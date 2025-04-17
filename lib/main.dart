@@ -1,0 +1,157 @@
+import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+import 'package:lawapp/aboutme_page.dart';
+import 'package:lawapp/internationalcase_page.dart';
+import 'package:lawapp/notifications.dart';
+import 'dart:async';
+import 'home_page.dart';
+import 'know_law_page.dart';
+import 'trend_page.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting("zh_TW", null);
+  runApp(const MylawApp());
+}
+
+class MylawApp extends StatefulWidget {
+  const MylawApp({super.key});
+
+  @override
+  State<MylawApp> createState() => _MylawAppState();
+}
+
+class _MylawAppState extends State<MylawApp> {
+  int selectedIndex = 0;
+
+  void _navigateBottomBar(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
+
+  final List _pages = [
+    //首頁
+    const Homepage(),
+
+    //了解法律頁面
+    const KnowLawPage(),
+
+    //趨勢頁面
+    const trendPage(),
+
+    //國際刑案頁面
+    const internationalcasePage(),
+
+    //搜尋頁面
+    const NotificationPage(),
+
+    //關於我頁面
+    const AboutmePage(),
+  ];
+
+  String dateTimeString = "載入中...";
+
+  late Timer timer;
+
+  @override
+  void initState() {
+    super.initState();
+    updateDateTime(); //立即更新時間
+    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
+      //每分鐘更新一次
+      updateDateTime();
+    });
+  }
+
+  void updateDateTime() {
+    setState(() {
+      dateTimeString = DateFormat(
+        "yyyy年MM月dd日EEEE",
+        "zh_TW",
+      ).format(DateTime.now());
+    });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      locale: const Locale('zh', 'TW'),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+      ),
+      title: 'MylawApp',
+      home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: const Color.fromARGB(255, 120, 150, 238),
+          title: ListTile(
+            title: Text(
+              dateTimeString,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  fontSize: 23.4, color: Color.fromARGB(255, 72, 0, 255)),
+            ),
+            subtitle: const SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Text(
+                '如果末日沒有發生 不要等到來生 讓此時此刻能不虛此生－五月天<第二人生>',
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+            ),
+          ),
+          toolbarHeight: 70,
+        ),
+        body: _pages[selectedIndex],
+        bottomNavigationBar: SizedBox(
+          child: BottomNavigationBar(
+            iconSize: 27,
+            showUnselectedLabels: false,
+            showSelectedLabels: false,
+            currentIndex: selectedIndex,
+            onTap: _navigateBottomBar,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: '首頁',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.inbox),
+                label: '了解法律',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.archive_outlined),
+                label: '趨勢',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.public),
+                label: '國際案件',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.notifications),
+                label: '最新通知',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: '關於我',
+              ),
+            ],
+            backgroundColor: Colors.white,
+            selectedItemColor: const Color.fromARGB(255, 220, 189, 147),
+            type: BottomNavigationBarType.fixed,
+          ),
+        ),
+      ),
+    );
+  }
+}
