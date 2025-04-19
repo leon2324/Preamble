@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 
+class searchbar extends StatelessWidget {
+  final String hintText;
+  final focusNode = FocusNode();
+  final TextEditingController controller;
 
+  searchbar({
+    Key? key,
+    required this.hintText,
+    required this.controller,
+  }) : super(key: key);
 
-
-class SearchBar extends StatefulWidget {
-  const SearchBar({super.key});
-
-  @override
-  State<SearchBar> createState() => _SearchBarState();
-}
-
-class _SearchBarState extends State<SearchBar> {
-  final FocusNode _focusNode = FocusNode();
-
-  final TextEditingController _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -27,20 +24,20 @@ class _SearchBarState extends State<SearchBar> {
             borderRadius: BorderRadius.circular(50),
           ),
           child: TextField(
-            controller: _controller,
-            focusNode: _focusNode,
+            controller: controller,
+            focusNode: focusNode,
             onTap: () {
-              _focusNode.requestFocus();
+              focusNode.requestFocus();
             },
             // onChanged: (value) {
             //   print("search query: $value");
             // },
             decoration: InputDecoration(
               hintStyle: TextStyle(color: Colors.grey[500]),
-              hintText: "搜尋判決、法律、實例...",
+              hintText: hintText,
               // contentPadding: EdgeInsets.all(0),
               border: InputBorder.none,
-              suffixIcon:Icon(
+              suffixIcon: Icon(
                 Icons.search,
                 size: 32,
                 color: Colors.grey[600],
@@ -49,7 +46,8 @@ class _SearchBarState extends State<SearchBar> {
                 minHeight: 40,
                 minWidth: 50,
               ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
             ),
           ),
         ),

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'component/SearchBar.dart';
+
+
 
 class KnowLawPage extends StatefulWidget {
   const KnowLawPage({super.key});
@@ -10,7 +13,8 @@ class KnowLawPage extends StatefulWidget {
 class Liststate extends State<KnowLawPage> {
   Liststate() : super();
 
-  
+  final controller = TextEditingController();
+  final focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +31,12 @@ class Liststate extends State<KnowLawPage> {
       ),
       body:Column(
         children: [
-          const Row(
-            children: [SearchBar()],
+          Row(
+            children: [
+              searchbar(
+                hintText:"搜尋判決、法律、實例...",
+                controller: controller,),
+            ],
           ),
           Expanded(
             child: ListView(
