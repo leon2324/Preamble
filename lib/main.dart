@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:lawapp/aboutme_page.dart';
-import 'package:lawapp/internationalcase_page.dart';
-import 'package:lawapp/notifications.dart';
+import 'package:lawapp/Pages/AboutMe_Page.dart';
+import 'package:lawapp/Pages/InternationalCase_Page.dart';
+import 'package:lawapp/Pages/Notifications_Page.dart';
 import 'dart:async';
-import 'home_page.dart';
-import 'know_law_page.dart';
-import 'trend_page.dart';
+import 'Pages/Home_Page.dart';
+import 'Pages/KnowLaw_Page.dart';
+import 'Pages/Trend_Page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -88,31 +88,32 @@ class _MylawAppState extends State<MylawApp> {
       theme: ThemeData(
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue)
       ),
       title: 'MylawApp',
       home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 120, 150, 238),
-          title: ListTile(
-            title: Text(
-              dateTimeString,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  fontSize: 23.4, color: Color.fromARGB(255, 72, 0, 255)),
-            ),
-            subtitle: const SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Text(
-                '如果末日沒有發生 不要等到來生 讓此時此刻能不虛此生－五月天<第二人生>',
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-              ),
-            ),
-          ),
-          toolbarHeight: 70,
-        ),
-        body: _pages[selectedIndex],
+        // appBar: AppBar(
+        //   backgroundColor: const Color.fromARGB(255, 120, 150, 238),
+        //   title: ListTile(
+        //     title: Text(
+        //       dateTimeString,
+        //       textAlign: TextAlign.center,
+        //       style: const TextStyle(
+        //           fontSize: 23.4, color: Color.fromARGB(255, 72, 0, 255)),
+        //     ),
+        //     subtitle: const SingleChildScrollView(
+        //       scrollDirection: Axis.horizontal,
+        //       child: Text(
+        //         '如果末日沒有發生 不要等到來生 讓此時此刻能不虛此生－五月天<第二人生>',
+        //         style: TextStyle(
+        //           fontSize: 20,
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        //   toolbarHeight: 70,
+        // ),
+        body: SafeArea(child: _pages[selectedIndex]),
         bottomNavigationBar: SizedBox(
           child: BottomNavigationBar(
             iconSize: 27,

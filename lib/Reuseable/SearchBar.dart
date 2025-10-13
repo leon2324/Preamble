@@ -6,10 +6,10 @@ class searchbar extends StatelessWidget {
   final TextEditingController controller;
 
   searchbar({
-    Key? key,
+    super.key,
     required this.hintText,
     required this.controller,
-  }) : super(key: key);
+  });
 
 
   @override

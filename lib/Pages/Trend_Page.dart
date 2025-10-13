@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lawapp/component/SearchBar.dart';
+import 'package:lawapp/Reuseable/SearchBar.dart';
 
 
 class trendPage extends StatefulWidget {

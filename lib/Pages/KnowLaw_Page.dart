@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'component/SearchBar.dart';
+import '../Reuseable/SearchBar.dart';
 
 
 
