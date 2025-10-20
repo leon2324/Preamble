@@ -57,7 +57,7 @@ class NewsTodayAtHomePage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: 5,
                           vertical: 7,
                         ),
@@ -102,7 +102,7 @@ class NewsTodayAtHomePage extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: 10,
                           vertical: 2,
                         ),
@@ -110,7 +110,7 @@ class NewsTodayAtHomePage extends StatelessWidget {
                           newsTitles[index],
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 20,
                           ),
                         ),

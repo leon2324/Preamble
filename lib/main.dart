@@ -33,7 +33,7 @@ class _MylawAppState extends State<MylawApp> {
 
   final List _pages = [
     //首頁
-    const Homepage(),
+    const HomePage(),
 
     //了解法律頁面
     const KnowLawPage(),

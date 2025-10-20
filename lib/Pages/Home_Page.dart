@@ -1,30 +1,42 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'package:lawapp/Reuseable/SearchBar.dart';
 import 'package:lawapp/Reuseable/SearchRow_HomePage.dart';
+import 'package:lawapp/Reuseable/SearchRow_RoundIcon.dart';
+import 'package:lawapp/component/HomePage_NewLegalNewsletter.dart';
 import 'package:lawapp/component/HomePage_NewsToday.dart';
 
-class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  Homestate createState() => Homestate();
+  HomePageState createState() => HomePageState();
 }
 
-class Homestate extends State<Homepage> {
+class HomePageState extends State<HomePage> {
   final controller = TextEditingController();
-  final focusNode = FocusNode();
+  final focusNode = FocusNode(); //用來控制搜尋框的聚焦
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SearchRowHomePage(hintText: "快速搜尋", controller: controller),
-        Expanded(
+    return CustomScrollView(
+      slivers: [
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: SearchHeaderDelegate(
+            minExtent: 70,
+            maxExtent: 70,
+            controller: controller,
+          ),
+        ),
+        SliverToBoxAdapter(
           child: NewsTodayAtHomePage(),
         ),
-        // Expanded(child:HomePageContent2()),
-        // Expanded(child:HomePageContent3()),
+        SliverToBoxAdapter(
+          child: NewsTodayAtHomePage(),
+        ),
       ],
     );
   }
 }
+
