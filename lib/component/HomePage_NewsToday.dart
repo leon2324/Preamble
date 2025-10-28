@@ -19,7 +19,7 @@ class NewsTodayAtHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -33,7 +33,9 @@ class NewsTodayAtHomePage extends StatelessWidget {
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  // TODO: Navigate to more news page
+                },
                 icon: const Icon(Icons.arrow_forward_ios),
               ),
             ],

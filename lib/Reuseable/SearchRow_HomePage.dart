@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/material.dart';
 import 'package:lawapp/Reuseable/SearchRow_RoundIcon.dart';
@@ -8,7 +8,7 @@ class SearchRowHomePage extends StatelessWidget {
   final focusNode = FocusNode();
   final TextEditingController controller;
   final bool ShowLeftIcon;
-  final double LeftIconSize;
+  final double LeftIconWidth;
   final double height;
 
   SearchRowHomePage({
@@ -16,7 +16,7 @@ class SearchRowHomePage extends StatelessWidget {
     required this.hintText,
     required this.controller,
     this.ShowLeftIcon = true,
-    this.LeftIconSize = 48,
+    this.LeftIconWidth = 55,
     this.height = 44,
   });
 
@@ -26,26 +26,19 @@ class SearchRowHomePage extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
       child: Row(
         children: [
-          AnimatedOpacity(
-            opacity: ShowLeftIcon ? 1.0 : 0.0,
-            duration: const Duration(milliseconds: 150),
-            // child: IconButton(
-            //   icon: Icon(
-            //     Icons.notifications_none,
-            //     size: LeftIconSize,
-            //   ),
-            //   onPressed: () {
-            //     //TODO: Navigate to notifications page
-            //   },
-            // ),
-            child: AnimatedContainer(
-              curve: Curves.easeOut,
-              width: LeftIconSize,
-              height: LeftIconSize,
-              duration: const Duration(milliseconds: 150),
+          AnimatedOpacity(//控制透明度淡入淡出
+            opacity: ShowLeftIcon ? 1.0 : 0.0,//控制透明度1顯示0消失
+            duration: const Duration(milliseconds: 150),//整個動畫150毫秒內結束
+            child: AnimatedContainer(//控制大小變化
+              curve: Curves.easeOut,//動畫曲線為滑出
+              width: LeftIconWidth,//
+              height: height,
+              duration: const Duration(milliseconds: 150),//整個動畫150毫秒內結束
               child:RoundIconButton(
                 icon: Icons.notifications_none,
-                onPressed: () {},
+                onPressed: () {
+                  //TODO: Navigate to notifications page
+                },
               )
             ),
           ),
@@ -123,32 +116,38 @@ class SearchHeaderDelegate extends SliverPersistentHeaderDelegate {
   final TextEditingController controller;
 
   // 計算滾動進度 (0～1)
-  double _t(double shrinkOffset) {
-    final total = (maxExtent - minExtent).clamp(1, double.infinity);
-    return (shrinkOffset / total).clamp(0.0, 1.0);
-  }
+  // double t(double shrinkOffset) {
+  //   final total = (maxExtent - minExtent).clamp(1.0, double.infinity);
+  //   return (shrinkOffset / total).clamp(0.0, 1.0);
+  // }
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlaps) {
     // 👇 這裡放「t 控制參數」的部分
     final double t = (shrinkOffset / 20.0).clamp(0.0, 1.0);
     final bool ShowIcon = t < 0.1;
-    final double LeftIconSize = lerpDouble(48, 0, t)!;
+    final double LeftIconWidth = lerpDouble(55, 0, t)?? 0.0;
 
     return Material(
-      elevation: overlaps ? 2 : 0,
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: SearchRowHomePage(
-        hintText: "快速搜尋",
-        controller: controller,
-        ShowLeftIcon: ShowIcon,
-        LeftIconSize: LeftIconSize,
-        height: 44,
+      elevation: overlaps ? 8 : 0,
+      shadowColor: Colors.black.withValues(alpha: 0.1),
+      color: Colors.transparent,
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: SearchRowHomePage(
+          hintText: "快速搜尋",
+          controller: controller,
+          ShowLeftIcon: ShowIcon,
+          LeftIconWidth: LeftIconWidth,
+          height: 45,
+        ),
       ),
     );
   }
 
   @override
   bool shouldRebuild(covariant SearchHeaderDelegate old) =>
-      old.minExtent != minExtent || old.maxExtent != maxExtent;
+      old.minExtent != minExtent ||
+      old.maxExtent != maxExtent ||
+      old.controller != controller;
 }

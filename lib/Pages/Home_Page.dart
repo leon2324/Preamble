@@ -24,8 +24,8 @@ class HomePageState extends State<HomePage> {
         SliverPersistentHeader(
           pinned: true,
           delegate: SearchHeaderDelegate(
-            minExtent: 70,
-            maxExtent: 70,
+            minExtent: 75,
+            maxExtent: 75,
             controller: controller,
           ),
         ),
@@ -33,10 +33,9 @@ class HomePageState extends State<HomePage> {
           child: NewsTodayAtHomePage(),
         ),
         SliverToBoxAdapter(
-          child: NewsTodayAtHomePage(),
+          child: HomePage_NewLegalNewsletter(),
         ),
       ],
     );
   }
 }
-
