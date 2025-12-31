@@ -1,8 +1,6 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:lawapp/Reuseable/SearchRow_HomePage.dart';
-import 'package:lawapp/Reuseable/SearchRow_RoundIcon.dart';
 import 'package:lawapp/component/HomePage_NewLegalNewsletter.dart';
 import 'package:lawapp/component/HomePage_NewsToday.dart';
 
@@ -32,7 +30,7 @@ class HomePageState extends State<HomePage> {
         SliverToBoxAdapter(
           child: NewsTodayAtHomePage(),
         ),
-        SliverToBoxAdapter(
+        const SliverToBoxAdapter(
           child: HomePage_NewLegalNewsletter(),
         ),
       ],

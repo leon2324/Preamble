@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:lawapp/Pages/AboutMe_Page.dart';
@@ -8,11 +9,21 @@ import 'dart:async';
 import 'Pages/Home_Page.dart';
 import 'Pages/KnowLaw_Page.dart';
 import 'Pages/Trend_Page.dart';
-
+  
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
   await initializeDateFormatting("zh_TW", null);
-  runApp(const MylawApp());
+  runApp(
+    ScreenUtilInit(//使用flutter_screenutil套件來做響應式設計
+      designSize: Size(375, 812),//設計稿Figma的尺寸，建議一律用375x812
+      minTextAdapt: true,//文字自動適應開啟
+      splitScreenMode: true,//支援分割螢幕與折疊手機
+      builder: (context, child) {
+        return MylawApp();
+      },
+    ),
+  );
 }
 
 class MylawApp extends StatefulWidget {
@@ -156,3 +167,4 @@ class _MylawAppState extends State<MylawApp> {
     );
   }
 }
+
