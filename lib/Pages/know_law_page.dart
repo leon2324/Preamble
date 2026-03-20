@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../Reuseable/SearchBar.dart';
+import '../Reuseable/search_bar.dart';
 
 
 
@@ -7,14 +7,19 @@ class KnowLawPage extends StatefulWidget {
   const KnowLawPage({super.key});
 
   @override
-  Liststate createState() => Liststate();
+  KnowLawPageState createState() => KnowLawPageState();
 }
 
-class Liststate extends State<KnowLawPage> {
-  Liststate() : super();
+class KnowLawPageState extends State<KnowLawPage> {
+  KnowLawPageState() : super();
 
   final controller = TextEditingController();
-  final focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +38,7 @@ class Liststate extends State<KnowLawPage> {
         children: [
           Row(
             children: [
-              searchbar(
+              AppSearchBar(
                 hintText:"搜尋判決、法律、實例...",
                 controller: controller,),
             ],
@@ -65,7 +70,7 @@ class Liststate extends State<KnowLawPage> {
                         }),
                       ),
                       onPressed: () {
-                        print('按鈕被按下囉！');
+                        debugPrint('按鈕被按下囉！');
                       },
                       child: const Text(
                         '勞動基準法',
@@ -91,7 +96,7 @@ class Liststate extends State<KnowLawPage> {
                         }),
                       ),
                       onPressed: () {
-                        print('按鈕被按下囉！');
+                        debugPrint('按鈕被按下囉！');
                       },
                       child: const Text(
                         '職業安全衛生設施條例',
@@ -117,7 +122,7 @@ class Liststate extends State<KnowLawPage> {
                         }),
                       ),
                       onPressed: () {
-                        print('按鈕被按下囉！');
+                        debugPrint('按鈕被按下囉！');
                       },
                       child: const Text(
                         '行政程序法',
@@ -143,7 +148,7 @@ class Liststate extends State<KnowLawPage> {
                         }),
                       ),
                       onPressed: () {
-                        print('按鈕被按下囉！');
+                        debugPrint('按鈕被按下囉！');
                       },
                       child: const Text(
                         '洗錢防制法',
@@ -169,7 +174,7 @@ class Liststate extends State<KnowLawPage> {
                         }),
                       ),
                       onPressed: () {
-                        print('按鈕被按下囉！');
+                        debugPrint('按鈕被按下囉！');
                       },
                       child: const Text(
                         '貪污治罪條例',
@@ -204,7 +209,7 @@ class Liststate extends State<KnowLawPage> {
                         }),
                       ),
                       onPressed: () {
-                        print('按鈕被按下囉！');
+                        debugPrint('按鈕被按下囉！');
                       },
                       child: const Text(
                         '道路交通處罰管理條例',
@@ -230,7 +235,7 @@ class Liststate extends State<KnowLawPage> {
                         }),
                       ),
                       onPressed: () {
-                        print('按鈕被按下囉！');
+                        debugPrint('按鈕被按下囉！');
                       },
                       child: const Text(
                         '證券交易法',
@@ -256,7 +261,7 @@ class Liststate extends State<KnowLawPage> {
                         }),
                       ),
                       onPressed: () {
-                        print('按鈕被按下囉！');
+                        debugPrint('按鈕被按下囉！');
                       },
                       child: const Text(
                         '銀行法',
@@ -282,7 +287,7 @@ class Liststate extends State<KnowLawPage> {
                         }),
                       ),
                       onPressed: () {
-                        print('按鈕被按下囉！');
+                        debugPrint('按鈕被按下囉！');
                       },
                       child: const Text(
                         '所得稅法',
@@ -308,7 +313,7 @@ class Liststate extends State<KnowLawPage> {
                         }),
                       ),
                       onPressed: () {
-                        print('按鈕被按下囉！');
+                        debugPrint('按鈕被按下囉！');
                       },
                       child: const Text(
                         '少年事件處理法',
@@ -334,7 +339,7 @@ class Liststate extends State<KnowLawPage> {
                         }),
                       ),
                       onPressed: () {
-                        print('按鈕被按下囉！');
+                        debugPrint('按鈕被按下囉！');
                       },
                       child: const Text(
                         '槍砲彈藥管理條例',
@@ -360,7 +365,7 @@ class Liststate extends State<KnowLawPage> {
                         }),
                       ),
                       onPressed: () {
-                        print('按鈕被按下囉！');
+                        debugPrint('按鈕被按下囉！');
                       },
                       child: const Text(
                         '著作權法',

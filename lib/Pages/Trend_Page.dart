@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:lawapp/Reuseable/SearchBar.dart';
+import 'package:lawapp/Reuseable/search_bar.dart';
 
 
-class trendPage extends StatefulWidget {
-  const trendPage({super.key});
+class TrendPage extends StatefulWidget {
+  const TrendPage({super.key});
 
   @override
-  trendState createState() => trendState();
+  TrendState createState() => TrendState();
 }
 
-class trendState extends State<trendPage> {
+class TrendState extends State<TrendPage> {
 
   final controller = TextEditingController();
-  final focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +25,7 @@ class trendState extends State<trendPage> {
       children: [
         Row(
           children: [
-            searchbar(
+            AppSearchBar(
               hintText:"搜尋案件、人名...",
               controller: controller,
             ),

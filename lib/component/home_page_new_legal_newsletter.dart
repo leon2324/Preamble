@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class HomePage_NewLegalNewsletter extends StatefulWidget {
-  const HomePage_NewLegalNewsletter({super.key});
+class HomePageNewLegalNewsletter extends StatefulWidget {
+  const HomePageNewLegalNewsletter({super.key});
 
   @override
-  State<HomePage_NewLegalNewsletter> createState() =>
-      _HomePage_NewLegalNewsletterState();
+  State<HomePageNewLegalNewsletter> createState() =>
+      _HomePageNewLegalNewsletterState();
 }
 
-class _HomePage_NewLegalNewsletterState
-    extends State<HomePage_NewLegalNewsletter> {
+class _HomePageNewLegalNewsletterState
+    extends State<HomePageNewLegalNewsletter> {
   final PageController controller = PageController();
   int currentPage = 0;
 
-  final bool ShowTip = true;
+  final bool showTip = true;
 
   final List<String> newsTitles = [
     "自拍時拍到別人臉，侵權了？！",
@@ -47,9 +47,16 @@ class _HomePage_NewLegalNewsletterState
   ];
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final cardWidth = 0.85.sw;
-    final cardHeight = 240.h;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isCompactScreen = screenHeight <= 700;
+    final cardHeight = isCompactScreen ? 232.h : 240.h;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(15.w, 0, 15.w, 10.h),
@@ -69,7 +76,7 @@ class _HomePage_NewLegalNewsletterState
                 onPressed: () {
                   // TODO: Navigate to more new law news page
                 },
-                icon: Icon(Icons.arrow_forward_ios),
+                icon: const Icon(Icons.arrow_forward_ios),
               ),
             ],
           ),
@@ -81,73 +88,74 @@ class _HomePage_NewLegalNewsletterState
               itemCount: newsTitles.length,
               onPageChanged: (i) => setState(() => currentPage = i),
               itemBuilder: (context, index) {
+                final showTip = this.showTip &&
+                    newsTip[index].isNotEmpty &&
+                    MediaQuery.of(context).size.height >= 760;
+                final contentMaxLines = showTip ? 3 : 4;
+
                 return Container(
                   margin: EdgeInsets.only(
                       right: index == newsTitles.length - 1 ? 0 : 10.w),
                   decoration: BoxDecoration(
-                    color: Color(0xFFF2EADF),
+                    color: const Color(0xFFF2EADF),
                     borderRadius: BorderRadius.circular(15.r),
                   ),
                   padding: EdgeInsets.all(12.w),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            //標題
-                            child: Text(
-                              newsTitles[index],
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 20.sp,
-                                color: Color(0xFF2B4499),
-                              ),
-                            ),
-                          ),
-                        ],
+                      Text(
+                        newsTitles[index],
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: isCompactScreen ? 18.sp : 20.sp,
+                          color: const Color(0xFF2B4499),
+                        ),
                       ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: 6,
-                            child: Column(
+                      SizedBox(height: isCompactScreen ? 6.h : 8.h),
+                      Expanded(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Expanded(
+                              flex: 6,
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  SizedBox(height: 8.h),
-                                  //內文
                                   Text(
                                     newsContent[index],
-                                    maxLines: 4,
+                                    maxLines: contentMaxLines,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                      fontSize: 16.sp,
-                                      color: Color(0xFF2B4499),
+                                      fontSize: isCompactScreen ? 15.sp : 16.sp,
+                                      color: const Color(0xFF2B4499),
                                       height: 1.4,
                                     ),
                                   ),
-                                  SizedBox(height: 8.h),
-                                  //小提醒bool
-                                  if (ShowTip) ...[
+                                  SizedBox(
+                                      height: showTip
+                                          ? (isCompactScreen ? 6.h : 8.h)
+                                          : 0),
+                                  if (showTip)
                                     Text(
                                       newsTip[index],
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        fontSize: 13.sp,
-                                        color: Color.fromARGB(255, 25, 134, 1),
+                                        fontSize:
+                                            isCompactScreen ? 12.sp : 13.sp,
+                                        color: const Color.fromARGB(
+                                            255, 25, 134, 1),
                                         height: 1.4,
                                       ),
                                     ),
-                                  ],
-                                ]),
-                          ),
-                          Expanded(
-                            flex: 4,
-                            // child: ClipRRect(
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              flex: 4,
                               child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15.r),
@@ -155,20 +163,43 @@ class _HomePage_NewLegalNewsletterState
                                       const Color.fromARGB(255, 160, 160, 160),
                                 ),
                               ),
-                            // ),
-                          ),
-                        ],
+                            ),
+                          ],
+                        ),
                       ),
-                      //下面4個按鈕
-                      Row(
-                        // crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      SizedBox(height: isCompactScreen ? 6.h : 8.h),
+                      Wrap(
+                        spacing: isCompactScreen ? 10.w : 12.w,
+                        runSpacing: isCompactScreen ? 6.h : 8.h,
                         children: [
-                          InterActionButton(Icons.favorite_sharp, Color.fromARGB(255, 255, 0, 0), "300+", (){}),
-                          InterActionButton(Icons.share, Color.fromARGB(255, 124, 108, 7), "100+", (){}),
-                          InterActionButton(Icons.comment_rounded, Color.fromARGB(255, 0, 94, 42), "100+", (){}),
-                          InterActionButton(Icons.download, Color.fromARGB(255, 0, 124, 124), "500+", (){}),
-                                
+                          interactionButton(
+                            Icons.favorite_sharp,
+                            const Color.fromARGB(255, 255, 0, 0),
+                            "300+",
+                            isCompactScreen,
+                            () {},
+                          ),
+                          interactionButton(
+                            Icons.share,
+                            const Color.fromARGB(255, 124, 108, 7),
+                            "100+",
+                            isCompactScreen,
+                            () {},
+                          ),
+                          interactionButton(
+                            Icons.comment_rounded,
+                            const Color.fromARGB(255, 0, 94, 42),
+                            "100+",
+                            isCompactScreen,
+                            () {},
+                          ),
+                          interactionButton(
+                            Icons.download,
+                            const Color.fromARGB(255, 0, 124, 124),
+                            "500+",
+                            isCompactScreen,
+                            () {},
+                          ),
                         ],
                       ),
                     ],
@@ -199,23 +230,33 @@ class _HomePage_NewLegalNewsletterState
   }
 }
 
-
-Widget InterActionButton(IconData icon, Color color, String count , VoidCallback onPressed) {
-  return InkWell(  // 用 InkWell 取代 IconButton
-    onTap: () {
-      // TODO: 按讚、分享等邏輯
-    },
-    borderRadius: BorderRadius.circular(8.r),  // 點擊波紋圓角
+Widget interactionButton(
+  IconData icon,
+  Color color,
+  String count,
+  bool isCompactScreen,
+  VoidCallback onPressed,
+) {
+  return InkWell(
+    // 用 InkWell 取代 IconButton
+    onTap: onPressed,
+    borderRadius: BorderRadius.circular(8.r), // 點擊波紋圓角
     child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),  // 自己控制 padding
+      padding: EdgeInsets.symmetric(
+        horizontal: isCompactScreen ? 2.w : 4.w,
+        vertical: isCompactScreen ? 2.h : 4.h,
+      ), // 自己控制 padding
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 24.sp, color: color),
-          SizedBox(width: 6.w),
+          Icon(icon, size: isCompactScreen ? 22.sp : 24.sp, color: color),
+          SizedBox(width: isCompactScreen ? 4.w : 6.w),
           Text(
             count,
-            style: TextStyle(fontSize: 14.sp, color: const Color.fromARGB(255, 0, 0, 0)),
+            style: TextStyle(
+              fontSize: isCompactScreen ? 13.sp : 14.sp,
+              color: const Color.fromARGB(255, 0, 0, 0),
+            ),
           ),
         ],
       ),

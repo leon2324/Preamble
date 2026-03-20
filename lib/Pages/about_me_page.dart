@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class AboutmePage extends StatefulWidget {
-  const AboutmePage({super.key});
+class AboutMePage extends StatefulWidget {
+  const AboutMePage({super.key});
 
   @override
-  aboutmeState createState() => aboutmeState();
+  AboutMeState createState() => AboutMeState();
 }
 
-class aboutmeState extends State<AboutmePage> {
+class AboutMeState extends State<AboutMePage> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -19,7 +19,7 @@ class aboutmeState extends State<AboutmePage> {
           Column(
             children: [
               Row(
-                children: <SearchBar>[SearchBar()],
+                children: <AboutSearchBar>[AboutSearchBar()],
               ),
             ],
           ),
@@ -29,18 +29,24 @@ class aboutmeState extends State<AboutmePage> {
   }
 }
 
-class SearchBar extends StatefulWidget {
-  const SearchBar({super.key});
+class AboutSearchBar extends StatefulWidget {
+  const AboutSearchBar({super.key});
 
   @override
-  State<SearchBar> createState() => _SearchBarState();
+  State<AboutSearchBar> createState() => _AboutSearchBarState();
 }
 
-class _SearchBarState extends State<SearchBar> {
+class _AboutSearchBarState extends State<AboutSearchBar> {
   final FocusNode _focusNode = FocusNode();
 
   final TextEditingController _controller = TextEditingController();
-  final double _scrollThreshold = 50;
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
