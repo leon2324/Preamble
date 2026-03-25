@@ -49,3 +49,19 @@ class HomeQuizOption {
   final String title;
   final bool isCorrect;
 }
+
+class HomeQuizQuestion {
+  const HomeQuizQuestion({
+    required this.question,
+    required this.options,
+    required this.hint,
+    required this.explanation,
+    required this.termExplainMap,
+  });
+
+  final String question;
+  final List<HomeQuizOption> options;
+  final String hint;
+  final String explanation;
+  final Map<String, String> termExplainMap;
+}

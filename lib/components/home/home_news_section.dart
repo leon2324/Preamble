@@ -1,34 +1,78 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/component/home/home_content.dart';
-import 'package:lawapp/component/home/home_section_title.dart';
+import 'package:lawapp/components/home/home_content.dart';
+import 'package:lawapp/components/home/home_section_title.dart';
+import 'package:lawapp/theme/adaptive_layout.dart';
 import 'package:lawapp/theme/app_colors.dart';
 
 class HomeNewsSection extends StatelessWidget {
   const HomeNewsSection({
     super.key,
     required this.items,
+    this.onMoreTap,
   });
 
   static const double _itemGap = 14;
 
   final List<HomeNewsItem> items;
+  final VoidCallback? onMoreTap;
 
   @override
   Widget build(BuildContext context) {
+    final extraHeight = context.adaptiveBuffer(22);
+    final cardSize = 164.w + extraHeight;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const HomeSectionTitle(title: '今日新聞'),
+        _SectionHeader(
+          title: '今日新聞',
+          onMoreTap: onMoreTap,
+        ),
         SizedBox(height: 20.h),
         SizedBox(
-          height: 164.w,
+          height: cardSize,
           child: ListView.separated(
             clipBehavior: Clip.none,
             scrollDirection: Axis.horizontal,
             itemCount: items.length,
             separatorBuilder: (_, __) => SizedBox(width: _itemGap.w),
-            itemBuilder: (context, index) => _NewsCard(item: items[index]),
+            itemBuilder: (context, index) => _NewsCard(
+              item: items[index],
+              size: cardSize,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  const _SectionHeader({
+    required this.title,
+    this.onMoreTap,
+  });
+
+  final String title;
+  final VoidCallback? onMoreTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        HomeSectionTitle(title: title),
+        const Spacer(),
+        GestureDetector(
+          onTap: onMoreTap,
+          behavior: HitTestBehavior.opaque,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
+            child: Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 18.sp,
+              color: Colors.black,
+            ),
           ),
         ),
       ],
@@ -37,9 +81,13 @@ class HomeNewsSection extends StatelessWidget {
 }
 
 class _NewsCard extends StatelessWidget {
-  const _NewsCard({required this.item});
+  const _NewsCard({
+    required this.item,
+    required this.size,
+  });
 
   final HomeNewsItem item;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +96,7 @@ class _NewsCard extends StatelessWidget {
     final badgeStyle = _NewsBadgeStyle.fromLabel(item.badge);
 
     return SizedBox(
-      width: 164.w,
+      width: size,
       child: AspectRatio(
         aspectRatio: 1,
         child: LayoutBuilder(

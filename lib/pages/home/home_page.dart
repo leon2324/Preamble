@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/Reuseable/search_row_home_page.dart';
+import 'package:lawapp/components/home/home_discussion_section.dart';
+import 'package:lawapp/components/home/home_news_section.dart';
+import 'package:lawapp/components/home/home_newsletter_section.dart';
+import 'package:lawapp/components/home/home_quiz_section.dart';
+import 'package:lawapp/components/home/home_tracked_topics_section.dart';
+import 'package:lawapp/components/search/search_row_home_page.dart';
 import 'package:lawapp/data/home_mock_data.dart';
-import 'package:lawapp/component/home/home_discussion_section.dart';
-import 'package:lawapp/component/home/home_news_section.dart';
-import 'package:lawapp/component/home/home_newsletter_section.dart';
-import 'package:lawapp/component/home/home_quiz_section.dart';
-import 'package:lawapp/component/home/home_tracked_topics_section.dart';
+import 'package:lawapp/theme/adaptive_layout.dart';
+import 'package:lawapp/theme/app_colors.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({
+    super.key,
+    required this.onNavigateToTab,
+  });
+
+  final ValueChanged<int> onNavigateToTab;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -23,8 +30,10 @@ class _HomePageState extends State<HomePage> {
   final ScrollController scrollController = ScrollController();
 
   int newsletterPage = 0;
+  int currentQuizQuestionIndex = 0;
   int? selectedQuizIndex;
-  bool showQuizResult = false;
+  final Set<int> incorrectQuizIndices = <int>{};
+  bool isQuizSolved = false;
   double searchCollapseProgress = 0;
 
   @override
@@ -41,6 +50,20 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _resetQuizState() {
+    selectedQuizIndex = null;
+    incorrectQuizIndices.clear();
+    isQuizSolved = false;
+  }
+
+  void _showNextQuizQuestion() {
+    setState(() {
+      currentQuizQuestionIndex =
+          (currentQuizQuestionIndex + 1) % homeQuizQuestions.length;
+      _resetQuizState();
+    });
+  }
+
   @override
   void dispose() {
     scrollController
@@ -51,15 +74,11 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  void _submitQuiz() {
-    if (selectedQuizIndex == null) return;
-    setState(() {
-      showQuizResult = true;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final layout = context.homeSearchLayout;
+    final currentQuizQuestion = homeQuizQuestions[currentQuizQuestionIndex];
+
     return Stack(
       children: [
         Positioned.fill(
@@ -71,14 +90,17 @@ class _HomePageState extends State<HomePage> {
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(
                     16.w,
-                    106.h,
+                    layout.contentTopPadding.h,
                     16.w,
-                    28.h,
+                    layout.contentBottomPadding.h,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const HomeNewsSection(items: homeNewsItems),
+                      HomeNewsSection(
+                        items: homeNewsItems,
+                        onMoreTap: () => widget.onNavigateToTab(3),
+                      ),
                       SizedBox(height: _sectionGap.h),
                       HomeNewsletterSection(
                         controller: newsletterController,
@@ -89,21 +111,30 @@ class _HomePageState extends State<HomePage> {
                             newsletterPage = index;
                           });
                         },
+                        onMoreTap: () => widget.onNavigateToTab(1),
                       ),
                       SizedBox(height: _sectionGap.h),
                       const HomeTrackedTopicsSection(items: homeTrackedTopics),
                       SizedBox(height: _sectionGap.h),
                       HomeQuizSection(
+                        question: currentQuizQuestion,
                         selectedQuizIndex: selectedQuizIndex,
-                        showQuizResult: showQuizResult,
-                        quizOptions: homeQuizOptions,
+                        incorrectQuizIndices: incorrectQuizIndices,
+                        isSolved: isQuizSolved,
+                        onNextQuestion: _showNextQuizQuestion,
                         onSelect: (index) {
                           setState(() {
                             selectedQuizIndex = index;
-                            showQuizResult = false;
+
+                            if (isQuizSolved) return;
+
+                            if (currentQuizQuestion.options[index].isCorrect) {
+                              isQuizSolved = true;
+                            } else {
+                              incorrectQuizIndices.add(index);
+                            }
                           });
                         },
-                        onSubmit: _submitQuiz,
                       ),
                       SizedBox(height: _sectionGap.h),
                       const HomeDiscussionSection(),
@@ -115,7 +146,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         Positioned(
-          top: 0,
+          top: layout.searchBarTopOffset.h,
           left: 0,
           right: 0,
           child: SearchRowHomePage(
@@ -123,6 +154,31 @@ class _HomePageState extends State<HomePage> {
             collapseProgress: searchCollapseProgress,
           ),
         ),
+        if (layout.hasLargeTopInset)
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: IgnorePointer(
+              child: Container(
+                height: layout.topMaskHeight.h,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: const [0, 0.14, 0.38, 0.68, 1],
+                    colors: [
+                      AppColors.background,
+                      AppColors.background,
+                      AppColors.background.withValues(alpha: 0.72),
+                      AppColors.background.withValues(alpha: 0.3),
+                      AppColors.background.withValues(alpha: 0),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }

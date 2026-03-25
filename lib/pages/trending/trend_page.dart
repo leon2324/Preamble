@@ -1,6 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:lawapp/Reuseable/search_bar.dart';
+import 'dart:ui' show lerpDouble;
 
+import 'package:flutter/material.dart';
+import 'package:lawapp/components/search/search_bar.dart';
+import 'package:lawapp/theme/adaptive_layout.dart';
 
 class TrendPage extends StatefulWidget {
   const TrendPage({super.key});
@@ -10,7 +12,6 @@ class TrendPage extends StatefulWidget {
 }
 
 class TrendState extends State<TrendPage> {
-
   final controller = TextEditingController();
 
   @override
@@ -21,12 +22,17 @@ class TrendState extends State<TrendPage> {
 
   @override
   Widget build(BuildContext context) {
+    final textScaleProgress =
+        ((context.adaptiveTextScale - 1.0) / 0.4).clamp(0.0, 1.0);
+    final gridAspectRatio = lerpDouble(1.5, 1.15, textScaleProgress) ?? 1.5;
+    final imageHeight = 70 + context.adaptiveBuffer(18);
+
     return Column(
       children: [
         Row(
           children: [
             AppSearchBar(
-              hintText:"搜尋案件、人名...",
+              hintText: "搜尋案件、人名...",
               controller: controller,
             ),
           ],
@@ -41,11 +47,11 @@ class TrendState extends State<TrendPage> {
         Expanded(
           child: GridView.builder(
             padding: const EdgeInsets.only(left: 15, right: 15),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
-              childAspectRatio: 1.5,
+              childAspectRatio: gridAspectRatio,
             ),
             itemCount: 8,
             itemBuilder: (context, index) {
@@ -69,7 +75,7 @@ class TrendState extends State<TrendPage> {
                   children: [
                     Image.network(
                       "https://www.appoverride.com/wp-content/uploads/2024/03/floating_action_button-1024x538.png",
-                      height: 70,
+                      height: imageHeight,
                       width: 80,
                     ),
                     // const SizedBox(height: 5),
@@ -91,5 +97,3 @@ class TrendState extends State<TrendPage> {
     );
   }
 }
-
- 

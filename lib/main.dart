@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/Pages/about_me_page.dart';
-import 'package:lawapp/Pages/home_page.dart';
-import 'package:lawapp/Pages/international_case_page.dart';
-import 'package:lawapp/Pages/know_law_page.dart';
-import 'package:lawapp/Pages/notifications_page.dart';
+import 'package:lawapp/pages/followed_updates/followed_updates_page.dart';
+import 'package:lawapp/pages/home/home_page.dart';
+import 'package:lawapp/pages/learning/know_law_page.dart';
+import 'package:lawapp/pages/profile/about_me_page.dart';
+import 'package:lawapp/pages/trending/trending_page.dart';
+import 'package:lawapp/theme/adaptive_layout.dart';
 import 'package:lawapp/theme/app_colors.dart';
 
 void main() {
@@ -31,13 +32,7 @@ class MylawApp extends StatefulWidget {
 class _MylawAppState extends State<MylawApp> {
   int selectedIndex = 0;
 
-  final List<Widget> _pages = const [
-    HomePage(),
-    KnowLawPage(),
-    InternationalCasePage(),
-    NotificationPage(),
-    AboutMePage(),
-  ];
+  void _handleLearningQuizTap() {}
 
   static const List<_BottomNavItemData> _navItems = [
     _BottomNavItemData(
@@ -69,6 +64,20 @@ class _MylawAppState extends State<MylawApp> {
 
   @override
   Widget build(BuildContext context) {
+    final pages = [
+      HomePage(
+        onNavigateToTab: (index) {
+          setState(() {
+            selectedIndex = index;
+          });
+        },
+      ),
+      const KnowLawPage(),
+      const FollowedUpdatesPage(),
+      const TrendingPage(),
+      const AboutMePage(),
+    ];
+
     return MaterialApp(
       locale: const Locale('zh', 'TW'),
       debugShowCheckedModeBanner: false,
@@ -93,34 +102,69 @@ class _MylawAppState extends State<MylawApp> {
       ),
       home: Scaffold(
         extendBody: false,
-        body: Stack(
-          children: [
-            Positioned.fill(
-              child: SafeArea(
-                child: IndexedStack(
-                  index: selectedIndex,
-                  children: _pages,
+        body: Builder(
+          builder: (context) {
+            final useTopSafeArea = !context.hasLargeTopInset;
+
+            return Stack(
+              children: [
+                Positioned.fill(
+                  child: SafeArea(
+                    top: useTopSafeArea,
+                    bottom: false,
+                    child: IndexedStack(
+                      index: selectedIndex,
+                      children: pages,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            Positioned(
-              left: 12,
-              right: 12,
-              bottom: 17,
-              child: SafeArea(
-                top: false,
-                child: _IslandBottomNav(
-                  selectedIndex: selectedIndex,
-                  items: _navItems,
-                  onTap: (index) {
-                    setState(() {
-                      selectedIndex = index;
-                    });
-                  },
+                if (selectedIndex == 1)
+                  Positioned(
+                    right: 24,
+                    bottom: 110,
+                    child: SafeArea(
+                      top: false,
+                      child: SizedBox(
+                        height: 70,
+                        width: 70,
+                        child: FloatingActionButton(
+                          backgroundColor: const Color.fromARGB(
+                            255,
+                            248,
+                            204,
+                            111,
+                          ),
+                          onPressed: _handleLearningQuizTap,
+                          shape: const CircleBorder(),
+                          child: const Icon(
+                            Icons.quiz_outlined,
+                            color: Color(0xFF101828),
+                            size: 32,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                Positioned(
+                  left: 12,
+                  right: 12,
+                  bottom: 17,
+                  child: SafeArea(
+                    top: false,
+                    child: _IslandBottomNav(
+                      selectedIndex: selectedIndex,
+                      items: _navItems,
+                      onTap: (index) {
+                        setState(() {
+                          selectedIndex = index;
+                        });
+                      },
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ],
+              ],
+            );
+          },
         ),
       ),
     );
@@ -140,11 +184,16 @@ class _IslandBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final extraHeight = context.adaptiveBuffer(12);
+    final navShellHeight = 76 + extraHeight;
+    final navHeight = 70 + extraHeight;
+    final iconBoxHeight = 30 + (extraHeight * 0.6);
+
     return SizedBox(
-      height: 76,
+      height: navShellHeight,
       child: Center(
         child: Container(
-          height: 70,
+          height: navHeight,
           decoration: BoxDecoration(
             color: const Color.fromARGB(255, 239, 239, 239),
             borderRadius: BorderRadius.circular(34),
@@ -187,21 +236,22 @@ class _IslandBottomNav extends StatelessWidget {
                           children: [
                             Container(
                               width: 50,
-                              height: 30,
+                              height: iconBoxHeight,
                               alignment: Alignment.center,
                               child: Icon(
                                 isSelected ? item.selectedIcon : item.icon,
                                 size: 25,
                                 color: isSelected
                                     ? AppColors.textPrimary
-                                    : AppColors.textPrimary.withValues(alpha: 0.42),
+                                    : AppColors.textPrimary
+                                        .withValues(alpha: 0.42),
                               ),
                             ),
                             const SizedBox(height: 5),
                             Text(
                               item.label,
-                              style: const TextStyle(
-                                fontSize: 11,
+                              style: TextStyle(
+                                fontSize: 11 + context.adaptiveBuffer(1.5),
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.textPrimary,
                               ),

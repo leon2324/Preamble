@@ -1,0 +1,93 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lawapp/components/home/home_content.dart';
+import 'package:lawapp/components/home/home_section_title.dart';
+import 'package:lawapp/theme/app_colors.dart';
+
+class HomeTrackedTopicsSection extends StatelessWidget {
+  const HomeTrackedTopicsSection({
+    super.key,
+    required this.items,
+  });
+
+  static const double _itemGap = 16;
+
+  final List<HomeTrackedTopic> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const HomeSectionTitle(title: '你關心的'),
+        SizedBox(height: 20.h),
+        ...List.generate(
+          items.length,
+          (index) => Padding(
+            padding: EdgeInsets.only(
+                bottom: index == items.length - 1 ? 0 : _itemGap.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 15.w),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 4.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.chipSurface.withValues(alpha: 0.65),
+                      borderRadius: BorderRadius.circular(999.r),
+                    ),
+                    child: Text(
+                      items[index].hashtag,
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        height: 1,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.primarySoft.withValues(alpha: 0.88),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding:
+                            EdgeInsets.only(top: 2.h, right: 10.w, left: 15.w),
+                        child: Text(
+                          items[index].title,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            height: 1.28,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: _itemGap.w),
+                    Container(
+                      width: 116.w,
+                      height: 84.h,
+                      decoration: BoxDecoration(
+                        color: AppColors.placeholder,
+                        borderRadius: BorderRadius.circular(18.r),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

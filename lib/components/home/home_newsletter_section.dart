@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/component/home/home_content.dart';
-import 'package:lawapp/component/home/home_section_title.dart';
+import 'package:lawapp/components/home/home_content.dart';
+import 'package:lawapp/components/home/home_section_title.dart';
+import 'package:lawapp/theme/adaptive_layout.dart';
 import 'package:lawapp/theme/app_colors.dart';
 
 class HomeNewsletterSection extends StatelessWidget {
@@ -11,6 +12,7 @@ class HomeNewsletterSection extends StatelessWidget {
     required this.items,
     required this.currentPage,
     required this.onPageChanged,
+    this.onMoreTap,
   });
 
   static const double _itemGap = 14;
@@ -20,16 +22,22 @@ class HomeNewsletterSection extends StatelessWidget {
   final List<HomeNewsletterItem> items;
   final int currentPage;
   final ValueChanged<int> onPageChanged;
+  final VoidCallback? onMoreTap;
 
   @override
   Widget build(BuildContext context) {
+    final extraHeight = context.adaptiveBuffer(44);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const HomeSectionTitle(title: '法律新知小報'),
+        _SectionHeader(
+          title: '法律新知小報',
+          onMoreTap: onMoreTap,
+        ),
         SizedBox(height: 20.h),
         SizedBox(
-          height: _cardHeight.h,
+          height: _cardHeight.h + extraHeight,
           child: PageView.builder(
             controller: controller,
             itemCount: items.length,
@@ -55,6 +63,38 @@ class HomeNewsletterSection extends StatelessWidget {
                     : const Color(0xFFD8D0C4),
                 borderRadius: BorderRadius.circular(999.r),
               ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  const _SectionHeader({
+    required this.title,
+    this.onMoreTap,
+  });
+
+  final String title;
+  final VoidCallback? onMoreTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        HomeSectionTitle(title: title),
+        const Spacer(),
+        GestureDetector(
+          onTap: onMoreTap,
+          behavior: HitTestBehavior.opaque,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
+            child: Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 18.sp,
+              color: Colors.black,
             ),
           ),
         ),
@@ -154,27 +194,34 @@ class _NewsletterCard extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 2.h),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _Action(
-                  icon: Icons.favorite_border_rounded,
-                  color: const Color(0xFFD85A53),
-                  label: item.likes,
+                Expanded(
+                  child: _Action(
+                    icon: Icons.favorite_border_rounded,
+                    color: const Color(0xFFD85A53),
+                    label: item.likes,
+                  ),
                 ),
-                _Action(
-                  icon: Icons.share_outlined,
-                  color: const Color(0xFF9B874A),
-                  label: item.shares,
+                Expanded(
+                  child: _Action(
+                    icon: Icons.share_outlined,
+                    color: const Color(0xFF9B874A),
+                    label: item.shares,
+                  ),
                 ),
-                _Action(
-                  icon: Icons.comment_rounded,
-                  color: const Color(0xFF4F8F36),
-                  label: item.comments,
+                Expanded(
+                  child: _Action(
+                    icon: Icons.comment_rounded,
+                    color: const Color(0xFF4F8F36),
+                    label: item.comments,
+                  ),
                 ),
-                _Action(
-                  icon: Icons.download_rounded,
-                  color: const Color(0xFF4A8E88),
-                  label: item.downloads,
+                Expanded(
+                  child: _Action(
+                    icon: Icons.download_rounded,
+                    color: const Color(0xFF4A8E88),
+                    label: item.downloads,
+                  ),
                 ),
               ],
             ),
@@ -190,9 +237,11 @@ class _NewsletterImageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final extraHeight = context.adaptiveBuffer(16);
+
     return Container(
       width: 130.w,
-      height: 110.h,
+      height: 110.h + extraHeight,
       decoration: BoxDecoration(
         color: const Color(0xFFB9B4B4),
         borderRadius: BorderRadius.circular(20.r),
@@ -228,20 +277,25 @@ class _Action extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, color: color.withValues(alpha: 0.92), size: 19.sp),
-        SizedBox(width: 5.w),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w500,
-            color: AppColors.textPrimary.withValues(alpha: 0.72),
-          ),
+    return Center(
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: color.withValues(alpha: 0.92), size: 19.sp),
+            SizedBox(width: 5.w),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 13.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors.textPrimary.withValues(alpha: 0.72),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

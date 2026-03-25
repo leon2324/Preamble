@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lawapp/theme/adaptive_layout.dart';
 
 class AppSearchBar extends StatefulWidget {
   const AppSearchBar({
@@ -31,11 +32,14 @@ class _AppSearchBarState extends State<AppSearchBar> {
 
   @override
   Widget build(BuildContext context) {
+    final extraHeight = context.adaptiveBuffer(10);
+    final fieldHeight = 52 + extraHeight;
+
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 18, 16, 8),
         child: Container(
-          height: 52,
+          height: fieldHeight,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
@@ -53,6 +57,7 @@ class _AppSearchBarState extends State<AppSearchBar> {
             focusNode: _focusNode,
             onSubmitted: (_) => FocusScope.of(context).unfocus(),
             onTapOutside: (_) => FocusScope.of(context).unfocus(),
+            textAlignVertical: TextAlignVertical.center,
             decoration: InputDecoration(
               hintText: widget.hintText,
               hintStyle: const TextStyle(color: Color(0xFF98A2B3)),
@@ -61,7 +66,10 @@ class _AppSearchBarState extends State<AppSearchBar> {
                 Icons.search_rounded,
                 color: Color(0xFF667085),
               ),
-              contentPadding: const EdgeInsets.symmetric(vertical: 15),
+              isCollapsed: true,
+              contentPadding: EdgeInsets.symmetric(
+                vertical: fieldHeight * 0.28,
+              ),
             ),
           ),
         ),

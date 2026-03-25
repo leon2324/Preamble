@@ -2,7 +2,8 @@ import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/Reuseable/search_row_round_icon.dart';
+import 'package:lawapp/components/search/search_row_round_icon.dart';
+import 'package:lawapp/theme/adaptive_layout.dart';
 import 'package:lawapp/theme/app_colors.dart';
 
 class SearchRowHomePage extends StatefulWidget {
@@ -10,10 +11,12 @@ class SearchRowHomePage extends StatefulWidget {
     super.key,
     required this.controller,
     required this.collapseProgress,
+    this.hintText = '快速搜尋',
   });
 
   final TextEditingController controller;
   final double collapseProgress;
+  final String hintText;
 
   @override
   State<SearchRowHomePage> createState() => _SearchRowHomePageState();
@@ -65,8 +68,9 @@ class _SearchRowHomePageState extends State<SearchRowHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final textBuffer = context.adaptiveBuffer(8);
     final buttonWidth = 59.w;
-    final buttonHeight = 47.h;
+    final buttonHeight = 47.h + textBuffer;
     final effectiveCollapseProgress =
         _isSearchFocused ? 1.0 : widget.collapseProgress;
     final currentShadow = _searchShadow(widget.collapseProgress);
@@ -134,7 +138,7 @@ class _SearchRowHomePageState extends State<SearchRowHomePage> {
                   onTapOutside: (_) => FocusScope.of(context).unfocus(),
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputDecoration(
-                    hintText: '快速搜尋',
+                    hintText: widget.hintText,
                     hintStyle: TextStyle(
                       fontSize: 17.sp,
                       fontWeight: FontWeight.w400,
