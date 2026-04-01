@@ -45,7 +45,7 @@ extension AdaptiveLayout on BuildContext {
         searchBarTopOffset: 55,
         contentTopPadding: 166,
         contentBottomPadding: 148,
-        topMaskHeight: 150,
+        topMaskHeight: 112,
       );
     }
 

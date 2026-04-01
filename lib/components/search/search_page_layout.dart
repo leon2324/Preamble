@@ -33,6 +33,7 @@ class SearchPageLayout extends StatefulWidget {
 
 class _SearchPageLayoutState extends State<SearchPageLayout> {
   double _titleStretch = 0;
+  double _searchCollapseProgress = 0;
 
   bool _handleScrollNotification(ScrollNotification notification) {
     if (notification.metrics.axis != Axis.vertical || notification.depth != 0) {
@@ -41,12 +42,24 @@ class _SearchPageLayoutState extends State<SearchPageLayout> {
 
     final nextStretch =
         notification.metrics.pixels < 0 ? -notification.metrics.pixels : 0.0;
-    if ((nextStretch - _titleStretch).abs() < 0.5) {
+    final nextCollapseProgress = notification.metrics.pixels <= 0
+        ? 0.0
+        : (notification.metrics.pixels / 56).clamp(0.0, 1.0);
+
+    final shouldUpdateStretch = (nextStretch - _titleStretch).abs() >= 0.5;
+    final shouldUpdateCollapse =
+        (nextCollapseProgress - _searchCollapseProgress).abs() >= 0.01;
+    if (!shouldUpdateStretch && !shouldUpdateCollapse) {
       return false;
     }
 
     setState(() {
-      _titleStretch = nextStretch;
+      if (shouldUpdateStretch) {
+        _titleStretch = nextStretch;
+      }
+      if (shouldUpdateCollapse) {
+        _searchCollapseProgress = nextCollapseProgress;
+      }
     });
 
     return false;
@@ -56,6 +69,7 @@ class _SearchPageLayoutState extends State<SearchPageLayout> {
   Widget build(BuildContext context) {
     final layout = context.homeSearchLayout;
     final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
+    final keyboardInset = MediaQuery.of(context).viewInsets.bottom;
     final searchBarBottom = layout.searchBarTopOffset.h + 74.h;
     final hasPinnedHeader =
         widget.headerTitle != null && widget.headerSubtitle != null;
@@ -64,7 +78,8 @@ class _SearchPageLayoutState extends State<SearchPageLayout> {
     final contentTopPadding = hasPinnedHeader
         ? headerTop + headerHeight + 14.h
         : context.searchPageContentTopPadding;
-    final contentBottomPadding = context.pageContentBottomPadding + 24;
+    final contentBottomPadding =
+        context.pageContentBottomPadding + 24 + keyboardInset;
     final titleMaskTop = headerTop + (headerHeight * 0.34);
     final titleMaskHeight = hasPinnedHeader ? 116.h : 0.0;
     final topBackdropHeight = hasPinnedHeader ? titleMaskTop + 8.h : 0.0;
@@ -139,7 +154,7 @@ class _SearchPageLayoutState extends State<SearchPageLayout> {
           right: 0,
           child: SearchRowHomePage(
             controller: widget.controller,
-            collapseProgress: 0,
+            collapseProgress: _searchCollapseProgress,
             hintText: widget.hintText,
           ),
         ),

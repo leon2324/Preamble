@@ -82,67 +82,82 @@ class _HomePageState extends State<HomePage> {
     return Stack(
       children: [
         Positioned.fill(
-          child: CustomScrollView(
-            controller: scrollController,
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    16.w,
-                    layout.contentTopPadding.h,
-                    16.w,
-                    layout.contentBottomPadding.h,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      HomeNewsSection(
-                        items: homeNewsItems,
-                        onMoreTap: () => widget.onNavigateToTab(3),
-                      ),
-                      SizedBox(height: _sectionGap.h),
-                      HomeNewsletterSection(
-                        controller: newsletterController,
-                        items: homeNewsletterItems,
-                        currentPage: newsletterPage,
-                        onPageChanged: (index) {
-                          setState(() {
-                            newsletterPage = index;
-                          });
-                        },
-                        onMoreTap: () => widget.onNavigateToTab(1),
-                      ),
-                      SizedBox(height: _sectionGap.h),
-                      const HomeTrackedTopicsSection(items: homeTrackedTopics),
-                      SizedBox(height: _sectionGap.h),
-                      HomeQuizSection(
-                        question: currentQuizQuestion,
-                        selectedQuizIndex: selectedQuizIndex,
-                        incorrectQuizIndices: incorrectQuizIndices,
-                        isSolved: isQuizSolved,
-                        onNextQuestion: _showNextQuizQuestion,
-                        onSelect: (index) {
-                          setState(() {
-                            selectedQuizIndex = index;
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: CustomScrollView(
+              controller: scrollController,
+              physics: const BouncingScrollPhysics(),
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      16.w,
+                      layout.contentTopPadding.h,
+                      16.w,
+                      (layout.contentBottomPadding +
+                              MediaQuery.of(context).viewInsets.bottom)
+                          .h,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        HomeNewsSection(
+                          items: homeNewsItems,
+                          onMoreTap: () => widget.onNavigateToTab(3),
+                        ),
+                        SizedBox(height: _sectionGap.h),
+                        HomeNewsletterSection(
+                          controller: newsletterController,
+                          items: homeNewsletterItems,
+                          currentPage: newsletterPage,
+                          onPageChanged: (index) {
+                            setState(() {
+                              newsletterPage = index;
+                            });
+                          },
+                          onMoreTap: () => widget.onNavigateToTab(1),
+                        ),
+                        SizedBox(height: _sectionGap.h),
+                        HomeTrackedTopicsSection(
+                          items: homeTrackedTopics,
+                          onMoreTap: () => widget.onNavigateToTab(2),
+                        ),
+                        SizedBox(height: _sectionGap.h),
+                        HomeQuizSection(
+                          question: currentQuizQuestion,
+                          selectedQuizIndex: selectedQuizIndex,
+                          incorrectQuizIndices: incorrectQuizIndices,
+                          isSolved: isQuizSolved,
+                          onNextQuestion: _showNextQuizQuestion,
+                          onMoreTap: () => widget.onNavigateToTab(1),
+                          onSelect: (index) {
+                            setState(() {
+                              selectedQuizIndex = index;
 
-                            if (isQuizSolved) return;
+                              if (isQuizSolved) return;
 
-                            if (currentQuizQuestion.options[index].isCorrect) {
-                              isQuizSolved = true;
-                            } else {
-                              incorrectQuizIndices.add(index);
-                            }
-                          });
-                        },
-                      ),
-                      SizedBox(height: _sectionGap.h),
-                      const HomeDiscussionSection(),
-                    ],
+                              if (currentQuizQuestion
+                                  .options[index].isCorrect) {
+                                isQuizSolved = true;
+                              } else {
+                                incorrectQuizIndices.add(index);
+                              }
+                            });
+                          },
+                        ),
+                        SizedBox(height: _sectionGap.h),
+                        HomeDiscussionSection(
+                          onMoreTap: () => widget.onNavigateToTab(3),
+                          feed: homeDiscussionFeed,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         Positioned(
@@ -166,12 +181,12 @@ class _HomePageState extends State<HomePage> {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    stops: const [0, 0.14, 0.38, 0.68, 1],
+                    stops: const [0, 0.12, 0.28, 0.52, 1],
                     colors: [
                       AppColors.background,
-                      AppColors.background,
-                      AppColors.background.withValues(alpha: 0.72),
-                      AppColors.background.withValues(alpha: 0.3),
+                      AppColors.background.withValues(alpha: 0.92),
+                      AppColors.background.withValues(alpha: 0.56),
+                      AppColors.background.withValues(alpha: 0.18),
                       AppColors.background.withValues(alpha: 0),
                     ],
                   ),

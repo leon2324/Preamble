@@ -8,19 +8,21 @@ class HomeTrackedTopicsSection extends StatelessWidget {
   const HomeTrackedTopicsSection({
     super.key,
     required this.items,
+    required this.onMoreTap,
   });
 
   static const double _itemGap = 16;
 
   final List<HomeTrackedTopic> items;
+  final VoidCallback onMoreTap;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const HomeSectionTitle(title: '你關心的'),
-        SizedBox(height: 20.h),
+        HomeSectionTitle(title: '你關心的', onTap: onMoreTap),
+        SizedBox(height: 15.h),
         ...List.generate(
           items.length,
           (index) => Padding(
@@ -64,7 +66,7 @@ class HomeTrackedTopicsSection extends StatelessWidget {
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            fontSize: 18.sp,
+                            fontSize: 15.sp,
                             height: 1.28,
                             fontWeight: FontWeight.w500,
                             color: AppColors.textPrimary,

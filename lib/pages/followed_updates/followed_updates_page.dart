@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lawapp/components/search/search_page_layout.dart';
-import 'package:lawapp/components/shared/page_section_header.dart';
 import 'package:lawapp/data/notifications_mock_data.dart';
-import 'package:lawapp/theme/adaptive_layout.dart';
 
 class FollowedUpdatesPage extends StatefulWidget {
   const FollowedUpdatesPage({super.key});

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lawapp/components/home/home_content.dart';
 import 'package:lawapp/components/home/home_section_title.dart';
 import 'package:lawapp/theme/app_colors.dart';
@@ -13,6 +14,7 @@ class HomeQuizSection extends StatefulWidget {
     required this.incorrectQuizIndices,
     required this.isSolved,
     required this.onNextQuestion,
+    required this.onMoreTap,
     required this.onSelect,
   });
 
@@ -23,6 +25,7 @@ class HomeQuizSection extends StatefulWidget {
   final Set<int> incorrectQuizIndices;
   final bool isSolved;
   final VoidCallback onNextQuestion;
+  final VoidCallback onMoreTap;
   final ValueChanged<int> onSelect;
 
   @override
@@ -30,7 +33,14 @@ class HomeQuizSection extends StatefulWidget {
 }
 
 class _HomeQuizSectionState extends State<HomeQuizSection> {
+  static const String _nextQuestionIconSvg = '''
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.0" stroke="currentColor">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+</svg>
+''';
+
   final Set<String> _activeTerms = <String>{};
+  bool _isNextIconPressed = false;
 
   bool get _showHint =>
       widget.incorrectQuizIndices.isNotEmpty && !widget.isSolved;
@@ -62,6 +72,13 @@ class _HomeQuizSectionState extends State<HomeQuizSection> {
     widget.onNextQuestion();
   }
 
+  void _setNextIconPressed(bool value) {
+    if (_isNextIconPressed == value) return;
+    setState(() {
+      _isNextIconPressed = value;
+    });
+  }
+
   @override
   void didUpdateWidget(covariant HomeQuizSection oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -82,8 +99,8 @@ class _HomeQuizSectionState extends State<HomeQuizSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const HomeSectionTitle(title: '給你的小任務(*¯︶¯*)'),
-        SizedBox(height: 20.h),
+        HomeSectionTitle(title: '給你的小任務(*¯︶¯*)', onTap: widget.onMoreTap),
+        SizedBox(height: 15.h),
         Container(
           padding: EdgeInsets.fromLTRB(16.w, 18.h, 16.w, 16.h),
           decoration: BoxDecoration(
@@ -114,13 +131,32 @@ class _HomeQuizSectionState extends State<HomeQuizSection> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: GestureDetector(
+                        onTapDown: (_) => _setNextIconPressed(true),
+                        onTapUp: (_) => _setNextIconPressed(false),
+                        onTapCancel: () => _setNextIconPressed(false),
                         onTap: _showNextQuestion,
                         child: Padding(
                           padding: EdgeInsets.only(left: 8.w),
-                          child: Icon(
-                            Icons.autorenew_rounded,
-                            size: 22.sp,
-                            color: const Color(0xFF1F1B2D),
+                          child: AnimatedScale(
+                            scale: _isNextIconPressed ? 0.92 : 1,
+                            duration: const Duration(milliseconds: 120),
+                            curve: Curves.easeOut,
+                            child: AnimatedRotation(
+                              turns: _isNextIconPressed ? -0.03 : 0,
+                              duration: const Duration(milliseconds: 120),
+                              curve: Curves.easeOut,
+                              child: SizedBox(
+                                width: 22.w,
+                                height: 22.w,
+                                child: SvgPicture.string(
+                                  _nextQuestionIconSvg,
+                                  colorFilter: const ColorFilter.mode(
+                                    Color(0xFF2B2F45),
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),

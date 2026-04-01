@@ -29,7 +29,7 @@ class HomeNewsSection extends StatelessWidget {
           title: '今日新聞',
           onMoreTap: onMoreTap,
         ),
-        SizedBox(height: 20.h),
+        SizedBox(height: 15.h),
         SizedBox(
           height: cardSize,
           child: ListView.separated(
@@ -59,23 +59,9 @@ class _SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        HomeSectionTitle(title: title),
-        const Spacer(),
-        GestureDetector(
-          onTap: onMoreTap,
-          behavior: HitTestBehavior.opaque,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
-            child: Icon(
-              Icons.arrow_forward_ios_rounded,
-              size: 18.sp,
-              color: Colors.black,
-            ),
-          ),
-        ),
-      ],
+    return HomeSectionTitle(
+      title: title,
+      onTap: onMoreTap,
     );
   }
 }
@@ -155,7 +141,7 @@ class _NewsCard extends StatelessWidget {
                               child: Text(
                                 'logo',
                                 style: TextStyle(
-                                  fontSize: 8.sp,
+                                  fontSize: 7.sp,
                                   fontWeight: FontWeight.w600,
                                   color: AppColors.textPrimary,
                                 ),
@@ -205,7 +191,7 @@ class _NewsCard extends StatelessWidget {
                                 child: Text(
                                   item.badge,
                                   style: TextStyle(
-                                    fontSize: 13.sp,
+                                    fontSize: 12.sp,
                                     fontWeight: FontWeight.w700,
                                     color: badgeStyle.textColor,
                                     letterSpacing: 0.2,
@@ -229,7 +215,7 @@ class _NewsCard extends StatelessWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            fontSize: 18.sp,
+                            fontSize: 15.sp,
                             height: 1.05,
                             fontWeight: FontWeight.w500,
                             color: AppColors.textPrimary,

@@ -58,7 +58,7 @@ class SelectAreaState extends State<SelectArea> {
             notificationFilterLabels[index],
             style: TextStyle(
               color: isSelected ? Colors.black : Colors.grey[600],
-              fontSize: 25,
+              fontSize: 20,
             ),
           ),
         ),

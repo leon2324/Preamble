@@ -75,7 +75,10 @@ class _MylawAppState extends State<MylawApp> {
       const KnowLawPage(),
       const FollowedUpdatesPage(),
       const TrendingPage(),
-      const AboutMePage(),
+      const AboutMePage(
+
+        
+      ),
     ];
 
     return MaterialApp(
@@ -102,6 +105,7 @@ class _MylawAppState extends State<MylawApp> {
       ),
       home: Scaffold(
         extendBody: false,
+        resizeToAvoidBottomInset: false,
         body: Builder(
           builder: (context) {
             final useTopSafeArea = !context.hasLargeTopInset;

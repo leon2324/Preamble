@@ -86,6 +86,293 @@ const homeTrackedTopics = [
   ),
 ];
 
+const homeDiscussionFeed = HomeDiscussionFeed(
+  collectionSlogan: '資料收集顯示：以下熱度由司法新聞、Google 與社群討論訊號彙整而成（mock data）。',
+  topics: [
+    HomeDiscussionTopic(
+      headline: '即將釋憲，究竟廢死還是維持死刑？',
+      title: '即將釋憲，究竟廢死還是維持死刑？',
+      heatScore: 92,
+      rank: 1,
+      dayChangePercent: 12,
+      weekRankDelta: 2,
+      overview:
+          '近日因定讞執行死刑槍決的 77 名囚犯提出死刑違憲，因此最高院提出釋憲，而結果將於 2023.09.20 在司法院官方 YouTube 全程直播公布。',
+      heatLabel: '下列資料是由此系統查詢次數、Google、社群話題趨勢資料提供，原因為AI判斷',
+      trendPoints: [
+        HomeDiscussionTrendPoint(dateLabel: '9/6', volumeLabel: '10 次'),
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/7',
+          volumeLabel: '50 次',
+          annotation: '司法院直播消息',
+        ),
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/8',
+          volumeLabel: '200 次',
+        ),
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/9',
+          volumeLabel: '50 次',
+          annotation: '他案新聞分流',
+        ),
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/10',
+          volumeLabel: '300 次',
+          annotation: '媒體重提釋憲',
+        ),
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/11',
+          volumeLabel: '420 次',
+          annotation: '網紅大量發言',
+        ),
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/12',
+          volumeLabel: '500 次',
+          annotation: '社群聲量維持',
+        ),
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/13',
+          volumeLabel: '800 次',
+          annotation: '今日',
+        ),
+      ],
+      timelineEvents: [
+        HomeDiscussionTimelineEvent(
+          pointIndex: 1,
+          timeLabel: '9/7 09:40',
+          description: '司法院釋出直播預告，話題快速升溫。',
+          impactLabel: '+18%',
+        ),
+        HomeDiscussionTimelineEvent(
+          pointIndex: 3,
+          timeLabel: '9/9 13:20',
+          description: '他案新聞分流，討論聲量短暫回落。',
+          impactLabel: '-9%',
+        ),
+        HomeDiscussionTimelineEvent(
+          pointIndex: 4,
+          timeLabel: '9/10 20:30',
+          description: '媒體重新聚焦釋憲內容，留言量回升。',
+          impactLabel: '+14%',
+        ),
+        HomeDiscussionTimelineEvent(
+          pointIndex: 5,
+          timeLabel: '9/11 22:10',
+          description: '網紅密集評論，社群互動持續攀高。',
+          impactLabel: '+11%',
+        ),
+      ],
+      poll: HomeDiscussionPoll(
+        prompt: '這一區只在要投票時出現',
+        options: [
+          HomeDiscussionPollOption(label: '支持廢死', votes: 1342),
+          HomeDiscussionPollOption(label: '反對廢死', votes: 1820),
+          HomeDiscussionPollOption(label: '還不確定', votes: 954),
+        ],
+      ),
+      latestComment: HomeDiscussionComment(
+        content: '我覺得死刑應該保留，因為一命償一命。',
+        submittedAt: '2025.09.13 21:10:07',
+        userHandle: '@user5525',
+      ),
+      tags: ['#刑法', '#死刑', '#人權', '#憲法釋憲'],
+    ),
+    HomeDiscussionTopic(
+      headline: '詐騙集團橫行，政府擬強化金融監管',
+      title: '詐騙集團橫行，政府擬強化金融監管',
+      heatScore: 88,
+      rank: 2,
+      dayChangePercent: 9,
+      weekRankDelta: 1,
+      overview: '近期詐騙金流案件攀升，政府預告提升高風險帳戶審查與跨行通報機制，引發「防詐效率」與「金融隱私」的兩派討論。',
+      heatLabel: '下列資料是由此系統查詢次數、Google、社群話題趨勢資料提供，原因為AI判斷',
+      trendPoints: [
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/6',
+          volumeLabel: '120 次',
+          annotation: '詐騙案新聞連發',
+        ),
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/8',
+          volumeLabel: '260 次',
+          annotation: '受害案例短影音擴散',
+        ),
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/10',
+          volumeLabel: '430 次',
+          annotation: '金管會預告新機制',
+        ),
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/12',
+          volumeLabel: '620 次',
+          annotation: '直播節目集中討論',
+        ),
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/13',
+          volumeLabel: '760 次',
+          annotation: '熱門關鍵字衝上前段',
+        ),
+      ],
+      timelineEvents: [
+        HomeDiscussionTimelineEvent(
+          pointIndex: 1,
+          timeLabel: '9/8 11:05',
+          description: '受害者案例短影音擴散，搜尋量上升。',
+          impactLabel: '+13%',
+        ),
+        HomeDiscussionTimelineEvent(
+          pointIndex: 2,
+          timeLabel: '9/10 15:40',
+          description: '金管會預告新機制，論壇討論翻倍。',
+          impactLabel: '+16%',
+        ),
+        HomeDiscussionTimelineEvent(
+          pointIndex: 3,
+          timeLabel: '9/12 21:00',
+          description: '直播節目連線受害者，留言量衝高。',
+          impactLabel: '+10%',
+        ),
+      ],
+      poll: null,
+      latestComment: HomeDiscussionComment(
+        content: '希望強化凍結效率，但要有更快的申訴流程。',
+        submittedAt: '2025.09.13 20:47:51',
+        userHandle: '@lin245',
+      ),
+      tags: ['#詐騙', '#金融監管', '#個資', '#金流'],
+    ),
+    HomeDiscussionTopic(
+      headline: '《勞基法》第 32 條修正通過，週工時改上限',
+      title: '《勞基法》第 32 條修正通過，週工時改上限',
+      heatScore: 79,
+      rank: 3,
+      dayChangePercent: 5,
+      weekRankDelta: -1,
+      overview: '法條修正後，企業排班彈性提高，但勞方擔心工時延長與補休落空。勞資雙方在「效率」與「過勞風險」之間意見分歧。',
+      heatLabel: '下列資料是由此系統查詢次數、Google、社群話題趨勢資料提供，原因為AI判斷',
+      trendPoints: [
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/6',
+          volumeLabel: '80 次',
+          annotation: '修法草案外流',
+        ),
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/8',
+          volumeLabel: '180 次',
+          annotation: '企業端表態支持',
+        ),
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/10',
+          volumeLabel: '390 次',
+          annotation: '勞團發聲反彈',
+        ),
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/12',
+          volumeLabel: '540 次',
+          annotation: '電視政論節目加溫',
+        ),
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/13',
+          volumeLabel: '670 次',
+          annotation: '修法條文懶人包瘋傳',
+        ),
+      ],
+      timelineEvents: [
+        HomeDiscussionTimelineEvent(
+          pointIndex: 1,
+          timeLabel: '9/8 10:15',
+          description: '企業端表態支持彈性排班，熱度墊高。',
+          impactLabel: '+8%',
+        ),
+        HomeDiscussionTimelineEvent(
+          pointIndex: 2,
+          timeLabel: '9/10 18:20',
+          description: '勞團反彈聲量發酵，議題再升溫。',
+          impactLabel: '+12%',
+        ),
+        HomeDiscussionTimelineEvent(
+          pointIndex: 3,
+          timeLabel: '9/12 20:45',
+          description: '政論節目集中討論，討論量維持高檔。',
+          impactLabel: '+6%',
+        ),
+      ],
+      poll: null,
+      latestComment: HomeDiscussionComment(
+        content: '如果要彈性，至少要把加班費與補休機制寫更清楚。',
+        submittedAt: '2025.09.13 19:33:20',
+        userHandle: '@may_work',
+      ),
+      tags: ['#勞基法', '#工時', '#加班', '#勞權'],
+    ),
+    HomeDiscussionTopic(
+      headline: '多起職場性騷擾案曝光，性平教育成焦點',
+      title: '多起職場性騷擾案曝光，性平教育成焦點',
+      heatScore: 74,
+      rank: 4,
+      dayChangePercent: 3,
+      weekRankDelta: 0,
+      overview: '多起案件在短時間內曝光，企業內部通報流程與主管責任被放大檢視，社群上出現大量「如何保護申訴人」的實務討論。',
+      heatLabel: '下列資料是由此系統查詢次數、Google、社群話題趨勢資料提供，原因為AI判斷',
+      trendPoints: [
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/6',
+          volumeLabel: '40 次',
+          annotation: '首波爆料文出現',
+        ),
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/8',
+          volumeLabel: '160 次',
+          annotation: '企業內訓議題發酵',
+        ),
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/10',
+          volumeLabel: '280 次',
+          annotation: '受害者經驗串擴散',
+        ),
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/12',
+          volumeLabel: '510 次',
+          annotation: '名人聲援帶動話題',
+        ),
+        HomeDiscussionTrendPoint(
+          dateLabel: '9/13',
+          volumeLabel: '690 次',
+          annotation: '制度改革訴求升溫',
+        ),
+      ],
+      timelineEvents: [
+        HomeDiscussionTimelineEvent(
+          pointIndex: 1,
+          timeLabel: '9/8 14:10',
+          description: '企業內訓與申訴流程議題持續發酵。',
+          impactLabel: '+7%',
+        ),
+        HomeDiscussionTimelineEvent(
+          pointIndex: 2,
+          timeLabel: '9/10 23:00',
+          description: '受害者經驗串擴散，社群討論集中。',
+          impactLabel: '+9%',
+        ),
+        HomeDiscussionTimelineEvent(
+          pointIndex: 3,
+          timeLabel: '9/12 19:25',
+          description: '名人聲援後，改革訴求再次升高。',
+          impactLabel: '+8%',
+        ),
+      ],
+      poll: null,
+      latestComment: HomeDiscussionComment(
+        content: '匿名通報後若沒有保護措施，很多人還是不敢說。',
+        submittedAt: '2025.09.13 22:05:44',
+        userHandle: '@eva_legal',
+      ),
+      tags: ['#職場性平', '#性騷擾', '#申訴機制', '#勞動法'],
+    ),
+  ],
+  actionLabels: ['查看更多留言', '追蹤', '進入議題'],
+);
+
 const homeQuizQuestions = [
   HomeQuizQuestion(
     question: '請問下列何者為公共危險罪之定義？',

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lawapp/components/search/search_page_layout.dart';
-import 'package:lawapp/theme/adaptive_layout.dart';
 
 class AboutMePage extends StatefulWidget {
   const AboutMePage({super.key});

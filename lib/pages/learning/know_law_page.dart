@@ -3,7 +3,6 @@ import 'package:lawapp/components/home/home_content.dart';
 import 'package:lawapp/components/search/search_page_layout.dart';
 import 'package:lawapp/components/shared/page_section_header.dart';
 import 'package:lawapp/data/home_mock_data.dart';
-import 'package:lawapp/theme/adaptive_layout.dart';
 
 class KnowLawPage extends StatefulWidget {
   const KnowLawPage({super.key});

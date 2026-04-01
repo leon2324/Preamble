@@ -35,7 +35,7 @@ class HomeNewsletterSection extends StatelessWidget {
           title: '法律新知小報',
           onMoreTap: onMoreTap,
         ),
-        SizedBox(height: 20.h),
+        SizedBox(height: 15.h),
         SizedBox(
           height: _cardHeight.h + extraHeight,
           child: PageView.builder(
@@ -82,23 +82,9 @@ class _SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        HomeSectionTitle(title: title),
-        const Spacer(),
-        GestureDetector(
-          onTap: onMoreTap,
-          behavior: HitTestBehavior.opaque,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
-            child: Icon(
-              Icons.arrow_forward_ios_rounded,
-              size: 18.sp,
-              color: Colors.black,
-            ),
-          ),
-        ),
-      ],
+    return HomeSectionTitle(
+      title: title,
+      onTap: onMoreTap,
     );
   }
 }
@@ -138,7 +124,7 @@ class _NewsletterCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 19.sp,
+                    fontSize: 18.sp,
                     height: 1.15,
                     fontWeight: FontWeight.w600,
                     color: const Color(0xFF2B4499),
@@ -158,7 +144,7 @@ class _NewsletterCard extends StatelessWidget {
                               maxLines: 4,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                fontSize: 13.sp,
+                                fontSize: 12.sp,
                                 height: 1.45,
                                 fontWeight: FontWeight.w400,
                                 color: const Color(0xFF8A8A8A),
@@ -170,7 +156,7 @@ class _NewsletterCard extends StatelessWidget {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                fontSize: 11.sp,
+                                fontSize: 10.sp,
                                 height: 1.2,
                                 fontWeight: FontWeight.w500,
                                 color: const Color(0xFF46A01E),
@@ -253,7 +239,7 @@ class _NewsletterImageCard extends StatelessWidget {
             '跟內容有關的小插圖',
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 11.sp,
+              fontSize: 10.sp,
               fontWeight: FontWeight.w500,
               color: AppColors.textPrimary,
             ),
@@ -288,7 +274,7 @@ class _Action extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                fontSize: 13.sp,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
                 color: AppColors.textPrimary.withValues(alpha: 0.72),
               ),

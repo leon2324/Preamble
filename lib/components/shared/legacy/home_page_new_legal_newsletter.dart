@@ -69,7 +69,7 @@ class _HomePageNewLegalNewsletterState
               Text(
                 '法律新知小報',
                 style: TextStyle(
-                  fontSize: 25.sp,
+                  fontSize: 20.sp,
                 ),
               ),
               IconButton(

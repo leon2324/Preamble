@@ -29,7 +29,7 @@ class NewsTodayAtHomePage extends StatelessWidget {
               const Text(
                 '今日新聞',
                 style: TextStyle(
-                  fontSize: 25,
+                  fontSize: 20,
                 ),
               ),
               IconButton(
