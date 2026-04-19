@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lawapp/components/search/search_page_layout.dart';
-import 'package:lawapp/data/notifications_mock_data.dart';
+import 'package:lawapp/data/mock_data/followed_updates/followed_updates_mock_data.dart';
 
+/// 追蹤頁展示「我已追蹤」主題的最新整理與更新。
 class FollowedUpdatesPage extends StatefulWidget {
   const FollowedUpdatesPage({super.key});
 

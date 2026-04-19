@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lawapp/components/search/search_page_layout.dart';
 
+/// 我的頁目前還是骨架階段，但已先沿用共用搜尋頁容器。
 class AboutMePage extends StatefulWidget {
   const AboutMePage({super.key});
 

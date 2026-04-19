@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:lawapp/components/search/search_bar.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
 
+/// 早期的熱門頁草稿，保留分類九宮格實驗版供後續參考。
 class TrendPage extends StatefulWidget {
   const TrendPage({super.key});
 
@@ -22,6 +23,7 @@ class TrendState extends State<TrendPage> {
 
   @override
   Widget build(BuildContext context) {
+    // 字級放大時同步降低格子長寬比，避免分類文字被擠到兩行。
     final textScaleProgress =
         ((context.adaptiveTextScale - 1.0) / 0.4).clamp(0.0, 1.0);
     final gridAspectRatio = lerpDouble(1.5, 1.15, textScaleProgress) ?? 1.5;

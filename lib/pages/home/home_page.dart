@@ -6,10 +6,11 @@ import 'package:lawapp/components/home/home_newsletter_section.dart';
 import 'package:lawapp/components/home/home_quiz_section.dart';
 import 'package:lawapp/components/home/home_tracked_topics_section.dart';
 import 'package:lawapp/components/search/search_row_home_page.dart';
-import 'package:lawapp/data/home_mock_data.dart';
+import 'package:lawapp/data/mock_data/home/home_mock_data.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
 import 'package:lawapp/theme/app_colors.dart';
 
+/// 首頁整合新聞、法律小報、追蹤議題、小任務與熱門討論等主要入口。
 class HomePage extends StatefulWidget {
   const HomePage({
     super.key,
@@ -43,6 +44,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _handleScroll() {
+    // 搜尋列收合程度直接跟 scroll offset 綁定，
+    // 讓首頁不用再維護額外的動畫 controller。
     final nextProgress = (scrollController.offset / 56).clamp(0.0, 1.0);
     if ((nextProgress - searchCollapseProgress).abs() < 0.01) return;
     setState(() {
@@ -96,9 +99,10 @@ class _HomePageState extends State<HomePage> {
                       16.w,
                       layout.contentTopPadding.h,
                       16.w,
-                      (layout.contentBottomPadding +
-                              MediaQuery.of(context).viewInsets.bottom)
-                          .h,
+                      // 直接加上鍵盤高度，確保底部留言欄在彈出鍵盤後
+                      // 仍然有空間可以捲到可視範圍。
+                      layout.contentBottomPadding.h +
+                          MediaQuery.of(context).viewInsets.bottom,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

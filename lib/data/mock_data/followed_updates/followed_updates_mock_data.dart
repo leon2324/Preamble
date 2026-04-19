@@ -1,3 +1,4 @@
+/// 追蹤更新頁的假資料。
 class TrackedTopicItem {
   const TrackedTopicItem({
     required this.tag,
@@ -28,4 +29,5 @@ const trackedTopicItems = [
   ),
 ];
 
+/// 目前頁面上方的快速篩選 chips。
 const notificationFilterLabels = ['案件', '法律', '追蹤中'];

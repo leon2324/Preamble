@@ -1,15 +1,39 @@
-# Uncomment the next line to define a global platform for your project
-# platform :ios, '13.0'
+# iOS 最低版本固定為 13.0，避免 CocoaPods 自動推測版本造成警告，也讓日後維護時清楚知道 App 支援範圍。
+platform :ios, '13.0'
+
+# 這段會從 Flutter 產生的設定檔讀出 FLUTTER_ROOT，CocoaPods 才能找到 Flutter 提供的 podhelper。
+generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+unless File.exist?(generated_xcode_build_settings_path)
+  raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, run flutter pub get first"
+end
+
+File.foreach(generated_xcode_build_settings_path) do |line|
+  matches = line.match(/FLUTTER_ROOT\=(.*)/)
+  if matches
+    require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), matches[1].strip)
+    break
+  end
+end
+
+# 初始化 Flutter iOS 的 CocoaPods 設定，讓 shared_preferences、url_launcher 這類 Flutter plugin 能轉成 iOS 原生 Pods。
+flutter_ios_podfile_setup
 
 target 'Runner' do
-  # Comment the next line if you don't want to use dynamic frameworks
+  # 使用 framework 方式整合 Pods，符合目前專案既有設定。
   use_frameworks!
 
-  # Pods for Runner
+  # 安裝 pubspec.yaml 內 Flutter plugins 對應的 iOS Pods，例如 shared_preferences_foundation。
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
   target 'RunnerTests' do
     inherit! :search_paths
-    # Pods for testing
   end
 
+end
+
+# Flutter 需要在每個 Pod target 補上額外的 iOS build settings，否則 plugin 可能找不到 Flutter module。
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+  end
 end

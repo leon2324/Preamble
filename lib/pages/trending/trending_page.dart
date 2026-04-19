@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:lawapp/components/home/home_content.dart';
 import 'package:lawapp/components/search/search_page_layout.dart';
 import 'package:lawapp/components/shared/page_section_header.dart';
-import 'package:lawapp/data/home_mock_data.dart';
-import 'package:lawapp/data/international_case_mock_data.dart';
+import 'package:lawapp/data/mock_data/home/home_mock_data.dart';
+import 'package:lawapp/data/mock_data/trending/trending_mock_data.dart';
 
+/// 紀事頁把社會案件與相關爭點拆成較完整的清單版本。
 class TrendingPage extends StatefulWidget {
   const TrendingPage({super.key});
 
@@ -25,9 +26,9 @@ class _TrendingPageState extends State<TrendingPage> {
   Widget build(BuildContext context) {
     return SearchPageLayout(
       controller: controller,
-      hintText: '搜尋新聞、熱門議題',
-      headerTitle: '今日新聞',
-      headerSubtitle: '先看今天最值得關注的公共議題與法律相關新聞。',
+      hintText: '搜尋社會案件、爭點、人物...',
+      headerTitle: '紀事',
+      headerSubtitle: '整理過往社會案件的脈絡、爭點與後續討論。',
       builder: (context, layout, contentTopPadding, contentBottomPadding) =>
           ListView(
         padding: EdgeInsets.fromLTRB(
@@ -48,8 +49,8 @@ class _TrendingPageState extends State<TrendingPage> {
           }),
           const SizedBox(height: 28),
           const PageSectionHeader(
-            title: '熱門討論',
-            subtitle: '這裡整理大家正在熱議的案件、爭點與觀點碰撞。',
+            title: '案件脈絡',
+            subtitle: '從事件背景、法律爭點到社會討論，快速掌握案件為什麼值得回看。',
             titleSize: 24,
           ),
           const SizedBox(height: 18),
@@ -147,7 +148,7 @@ class _HotTopicCard extends StatelessWidget {
           Row(
             children: [
               const Icon(
-                Icons.local_fire_department_rounded,
+                Icons.article_rounded,
                 color: Color(0xFFC96B3B),
               ),
               const SizedBox(width: 8),
@@ -172,7 +173,7 @@ class _HotTopicCard extends StatelessWidget {
             ),
             child: const Center(
               child: Text(
-                '趨勢圖與留言預覽',
+                '案件時間線與資料摘要',
                 style: TextStyle(
                   fontSize: 14,
                   color: Color(0xFF52607A),

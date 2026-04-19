@@ -6,17 +6,26 @@ import 'package:lawapp/components/search/search_row_round_icon.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
 import 'package:lawapp/theme/app_colors.dart';
 
+/// 首頁專用搜尋列。
+///
+/// 跟一般搜尋頁不同，這裡會依照 scroll 進度收合左側通知按鈕。
 class SearchRowHomePage extends StatefulWidget {
   const SearchRowHomePage({
     super.key,
     required this.controller,
     required this.collapseProgress,
     this.hintText = '快速搜尋',
+    this.showNotificationCapsule = true,
+    this.hasShadow = true,
+    this.surfaceColor = const Color.fromARGB(255, 224, 224, 224),
   });
 
   final TextEditingController controller;
   final double collapseProgress;
   final String hintText;
+  final bool showNotificationCapsule;
+  final bool hasShadow;
+  final Color surfaceColor;
 
   @override
   State<SearchRowHomePage> createState() => _SearchRowHomePageState();
@@ -27,6 +36,7 @@ class _SearchRowHomePageState extends State<SearchRowHomePage> {
   bool _isSearchFocused = false;
 
   List<BoxShadow> _searchShadow(double progress) {
+    // 收合前後的陰影稍微不同，視覺上才不會像兩個完全分離的元件。
     final color = Color.lerp(
       const Color(0x6C5C5C5C),
       const Color.fromARGB(255, 92, 92, 92),
@@ -73,52 +83,60 @@ class _SearchRowHomePageState extends State<SearchRowHomePage> {
     final buttonHeight = 47.h + textBuffer;
     final effectiveCollapseProgress =
         _isSearchFocused ? 1.0 : widget.collapseProgress;
-    final currentShadow = _searchShadow(widget.collapseProgress);
-    final leftIconWidth =
-        lerpDouble(buttonWidth, 0, effectiveCollapseProgress) ?? 0;
-    final searchLeftMargin =
-        lerpDouble(10.w, 0, effectiveCollapseProgress) ?? 0;
+    final currentShadow = widget.hasShadow
+        ? _searchShadow(widget.collapseProgress)
+        : <BoxShadow>[];
+    // 一旦輸入框取得焦點，就直接視為完全展開，避免使用者打字時
+    // 搜尋列還被 scroll 位置影響而晃動。
+    final leftIconWidth = widget.showNotificationCapsule
+        ? lerpDouble(buttonWidth, 0, effectiveCollapseProgress) ?? 0
+        : 0.0;
+    final searchLeftMargin = widget.showNotificationCapsule
+        ? lerpDouble(10.w, 0, effectiveCollapseProgress) ?? 0
+        : 0.0;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 8.h),
       child: Row(
         children: [
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 140),
-            curve: Curves.easeOut,
-            width: leftIconWidth,
-            child: AnimatedOpacity(
-              duration: const Duration(milliseconds: 120),
-              opacity: effectiveCollapseProgress < 0.92 ? 1 : 0,
-              child: IgnorePointer(
-                ignoring: effectiveCollapseProgress >= 0.92,
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    RoundIconButton(
-                      icon: Icons.notifications_none,
-                      onPressed: () {},
-                      width: buttonWidth,
-                      height: buttonHeight,
-                      boxShadow: currentShadow,
-                    ),
-                    Positioned(
-                      top: 6.h,
-                      right: 6.w,
-                      child: Container(
-                        width: 8.w,
-                        height: 8.w,
-                        decoration: const BoxDecoration(
-                          color: AppColors.info,
-                          shape: BoxShape.circle,
+          if (widget.showNotificationCapsule)
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 140),
+              curve: Curves.easeOut,
+              width: leftIconWidth,
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 120),
+                opacity: effectiveCollapseProgress < 0.92 ? 1 : 0,
+                child: IgnorePointer(
+                  ignoring: effectiveCollapseProgress >= 0.92,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      RoundIconButton(
+                        icon: Icons.notifications_none,
+                        onPressed: () {},
+                        width: buttonWidth,
+                        height: buttonHeight,
+                        boxShadow: currentShadow,
+                        backgroundColor: widget.surfaceColor,
+                      ),
+                      Positioned(
+                        top: 6.h,
+                        right: 6.w,
+                        child: Container(
+                          width: 8.w,
+                          height: 8.w,
+                          decoration: const BoxDecoration(
+                            color: AppColors.info,
+                            shape: BoxShape.circle,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
           Expanded(
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 140),
@@ -127,7 +145,7 @@ class _SearchRowHomePageState extends State<SearchRowHomePage> {
               child: Container(
                 height: buttonHeight,
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 224, 224, 224),
+                  color: widget.surfaceColor,
                   borderRadius: BorderRadius.circular(buttonHeight / 2),
                   boxShadow: currentShadow,
                 ),
@@ -170,6 +188,7 @@ class _SearchRowHomePageState extends State<SearchRowHomePage> {
             width: buttonWidth,
             height: buttonHeight,
             boxShadow: currentShadow,
+            backgroundColor: widget.surfaceColor,
           ),
         ],
       ),

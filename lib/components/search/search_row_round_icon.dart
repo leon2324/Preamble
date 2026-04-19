@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// 搜尋列兩側共用的膠囊型 icon button。
 class RoundIconButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onPressed;
@@ -7,6 +8,7 @@ class RoundIconButton extends StatelessWidget {
   final double height;
   final double iconSize;
   final List<BoxShadow>? boxShadow;
+  final Color backgroundColor;
 
   const RoundIconButton({
     super.key,
@@ -16,11 +18,13 @@ class RoundIconButton extends StatelessWidget {
     this.height = 47,
     this.iconSize = 24,
     this.boxShadow,
+    this.backgroundColor = const Color.fromARGB(255, 224, 224, 224),
   });
 
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
+      // 把陰影放在最外層盒子，Material / InkWell 才不會把陰影裁掉。
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(height / 2),
         boxShadow: boxShadow ??
@@ -34,7 +38,7 @@ class RoundIconButton extends StatelessWidget {
             ],
       ),
       child: Material(
-        color: const Color.fromARGB(255, 224, 224, 224),
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(height / 2),
         child: InkWell(
           onTap: onPressed,

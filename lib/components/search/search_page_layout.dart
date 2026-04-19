@@ -4,6 +4,10 @@ import 'package:lawapp/components/search/search_row_home_page.dart';
 import 'package:lawapp/components/shared/page_section_header.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
 
+/// 搜尋頁共用骨架。
+///
+/// 任何需要「固定搜尋列 + 可選頁首標題 + 可捲內容區」的頁面，
+/// 都盡量透過這個 widget 組裝，避免每頁維護自己的固定頁首。
 class SearchPageLayout extends StatefulWidget {
   const SearchPageLayout({
     super.key,
@@ -12,6 +16,8 @@ class SearchPageLayout extends StatefulWidget {
     this.headerTitle,
     this.headerSubtitle,
     this.headerTitleSize = 28,
+    this.searchBarHasShadow = true,
+    this.searchBarSurfaceColor = const Color.fromARGB(255, 224, 224, 224),
     required this.builder,
   });
 
@@ -20,6 +26,8 @@ class SearchPageLayout extends StatefulWidget {
   final String? headerTitle;
   final String? headerSubtitle;
   final double headerTitleSize;
+  final bool searchBarHasShadow;
+  final Color searchBarSurfaceColor;
   final Widget Function(
     BuildContext context,
     HomeSearchLayout layout,
@@ -36,6 +44,7 @@ class _SearchPageLayoutState extends State<SearchPageLayout> {
   double _searchCollapseProgress = 0;
 
   bool _handleScrollNotification(ScrollNotification notification) {
+    // 只處理最外層垂直捲動，避免內層可捲元件也來更新收合狀態。
     if (notification.metrics.axis != Axis.vertical || notification.depth != 0) {
       return false;
     }
@@ -78,6 +87,7 @@ class _SearchPageLayoutState extends State<SearchPageLayout> {
     final contentTopPadding = hasPinnedHeader
         ? headerTop + headerHeight + 14.h
         : context.searchPageContentTopPadding;
+    // 鍵盤出現時把底部留白一起墊高，讓內容清單仍然能捲上來。
     final contentBottomPadding =
         context.pageContentBottomPadding + 24 + keyboardInset;
     final titleMaskTop = headerTop + (headerHeight * 0.34);
@@ -156,6 +166,9 @@ class _SearchPageLayoutState extends State<SearchPageLayout> {
             controller: widget.controller,
             collapseProgress: _searchCollapseProgress,
             hintText: widget.hintText,
+            showNotificationCapsule: false,
+            hasShadow: widget.searchBarHasShadow,
+            surfaceColor: widget.searchBarSurfaceColor,
           ),
         ),
       ],

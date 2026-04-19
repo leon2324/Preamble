@@ -1,5 +1,8 @@
 import 'package:lawapp/components/home/home_content.dart';
 
+/// 首頁各區塊使用的假資料。
+///
+/// 正式串後端資料前，可先在這裡快速調整文案與資料量，驗證畫面是否撐得住。
 const homeNewsItems = [
   HomeNewsItem(
     badge: '快訊',

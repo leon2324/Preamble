@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
 
+/// 簡化版搜尋框，目前主要給舊版熱門頁或單純搜尋場景使用。
 class AppSearchBar extends StatefulWidget {
   const AppSearchBar({
     super.key,

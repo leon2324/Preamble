@@ -6,6 +6,7 @@ import 'package:lawapp/components/home/home_content.dart';
 import 'package:lawapp/components/home/home_section_title.dart';
 import 'package:lawapp/theme/app_colors.dart';
 
+/// 首頁小任務區塊，結合單選題、提示與術語解釋泡泡。
 class HomeQuizSection extends StatefulWidget {
   const HomeQuizSection({
     super.key,
@@ -50,6 +51,7 @@ class _HomeQuizSectionState extends State<HomeQuizSection> {
   }
 
   void _toggleTerm(String term) {
+    // 解析區允許同時展開多個術語，方便使用者對照閱讀。
     setState(() {
       if (_activeTerms.contains(term)) {
         _activeTerms.remove(term);
@@ -60,6 +62,7 @@ class _HomeQuizSectionState extends State<HomeQuizSection> {
   }
 
   void _selectOption(int index) {
+    // 一旦答對後就鎖住，不再接受新的選項，避免解析狀態被覆蓋。
     if (widget.isSolved) return;
 
     HapticFeedback.selectionClick();
@@ -83,6 +86,7 @@ class _HomeQuizSectionState extends State<HomeQuizSection> {
   void didUpdateWidget(covariant HomeQuizSection oldWidget) {
     super.didUpdateWidget(oldWidget);
 
+    // 題目切換後，把上一題展開的術語泡泡清乾淨，避免殘留錯誤內容。
     if ((oldWidget.question != widget.question || !_showExplanation) &&
         _activeTerms.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {

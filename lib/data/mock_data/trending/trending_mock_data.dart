@@ -1,3 +1,4 @@
+/// 紀事頁使用的社會案件與爭點假資料。
 class HotTopicItem {
   const HotTopicItem({
     required this.title,

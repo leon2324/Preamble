@@ -1,3 +1,7 @@
+/// 首頁各區塊共用的資料模型定義。
+///
+/// 目前專案多數畫面仍以假資料驅動，先把資料形狀集中在這裡，
+/// 之後接後端資料時只要對應這些型別即可。
 class HomeNewsItem {
   const HomeNewsItem({
     required this.badge,

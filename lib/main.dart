@@ -8,6 +8,10 @@ import 'package:lawapp/pages/trending/trending_page.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
 import 'package:lawapp/theme/app_colors.dart';
 
+/// 應用程式進入點。
+///
+/// `ScreenUtilInit` 會先建立設計稿基準尺寸，後面的 widget 才能安全使用
+/// `.w` / `.h` / `.sp` 做響應式換算。
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
@@ -22,6 +26,7 @@ void main() {
   );
 }
 
+/// 整個 App 的殼層，負責主題、分頁切換與底部導覽。
 class MylawApp extends StatefulWidget {
   const MylawApp({super.key});
 
@@ -31,8 +36,6 @@ class MylawApp extends StatefulWidget {
 
 class _MylawAppState extends State<MylawApp> {
   int selectedIndex = 0;
-
-  void _handleLearningQuizTap() {}
 
   static const List<_BottomNavItemData> _navItems = [
     _BottomNavItemData(
@@ -51,9 +54,9 @@ class _MylawAppState extends State<MylawApp> {
       selectedIcon: Icons.bookmark_rounded,
     ),
     _BottomNavItemData(
-      label: '熱門',
-      icon: Icons.local_fire_department_outlined,
-      selectedIcon: Icons.local_fire_department_rounded,
+      label: '紀事',
+      icon: Icons.inventory_2_outlined,
+      selectedIcon: Icons.inventory_2_rounded,
     ),
     _BottomNavItemData(
       label: '我的',
@@ -64,6 +67,8 @@ class _MylawAppState extends State<MylawApp> {
 
   @override
   Widget build(BuildContext context) {
+    // 這裡集中管理主分頁，未來若改成路由系統或深層連結，
+    // 可以先從這個列表與 selectedIndex 的關係下手重構。
     final pages = [
       HomePage(
         onNavigateToTab: (index) {
@@ -75,10 +80,7 @@ class _MylawAppState extends State<MylawApp> {
       const KnowLawPage(),
       const FollowedUpdatesPage(),
       const TrendingPage(),
-      const AboutMePage(
-
-        
-      ),
+      const AboutMePage(),
     ];
 
     return MaterialApp(
@@ -122,33 +124,6 @@ class _MylawAppState extends State<MylawApp> {
                     ),
                   ),
                 ),
-                if (selectedIndex == 1)
-                  Positioned(
-                    right: 24,
-                    bottom: 110,
-                    child: SafeArea(
-                      top: false,
-                      child: SizedBox(
-                        height: 70,
-                        width: 70,
-                        child: FloatingActionButton(
-                          backgroundColor: const Color.fromARGB(
-                            255,
-                            248,
-                            204,
-                            111,
-                          ),
-                          onPressed: _handleLearningQuizTap,
-                          shape: const CircleBorder(),
-                          child: const Icon(
-                            Icons.quiz_outlined,
-                            color: Color(0xFF101828),
-                            size: 32,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
                 Positioned(
                   left: 12,
                   right: 12,
@@ -188,6 +163,7 @@ class _IslandBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 文字縮放時一起拉高底部島的高度，避免 icon 與文字互相擠壓。
     final extraHeight = context.adaptiveBuffer(12);
     final navShellHeight = 76 + extraHeight;
     final navHeight = 70 + extraHeight;

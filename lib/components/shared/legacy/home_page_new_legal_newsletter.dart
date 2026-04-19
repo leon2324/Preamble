@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+/// 舊版首頁法律小報元件。
+///
+/// 目前正式首頁已改用新的 `HomeNewsletterSection`，這個檔案保留供設計比較。
 class HomePageNewLegalNewsletter extends StatefulWidget {
   const HomePageNewLegalNewsletter({super.key});
 
@@ -74,7 +77,7 @@ class _HomePageNewLegalNewsletterState
               ),
               IconButton(
                 onPressed: () {
-                  // TODO: Navigate to more new law news page
+                  // TODO: 之後接上「查看更多法律小報」頁面。
                 },
                 icon: const Icon(Icons.arrow_forward_ios),
               ),
@@ -209,7 +212,7 @@ class _HomePageNewLegalNewsletterState
             ),
           ),
           SizedBox(height: 12.h),
-          //下方圓點指示器
+          // 下方圓點指示器
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(newsTitles.length, (index) {
@@ -238,14 +241,14 @@ Widget interactionButton(
   VoidCallback onPressed,
 ) {
   return InkWell(
-    // 用 InkWell 取代 IconButton
+    // 用 InkWell 取代 IconButton，方便之後自訂點擊區與外觀。
     onTap: onPressed,
-    borderRadius: BorderRadius.circular(8.r), // 點擊波紋圓角
+    borderRadius: BorderRadius.circular(8.r), // 點擊波紋的圓角範圍
     child: Padding(
       padding: EdgeInsets.symmetric(
         horizontal: isCompactScreen ? 2.w : 4.w,
         vertical: isCompactScreen ? 2.h : 4.h,
-      ), // 自己控制 padding
+      ), // 由這裡自己控制內距
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

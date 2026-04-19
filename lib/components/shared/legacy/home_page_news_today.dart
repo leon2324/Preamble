@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// 舊版首頁新聞區塊。
+///
+/// 目前保留作為版型演進參考，不再是首頁正式使用的元件。
 class NewsTodayAtHomePage extends StatelessWidget {
   NewsTodayAtHomePage({super.key});
 
@@ -34,7 +37,7 @@ class NewsTodayAtHomePage extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  // TODO: Navigate to more news page
+                  // TODO: 之後接上「查看更多新聞」頁面。
                 },
                 icon: const Icon(Icons.arrow_forward_ios),
               ),
@@ -64,7 +67,7 @@ class NewsTodayAtHomePage extends StatelessWidget {
                           vertical: 7,
                         ),
                         child: Stack(
-                          clipBehavior: Clip.none, // 允許子元件超出邊界
+                          clipBehavior: Clip.none, // 允許子元件超出卡片邊界
                           children: [
                             Center(
                               child: Container(

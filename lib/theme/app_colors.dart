@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// 專案共用色票。
+///
+/// 之後若要調整品牌色或增加深色模式，先從這個檔案收斂顏色會最省力。
 class AppColors {
   static const background = Color(0xFFFAF7F2);
   static const surface = Color(0xFFFFFDFC);

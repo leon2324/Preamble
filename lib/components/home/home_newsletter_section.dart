@@ -5,6 +5,7 @@ import 'package:lawapp/components/home/home_section_title.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
 import 'package:lawapp/theme/app_colors.dart';
 
+/// 首頁「法律新知小報」輪播區塊。
 class HomeNewsletterSection extends StatelessWidget {
   const HomeNewsletterSection({
     super.key,
@@ -219,6 +220,7 @@ class _NewsletterCard extends StatelessWidget {
 }
 
 class _NewsletterImageCard extends StatelessWidget {
+  /// 目前先用佔位區代表插圖，之後可以直接替換成真圖或插畫元件。
   const _NewsletterImageCard();
 
   @override

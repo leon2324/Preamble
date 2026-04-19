@@ -1,0 +1,5 @@
+// Profile 建置模式要載入 CocoaPods 產生的 profile 設定，避免 Flutter plugins 在 iOS profile/release 流程中缺少原生依賴。
+#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"
+
+// Flutter 產生的共用建置設定放在最後載入，讓 FLUTTER_ROOT、build name、build number 等參數維持一致。
+#include "Generated.xcconfig"

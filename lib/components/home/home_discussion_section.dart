@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lawapp/components/home/home_content.dart';
 import 'package:lawapp/components/home/home_section_title.dart';
 import 'package:lawapp/theme/app_colors.dart';
 
+/// 首頁最複雜的討論區塊。
+///
+/// 這裡同時整合話題列表、趨勢圖、時間線、投票、留言輸入與操作按鈕，
+/// 所以維護時建議先從資料模型 `HomeDiscussionFeed` 對照 UI 區塊來看。
 class HomeDiscussionSection extends StatefulWidget {
   const HomeDiscussionSection({
     super.key,
@@ -19,6 +24,29 @@ class HomeDiscussionSection extends StatefulWidget {
 }
 
 class _HomeDiscussionSectionState extends State<HomeDiscussionSection> {
+  static const String _commentSvg = '''
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
+</svg>
+''';
+  static const String _followSvg = '''
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 8v6"/>
+  <path d="M9 11h6"/>
+  <path d="M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z"/>
+</svg>
+''';
+  static const String _goSvg = '''
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M5 12h14"/>
+  <path d="m12 5 7 7-7 7"/>
+</svg>
+''';
+  static const String _sendSvg = '''
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000" viewBox="0 0 256 256">
+  <path d="M231.87,114l-168-95.89A16,16,0,0,0,40.92,37.34L71.55,128,40.92,218.67A16,16,0,0,0,56,240a16.15,16.15,0,0,0,7.93-2.1l167.92-96.05a16,16,0,0,0,.05-27.89ZM56,224a.56.56,0,0,0,0-.12L85.74,136H144a8,8,0,0,0,0-16H85.74L56.06,32.16A.46.46,0,0,0,56,32l168,95.83Z"></path>
+</svg>
+''';
   static const double _itemGap = 18;
   static const double _timelineItemWidth = 176;
   static const double _timelineItemGap = 8;
@@ -55,19 +83,65 @@ class _HomeDiscussionSectionState extends State<HomeDiscussionSection> {
   void _ensureCommentVisible() {
     final targetContext = _commentFieldKey.currentContext;
     if (targetContext == null) return;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
+
+    // iOS 鍵盤動畫會分段完成，所以這裡分成「先 ensureVisible」、
+    // 「鍵盤升起後再補一次」與「最後微調 overlap」三段處理。
+    void scrollIntoView() {
       Scrollable.ensureVisible(
         targetContext,
-        duration: const Duration(milliseconds: 240),
+        duration: const Duration(milliseconds: 260),
         curve: Curves.easeOutCubic,
-        alignment: 0.25,
+        alignment: 0.08,
+        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
       );
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      scrollIntoView();
+      Future<void>.delayed(const Duration(milliseconds: 280), () {
+        if (!mounted || !_commentFocusNode.hasFocus) return;
+        scrollIntoView();
+        Future<void>.delayed(const Duration(milliseconds: 40), () {
+          if (!mounted || !_commentFocusNode.hasFocus) return;
+
+          final latestContext = _commentFieldKey.currentContext;
+          if (latestContext == null) return;
+          if (!latestContext.mounted) return;
+
+          final renderObject = latestContext.findRenderObject();
+          final scrollableState = Scrollable.maybeOf(latestContext);
+          if (renderObject is! RenderBox || scrollableState == null) return;
+
+          final keyboardInset = MediaQuery.of(latestContext).viewInsets.bottom;
+          if (keyboardInset <= 0) return;
+
+          final position = scrollableState.position;
+          final boxTop = renderObject.localToGlobal(Offset.zero).dy;
+          final boxBottom = boxTop + renderObject.size.height;
+          final screenHeight = MediaQuery.of(latestContext).size.height;
+          final visibleBottom = screenHeight - keyboardInset - 20.h;
+          final overlap = boxBottom - visibleBottom;
+
+          if (overlap > 0 && position.hasPixels) {
+            final nextOffset = (position.pixels + overlap + 16.h).clamp(
+              position.minScrollExtent,
+              position.maxScrollExtent,
+            );
+            position.animateTo(
+              nextOffset,
+              duration: const Duration(milliseconds: 220),
+              curve: Curves.easeOutCubic,
+            );
+          }
+        });
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    // 這三個顏色會對應留言 / 追蹤 / 前往，刻意做出淡淡的功能區分。
     final buttonColors = <Color>[
       const Color(0xFFA8B9F2),
       const Color(0xFF9AB6E3),
@@ -593,6 +667,11 @@ class _HomeDiscussionSectionState extends State<HomeDiscussionSection> {
                               child: TextField(
                                 focusNode: _commentFocusNode,
                                 onTap: _ensureCommentVisible,
+                                scrollPadding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom +
+                                          140.h,
+                                ),
                                 decoration: InputDecoration(
                                   isDense: true,
                                   border: InputBorder.none,
@@ -612,10 +691,17 @@ class _HomeDiscussionSectionState extends State<HomeDiscussionSection> {
                             ),
                           ),
                           SizedBox(width: 8.w),
-                          Icon(
-                            Icons.send,
-                            size: 18.sp,
-                            color: const Color(0xFF1E3A8A),
+                          SizedBox(
+                            width: 22.sp,
+                            height: 22.sp,
+                            child: SvgPicture.string(
+                              _sendSvg,
+                              fit: BoxFit.fill,
+                              colorFilter: const ColorFilter.mode(
+                                Color(0xFF1E3A8A),
+                                BlendMode.srcIn,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -637,30 +723,24 @@ class _HomeDiscussionSectionState extends State<HomeDiscussionSection> {
                       ),
                       SizedBox(height: _itemGap.h),
                       Row(
-                        children: List.generate(
-                          widget.feed.actionLabels.length,
-                          (index) {
-                            final label = widget.feed.actionLabels[index];
-                            final color =
-                                buttonColors[index % buttonColors.length];
-                            final icon = _actionIconForLabel(label);
-                            return Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  right: index ==
-                                          widget.feed.actionLabels.length - 1
-                                      ? 0
-                                      : 8.w,
+                        children: [
+                          for (var index = 0;
+                              index < widget.feed.actionLabels.length;
+                              index++) ...[
+                            Expanded(
+                              child: _DiscussionButton(
+                                icon: _actionIconForLabel(
+                                  widget.feed.actionLabels[index],
                                 ),
-                                child: _DiscussionButton(
-                                  icon: icon,
-                                  semanticsLabel: label,
-                                  backgroundColor: color,
-                                ),
+                                semanticsLabel: widget.feed.actionLabels[index],
+                                backgroundColor:
+                                    buttonColors[index % buttonColors.length],
                               ),
-                            );
-                          },
-                        ),
+                            ),
+                            if (index != widget.feed.actionLabels.length - 1)
+                              SizedBox(width: 12.w),
+                          ],
+                        ],
                       ),
                     ],
                   ),
@@ -684,10 +764,23 @@ class _HomeDiscussionSectionState extends State<HomeDiscussionSection> {
     return '7日排名持平';
   }
 
-  IconData _actionIconForLabel(String label) {
-    if (label.contains('留言')) return Icons.chat_bubble_outline_rounded;
-    if (label.contains('追蹤')) return Icons.bookmark_border_rounded;
-    return Icons.arrow_forward_rounded;
+  Widget _actionIconForLabel(String label) {
+    if (label.contains('留言')) return _buildActionSvg(_commentSvg);
+    if (label.contains('追蹤')) return _buildActionSvg(_followSvg);
+    return _buildActionSvg(_goSvg);
+  }
+
+  Widget _buildActionSvg(String svg) {
+    // 這三顆操作圖示直接吃 SVG 字串，方便快速替換設計稿提供的圖示。
+    return SvgPicture.string(
+      svg,
+      width: 22.sp,
+      height: 22.sp,
+      colorFilter: const ColorFilter.mode(
+        AppColors.textPrimary,
+        BlendMode.srcIn,
+      ),
+    );
   }
 
   int? _selectedTrendPointIndex(
@@ -702,6 +795,7 @@ class _HomeDiscussionSectionState extends State<HomeDiscussionSection> {
   }
 
   void _scrollTimelineToIndex(int index) {
+    // 展開某個話題時，時間線永遠先回到第一個節點，避免停留在上一個話題的位置。
     if (!_timelineScrollController.hasClients) return;
     final targetOffset =
         (index * (_timelineItemWidth.w + _timelineItemGap.w)).clamp(
@@ -1139,7 +1233,7 @@ class _DiscussionButton extends StatelessWidget {
     required this.backgroundColor,
   });
 
-  final IconData icon;
+  final Widget icon;
   final String semanticsLabel;
   final Color backgroundColor;
 
@@ -1147,7 +1241,7 @@ class _DiscussionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 38.h,
-      padding: EdgeInsets.symmetric(horizontal: 8.w),
+      padding: EdgeInsets.symmetric(horizontal: 12.w),
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(16.r),
@@ -1155,11 +1249,7 @@ class _DiscussionButton extends StatelessWidget {
       alignment: Alignment.center,
       child: Semantics(
         label: semanticsLabel,
-        child: Icon(
-          icon,
-          size: 18.sp,
-          color: AppColors.textPrimary,
-        ),
+        child: icon,
       ),
     );
   }

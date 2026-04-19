@@ -5,6 +5,7 @@ import 'package:lawapp/components/home/home_section_title.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
 import 'package:lawapp/theme/app_colors.dart';
 
+/// 首頁「今日新聞」橫向卡片區塊。
 class HomeNewsSection extends StatelessWidget {
   const HomeNewsSection({
     super.key,
@@ -77,6 +78,7 @@ class _NewsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 標籤風格依新聞來源/分類切換，讓相同卡片結構仍有辨識度。
     final cardRadius = 21.r;
     final mediaRadius = 19.r;
     final badgeStyle = _NewsBadgeStyle.fromLabel(item.badge);
@@ -248,6 +250,7 @@ class _NewsBadgeStyle {
   final Color shadowColor;
 
   factory _NewsBadgeStyle.fromLabel(String label) {
+    // 目前以假資料標籤做切換，之後若接後端資料可改成列舉會更安全。
     switch (label) {
       case '快訊':
         return const _NewsBadgeStyle(

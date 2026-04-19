@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lawapp/data/notifications_mock_data.dart';
+import 'package:lawapp/data/mock_data/followed_updates/followed_updates_mock_data.dart';
 
+/// 舊版追蹤頁篩選按鈕實驗元件。
 class SelectArea extends StatefulWidget {
   const SelectArea({super.key});
 
@@ -29,7 +30,7 @@ class SelectAreaState extends State<SelectArea> {
   }
 
   Widget _eachButtonInArea(int index, String text) {
-    final bool isSelected = selectedIndex == index; // 假設第一個按鈕是選中的
+    final bool isSelected = selectedIndex == index; // 依目前選中的索引決定樣式
 
     return GestureDetector(
       onTap: () {

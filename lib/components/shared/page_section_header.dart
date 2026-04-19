@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+/// 搜尋頁上方的大標題區塊。
+///
+/// `stretch` 會隨 overscroll 微幅放大標題，讓頁首更有彈性手感。
 class PageSectionHeader extends StatelessWidget {
   const PageSectionHeader({
     super.key,
