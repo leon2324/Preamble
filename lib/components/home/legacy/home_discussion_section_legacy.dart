@@ -14,10 +14,14 @@ class HomeDiscussionSection extends StatefulWidget {
     super.key,
     required this.onMoreTap,
     required this.feed,
+    this.showHeader = true,
   });
 
   final VoidCallback onMoreTap;
   final HomeDiscussionFeed feed;
+  /// 台灣繁體中文教學註解：
+  /// 這個開關讓新版首頁可以沿用舊討論內容，但把標題列交給新版 section header 統一處理。
+  final bool showHeader;
 
   @override
   State<HomeDiscussionSection> createState() => _HomeDiscussionSectionState();
@@ -153,8 +157,10 @@ class _HomeDiscussionSectionState extends State<HomeDiscussionSection> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          HomeSectionTitle(title: '大家都在討論', onTap: widget.onMoreTap),
-          SizedBox(height: 15.h),
+          if (widget.showHeader) ...[
+            HomeSectionTitle(title: '大家都在討論', onTap: widget.onMoreTap),
+            SizedBox(height: 15.h),
+          ],
         ],
       );
     }
@@ -168,8 +174,10 @@ class _HomeDiscussionSectionState extends State<HomeDiscussionSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        HomeSectionTitle(title: '大家都在討論', onTap: widget.onMoreTap),
-        SizedBox(height: 15.h),
+        if (widget.showHeader) ...[
+          HomeSectionTitle(title: '大家都在討論', onTap: widget.onMoreTap),
+          SizedBox(height: 15.h),
+        ],
         Container(
           padding: EdgeInsets.all(12.w),
           decoration: BoxDecoration(

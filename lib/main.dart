@@ -70,6 +70,9 @@ class _MylawAppState extends State<MylawApp> {
     // 這裡集中管理主分頁，未來若改成路由系統或深層連結，
     // 可以先從這個列表與 selectedIndex 的關係下手重構。
     final pages = [
+      // 台灣繁體中文教學註解：
+      // 新版首頁已正式收編成 pages/home/home_page.dart；
+      // 舊版首頁則搬到 pages/home/legacy 供日後設計回顧。
       HomePage(
         onNavigateToTab: (index) {
           setState(() {

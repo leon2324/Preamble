@@ -11,28 +11,34 @@ class HomeNewsSection extends StatelessWidget {
     super.key,
     required this.items,
     this.onMoreTap,
+    this.showHeader = true,
   });
 
   static const double _itemGap = 14;
 
   final List<HomeNewsItem> items;
   final VoidCallback? onMoreTap;
+  final bool showHeader;
 
   @override
   Widget build(BuildContext context) {
-    final extraHeight = context.adaptiveBuffer(22);
-    final cardSize = 164.w + extraHeight;
+    final extraSpace = context.adaptiveBuffer(22);
+    final cardWidth = 164.w + extraSpace;
+    final mediaHeight = 92.h + context.adaptiveBuffer(10);
+    final cardHeight = mediaHeight + 74.h;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(
-          title: '今日新聞',
-          onMoreTap: onMoreTap,
-        ),
-        SizedBox(height: 15.h),
+        if (showHeader) ...[
+          _SectionHeader(
+            title: '今日新聞',
+            onMoreTap: onMoreTap,
+          ),
+          SizedBox(height: 15.h),
+        ],
         SizedBox(
-          height: cardSize,
+          height: cardHeight,
           child: ListView.separated(
             clipBehavior: Clip.none,
             scrollDirection: Axis.horizontal,
@@ -40,7 +46,8 @@ class HomeNewsSection extends StatelessWidget {
             separatorBuilder: (_, __) => SizedBox(width: _itemGap.w),
             itemBuilder: (context, index) => _NewsCard(
               item: items[index],
-              size: cardSize,
+              width: cardWidth,
+              mediaHeight: mediaHeight,
             ),
           ),
         ),
@@ -70,11 +77,13 @@ class _SectionHeader extends StatelessWidget {
 class _NewsCard extends StatelessWidget {
   const _NewsCard({
     required this.item,
-    required this.size,
+    required this.width,
+    required this.mediaHeight,
   });
 
   final HomeNewsItem item;
-  final double size;
+  final double width;
+  final double mediaHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -84,152 +93,141 @@ class _NewsCard extends StatelessWidget {
     final badgeStyle = _NewsBadgeStyle.fromLabel(item.badge);
 
     return SizedBox(
-      width: size,
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final mediaHeight = constraints.maxHeight * 0.56;
-
-            return Container(
-              padding: EdgeInsets.fromLTRB(7.w, 7.h, 7.w, 6.h),
-              decoration: BoxDecoration(
-                color: AppColors.newsSurface,
-                borderRadius: BorderRadius.circular(cardRadius),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      width: width,
+      child: Container(
+        padding: EdgeInsets.fromLTRB(7.w, 7.h, 7.w, 6.h),
+        decoration: BoxDecoration(
+          color: AppColors.newsSurface,
+          borderRadius: BorderRadius.circular(cardRadius),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: mediaHeight,
+              child: Stack(
+                clipBehavior: Clip.none,
                 children: [
-                  SizedBox(
+                  Container(
                     height: mediaHeight,
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Container(
-                          height: mediaHeight,
-                          width: double.infinity,
-                          margin: EdgeInsets.only(
-                            top: 4.h,
-                            left: 4.w,
-                            right: 4.w,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.placeholder,
-                            borderRadius: BorderRadius.circular(mediaRadius),
-                          ),
-                        ),
-                        Positioned(
-                          top: -15.h,
-                          left: -10.w,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.08),
-                                  blurRadius: 8.r,
-                                  offset: Offset(0, 2.h),
-                                ),
-                              ],
-                            ),
-                            child: Container(
-                              width: 42.w,
-                              height: 42.w,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFE1E1DE),
-                                shape: BoxShape.circle,
-                              ),
-                              alignment: Alignment.center,
-                              child: Text(
-                                'logo',
-                                style: TextStyle(
-                                  fontSize: 7.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.textPrimary,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: -15.h,
-                          right: -7.w,
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              Positioned(
-                                top: 3.h,
-                                right: -1.w,
-                                child: Container(
-                                  width: 58.w,
-                                  height: 28.h,
-                                  decoration: BoxDecoration(
-                                    color: badgeStyle.shadowColor,
-                                    borderRadius: BorderRadius.circular(999.r),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 12.w,
-                                  vertical: 4.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: badgeStyle.backgroundColor,
-                                  borderRadius: BorderRadius.circular(999.r),
-                                  border: Border.all(
-                                    color: badgeStyle.borderColor,
-                                    width: 1.w,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color:
-                                          Colors.white.withValues(alpha: 0.55),
-                                      blurRadius: 2.r,
-                                      offset: Offset(0, -1.h),
-                                    ),
-                                  ],
-                                ),
-                                child: Text(
-                                  item.badge,
-                                  style: TextStyle(
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: badgeStyle.textColor,
-                                    letterSpacing: 0.2,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                    width: double.infinity,
+                    margin: EdgeInsets.only(
+                      top: 4.h,
+                      left: 4.w,
+                      right: 4.w,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.placeholder,
+                      borderRadius: BorderRadius.circular(mediaRadius),
                     ),
                   ),
-                  SizedBox(height: 2.h),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(6.w, 8.w, 6.w, 5.h),
-                      child: Align(
-                        alignment: Alignment.topLeft,
+                  Positioned(
+                    top: -15.h,
+                    left: -10.w,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.08),
+                            blurRadius: 8.r,
+                            offset: Offset(0, 2.h),
+                          ),
+                        ],
+                      ),
+                      child: Container(
+                        width: 42.w,
+                        height: 42.w,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFE1E1DE),
+                          shape: BoxShape.circle,
+                        ),
+                        alignment: Alignment.center,
                         child: Text(
-                          item.title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                          'logo',
                           style: TextStyle(
-                            fontSize: 15.sp,
-                            height: 1.05,
-                            fontWeight: FontWeight.w500,
+                            fontSize: 7.sp,
+                            fontWeight: FontWeight.w600,
                             color: AppColors.textPrimary,
                           ),
                         ),
                       ),
                     ),
                   ),
+                  Positioned(
+                    top: -15.h,
+                    right: -7.w,
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Positioned(
+                          top: 3.h,
+                          right: -1.w,
+                          child: Container(
+                            width: 58.w,
+                            height: 28.h,
+                            decoration: BoxDecoration(
+                              color: badgeStyle.shadowColor,
+                              borderRadius: BorderRadius.circular(999.r),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12.w,
+                            vertical: 4.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: badgeStyle.backgroundColor,
+                            borderRadius: BorderRadius.circular(999.r),
+                            border: Border.all(
+                              color: badgeStyle.borderColor,
+                              width: 1.w,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white.withValues(alpha: 0.55),
+                                blurRadius: 2.r,
+                                offset: Offset(0, -1.h),
+                              ),
+                            ],
+                          ),
+                          child: Text(
+                            item.badge,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w700,
+                              color: badgeStyle.textColor,
+                              letterSpacing: 0.2,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-            );
-          },
+            ),
+            SizedBox(height: 2.h),
+            Padding(
+              padding: EdgeInsets.fromLTRB(6.w, 8.w, 6.w, 5.h),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  item.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    height: 1.05,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

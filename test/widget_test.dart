@@ -22,15 +22,21 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('今日新聞'), findsOneWidget);
-    expect(find.text('法律新知小報'), findsOneWidget);
+    expect(find.text('AI 法律輔助'), findsOneWidget);
+    expect(find.text('法規資料庫'), findsOneWidget);
 
     await tester.drag(find.byType(CustomScrollView), const Offset(0, -900));
     await tester.pumpAndSettle();
 
-    expect(find.text('你關心的'), findsOneWidget);
     expect(find.text('給你的小任務(*¯︶¯*)'), findsOneWidget);
+    expect(find.text('法律新知小報'), findsAtLeastNWidgets(1));
+    expect(find.text('今日新聞'), findsAtLeastNWidgets(1));
+
+    await tester.drag(find.byType(CustomScrollView), const Offset(0, -900));
+    await tester.pumpAndSettle();
+
     expect(find.text('大家都在討論'), findsOneWidget);
+    expect(find.text('專題'), findsOneWidget);
 
     await tester.tap(find.byIcon(Icons.person_outline_rounded));
     await tester.pumpAndSettle();
@@ -97,5 +103,35 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('這頁會帶你先抓住三個重點'), findsOneWidget);
+  });
+
+  testWidgets('Home mission opens quiz detail page', (
+    WidgetTester tester,
+  ) async {
+    tester.view.devicePixelRatio = 3.0;
+    tester.view.physicalSize = const Size(1179, 2556);
+    addTearDown(() {
+      tester.view.resetDevicePixelRatio();
+      tester.view.resetPhysicalSize();
+    });
+
+    await tester.pumpWidget(
+      ScreenUtilInit(
+        designSize: const Size(375, 812),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (_, __) => const MylawApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.drag(find.byType(CustomScrollView), const Offset(0, -900));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('更多題目'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('小任務測驗'), findsOneWidget);
+    expect(find.textContaining('第 1 題 / 共'), findsOneWidget);
   });
 }
