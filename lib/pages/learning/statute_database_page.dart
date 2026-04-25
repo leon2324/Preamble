@@ -146,7 +146,7 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
             ),
             SizedBox(height: 6.h),
             Text(
-              '資料來源：全國法規資料庫。以下內容僅作法規資料呈現，不構成法律意見。',
+              '資料來源：全國法規資料庫法律與命令資料。以下內容僅作法規資料呈現，不構成法律意見。',
               style: TextStyle(
                 fontSize: 12.sp,
                 height: 1.45,

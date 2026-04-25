@@ -11,6 +11,7 @@ class HomeNewsSection extends StatelessWidget {
     super.key,
     required this.items,
     this.onMoreTap,
+    this.onItemTap,
     this.showHeader = true,
   });
 
@@ -18,6 +19,7 @@ class HomeNewsSection extends StatelessWidget {
 
   final List<HomeNewsItem> items;
   final VoidCallback? onMoreTap;
+  final ValueChanged<HomeNewsItem>? onItemTap;
   final bool showHeader;
 
   @override
@@ -48,6 +50,7 @@ class HomeNewsSection extends StatelessWidget {
               item: items[index],
               width: cardWidth,
               mediaHeight: mediaHeight,
+              onTap: onItemTap == null ? null : () => onItemTap!(items[index]),
             ),
           ),
         ),
@@ -79,11 +82,13 @@ class _NewsCard extends StatelessWidget {
     required this.item,
     required this.width,
     required this.mediaHeight,
+    this.onTap,
   });
 
   final HomeNewsItem item;
   final double width;
   final double mediaHeight;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -94,140 +99,155 @@ class _NewsCard extends StatelessWidget {
 
     return SizedBox(
       width: width,
-      child: Container(
-        padding: EdgeInsets.fromLTRB(7.w, 7.h, 7.w, 6.h),
-        decoration: BoxDecoration(
-          color: AppColors.newsSurface,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
           borderRadius: BorderRadius.circular(cardRadius),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: mediaHeight,
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    height: mediaHeight,
-                    width: double.infinity,
-                    margin: EdgeInsets.only(
-                      top: 4.h,
-                      left: 4.w,
-                      right: 4.w,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.placeholder,
-                      borderRadius: BorderRadius.circular(mediaRadius),
-                    ),
-                  ),
-                  Positioned(
-                    top: -15.h,
-                    left: -10.w,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.08),
-                            blurRadius: 8.r,
-                            offset: Offset(0, 2.h),
-                          ),
-                        ],
-                      ),
-                      child: Container(
-                        width: 42.w,
-                        height: 42.w,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFE1E1DE),
-                          shape: BoxShape.circle,
+          child: Ink(
+            padding: EdgeInsets.fromLTRB(7.w, 7.h, 7.w, 6.h),
+            decoration: BoxDecoration(
+              color: AppColors.newsSurface,
+              borderRadius: BorderRadius.circular(cardRadius),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: mediaHeight,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        height: mediaHeight,
+                        width: double.infinity,
+                        margin: EdgeInsets.only(
+                          top: 4.h,
+                          left: 4.w,
+                          right: 4.w,
                         ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          'logo',
-                          style: TextStyle(
-                            fontSize: 7.sp,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.textPrimary,
-                          ),
+                        decoration: BoxDecoration(
+                          color: AppColors.placeholder,
+                          borderRadius: BorderRadius.circular(mediaRadius),
+                        ),
+                        child: Icon(
+                          Icons.article_outlined,
+                          color: Colors.white.withValues(alpha: 0.72),
+                          size: 34.sp,
                         ),
                       ),
-                    ),
-                  ),
-                  Positioned(
-                    top: -15.h,
-                    right: -7.w,
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Positioned(
-                          top: 3.h,
-                          right: -1.w,
-                          child: Container(
-                            width: 58.w,
-                            height: 28.h,
-                            decoration: BoxDecoration(
-                              color: badgeStyle.shadowColor,
-                              borderRadius: BorderRadius.circular(999.r),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 12.w,
-                            vertical: 4.h,
-                          ),
+                      Positioned(
+                        top: -15.h,
+                        left: -10.w,
+                        child: DecoratedBox(
                           decoration: BoxDecoration(
-                            color: badgeStyle.backgroundColor,
-                            borderRadius: BorderRadius.circular(999.r),
-                            border: Border.all(
-                              color: badgeStyle.borderColor,
-                              width: 1.w,
-                            ),
+                            shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.white.withValues(alpha: 0.55),
-                                blurRadius: 2.r,
-                                offset: Offset(0, -1.h),
+                                color: Colors.black.withValues(alpha: 0.08),
+                                blurRadius: 8.r,
+                                offset: Offset(0, 2.h),
                               ),
                             ],
                           ),
-                          child: Text(
-                            item.badge,
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w700,
-                              color: badgeStyle.textColor,
-                              letterSpacing: 0.2,
+                          child: Container(
+                            width: 42.w,
+                            height: 42.w,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFE1E1DE),
+                              shape: BoxShape.circle,
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              item.sourceLabel ?? 'MOJ',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 7.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textPrimary,
+                              ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 2.h),
-            Padding(
-              padding: EdgeInsets.fromLTRB(6.w, 8.w, 6.w, 5.h),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  item.title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 15.sp,
-                    height: 1.05,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.textPrimary,
+                      ),
+                      Positioned(
+                        top: -15.h,
+                        right: -7.w,
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Positioned(
+                              top: 3.h,
+                              right: -1.w,
+                              child: Container(
+                                width: 58.w,
+                                height: 28.h,
+                                decoration: BoxDecoration(
+                                  color: badgeStyle.shadowColor,
+                                  borderRadius: BorderRadius.circular(999.r),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 12.w,
+                                vertical: 4.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: badgeStyle.backgroundColor,
+                                borderRadius: BorderRadius.circular(999.r),
+                                border: Border.all(
+                                  color: badgeStyle.borderColor,
+                                  width: 1.w,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color:
+                                        Colors.white.withValues(alpha: 0.55),
+                                    blurRadius: 2.r,
+                                    offset: Offset(0, -1.h),
+                                  ),
+                                ],
+                              ),
+                              child: Text(
+                                item.badge,
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: badgeStyle.textColor,
+                                  letterSpacing: 0,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
+                SizedBox(height: 2.h),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(6.w, 8.w, 6.w, 5.h),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      item.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        height: 1.05,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

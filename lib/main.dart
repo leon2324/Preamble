@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/pages/followed_updates/followed_updates_page.dart';
+import 'package:lawapp/app/app_state.dart';
 import 'package:lawapp/pages/home/home_page.dart';
 import 'package:lawapp/pages/learning/know_law_page.dart';
-import 'package:lawapp/pages/profile/about_me_page.dart';
+import 'package:lawapp/pages/profile/profile_page.dart';
+import 'package:lawapp/pages/search/global_search_page.dart';
 import 'package:lawapp/pages/trending/trending_page.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
 import 'package:lawapp/theme/app_colors.dart';
@@ -35,6 +36,7 @@ class MylawApp extends StatefulWidget {
 }
 
 class _MylawAppState extends State<MylawApp> {
+  late final LawAppState _appState;
   int selectedIndex = 0;
 
   static const List<_BottomNavItemData> _navItems = [
@@ -49,14 +51,14 @@ class _MylawAppState extends State<MylawApp> {
       selectedIcon: Icons.menu_book_rounded,
     ),
     _BottomNavItemData(
-      label: '追蹤',
-      icon: Icons.bookmark_border_rounded,
-      selectedIcon: Icons.bookmark_rounded,
+      label: '搜尋',
+      icon: Icons.search_rounded,
+      selectedIcon: Icons.search_rounded,
     ),
     _BottomNavItemData(
-      label: '紀事',
-      icon: Icons.inventory_2_outlined,
-      selectedIcon: Icons.inventory_2_rounded,
+      label: '案例',
+      icon: Icons.local_library_outlined,
+      selectedIcon: Icons.local_library_rounded,
     ),
     _BottomNavItemData(
       label: '我的',
@@ -64,6 +66,18 @@ class _MylawAppState extends State<MylawApp> {
       selectedIcon: Icons.person_rounded,
     ),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _appState = LawAppState()..load();
+  }
+
+  @override
+  void dispose() {
+    _appState.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,73 +95,119 @@ class _MylawAppState extends State<MylawApp> {
         },
       ),
       const KnowLawPage(),
-      const FollowedUpdatesPage(),
+      // 台灣繁體中文教學註解：
+      // 搜尋提升為底部 Nav 中間分頁，讓它成為全站入口，而不是只藏在首頁。
+      const GlobalSearchPage(),
       const TrendingPage(),
-      const AboutMePage(),
+      const ProfilePage(),
     ];
 
-    return MaterialApp(
-      locale: const Locale('zh', 'TW'),
-      debugShowCheckedModeBanner: false,
-      title: 'MylawApp',
-      theme: ThemeData(
-        useMaterial3: true,
-        scaffoldBackgroundColor: AppColors.background,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.primary,
-          primary: AppColors.primary,
-          surface: AppColors.background,
-        ),
-        textTheme: Typography.blackMountainView.apply(
-          bodyColor: AppColors.textPrimary,
-          displayColor: AppColors.textPrimary,
-        ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: AppColors.background,
-          foregroundColor: AppColors.textPrimary,
-          elevation: 0,
-        ),
-      ),
-      home: Scaffold(
-        extendBody: false,
-        resizeToAvoidBottomInset: false,
-        body: Builder(
-          builder: (context) {
-            final useTopSafeArea = !context.hasLargeTopInset;
+    return LawAppScope(
+      state: _appState,
+      child: AnimatedBuilder(
+        animation: _appState,
+        builder: (context, _) {
+          return MaterialApp(
+            locale: const Locale('zh', 'TW'),
+            debugShowCheckedModeBanner: false,
+            title: 'MylawApp',
+            theme: _buildLightTheme(),
+            darkTheme: _buildDarkTheme(),
+            themeMode: _appState.themeMode,
+            home: Scaffold(
+              extendBody: false,
+              resizeToAvoidBottomInset: false,
+              body: Builder(
+                builder: (context) {
+                  final useTopSafeArea = !context.hasLargeTopInset;
 
-            return Stack(
-              children: [
-                Positioned.fill(
-                  child: SafeArea(
-                    top: useTopSafeArea,
-                    bottom: false,
-                    child: IndexedStack(
-                      index: selectedIndex,
-                      children: pages,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 12,
-                  right: 12,
-                  bottom: 17,
-                  child: SafeArea(
-                    top: false,
-                    child: _IslandBottomNav(
-                      selectedIndex: selectedIndex,
-                      items: _navItems,
-                      onTap: (index) {
-                        setState(() {
-                          selectedIndex = index;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
+                  return Stack(
+                    children: [
+                      Positioned.fill(
+                        child: SafeArea(
+                          top: useTopSafeArea,
+                          bottom: false,
+                          child: IndexedStack(
+                            index: selectedIndex,
+                            children: pages,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        left: 12,
+                        right: 12,
+                        bottom: 17,
+                        child: SafeArea(
+                          top: false,
+                          child: _IslandBottomNav(
+                            selectedIndex: selectedIndex,
+                            items: _navItems,
+                            onTap: (index) {
+                              setState(() {
+                                selectedIndex = index;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  ThemeData _buildLightTheme() {
+    return ThemeData(
+      useMaterial3: true,
+      scaffoldBackgroundColor: AppColors.background,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColors.primary,
+        primary: AppColors.primary,
+        surface: AppColors.background,
+      ),
+      textTheme: Typography.blackMountainView.apply(
+        bodyColor: AppColors.textPrimary,
+        displayColor: AppColors.textPrimary,
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: AppColors.background,
+        foregroundColor: AppColors.textPrimary,
+        elevation: 0,
+      ),
+    );
+  }
+
+  ThemeData _buildDarkTheme() {
+    // 台灣繁體中文教學註解：
+    // 深色主題先處理全域背景、文字與 Material 元件基礎色；
+    // 部分既有首頁插畫卡片仍保留品牌色，避免一鍵深色後失去首頁識別。
+    const darkBackground = Color(0xFF0F1216);
+    const darkSurface = Color(0xFF171C22);
+    const darkText = Color(0xFFF2F4F7);
+
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: darkBackground,
+      colorScheme: ColorScheme.fromSeed(
+        brightness: Brightness.dark,
+        seedColor: const Color(0xFF9FB0C6),
+        primary: const Color(0xFF9FB0C6),
+        surface: darkSurface,
+      ),
+      textTheme: Typography.whiteMountainView.apply(
+        bodyColor: darkText,
+        displayColor: darkText,
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: darkBackground,
+        foregroundColor: darkText,
+        elevation: 0,
       ),
     );
   }
@@ -166,6 +226,13 @@ class _IslandBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final shellColor = isDark
+        ? const Color(0xFF1A2028)
+        : const Color.fromARGB(255, 239, 239, 239);
+    final selectedColor =
+        isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary;
+    final unselectedColor = selectedColor.withValues(alpha: 0.42);
     // 文字縮放時一起拉高底部島的高度，避免 icon 與文字互相擠壓。
     final extraHeight = context.adaptiveBuffer(12);
     final navShellHeight = 76 + extraHeight;
@@ -178,7 +245,7 @@ class _IslandBottomNav extends StatelessWidget {
         child: Container(
           height: navHeight,
           decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 239, 239, 239),
+            color: shellColor,
             borderRadius: BorderRadius.circular(34),
             boxShadow: const [
               BoxShadow(
@@ -225,9 +292,8 @@ class _IslandBottomNav extends StatelessWidget {
                                 isSelected ? item.selectedIcon : item.icon,
                                 size: 25,
                                 color: isSelected
-                                    ? AppColors.textPrimary
-                                    : AppColors.textPrimary
-                                        .withValues(alpha: 0.42),
+                                    ? selectedColor
+                                    : unselectedColor,
                               ),
                             ),
                             const SizedBox(height: 5),
@@ -236,7 +302,7 @@ class _IslandBottomNav extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 11 + context.adaptiveBuffer(1.5),
                                 fontWeight: FontWeight.w400,
-                                color: AppColors.textPrimary,
+                                color: selectedColor,
                               ),
                             ),
                           ],

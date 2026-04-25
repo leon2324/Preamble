@@ -7,139 +7,160 @@ import 'package:lawapp/data/mock_data/home/home_v2_mock_data.dart';
 import 'package:lawapp/theme/app_colors.dart';
 
 class HomeV2AiAssistantCard extends StatelessWidget {
-  const HomeV2AiAssistantCard({super.key});
+  const HomeV2AiAssistantCard({super.key, required this.onTap});
+
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: HomeV2Palette.aiYellow,
+    // 台灣繁體中文教學註解：
+    // 首頁這張卡只扮演「導到小法助入口」的角色，實際提問、guest 次數限制
+    // 與後端設定判斷都集中在 LawAssistantSearchPage，避免日後維護兩套流程。
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(22.r),
-        border: Border.all(color: const Color(0xFFE8B95F)),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x14000000),
-            blurRadius: 18,
-            offset: Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 34.w,
-                height: 34.w,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.72),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Icon(
-                  Icons.psychology_alt_outlined,
-                  color: const Color(0xFF94610D),
-                  size: 22.sp,
-                ),
+        child: Ink(
+          padding: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            color: HomeV2Palette.aiYellow,
+            borderRadius: BorderRadius.circular(22.r),
+            border: Border.all(color: const Color(0xFFE8B95F)),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x14000000),
+                blurRadius: 18,
+                offset: Offset(0, 8),
               ),
-              SizedBox(width: 10.w),
-              Expanded(
-                child: Text(
-                  'AI 法律輔助',
-                  style: TextStyle(
-                    color: const Color(0xFF5C3A07),
-                    fontSize: 17.sp,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ),
-              const _BetaBadge(),
             ],
           ),
-          SizedBox(height: 14.h),
-          Text(
-            '請描述你遇到的法律問題',
-            style: TextStyle(
-              color: const Color(0xFF5C3A07),
-              fontSize: 17.sp,
-              fontWeight: FontWeight.w900,
-            ),
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            '越完整描述情境，越能提供精準的建議與法規來源。',
-            style: TextStyle(
-              color: const Color(0xFF8C651E),
-              fontSize: 11.sp,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          SizedBox(height: 14.h),
-          Container(
-            padding: EdgeInsets.fromLTRB(14.w, 10.h, 8.w, 10.h),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20.r),
-              border: Border.all(color: const Color(0xFFE4C179)),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    '例如：房東不退押金怎麼辦？',
-                    style: TextStyle(
-                      color: AppColors.textMuted,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w500,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 34.w,
+                    height: 34.w,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.72),
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Icon(
+                      Icons.psychology_alt_outlined,
+                      color: const Color(0xFF94610D),
+                      size: 22.sp,
                     ),
                   ),
-                ),
-                Container(
-                  width: 42.w,
-                  height: 42.w,
-                  decoration: const BoxDecoration(
-                    color: HomeV2Palette.trustGreen,
-                    shape: BoxShape.circle,
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: Text(
+                      'AI 法律輔助',
+                      style: TextStyle(
+                        color: const Color(0xFF5C3A07),
+                        fontSize: 17.sp,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
                   ),
-                  child: Icon(
-                    Icons.arrow_forward_rounded,
-                    color: Colors.white,
-                    size: 24.sp,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 12.h),
-          Row(
-            children: [
-              Icon(
-                Icons.lock_open_rounded,
-                color: HomeV2Palette.trustGreen,
-                size: 15.sp,
+                  const _BetaBadge(),
+                ],
               ),
-              SizedBox(width: 6.w),
-              Expanded(
-                child: Text(
-                  '未登入也可使用基礎查詢，登入後可保存紀錄與追蹤案件。',
-                  style: TextStyle(
-                    color: const Color(0xFF6B4B14),
-                    fontSize: 10.sp,
-                    fontWeight: FontWeight.w600,
+              SizedBox(height: 14.h),
+              Text(
+                '請描述你遇到的法律問題',
+                style: TextStyle(
+                  color: const Color(0xFF5C3A07),
+                  fontSize: 17.sp,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                '越完整描述情境，越能提供精準的建議與法規來源。',
+                style: TextStyle(
+                  color: const Color(0xFF8C651E),
+                  fontSize: 11.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(height: 14.h),
+              Semantics(
+                button: true,
+                label: '前往問小法助',
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(14.w, 10.h, 8.w, 10.h),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20.r),
+                    border: Border.all(color: const Color(0xFFE4C179)),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '例如：房東不退押金怎麼辦？',
+                          style: TextStyle(
+                            color: AppColors.textMuted,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 42.w,
+                        height: 42.w,
+                        decoration: const BoxDecoration(
+                          color: HomeV2Palette.trustGreen,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.arrow_forward_rounded,
+                          color: Colors.white,
+                          size: 24.sp,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+              ),
+              SizedBox(height: 12.h),
+              Row(
+                children: [
+                  Icon(
+                    Icons.lock_open_rounded,
+                    color: HomeV2Palette.trustGreen,
+                    size: 15.sp,
+                  ),
+                  SizedBox(width: 6.w),
+                  Expanded(
+                    child: Text(
+                      '未登入也可使用基礎查詢，登入後可保存紀錄與追蹤案件。',
+                      style: TextStyle(
+                        color: const Color(0xFF6B4B14),
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
 }
 
 class HomeV2QuickIssueGrid extends StatelessWidget {
-  const HomeV2QuickIssueGrid({super.key});
+  const HomeV2QuickIssueGrid({
+    super.key,
+    this.onIssueTap,
+  });
+
+  final ValueChanged<HomeV2IssueItem>? onIssueTap;
 
   @override
   Widget build(BuildContext context) {
@@ -150,38 +171,189 @@ class HomeV2QuickIssueGrid extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         itemBuilder: (context, index) {
           final item = homeV2IssueItems[index];
-          return Container(
+          final radius = BorderRadius.circular(18.r);
+
+          return SizedBox(
             width: 74.w,
-            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
-            decoration: BoxDecoration(
-              color: item.color,
-              borderRadius: BorderRadius.circular(18.r),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  item.icon,
-                  color: HomeV2Palette.trustGreen,
-                  size: 25.sp,
-                ),
-                SizedBox(height: 7.h),
-                FittedBox(
-                  child: Text(
-                    item.label,
-                    style: TextStyle(
-                      color: HomeV2Palette.trustGreen,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w800,
-                    ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: onIssueTap == null ? null : () => onIssueTap!(item),
+                borderRadius: radius,
+                child: Ink(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
+                  decoration: BoxDecoration(
+                    color: item.color,
+                    borderRadius: radius,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        item.icon,
+                        color: HomeV2Palette.trustGreen,
+                        size: 25.sp,
+                      ),
+                      SizedBox(height: 7.h),
+                      FittedBox(
+                        child: Text(
+                          item.label,
+                          style: TextStyle(
+                            color: HomeV2Palette.trustGreen,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
           );
         },
         separatorBuilder: (_, __) => SizedBox(width: 10.w),
         itemCount: homeV2IssueItems.length,
+      ),
+    );
+  }
+}
+
+class HomeV2MmpFeatureStrip extends StatelessWidget {
+  const HomeV2MmpFeatureStrip({
+    super.key,
+    required this.onOpenTools,
+    required this.onOpenCases,
+    required this.onOpenProfile,
+  });
+
+  final VoidCallback onOpenTools;
+  final VoidCallback onOpenCases;
+  final VoidCallback onOpenProfile;
+
+  @override
+  Widget build(BuildContext context) {
+    // 台灣繁體中文教學註解：
+    // 這排是首頁進入完整 MMP 的三個主入口，對應「解決問題、看案例、管理權限」。
+    // 之後若新增正式文件 API 或收藏 API，優先從各入口進到專頁，不把首頁塞成工具頁。
+    final items = [
+      _MmpFeatureItem(
+        title: '文件產生',
+        subtitle: '存證、協商、備忘',
+        icon: Icons.description_outlined,
+        color: const Color(0xFFF6E8D7),
+        onTap: onOpenTools,
+      ),
+      _MmpFeatureItem(
+        title: '案例庫',
+        subtitle: '社會案件與爭點',
+        icon: Icons.local_library_outlined,
+        color: HomeV2Palette.lawBlue,
+        onTap: onOpenCases,
+      ),
+      _MmpFeatureItem(
+        title: '會員權限',
+        subtitle: '登入、Pro、收藏',
+        icon: Icons.verified_user_outlined,
+        color: HomeV2Palette.mint,
+        onTap: onOpenProfile,
+      ),
+    ];
+
+    final stripHeight = 118.h + MediaQuery.textScalerOf(context).scale(4);
+
+    return SizedBox(
+      height: stripHeight,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemBuilder: (context, index) {
+          return _MmpFeatureCard(item: items[index]);
+        },
+        separatorBuilder: (_, __) => SizedBox(width: 10.w),
+        itemCount: items.length,
+      ),
+    );
+  }
+}
+
+class _MmpFeatureItem {
+  const _MmpFeatureItem({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.color,
+    required this.onTap,
+  });
+
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+}
+
+class _MmpFeatureCard extends StatelessWidget {
+  const _MmpFeatureCard({required this.item});
+
+  final _MmpFeatureItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: item.onTap,
+        borderRadius: BorderRadius.circular(20.r),
+        child: Container(
+          width: 122.w,
+          padding: EdgeInsets.all(13.w),
+          decoration: BoxDecoration(
+            color: item.color,
+            borderRadius: BorderRadius.circular(20.r),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.72)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Icon(item.icon, color: HomeV2Palette.trustGreen, size: 25.sp),
+              SizedBox(height: 10.h),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      item.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: HomeV2Palette.ink,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w900,
+                        height: 1.12,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      item.subtitle,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w600,
+                        height: 1.2,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -429,112 +601,124 @@ class _HomeV2DailyMissionCardState extends State<HomeV2DailyMissionCard> {
 }
 
 class HomeV2NewsletterCard extends StatelessWidget {
-  const HomeV2NewsletterCard({super.key});
+  const HomeV2NewsletterCard({
+    super.key,
+    this.onTap,
+  });
+
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.fromLTRB(14.w, 16.h, 14.w, 12.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF6E8D7),
-        borderRadius: BorderRadius.circular(24.r),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.72)),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x128B6A3C),
-            blurRadius: 18,
-            offset: Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '狗咬人，主人要賠？！',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: const Color(0xFF2B4499),
-                        fontSize: 17.sp,
-                        fontWeight: FontWeight.w800,
-                        height: 1.15,
-                      ),
-                    ),
-                    SizedBox(height: 10.h),
-                    Text(
-                      '根據《民法》第 195 條，飼主有責任控管動物。若狗咬人，可能得賠醫藥費、精神損失費等。',
-                      maxLines: 4,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 11.sp,
-                        height: 1.45,
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      '小提醒：遛狗記得繫牽繩，也別忘記植晶片喔！',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: const Color(0xFF3F8B2A),
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(width: 12.w),
-              Container(
-                width: 112.w,
-                height: 104.h,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFD2BE98),
-                  borderRadius: BorderRadius.circular(20.r),
-                ),
-                child: Icon(
-                  Icons.pets_rounded,
-                  color: Colors.white,
-                  size: 38.sp,
-                ),
+    // 台灣繁體中文教學註解：
+    // 這張小報卡片目前先導向法務部「全國法規最新消息」公開清單，
+    // 等後端 RAG 完成後，可把摘要與統計改由後端產生，首頁元件不需要改結構。
+    final radius = BorderRadius.circular(24.r);
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: radius,
+        child: Ink(
+          width: double.infinity,
+          padding: EdgeInsets.fromLTRB(14.w, 16.h, 14.w, 12.h),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF6E8D7),
+            borderRadius: radius,
+            border: Border.all(color: Colors.white.withValues(alpha: 0.72)),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x128B6A3C),
+                blurRadius: 18,
+                offset: Offset(0, 10),
               ),
             ],
           ),
-          SizedBox(height: 12.h),
-          const Row(
+          child: Column(
             children: [
-              _NewsletterMetric(
-                icon: Icons.favorite_border_rounded,
-                color: Color(0xFFD85A53),
-                label: '300+',
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '全國法規最新消息',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: const Color(0xFF2B4499),
+                            fontSize: 17.sp,
+                            fontWeight: FontWeight.w800,
+                            height: 1.18,
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        Text(
+                          '即時讀取法務部公開列表，掌握法規命令修正與廢止動態。',
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 11.sp,
+                            height: 1.45,
+                          ),
+                        ),
+                        SizedBox(height: 8.h),
+                        Text(
+                          '小提醒：點進去可開啟官方來源頁面。',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: const Color(0xFF3F8B2A),
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  Container(
+                    width: 112.w,
+                    height: 104.h,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFD7C8A6),
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: Icon(
+                      Icons.rule_folder_rounded,
+                      color: Colors.white,
+                      size: 38.sp,
+                    ),
+                  ),
+                ],
               ),
-              _NewsletterMetric(
-                icon: Icons.share_outlined,
-                color: Color(0xFF9B874A),
-                label: '100+',
-              ),
-              _NewsletterMetric(
-                icon: Icons.comment_rounded,
-                color: Color(0xFF4F8F36),
-                label: '100+',
-              ),
-              _NewsletterMetric(
-                icon: Icons.download_rounded,
-                color: Color(0xFF4A8E88),
-                label: '500+',
+              SizedBox(height: 12.h),
+              const Row(
+                children: [
+                  _NewsletterMetric(
+                    icon: Icons.verified_outlined,
+                    color: Color(0xFF4F8F36),
+                    label: '官方',
+                  ),
+                  _NewsletterMetric(
+                    icon: Icons.update_rounded,
+                    color: Color(0xFF9B874A),
+                    label: '即時',
+                  ),
+                  _NewsletterMetric(
+                    icon: Icons.open_in_new_rounded,
+                    color: Color(0xFF4A8E88),
+                    label: '來源',
+                  ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -587,7 +771,12 @@ class HomeV2DiscussionCard extends StatelessWidget {
 }
 
 class HomeV2TopicSeries extends StatelessWidget {
-  const HomeV2TopicSeries({super.key});
+  const HomeV2TopicSeries({
+    super.key,
+    this.onTopicTap,
+  });
+
+  final ValueChanged<HomeV2TopicItem>? onTopicTap;
 
   @override
   Widget build(BuildContext context) {
@@ -603,6 +792,7 @@ class HomeV2TopicSeries extends StatelessWidget {
                 subtitle: item.subtitle,
                 color: item.color,
                 icon: item.icon,
+                onTap: onTopicTap == null ? null : () => onTopicTap!(item),
               ),
             )
             .toList(growable: false),
@@ -831,46 +1021,66 @@ class _TopicCard extends StatelessWidget {
     required this.subtitle,
     required this.color,
     required this.icon,
+    this.onTap,
   });
 
   final String title;
   final String subtitle;
   final Color color;
   final IconData icon;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final radius = BorderRadius.circular(22.r);
+
+    return SizedBox(
       width: 168.w,
-      margin: EdgeInsets.only(right: 12.w),
-      padding: EdgeInsets.all(14.w),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(22.r),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, color: HomeV2Palette.trustGreen, size: 28.sp),
-          const Spacer(),
-          Text(
-            title,
-            style: TextStyle(
-              color: HomeV2Palette.ink,
-              fontSize: 15.sp,
-              fontWeight: FontWeight.w900,
+      child: Padding(
+        padding: EdgeInsets.only(right: 12.w),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: radius,
+            child: Ink(
+              padding: EdgeInsets.all(14.w),
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: radius,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(icon, color: HomeV2Palette.trustGreen, size: 28.sp),
+                  const Spacer(),
+                  Text(
+                    title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: HomeV2Palette.ink,
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w900,
+                      height: 1.18,
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    subtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          SizedBox(height: 4.h),
-          Text(
-            subtitle,
-            style: TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

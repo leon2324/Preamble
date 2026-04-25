@@ -14,22 +14,23 @@ class StatuteApiService {
   static final Uri chineseLawUri = Uri.parse(
     'https://law.moj.gov.tw/api/ch/law/json',
   );
+  static final Uri chineseOrderUri = Uri.parse(
+    'https://law.moj.gov.tw/api/ch/order/json',
+  );
 
   final http.Client _client;
 
   Future<List<StatuteItem>> fetchChineseLawItems() async {
-    final response = await _client.get(chineseLawUri);
-
-    if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw StatuteApiException('法規資料讀取失敗：HTTP ${response.statusCode}');
-    }
-
-    final decoded = jsonDecode(_decodeBody(response.bodyBytes));
-    final items = <StatuteItem>[];
-    _collectItems(decoded, const _LawParseContext(), items);
+    // 台灣繁體中文教學註解：
+    // 使用者期待的是「台灣法規大全」，不只法律，也包含行政命令。
+    // 因此第一版直接合併 MOJ 的 law 與 order 兩個官方 JSON 端點。
+    final itemGroups = await Future.wait([
+      _fetchItemsFromUri(chineseLawUri),
+      _fetchItemsFromUri(chineseOrderUri),
+    ]);
 
     final uniqueItems = <String, StatuteItem>{};
-    for (final item in items) {
+    for (final item in itemGroups.expand((items) => items)) {
       final key = '${item.codeName}-${item.articleNumber}-${item.articleText}';
       uniqueItems.putIfAbsent(key, () => item);
     }
@@ -39,6 +40,20 @@ class StatuteApiService {
     }
 
     return uniqueItems.values.toList(growable: false);
+  }
+
+  Future<List<StatuteItem>> _fetchItemsFromUri(Uri uri) async {
+    final response = await _client.get(uri);
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw StatuteApiException('法規資料讀取失敗：HTTP ${response.statusCode}');
+    }
+
+    final decoded = jsonDecode(_decodeBody(response.bodyBytes));
+    final items = <StatuteItem>[];
+    _collectItems(decoded, const _LawParseContext(), items);
+
+    return items;
   }
 
   void dispose() {

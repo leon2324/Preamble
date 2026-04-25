@@ -17,6 +17,46 @@ class HomeV2SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final shouldStack = MediaQuery.sizeOf(context).width < 360 ||
+        MediaQuery.textScalerOf(context).scale(1) > 1.12;
+
+    if (shouldStack) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              color: HomeV2Palette.ink,
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w900,
+              height: 1.15,
+            ),
+          ),
+          if (action != null && onTap != null) ...[
+            SizedBox(height: 4.h),
+            TextButton(
+              onPressed: onTap,
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.textSecondary,
+                visualDensity: VisualDensity.compact,
+                padding: EdgeInsets.zero,
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(action!, style: TextStyle(fontSize: 11.sp)),
+                  Icon(Icons.chevron_right_rounded, size: 18.sp),
+                ],
+              ),
+            ),
+          ],
+        ],
+      );
+    }
+
     return Row(
       children: [
         Expanded(
@@ -134,15 +174,21 @@ class HomeV2SmallPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textScale = MediaQuery.textScalerOf(context).scale(1);
+
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: 10.w,
+        vertical: textScale > 1.15 ? 7.h : 6.h,
+      ),
       decoration: BoxDecoration(
         color: background,
         borderRadius: BorderRadius.circular(99.r),
         border: borderColor == null ? null : Border.all(color: borderColor!),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+      child: Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: 3.w,
         children: [
           Text(
             label,
@@ -150,12 +196,10 @@ class HomeV2SmallPill extends StatelessWidget {
               color: textColor,
               fontSize: 10.sp,
               fontWeight: FontWeight.w800,
+              height: 1.1,
             ),
           ),
-          if (icon != null) ...[
-            SizedBox(width: 3.w),
-            Icon(icon, color: textColor, size: 15.sp),
-          ],
+          if (icon != null) Icon(icon, color: textColor, size: 15.sp),
         ],
       ),
     );

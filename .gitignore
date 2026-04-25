@@ -26,6 +26,8 @@ migrate_working_dir/
 # Flutter/Dart/Pub related
 **/doc/api/
 **/ios/Flutter/.last_build_id
+# 台灣繁體中文教學註解：iOS 的 Xcode build cache 是本機產物，不應進入 PR。
+ios/build/
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies

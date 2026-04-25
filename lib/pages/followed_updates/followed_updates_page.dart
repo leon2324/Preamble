@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lawapp/app/app_state.dart';
 import 'package:lawapp/components/search/search_page_layout.dart';
 import 'package:lawapp/data/mock_data/followed_updates/followed_updates_mock_data.dart';
 
@@ -21,6 +22,8 @@ class _FollowedUpdatesPageState extends State<FollowedUpdatesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final appState = LawAppScope.of(context);
+
     return SearchPageLayout(
       controller: controller,
       hintText: '搜尋追蹤主題、Hashtag',
@@ -35,88 +38,121 @@ class _FollowedUpdatesPageState extends State<FollowedUpdatesPage> {
           16,
           contentBottomPadding,
         ),
-        children: [
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: notificationFilterLabels
-                .map(
-                  (label) => Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEAF0F8),
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                    child: Text(
-                      label,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF31486F),
+        children: appState.canTrackTopics
+            ? [
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: notificationFilterLabels
+                      .map(
+                        (label) => Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFEAF0F8),
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                          child: Text(
+                            label,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF31486F),
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+                const SizedBox(height: 16),
+                ...trackedTopicItems.map(
+                  (item) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: const Color(0xFFE5E7EB)),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFEAF0F8),
+                              borderRadius: BorderRadius.circular(999),
+                            ),
+                            child: Text(
+                              item.tag,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFF31486F),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            item.title,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            item.summary,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              height: 1.5,
+                              color: Color(0xFF667085),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                )
-                .toList(),
-          ),
-          const SizedBox(height: 16),
-          ...trackedTopicItems.map(
-            (item) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: const Color(0xFFE5E7EB)),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 6,
+              ]
+            : [
+                Container(
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: const Color(0xFFE5E7EB)),
+                  ),
+                  child: const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.lock_outline_rounded,
+                          color: Color(0xFFD6A85F)),
+                      SizedBox(height: 10),
+                      Text(
+                        '登入後可以追蹤主題',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w800),
                       ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFEAF0F8),
-                        borderRadius: BorderRadius.circular(999),
-                      ),
-                      child: Text(
-                        item.tag,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF31486F),
+                      SizedBox(height: 8),
+                      Text(
+                        '訪客可以瀏覽公開內容；登入後會開啟法條、案件、Hashtag 與 AI 對話追蹤。',
+                        style: TextStyle(
+                          fontSize: 14,
+                          height: 1.5,
+                          color: Color(0xFF667085),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      item.title,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      item.summary,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        height: 1.5,
-                        color: Color(0xFF667085),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ),
-          ),
-        ],
+              ],
       ),
     );
   }

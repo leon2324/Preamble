@@ -60,7 +60,10 @@ class HomeV2HeroHeader extends StatelessWidget {
               ),
             ],
           ),
-          child: Row(
+          child: Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 8.w,
+            runSpacing: 6.h,
             children: [
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
@@ -77,16 +80,17 @@ class HomeV2HeroHeader extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(width: 8.w),
-              Expanded(
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 220.w),
                 child: Text(
                   '道路交通管理處罰條例修正',
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w800,
+                    height: 1.15,
                   ),
                 ),
               ),
@@ -108,43 +112,68 @@ class HomeV2GreetingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final shouldStack = MediaQuery.sizeOf(context).width < 360 ||
+        MediaQuery.textScalerOf(context).scale(1) > 1.08;
+
     return HomeV2SurfaceCard(
       padding: EdgeInsets.fromLTRB(18.w, 16.h, 14.w, 16.h),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
+      child: shouldStack
+          ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '早安，Leon',
-                  style: TextStyle(
-                    color: HomeV2Palette.ink,
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w800,
-                  ),
+                _GreetingTextBlock(),
+                SizedBox(height: 10.h),
+                const HomeV2SmallPill(
+                  label: '查看全部',
+                  icon: Icons.chevron_right_rounded,
+                  background: Colors.white,
+                  borderColor: AppColors.border,
+                  textColor: HomeV2Palette.ink,
                 ),
-                SizedBox(height: 4.h),
-                Text(
-                  '今天有 3 則與你相關的法律更新',
-                  style: TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(child: _GreetingTextBlock()),
+                const HomeV2SmallPill(
+                  label: '查看全部',
+                  icon: Icons.chevron_right_rounded,
+                  background: Colors.white,
+                  borderColor: AppColors.border,
+                  textColor: HomeV2Palette.ink,
                 ),
               ],
             ),
+    );
+  }
+}
+
+class _GreetingTextBlock extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '早安，Leon',
+          style: TextStyle(
+            color: HomeV2Palette.ink,
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w800,
+            height: 1.15,
           ),
-          const HomeV2SmallPill(
-            label: '查看全部',
-            icon: Icons.chevron_right_rounded,
-            background: Colors.white,
-            borderColor: AppColors.border,
-            textColor: HomeV2Palette.ink,
+        ),
+        SizedBox(height: 4.h),
+        Text(
+          '今天有 3 則與你相關的法律更新',
+          style: TextStyle(
+            color: AppColors.textSecondary,
+            fontSize: 11.sp,
+            fontWeight: FontWeight.w500,
+            height: 1.3,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

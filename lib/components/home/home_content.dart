@@ -6,10 +6,14 @@ class HomeNewsItem {
   const HomeNewsItem({
     required this.badge,
     required this.title,
+    this.sourceLabel,
+    this.url,
   });
 
   final String badge;
   final String title;
+  final String? sourceLabel;
+  final String? url;
 }
 
 class HomeNewsletterItem {

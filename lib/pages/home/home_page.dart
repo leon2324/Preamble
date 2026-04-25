@@ -7,7 +7,13 @@ import 'package:lawapp/components/home/v2/home_v2_header.dart';
 import 'package:lawapp/components/home/v2/home_v2_primitives.dart';
 import 'package:lawapp/components/home/v2/home_v2_sections.dart';
 import 'package:lawapp/data/mock_data/home/home_mock_data.dart';
+import 'package:lawapp/data/mock_data/home/home_v2_mock_data.dart';
+import 'package:lawapp/data/moj/moj_feed_item.dart';
+import 'package:lawapp/pages/home/home_subpages.dart';
 import 'package:lawapp/pages/learning/home_mission_quiz_page.dart';
+import 'package:lawapp/pages/learning/know_law_page.dart';
+import 'package:lawapp/pages/learning/statute_database_page.dart';
+import 'package:lawapp/pages/tools/legal_tools_page.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
 import 'package:lawapp/theme/app_colors.dart';
 
@@ -39,6 +45,73 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void _openLawAssistantSearch() {
+    // 台灣繁體中文教學註解：
+    // 首頁新版卡片直接推到學習頁同一個小法助入口，讓 guest 一次提問限制、
+    // 最近對話讀取與 LAWAPP_API_BASE_URL 判斷都由同一份頁面邏輯處理。
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const LawAssistantSearchPage(),
+      ),
+    );
+  }
+
+  void _openLegalTools() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const LegalToolsPage(),
+      ),
+    );
+  }
+
+  void _openCommonLegalIssues() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const CommonLegalIssuesPage(),
+      ),
+    );
+  }
+
+  void _openQuickIssue(HomeV2IssueItem item) {
+    // 台灣繁體中文教學註解：
+    // 首頁小圖示提供「直接進入該問題」的快捷路徑；法規查詢是資料庫，
+    // 其他生活情境則先帶著預填 prompt 進小法助，讓使用者可以補充細節。
+    if (item.label == '法規查詢') {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => const StatuteDatabasePage()),
+      );
+      return;
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => LawAssistantSearchPage(
+          initialPrompt: '我想了解${item.label}常見法律問題，可以先看哪些方向？',
+        ),
+      ),
+    );
+  }
+
+  void _openStatuteDatabase() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const StatuteDatabasePage()),
+    );
+  }
+
+  void _openOfficialFeed(MojFeedCategory category) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => OfficialFeedPage(category: category),
+      ),
+    );
+  }
+
+  void _openLearningTopics() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const HomeLearningTopicsPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final layout = context.homeSearchLayout;
@@ -66,18 +139,26 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(height: 14.h),
                           const HomeV2GreetingCard(),
                           SizedBox(height: 12.h),
-                          const HomeV2AiAssistantCard(),
+                          HomeV2AiAssistantCard(
+                            onTap: _openLawAssistantSearch,
+                          ),
+                          SizedBox(height: 14.h),
+                          HomeV2MmpFeatureStrip(
+                            onOpenTools: _openLegalTools,
+                            onOpenCases: () => widget.onNavigateToTab(3),
+                            onOpenProfile: () => widget.onNavigateToTab(4),
+                          ),
                           SizedBox(height: 18.h),
                           HomeV2SectionHeader(
                             title: '常見法律問題',
                             action: '查看更多',
-                            onTap: () => widget.onNavigateToTab(1),
+                            onTap: _openCommonLegalIssues,
                           ),
                           SizedBox(height: 10.h),
-                          const HomeV2QuickIssueGrid(),
+                          HomeV2QuickIssueGrid(onIssueTap: _openQuickIssue),
                           SizedBox(height: 18.h),
                           HomeV2LawDatabaseCard(
-                            onTap: () => widget.onNavigateToTab(1),
+                            onTap: _openStatuteDatabase,
                           ),
                           SizedBox(height: 18.h),
                           HomeV2SectionHeader(
@@ -100,20 +181,28 @@ class _HomePageState extends State<HomePage> {
                           HomeV2SectionHeader(
                             title: '法律新知小報',
                             action: '更多小報',
-                            onTap: () => widget.onNavigateToTab(1),
+                            onTap: () =>
+                                _openOfficialFeed(MojFeedCategory.lawUpdates),
                           ),
                           SizedBox(height: 10.h),
-                          const HomeV2NewsletterCard(),
+                          HomeV2NewsletterCard(
+                            onTap: () =>
+                                _openOfficialFeed(MojFeedCategory.lawUpdates),
+                          ),
                           SizedBox(height: 18.h),
                           HomeV2SectionHeader(
                             title: '今日新聞',
                             action: '看全部',
-                            onTap: () => widget.onNavigateToTab(3),
+                            onTap: () =>
+                                _openOfficialFeed(MojFeedCategory.news),
                           ),
                           SizedBox(height: 10.h),
                           HomeNewsSection(
                             items: homeNewsItems,
-                            onMoreTap: () => widget.onNavigateToTab(3),
+                            onMoreTap: () =>
+                                _openOfficialFeed(MojFeedCategory.news),
+                            onItemTap: (_) =>
+                                _openOfficialFeed(MojFeedCategory.news),
                             showHeader: false,
                           ),
                           SizedBox(height: 18.h),
@@ -135,10 +224,12 @@ class _HomePageState extends State<HomePage> {
                           HomeV2SectionHeader(
                             title: '專題',
                             action: '全部專題',
-                            onTap: () => widget.onNavigateToTab(1),
+                            onTap: _openLearningTopics,
                           ),
                           SizedBox(height: 10.h),
-                          const HomeV2TopicSeries(),
+                          HomeV2TopicSeries(
+                            onTopicTap: (_) => _openLearningTopics(),
+                          ),
                           SizedBox(height: 112.h),
                         ],
                       ),

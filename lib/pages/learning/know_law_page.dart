@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lawapp/app/app_state.dart';
+import 'package:lawapp/components/home/v2/home_v2_palette.dart';
 import 'package:lawapp/data/law_assistant/guest_law_assistant_usage.dart';
 import 'package:lawapp/data/law_assistant/law_assistant_api_service.dart';
 import 'package:lawapp/data/law_assistant/law_assistant_models.dart';
@@ -41,7 +43,7 @@ class KnowLawPageState extends State<KnowLawPage> {
   void _openLearningSearch() {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => const _LearningSearchPage(),
+        builder: (_) => const LawAssistantSearchPage(),
       ),
     );
   }
@@ -227,7 +229,8 @@ class _LawAssistantPalette {
   static _LawAssistantPalette of(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // 教學註解：小法助配色用「深藍灰 + 灰綠 + 暖米金」。
+    // 教學註解：小法助沿用首頁新版的「暖米黃 + 信任綠 + 淡薄荷」方向，
+    // 讓使用者從首頁卡片進入後，視覺語言不會突然切回舊版學習頁風格。
     // 深色模式則提升明度與對比，避免主色在暗底上看起來灰掉。
     if (isDark) {
       return const _LawAssistantPalette(
@@ -250,36 +253,46 @@ class _LawAssistantPalette {
     }
 
     return const _LawAssistantPalette(
-      // 亮色模式：保持專業、乾淨、略帶溫度。
-      pageBackground: Color(0xFFFCFCFA),
+      // 亮色模式：直接承接 Home V2 色票，保留首頁卡片的溫暖與可信感。
+      pageBackground: AppColors.background,
       cardSurface: Colors.white,
-      introSurface: Color(0xFFF3F6F1),
-      subtleSurface: Color(0xFFF3F6F1),
-      chipSurface: Color(0xFFF3F6F1),
-      border: Color(0xFFD9DDD8),
-      neutralBorder: Color(0xFFD9DDD8),
-      // 主色：深藍灰
-      accent: Color(0xFF2F3A4A),
-      // 輔色：灰綠
-      secondary: Color(0xFF7E8F7A),
-      // 點綴：暖米金
-      // 教學註解：點綴色刻意比主色亮一階，讓徽章有溫度但不搶戲。
-      highlight: Color(0xFFE2C77C),
-      primaryText: Color(0xFF2F3A4A),
-      mutedText: Color(0xFF7A7F87),
-      inverseText: Color(0xFFFCFCFA),
+      introSurface: HomeV2Palette.aiYellow,
+      subtleSurface: HomeV2Palette.mint,
+      chipSurface: Color(0xFFFFFAEC),
+      border: Color(0xFFE4C179),
+      neutralBorder: Color(0xFFDDE7E0),
+      // 主色：首頁新版 trust green，用在主要 CTA、使用者泡泡與小法助 icon。
+      accent: HomeV2Palette.trustGreen,
+      // 輔色：首頁 AI 卡片的棕金文字色，用在次要說明與 pill。
+      secondary: Color(0xFF94610D),
+      // 點綴：暖米金，用在 Beta 徽章與角色小標，面積小但能接住首頁氛圍。
+      highlight: Color(0xFFE8B95F),
+      primaryText: HomeV2Palette.ink,
+      mutedText: AppColors.textSecondary,
+      inverseText: Colors.white,
     );
   }
 }
 
-class _LearningSearchPage extends StatefulWidget {
-  const _LearningSearchPage();
+/// 小法助提問入口頁。
+///
+/// 台灣繁體中文教學註解：
+/// 這個頁面刻意做成公開 widget，讓首頁新版「AI 法律輔助」卡片與學習頁
+/// 搜尋列都共用同一套提問流程。未來若要調整 guest 額度、後端設定提示或
+/// 最近對話載入，只要改這裡，不需要追兩個入口。
+class LawAssistantSearchPage extends StatefulWidget {
+  const LawAssistantSearchPage({
+    super.key,
+    this.initialPrompt,
+  });
+
+  final String? initialPrompt;
 
   @override
-  State<_LearningSearchPage> createState() => _LearningSearchPageState();
+  State<LawAssistantSearchPage> createState() => _LawAssistantSearchPageState();
 }
 
-class _LearningSearchPageState extends State<_LearningSearchPage> {
+class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   final LawAssistantApiService _assistantApiService = LawAssistantApiService();
@@ -294,6 +307,13 @@ class _LearningSearchPageState extends State<_LearningSearchPage> {
     // 教學註解：這頁是小法助入口與說明頁，先不要自動叫出鍵盤，
     // 才能讓使用者完整看到上方引導、常見提問與後續整理方式。
     _controller.addListener(() => setState(() {}));
+    final initialPrompt = widget.initialPrompt?.trim();
+    if (initialPrompt != null && initialPrompt.isNotEmpty) {
+      _controller.text = initialPrompt;
+      _controller.selection = TextSelection.collapsed(
+        offset: initialPrompt.length,
+      );
+    }
     _recentConversationsFuture =
         _assistantApiService.fetchRecentConversations();
     _loadGuestUsage();
@@ -345,8 +365,9 @@ class _LearningSearchPageState extends State<_LearningSearchPage> {
   void _submitPrompt() {
     final prompt = _controller.text.trim();
     if (prompt.isEmpty || _isCheckingGuestUsage) return;
+    final appState = LawAppScope.of(context);
 
-    if (_hasGuestUsed) {
+    if (appState.isGuest && _hasGuestUsed) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('未登入使用者只能先問一次；登入後可以保存更多對話。')),
       );
@@ -357,7 +378,10 @@ class _LearningSearchPageState extends State<_LearningSearchPage> {
     Navigator.of(context)
         .push(
           MaterialPageRoute(
-            builder: (_) => LawAssistantChatPage(initialPrompt: prompt),
+            builder: (_) => LawAssistantChatPage(
+              initialPrompt: prompt,
+              isGuestSession: appState.isGuest,
+            ),
           ),
         )
         .then((_) => _loadGuestUsage());
@@ -367,6 +391,8 @@ class _LearningSearchPageState extends State<_LearningSearchPage> {
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.paddingOf(context).top;
     final assistantPalette = _LawAssistantPalette.of(context);
+    final canSubmit =
+        _controller.text.trim().isNotEmpty && !_isCheckingGuestUsage;
 
     return Scaffold(
       backgroundColor: assistantPalette.pageBackground,
@@ -384,11 +410,18 @@ class _LearningSearchPageState extends State<_LearningSearchPage> {
             const _LawBuddyIntroBubble(),
             SizedBox(height: 14.h),
             Container(
-              padding: EdgeInsets.fromLTRB(14.w, 12.h, 10.w, 8.h),
+              padding: EdgeInsets.fromLTRB(16.w, 14.h, 10.w, 10.h),
               decoration: BoxDecoration(
                 color: assistantPalette.cardSurface,
-                borderRadius: BorderRadius.circular(18.r),
+                borderRadius: BorderRadius.circular(22.r),
                 border: Border.all(color: assistantPalette.border),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x12000000),
+                    blurRadius: 18,
+                    offset: Offset(0, 8),
+                  ),
+                ],
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -401,6 +434,9 @@ class _LearningSearchPageState extends State<_LearningSearchPage> {
                       maxLines: 4,
                       textInputAction: TextInputAction.newline,
                       decoration: InputDecoration(
+                        // 台灣繁體中文教學註解：
+                        // 這裡只收集使用者敘述，不在首頁做假輸入；按送出後會交給
+                        // LawAssistantChatPage 呼叫後端，並沿用 guest 一次提問限制。
                         hintText: '例如：房東說提前解約押金不能退，我該先看什麼？',
                         hintStyle: TextStyle(
                           fontSize: 13.sp,
@@ -437,18 +473,29 @@ class _LearningSearchPageState extends State<_LearningSearchPage> {
                           color: assistantPalette.secondary,
                         ),
                       ),
-                      IconButton(
-                        onPressed: _controller.text.trim().isEmpty
-                            ? null
-                            : _submitPrompt,
-                        tooltip: '送出問題',
-                        visualDensity: VisualDensity.compact,
-                        icon: Icon(
-                          Icons.arrow_upward_rounded,
-                          size: 20.sp,
-                          color: _controller.text.trim().isEmpty
-                              ? assistantPalette.mutedText
-                              : assistantPalette.accent,
+                      Tooltip(
+                        message: '送出問題',
+                        child: InkWell(
+                          onTap: canSubmit ? _submitPrompt : null,
+                          borderRadius: BorderRadius.circular(999.r),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 160),
+                            width: 40.w,
+                            height: 40.w,
+                            decoration: BoxDecoration(
+                              color: canSubmit
+                                  ? assistantPalette.accent
+                                  : assistantPalette.subtleSurface,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.arrow_forward_rounded,
+                              size: 22.sp,
+                              color: canSubmit
+                                  ? assistantPalette.inverseText
+                                  : assistantPalette.mutedText,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -1064,11 +1111,13 @@ class LawAssistantChatPage extends StatefulWidget {
     this.initialPrompt,
     this.conversationId,
     this.fallbackConversation,
+    this.isGuestSession = false,
   });
 
   final String? initialPrompt;
   final String? conversationId;
   final LawAssistantConversation? fallbackConversation;
+  final bool isGuestSession;
 
   @override
   State<LawAssistantChatPage> createState() => _LawAssistantChatPageState();
@@ -1148,10 +1197,12 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
     try {
       final conversation =
           await _assistantApiService.createConversation(prompt: prompt);
-      await _guestUsage.markUsed();
+      if (widget.isGuestSession) {
+        await _guestUsage.markUsed();
+      }
       if (!mounted) return;
       setState(() {
-        _conversation = conversation.copyWith(isGuest: true);
+        _conversation = conversation.copyWith(isGuest: widget.isGuestSession);
         _isLoading = false;
       });
       _scrollToBottom();
@@ -1172,7 +1223,7 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
       preview: prompt,
       updatedAt: now,
       categoryLabel: '臨時',
-      isGuest: true,
+      isGuest: widget.isGuestSession,
       messages: [
         LawAssistantMessage(
           id: 'guest-user-message',
@@ -1239,9 +1290,10 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
     final conversation = _conversation;
     final messages = conversation?.messages ?? const <LawAssistantMessage>[];
+    final assistantPalette = _LawAssistantPalette.of(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F7F0),
+      backgroundColor: assistantPalette.pageBackground,
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -1343,13 +1395,20 @@ class _AssistantAnswerContent extends StatelessWidget {
     final assistantPalette = _LawAssistantPalette.of(context);
     final answer = message.answer;
     if (answer == null || answer.isEmpty) {
-      return Text(
-        message.content,
-        style: TextStyle(
-          fontSize: 13.sp,
-          height: 1.45,
-          color: assistantPalette.primaryText,
-        ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            message.content,
+            style: TextStyle(
+              fontSize: 13.sp,
+              height: 1.45,
+              color: assistantPalette.primaryText,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          const _AssistantLegalDisclaimer(),
+        ],
       );
     }
 
@@ -1359,7 +1418,28 @@ class _AssistantAnswerContent extends StatelessWidget {
         _AssistantAnswerBlock(title: '問題方向', text: answer.problemDirection),
         _AssistantAnswerBlock(title: '相關內容', text: answer.relatedContent),
         _AssistantAnswerBlock(title: '下一步可以補充什麼', text: answer.nextStep),
+        const _AssistantLegalDisclaimer(),
       ],
+    );
+  }
+}
+
+class _AssistantLegalDisclaimer extends StatelessWidget {
+  const _AssistantLegalDisclaimer();
+
+  @override
+  Widget build(BuildContext context) {
+    final assistantPalette = _LawAssistantPalette.of(context);
+
+    // 台灣繁體中文教學註解：
+    // AI 回覆固定補上免責與求助提醒，避免使用者把初步整理誤認為律師正式意見。
+    return Text(
+      '提醒：這是法律資訊整理，不構成律師正式法律意見；若涉及期限、訴訟、刑事或重大權益，請諮詢專業律師或法律扶助。',
+      style: TextStyle(
+        fontSize: 10.5.sp,
+        height: 1.45,
+        color: assistantPalette.mutedText,
+      ),
     );
   }
 }
