@@ -17,51 +17,13 @@ class HomeV2SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final shouldStack = MediaQuery.sizeOf(context).width < 360 ||
-        MediaQuery.textScalerOf(context).scale(1) > 1.12;
-
-    if (shouldStack) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              color: HomeV2Palette.ink,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w900,
-              height: 1.15,
-            ),
-          ),
-          if (action != null && onTap != null) ...[
-            SizedBox(height: 4.h),
-            TextButton(
-              onPressed: onTap,
-              style: TextButton.styleFrom(
-                foregroundColor: AppColors.textSecondary,
-                visualDensity: VisualDensity.compact,
-                padding: EdgeInsets.zero,
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(action!, style: TextStyle(fontSize: 11.sp)),
-                  Icon(Icons.chevron_right_rounded, size: 18.sp),
-                ],
-              ),
-            ),
-          ],
-        ],
-      );
-    }
-
     return Row(
       children: [
         Expanded(
           child: Text(
             title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: HomeV2Palette.ink,
               fontSize: 16.sp,
@@ -70,19 +32,29 @@ class HomeV2SectionHeader extends StatelessWidget {
           ),
         ),
         if (action != null && onTap != null)
-          TextButton(
-            onPressed: onTap,
-            style: TextButton.styleFrom(
-              foregroundColor: AppColors.textSecondary,
-              visualDensity: VisualDensity.compact,
-              padding: EdgeInsets.symmetric(horizontal: 4.w),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(action!, style: TextStyle(fontSize: 11.sp)),
-                Icon(Icons.chevron_right_rounded, size: 18.sp),
-              ],
+          Semantics(
+            button: true,
+            label: action,
+            onTap: onTap,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: onTap,
+                customBorder: const CircleBorder(),
+                child: Container(
+                  width: 28.w,
+                  height: 28.w,
+                  decoration: const BoxDecoration(
+                    color: AppColors.textPrimary,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.chevron_right_rounded,
+                    color: Colors.white,
+                    size: 20.sp,
+                  ),
+                ),
+              ),
             ),
           ),
       ],

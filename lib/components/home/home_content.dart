@@ -25,6 +25,7 @@ class HomeNewsletterItem {
     required this.shares,
     required this.comments,
     required this.downloads,
+    this.category = '生活',
   });
 
   final String title;
@@ -34,6 +35,7 @@ class HomeNewsletterItem {
   final String shares;
   final String comments;
   final String downloads;
+  final String category;
 }
 
 class HomeTrackedTopic {

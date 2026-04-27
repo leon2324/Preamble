@@ -46,7 +46,12 @@ const homeNewsItems = [
   ),
 ];
 
-const homeNewsletterItems = [
+final homeNewsletterItems = [
+  ..._featuredTrapNoteItems,
+  ...List<HomeNewsletterItem>.generate(515, _buildGeneratedTrapNote),
+];
+
+const _featuredTrapNoteItems = [
   HomeNewsletterItem(
     title: '狗咬人，主人要賠？！',
     summary: '根據《民法》第195條，飼主有責任控管動物。若狗咬人，可能得賠醫藥費、精神損失費等。',
@@ -55,6 +60,7 @@ const homeNewsletterItems = [
     shares: '100+',
     comments: '100+',
     downloads: '500+',
+    category: '養狗',
   ),
   HomeNewsletterItem(
     title: '自拍時拍到別人臉，侵權了？！',
@@ -64,6 +70,7 @@ const homeNewsletterItems = [
     shares: '80+',
     comments: '64+',
     downloads: '180+',
+    category: '拍照隱私',
   ),
   HomeNewsletterItem(
     title: '租屋提前解約，押金一定拿不回來嗎？',
@@ -73,7 +80,131 @@ const homeNewsletterItems = [
     shares: '92+',
     comments: '58+',
     downloads: '210+',
+    category: '租屋',
   ),
+  HomeNewsletterItem(
+    title: '網購退貨，拆封就一定不能退嗎？',
+    summary: '七天鑑賞期不是試用期，但也不是商家一句「拆封不退」就能完全排除。',
+    tip: '小提醒：退貨前保留商品狀態、訂單頁面與客服對話。',
+    likes: '260+',
+    shares: '86+',
+    comments: '77+',
+    downloads: '240+',
+    category: '網購',
+  ),
+  HomeNewsletterItem(
+    title: '車禍後先道歉，會不會變成承認全責？',
+    summary: '事故責任仍要看證據、肇責判斷與調解內容；現場可以關心傷勢，但別急著簽不清楚的文件。',
+    tip: '小提醒：先報警、拍照、交換資料，再談和解。',
+    likes: '310+',
+    shares: '120+',
+    comments: '88+',
+    downloads: '330+',
+    category: '交通',
+  ),
+];
+
+HomeNewsletterItem _buildGeneratedTrapNote(int index) {
+  final category = _trapNoteCategories[index % _trapNoteCategories.length];
+  final topic = _trapNoteTopics[index % _trapNoteTopics.length];
+  final action = _trapNoteActions[index % _trapNoteActions.length];
+  final scenario = _trapNoteScenarios[index % _trapNoteScenarios.length];
+  final number = index + 1;
+
+  return HomeNewsletterItem(
+    title: '$category避坑筆記 $number：$scenario',
+    summary: '$topic 時，常見風險不是只有誰對誰錯，也包含證據、期限、通知方式與是否留下紀錄。',
+    tip: '小提醒：$action，先把事情說清楚，再決定要協商、申訴或查法規。',
+    likes: '${120 + (index * 7) % 880}+',
+    shares: '${32 + (index * 5) % 260}+',
+    comments: '${18 + (index * 3) % 190}+',
+    downloads: '${80 + (index * 11) % 920}+',
+    category: category,
+  );
+}
+
+const _trapNoteCategories = [
+  '最近',
+  '養狗',
+  '租屋',
+  '拍照隱私',
+  '網購',
+  '交通',
+  '職場',
+  '家庭',
+  '校園',
+  '醫療',
+  '旅遊',
+  '社群',
+  '金融',
+  '裝修',
+  '鄰里',
+  '外送',
+  '寵物',
+  '二手交易',
+  '活動票券',
+  '個資',
+];
+
+const _trapNoteTopics = [
+  '簽約前沒有看清楚條款',
+  '對方只用口頭承諾',
+  '付款後沒有留下收據',
+  '發生爭議時急著刪訊息',
+  '把私人照片傳到公開群組',
+  '借名登記或代收款項',
+  '社群留言太快下結論',
+  '共同生活費沒有記帳',
+  '臨時取消預約或訂單',
+  '被要求先匯保證金',
+  '收到存證信函卻放著不理',
+  '車禍現場沒有拍照',
+  '租屋點交沒有錄影',
+  '公司要求加班但沒有紀錄',
+  '寵物造成他人受傷或損害',
+  '網購商品瑕疵但包裝已丟',
+  '旅遊住宿描述與實際不符',
+  '醫療說明聽不懂卻直接簽名',
+  '裝修追加費沒有白紙黑字',
+  '孩子在校衝突沒有保存通知',
+];
+
+const _trapNoteScenarios = [
+  '先確認誰有證據',
+  '不要只相信截圖',
+  '付款紀錄很重要',
+  '合約附件也要保存',
+  '期限比情緒更急',
+  '先問清楚再簽名',
+  '公開發文前停一下',
+  '退貨規則要先看',
+  '維修報價要留底',
+  '和解內容要寫完整',
+  '證人資訊要記下來',
+  '通話後補一封文字確認',
+  '別急著承認全部責任',
+  '先把損害拍清楚',
+  '請對方提出明細',
+  '保固範圍要看文件',
+  '個資不要隨手傳',
+  '報案資料要留存',
+  '對方身分要核對',
+  '先查官方來源',
+];
+
+const _trapNoteActions = [
+  '截圖、拍照、保存原始檔',
+  '把日期、地點、對話對象記下來',
+  '請對方用文字確認說法',
+  '先看契約，再談感受',
+  '保留付款、匯款與發票資料',
+  '不要在情緒高點公開指名道姓',
+  '重要文件簽名前先拍照留存',
+  '先確認申訴或請求期限',
+  '要求明細、收據或報價單',
+  '把口頭約定補成文字紀錄',
+  '先找官方資料，不只看轉傳訊息',
+  '把證據存在雲端或寄給自己備份',
 ];
 
 const homeTrackedTopics = [

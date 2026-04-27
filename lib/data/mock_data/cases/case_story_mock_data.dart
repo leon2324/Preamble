@@ -8,6 +8,9 @@ class CaseStoryItem {
     required this.country,
     required this.statusLabel,
     required this.publicInterest,
+    required this.courtName,
+    required this.caseNumber,
+    required this.oneSentenceConclusion,
     required this.summary,
     required this.timeline,
     required this.legalIssues,
@@ -22,6 +25,9 @@ class CaseStoryItem {
   final String country;
   final String statusLabel;
   final int publicInterest;
+  final String courtName;
+  final String caseNumber;
+  final String oneSentenceConclusion;
   final String summary;
   final List<CaseTimelineItem> timeline;
   final List<String> legalIssues;
@@ -54,6 +60,9 @@ const caseStoryItems = [
     country: '台灣',
     statusLabel: '社會高度討論',
     publicInterest: 96,
+    courtName: '憲法法庭及各級法院公開裁判',
+    caseNumber: '憲法法庭與刑事確定判決資料',
+    oneSentenceConclusion: '制度爭點不能只看單一案件結果，法院會同時處理量刑、救濟與憲法界線。',
     summary: '從重大刑案被害情緒、死刑制度合憲性，到法庭如何看待量刑與救濟程序，這類案件常把社會價值衝突推到最前線。',
     timeline: [
       CaseTimelineItem(label: '案件定讞', description: '個案進入死刑確定判決與後續救濟階段。'),
@@ -72,6 +81,9 @@ const caseStoryItems = [
     country: '台灣',
     statusLabel: '常見高風險',
     publicInterest: 91,
+    courtName: '各級法院公開刑事裁判',
+    caseNumber: '詐欺、洗錢防制相關裁判整理',
+    oneSentenceConclusion: '法院通常會細看帳戶提供者、提款者是否知道資金來源與分工角色。',
     summary: '詐騙案件常不只是一通電話，背後包含收簿、轉帳、提款、洗錢與組織分工。一般民眾最需要知道的是如何避免被利用成犯罪鏈的一段。',
     timeline: [
       CaseTimelineItem(label: '帳戶取得', description: '犯罪者透過收購、租用或誘騙取得帳戶。'),
@@ -90,6 +102,9 @@ const caseStoryItems = [
     country: '台灣',
     statusLabel: '生活常見',
     publicInterest: 84,
+    courtName: '臺灣高等法院',
+    caseNumber: '112 年度上字第 123 號判決',
+    oneSentenceConclusion: '房東未能證明租屋有造成損害，法院認定不得扣除押金，應全額返還。',
     summary: '房東不退押金、提前解約、修繕費與點交紀錄，是民眾最常搜尋的法律場景之一。它適合作為一般人學會「事實整理」的第一個案例。',
     timeline: [
       CaseTimelineItem(label: '簽約入住', description: '雙方約定押金、租期、修繕與提前解約條款。'),

@@ -56,8 +56,8 @@ const legalSourceEntries = [
   LegalSourceEntry(
     title: '司法院裁判書開放資料',
     owner: '司法院',
-    description: '提供裁判書異動清單與全文。新版規格需平台帳密換 token，建議由後端排程同步。',
-    endpointLabel: 'JList、JDoc/{jid}',
+    description: '提供裁判書異動清單與全文。需平台帳密換 token 且限凌晨服務，正式產品應由後端排程同步，不建議前端爬裁判書網頁。',
+    endpointLabel: 'Auth、JList、JDoc/{jid}',
     url: 'https://opendata.judicial.gov.tw/',
     status: LegalSourceStatus.credentialRequired,
     icon: Icons.gavel_rounded,

@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lawapp/app/app_state.dart';
+import 'package:lawapp/data/common/app_loading_quotes.dart';
+import 'package:lawapp/data/mock_data/cases/case_story_mock_data.dart';
+import 'package:lawapp/data/mock_data/home/home_mock_data.dart';
 import 'package:lawapp/data/moj/moj_feed_item.dart';
 import 'package:lawapp/main.dart';
 import 'package:lawapp/pages/home/home_subpages.dart';
+import 'package:lawapp/pages/learning/statute_database_page.dart';
+import 'package:lawapp/pages/trending/trending_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -32,7 +38,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('給你的小任務(*¯︶¯*)'), findsOneWidget);
-    expect(find.text('法律新知小報'), findsAtLeastNWidgets(1));
+    expect(find.text('生活避坑筆記'), findsAtLeastNWidgets(1));
     expect(find.text('今日新聞'), findsAtLeastNWidgets(1));
 
     await tester.drag(find.byType(CustomScrollView), const Offset(0, -900));
@@ -162,16 +168,17 @@ void main() {
     await tester.pumpAndSettle();
 
     // 台灣繁體中文教學註解：
-    // 用 scrollUntilVisible 取代固定距離拖曳，避免首頁內容高度微調後，
-    // 「更多題目」剛好被滑到螢幕外而導致 tap 打不到。
+    // 首頁 SectionHeader 的「更多」已改為 iOS 箭頭圖示，測試改走語意標籤，
+    // 讓畫面維持精簡但自動化仍能確認導頁功能。
+    final moreMissionButton = find.bySemanticsLabel('更多題目');
     await tester.scrollUntilVisible(
-      find.text('更多題目'),
+      moreMissionButton,
       240,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('更多題目'));
+    await tester.tap(moreMissionButton);
     await tester.pumpAndSettle();
 
     expect(find.text('小任務測驗'), findsOneWidget);
@@ -248,6 +255,12 @@ void main() {
     expect(find.text('法律學習專題'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
+    await tester.pumpWidget(testFrame(const LifeLegalTipsPage()));
+    await tester.pumpAndSettle();
+    expect(find.text('生活避坑筆記'), findsOneWidget);
+    expect(find.text('最近筆記'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+
     await tester.pumpWidget(
       testFrame(
         const OfficialFeedDetailPage(
@@ -263,5 +276,60 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('開啟官方頁面'), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Side reference screens match compact app layout', (
+    WidgetTester tester,
+  ) async {
+    tester.view.devicePixelRatio = 2.0;
+    tester.view.physicalSize = const Size(640, 1136);
+    final appState = LawAppState();
+    addTearDown(() {
+      tester.view.resetDevicePixelRatio();
+      tester.view.resetPhysicalSize();
+      appState.dispose();
+    });
+
+    Widget testFrame(Widget child) {
+      return MediaQuery(
+        data: const MediaQueryData(
+          size: Size(320, 568),
+          textScaler: TextScaler.linear(1.18),
+        ),
+        child: ScreenUtilInit(
+          designSize: const Size(375, 812),
+          minTextAdapt: true,
+          splitScreenMode: true,
+          builder: (_, __) => LawAppScope(
+            state: appState,
+            child: MaterialApp(home: child),
+          ),
+        ),
+      );
+    }
+
+    // 台灣繁體中文教學註解：
+    // 左右兩張參考圖對應法規資料庫與案件解析，這裡鎖住初始入口與詳細頁不爆版。
+    await tester.pumpWidget(testFrame(const StatuteDatabasePage()));
+    await tester.pumpAndSettle();
+    expect(find.text('熱門查詢'), findsOneWidget);
+    expect(find.text('最近瀏覽'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+
+    await tester.pumpWidget(
+      testFrame(CaseStoryDetailPage(item: caseStoryItems.last)),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('案件解析'), findsOneWidget);
+    expect(find.text('一句話結論'), findsOneWidget);
+    expect(find.text('案件時光機'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  test('Life trap notes and loading quotes have enough content', () {
+    // 台灣繁體中文教學註解：
+    // 這個測試守住首頁與子頁的內容量，避免未來整理 mock data 時不小心刪太多。
+    expect(homeNewsletterItems.length, greaterThanOrEqualTo(500));
+    expect(appLoadingQuotes.length, 200);
   });
 }

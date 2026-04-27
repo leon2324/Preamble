@@ -106,6 +106,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void _openLifeLegalTips() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const LifeLegalTipsPage()),
+    );
+  }
+
   void _openLearningTopics() {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => const HomeLearningTopicsPage()),
@@ -179,15 +185,14 @@ class _HomePageState extends State<HomePage> {
                           ),
                           SizedBox(height: 18.h),
                           HomeV2SectionHeader(
-                            title: '法律新知小報',
-                            action: '更多小報',
-                            onTap: () =>
-                                _openOfficialFeed(MojFeedCategory.lawUpdates),
+                            title: '生活避坑筆記',
+                            action: '更多提醒',
+                            onTap: _openLifeLegalTips,
                           ),
                           SizedBox(height: 10.h),
                           HomeV2NewsletterCard(
-                            onTap: () =>
-                                _openOfficialFeed(MojFeedCategory.lawUpdates),
+                            item: homeNewsletterItems.first,
+                            onTap: _openLifeLegalTips,
                           ),
                           SizedBox(height: 18.h),
                           HomeV2SectionHeader(

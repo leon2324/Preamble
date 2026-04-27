@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
+import 'package:lawapp/components/home/home_content.dart';
 import 'package:lawapp/components/home/v2/home_v2_palette.dart';
 import 'package:lawapp/components/home/v2/home_v2_primitives.dart';
 import 'package:lawapp/data/mock_data/home/home_v2_mock_data.dart';
@@ -600,25 +601,80 @@ class _HomeV2DailyMissionCardState extends State<HomeV2DailyMissionCard> {
   }
 }
 
-class HomeV2NewsletterCard extends StatelessWidget {
+class HomeV2NewsletterCard extends StatefulWidget {
   const HomeV2NewsletterCard({
     super.key,
+    required this.item,
     this.onTap,
   });
 
+  final HomeNewsletterItem item;
   final VoidCallback? onTap;
+
+  @override
+  State<HomeV2NewsletterCard> createState() => _HomeV2NewsletterCardState();
+}
+
+class _HomeV2NewsletterCardState extends State<HomeV2NewsletterCard> {
+  var _isLiked = false;
+  var _isBookmarked = false;
+  var _shareCountDelta = 0;
+  var _commentCountDelta = 0;
+
+  HomeNewsletterItem get item => widget.item;
+
+  int _metricBase(String value) {
+    final digits = RegExp(r'\d+').firstMatch(value)?.group(0);
+    return int.tryParse(digits ?? '') ?? 0;
+  }
+
+  String _metricText(String value, int delta) {
+    final next = _metricBase(value) + delta;
+    return '$next+';
+  }
+
+  void _toggleLike() {
+    setState(() {
+      _isLiked = !_isLiked;
+    });
+  }
+
+  void _share() {
+    setState(() {
+      _shareCountDelta += 1;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('已複製分享連結示意。')),
+    );
+  }
+
+  void _comment() {
+    setState(() {
+      _commentCountDelta += 1;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('留言功能已預留，先幫你記一筆互動。')),
+    );
+  }
+
+  void _toggleBookmark() {
+    setState(() {
+      _isBookmarked = !_isBookmarked;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     // 台灣繁體中文教學註解：
-    // 這張小報卡片目前先導向法務部「全國法規最新消息」公開清單，
-    // 等後端 RAG 完成後，可把摘要與統計改由後端產生，首頁元件不需要改結構。
+    // 這張卡定位是「一般民眾用得到的生活法律提醒」，不是官方最新消息。
+    // 內容先吃 HomeNewsletterItem，未來可由後端依使用者身分或最近查詢推薦。
     final radius = BorderRadius.circular(24.r);
+    final icon = _iconForItem(item);
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: onTap,
+        onTap: widget.onTap,
         borderRadius: radius,
         child: Ink(
           width: double.infinity,
@@ -636,7 +692,20 @@ class HomeV2NewsletterCard extends StatelessWidget {
             ],
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                item.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: const Color(0xFF2B4499),
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.w900,
+                  height: 1.18,
+                ),
+              ),
+              SizedBox(height: 12.h),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -645,20 +714,8 @@ class HomeV2NewsletterCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '全國法規最新消息',
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: const Color(0xFF2B4499),
-                            fontSize: 17.sp,
-                            fontWeight: FontWeight.w800,
-                            height: 1.18,
-                          ),
-                        ),
-                        SizedBox(height: 10.h),
-                        Text(
-                          '即時讀取法務部公開列表，掌握法規命令修正與廢止動態。',
-                          maxLines: 3,
+                          item.summary,
+                          maxLines: 4,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             color: AppColors.textSecondary,
@@ -668,7 +725,7 @@ class HomeV2NewsletterCard extends StatelessWidget {
                         ),
                         SizedBox(height: 8.h),
                         Text(
-                          '小提醒：點進去可開啟官方來源頁面。',
+                          item.tip,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -689,7 +746,7 @@ class HomeV2NewsletterCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20.r),
                     ),
                     child: Icon(
-                      Icons.rule_folder_rounded,
+                      icon,
                       color: Colors.white,
                       size: 38.sp,
                     ),
@@ -697,22 +754,35 @@ class HomeV2NewsletterCard extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 12.h),
-              const Row(
+              Row(
                 children: [
                   _NewsletterMetric(
-                    icon: Icons.verified_outlined,
-                    color: Color(0xFF4F8F36),
-                    label: '官方',
+                    icon: _isLiked
+                        ? Icons.favorite_rounded
+                        : Icons.favorite_border_rounded,
+                    color: const Color(0xFFD85A53),
+                    label: _metricText(item.likes, _isLiked ? 1 : 0),
+                    onTap: _toggleLike,
                   ),
                   _NewsletterMetric(
-                    icon: Icons.update_rounded,
-                    color: Color(0xFF9B874A),
-                    label: '即時',
+                    icon: Icons.share_outlined,
+                    color: const Color(0xFF9B874A),
+                    label: _metricText(item.shares, _shareCountDelta),
+                    onTap: _share,
                   ),
                   _NewsletterMetric(
-                    icon: Icons.open_in_new_rounded,
-                    color: Color(0xFF4A8E88),
-                    label: '來源',
+                    icon: Icons.comment_rounded,
+                    color: const Color(0xFF4F8F36),
+                    label: _metricText(item.comments, _commentCountDelta),
+                    onTap: _comment,
+                  ),
+                  _NewsletterMetric(
+                    icon: _isBookmarked
+                        ? Icons.bookmark_rounded
+                        : Icons.bookmark_border_rounded,
+                    color: const Color(0xFF4A8E88),
+                    label: _metricText(item.downloads, _isBookmarked ? 1 : 0),
+                    onTap: _toggleBookmark,
                   ),
                 ],
               ),
@@ -721,6 +791,19 @@ class HomeV2NewsletterCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  IconData _iconForItem(HomeNewsletterItem item) {
+    if (item.category.contains('狗') || item.category.contains('寵物')) {
+      return Icons.pets_rounded;
+    }
+    if (item.category.contains('租')) return Icons.home_work_outlined;
+    if (item.category.contains('拍照') || item.category.contains('隱私')) {
+      return Icons.photo_camera_outlined;
+    }
+    if (item.category.contains('網購')) return Icons.shopping_bag_outlined;
+    if (item.category.contains('交通')) return Icons.directions_car_outlined;
+    return Icons.lightbulb_outline_rounded;
   }
 }
 
@@ -956,31 +1039,40 @@ class _NewsletterMetric extends StatelessWidget {
     required this.icon,
     required this.color,
     required this.label,
+    this.onTap,
   });
 
   final IconData icon;
   final Color color;
   final String label;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: FittedBox(
-        fit: BoxFit.scaleDown,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: color.withValues(alpha: 0.92), size: 17.sp),
-            SizedBox(width: 4.w),
-            Text(
-              label,
-              style: TextStyle(
-                color: HomeV2Palette.ink.withValues(alpha: 0.72),
-                fontSize: 11.sp,
-                fontWeight: FontWeight.w700,
-              ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12.r),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 4.h),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, color: color.withValues(alpha: 0.92), size: 17.sp),
+                SizedBox(width: 4.w),
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: HomeV2Palette.ink.withValues(alpha: 0.72),
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

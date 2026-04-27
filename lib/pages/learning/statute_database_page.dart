@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lawapp/data/common/app_loading_quotes.dart';
 import 'package:lawapp/data/statutes/statute_api_service.dart';
 import 'package:lawapp/data/statutes/statute_item.dart';
 import 'package:lawapp/theme/app_colors.dart';
@@ -17,36 +18,50 @@ class StatuteDatabasePage extends StatefulWidget {
 class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
   static const List<String> _quickFilters = [
     '全部',
-    '民法',
-    '刑法',
-    '勞動基準法',
-    '道路交通管理處罰條例',
-    '消費者保護法',
+    '法律',
+    '法規命令',
+    '行政規則',
+    '解釋函令',
   ];
-  static const List<_StatuteGuideEntry> _homeGuides = [
-    _StatuteGuideEntry(
-      title: '日常權利',
-      subtitle: '契約、租屋、損害賠償',
-      query: '民法',
-      icon: Icons.home_work_rounded,
+  static const List<_StatuteQueryEntry> _popularQueries = [
+    _StatuteQueryEntry(
+      title: '民法第 184 條',
+      subtitle: '侵權行為',
+      query: '民法 184',
     ),
-    _StatuteGuideEntry(
-      title: '職場保障',
-      subtitle: '工時、休假、薪資',
-      query: '勞動基準法',
-      icon: Icons.badge_rounded,
+    _StatuteQueryEntry(
+      title: '租賃契約相關法條',
+      subtitle: '租賃、押金、修繕',
+      query: '租賃',
     ),
-    _StatuteGuideEntry(
-      title: '交通生活',
-      subtitle: '道路規則與裁罰',
-      query: '道路交通管理處罰條例',
-      icon: Icons.directions_car_filled_rounded,
+    _StatuteQueryEntry(
+      title: '勞動基準法第 24 條',
+      subtitle: '工資、工時、加班',
+      query: '勞動基準法 24',
+    ),
+  ];
+  static const List<_StatuteQueryEntry> _defaultRecentEntries = [
+    _StatuteQueryEntry(
+      title: '民法第 184 條',
+      subtitle: '最後瀏覽：2026/04/23',
+      query: '民法 184',
+    ),
+    _StatuteQueryEntry(
+      title: '消費者保護法第 7 條',
+      subtitle: '最後瀏覽：2026/04/22',
+      query: '消費者保護法 7',
+    ),
+    _StatuteQueryEntry(
+      title: '道路交通管理處罰條例第 56 條',
+      subtitle: '最後瀏覽：2026/04/22',
+      query: '道路交通管理處罰條例 56',
     ),
   ];
 
   final StatuteApiService _service = StatuteApiService();
   late final TextEditingController _searchController;
-  late Future<List<StatuteItem>> _itemsFuture;
+  Future<List<StatuteItem>>? _itemsFuture;
+  late List<_StatuteQueryEntry> _recentEntries;
   String _query = '';
   String _selectedFilter = '全部';
 
@@ -55,7 +70,10 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
     super.initState();
     _query = widget.initialQuery;
     _searchController = TextEditingController(text: widget.initialQuery);
-    _itemsFuture = _service.fetchChineseLawItems();
+    if (widget.initialQuery.trim().isNotEmpty) {
+      _itemsFuture = _service.fetchChineseLawItems();
+    }
+    _recentEntries = List<_StatuteQueryEntry>.from(_defaultRecentEntries);
   }
 
   @override
@@ -71,6 +89,10 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
     });
   }
 
+  Future<List<StatuteItem>> _ensureItemsFuture() {
+    return _itemsFuture ??= _service.fetchChineseLawItems();
+  }
+
   void _applyGuideQuery(String query) {
     // 教學註解：首頁型入口會同時更新搜尋欄文字、篩選膠囊與查詢字串，
     // 讓使用者點入口後，看到的列表、搜尋欄狀態與選中的分類保持一致。
@@ -78,8 +100,80 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
       _searchController.text = query;
       _query = query;
       _selectedFilter = _quickFilters.contains(query) ? query : '全部';
+      _rememberQuery(query);
     });
     FocusManager.instance.primaryFocus?.unfocus();
+  }
+
+  void _rememberQuery(String query) {
+    if (query.trim().isEmpty) return;
+    _recentEntries.removeWhere((entry) => entry.query == query);
+    _recentEntries.insert(
+      0,
+      _StatuteQueryEntry(
+        title: query,
+        subtitle: '剛剛瀏覽',
+        query: query,
+      ),
+    );
+    if (_recentEntries.length > 5) {
+      _recentEntries = _recentEntries.take(5).toList(growable: true);
+    }
+  }
+
+  void _clearRecentEntries() {
+    setState(() {
+      _recentEntries = [];
+    });
+  }
+
+  void _openFilterSheet() {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: AppColors.background,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(26.r)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          top: false,
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(18.w, 18.h, 18.w, 22.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '篩選資料類型',
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                Wrap(
+                  spacing: 8.w,
+                  runSpacing: 8.h,
+                  children: _quickFilters.map((label) {
+                    return _FilterChipButton(
+                      label: label,
+                      isSelected: label == _selectedFilter,
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        setState(() {
+                          _selectedFilter = label;
+                        });
+                      },
+                    );
+                  }).toList(growable: false),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   List<StatuteItem> _filterItems(List<StatuteItem> items) {
@@ -89,7 +183,8 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
       final matchesQuery = item.matches(_query);
       final matchesFilter = _selectedFilter == '全部' ||
           item.codeName.contains(_selectedFilter) ||
-          item.category.contains(_selectedFilter);
+          item.category.contains(_selectedFilter) ||
+          item.tags.any((tag) => tag.contains(_selectedFilter));
       return matchesQuery && matchesFilter && !item.isRepealed;
     }).take(50);
 
@@ -100,6 +195,8 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.paddingOf(context).top;
 
+    final hasActiveSearch = _query.trim().isNotEmpty || _selectedFilter != '全部';
+
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F0),
       body: Padding(
@@ -107,13 +204,12 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            _StatuteTopBar(
+              onBack: () => Navigator.of(context).pop(),
+            ),
+            SizedBox(height: 18.h),
             Row(
               children: [
-                _RoundToolButton(
-                  icon: Icons.arrow_back_rounded,
-                  onTap: () => Navigator.of(context).pop(),
-                ),
-                SizedBox(width: 10.w),
                 Expanded(
                   child: _StatuteSearchField(
                     controller: _searchController,
@@ -132,88 +228,73 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
                     },
                   ),
                 ),
+                SizedBox(width: 10.w),
+                _FilterSquareButton(onTap: _openFilterSheet),
               ],
             ),
-            SizedBox(height: 18.h),
-            Text(
-              '法條資料庫',
-              style: TextStyle(
-                fontSize: 24.sp,
-                height: 1.05,
-                fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary,
-              ),
-            ),
-            SizedBox(height: 6.h),
-            Text(
-              '資料來源：全國法規資料庫法律與命令資料。以下內容僅作法規資料呈現，不構成法律意見。',
-              style: TextStyle(
-                fontSize: 12.sp,
-                height: 1.45,
-                color: AppColors.textSecondary,
-              ),
-            ),
             SizedBox(height: 14.h),
+            _StatuteFilterRail(
+              filters: _quickFilters,
+              selectedFilter: _selectedFilter,
+              onFilterTap: (label) {
+                setState(() {
+                  _selectedFilter = label;
+                });
+              },
+            ),
+            SizedBox(height: 20.h),
             Expanded(
-              child: FutureBuilder<List<StatuteItem>>(
-                future: _itemsFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const _StatuteLoadingState();
-                  }
+              child: hasActiveSearch
+                  ? FutureBuilder<List<StatuteItem>>(
+                      future: _ensureItemsFuture(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const _StatuteLoadingState();
+                        }
 
-                  if (snapshot.hasError) {
-                    return _StatuteErrorState(
-                      message: snapshot.error.toString(),
-                      onRetry: _reload,
-                    );
-                  }
-
-                  final items = _filterItems(snapshot.data ?? const []);
-                  if (items.isEmpty) {
-                    return const _StatuteEmptyState();
-                  }
-
-                  return ListView.separated(
-                    physics: const BouncingScrollPhysics(),
-                    keyboardDismissBehavior:
-                        ScrollViewKeyboardDismissBehavior.onDrag,
-                    padding: EdgeInsets.only(bottom: 28.h),
-                    itemCount: items.length + 1,
-                    separatorBuilder: (_, __) => SizedBox(height: 10.h),
-                    itemBuilder: (context, index) {
-                      if (index == 0) {
-                        return _StatuteHomeGuide(
-                          filters: _quickFilters,
-                          selectedFilter: _selectedFilter,
-                          guides: _homeGuides,
-                          onFilterTap: (label) {
-                            setState(() {
-                              _selectedFilter = label;
-                              _searchController.clear();
-                              _query = '';
-                            });
-                            FocusManager.instance.primaryFocus?.unfocus();
-                          },
-                          onGuideTap: _applyGuideQuery,
-                        );
-                      }
-
-                      final item = items[index - 1];
-                      return _StatuteResultCard(
-                        item: item,
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => StatuteDetailPage(item: item),
-                            ),
+                        if (snapshot.hasError) {
+                          return _StatuteErrorState(
+                            message: snapshot.error.toString(),
+                            onRetry: _reload,
                           );
-                        },
-                      );
-                    },
-                  );
-                },
-              ),
+                        }
+
+                        final items = _filterItems(snapshot.data ?? const []);
+                        if (items.isEmpty) {
+                          return const _StatuteEmptyState();
+                        }
+
+                        return ListView.separated(
+                          physics: const BouncingScrollPhysics(),
+                          keyboardDismissBehavior:
+                              ScrollViewKeyboardDismissBehavior.onDrag,
+                          padding: EdgeInsets.only(bottom: 28.h),
+                          itemCount: items.length,
+                          separatorBuilder: (_, __) => SizedBox(height: 10.h),
+                          itemBuilder: (context, index) {
+                            final item = items[index];
+                            return _StatuteResultCard(
+                              item: item,
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        StatuteDetailPage(item: item),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
+                    )
+                  : _StatuteLandingBody(
+                      popularQueries: _popularQueries,
+                      recentEntries: _recentEntries,
+                      onQueryTap: _applyGuideQuery,
+                      onClearRecent: _clearRecentEntries,
+                    ),
             ),
           ],
         ),
@@ -222,18 +303,16 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
   }
 }
 
-class _StatuteGuideEntry {
-  const _StatuteGuideEntry({
+class _StatuteQueryEntry {
+  const _StatuteQueryEntry({
     required this.title,
     required this.subtitle,
     required this.query,
-    required this.icon,
   });
 
   final String title;
   final String subtitle;
   final String query;
-  final IconData icon;
 }
 
 class StatuteDetailPage extends StatelessWidget {
@@ -341,66 +420,6 @@ class StatuteDetailPage extends StatelessWidget {
   }
 }
 
-class _StatuteSearchField extends StatelessWidget {
-  const _StatuteSearchField({
-    required this.controller,
-    required this.onChanged,
-    required this.onClear,
-  });
-
-  final TextEditingController controller;
-  final ValueChanged<String> onChanged;
-  final VoidCallback onClear;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 44.h,
-      decoration: BoxDecoration(
-        color: const Color(0xFFE6ECE6),
-        borderRadius: BorderRadius.circular(999.r),
-      ),
-      child: TextField(
-        controller: controller,
-        onChanged: onChanged,
-        textAlignVertical: TextAlignVertical.center,
-        decoration: InputDecoration(
-          hintText: '搜尋法規名稱、條號、關鍵字...',
-          hintStyle: TextStyle(
-            fontSize: 14.sp,
-            color: const Color(0xFF7E877B),
-          ),
-          border: InputBorder.none,
-          isCollapsed: true,
-          contentPadding: EdgeInsets.only(left: 16.w, right: 8.w),
-          suffixIcon: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.search_rounded,
-                size: 22.sp,
-                color: const Color(0xFF4B5647),
-              ),
-              if (controller.text.isNotEmpty)
-                IconButton(
-                  onPressed: onClear,
-                  visualDensity: VisualDensity.compact,
-                  tooltip: '清除搜尋關鍵字',
-                  icon: Icon(
-                    Icons.close_rounded,
-                    size: 18.sp,
-                    color: const Color(0xFF4B5647),
-                  ),
-                ),
-              SizedBox(width: 4.w),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _RoundToolButton extends StatelessWidget {
   const _RoundToolButton({
     required this.icon,
@@ -433,6 +452,159 @@ class _RoundToolButton extends StatelessWidget {
   }
 }
 
+class _StatuteTopBar extends StatelessWidget {
+  const _StatuteTopBar({required this.onBack});
+
+  final VoidCallback onBack;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 42.h,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: _RoundToolButton(
+              icon: Icons.arrow_back_rounded,
+              onTap: onBack,
+            ),
+          ),
+          Text(
+            '法規資料庫',
+            style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w900,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          SizedBox(width: 42.w),
+        ],
+      ),
+    );
+  }
+}
+
+class _StatuteSearchField extends StatelessWidget {
+  const _StatuteSearchField({
+    required this.controller,
+    required this.onChanged,
+    required this.onClear,
+  });
+
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onClear;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 44.h,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(13.r),
+        border: Border.all(color: const Color(0xFFE7E9DF)),
+      ),
+      child: TextField(
+        controller: controller,
+        onChanged: onChanged,
+        textAlignVertical: TextAlignVertical.center,
+        decoration: InputDecoration(
+          hintText: '搜尋法條、關鍵字或法規名稱',
+          hintStyle: TextStyle(
+            fontSize: 13.sp,
+            color: const Color(0xFF9AA19A),
+          ),
+          prefixIcon: Icon(
+            Icons.search_rounded,
+            size: 21.sp,
+            color: const Color(0xFF7E877B),
+          ),
+          suffixIcon: controller.text.isEmpty
+              ? null
+              : IconButton(
+                  onPressed: onClear,
+                  tooltip: '清除搜尋關鍵字',
+                  icon: Icon(
+                    Icons.close_rounded,
+                    size: 18.sp,
+                    color: const Color(0xFF4B5647),
+                  ),
+                ),
+          border: InputBorder.none,
+          isCollapsed: true,
+          contentPadding: EdgeInsets.symmetric(vertical: 13.h),
+        ),
+      ),
+    );
+  }
+}
+
+class _FilterSquareButton extends StatelessWidget {
+  const _FilterSquareButton({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(13.r),
+        child: Container(
+          width: 44.w,
+          height: 44.h,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(13.r),
+            border: Border.all(color: const Color(0xFFE7E9DF)),
+          ),
+          child: Icon(
+            Icons.tune_rounded,
+            size: 20.sp,
+            color: AppColors.textPrimary,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _StatuteFilterRail extends StatelessWidget {
+  const _StatuteFilterRail({
+    required this.filters,
+    required this.selectedFilter,
+    required this.onFilterTap,
+  });
+
+  final List<String> filters;
+  final String selectedFilter;
+  final ValueChanged<String> onFilterTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 32.h,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemBuilder: (context, index) {
+          final label = filters[index];
+          return _FilterChipButton(
+            label: label,
+            isSelected: label == selectedFilter,
+            onTap: () => onFilterTap(label),
+          );
+        },
+        separatorBuilder: (_, __) => SizedBox(width: 8.w),
+        itemCount: filters.length,
+      ),
+    );
+  }
+}
+
 class _FilterChipButton extends StatelessWidget {
   const _FilterChipButton({
     required this.label,
@@ -452,25 +624,20 @@ class _FilterChipButton extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(999.r),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
+          padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 7.h),
           decoration: BoxDecoration(
             color:
-                isSelected ? const Color(0xFFCFDDBF) : const Color(0xFFFFFAEC),
+                isSelected ? const Color(0xFFE4F0E8) : const Color(0xFFF1F2EE),
             borderRadius: BorderRadius.circular(999.r),
-            border: Border.all(
-              color: isSelected
-                  ? const Color(0xFFB9CAA8)
-                  : const Color(0xFFE2D7B8),
-            ),
           ),
           child: Text(
             label,
             style: TextStyle(
-              fontSize: 11.5.sp,
+              fontSize: 11.sp,
               fontWeight: FontWeight.w800,
               color: isSelected
-                  ? const Color(0xFF405238)
-                  : const Color(0xFF5C5C45),
+                  ? const Color(0xFF386249)
+                  : const Color(0xFF6C746C),
             ),
           ),
         ),
@@ -479,94 +646,106 @@ class _FilterChipButton extends StatelessWidget {
   }
 }
 
-class _StatuteHomeGuide extends StatelessWidget {
-  const _StatuteHomeGuide({
-    required this.filters,
-    required this.selectedFilter,
-    required this.guides,
-    required this.onFilterTap,
-    required this.onGuideTap,
+class _StatuteLandingBody extends StatelessWidget {
+  const _StatuteLandingBody({
+    required this.popularQueries,
+    required this.recentEntries,
+    required this.onQueryTap,
+    required this.onClearRecent,
   });
 
-  final List<String> filters;
-  final String selectedFilter;
-  final List<_StatuteGuideEntry> guides;
-  final ValueChanged<String> onFilterTap;
-  final ValueChanged<String> onGuideTap;
+  final List<_StatuteQueryEntry> popularQueries;
+  final List<_StatuteQueryEntry> recentEntries;
+  final ValueChanged<String> onQueryTap;
+  final VoidCallback onClearRecent;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      physics: const BouncingScrollPhysics(),
+      padding: EdgeInsets.only(bottom: 32.h),
+      children: [
+        _StatuteSectionTitle(title: '熱門查詢'),
+        SizedBox(height: 10.h),
+        _StatuteQueryPanel(
+          entries: popularQueries,
+          numbered: true,
+          onQueryTap: onQueryTap,
+        ),
+        SizedBox(height: 22.h),
+        _StatuteSectionTitle(title: '最近瀏覽'),
+        SizedBox(height: 10.h),
+        if (recentEntries.isEmpty)
+          const _StatuteQuietCard(message: '目前沒有瀏覽記錄。')
+        else ...[
+          _StatuteQueryPanel(
+            entries: recentEntries,
+            numbered: false,
+            onQueryTap: onQueryTap,
+          ),
+          SizedBox(height: 12.h),
+          Center(
+            child: TextButton(
+              onPressed: onClearRecent,
+              child: const Text('清除瀏覽記錄'),
+            ),
+          ),
+        ],
+        SizedBox(height: 10.h),
+        const _StatuteQuietCard(
+          message: '資料來源：全國法規資料庫法律與命令資料。本頁只呈現公開法規資料，不構成法律意見。',
+        ),
+      ],
+    );
+  }
+}
+
+class _StatuteSectionTitle extends StatelessWidget {
+  const _StatuteSectionTitle({required this.title});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      style: TextStyle(
+        fontSize: 15.sp,
+        fontWeight: FontWeight.w900,
+        color: AppColors.textPrimary,
+      ),
+    );
+  }
+}
+
+class _StatuteQueryPanel extends StatelessWidget {
+  const _StatuteQueryPanel({
+    required this.entries,
+    required this.numbered,
+    required this.onQueryTap,
+  });
+
+  final List<_StatuteQueryEntry> entries;
+  final bool numbered;
+  final ValueChanged<String> onQueryTap;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
-      padding: EdgeInsets.fromLTRB(14.w, 14.h, 14.w, 10.h),
       decoration: BoxDecoration(
-        color: const Color(0xFFEFF4E9),
-        borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: const Color(0xFFDDE8D5)),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(color: const Color(0xFFE7E9DF)),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Icon(
-                Icons.travel_explore_rounded,
-                size: 20.sp,
-                color: const Color(0xFF405238),
-              ),
-              SizedBox(width: 8.w),
-              Expanded(
-                child: Text(
-                  '先選一個方向',
-                  style: TextStyle(
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 6.h),
-          Text(
-            '不知道要查哪一條時，可以先從常用法規或生活情境開始。',
-            style: TextStyle(
-              fontSize: 11.5.sp,
-              height: 1.45,
-              color: AppColors.textSecondary,
-            ),
-          ),
-          SizedBox(height: 12.h),
-          Wrap(
-            spacing: 8.w,
-            runSpacing: 8.h,
-            children: filters.map((label) {
-              return _FilterChipButton(
-                label: label,
-                isSelected: label == selectedFilter,
-                onTap: () => onFilterTap(label),
-              );
-            }).toList(growable: false),
-          ),
-          SizedBox(height: 14.h),
-          Text(
-            '生活入口',
-            style: TextStyle(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w900,
-              color: const Color(0xFF5D5A38),
-            ),
-          ),
-          SizedBox(height: 6.h),
-          for (var index = 0; index < guides.length; index++) ...[
-            if (index > 0)
-              Divider(
-                height: 1.h,
-                color: const Color(0xFFDDE8D5),
-              ),
-            _StatuteGuideRow(
-              guide: guides[index],
-              onTap: () => onGuideTap(guides[index].query),
+          for (var index = 0; index < entries.length; index++) ...[
+            if (index > 0) Divider(height: 1.h, color: const Color(0xFFE9EBE3)),
+            _StatuteQueryRow(
+              entry: entries[index],
+              index: index,
+              numbered: numbered,
+              onTap: () => onQueryTap(entries[index].query),
             ),
           ],
         ],
@@ -575,47 +754,75 @@ class _StatuteHomeGuide extends StatelessWidget {
   }
 }
 
-class _StatuteGuideRow extends StatelessWidget {
-  const _StatuteGuideRow({
-    required this.guide,
+class _StatuteQueryRow extends StatelessWidget {
+  const _StatuteQueryRow({
+    required this.entry,
+    required this.index,
+    required this.numbered,
     required this.onTap,
   });
 
-  final _StatuteGuideEntry guide;
+  final _StatuteQueryEntry entry;
+  final int index;
+  final bool numbered;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
+    final leading = numbered
+        ? Container(
+            width: 18.w,
+            height: 18.w,
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+              color: Color(0xFF315D47),
+              shape: BoxShape.circle,
+            ),
+            child: Text(
+              '${index + 1}',
+              style: TextStyle(
+                fontSize: 10.sp,
+                fontWeight: FontWeight.w900,
+                color: Colors.white,
+              ),
+            ),
+          )
+        : Icon(
+            Icons.history_rounded,
+            size: 18.sp,
+            color: const Color(0xFF637063),
+          );
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(10.r),
+        borderRadius: BorderRadius.circular(14.r),
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 10.h),
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
           child: Row(
             children: [
-              Icon(
-                guide.icon,
-                size: 21.sp,
-                color: AppColors.primary,
-              ),
+              leading,
               SizedBox(width: 10.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      guide.title,
+                      entry.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 13.sp,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w800,
                         color: AppColors.textPrimary,
                       ),
                     ),
-                    SizedBox(height: 2.h),
+                    SizedBox(height: 3.h),
                     Text(
-                      guide.subtitle,
+                      entry.subtitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 11.sp,
                         color: AppColors.textSecondary,
@@ -624,22 +831,40 @@ class _StatuteGuideRow extends StatelessWidget {
                   ],
                 ),
               ),
-              Text(
-                guide.query,
-                style: TextStyle(
-                  fontSize: 10.5.sp,
-                  fontWeight: FontWeight.w800,
-                  color: const Color(0xFF6B765F),
-                ),
-              ),
-              SizedBox(width: 6.w),
               Icon(
                 Icons.chevron_right_rounded,
                 size: 20.sp,
-                color: const Color(0xFF6B7280),
+                color: const Color(0xFF5F665F),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _StatuteQuietCard extends StatelessWidget {
+  const _StatuteQuietCard({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(14.w),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFFCF5),
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(color: const Color(0xFFE7E0D2)),
+      ),
+      child: Text(
+        message,
+        style: TextStyle(
+          fontSize: 11.5.sp,
+          height: 1.45,
+          color: AppColors.textSecondary,
         ),
       ),
     );
@@ -814,29 +1039,6 @@ class _StatuteLoadingState extends StatefulWidget {
 
 class _StatuteLoadingStateState extends State<_StatuteLoadingState>
     with SingleTickerProviderStateMixin {
-  static const List<String> _legalQuotes = [
-    '法律之前，人人平等。',
-    '權利會睡著，提醒自己醒著。',
-    '懂法，是保護自己的第一步。',
-    '讓法條慢一點，也讓判斷準一點。',
-    '自由不是沒有界線，而是知道界線在哪。',
-    '證據會說話，判斷要聽完。',
-    '程序走得穩，權利才站得住。',
-    '法律保護願意主張權利的人。',
-    '每一條法規，都是生活的一個路標。',
-    '公平不是口號，是一步一步被實現。',
-    '先理解事實，再靠近答案。',
-    '權利與義務，總是一起出場。',
-    '好的判斷，從不急著下結論。',
-    '規則清楚，生活才有安全感。',
-    '法律不是距離感，是日常的保護傘。',
-    '把問題說清楚，就是解決的一半。',
-    '法條很安靜，但權利需要被看見。',
-    '每一次查法，都是替自己多留一盞燈。',
-    '正義需要熱情，也需要耐心。',
-    '懂得問，才會更接近真正的答案。',
-  ];
-
   late final AnimationController _typewriterController;
   var _quoteIndex = 0;
 
@@ -851,7 +1053,7 @@ class _StatuteLoadingStateState extends State<_StatuteLoadingState>
     )..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           setState(() {
-            _quoteIndex = (_quoteIndex + 1) % _legalQuotes.length;
+            _quoteIndex = (_quoteIndex + 1) % appLoadingQuotes.length;
           });
           _typewriterController.forward(from: 0);
         }
@@ -878,7 +1080,7 @@ class _StatuteLoadingStateState extends State<_StatuteLoadingState>
       child: AnimatedBuilder(
         animation: _typewriterController,
         builder: (context, _) {
-          final quote = _legalQuotes[_quoteIndex];
+          final quote = appLoadingQuotes[_quoteIndex];
           final typingProgress =
               (_typewriterController.value / 0.78).clamp(0.0, 1.0);
           final cursorIsVisible =
