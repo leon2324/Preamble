@@ -355,10 +355,8 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
         children: [
           ListView(
             physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.fromLTRB(16.w, topPadding + 118.h, 16.w, 30.h),
+            padding: EdgeInsets.fromLTRB(16.w, topPadding + 132.h, 16.w, 30.h),
             children: [
-              _LifeTrapSearchBar(controller: _searchController),
-              SizedBox(height: 14.h),
               _LifeTipCategoryRail(
                 labels: _categories,
                 selectedLabel: _selectedCategory,
@@ -427,9 +425,9 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _SubpageTopBar(onBack: () => Navigator.of(context).pop()),
-                SizedBox(height: 8.h),
-                const _LifeTrapTitlePill(),
+                _LifeTrapAppBar(onBack: () => Navigator.of(context).pop()),
+                SizedBox(height: 12.h),
+                _LifeTrapSearchBar(controller: _searchController),
               ],
             ),
           ),
@@ -456,114 +454,157 @@ class LifeLegalTipDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.paddingOf(context).top;
+    final detailGap = 10.h;
+    final detailHeroHeight = 180.h;
+    final reactionBarHeight = 58.h;
+    final pinnedHeaderHeight = topPadding +
+        8.h +
+        42.h +
+        detailGap +
+        detailHeroHeight +
+        detailGap +
+        reactionBarHeight +
+        detailGap;
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.fromLTRB(16.w, topPadding + 14.h, 16.w, 30.h),
+      body: Stack(
         children: [
-          _SubpageTopBar(onBack: () => Navigator.of(context).pop()),
-          SizedBox(height: 18.h),
-          _LifeTipDetailHero(item: item),
-          SizedBox(height: 12.h),
-          _LifeTipReactionBar(item: item),
-          SizedBox(height: 14.h),
-          _LifeTipSectionCard(
-            title: '你需要先知道',
-            child: Text(
-              item.summary,
-              style: TextStyle(
-                fontSize: 14.sp,
-                height: 1.6,
-                color: AppColors.textPrimary,
-              ),
+          ListView(
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(
+              16.w,
+              pinnedHeaderHeight,
+              16.w,
+              30.h,
             ),
+            children: _buildScrollableContent(context),
           ),
-          SizedBox(height: 12.h),
-          _LifeTipSectionCard(
-            title: '可以先怎麼做',
+          _LifeTipDetailTopFrost(height: pinnedHeaderHeight),
+          Positioned(
+            top: topPadding + 8.h,
+            left: 16.w,
+            right: 16.w,
             child: Column(
-              children: _buildActionSteps(item).map((step) {
-                return Padding(
-                  padding: EdgeInsets.only(bottom: 10.h),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Icon(
-                        Icons.check_circle_outline_rounded,
-                        size: 18.sp,
-                        color: HomeV2Palette.trustGreen,
-                      ),
-                      SizedBox(width: 8.w),
-                      Expanded(
-                        child: Text(
-                          step,
-                          style: TextStyle(
-                            fontSize: 12.5.sp,
-                            height: 1.45,
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(growable: false),
-            ),
-          ),
-          SizedBox(height: 12.h),
-          _LifeTipSectionCard(
-            title: '小提醒',
-            child: Text(
-              item.tip,
-              style: TextStyle(
-                fontSize: 13.sp,
-                height: 1.55,
-                fontWeight: FontWeight.w800,
-                color: const Color(0xFF3F8B2A),
-              ),
-            ),
-          ),
-          SizedBox(height: 14.h),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => LawAssistantSearchPage(
-                          initialPrompt: '我想了解「${item.title}」這個生活法律問題，可以怎麼處理？',
-                        ),
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.psychology_alt_outlined),
-                  label: const Text('問小法助'),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _SubpageTopBar(onBack: () => Navigator.of(context).pop()),
+                SizedBox(height: detailGap),
+                _LifeTipDetailHero(
+                  item: item,
+                  height: detailHeroHeight,
                 ),
-              ),
-              SizedBox(width: 10.w),
-              Expanded(
-                child: FilledButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => StatuteDatabasePage(
-                          initialQuery: _statuteQueryForTip(item),
-                        ),
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.manage_search_rounded),
-                  label: const Text('查相關法規'),
+                SizedBox(height: detailGap),
+                _LifeTipReactionBar(
+                  item: item,
+                  height: reactionBarHeight,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
     );
+  }
+
+  List<Widget> _buildScrollableContent(BuildContext context) {
+    // 台灣繁體中文教學註解：
+    // 所有生活避坑筆記詳細頁共用這份版型；Hero 與互動列固定在上方，
+    // 這裡只放可以上下閱讀的補充內容。
+    return [
+      _LifeTipSectionCard(
+        title: '你需要先知道',
+        child: Text(
+          item.summary,
+          style: TextStyle(
+            fontSize: 14.sp,
+            height: 1.6,
+            color: AppColors.textPrimary,
+          ),
+        ),
+      ),
+      SizedBox(height: 12.h),
+      _LifeTipSectionCard(
+        title: '可以先怎麼做',
+        child: Column(
+          children: _buildActionSteps(item).map((step) {
+            return Padding(
+              padding: EdgeInsets.only(bottom: 10.h),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.check_circle_outline_rounded,
+                    size: 18.sp,
+                    color: HomeV2Palette.trustGreen,
+                  ),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Text(
+                      step,
+                      style: TextStyle(
+                        fontSize: 12.5.sp,
+                        height: 1.45,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(growable: false),
+        ),
+      ),
+      SizedBox(height: 12.h),
+      _LifeTipSectionCard(
+        title: '小提醒',
+        child: Text(
+          item.tip,
+          style: TextStyle(
+            fontSize: 13.sp,
+            height: 1.55,
+            fontWeight: FontWeight.w800,
+            color: const Color(0xFF3F8B2A),
+          ),
+        ),
+      ),
+      SizedBox(height: 14.h),
+      Row(
+        children: [
+          Expanded(
+            child: OutlinedButton.icon(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => LawAssistantSearchPage(
+                      initialPrompt: '我想了解「${item.title}」這個生活法律問題，可以怎麼處理？',
+                    ),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.psychology_alt_outlined),
+              label: const Text('問小法助'),
+            ),
+          ),
+          SizedBox(width: 10.w),
+          Expanded(
+            child: FilledButton.icon(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => StatuteDatabasePage(
+                      initialQuery: _statuteQueryForTip(item),
+                    ),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.manage_search_rounded),
+              label: const Text('查相關法規'),
+            ),
+          ),
+        ],
+      ),
+    ];
   }
 
   static List<String> _buildActionSteps(HomeNewsletterItem item) {
@@ -882,7 +923,7 @@ class _LifeTrapTopFrostMask extends StatelessWidget {
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
             child: Container(
-              height: topPadding + 116.h,
+              height: topPadding + 130.h,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -903,44 +944,60 @@ class _LifeTrapTopFrostMask extends StatelessWidget {
   }
 }
 
-class _LifeTrapTitlePill extends StatelessWidget {
-  const _LifeTrapTitlePill();
+class _LifeTipDetailTopFrost extends StatelessWidget {
+  const _LifeTipDetailTopFrost({required this.height});
+
+  final double height;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF3D8),
-        borderRadius: BorderRadius.circular(22.r),
-        border: Border.all(color: const Color(0xFFFFD58A)),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x12000000),
-            blurRadius: 18,
-            offset: Offset(0, 8),
+    // 台灣繁體中文教學註解：固定區只負責遮住上方 pinned header，
+    // 不再往下做大範圍漸層，避免第一張內容卡被霧面吃掉。
+    return Positioned(
+      top: 0,
+      left: 0,
+      right: 0,
+      child: IgnorePointer(
+        child: ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+            child: Container(
+              height: height,
+              color: AppColors.background.withValues(alpha: 0.96),
+            ),
           ),
-        ],
+        ),
       ),
-      child: Row(
+    );
+  }
+}
+
+class _LifeTrapAppBar extends StatelessWidget {
+  const _LifeTrapAppBar({required this.onBack});
+
+  final VoidCallback onBack;
+
+  @override
+  Widget build(BuildContext context) {
+    // 台灣繁體中文教學註解：這裡做成真正的 AppBar 結構，
+    // 返回箭頭與頁面標題同列；搜尋欄則放在下一列，避免把標題做成內容卡片。
+    return SizedBox(
+      height: 42.h,
+      child: Stack(
+        alignment: Alignment.center,
         children: [
-          Icon(
-            Icons.lightbulb_outline_rounded,
-            color: const Color(0xFF9B6500),
-            size: 19.sp,
+          Align(
+            alignment: Alignment.centerLeft,
+            child: _SubpageTopBar(onBack: onBack),
           ),
-          SizedBox(width: 8.w),
-          Expanded(
-            child: Text(
-              '生活避坑筆記',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 17.sp,
-                fontWeight: FontWeight.w900,
-                color: HomeV2Palette.ink,
-              ),
+          Text(
+            '生活避坑筆記',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 17.sp,
+              fontWeight: FontWeight.w900,
+              color: AppColors.textPrimary,
             ),
           ),
         ],
@@ -964,9 +1021,9 @@ class _LifeTrapSearchBar extends StatelessWidget {
         border: Border.all(color: AppColors.border),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x0F000000),
-            blurRadius: 16,
-            offset: Offset(0, 6),
+            color: Color(0x0A000000),
+            blurRadius: 12,
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -1291,13 +1348,18 @@ class _LifeTipListCard extends StatelessWidget {
 }
 
 class _LifeTipDetailHero extends StatelessWidget {
-  const _LifeTipDetailHero({required this.item});
+  const _LifeTipDetailHero({
+    required this.item,
+    required this.height,
+  });
 
   final HomeNewsletterItem item;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: height,
       padding: EdgeInsets.all(18.w),
       decoration: BoxDecoration(
         color: const Color(0xFFF6E8D7),
@@ -1311,6 +1373,8 @@ class _LifeTipDetailHero extends StatelessWidget {
           SizedBox(height: 12.h),
           Text(
             item.title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: 24.sp,
               height: 1.18,
@@ -1321,6 +1385,8 @@ class _LifeTipDetailHero extends StatelessWidget {
           SizedBox(height: 10.h),
           Text(
             '適合在事情發生前先看懂，也適合在遇到狀況時拿來整理下一步。',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: 12.sp,
               height: 1.5,
@@ -1334,9 +1400,13 @@ class _LifeTipDetailHero extends StatelessWidget {
 }
 
 class _LifeTipReactionBar extends StatefulWidget {
-  const _LifeTipReactionBar({required this.item});
+  const _LifeTipReactionBar({
+    required this.item,
+    required this.height,
+  });
 
   final HomeNewsletterItem item;
+  final double height;
 
   @override
   State<_LifeTipReactionBar> createState() => _LifeTipReactionBarState();
@@ -1375,6 +1445,7 @@ class _LifeTipReactionBarState extends State<_LifeTipReactionBar> {
     final item = widget.item;
 
     return Container(
+      height: widget.height,
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -1590,11 +1661,10 @@ class _SubpageTopBar extends StatelessWidget {
       children: [
         InkWell(
           onTap: onBack,
-          borderRadius: BorderRadius.circular(99.r),
           child: SizedBox(
             width: 42.w,
             height: 42.w,
-            child: Icon(Icons.arrow_back_rounded, size: 24.sp),
+            child: Icon(Icons.arrow_back_ios_new_rounded, size: 20.sp),
           ),
         ),
       ],

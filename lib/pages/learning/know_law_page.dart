@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter/services.dart';
 import 'package:lawapp/app/app_state.dart';
 import 'package:lawapp/components/home/v2/home_v2_palette.dart';
+import 'package:lawapp/components/home/v2/home_v2_primitives.dart';
+import 'package:lawapp/components/shared/mvp_state_widgets.dart';
 import 'package:lawapp/data/law_assistant/guest_law_assistant_usage.dart';
-import 'package:lawapp/data/law_assistant/law_assistant_api_service.dart';
 import 'package:lawapp/data/law_assistant/law_assistant_models.dart';
+import 'package:lawapp/data/law_assistant/law_assistant_repository.dart';
 import 'package:lawapp/data/mock_data/learning/learning_mock_data.dart';
 import 'package:lawapp/pages/learning/learning_mock_detail_page.dart';
 import 'package:lawapp/pages/learning/learning_quiz_page.dart';
@@ -12,10 +15,16 @@ import 'package:lawapp/pages/learning/statute_database_page.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
 import 'package:lawapp/theme/app_colors.dart';
 
-/// 學習頁改成向下滑動的長頁版型。
+part 'law_assistant/law_assistant_palette.dart';
+part 'law_assistant/law_assistant_search_page.dart';
+part 'law_assistant/law_assistant_prototype_widgets.dart';
+part 'law_assistant/law_assistant_chat_page.dart';
+
+/// 學習頁 Prototype：把文章入口整理成「情境學習中心」。
 ///
-/// 左上角先放主專題與最近案件，往下滑會接到常見主題與法條翻譯機，
-/// 這樣就能對齊設計稿裡「往下捲到下一個畫面」的節奏。
+/// 台灣繁體中文教學註解：
+/// 這版先用首頁 v2 的色票與卡片語言重新排列內容，重點是驗證資訊架構；
+/// 詳細資料仍沿用 learning mock data，等視覺方向確認後再拆成正式元件檔。
 class KnowLawPage extends StatefulWidget {
   const KnowLawPage({super.key});
 
@@ -58,116 +67,1182 @@ class KnowLawPageState extends State<KnowLawPage> {
 
   @override
   Widget build(BuildContext context) {
-    final layout = context.homeSearchLayout;
-    final assistantPalette = _LawAssistantPalette.of(context);
     final keyboardInset = MediaQuery.of(context).viewInsets.bottom;
-    final compactHeaderTop = layout.searchBarTopOffset.h + 8.h;
-    final compactHeaderHeight = 98.h;
-    final contentStartPadding = compactHeaderTop + compactHeaderHeight + 34.h;
-    // 這裡維持學習頁自己的固定頂部，不再依賴共用搜尋列，
-    // 讓搜尋入口可以縮成一顆 icon，避免佔掉太多學習內容空間。
+
+    // 台灣繁體中文教學註解：
+    // Prototype 先取消舊版固定頂部，改用首頁同款垂直資訊流，讓學習分頁
+    // 和首頁、記事頁保持同一個產品節奏；底部仍預留全域 Nav 的安全距離。
     return Scaffold(
-      body: Stack(
+      backgroundColor: AppColors.background,
+      body: ListView(
+        physics: const BouncingScrollPhysics(),
+        padding: EdgeInsets.fromLTRB(
+          16.w,
+          18.h,
+          16.w,
+          context.pageContentBottomPadding + 70.h + keyboardInset,
+        ),
         children: [
-          Positioned.fill(
-            child: ListView(
-              physics: const BouncingScrollPhysics(),
-              padding: EdgeInsets.fromLTRB(
-                16.w,
-                contentStartPadding,
-                16.w,
-                context.pageContentBottomPadding + 52.h + keyboardInset,
+          _LearningPrototypeHeader(onSearchTap: _openLearningSearch),
+          SizedBox(height: 14.h),
+          _LearningPrototypeActionStrip(
+            onAskTap: _openLearningSearch,
+            onRouteTap: () => _openArticle(learningTopic.heroArticle),
+            onStatuteTap: _openStatuteDatabase,
+          ),
+          SizedBox(height: 18.h),
+          HomeV2SectionHeader(
+            title: '專題',
+            action: '查看',
+            onTap: () => _openArticle(learningTopic.heroArticle),
+          ),
+          SizedBox(height: 10.h),
+          _LearningRouteCard(
+            topic: learningTopic,
+            onTap: () => _openArticle(learningTopic.heroArticle),
+            onQuizTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const LearningQuizPage()),
+              );
+            },
+          ),
+          SizedBox(height: 18.h),
+          const HomeV2SectionHeader(title: '根據最近查看的案件'),
+          SizedBox(height: 10.h),
+          _LearningCaseRecommendationList(
+            items: _recentCases,
+            onTap: (item) => _openArticle(item.article),
+          ),
+          SizedBox(height: 18.h),
+          const HomeV2SectionHeader(title: '常見法律學習主題'),
+          SizedBox(height: 10.h),
+          _LearningTopicMatrix(
+            items: _commonTopics,
+            onTap: (item) => _openArticle(item.article),
+          ),
+          SizedBox(height: 18.h),
+          _LearningReviewAndGlossaryRow(
+            onQuizTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const LearningQuizPage()),
+              );
+            },
+            onGlossaryTap: () =>
+                _openArticle(learningTopic.supportItems.first.article),
+          ),
+          SizedBox(height: 18.h),
+          const HomeV2SectionHeader(title: '法條資料庫'),
+          SizedBox(height: 10.h),
+          _LearningStatuteToolCard(
+            onTap: _openStatuteDatabase,
+            onChipTap: (query) => _openStatuteDatabase(initialQuery: query),
+          ),
+          SizedBox(height: 18.h),
+          const HomeV2SectionHeader(title: '法律翻譯機'),
+          SizedBox(height: 10.h),
+          _LearningTranslatorPrototypeCard(
+            article: learningTopic.supportItems[1].article,
+            onTap: () => _openArticle(learningTopic.supportItems[1].article),
+          ),
+          SizedBox(height: 18.h),
+          const HomeV2SectionHeader(title: '文件與證據準備'),
+          SizedBox(height: 10.h),
+          _LearningEvidenceChecklistCard(
+            onTap: () => _openArticle(learningTopic.supportItems[2].article),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LearningPrototypeHeader extends StatelessWidget {
+  const _LearningPrototypeHeader({required this.onSearchTap});
+
+  final VoidCallback onSearchTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return HomeV2SurfaceCard(
+      color: HomeV2Palette.mint,
+      padding: EdgeInsets.fromLTRB(16.w, 16.h, 14.w, 14.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 42.w,
+                height: 42.w,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.menu_book_rounded,
+                  color: HomeV2Palette.trustGreen,
+                  size: 23.sp,
+                ),
               ),
-              children: [
-                const _LearningSectionTitle(title: '專題'),
-                SizedBox(height: 10.h),
-                _FeaturedTopicCard(
-                  topic: learningTopic,
-                  onTap: () => _openArticle(learningTopic.heroArticle),
-                ),
-                SizedBox(height: 10.h),
-                const _PageDots(activeIndex: 0, count: 6),
-                SizedBox(height: 18.h),
-                const _LearningSectionTitle(title: '根據你最近查看的案件'),
-                SizedBox(height: 12.h),
-                _RecentCaseGrid(
-                  items: _recentCases,
-                  onTap: (item) => _openArticle(item.article),
-                ),
-                SizedBox(height: 26.h),
-                const _LearningSectionTitle(title: '常見法律學習主題'),
-                SizedBox(height: 12.h),
-                _CommonTopicGrid(
-                  items: _commonTopics,
-                  onTap: (item) => _openArticle(item.article),
-                ),
-                SizedBox(height: 22.h),
-                const _LearningSectionTitle(title: '法條資料庫'),
-                SizedBox(height: 12.h),
-                _StatuteDatabaseEntryCard(
-                  onTap: _openStatuteDatabase,
-                  onChipTap: (query) => _openStatuteDatabase(
-                    initialQuery: query,
-                  ),
-                ),
-                SizedBox(height: 24.h),
-                const _LearningSectionTitle(title: '法律翻譯機'),
-                SizedBox(height: 12.h),
-                _TranslatorCard(
-                  article: learningTopic.supportItems[1].article,
-                  onTap: () =>
-                      _openArticle(learningTopic.supportItems[1].article),
-                ),
-                SizedBox(height: 18.h),
-                _TranslatorCard(
-                  article: learningTopic.supportItems[2].article,
-                  onTap: () =>
-                      _openArticle(learningTopic.supportItems[2].article),
-                  variant: _TranslatorCardVariant.compact,
-                ),
-                SizedBox(height: 16.h),
-                _QuizEntryCard(
-                  entry: learningTopic.quizEntry,
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const LearningQuizPage(),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '學習',
+                      style: TextStyle(
+                        color: HomeV2Palette.ink,
+                        fontSize: 26.sp,
+                        height: 1,
+                        fontWeight: FontWeight.w900,
                       ),
-                    );
-                  },
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      '用生活情境建立法律判斷順序',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: IgnorePointer(
-              child: Container(
-                height: contentStartPadding - 6.h,
-                color: assistantPalette.pageBackground,
               ),
-            ),
+              _LearningIconButton(
+                icon: Icons.search_rounded,
+                label: '搜尋學習內容',
+                onTap: onSearchTap,
+              ),
+            ],
           ),
-          Positioned(
-            top: compactHeaderTop,
-            left: 16.w,
-            right: 16.w,
-            child: _LearningFrozenToolbar(
-              categories: _learningCategories,
-              onSearchTap: _openLearningSearch,
-            ),
-          ),
-          Positioned(
-            right: 18.w,
-            bottom: 108.h,
-            child: _FaqFloatingChip(
-              onTap: () =>
-                  _openArticle(learningTopic.supportItems.first.article),
+          SizedBox(height: 16.h),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onSearchTap,
+              borderRadius: BorderRadius.circular(18.r),
+              child: Ink(
+                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18.r),
+                  border: Border.all(color: const Color(0xFFD5E2D9)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.search_rounded,
+                      color: HomeV2Palette.trustGreen,
+                      size: 20.sp,
+                    ),
+                    SizedBox(width: 9.w),
+                    Expanded(
+                      child: Text(
+                        '輸入情境、法條或術語',
+                        style: TextStyle(
+                          color: AppColors.textMuted,
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_rounded,
+                      color: HomeV2Palette.trustGreen,
+                      size: 20.sp,
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _LearningPrototypeActionStrip extends StatelessWidget {
+  const _LearningPrototypeActionStrip({
+    required this.onAskTap,
+    required this.onRouteTap,
+    required this.onStatuteTap,
+  });
+
+  final VoidCallback onAskTap;
+  final VoidCallback onRouteTap;
+  final VoidCallback onStatuteTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final actions = [
+      _LearningActionItem(
+        title: '描述情況',
+        subtitle: '初步整理',
+        icon: Icons.psychology_alt_outlined,
+        color: HomeV2Palette.aiYellow,
+        onTap: onAskTap,
+      ),
+      _LearningActionItem(
+        title: '學習路線',
+        subtitle: '依序閱讀',
+        icon: Icons.route_outlined,
+        color: HomeV2Palette.lavender,
+        onTap: onRouteTap,
+      ),
+      _LearningActionItem(
+        title: '查詢條文',
+        subtitle: '法規資料',
+        icon: Icons.article_outlined,
+        color: HomeV2Palette.lawBlue,
+        onTap: onStatuteTap,
+      ),
+    ];
+
+    return SizedBox(
+      height: 104.h,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemBuilder: (context, index) {
+          return _LearningActionCard(item: actions[index]);
+        },
+        separatorBuilder: (_, __) => SizedBox(width: 10.w),
+        itemCount: actions.length,
+      ),
+    );
+  }
+}
+
+class _LearningActionItem {
+  const _LearningActionItem({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.color,
+    required this.onTap,
+  });
+
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+}
+
+class _LearningActionCard extends StatelessWidget {
+  const _LearningActionCard({required this.item});
+
+  final _LearningActionItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: item.onTap,
+        borderRadius: BorderRadius.circular(20.r),
+        child: Ink(
+          width: 112.w,
+          padding: EdgeInsets.all(13.w),
+          decoration: BoxDecoration(
+            color: item.color,
+            borderRadius: BorderRadius.circular(20.r),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.72)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(item.icon, color: HomeV2Palette.trustGreen, size: 25.sp),
+              const Spacer(),
+              Text(
+                item.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: HomeV2Palette.ink,
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              SizedBox(height: 3.h),
+              Text(
+                item.subtitle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _LearningRouteCard extends StatelessWidget {
+  const _LearningRouteCard({
+    required this.topic,
+    required this.onTap,
+    required this.onQuizTap,
+  });
+
+  final LearningTopicData topic;
+  final VoidCallback onTap;
+  final VoidCallback onQuizTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return HomeV2SurfaceCard(
+      color: Colors.white,
+      padding: EdgeInsets.all(16.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onTap,
+              borderRadius: BorderRadius.circular(18.r),
+              child: Ink(
+                padding: EdgeInsets.all(14.w),
+                decoration: BoxDecoration(
+                  color: HomeV2Palette.aiYellow,
+                  borderRadius: BorderRadius.circular(18.r),
+                  border: Border.all(color: const Color(0xFFE8B95F)),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 42.w,
+                      height: 42.w,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.76),
+                        borderRadius: BorderRadius.circular(14.r),
+                      ),
+                      child: Icon(
+                        Icons.home_work_outlined,
+                        color: HomeV2Palette.trustGreen,
+                        size: 24.sp,
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '租屋糾紛怎麼看懂',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: HomeV2Palette.ink,
+                              fontSize: 17.sp,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                          SizedBox(height: 5.h),
+                          Text(
+                            topic.summary,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: const Color(0xFF6B4B14),
+                              fontSize: 11.sp,
+                              height: 1.35,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.chevron_right_rounded,
+                      color: HomeV2Palette.trustGreen,
+                      size: 24.sp,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 14.h),
+          _LearningProgressBar(completed: 2, total: topic.units.length),
+          SizedBox(height: 14.h),
+          ...topic.units.take(4).map(
+                (unit) => _LearningRouteStep(
+                  label: unit.stepLabel,
+                  title: unit.title,
+                  meta: unit.readTime,
+                  isDone: unit.stepLabel == '01' || unit.stepLabel == '02',
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          LearningMockDetailPage(article: unit.article),
+                    ),
+                  ),
+                ),
+              ),
+          SizedBox(height: 6.h),
+          _LearningRouteStep(
+            label: '05',
+            title: '用一題測驗確認判斷順序',
+            meta: '1 題測驗',
+            icon: Icons.fact_check_outlined,
+            isDone: false,
+            onTap: onQuizTap,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LearningProgressBar extends StatelessWidget {
+  const _LearningProgressBar({required this.completed, required this.total});
+
+  final int completed;
+  final int total;
+
+  @override
+  Widget build(BuildContext context) {
+    final progress = completed / total;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                '目前進度',
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 11.sp,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+            Text(
+              '$completed / $total 單元',
+              style: TextStyle(
+                color: HomeV2Palette.trustGreen,
+                fontSize: 11.sp,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 8.h),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(99.r),
+          child: LinearProgressIndicator(
+            value: progress,
+            minHeight: 8.h,
+            backgroundColor: const Color(0xFFE8ECE8),
+            valueColor: const AlwaysStoppedAnimation<Color>(
+              HomeV2Palette.trustGreen,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _LearningRouteStep extends StatelessWidget {
+  const _LearningRouteStep({
+    required this.label,
+    required this.title,
+    required this.meta,
+    required this.isDone,
+    required this.onTap,
+    this.icon,
+  });
+
+  final String label;
+  final String title;
+  final String meta;
+  final bool isDone;
+  final VoidCallback onTap;
+  final IconData? icon;
+
+  @override
+  Widget build(BuildContext context) {
+    final markerColor =
+        isDone ? HomeV2Palette.trustGreen : const Color(0xFFE8ECE8);
+    final markerTextColor = isDone ? Colors.white : AppColors.textSecondary;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16.r),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 5.h),
+          child: Row(
+            children: [
+              Container(
+                width: 34.w,
+                height: 34.w,
+                decoration: BoxDecoration(
+                  color: markerColor,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: icon == null
+                      ? Text(
+                          label,
+                          style: TextStyle(
+                            color: markerTextColor,
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        )
+                      : Icon(icon, color: markerTextColor, size: 18.sp),
+                ),
+              ),
+              SizedBox(width: 11.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: HomeV2Palette.ink,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    SizedBox(height: 3.h),
+                    Text(
+                      meta,
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: AppColors.textMuted,
+                size: 20.sp,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _LearningCaseRecommendationList extends StatelessWidget {
+  const _LearningCaseRecommendationList({
+    required this.items,
+    required this.onTap,
+  });
+
+  final List<_RecentCaseItem> items;
+  final ValueChanged<_RecentCaseItem> onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 128.h,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemBuilder: (context, index) {
+          final item = items[index];
+
+          return _LearningRecommendationCard(
+            title: item.title,
+            subtitle: '建議閱讀：${item.article.badge}',
+            icon: Icons.inventory_2_outlined,
+            color: index.isEven ? HomeV2Palette.lawBlue : HomeV2Palette.mint,
+            onTap: () => onTap(item),
+          );
+        },
+        separatorBuilder: (_, __) => SizedBox(width: 10.w),
+        itemCount: items.length,
+      ),
+    );
+  }
+}
+
+class _LearningRecommendationCard extends StatelessWidget {
+  const _LearningRecommendationCard({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.color,
+    required this.onTap,
+  });
+
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20.r),
+        child: Ink(
+          width: 168.w,
+          padding: EdgeInsets.all(14.w),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(20.r),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.72)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(icon, color: HomeV2Palette.trustGreen, size: 24.sp),
+              const Spacer(),
+              Text(
+                title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: HomeV2Palette.ink,
+                  fontSize: 13.sp,
+                  height: 1.2,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              SizedBox(height: 5.h),
+              Text(
+                subtitle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _LearningTopicMatrix extends StatelessWidget {
+  const _LearningTopicMatrix({
+    required this.items,
+    required this.onTap,
+  });
+
+  final List<_CommonTopicItem> items;
+  final ValueChanged<_CommonTopicItem> onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: items.length,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        mainAxisSpacing: 10.h,
+        crossAxisSpacing: 10.w,
+        childAspectRatio: 0.98,
+      ),
+      itemBuilder: (context, index) {
+        final item = items[index];
+        final icon = _topicIconForLabel(item.label);
+
+        return Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () => onTap(item),
+            borderRadius: BorderRadius.circular(18.r),
+            child: Ink(
+              padding: EdgeInsets.all(10.w),
+              decoration: BoxDecoration(
+                color: index.isEven ? Colors.white : HomeV2Palette.mint,
+                borderRadius: BorderRadius.circular(18.r),
+                border:
+                    Border.all(color: AppColors.border.withValues(alpha: 0.6)),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(icon, color: HomeV2Palette.trustGreen, size: 25.sp),
+                  SizedBox(height: 8.h),
+                  Text(
+                    item.label,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: HomeV2Palette.ink,
+                      fontSize: 12.sp,
+                      height: 1.18,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  IconData _topicIconForLabel(String label) {
+    switch (label) {
+      case '租屋':
+        return Icons.home_work_outlined;
+      case '職場':
+        return Icons.badge_outlined;
+      case '交通':
+        return Icons.directions_car_outlined;
+      case '網路':
+        return Icons.language_outlined;
+      case '消費':
+        return Icons.shopping_bag_outlined;
+      default:
+        return Icons.balance_outlined;
+    }
+  }
+}
+
+class _LearningReviewAndGlossaryRow extends StatelessWidget {
+  const _LearningReviewAndGlossaryRow({
+    required this.onQuizTap,
+    required this.onGlossaryTap,
+  });
+
+  final VoidCallback onQuizTap;
+  final VoidCallback onGlossaryTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _LearningMiniFeatureCard(
+            title: '複習',
+            subtitle: '錯題與待讀單元',
+            icon: Icons.replay_outlined,
+            color: HomeV2Palette.lavender,
+            onTap: onQuizTap,
+          ),
+        ),
+        SizedBox(width: 10.w),
+        Expanded(
+          child: _LearningMiniFeatureCard(
+            title: '術語字典',
+            subtitle: '故意、過失、契約',
+            icon: Icons.translate_outlined,
+            color: HomeV2Palette.aiYellow,
+            onTap: onGlossaryTap,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _LearningMiniFeatureCard extends StatelessWidget {
+  const _LearningMiniFeatureCard({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.color,
+    required this.onTap,
+  });
+
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20.r),
+        child: Ink(
+          height: 112.h,
+          padding: EdgeInsets.all(14.w),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(20.r),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.72)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(icon, color: HomeV2Palette.trustGreen, size: 24.sp),
+              const Spacer(),
+              Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: HomeV2Palette.ink,
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                subtitle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _LearningStatuteToolCard extends StatelessWidget {
+  const _LearningStatuteToolCard({
+    required this.onTap,
+    required this.onChipTap,
+  });
+
+  final VoidCallback onTap;
+  final ValueChanged<String> onChipTap;
+
+  static const List<String> _queries = [
+    '民法',
+    '刑法',
+    '勞基法',
+    '消保法',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return HomeV2SurfaceCard(
+      color: HomeV2Palette.lawBlue,
+      padding: EdgeInsets.all(16.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onTap,
+              borderRadius: BorderRadius.circular(18.r),
+              child: Ink(
+                padding: EdgeInsets.all(14.w),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18.r),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.article_outlined,
+                      color: const Color(0xFF1F4E87),
+                      size: 24.sp,
+                    ),
+                    SizedBox(width: 10.w),
+                    Expanded(
+                      child: Text(
+                        '依法名、條號或生活情境查詢',
+                        style: TextStyle(
+                          color: HomeV2Palette.ink,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_rounded,
+                      color: const Color(0xFF1F4E87),
+                      size: 22.sp,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 12.h),
+          Wrap(
+            spacing: 8.w,
+            runSpacing: 8.h,
+            children: _queries.map((query) {
+              final actualQuery = query == '勞基法' ? '勞動基準法' : query;
+
+              return _LearningPlainChip(
+                label: query,
+                onTap: () => onChipTap(actualQuery),
+              );
+            }).toList(growable: false),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LearningTranslatorPrototypeCard extends StatelessWidget {
+  const _LearningTranslatorPrototypeCard({
+    required this.article,
+    required this.onTap,
+  });
+
+  final LearningMockArticle article;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return HomeV2SurfaceCard(
+      color: const Color(0xFFF5F1DF),
+      padding: EdgeInsets.all(16.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const HomeV2TinyLabel(
+                icon: Icons.gavel_outlined,
+                label: '法條白話整理',
+                color: Color(0xFF5D5A38),
+              ),
+              const Spacer(),
+              _LearningIconButton(
+                icon: Icons.arrow_forward_rounded,
+                label: '查看法律翻譯機',
+                onTap: onTap,
+              ),
+            ],
+          ),
+          SizedBox(height: 14.h),
+          Text(
+            '民法第184條第1項前段',
+            style: TextStyle(
+              color: const Color(0xFF5D5A38),
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            article.summary,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: const Color(0xFF524E35),
+              fontSize: 13.sp,
+              height: 1.5,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 12.h),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onTap,
+              borderRadius: BorderRadius.circular(999.r),
+              child: Ink(
+                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 9.h),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFD7D09D),
+                  borderRadius: BorderRadius.circular(999.r),
+                ),
+                child: Text(
+                  '查看白話整理',
+                  style: TextStyle(
+                    color: const Color(0xFF433F24),
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LearningEvidenceChecklistCard extends StatelessWidget {
+  const _LearningEvidenceChecklistCard({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final items = ['合約與附約', '對話紀錄', '照片與點交紀錄'];
+
+    return HomeV2SurfaceCard(
+      color: Colors.white,
+      padding: EdgeInsets.all(16.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.task_alt_rounded,
+                color: HomeV2Palette.trustGreen,
+                size: 24.sp,
+              ),
+              SizedBox(width: 10.w),
+              Expanded(
+                child: Text(
+                  '租屋爭議先整理哪些資料',
+                  style: TextStyle(
+                    color: HomeV2Palette.ink,
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 12.h),
+          ...items.map(
+            (item) => Padding(
+              padding: EdgeInsets.only(bottom: 8.h),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.check_circle_outline_rounded,
+                    color: HomeV2Palette.trustGreen,
+                    size: 18.sp,
+                  ),
+                  SizedBox(width: 9.w),
+                  Expanded(
+                    child: Text(
+                      item,
+                      style: TextStyle(
+                        color: AppColors.textPrimary,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 4.h),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: _LearningPlainChip(
+              label: '查看準備清單',
+              onTap: onTap,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LearningPlainChip extends StatelessWidget {
+  const _LearningPlainChip({
+    required this.label,
+    required this.onTap,
+  });
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(999.r),
+        child: Ink(
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.h),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.86),
+            borderRadius: BorderRadius.circular(999.r),
+            border: Border.all(color: AppColors.border.withValues(alpha: 0.7)),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: HomeV2Palette.trustGreen,
+              fontSize: 11.sp,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _LearningIconButton extends StatelessWidget {
+  const _LearningIconButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: label,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(99.r),
+          child: Ink(
+            width: 36.w,
+            height: 36.w,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              color: HomeV2Palette.trustGreen,
+              size: 20.sp,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -187,1463 +1262,6 @@ class _LearningSectionTitle extends StatelessWidget {
         height: 1.08,
         fontWeight: FontWeight.w700,
         color: AppColors.textPrimary,
-      ),
-    );
-  }
-}
-
-class _LawAssistantPalette {
-  const _LawAssistantPalette({
-    required this.pageBackground,
-    required this.cardSurface,
-    required this.introSurface,
-    required this.subtleSurface,
-    required this.chipSurface,
-    required this.border,
-    required this.neutralBorder,
-    required this.accent,
-    required this.secondary,
-    required this.highlight,
-    required this.primaryText,
-    required this.mutedText,
-    required this.inverseText,
-  });
-
-  final Color pageBackground;
-  final Color cardSurface;
-  final Color introSurface;
-  final Color subtleSurface;
-  final Color chipSurface;
-  final Color border;
-  final Color neutralBorder;
-  // 主題主色：用在機器人 icon、送出按鈕、使用者泡泡等「主要強調」。
-  final Color accent;
-  // 輔色：用在較弱的 icon/標籤，讓畫面有溫度但不搶戲。
-  final Color secondary;
-  // 點綴色：只用在極小面積（例如徽章），避免整頁變成金色系。
-  final Color highlight;
-  final Color primaryText;
-  final Color mutedText;
-  final Color inverseText;
-
-  static _LawAssistantPalette of(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    // 教學註解：小法助沿用首頁新版的「暖米黃 + 信任綠 + 淡薄荷」方向，
-    // 讓使用者從首頁卡片進入後，視覺語言不會突然切回舊版學習頁風格。
-    // 深色模式則提升明度與對比，避免主色在暗底上看起來灰掉。
-    if (isDark) {
-      return const _LawAssistantPalette(
-        pageBackground: Color(0xFF0F1216),
-        cardSurface: Color(0xFF151A20),
-        introSurface: Color(0xFF17202A),
-        subtleSurface: Color(0xFF131820),
-        chipSurface: Color(0xFF182029),
-        border: Color(0xFF2A3340),
-        neutralBorder: Color(0xFF2A3340),
-        // 深色模式下將主色提亮，確保按鈕/泡泡有足夠對比。
-        accent: Color(0xFF9FB0C6),
-        secondary: Color(0xFF9EB19A),
-        // 深色模式的米金點綴：提高亮度，讓小徽章在暗底上更清楚。
-        highlight: Color(0xFFE5CD93),
-        primaryText: Color(0xFFF2F4F7),
-        mutedText: Color(0xFFA3ABB6),
-        inverseText: Color(0xFF0B0F14),
-      );
-    }
-
-    return const _LawAssistantPalette(
-      // 亮色模式：直接承接 Home V2 色票，保留首頁卡片的溫暖與可信感。
-      pageBackground: AppColors.background,
-      cardSurface: Colors.white,
-      introSurface: HomeV2Palette.aiYellow,
-      subtleSurface: HomeV2Palette.mint,
-      chipSurface: Color(0xFFFFFAEC),
-      border: Color(0xFFE4C179),
-      neutralBorder: Color(0xFFDDE7E0),
-      // 主色：首頁新版 trust green，用在主要 CTA、使用者泡泡與小法助 icon。
-      accent: HomeV2Palette.trustGreen,
-      // 輔色：首頁 AI 卡片的棕金文字色，用在次要說明與 pill。
-      secondary: Color(0xFF94610D),
-      // 點綴：暖米金，用在 Beta 徽章與角色小標，面積小但能接住首頁氛圍。
-      highlight: Color(0xFFE8B95F),
-      primaryText: HomeV2Palette.ink,
-      mutedText: AppColors.textSecondary,
-      inverseText: Colors.white,
-    );
-  }
-}
-
-/// 小法助提問入口頁。
-///
-/// 台灣繁體中文教學註解：
-/// 這個頁面刻意做成公開 widget，讓首頁新版「AI 法律輔助」卡片與學習頁
-/// 搜尋列都共用同一套提問流程。未來若要調整 guest 額度、後端設定提示或
-/// 最近對話載入，只要改這裡，不需要追兩個入口。
-class LawAssistantSearchPage extends StatefulWidget {
-  const LawAssistantSearchPage({
-    super.key,
-    this.initialPrompt,
-  });
-
-  final String? initialPrompt;
-
-  @override
-  State<LawAssistantSearchPage> createState() => _LawAssistantSearchPageState();
-}
-
-class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
-  final TextEditingController _controller = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
-  final LawAssistantApiService _assistantApiService = LawAssistantApiService();
-  final GuestLawAssistantUsage _guestUsage = const GuestLawAssistantUsage();
-  late Future<List<LawAssistantConversation>> _recentConversationsFuture;
-  var _hasGuestUsed = false;
-  var _isCheckingGuestUsage = true;
-
-  @override
-  void initState() {
-    super.initState();
-    // 教學註解：這頁是小法助入口與說明頁，先不要自動叫出鍵盤，
-    // 才能讓使用者完整看到上方引導、常見提問與後續整理方式。
-    _controller.addListener(() => setState(() {}));
-    final initialPrompt = widget.initialPrompt?.trim();
-    if (initialPrompt != null && initialPrompt.isNotEmpty) {
-      _controller.text = initialPrompt;
-      _controller.selection = TextSelection.collapsed(
-        offset: initialPrompt.length,
-      );
-    }
-    _recentConversationsFuture =
-        _assistantApiService.fetchRecentConversations();
-    _loadGuestUsage();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _focusNode.dispose();
-    _assistantApiService.dispose();
-    super.dispose();
-  }
-
-  Future<void> _loadGuestUsage() async {
-    final hasUsed = await _guestUsage.hasUsed();
-    if (!mounted) return;
-    setState(() {
-      _hasGuestUsed = hasUsed;
-      _isCheckingGuestUsage = false;
-    });
-  }
-
-  void _usePrompt(String prompt) {
-    // 教學註解：常見提問膠囊不是直接送出答案，而是先填進輸入框，
-    // 讓使用者可以沿用範例語氣，再補自己的情境細節。
-    _controller.text = prompt;
-    _controller.selection = TextSelection.collapsed(offset: prompt.length);
-    _focusNode.requestFocus();
-  }
-
-  void _clearPrompt() {
-    setState(() {
-      _controller.clear();
-    });
-    _focusNode.requestFocus();
-  }
-
-  void _openConversation(LawAssistantConversation conversation) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => LawAssistantChatPage(
-          conversationId: conversation.id,
-          fallbackConversation: conversation,
-        ),
-      ),
-    );
-  }
-
-  void _submitPrompt() {
-    final prompt = _controller.text.trim();
-    if (prompt.isEmpty || _isCheckingGuestUsage) return;
-    final appState = LawAppScope.of(context);
-
-    if (appState.isGuest && _hasGuestUsed) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('未登入使用者只能先問一次；登入後可以保存更多對話。')),
-      );
-      return;
-    }
-
-    FocusManager.instance.primaryFocus?.unfocus();
-    Navigator.of(context)
-        .push(
-          MaterialPageRoute(
-            builder: (_) => LawAssistantChatPage(
-              initialPrompt: prompt,
-              isGuestSession: appState.isGuest,
-            ),
-          ),
-        )
-        .then((_) => _loadGuestUsage());
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final topPadding = MediaQuery.paddingOf(context).top;
-    final assistantPalette = _LawAssistantPalette.of(context);
-    final canSubmit =
-        _controller.text.trim().isNotEmpty && !_isCheckingGuestUsage;
-
-    return Scaffold(
-      backgroundColor: assistantPalette.pageBackground,
-      body: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: ListView(
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          padding: EdgeInsets.fromLTRB(16.w, topPadding + 14.h, 16.w, 24.h),
-          children: [
-            _LearningSearchTopBar(
-              onBack: () => Navigator.of(context).pop(),
-            ),
-            SizedBox(height: 18.h),
-            const _LawBuddyIntroBubble(),
-            SizedBox(height: 14.h),
-            Container(
-              padding: EdgeInsets.fromLTRB(16.w, 14.h, 10.w, 10.h),
-              decoration: BoxDecoration(
-                color: assistantPalette.cardSurface,
-                borderRadius: BorderRadius.circular(22.r),
-                border: Border.all(color: assistantPalette.border),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x12000000),
-                    blurRadius: 18,
-                    offset: Offset(0, 8),
-                  ),
-                ],
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      focusNode: _focusNode,
-                      minLines: 3,
-                      maxLines: 4,
-                      textInputAction: TextInputAction.newline,
-                      decoration: InputDecoration(
-                        // 台灣繁體中文教學註解：
-                        // 這裡只收集使用者敘述，不在首頁做假輸入；按送出後會交給
-                        // LawAssistantChatPage 呼叫後端，並沿用 guest 一次提問限制。
-                        hintText: '例如：房東說提前解約押金不能退，我該先看什麼？',
-                        hintStyle: TextStyle(
-                          fontSize: 13.sp,
-                          height: 1.45,
-                          color: assistantPalette.mutedText,
-                        ),
-                        border: InputBorder.none,
-                        isCollapsed: true,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 4.w),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (_controller.text.isNotEmpty)
-                        IconButton(
-                          onPressed: _clearPrompt,
-                          tooltip: '清除目前輸入',
-                          visualDensity: VisualDensity.compact,
-                          icon: Icon(
-                            Icons.close_rounded,
-                            size: 18.sp,
-                            color: assistantPalette.secondary,
-                          ),
-                        ),
-                      IconButton(
-                        onPressed: () {},
-                        tooltip: '語音輸入',
-                        visualDensity: VisualDensity.compact,
-                        icon: Icon(
-                          Icons.mic_rounded,
-                          size: 20.sp,
-                          color: assistantPalette.secondary,
-                        ),
-                      ),
-                      Tooltip(
-                        message: '送出問題',
-                        child: InkWell(
-                          onTap: canSubmit ? _submitPrompt : null,
-                          borderRadius: BorderRadius.circular(999.r),
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 160),
-                            width: 40.w,
-                            height: 40.w,
-                            decoration: BoxDecoration(
-                              color: canSubmit
-                                  ? assistantPalette.accent
-                                  : assistantPalette.subtleSurface,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.arrow_forward_rounded,
-                              size: 22.sp,
-                              color: canSubmit
-                                  ? assistantPalette.inverseText
-                                  : assistantPalette.mutedText,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            if (_hasGuestUsed) ...[
-              SizedBox(height: 8.h),
-              Text(
-                '未登入使用者已使用一次提問；登入後可以繼續追問並保存對話。',
-                style: TextStyle(
-                  fontSize: 11.sp,
-                  height: 1.4,
-                  color: assistantPalette.mutedText,
-                ),
-              ),
-            ],
-            SizedBox(height: 20.h),
-            Text(
-              '也可以先這樣問',
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w800,
-                color: assistantPalette.primaryText,
-              ),
-            ),
-            SizedBox(height: 12.h),
-            Wrap(
-              spacing: 8.w,
-              runSpacing: 10.h,
-              children: [
-                _LearningSearchSuggestion(
-                  label: '押金被扣怎麼辦？',
-                  onTap: () => _usePrompt('房東說押金不能退，我可以先確認哪些事情？'),
-                ),
-                _LearningSearchSuggestion(
-                  label: '加班費怎麼算？',
-                  onTap: () => _usePrompt('公司說加班只能補休，不能領加班費，這樣合理嗎？'),
-                ),
-                _LearningSearchSuggestion(
-                  label: '車禍先做什麼？',
-                  onTap: () => _usePrompt('發生車禍後，我要先保存哪些資料和紀錄？'),
-                ),
-                _LearningSearchSuggestion(
-                  label: '網購可以退貨嗎？',
-                  onTap: () => _usePrompt('網購商品收到後不想要了，我可以主張退貨嗎？'),
-                ),
-              ],
-            ),
-            SizedBox(height: 22.h),
-            // 教學註解：最近對話放在提問範例後方，取代原本的功能說明卡，
-            // 讓使用者先完成提問，再往下看到可以接續的舊對話。
-            _RecentLawAssistantConversations(
-              conversationsFuture: _recentConversationsFuture,
-              onConversationTap: _openConversation,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _LawBuddyIntroBubble extends StatelessWidget {
-  const _LawBuddyIntroBubble();
-
-  @override
-  Widget build(BuildContext context) {
-    final assistantPalette = _LawAssistantPalette.of(context);
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const _LawBuddyAvatar(),
-        SizedBox(width: 4.w),
-        _CloudBubbleTrail(
-          color: assistantPalette.border,
-          fillColor: assistantPalette.introSurface,
-        ),
-        SizedBox(width: 4.w),
-        Expanded(
-          child: _CloudChatBubble(
-            fillColor: assistantPalette.introSurface,
-            borderColor: assistantPalette.border,
-            padding: EdgeInsets.fromLTRB(22.w, 18.h, 20.w, 18.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '把情況說清楚，我先幫你找方向',
-                  style: TextStyle(
-                    fontSize: 15.sp,
-                    height: 1.35,
-                    fontWeight: FontWeight.w900,
-                    color: assistantPalette.primaryText,
-                  ),
-                ),
-                SizedBox(height: 6.h),
-                Text(
-                  '我會整理可能的法律主題、相關法條，以及下一步可以看的學習內容。',
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    height: 1.45,
-                    color: assistantPalette.mutedText,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _CloudBubbleTrail extends StatelessWidget {
-  const _CloudBubbleTrail({
-    required this.color,
-    required this.fillColor,
-  });
-
-  final Color color;
-  final Color fillColor;
-
-  @override
-  Widget build(BuildContext context) {
-    // 教學註解：用逐漸變大的小圓把機器人和雲朵泡泡連起來，
-    // 讓視覺像「想法冒出來」，而不是傳統尖尾巴 chat bubble。
-    return Padding(
-      padding: EdgeInsets.only(top: 26.h),
-      child: SizedBox(
-        width: 28.w,
-        height: 16.h,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Positioned(
-              left: 0,
-              top: 6.h,
-              child: _CloudTrailDot(
-                size: 5.w,
-                color: color,
-                fillColor: fillColor,
-              ),
-            ),
-            Positioned(
-              left: 8.w,
-              top: 4.h,
-              child: _CloudTrailDot(
-                size: 7.w,
-                color: color,
-                fillColor: fillColor,
-              ),
-            ),
-            Positioned(
-              right: 0,
-              top: 1.h,
-              child: _CloudTrailDot(
-                size: 11.w,
-                color: color,
-                fillColor: fillColor,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _CloudTrailDot extends StatelessWidget {
-  const _CloudTrailDot({
-    required this.size,
-    required this.color,
-    required this.fillColor,
-  });
-
-  final double size;
-  final Color color;
-  final Color fillColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: fillColor,
-        shape: BoxShape.circle,
-        border: Border.all(color: color, width: 1),
-      ),
-    );
-  }
-}
-
-class _CloudChatBubble extends StatelessWidget {
-  const _CloudChatBubble({
-    required this.child,
-    required this.fillColor,
-    required this.borderColor,
-    this.padding = EdgeInsets.zero,
-  });
-
-  final Widget child;
-  final Color fillColor;
-  final Color borderColor;
-  final EdgeInsets padding;
-
-  @override
-  Widget build(BuildContext context) {
-    // 教學註解：雲朵泡泡用 CustomPaint 畫出輪廓，再把內容當作 child 放進去，
-    // 外層保留 cloudInset 給雲朵圓弧伸展，避免文字貼到雲邊或被輪廓壓住。
-    final cloudInset = EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h);
-
-    return CustomPaint(
-      painter: _CloudBubblePainter(
-        fillColor: fillColor,
-        borderColor: borderColor,
-      ),
-      child: Padding(
-        padding: cloudInset.add(padding),
-        child: child,
-      ),
-    );
-  }
-}
-
-class _CloudBubblePainter extends CustomPainter {
-  const _CloudBubblePainter({
-    required this.fillColor,
-    required this.borderColor,
-  });
-
-  final Color fillColor;
-  final Color borderColor;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (size.width <= 0 || size.height <= 0) return;
-
-    final borderWidth = 1.0;
-    final puff = (size.shortestSide * 0.28).clamp(14.0, 30.0);
-    final horizontalMargin = puff * 0.82;
-    final verticalMargin = puff * 0.72;
-    final baseRect = Rect.fromLTWH(
-      horizontalMargin,
-      verticalMargin,
-      (size.width - horizontalMargin * 2).clamp(0.0, size.width),
-      (size.height - verticalMargin * 2).clamp(0.0, size.height),
-    );
-    final baseRadius = (puff * 1.6).clamp(24.0, 42.0);
-
-    Path path = Path()
-      ..addRRect(
-        RRect.fromRectAndRadius(
-          baseRect,
-          Radius.circular(baseRadius),
-        ),
-      );
-
-    // 教學註解：這裡用多個大圓和圓角底座做 union，形成真正外擴的雲朵邊界；
-    // 圓心刻意落在底座邊緣附近，讓雲朵能包住較長引文而不是只像圓角卡片。
-    path = Path.combine(
-      PathOperation.union,
-      path,
-      Path()
-        ..addOval(
-          Rect.fromCircle(
-            center: Offset(baseRect.left + baseRect.width * 0.12, baseRect.top),
-            radius: puff * 1.08,
-          ),
-        )
-        ..addOval(
-          Rect.fromCircle(
-            center: Offset(baseRect.left + baseRect.width * 0.46, baseRect.top),
-            radius: puff * 1.32,
-          ),
-        )
-        ..addOval(
-          Rect.fromCircle(
-            center: Offset(baseRect.left + baseRect.width * 0.76, baseRect.top),
-            radius: puff * 1.12,
-          ),
-        )
-        ..addOval(
-          Rect.fromCircle(
-            center:
-                Offset(baseRect.left, baseRect.top + baseRect.height * 0.48),
-            radius: puff * 1.02,
-          ),
-        )
-        ..addOval(
-          Rect.fromCircle(
-            center:
-                Offset(baseRect.right, baseRect.top + baseRect.height * 0.46),
-            radius: puff * 1.12,
-          ),
-        )
-        ..addOval(
-          Rect.fromCircle(
-            center:
-                Offset(baseRect.left + baseRect.width * 0.24, baseRect.bottom),
-            radius: puff * 1.1,
-          ),
-        )
-        ..addOval(
-          Rect.fromCircle(
-            center:
-                Offset(baseRect.left + baseRect.width * 0.58, baseRect.bottom),
-            radius: puff * 1.28,
-          ),
-        )
-        ..addOval(
-          Rect.fromCircle(
-            center:
-                Offset(baseRect.left + baseRect.width * 0.86, baseRect.bottom),
-            radius: puff * 1.08,
-          ),
-        ),
-    );
-
-    final fillPaint = Paint()
-      ..style = PaintingStyle.fill
-      ..color = fillColor;
-    canvas.drawPath(path, fillPaint);
-
-    final strokePaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = borderWidth
-      ..color = borderColor;
-    canvas.drawPath(path, strokePaint);
-  }
-
-  @override
-  bool shouldRepaint(covariant _CloudBubblePainter oldDelegate) {
-    return oldDelegate.fillColor != fillColor ||
-        oldDelegate.borderColor != borderColor;
-  }
-}
-
-class _RecentLawAssistantConversations extends StatelessWidget {
-  const _RecentLawAssistantConversations({
-    required this.conversationsFuture,
-    required this.onConversationTap,
-  });
-
-  final Future<List<LawAssistantConversation>> conversationsFuture;
-  final ValueChanged<LawAssistantConversation> onConversationTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<LawAssistantConversation>>(
-      future: conversationsFuture,
-      builder: (context, snapshot) {
-        final conversations = snapshot.data ?? const [];
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '最近對話',
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w800,
-                color: _LawAssistantPalette.of(context).primaryText,
-              ),
-            ),
-            SizedBox(height: 10.h),
-            if (snapshot.connectionState == ConnectionState.waiting)
-              const _RecentConversationPlaceholder()
-            else if (conversations.isEmpty)
-              const _RecentConversationEmptyState()
-            else
-              Column(
-                children: conversations.take(3).map((conversation) {
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 8.h),
-                    child: _RecentConversationCard(
-                      conversation: conversation,
-                      onTap: () => onConversationTap(conversation),
-                    ),
-                  );
-                }).toList(growable: false),
-              ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _RecentConversationEmptyState extends StatelessWidget {
-  const _RecentConversationEmptyState();
-
-  @override
-  Widget build(BuildContext context) {
-    final assistantPalette = _LawAssistantPalette.of(context);
-
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(14.w),
-      decoration: BoxDecoration(
-        color: assistantPalette.subtleSurface,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: assistantPalette.neutralBorder),
-      ),
-      child: Text(
-        '登入後可以保存對話，之後回來就能接著問。',
-        style: TextStyle(
-          fontSize: 12.sp,
-          height: 1.45,
-          color: assistantPalette.mutedText,
-        ),
-      ),
-    );
-  }
-}
-
-class _RecentConversationPlaceholder extends StatelessWidget {
-  const _RecentConversationPlaceholder();
-
-  @override
-  Widget build(BuildContext context) {
-    final assistantPalette = _LawAssistantPalette.of(context);
-
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(14.w),
-      decoration: BoxDecoration(
-        color: assistantPalette.subtleSurface,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: assistantPalette.neutralBorder),
-      ),
-      child: Text(
-        '正在讀取最近對話...',
-        style: TextStyle(fontSize: 12.sp, color: assistantPalette.mutedText),
-      ),
-    );
-  }
-}
-
-class _RecentConversationCard extends StatelessWidget {
-  const _RecentConversationCard({
-    required this.conversation,
-    required this.onTap,
-  });
-
-  final LawAssistantConversation conversation;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final assistantPalette = _LawAssistantPalette.of(context);
-
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16.r),
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(14.w),
-          decoration: BoxDecoration(
-            color: assistantPalette.cardSurface,
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: assistantPalette.neutralBorder),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      conversation.title.isEmpty ? '未命名對話' : conversation.title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w900,
-                        color: assistantPalette.primaryText,
-                      ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      conversation.preview,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 11.5.sp,
-                        color: assistantPalette.mutedText,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(width: 8.w),
-              Text(
-                conversation.categoryLabel.isEmpty
-                    ? '對話'
-                    : conversation.categoryLabel,
-                style: TextStyle(
-                  fontSize: 10.5.sp,
-                  fontWeight: FontWeight.w800,
-                  color: assistantPalette.secondary,
-                ),
-              ),
-              Icon(
-                Icons.chevron_right_rounded,
-                size: 20.sp,
-                color: assistantPalette.mutedText,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _LearningSearchTopBar extends StatelessWidget {
-  const _LearningSearchTopBar({required this.onBack});
-
-  final VoidCallback onBack;
-
-  @override
-  Widget build(BuildContext context) {
-    final assistantPalette = _LawAssistantPalette.of(context);
-
-    return SizedBox(
-      height: 42.w,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: SizedBox(
-              width: 42.w,
-              height: 42.w,
-              child: InkWell(
-                onTap: onBack,
-                borderRadius: BorderRadius.circular(8.r),
-                child: Icon(
-                  Icons.arrow_back_rounded,
-                  size: 28.sp,
-                  color: assistantPalette.primaryText,
-                ),
-              ),
-            ),
-          ),
-          Text(
-            '問小法助',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w900,
-              color: assistantPalette.primaryText,
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: SizedBox(width: 42.w, height: 42.w),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LearningSearchSuggestion extends StatelessWidget {
-  const _LearningSearchSuggestion({
-    required this.label,
-    required this.onTap,
-  });
-
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final assistantPalette = _LawAssistantPalette.of(context);
-
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(999.r),
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 8.h),
-          decoration: BoxDecoration(
-            color: assistantPalette.chipSurface,
-            borderRadius: BorderRadius.circular(999.r),
-            border: Border.all(color: assistantPalette.border),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w700,
-              color: assistantPalette.secondary,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class LawAssistantChatPage extends StatefulWidget {
-  const LawAssistantChatPage({
-    super.key,
-    this.initialPrompt,
-    this.conversationId,
-    this.fallbackConversation,
-    this.isGuestSession = false,
-  });
-
-  final String? initialPrompt;
-  final String? conversationId;
-  final LawAssistantConversation? fallbackConversation;
-  final bool isGuestSession;
-
-  @override
-  State<LawAssistantChatPage> createState() => _LawAssistantChatPageState();
-}
-
-class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
-  final LawAssistantApiService _assistantApiService = LawAssistantApiService();
-  final GuestLawAssistantUsage _guestUsage = const GuestLawAssistantUsage();
-  final TextEditingController _replyController = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
-
-  LawAssistantConversation? _conversation;
-  String? _errorMessage;
-  var _isLoading = false;
-  var _isSending = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _bootstrap();
-  }
-
-  @override
-  void dispose() {
-    _assistantApiService.dispose();
-    _replyController.dispose();
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _bootstrap() async {
-    final initialPrompt = widget.initialPrompt?.trim();
-    if (initialPrompt != null && initialPrompt.isNotEmpty) {
-      await _createConversation(initialPrompt);
-      return;
-    }
-
-    final conversationId = widget.conversationId;
-    if (conversationId == null || conversationId.isEmpty) {
-      setState(() {
-        _conversation = widget.fallbackConversation;
-      });
-      return;
-    }
-
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-      _conversation = widget.fallbackConversation;
-    });
-
-    try {
-      final conversation =
-          await _assistantApiService.fetchConversation(conversationId);
-      if (!mounted) return;
-      setState(() {
-        _conversation = conversation;
-        _isLoading = false;
-      });
-      _scrollToBottom();
-    } catch (error) {
-      if (!mounted) return;
-      setState(() {
-        _isLoading = false;
-        _errorMessage = error.toString();
-      });
-    }
-  }
-
-  Future<void> _createConversation(String prompt) async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-      _conversation = _guestDraftConversation(prompt);
-    });
-
-    try {
-      final conversation =
-          await _assistantApiService.createConversation(prompt: prompt);
-      if (widget.isGuestSession) {
-        await _guestUsage.markUsed();
-      }
-      if (!mounted) return;
-      setState(() {
-        _conversation = conversation.copyWith(isGuest: widget.isGuestSession);
-        _isLoading = false;
-      });
-      _scrollToBottom();
-    } catch (error) {
-      if (!mounted) return;
-      setState(() {
-        _isLoading = false;
-        _errorMessage = error.toString();
-      });
-    }
-  }
-
-  LawAssistantConversation _guestDraftConversation(String prompt) {
-    final now = DateTime.now();
-    return LawAssistantConversation(
-      id: 'guest-draft',
-      title: prompt.length > 18 ? '${prompt.substring(0, 18)}...' : prompt,
-      preview: prompt,
-      updatedAt: now,
-      categoryLabel: '臨時',
-      isGuest: widget.isGuestSession,
-      messages: [
-        LawAssistantMessage(
-          id: 'guest-user-message',
-          role: LawAssistantMessageRole.user,
-          content: prompt,
-          createdAt: now,
-        ),
-      ],
-    );
-  }
-
-  Future<void> _sendFollowUp() async {
-    final prompt = _replyController.text.trim();
-    final conversation = _conversation;
-    if (prompt.isEmpty || conversation == null || _isSending) return;
-
-    if (conversation.isGuest) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('登入後可以在同一段對話中繼續追問。')),
-      );
-      return;
-    }
-
-    setState(() {
-      _isSending = true;
-      _errorMessage = null;
-    });
-    _replyController.clear();
-
-    try {
-      final updatedConversation = await _assistantApiService.sendMessage(
-        conversationId: conversation.id,
-        prompt: prompt,
-      );
-      if (!mounted) return;
-      setState(() {
-        _conversation = updatedConversation;
-        _isSending = false;
-      });
-      _scrollToBottom();
-    } catch (error) {
-      if (!mounted) return;
-      setState(() {
-        _isSending = false;
-        _errorMessage = error.toString();
-      });
-    }
-  }
-
-  void _scrollToBottom() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!_scrollController.hasClients) return;
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 240),
-        curve: Curves.easeOut,
-      );
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final topPadding = MediaQuery.paddingOf(context).top;
-    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
-    final conversation = _conversation;
-    final messages = conversation?.messages ?? const <LawAssistantMessage>[];
-    final assistantPalette = _LawAssistantPalette.of(context);
-
-    return Scaffold(
-      backgroundColor: assistantPalette.pageBackground,
-      body: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(16.w, topPadding + 14.h, 16.w, 8.h),
-              child: _LearningSearchTopBar(
-                onBack: () => Navigator.of(context).pop(),
-              ),
-            ),
-            Expanded(
-              child: ListView(
-                controller: _scrollController,
-                keyboardDismissBehavior:
-                    ScrollViewKeyboardDismissBehavior.onDrag,
-                padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 18.h),
-                children: [
-                  if (messages.isEmpty && !_isLoading)
-                    const _AssistantStatusCard(message: '這段對話還沒有內容。'),
-                  for (final message in messages)
-                    _LawAssistantChatBubble(message: message),
-                  if (_isLoading)
-                    const _AssistantStatusCard(message: '小法助正在整理方向...'),
-                  if (_errorMessage != null)
-                    _AssistantErrorCard(
-                      message: _errorMessage!,
-                      onRetry: () {
-                        final initialPrompt = widget.initialPrompt?.trim();
-                        if (initialPrompt != null && initialPrompt.isNotEmpty) {
-                          _createConversation(initialPrompt);
-                        } else {
-                          _bootstrap();
-                        }
-                      },
-                    ),
-                ],
-              ),
-            ),
-            _LawAssistantReplyBox(
-              controller: _replyController,
-              bottomInset: bottomInset,
-              isSending: _isSending,
-              isGuest: conversation?.isGuest ?? false,
-              onSend: _sendFollowUp,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _LawAssistantChatBubble extends StatelessWidget {
-  const _LawAssistantChatBubble({required this.message});
-
-  final LawAssistantMessage message;
-
-  @override
-  Widget build(BuildContext context) {
-    final isUser = message.role == LawAssistantMessageRole.user;
-    final assistantPalette = _LawAssistantPalette.of(context);
-
-    return Align(
-      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        constraints: BoxConstraints(maxWidth: 292.w),
-        margin: EdgeInsets.only(bottom: 12.h),
-        padding: EdgeInsets.all(14.w),
-        decoration: BoxDecoration(
-          color:
-              isUser ? assistantPalette.accent : assistantPalette.introSurface,
-          borderRadius: BorderRadius.circular(18.r),
-          border:
-              isUser ? null : Border.all(color: assistantPalette.neutralBorder),
-        ),
-        child: isUser
-            ? Text(
-                message.content,
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  height: 1.45,
-                  color: assistantPalette.inverseText,
-                ),
-              )
-            : _AssistantAnswerContent(message: message),
-      ),
-    );
-  }
-}
-
-class _AssistantAnswerContent extends StatelessWidget {
-  const _AssistantAnswerContent({required this.message});
-
-  final LawAssistantMessage message;
-
-  @override
-  Widget build(BuildContext context) {
-    final assistantPalette = _LawAssistantPalette.of(context);
-    final answer = message.answer;
-    if (answer == null || answer.isEmpty) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            message.content,
-            style: TextStyle(
-              fontSize: 13.sp,
-              height: 1.45,
-              color: assistantPalette.primaryText,
-            ),
-          ),
-          SizedBox(height: 10.h),
-          const _AssistantLegalDisclaimer(),
-        ],
-      );
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _AssistantAnswerBlock(title: '問題方向', text: answer.problemDirection),
-        _AssistantAnswerBlock(title: '相關內容', text: answer.relatedContent),
-        _AssistantAnswerBlock(title: '下一步可以補充什麼', text: answer.nextStep),
-        const _AssistantLegalDisclaimer(),
-      ],
-    );
-  }
-}
-
-class _AssistantLegalDisclaimer extends StatelessWidget {
-  const _AssistantLegalDisclaimer();
-
-  @override
-  Widget build(BuildContext context) {
-    final assistantPalette = _LawAssistantPalette.of(context);
-
-    // 台灣繁體中文教學註解：
-    // AI 回覆固定補上免責與求助提醒，避免使用者把初步整理誤認為律師正式意見。
-    return Text(
-      '提醒：這是法律資訊整理，不構成律師正式法律意見；若涉及期限、訴訟、刑事或重大權益，請諮詢專業律師或法律扶助。',
-      style: TextStyle(
-        fontSize: 10.5.sp,
-        height: 1.45,
-        color: assistantPalette.mutedText,
-      ),
-    );
-  }
-}
-
-class _AssistantAnswerBlock extends StatelessWidget {
-  const _AssistantAnswerBlock({
-    required this.title,
-    required this.text,
-  });
-
-  final String title;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    if (text.isEmpty) return const SizedBox.shrink();
-    final assistantPalette = _LawAssistantPalette.of(context);
-
-    return Padding(
-      padding: EdgeInsets.only(bottom: 10.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w900,
-              color: assistantPalette.primaryText,
-            ),
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: 12.sp,
-              height: 1.45,
-              color: assistantPalette.mutedText,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _AssistantStatusCard extends StatelessWidget {
-  const _AssistantStatusCard({required this.message});
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    final assistantPalette = _LawAssistantPalette.of(context);
-
-    return Container(
-      padding: EdgeInsets.all(14.w),
-      decoration: BoxDecoration(
-        color: assistantPalette.subtleSurface,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: assistantPalette.neutralBorder),
-      ),
-      child: Text(
-        message,
-        style: TextStyle(fontSize: 12.sp, color: assistantPalette.mutedText),
-      ),
-    );
-  }
-}
-
-class _AssistantErrorCard extends StatelessWidget {
-  const _AssistantErrorCard({
-    required this.message,
-    required this.onRetry,
-  });
-
-  final String message;
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    final assistantPalette = _LawAssistantPalette.of(context);
-
-    return Container(
-      padding: EdgeInsets.all(14.w),
-      decoration: BoxDecoration(
-        color: assistantPalette.cardSurface,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: assistantPalette.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            message,
-            style: TextStyle(
-              fontSize: 12.sp,
-              height: 1.45,
-              color: assistantPalette.mutedText,
-            ),
-          ),
-          SizedBox(height: 8.h),
-          TextButton(
-            onPressed: onRetry,
-            child: const Text('再試一次'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LawAssistantReplyBox extends StatefulWidget {
-  const _LawAssistantReplyBox({
-    required this.controller,
-    required this.bottomInset,
-    required this.isSending,
-    required this.isGuest,
-    required this.onSend,
-  });
-
-  final TextEditingController controller;
-  final double bottomInset;
-  final bool isSending;
-  final bool isGuest;
-  final VoidCallback onSend;
-
-  @override
-  State<_LawAssistantReplyBox> createState() => _LawAssistantReplyBoxState();
-}
-
-class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
-  @override
-  void initState() {
-    super.initState();
-    widget.controller.addListener(_refresh);
-  }
-
-  @override
-  void didUpdateWidget(covariant _LawAssistantReplyBox oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.controller == widget.controller) return;
-    oldWidget.controller.removeListener(_refresh);
-    widget.controller.addListener(_refresh);
-  }
-
-  @override
-  void dispose() {
-    widget.controller.removeListener(_refresh);
-    super.dispose();
-  }
-
-  void _refresh() => setState(() {});
-
-  @override
-  Widget build(BuildContext context) {
-    final assistantPalette = _LawAssistantPalette.of(context);
-    final canSend = widget.controller.text.trim().isNotEmpty &&
-        !widget.isSending &&
-        !widget.isGuest;
-
-    return AnimatedPadding(
-      duration: const Duration(milliseconds: 180),
-      padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, widget.bottomInset + 16.h),
-      child: Container(
-        padding: EdgeInsets.fromLTRB(14.w, 8.h, 8.w, 8.h),
-        decoration: BoxDecoration(
-          color: assistantPalette.cardSurface,
-          borderRadius: BorderRadius.circular(18.r),
-          border: Border.all(color: assistantPalette.border),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: widget.controller,
-                enabled: !widget.isGuest,
-                minLines: 1,
-                maxLines: 3,
-                decoration: InputDecoration(
-                  hintText: widget.isGuest ? '登入後可以繼續追問' : '繼續追問...',
-                  border: InputBorder.none,
-                  isCollapsed: true,
-                ),
-              ),
-            ),
-            IconButton(
-              onPressed: canSend ? widget.onSend : null,
-              icon: widget.isSending
-                  ? SizedBox(
-                      width: 18.w,
-                      height: 18.w,
-                      child: const CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : Icon(
-                      Icons.arrow_upward_rounded,
-                      size: 20.sp,
-                      color: canSend
-                          ? assistantPalette.accent
-                          : assistantPalette.mutedText,
-                    ),
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -5,14 +5,18 @@ import 'package:lawapp/components/search/search_bar.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
 
 /// 早期的熱門頁草稿，保留分類九宮格實驗版供後續參考。
-class TrendPage extends StatefulWidget {
-  const TrendPage({super.key});
+///
+/// 台灣繁體中文教學註解：
+/// 正式主流程已改成搜尋頁與記事頁，這個舊頁有外部測試圖片與獵奇分類，
+/// 因此移到 legacy，避免被誤接回正式 UI。
+class TrendPageLegacy extends StatefulWidget {
+  const TrendPageLegacy({super.key});
 
   @override
-  TrendState createState() => TrendState();
+  TrendLegacyState createState() => TrendLegacyState();
 }
 
-class TrendState extends State<TrendPage> {
+class TrendLegacyState extends State<TrendPageLegacy> {
   final controller = TextEditingController();
 
   @override

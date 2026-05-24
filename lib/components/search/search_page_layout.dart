@@ -18,6 +18,8 @@ class SearchPageLayout extends StatefulWidget {
     this.headerTitleSize = 28,
     this.searchBarHasShadow = true,
     this.searchBarSurfaceColor = const Color.fromARGB(255, 224, 224, 224),
+    this.onSearchSubmitted,
+    this.onSearchIconTap,
     required this.builder,
   });
 
@@ -28,6 +30,8 @@ class SearchPageLayout extends StatefulWidget {
   final double headerTitleSize;
   final bool searchBarHasShadow;
   final Color searchBarSurfaceColor;
+  final ValueChanged<String>? onSearchSubmitted;
+  final VoidCallback? onSearchIconTap;
   final Widget Function(
     BuildContext context,
     HomeSearchLayout layout,
@@ -169,6 +173,8 @@ class _SearchPageLayoutState extends State<SearchPageLayout> {
             showNotificationCapsule: false,
             hasShadow: widget.searchBarHasShadow,
             surfaceColor: widget.searchBarSurfaceColor,
+            onSubmitted: widget.onSearchSubmitted,
+            onSearchTap: widget.onSearchIconTap,
           ),
         ),
       ],

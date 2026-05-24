@@ -13,6 +13,7 @@ import 'package:lawapp/pages/home/home_subpages.dart';
 import 'package:lawapp/pages/learning/home_mission_quiz_page.dart';
 import 'package:lawapp/pages/learning/know_law_page.dart';
 import 'package:lawapp/pages/learning/statute_database_page.dart';
+import 'package:lawapp/pages/profile/profile_page.dart';
 import 'package:lawapp/pages/tools/legal_tools_page.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
 import 'package:lawapp/theme/app_colors.dart';
@@ -118,6 +119,15 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void _openProfilePage() {
+    // 台灣繁體中文教學註解：
+    // 首頁的「我的」現在直接開會員頁，不再依賴底部第 5 個 tab；
+    // 這樣底部導覽可以改成新的「追蹤」，同時保留原本會員功能入口。
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const ProfilePage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final layout = context.homeSearchLayout;
@@ -141,7 +151,7 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const HomeV2HeroHeader(),
+                          HomeV2HeroHeader(onProfileTap: _openProfilePage),
                           SizedBox(height: 14.h),
                           const HomeV2GreetingCard(),
                           SizedBox(height: 12.h),
@@ -152,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                           HomeV2MmpFeatureStrip(
                             onOpenTools: _openLegalTools,
                             onOpenCases: () => widget.onNavigateToTab(3),
-                            onOpenProfile: () => widget.onNavigateToTab(4),
+                            onOpenProfile: _openProfilePage,
                           ),
                           SizedBox(height: 18.h),
                           HomeV2SectionHeader(

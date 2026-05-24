@@ -15,13 +15,22 @@ class HomeDiscussionSection extends StatefulWidget {
     required this.onMoreTap,
     required this.feed,
     this.showHeader = true,
+    this.initialExpandedIndex,
+    this.initialActiveIndex,
   });
 
   final VoidCallback onMoreTap;
   final HomeDiscussionFeed feed;
+
   /// 台灣繁體中文教學註解：
   /// 這個開關讓新版首頁可以沿用舊討論內容，但把標題列交給新版 section header 統一處理。
   final bool showHeader;
+
+  /// 台灣繁體中文教學註解：
+  /// 記事頁的 Bottom Sheet 會指定要先展開哪一則議題；
+  /// 保留 nullable 是為了首頁維持原本「預設不展開」的互動。
+  final int? initialExpandedIndex;
+  final int? initialActiveIndex;
 
   @override
   State<HomeDiscussionSection> createState() => _HomeDiscussionSectionState();
@@ -67,6 +76,14 @@ class _HomeDiscussionSectionState extends State<HomeDiscussionSection> {
   @override
   void initState() {
     super.initState();
+    final topics = widget.feed.topics;
+    if (topics.isNotEmpty) {
+      final initialActive =
+          (widget.initialActiveIndex ?? widget.initialExpandedIndex ?? 0)
+              .clamp(0, topics.length - 1);
+      _activeIndex = initialActive;
+      _expandedIndex = widget.initialExpandedIndex?.clamp(0, topics.length - 1);
+    }
     _commentFocusNode.addListener(_handleCommentFocus);
   }
 

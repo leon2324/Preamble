@@ -18,6 +18,8 @@ class SearchRowHomePage extends StatefulWidget {
     this.showNotificationCapsule = true,
     this.hasShadow = true,
     this.surfaceColor = const Color.fromARGB(255, 224, 224, 224),
+    this.onSubmitted,
+    this.onSearchTap,
   });
 
   final TextEditingController controller;
@@ -26,6 +28,8 @@ class SearchRowHomePage extends StatefulWidget {
   final bool showNotificationCapsule;
   final bool hasShadow;
   final Color surfaceColor;
+  final ValueChanged<String>? onSubmitted;
+  final VoidCallback? onSearchTap;
 
   @override
   State<SearchRowHomePage> createState() => _SearchRowHomePageState();
@@ -114,7 +118,12 @@ class _SearchRowHomePageState extends State<SearchRowHomePage> {
                     children: [
                       RoundIconButton(
                         icon: Icons.notifications_none,
-                        onPressed: () {},
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('通知中心開發中，追蹤更新請先到「追蹤」分頁查看。')),
+                          );
+                        },
                         width: buttonWidth,
                         height: buttonHeight,
                         boxShadow: currentShadow,
@@ -152,7 +161,14 @@ class _SearchRowHomePageState extends State<SearchRowHomePage> {
                 child: TextField(
                   controller: widget.controller,
                   focusNode: _focusNode,
-                  onSubmitted: (_) => FocusScope.of(context).unfocus(),
+                  textInputAction: TextInputAction.search,
+                  onSubmitted: (value) {
+                    // 台灣繁體中文教學註解：
+                    // 共用搜尋列只負責收集與送出文字，實際要導去哪個搜尋流程
+                    // 交給外層頁面決定，避免首頁、全站搜尋頁各自寫一套 TextField。
+                    widget.onSubmitted?.call(value.trim());
+                    FocusScope.of(context).unfocus();
+                  },
                   onTapOutside: (_) => FocusScope.of(context).unfocus(),
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputDecoration(
@@ -168,10 +184,17 @@ class _SearchRowHomePageState extends State<SearchRowHomePage> {
                       left: 20.w,
                       right: 12.w,
                     ),
-                    suffixIcon: Icon(
-                      Icons.search,
-                      size: 32.sp,
-                      color: Colors.grey[600],
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        widget.onSearchTap?.call();
+                        FocusScope.of(context).unfocus();
+                      },
+                      tooltip: '送出搜尋',
+                      icon: Icon(
+                        Icons.search,
+                        size: 28.sp,
+                        color: Colors.grey[600],
+                      ),
                     ),
                     suffixIconConstraints: BoxConstraints(
                       minHeight: 48.h,
@@ -184,7 +207,11 @@ class _SearchRowHomePageState extends State<SearchRowHomePage> {
           ),
           RoundIconButton(
             icon: Icons.mic,
-            onPressed: () {},
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('語音搜尋開發中；目前請先輸入關鍵字。')),
+              );
+            },
             width: buttonWidth,
             height: buttonHeight,
             boxShadow: currentShadow,

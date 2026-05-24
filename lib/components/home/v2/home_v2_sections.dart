@@ -236,7 +236,7 @@ class HomeV2MmpFeatureStrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // 台灣繁體中文教學註解：
-    // 這排是首頁進入完整 MMP 的三個主入口，對應「解決問題、看案例、管理權限」。
+    // 這排是首頁進入完整 MMP 的三個主入口，對應「解決問題、看記事、管理權限」。
     // 之後若新增正式文件 API 或收藏 API，優先從各入口進到專頁，不把首頁塞成工具頁。
     final items = [
       _MmpFeatureItem(
@@ -247,9 +247,9 @@ class HomeV2MmpFeatureStrip extends StatelessWidget {
         onTap: onOpenTools,
       ),
       _MmpFeatureItem(
-        title: '案例庫',
-        subtitle: '社會案件與爭點',
-        icon: Icons.local_library_outlined,
+        title: '記事',
+        subtitle: '趨勢、議題、案件',
+        icon: Icons.inventory_2_outlined,
         color: HomeV2Palette.lawBlue,
         onTap: onOpenCases,
       ),
@@ -302,12 +302,15 @@ class _MmpFeatureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 台灣繁體中文教學註解：
+    // 這張卡目前會被用在首頁的三個主入口上，因此改用 InkWell + Ink 的標準組合，
+    // 可以讓點擊命中區與圓角背景完全一致，降低日後調整版型時出現「看得到但點不到」的風險。
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: item.onTap,
         borderRadius: BorderRadius.circular(20.r),
-        child: Container(
+        child: Ink(
           width: 122.w,
           padding: EdgeInsets.all(13.w),
           decoration: BoxDecoration(

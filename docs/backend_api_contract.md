@@ -1,89 +1,174 @@
-# MylawApp 後端 API 契約草案
+# LawApp 後端 API 契約
 
-> 台灣繁體中文教學註解：這份文件是 Flutter App 與後端/RAG 服務之間的「對齊表」。
-> 目前 App 已預留 `LAWAPP_API_BASE_URL`，正式後端上線後請優先符合這裡的路徑與欄位，
-> 這樣前端不需要大改就能接上真正的 AI、資料庫與法條索引。
+Flutter 端只呼叫 LawApp 後端，不保存任何 OpenAI、Gemini 或其他 AI provider API key。後端 base URL 由 `LAWAPP_API_BASE_URL` 注入；未設定時 App 使用 mock mode。
 
-## 1. 使用者權限
+## 通用規則
 
-- `guest`：免登入，可看公開內容、試問 AI 一次。
-- `member`：已登入，可保存 AI 對話、收藏追蹤、保存測驗與學習進度。
-- `subscriber`：訂閱者，可使用進階文件產生、完整案例卷宗、較高 AI/RAG 額度。
-
-建議後端以 Bearer token 回傳使用者層級，Flutter 端已透過 `AuthTokenProvider` 預留。
-
-## 2. AI 法律助理
-
-### `GET /law-assistant/conversations`
-
-回傳最近對話。
+- Auth：`Authorization: Bearer <token>`
+- Content-Type：`application/json; charset=utf-8`
+- 時間格式：ISO 8601 UTC
+- 錯誤格式：
 
 ```json
 {
-  "conversations": [
-    {
-      "id": "c_123",
-      "title": "押金問題",
-      "preview": "房東說押金不能退",
-      "updatedAt": "2026-04-25T08:00:00Z",
-      "categoryLabel": "租屋",
-      "messages": []
-    }
-  ]
-}
-```
-
-### `POST /law-assistant/conversations`
-
-建立新對話。
-
-```json
-{
-  "prompt": "房東不退押金，我可以怎麼處理？"
-}
-```
-
-回傳 `LawAssistantConversation`。助理訊息建議固定提供：
-
-```json
-{
-  "answer": {
-    "problemDirection": "這可能是租賃押金返還爭議。",
-    "relatedContent": "可先查看租約、點交紀錄、扣款明細與民法租賃相關規定。",
-    "nextStep": "請補充租約押金條款、退租日期、房東扣款理由。"
+  "error": {
+    "code": "quota_exceeded",
+    "message": "今日額度已用完",
+    "requestId": "req_123"
   }
 }
 ```
 
-## 3. 法規資料與 RAG
+## Auth
 
-- 台灣法規來源：法務部全國法規資料庫
-  - `https://law.moj.gov.tw/api/ch/law/json`
-  - `https://law.moj.gov.tw/api/ch/order/json`
-- App 端已可直接讀取上述資料；正式 RAG 建議由後端排程同步、斷詞、建立向量索引。
-- 回答時請回傳引用法規名稱、條號、來源網址與更新日期。
+- `POST /auth/demo/member`
+- `POST /auth/demo/subscriber`
+- `POST /auth/sign-out`
+- `POST /auth/refresh`
 
-## 4. 裁判書與案例庫
+回傳：
 
-- 司法院裁判書開放 API 需平台帳密換 token，且官方規格有服務時段限制。
-- 建議由後端排程同步 `Auth`、`JList` 與 `JDoc/{jid}`，不要由 Flutter 端直接打司法院帳密 API。
-- 不建議以網路爬蟲直接抓取司法院裁判書網頁作為正式資料來源；裁判書可能異動或移除，後端應依官方 API 的 `jid` 覆蓋與移除規則維護資料庫。
-- 案例庫資料建議欄位：
-  - `title`
-  - `summary`
-  - `country`
-  - `category`
-  - `timeline`
-  - `legalIssues`
-  - `sourceLinks`
-  - `privacyLevel`
+```json
+{
+  "token": "jwt-or-session-token",
+  "user": {
+    "id": "u_123",
+    "displayName": "王小明",
+    "email": "ming@example.com",
+    "accessTier": "member",
+    "createdAt": "2026-05-05T00:00:00Z",
+    "updatedAt": "2026-05-05T00:00:00Z",
+    "usageQuota": 20,
+    "usedQuotaToday": 3
+  }
+}
+```
 
-## 5. 文件產生
+## User Profile
 
-第一版 Flutter 已有本地模板。正式後端可新增：
+- `GET /users/me`
+- `PATCH /users/me`
+- `GET /users/me/quota`
 
+## Law Assistant
+
+- `GET /law-assistant/conversations`
+- `POST /law-assistant/conversations`
+- `GET /law-assistant/conversations/{id}`
+- `POST /law-assistant/conversations/{id}/messages`
+
+Conversation 欄位：
+
+- `id`
+- `title`
+- `preview`
+- `categoryLabel`
+- `updatedAt`
+- `messages`
+- `sourceCitations`
+- `disclaimer`
+
+Message 欄位：
+
+- `id`
+- `role`: `user` / `assistant` / `system`
+- `content`
+- `createdAt`
+- `answer`
+- `citations`
+- `warningText`
+
+Answer 欄位：
+
+- `problemDirection`
+- `relatedContent`
+- `nextStep`
+- `evidenceNeeded`
+- `possibleLegalIssues`
+- `recommendedActions`
+- `disclaimer`
+
+Citation 欄位：
+
+- `title`
+- `sourceType`: `statute` / `judgment` / `official` / `news` / `other`
+- `url`
+- `publishedAt`
+- `updatedAt`
+- `lawName`
+- `articleNumber`
+
+## Statutes
+
+- `GET /statutes`
+- `GET /statutes/search?q=&lawName=&articleNumber=&category=`
+- `GET /statutes/{id}`
+
+必備欄位：`codeName`、`articleNumber`、`articleText`、`lawUrl`、`category`、`updatedDate`、`isRepealed`、`sourceName`、`sourceType`、`plainLanguageSummary`、`relatedKeywords`。
+
+## Cases
+
+- `GET /cases/featured`
+- `GET /cases/archive?era=&category=`
+- `GET /cases/search?q=`
+- `GET /cases/{id}`
+
+必備欄位：`id`、`title`、`subtitle`、`summary`、`oneSentenceTakeaway`、`country`、`location`、`happenedAt`、`updatedAt`、`status`、`category`、`tags`、`timeline`、`legalIssues`、`relatedStatutes`、`sourceLinks`、`privacyLevel`、`isMockData`、`era`。
+
+## Search
+
+- `GET /search?q=&type=`
+
+Result 欄位：`id`、`title`、`subtitle`、`snippet`、`type`、`destination`、`score`、`source`、`updatedAt`、`tags`。
+
+## Following
+
+- `GET /following`
+- `POST /following/cases/{id}`
+- `DELETE /following/cases/{id}`
+- `POST /following/topics/{id}`
+- `DELETE /following/topics/{id}`
+- `POST /following/statutes/{id}`
+- `DELETE /following/statutes/{id}`
+- `POST /following/saved/cases/{id}`
+- `DELETE /following/saved/cases/{id}`
+- `POST /following/saved/statutes/{id}`
+- `DELETE /following/saved/statutes/{id}`
+- `POST /following/saved/articles/{id}`
+- `DELETE /following/saved/articles/{id}`
+- `GET /following/updates`
+
+`GET /following` 回傳 `FollowingSummary`，需同時包含
+`followedCaseIds`、`followedStatuteIds`、`followedTopicIds`、`followedKeywords`、
+`savedCaseIds`、`savedStatuteIds`、`savedArticleIds`、`notificationEnabled`、
+`createdAt`、`updatedAt`。全站搜尋、法規頁與我的 LawApp 都使用這份 summary。
+
+## Documents
+
+- `GET /documents/templates`
 - `POST /documents/drafts`
 - `GET /documents/drafts/{id}`
 - `POST /documents/drafts/{id}/export`
 
-文件產生必須固定附上：內容僅為草稿，不構成律師正式法律意見。
+文件回傳必須包含 `disclaimer`，並標示是否由模板或 AI 產生。
+
+## Official Feeds
+
+- `GET /official-feeds/news`
+- `GET /official-feeds/press-releases`
+- `GET /official-feeds/announcements`
+
+官方資料只回傳標題、摘要、來源、發布時間與官方連結，不回傳或保存新聞全文。
+
+## Quota
+
+- `GET /quota`
+- `POST /quota/consume`
+
+額度應由後端強制執行；Flutter 的 `remainingAiQuota` 只作 UI 提示。
+
+## 固定免責聲明
+
+所有 AI 回答、法條解釋、案件整理與文件草稿都必須包含：
+
+> 本內容僅供法律知識參考，不構成正式法律意見；具體案件請諮詢律師或專業人士。

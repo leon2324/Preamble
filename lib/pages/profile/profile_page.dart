@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/app/app_state.dart';
+import 'package:lawapp/components/shared/mvp_state_widgets.dart';
 import 'package:lawapp/data/legal_sources/legal_source_registry.dart';
-import 'package:lawapp/pages/followed_updates/followed_updates_page.dart';
+import 'package:lawapp/pages/following/following_page.dart';
 import 'package:lawapp/pages/tools/legal_tools_page.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
 import 'package:lawapp/theme/app_colors.dart';
@@ -13,108 +14,69 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appState = LawAppScope.of(context);
-    final palette = _ProfilePalette.of(context);
+    final canPop = Navigator.of(context).canPop();
     final topPadding =
         context.hasLargeTopInset ? context.topSafeInset + 10.h : 22.h;
 
     return Scaffold(
-      backgroundColor: palette.background,
+      backgroundColor: _background(context),
       body: ListView(
         physics: const BouncingScrollPhysics(),
         padding: EdgeInsets.fromLTRB(
-          16.w,
-          topPadding,
-          16.w,
-          context.pageContentBottomPadding + 32.h,
-        ),
+            16.w, topPadding, 16.w, context.pageContentBottomPadding + 32.h),
         children: [
-          _ProfileHeader(appState: appState, palette: palette),
+          if (canPop) _BackButton(onBack: () => Navigator.of(context).pop()),
+          _Header(appState: appState),
+          SizedBox(height: 14.h),
+          _SectionTitle('我的資料'),
+          SizedBox(height: 10.h),
+          _DataGrid(appState: appState),
           SizedBox(height: 16.h),
-          _AuthActionCard(appState: appState, palette: palette),
-          SizedBox(height: 14.h),
-          _ThemeCard(appState: appState, palette: palette),
-          SizedBox(height: 14.h),
-          _MemberFeatureGrid(palette: palette),
-          SizedBox(height: 14.h),
-          _PricingTierCard(appState: appState, palette: palette),
-          SizedBox(height: 14.h),
-          _LegalDisclaimerCard(palette: palette),
-          SizedBox(height: 14.h),
-          _LegalSourcesCard(palette: palette),
+          _SectionTitle('會員區'),
+          SizedBox(height: 10.h),
+          _PlanCard(appState: appState),
+          SizedBox(height: 10.h),
+          LockedFeatureCard(
+            title: 'Pro 功能預覽',
+            message: '完整案件卷宗、進階文件匯出、高額度小法助與追蹤提醒會在正式訂閱流程完成後開放。',
+            actionLabel: '啟用 Pro Demo',
+            onAction: appState.activateSubscriberDemo,
+          ),
+          SizedBox(height: 16.h),
+          _SectionTitle('設定'),
+          SizedBox(height: 10.h),
+          _SettingsCard(appState: appState),
+          SizedBox(height: 10.h),
+          const LegalDisclaimerBox(),
+          SizedBox(height: 10.h),
+          _SourcesCard(),
+          SizedBox(height: 10.h),
+          _DevLoginCard(appState: appState),
+          SizedBox(height: 10.h),
+          _ComingSoonLoginCard(),
         ],
       ),
     );
   }
 }
 
-class _ProfilePalette {
-  const _ProfilePalette({
-    required this.background,
-    required this.surface,
-    required this.subtleSurface,
-    required this.border,
-    required this.primaryText,
-    required this.secondaryText,
-    required this.accent,
-  });
-
-  final Color background;
-  final Color surface;
-  final Color subtleSurface;
-  final Color border;
-  final Color primaryText;
-  final Color secondaryText;
-  final Color accent;
-
-  static _ProfilePalette of(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    if (isDark) {
-      return const _ProfilePalette(
-        background: Color(0xFF0F1216),
-        surface: Color(0xFF171C22),
-        subtleSurface: Color(0xFF202731),
-        border: Color(0xFF2B3441),
-        primaryText: Color(0xFFF2F4F7),
-        secondaryText: Color(0xFFA3ABB6),
-        accent: Color(0xFFE5CD93),
-      );
-    }
-
-    return const _ProfilePalette(
-      background: AppColors.background,
-      surface: Colors.white,
-      subtleSurface: Color(0xFFFFFAEC),
-      border: AppColors.border,
-      primaryText: AppColors.textPrimary,
-      secondaryText: AppColors.textSecondary,
-      accent: AppColors.accent,
-    );
-  }
-}
-
-class _ProfileHeader extends StatelessWidget {
-  const _ProfileHeader({
-    required this.appState,
-    required this.palette,
-  });
+class _Header extends StatelessWidget {
+  const _Header({required this.appState});
 
   final LawAppState appState;
-  final _ProfilePalette palette;
 
   @override
   Widget build(BuildContext context) {
+    final quota = appState.remainingAiQuota;
     return Container(
       padding: EdgeInsets.all(18.w),
       decoration: BoxDecoration(
-        color: palette.surface,
+        color: _surface(context),
         borderRadius: BorderRadius.circular(24.r),
-        border: Border.all(color: palette.border),
+        border: Border.all(color: _border(context)),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x10000000),
-            blurRadius: 18,
-            offset: Offset(0, 8),
-          ),
+              color: Color(0x10000000), blurRadius: 18, offset: Offset(0, 8))
         ],
       ),
       child: Row(
@@ -123,17 +85,16 @@ class _ProfileHeader extends StatelessWidget {
             width: 58.w,
             height: 58.w,
             decoration: BoxDecoration(
-              color: palette.subtleSurface,
+              color: AppColors.chipSurface,
               shape: BoxShape.circle,
-              border: Border.all(color: palette.border),
+              border: Border.all(color: _border(context)),
             ),
             child: Icon(
-              appState.isSubscriber
-                  ? Icons.workspace_premium_rounded
-                  : Icons.person_rounded,
-              color: palette.accent,
-              size: 30.sp,
-            ),
+                appState.isSubscriber
+                    ? Icons.workspace_premium_rounded
+                    : Icons.person_rounded,
+                color: AppColors.accent,
+                size: 30.sp),
           ),
           SizedBox(width: 14.w),
           Expanded(
@@ -141,22 +102,23 @@ class _ProfileHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  appState.isGuest ? '一般民眾模式' : 'MylawApp 使用者',
-                  style: TextStyle(
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.w900,
-                    color: palette.primaryText,
-                  ),
-                ),
+                    appState.isGuest
+                        ? '訪客資料中心'
+                        : appState.currentUser.displayName,
+                    style: TextStyle(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w900,
+                        color: _text(context))),
                 SizedBox(height: 4.h),
-                Text(
-                  '${appState.accessTier.label} · ${appState.accessTier.helperText}',
-                  style: TextStyle(
-                    fontSize: 11.5.sp,
-                    height: 1.4,
-                    color: palette.secondaryText,
-                  ),
-                ),
+                Text('目前方案：${appState.accessTier.label}｜今日 AI 額度：$quota',
+                    style: TextStyle(
+                        fontSize: 11.5.sp,
+                        height: 1.4,
+                        color: _muted(context))),
+                SizedBox(height: 8.h),
+                Text(appState.accessTier.helperText,
+                    style: TextStyle(
+                        fontSize: 11.sp, height: 1.4, color: _muted(context))),
               ],
             ),
           ),
@@ -166,256 +128,124 @@ class _ProfileHeader extends StatelessWidget {
   }
 }
 
-class _AuthActionCard extends StatelessWidget {
-  const _AuthActionCard({
-    required this.appState,
-    required this.palette,
-  });
+class _DataGrid extends StatelessWidget {
+  const _DataGrid({required this.appState});
 
   final LawAppState appState;
-  final _ProfilePalette palette;
 
   @override
   Widget build(BuildContext context) {
-    return _ProfileCard(
-      palette: palette,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _ProfileSectionTitle(title: '登入與權限', palette: palette),
-          SizedBox(height: 10.h),
-          Text(
-            '第一版先保留 Google / Apple 登入位置，並用 demo 權限驗證三層產品規則。',
-            style: TextStyle(
-              fontSize: 12.sp,
-              height: 1.45,
-              color: palette.secondaryText,
-            ),
-          ),
-          SizedBox(height: 12.h),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () => _showReservedMessage(context, 'Google 登入'),
-                  icon: const Icon(Icons.g_mobiledata_rounded),
-                  label: const Text('Google'),
-                ),
-              ),
-              SizedBox(width: 10.w),
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () => _showReservedMessage(context, 'Apple 登入'),
-                  icon: const Icon(Icons.apple_rounded),
-                  label: const Text('Apple'),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 10.h),
-          Row(
-            children: [
-              Expanded(
-                child: FilledButton(
-                  onPressed: appState.signInDemo,
-                  child: const Text('登入 Demo'),
-                ),
-              ),
-              SizedBox(width: 10.w),
-              Expanded(
-                child: FilledButton.tonal(
-                  onPressed: appState.activateSubscriberDemo,
-                  child: const Text('Pro Demo'),
-                ),
-              ),
-            ],
-          ),
-          if (!appState.isGuest) ...[
-            SizedBox(height: 8.h),
-            SizedBox(
-              width: double.infinity,
-              child: TextButton(
-                onPressed: appState.signOut,
-                child: const Text('登出並回到訪客模式'),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  void _showReservedMessage(BuildContext context, String provider) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$provider 已在 UI 預留，正式 SDK 接入後即可啟用。')),
-    );
-  }
-}
-
-class _ThemeCard extends StatelessWidget {
-  const _ThemeCard({
-    required this.appState,
-    required this.palette,
-  });
-
-  final LawAppState appState;
-  final _ProfilePalette palette;
-
-  @override
-  Widget build(BuildContext context) {
-    return _ProfileCard(
-      palette: palette,
-      child: SwitchListTile.adaptive(
-        value: appState.isDarkMode,
-        onChanged: appState.setDarkMode,
-        dense: true,
-        contentPadding: EdgeInsets.zero,
-        title: Text(
-          '深色模式',
-          style: TextStyle(
-            fontSize: 15.sp,
-            fontWeight: FontWeight.w900,
-            color: palette.primaryText,
-          ),
-        ),
-        subtitle: Text(
-          '夜間查資料或讀案例時降低亮度。',
-          style: TextStyle(fontSize: 11.5.sp, color: palette.secondaryText),
-        ),
-      ),
-    );
-  }
-}
-
-class _MemberFeatureGrid extends StatelessWidget {
-  const _MemberFeatureGrid({required this.palette});
-
-  final _ProfilePalette palette;
-
-  @override
-  Widget build(BuildContext context) {
-    final features = [
-      _FeatureShortcut(
-        title: '收藏追蹤',
-        subtitle: '主題、案件、法條更新',
-        icon: Icons.bookmark_rounded,
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const FollowedUpdatesPage()),
-          );
-        },
-      ),
-      _FeatureShortcut(
-        title: '文件工具',
-        subtitle: '通知、協商、備忘草稿',
-        icon: Icons.description_rounded,
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const LegalToolsPage()),
-          );
-        },
-      ),
+    final items = [
+      _DataItem(
+          '我的收藏',
+          '${appState.savedCaseIds.length} 件',
+          Icons.bookmark_rounded,
+          () => Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => const FollowingPage()))),
+      _DataItem('我的筆記', '2 則 mock', Icons.note_alt_rounded,
+          () => _showMockSheet(context, '我的筆記', '案件筆記與法條筆記會在正式同步後顯示在這裡。')),
+      _DataItem(
+          '我的提問紀錄',
+          appState.isGuest ? '訪客未同步' : '3 段 mock',
+          Icons.smart_toy_rounded,
+          () => _showMockSheet(context, '我的提問紀錄', '小法助對話會由後端同步；目前顯示 mock 狀態。')),
+      _DataItem(
+          '我的文件草稿',
+          '1 份草稿',
+          Icons.description_rounded,
+          () => Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => const LegalToolsPage()))),
+      _DataItem(
+          '我的追蹤',
+          '案件 / 法條 / 主題',
+          Icons.notifications_active_rounded,
+          () => Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => const FollowingPage()))),
     ];
 
-    return Row(
-      children: features.map((feature) {
-        return Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(
-              right: feature == features.first ? 10.w : 0,
-            ),
-            child: InkWell(
-              onTap: feature.onTap,
-              borderRadius: BorderRadius.circular(20.r),
-              child: Container(
-                padding: EdgeInsets.all(14.w),
-                decoration: BoxDecoration(
-                  color: palette.surface,
-                  borderRadius: BorderRadius.circular(20.r),
-                  border: Border.all(color: palette.border),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(feature.icon, color: palette.accent, size: 24.sp),
-                    SizedBox(height: 10.h),
-                    Text(
-                      feature.title,
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w900,
-                        color: palette.primaryText,
-                      ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      feature.subtitle,
-                      style: TextStyle(
-                        fontSize: 10.5.sp,
-                        height: 1.35,
-                        color: palette.secondaryText,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+    return Wrap(
+      spacing: 10.w,
+      runSpacing: 10.h,
+      children: items.map((item) {
+        return SizedBox(
+          width: (MediaQuery.sizeOf(context).width - 42.w) / 2,
+          child: _DataCard(item: item),
         );
       }).toList(growable: false),
     );
   }
 }
 
-class _FeatureShortcut {
-  const _FeatureShortcut({
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-    required this.onTap,
-  });
+class _DataCard extends StatelessWidget {
+  const _DataCard({required this.item});
 
-  final String title;
-  final String subtitle;
-  final IconData icon;
-  final VoidCallback onTap;
+  final _DataItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: item.onTap,
+      borderRadius: BorderRadius.circular(20.r),
+      child: Container(
+        padding: EdgeInsets.all(14.w),
+        decoration: BoxDecoration(
+          color: _surface(context),
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(color: _border(context)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(item.icon, color: AppColors.accent, size: 23.sp),
+            SizedBox(height: 10.h),
+            Text(item.title,
+                style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w900,
+                    color: _text(context))),
+            SizedBox(height: 4.h),
+            Text(item.subtitle,
+                style: TextStyle(fontSize: 11.sp, color: _muted(context))),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
-class _PricingTierCard extends StatelessWidget {
-  const _PricingTierCard({
-    required this.appState,
-    required this.palette,
-  });
+class _PlanCard extends StatelessWidget {
+  const _PlanCard({required this.appState});
 
   final LawAppState appState;
-  final _ProfilePalette palette;
 
   @override
   Widget build(BuildContext context) {
-    return _ProfileCard(
-      palette: palette,
+    return _Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _ProfileSectionTitle(title: '三層功能規則', palette: palette),
+          Text('目前方案：${appState.accessTier.label}',
+              style: TextStyle(
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w900,
+                  color: _text(context))),
+          SizedBox(height: 6.h),
+          Text('升級 CTA 目前是 mock，不會進入真付款；正式付款 SDK 接上後會從這張卡承接。',
+              style: TextStyle(
+                  fontSize: 11.5.sp, height: 1.45, color: _muted(context))),
           SizedBox(height: 10.h),
-          _TierRow(
-            title: '未登入',
-            body: '公開查詢、一次 AI 試問、可閱讀基礎案例摘要。',
-            isActive: appState.accessTier == LawAppAccessTier.guest,
-            palette: palette,
-          ),
-          _TierRow(
-            title: '已登入',
-            body: '保存對話、收藏追蹤、記錄測驗與學習進度。',
-            isActive: appState.accessTier == LawAppAccessTier.member,
-            palette: palette,
-          ),
-          _TierRow(
-            title: '訂閱者',
-            body: '進階文件草稿、完整案例卷宗、較高 AI/RAG 額度。',
-            isActive: appState.accessTier == LawAppAccessTier.subscriber,
-            palette: palette,
+          Row(
+            children: [
+              Expanded(
+                  child: OutlinedButton(
+                      onPressed: appState.signInDemo,
+                      child: const Text('Demo 會員'))),
+              SizedBox(width: 10.w),
+              Expanded(
+                  child: FilledButton(
+                      onPressed: appState.activateSubscriberDemo,
+                      child: const Text('Pro Demo'))),
+            ],
           ),
         ],
       ),
@@ -423,155 +253,108 @@ class _PricingTierCard extends StatelessWidget {
   }
 }
 
-class _TierRow extends StatelessWidget {
-  const _TierRow({
-    required this.title,
-    required this.body,
-    required this.isActive,
-    required this.palette,
-  });
+class _SettingsCard extends StatelessWidget {
+  const _SettingsCard({required this.appState});
 
-  final String title;
-  final String body;
-  final bool isActive;
-  final _ProfilePalette palette;
+  final LawAppState appState;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 8.h),
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        color: isActive ? palette.subtleSurface : Colors.transparent,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: isActive ? palette.accent : palette.border),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            isActive ? Icons.check_circle_rounded : Icons.circle_outlined,
-            color: isActive ? palette.accent : palette.secondaryText,
-            size: 18.sp,
-          ),
-          SizedBox(width: 8.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w900,
-                    color: palette.primaryText,
-                  ),
-                ),
-                SizedBox(height: 3.h),
-                Text(
-                  body,
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    height: 1.4,
-                    color: palette.secondaryText,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LegalDisclaimerCard extends StatelessWidget {
-  const _LegalDisclaimerCard({required this.palette});
-
-  final _ProfilePalette palette;
-
-  @override
-  Widget build(BuildContext context) {
-    return _ProfileCard(
-      palette: palette,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _ProfileSectionTitle(title: '法律使用提醒', palette: palette),
-          SizedBox(height: 8.h),
-          Text(
-            '本 App 提供法律資訊整理、學習與 AI 輔助，不構成律師正式法律意見。'
-            '案件結果會受完整事實、證據、法院見解與最新法令影響；遇到訴訟期限、重大財產、刑事或人身安全問題，請儘快諮詢律師或法律扶助資源。',
+    return _Card(
+      child: SwitchListTile.adaptive(
+        value: appState.isDarkMode,
+        onChanged: appState.setDarkMode,
+        contentPadding: EdgeInsets.zero,
+        title: Text('深色模式',
             style: TextStyle(
-              fontSize: 12.sp,
-              height: 1.55,
-              color: palette.secondaryText,
-            ),
-          ),
-        ],
+                fontSize: 15.sp,
+                fontWeight: FontWeight.w900,
+                color: _text(context))),
+        subtitle: Text('夜間查資料或讀案例時降低亮度。',
+            style: TextStyle(fontSize: 11.5.sp, color: _muted(context))),
       ),
     );
   }
 }
 
-class _LegalSourcesCard extends StatelessWidget {
-  const _LegalSourcesCard({required this.palette});
-
-  final _ProfilePalette palette;
-
+class _SourcesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return _ProfileCard(
-      palette: palette,
+    return _Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _ProfileSectionTitle(title: '資料來源與後端規劃', palette: palette),
-          SizedBox(height: 10.h),
-          ...legalSourceEntries.map(
-            (source) => Padding(
-              padding: EdgeInsets.only(bottom: 10.h),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 34.w,
-                    height: 34.w,
-                    decoration: BoxDecoration(
-                      color: palette.subtleSurface,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child:
-                        Icon(source.icon, color: palette.accent, size: 19.sp),
-                  ),
-                  SizedBox(width: 10.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${source.title}｜${source.statusLabel}',
-                          style: TextStyle(
-                            fontSize: 12.5.sp,
-                            fontWeight: FontWeight.w900,
-                            color: palette.primaryText,
-                          ),
-                        ),
-                        SizedBox(height: 3.h),
-                        Text(
-                          source.description,
-                          style: TextStyle(
-                            fontSize: 10.8.sp,
-                            height: 1.45,
-                            color: palette.secondaryText,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+          Text('資料來源',
+              style: TextStyle(
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w900,
+                  color: _text(context))),
+          SizedBox(height: 8.h),
+          for (final source in legalSourceEntries.take(3))
+            Padding(
+              padding: EdgeInsets.only(bottom: 8.h),
+              child: Text('${source.title}｜${source.statusLabel}',
+                  style: TextStyle(
+                      fontSize: 11.5.sp, height: 1.4, color: _muted(context))),
             ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DevLoginCard extends StatelessWidget {
+  const _DevLoginCard({required this.appState});
+
+  final LawAppState appState;
+
+  @override
+  Widget build(BuildContext context) {
+    return _Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('開發模式 Demo 登入',
+              style: TextStyle(
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w900,
+                  color: _text(context))),
+          SizedBox(height: 6.h),
+          Text('這是開發展示模式，用來預覽會員與 Pro UI，不代表正式登入或付款。',
+              style: TextStyle(
+                  fontSize: 11.5.sp, height: 1.45, color: _muted(context))),
+          if (!appState.isGuest) ...[
+            SizedBox(height: 8.h),
+            TextButton(
+                onPressed: appState.signOut, child: const Text('登出並回到訪客')),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _ComingSoonLoginCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return _Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('即將支援',
+              style: TextStyle(
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w900,
+                  color: _text(context))),
+          SizedBox(height: 8.h),
+          Wrap(
+            spacing: 8.w,
+            runSpacing: 8.h,
+            children: const [
+              Chip(label: Text('Google 登入')),
+              Chip(label: Text('Apple 登入')),
+              Chip(label: Text('訂閱付款')),
+            ],
           ),
         ],
       ),
@@ -579,48 +362,95 @@ class _LegalSourcesCard extends StatelessWidget {
   }
 }
 
-class _ProfileCard extends StatelessWidget {
-  const _ProfileCard({
-    required this.palette,
-    required this.child,
-  });
+class _Card extends StatelessWidget {
+  const _Card({required this.child});
 
-  final _ProfilePalette palette;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
-        color: palette.surface,
+        color: _surface(context),
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: palette.border),
+        border: Border.all(color: _border(context)),
       ),
       child: child,
     );
   }
 }
 
-class _ProfileSectionTitle extends StatelessWidget {
-  const _ProfileSectionTitle({
-    required this.title,
-    required this.palette,
-  });
+class _BackButton extends StatelessWidget {
+  const _BackButton({required this.onBack});
 
-  final String title;
-  final _ProfilePalette palette;
+  final VoidCallback onBack;
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: TextStyle(
-        fontSize: 16.sp,
-        fontWeight: FontWeight.w900,
-        color: palette.primaryText,
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: IconButton(
+        onPressed: onBack,
+        icon: const Icon(Icons.arrow_back_ios_new_rounded),
+        color: _text(context),
       ),
     );
   }
 }
+
+class _SectionTitle extends StatelessWidget {
+  const _SectionTitle(this.title);
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(title,
+        style: TextStyle(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w900,
+            color: _text(context)));
+  }
+}
+
+class _DataItem {
+  const _DataItem(this.title, this.subtitle, this.icon, this.onTap);
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final VoidCallback onTap;
+}
+
+void _showMockSheet(BuildContext context, String title, String message) {
+  showModalBottomSheet<void>(
+    context: context,
+    backgroundColor: Colors.transparent,
+    builder: (context) => Padding(
+      padding: EdgeInsets.all(16.w),
+      child: AppEmptyState(
+          title: title, message: message, icon: Icons.folder_open_rounded),
+    ),
+  );
+}
+
+Color _background(BuildContext context) =>
+    Theme.of(context).brightness == Brightness.dark
+        ? const Color(0xFF0F1216)
+        : AppColors.background;
+Color _surface(BuildContext context) =>
+    Theme.of(context).brightness == Brightness.dark
+        ? const Color(0xFF171C22)
+        : Colors.white;
+Color _border(BuildContext context) =>
+    Theme.of(context).brightness == Brightness.dark
+        ? const Color(0xFF2B3441)
+        : AppColors.border;
+Color _text(BuildContext context) =>
+    Theme.of(context).brightness == Brightness.dark
+        ? const Color(0xFFF2F4F7)
+        : AppColors.textPrimary;
+Color _muted(BuildContext context) =>
+    Theme.of(context).brightness == Brightness.dark
+        ? const Color(0xFFA3ABB6)
+        : AppColors.textSecondary;

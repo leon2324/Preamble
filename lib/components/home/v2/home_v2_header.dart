@@ -1,11 +1,53 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/components/home/v2/home_v2_palette.dart';
 import 'package:lawapp/components/home/v2/home_v2_primitives.dart';
+import 'package:lawapp/data/mock_data/home/home_v2_mock_data.dart';
 import 'package:lawapp/theme/app_colors.dart';
 
-class HomeV2HeroHeader extends StatelessWidget {
-  const HomeV2HeroHeader({super.key});
+class HomeV2HeroHeader extends StatefulWidget {
+  const HomeV2HeroHeader({
+    super.key,
+    required this.onProfileTap,
+  });
+
+  final VoidCallback onProfileTap;
+
+  @override
+  State<HomeV2HeroHeader> createState() => _HomeV2HeroHeaderState();
+}
+
+class _HomeV2HeroHeaderState extends State<HomeV2HeroHeader> {
+  late final PageController _tickerController;
+  Timer? _tickerTimer;
+  var _tickerIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _tickerController = PageController();
+    // 台灣繁體中文教學註解：
+    // 頂部法規快訊每 4 秒往上換一則，先使用 mock data；
+    // 未來接 API 時只要替換 homeV2TickerItems 的資料來源即可。
+    _tickerTimer = Timer.periodic(const Duration(seconds: 4), (_) {
+      if (!_tickerController.hasClients || homeV2TickerItems.isEmpty) return;
+      final nextIndex = (_tickerIndex + 1) % homeV2TickerItems.length;
+      _tickerController.animateToPage(
+        nextIndex,
+        duration: const Duration(milliseconds: 420),
+        curve: Curves.easeOutCubic,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _tickerTimer?.cancel();
+    _tickerController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +84,7 @@ class HomeV2HeroHeader extends StatelessWidget {
             ),
             const _HeaderIcon(icon: Icons.notifications_none_rounded),
             SizedBox(width: 10.w),
-            const _HeaderAvatar(),
+            _HeaderAvatar(onTap: widget.onProfileTap),
           ],
         ),
         SizedBox(height: 16.h),
@@ -60,46 +102,59 @@ class HomeV2HeroHeader extends StatelessWidget {
               ),
             ],
           ),
-          child: Wrap(
-            crossAxisAlignment: WrapCrossAlignment.center,
-            spacing: 8.w,
-            runSpacing: 6.h,
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.16),
-                  borderRadius: BorderRadius.circular(99.r),
-                ),
-                child: Text(
-                  '新修正',
-                  style: TextStyle(
-                    color: const Color(0xFFFFD36D),
-                    fontSize: 10.sp,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ),
-              ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 220.w),
-                child: Text(
-                  '道路交通管理處罰條例修正',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w800,
-                    height: 1.15,
-                  ),
-                ),
-              ),
-              Icon(
-                Icons.chevron_right_rounded,
-                color: Colors.white.withValues(alpha: 0.9),
-                size: 20.sp,
-              ),
-            ],
+          child: SizedBox(
+            height: 24.h,
+            child: PageView.builder(
+              controller: _tickerController,
+              scrollDirection: Axis.vertical,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: homeV2TickerItems.length,
+              onPageChanged: (index) => setState(() => _tickerIndex = index),
+              itemBuilder: (context, index) {
+                final tickerItem = homeV2TickerItems[index];
+                return Row(
+                  children: [
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.16),
+                        borderRadius: BorderRadius.circular(99.r),
+                      ),
+                      child: Text(
+                        tickerItem.badge,
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: const Color(0xFFFFD36D),
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Text(
+                        tickerItem.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w800,
+                          height: 1.15,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 4.w),
+                    Icon(
+                      Icons.chevron_right_rounded,
+                      color: Colors.white.withValues(alpha: 0.9),
+                      size: 20.sp,
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ],
@@ -199,18 +254,31 @@ class _HeaderIcon extends StatelessWidget {
 }
 
 class _HeaderAvatar extends StatelessWidget {
-  const _HeaderAvatar();
+  const _HeaderAvatar({required this.onTap});
+
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 40.w,
-      height: 40.w,
-      decoration: const BoxDecoration(
-        color: HomeV2Palette.trustGreen,
-        shape: BoxShape.circle,
+    // 台灣繁體中文教學註解：
+    // 通知右邊這顆頭像就是首頁的「我的」快捷入口，因此要做成真正可點擊按鈕，
+    // 不要只保留視覺外觀。未來若要接會員照片或未讀徽章，也建議從這個元件擴充。
+    return Material(
+      color: Colors.transparent,
+      shape: const CircleBorder(),
+      child: InkWell(
+        onTap: onTap,
+        customBorder: const CircleBorder(),
+        child: Ink(
+          width: 40.w,
+          height: 40.w,
+          decoration: const BoxDecoration(
+            color: HomeV2Palette.trustGreen,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(Icons.person_rounded, color: Colors.white, size: 25.sp),
+        ),
       ),
-      child: Icon(Icons.person_rounded, color: Colors.white, size: 25.sp),
     );
   }
 }

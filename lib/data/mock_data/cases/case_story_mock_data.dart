@@ -6,6 +6,8 @@ class CaseStoryItem {
     required this.subtitle,
     required this.category,
     required this.country,
+    required this.occurredAt,
+    required this.location,
     required this.statusLabel,
     required this.publicInterest,
     required this.courtName,
@@ -23,6 +25,12 @@ class CaseStoryItem {
   final String subtitle;
   final String category;
   final String country;
+
+  /// 台灣繁體中文教學註解：
+  /// 詳情頁頂端只需要讓使用者快速抓到「何時、何地」；
+  /// 先用可讀字串，未來若要排序或篩選再拆成 DateTime 與地點代碼。
+  final String occurredAt;
+  final String location;
   final String statusLabel;
   final int publicInterest;
   final String courtName;
@@ -34,6 +42,11 @@ class CaseStoryItem {
   final List<String> watchPoints;
   final List<String> sources;
   final Color accentColor;
+
+  /// 台灣繁體中文教學註解：
+  /// 目前案件資料仍是 mock，但收藏與筆記已經會寫入本機；
+  /// 用標題與案號組成穩定 ID，之後後端補正式 caseId 時只要改這個 getter。
+  String get storageId => '${title}__$caseNumber';
 }
 
 class CaseTimelineItem {
@@ -46,7 +59,7 @@ class CaseTimelineItem {
   final String description;
 }
 
-/// 案例庫第一版示範資料。
+/// 記事頁社會案件示範資料。
 ///
 /// 台灣繁體中文教學註解：
 /// 這裡故意用「社會案件整理」的語氣，而不是只放裁判書標題；
@@ -58,7 +71,9 @@ const caseStoryItems = [
     subtitle: '死刑制度、憲法審查與重大刑案判決的交會',
     category: '刑事 / 憲法',
     country: '台灣',
-    statusLabel: '社會高度討論',
+    occurredAt: '2024 年 9 月',
+    location: '台灣',
+    statusLabel: '憲法法庭判決後追蹤',
     publicInterest: 96,
     courtName: '憲法法庭及各級法院公開裁判',
     caseNumber: '憲法法庭與刑事確定判決資料',
@@ -79,7 +94,9 @@ const caseStoryItems = [
     subtitle: '從帳戶、人頭、提款到詐欺集團分工',
     category: '刑事 / 金融',
     country: '台灣',
-    statusLabel: '常見高風險',
+    occurredAt: '2024 年至今',
+    location: '全台',
+    statusLabel: '偵查與起訴高發',
     publicInterest: 91,
     courtName: '各級法院公開刑事裁判',
     caseNumber: '詐欺、洗錢防制相關裁判整理',
@@ -100,7 +117,9 @@ const caseStoryItems = [
     subtitle: '看似日常，卻最容易進入調解與小額訴訟',
     category: '民事 / 租賃',
     country: '台灣',
-    statusLabel: '生活常見',
+    occurredAt: '2023 年 8 月',
+    location: '台北市',
+    statusLabel: '二審判決',
     publicInterest: 84,
     courtName: '臺灣高等法院',
     caseNumber: '112 年度上字第 123 號判決',

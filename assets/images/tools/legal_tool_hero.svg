@@ -1,0 +1,15 @@
+<svg width="180" height="150" viewBox="0 0 180 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="34" y="34" width="96" height="86" rx="14" fill="#F3EAD7"/>
+  <rect x="68" y="20" width="74" height="94" rx="10" fill="#FFFFFF" stroke="#D9CBB9" stroke-width="3"/>
+  <rect x="86" y="34" width="38" height="8" rx="4" fill="#6D8B74"/>
+  <path d="M91 55H119" stroke="#D9CBB9" stroke-width="4" stroke-linecap="round"/>
+  <path d="M91 70H124" stroke="#D9CBB9" stroke-width="4" stroke-linecap="round"/>
+  <path d="M91 85H113" stroke="#D9CBB9" stroke-width="4" stroke-linecap="round"/>
+  <path d="M62 108H112" stroke="#314D44" stroke-width="5" stroke-linecap="round"/>
+  <path d="M87 105V60" stroke="#314D44" stroke-width="5" stroke-linecap="round"/>
+  <path d="M61 67H113" stroke="#314D44" stroke-width="5" stroke-linecap="round"/>
+  <path d="M69 67L57 94H81L69 67Z" fill="#F7F5EF" stroke="#E7B76D" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M105 67L93 94H117L105 67Z" fill="#F7F5EF" stroke="#E7B76D" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M126 109L147 66C149 62 154 61 157 64C160 66 160 71 157 74L132 113L126 109Z" fill="#555555"/>
+  <path d="M122 118L126 109L132 113L126 121L122 118Z" fill="#FF8A65"/>
+</svg>

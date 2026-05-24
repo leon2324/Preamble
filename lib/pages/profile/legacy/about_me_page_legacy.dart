@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:lawapp/components/search/search_page_layout.dart';
 
-/// 我的頁目前還是骨架階段，但已先沿用共用搜尋頁容器。
-class AboutMePage extends StatefulWidget {
-  const AboutMePage({super.key});
+/// 舊版我的頁骨架。
+///
+/// 台灣繁體中文教學註解：
+/// 正式主流程已改用 `ProfilePage`，這個檔案只保留作為早期搜尋式個人頁參考，
+/// 不應再從正式入口導到這裡，避免使用者看到空白骨架。
+class AboutMePageLegacy extends StatefulWidget {
+  const AboutMePageLegacy({super.key});
 
   @override
-  AboutMeState createState() => AboutMeState();
+  AboutMeLegacyState createState() => AboutMeLegacyState();
 }
 
-class AboutMeState extends State<AboutMePage> {
+class AboutMeLegacyState extends State<AboutMePageLegacy> {
   final TextEditingController controller = TextEditingController();
 
   @override

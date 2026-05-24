@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/app/app_state.dart';
+import 'package:lawapp/pages/following/following_page.dart';
 import 'package:lawapp/pages/home/home_page.dart';
 import 'package:lawapp/pages/learning/know_law_page.dart';
-import 'package:lawapp/pages/profile/profile_page.dart';
 import 'package:lawapp/pages/search/global_search_page.dart';
-import 'package:lawapp/pages/trending/trending_page.dart';
+import 'package:lawapp/pages/journal/journal_page.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
 import 'package:lawapp/theme/app_colors.dart';
 
@@ -56,9 +56,9 @@ class _MylawAppState extends State<MylawApp> {
       selectedIcon: Icons.search_rounded,
     ),
     _BottomNavItemData(
-      label: '案例',
-      icon: Icons.local_library_outlined,
-      selectedIcon: Icons.local_library_rounded,
+      label: '記事',
+      icon: Icons.inventory_2_outlined,
+      selectedIcon: Icons.inventory_2_rounded,
     ),
     _BottomNavItemData(
       label: '我的',
@@ -98,8 +98,12 @@ class _MylawAppState extends State<MylawApp> {
       // 台灣繁體中文教學註解：
       // 搜尋提升為底部 Nav 中間分頁，讓它成為全站入口，而不是只藏在首頁。
       const GlobalSearchPage(),
-      const TrendingPage(),
-      const ProfilePage(),
+      const JournalPage(),
+      // 台灣繁體中文教學註解：
+      // 台灣繁體中文教學註解：
+      // 第五格現在整合「追蹤」與「我的」成個人法律中心，
+      // 所以頁面檔名仍沿用 FollowingPage，但 UI 入口命名改為「我的」。
+      const FollowingPage(),
     ];
 
     return LawAppScope(
@@ -110,7 +114,7 @@ class _MylawAppState extends State<MylawApp> {
           return MaterialApp(
             locale: const Locale('zh', 'TW'),
             debugShowCheckedModeBanner: false,
-            title: 'MylawApp',
+            title: 'LawApp',
             theme: _buildLightTheme(),
             darkTheme: _buildDarkTheme(),
             themeMode: _appState.themeMode,
@@ -120,6 +124,9 @@ class _MylawAppState extends State<MylawApp> {
               body: Builder(
                 builder: (context) {
                   final useTopSafeArea = !context.hasLargeTopInset;
+                  // 台灣繁體中文教學註解：
+                  // 全域底部 Nav 維持常駐，讓「我的 LawApp」仍能像其他主分頁一樣快速切換。
+                  // 個別子頁若需要沉浸式流程，請在 push 新頁時另外處理，而不要從主殼層關掉 Nav。
 
                   return Stack(
                     children: [

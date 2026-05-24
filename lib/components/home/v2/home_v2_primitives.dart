@@ -40,18 +40,14 @@ class HomeV2SectionHeader extends StatelessWidget {
               color: Colors.transparent,
               child: InkWell(
                 onTap: onTap,
-                customBorder: const CircleBorder(),
-                child: Container(
+                borderRadius: BorderRadius.circular(99.r),
+                child: SizedBox(
                   width: 28.w,
                   height: 28.w,
-                  decoration: const BoxDecoration(
-                    color: AppColors.textPrimary,
-                    shape: BoxShape.circle,
-                  ),
                   child: Icon(
                     Icons.chevron_right_rounded,
-                    color: Colors.white,
-                    size: 20.sp,
+                    color: AppColors.textPrimary,
+                    size: 24.sp,
                   ),
                 ),
               ),

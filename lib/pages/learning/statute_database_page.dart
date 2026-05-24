@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lawapp/app/app_state.dart';
+import 'package:lawapp/components/shared/mvp_state_widgets.dart';
 import 'package:lawapp/data/common/app_loading_quotes.dart';
-import 'package:lawapp/data/statutes/statute_api_service.dart';
 import 'package:lawapp/data/statutes/statute_item.dart';
+import 'package:lawapp/data/statutes/statute_repository.dart';
+import 'package:lawapp/pages/learning/know_law_page.dart';
 import 'package:lawapp/theme/app_colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class StatuteDatabasePage extends StatefulWidget {
-  const StatuteDatabasePage({super.key, this.initialQuery = ''});
+  const StatuteDatabasePage({
+    super.key,
+    this.initialQuery = '',
+    StatuteRepository? repository,
+  }) : _repository = repository;
 
   final String initialQuery;
+  final StatuteRepository? _repository;
 
   @override
   State<StatuteDatabasePage> createState() => _StatuteDatabasePageState();
@@ -58,9 +66,10 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
     ),
   ];
 
-  final StatuteApiService _service = StatuteApiService();
+  late final StatuteRepository _repository;
+  late final bool _ownsRepository;
   late final TextEditingController _searchController;
-  Future<List<StatuteItem>>? _itemsFuture;
+  Future<StatuteSearchResult>? _searchFuture;
   late List<_StatuteQueryEntry> _recentEntries;
   String _query = '';
   String _selectedFilter = '全部';
@@ -68,10 +77,12 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
   @override
   void initState() {
     super.initState();
+    _ownsRepository = widget._repository == null;
+    _repository = widget._repository ?? StatuteRepository();
     _query = widget.initialQuery;
     _searchController = TextEditingController(text: widget.initialQuery);
     if (widget.initialQuery.trim().isNotEmpty) {
-      _itemsFuture = _service.fetchChineseLawItems();
+      _searchFuture = _searchStatutes();
     }
     _recentEntries = List<_StatuteQueryEntry>.from(_defaultRecentEntries);
   }
@@ -79,18 +90,29 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
   @override
   void dispose() {
     _searchController.dispose();
-    _service.dispose();
+    if (_ownsRepository) {
+      _repository.dispose();
+    }
     super.dispose();
   }
 
   void _reload() {
     setState(() {
-      _itemsFuture = _service.fetchChineseLawItems();
+      _searchFuture = _searchStatutes(forceRefresh: true);
     });
   }
 
-  Future<List<StatuteItem>> _ensureItemsFuture() {
-    return _itemsFuture ??= _service.fetchChineseLawItems();
+  Future<StatuteSearchResult> _ensureSearchFuture() {
+    return _searchFuture ??= _searchStatutes();
+  }
+
+  Future<StatuteSearchResult> _searchStatutes({bool forceRefresh = false}) {
+    final category = _selectedFilter == '全部' ? '' : _selectedFilter;
+    return _repository.searchStatutes(
+      query: _query,
+      category: category,
+      forceRefresh: forceRefresh,
+    );
   }
 
   void _applyGuideQuery(String query) {
@@ -101,6 +123,26 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
       _query = query;
       _selectedFilter = _quickFilters.contains(query) ? query : '全部';
       _rememberQuery(query);
+      _searchFuture = _searchStatutes();
+    });
+    FocusManager.instance.primaryFocus?.unfocus();
+  }
+
+  void _submitSearch(String value) {
+    final query = value.trim();
+    if (query.isEmpty) return;
+    // 台灣繁體中文教學註解：
+    // TextField 的 onChanged 只負責即時篩選；使用者按鍵盤搜尋或點入口時，
+    // 才把關鍵字記進最近查詢，避免每打一個字都產生一筆假瀏覽紀錄。
+    setState(() {
+      _query = query;
+      _searchController.text = query;
+      _searchController.selection = TextSelection.collapsed(
+        offset: query.length,
+      );
+      _selectedFilter = _quickFilters.contains(query) ? query : '全部';
+      _rememberQuery(query);
+      _searchFuture = _searchStatutes();
     });
     FocusManager.instance.primaryFocus?.unfocus();
   }
@@ -163,6 +205,7 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
                         Navigator.of(context).pop();
                         setState(() {
                           _selectedFilter = label;
+                          _searchFuture = _searchStatutes();
                         });
                       },
                     );
@@ -174,21 +217,6 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
         );
       },
     );
-  }
-
-  List<StatuteItem> _filterItems(List<StatuteItem> items) {
-    // 搜尋採本地過濾，讓第一版不用每輸入一個字就打 API；
-    // 未來若資料量或 API 能力改變，可以在這裡抽換成遠端搜尋。
-    final filtered = items.where((item) {
-      final matchesQuery = item.matches(_query);
-      final matchesFilter = _selectedFilter == '全部' ||
-          item.codeName.contains(_selectedFilter) ||
-          item.category.contains(_selectedFilter) ||
-          item.tags.any((tag) => tag.contains(_selectedFilter));
-      return matchesQuery && matchesFilter && !item.isRepealed;
-    }).take(50);
-
-    return filtered.toList(growable: false);
   }
 
   @override
@@ -216,6 +244,8 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
                     onChanged: (value) {
                       setState(() {
                         _query = value;
+                        _searchFuture =
+                            hasActiveSearch ? _searchStatutes() : _searchFuture;
                       });
                     },
                     onClear: () {
@@ -224,8 +254,10 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
                       setState(() {
                         _searchController.clear();
                         _query = '';
+                        _searchFuture = null;
                       });
                     },
+                    onSubmitted: _submitSearch,
                   ),
                 ),
                 SizedBox(width: 10.w),
@@ -239,14 +271,15 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
               onFilterTap: (label) {
                 setState(() {
                   _selectedFilter = label;
+                  _searchFuture = _searchStatutes();
                 });
               },
             ),
             SizedBox(height: 20.h),
             Expanded(
               child: hasActiveSearch
-                  ? FutureBuilder<List<StatuteItem>>(
-                      future: _ensureItemsFuture(),
+                  ? FutureBuilder<StatuteSearchResult>(
+                      future: _ensureSearchFuture(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -260,7 +293,12 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
                           );
                         }
 
-                        final items = _filterItems(snapshot.data ?? const []);
+                        final result = snapshot.data ??
+                            const StatuteSearchResult(
+                              items: [],
+                              isMock: false,
+                            );
+                        final items = result.items.take(50).toList();
                         if (items.isEmpty) {
                           return const _StatuteEmptyState();
                         }
@@ -315,14 +353,46 @@ class _StatuteQueryEntry {
   final String query;
 }
 
-class StatuteDetailPage extends StatelessWidget {
+class StatuteDetailPage extends StatefulWidget {
   const StatuteDetailPage({super.key, required this.item});
 
   final StatuteItem item;
 
   @override
+  State<StatuteDetailPage> createState() => _StatuteDetailPageState();
+}
+
+class _StatuteDetailPageState extends State<StatuteDetailPage> {
+  StatuteItem get item => widget.item;
+
+  Future<void> _toggleFollow(bool isFollowed) async {
+    final appState = LawAppScope.of(context);
+    // 台灣繁體中文教學註解：
+    // 法規頁的追蹤不是本頁自己的暫存 bool，而是寫進 App 共用的 FollowingSummary；
+    // 這樣從全站搜尋追蹤、從法規頁追蹤、到我的 LawApp 查看，都會看到同一份資料。
+    await appState.setStatuteFollowed(_statuteInteractionId(item), !isFollowed);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(isFollowed ? '已取消追蹤。' : '已加入追蹤法條。')),
+    );
+  }
+
+  Future<void> _toggleSaved(bool isSaved) async {
+    final appState = LawAppScope.of(context);
+    await appState.setStatuteSaved(_statuteInteractionId(item), !isSaved);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(isSaved ? '已取消收藏。' : '已收藏法條。')),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.paddingOf(context).top;
+    final appState = LawAppScope.of(context);
+    final statuteId = _statuteInteractionId(item);
+    final isFollowed = appState.isStatuteFollowed(statuteId);
+    final isSaved = appState.isStatuteSaved(statuteId);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F0),
@@ -333,7 +403,7 @@ class StatuteDetailPage extends StatelessWidget {
           Align(
             alignment: Alignment.centerLeft,
             child: _RoundToolButton(
-              icon: Icons.arrow_back_rounded,
+              icon: Icons.arrow_back_ios_new_rounded,
               onTap: () => Navigator.of(context).pop(),
             ),
           ),
@@ -370,15 +440,95 @@ class StatuteDetailPage extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
           _DetailSectionCard(
+            title: '白話文解釋',
+            child: Text(
+              item.plainSummary,
+              style: TextStyle(
+                fontSize: 14.sp,
+                height: 1.6,
+                color: AppColors.textPrimary,
+              ),
+            ),
+          ),
+          SizedBox(height: 12.h),
+          _DetailSectionCard(
+            title: '生活例子',
+            child: Text(
+              _lifeExampleFor(item),
+              style: TextStyle(
+                fontSize: 14.sp,
+                height: 1.6,
+                color: AppColors.textPrimary,
+              ),
+            ),
+          ),
+          SizedBox(height: 12.h),
+          _DetailSectionCard(
+            title: '可能相關情境',
+            child: Wrap(
+              spacing: 8.w,
+              runSpacing: 8.h,
+              children: _scenarioChipsFor(item)
+                  .map((label) => Chip(label: Text(label)))
+                  .toList(growable: false),
+            ),
+          ),
+          SizedBox(height: 12.h),
+          Row(
+            children: [
+              Expanded(
+                child: FilledButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => LawAssistantSearchPage(
+                          initialPrompt:
+                              '我想了解「${item.displayTitle}」在生活案例中怎麼使用？',
+                        ),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.smart_toy_outlined),
+                  label: const Text('用這條法規問小法助'),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10.h),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () => _toggleFollow(isFollowed),
+                  icon: Icon(isFollowed
+                      ? Icons.notifications_active_rounded
+                      : Icons.notifications_none_rounded),
+                  label: Text(isFollowed ? '已追蹤' : '加入追蹤'),
+                ),
+              ),
+              SizedBox(width: 10.w),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () => _toggleSaved(isSaved),
+                  icon: Icon(isSaved
+                      ? Icons.bookmark_rounded
+                      : Icons.bookmark_border_rounded),
+                  label: Text(isSaved ? '已收藏' : '收藏法條'),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 12.h),
+          _DetailSectionCard(
             title: '資料資訊',
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _DetailMetaRow(label: '法規類別', value: item.category),
                 _DetailMetaRow(label: '最新異動', value: item.updatedDate),
-                const _DetailMetaRow(
+                _DetailMetaRow(
                   label: '資料來源',
-                  value: '全國法規資料庫',
+                  value: item.sourceName,
                 ),
                 if (item.lawUrl.isNotEmpty) ...[
                   SizedBox(height: 10.h),
@@ -406,18 +556,46 @@ class StatuteDetailPage extends StatelessWidget {
             ),
           ),
           SizedBox(height: 12.h),
-          Text(
-            '提醒：本頁只呈現法規資料，實際個案仍需要依事實、證據與最新正式公布資料判斷。',
-            style: TextStyle(
-              fontSize: 12.sp,
-              height: 1.45,
-              color: AppColors.textSecondary,
-            ),
-          ),
+          const LegalDisclaimerBox(),
         ],
       ),
     );
   }
+}
+
+String _statuteInteractionId(StatuteItem item) {
+  final raw = '${item.codeName}-${item.articleNumber}';
+  return 'statute-${raw.trim().replaceAll(RegExp(r'\s+'), '').replaceAll(RegExp(r'[^a-zA-Z0-9\u4e00-\u9fff]+'), '').toLowerCase()}';
+}
+
+String _lifeExampleFor(StatuteItem item) {
+  final text =
+      '${item.codeName} ${item.articleNumber} ${item.articleText} ${item.tags.join(' ')}';
+  if (text.contains('勞') || text.contains('加班')) {
+    return '例如公司要求你下班後繼續工作，卻只說「之後補休」而沒有清楚記錄工時與加班費，這時就可以先回到條文確認工時與工資計算方向。';
+  }
+  if (text.contains('消費') || text.contains('網購')) {
+    return '例如網購商品收到後發現不符合期待，是否能退貨、是否有例外商品，就需要同時看條文、交易紀錄與店家公告。';
+  }
+  if (text.contains('租') || text.contains('押金')) {
+    return '例如退租後房東主張扣押金，但沒有提供修繕明細，你可以先整理租約、點交照片與對話紀錄，再判斷是否進入調解或訴訟。';
+  }
+  if (text.contains('刑') || text.contains('詐')) {
+    return '例如收到不明款項或被要求提供帳戶時，是否涉及詐欺或洗錢風險，不能只看單一行為，還要看你是否知情與資金流向。';
+  }
+  return '例如車禍、網路言論或日常交易造成損害時，除了看條文，也要整理時間線、對方行為、損害證明與你希望請求的結果。';
+}
+
+List<String> _scenarioChipsFor(StatuteItem item) {
+  final text = '${item.codeName} ${item.articleText} ${item.tags.join(' ')}';
+  final chips = <String>{};
+  if (text.contains('租') || text.contains('押金')) chips.add('租屋');
+  if (text.contains('車') || text.contains('損害')) chips.add('車禍');
+  if (text.contains('消費') || text.contains('網購')) chips.add('消費');
+  if (text.contains('勞') || text.contains('工資')) chips.add('勞資');
+  if (text.contains('刑') || text.contains('詐')) chips.add('刑事');
+  chips.addAll(['生活證據', '調解前準備']);
+  return chips.take(6).toList(growable: false);
 }
 
 class _RoundToolButton extends StatelessWidget {
@@ -431,19 +609,19 @@ class _RoundToolButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 返回鍵只保留大箭頭，不再加底色圓框；
+    // 台灣繁體中文教學註解：
+    // 返回鍵統一改成 iOS 簡潔箭頭，不再加底色圓框；
     // 點擊範圍仍保留 42.w，避免視覺變輕後手指不好點。
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12.r),
         child: SizedBox(
           width: 42.w,
           height: 42.w,
           child: Icon(
             icon,
-            size: 30.sp,
+            size: 20.sp,
             color: AppColors.textPrimary,
           ),
         ),
@@ -467,7 +645,7 @@ class _StatuteTopBar extends StatelessWidget {
           Align(
             alignment: Alignment.centerLeft,
             child: _RoundToolButton(
-              icon: Icons.arrow_back_rounded,
+              icon: Icons.arrow_back_ios_new_rounded,
               onTap: onBack,
             ),
           ),
@@ -491,11 +669,13 @@ class _StatuteSearchField extends StatelessWidget {
     required this.controller,
     required this.onChanged,
     required this.onClear,
+    required this.onSubmitted,
   });
 
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
   final VoidCallback onClear;
+  final ValueChanged<String> onSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -509,6 +689,8 @@ class _StatuteSearchField extends StatelessWidget {
       child: TextField(
         controller: controller,
         onChanged: onChanged,
+        onSubmitted: (value) => onSubmitted(value.trim()),
+        textInputAction: TextInputAction.search,
         textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
           hintText: '搜尋法條、關鍵字或法規名稱',
