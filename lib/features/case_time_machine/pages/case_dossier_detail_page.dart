@@ -64,13 +64,6 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
   int _galleryIndex = 0;
 
   // 台灣繁體中文教學註解：
-  // 為整個頁面配置 ScrollController，用於在點擊頂部討論鍵時，自動流暢滾動至下方 Tab 討論區。
-  final ScrollController _scrollController = ScrollController();
-  final GlobalKey _scrollAreaKey = GlobalKey();
-  final GlobalKey _tabBarKey = GlobalKey();
-  bool _isTabBarPinned = false;
-
-  // 台灣繁體中文教學註解：
   // 定義自訂的 SVG 圖示字串，避免使用 Google Material Icons。
   static const String _svgNotesIcon = '''
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#1B3F38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -244,7 +237,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
   void initState() {
     super.initState();
     _galleryController = PageController();
-    _scrollController.addListener(_updatePinnedTabBar);
+
     _isFollowed = book.isFollowing;
     _isSaved = book.isFavorite;
     
@@ -280,33 +273,13 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
 
   @override
   void dispose() {
-    _scrollController.removeListener(_updatePinnedTabBar);
-    _scrollController.dispose();
+
     _galleryController.dispose();
     _commentController.dispose();
     super.dispose();
   }
 
-  void _updatePinnedTabBar() {
-    final tabRenderObject = _tabBarKey.currentContext?.findRenderObject();
-    final scrollRenderObject =
-        _scrollAreaKey.currentContext?.findRenderObject();
-    if (tabRenderObject is! RenderBox || scrollRenderObject is! RenderBox) {
-      return;
-    }
 
-    final tabTop = tabRenderObject.localToGlobal(Offset.zero).dy;
-    final scrollTop = scrollRenderObject.localToGlobal(Offset.zero).dy;
-    final shouldPin = tabTop <= scrollTop + 1;
-    if (shouldPin == _isTabBarPinned || !mounted) return;
-
-    // 台灣繁體中文教學註解：
-    // 詳情頁的 Tab 本身仍留在原本內容流裡；當它捲到 AppBar 下方時，
-    // 只額外顯示一份固定版 Tab，形成「凍結窗格」效果，避免改動既有 Tab 內容架構。
-    setState(() {
-      _isTabBarPinned = shouldPin;
-    });
-  }
 
   void _openRelatedCase(BuildContext context, String caseId) {
     final relatedBook = caseTimeMachineCaseById(caseId);
@@ -373,20 +346,31 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                   alignment: Alignment.center,
                   children: [
                     Positioned(
-                      left: 0,
-                      child: IconButton(
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                        icon: SvgPicture.string(
-                          _svgBackIcon,
-                          width: 20.w,
-                          height: 20.w,
-                          colorFilter: const ColorFilter.mode(
-                            CaseTimeMachineColors.primaryGreen,
-                            BlendMode.srcIn,
+                      left: 12.w,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CtmSvgIcon(
+                            CtmSvgIcons.waveform3,
+                            size: 20.w,
+                            color: CaseTimeMachineColors.primaryGreen,
                           ),
-                        ),
-                        onPressed: () => Navigator.of(context).pop(),
+                          SizedBox(width: 8.w),
+                          IconButton(
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                            icon: SvgPicture.string(
+                              _svgBackIcon,
+                              width: 20.w,
+                              height: 20.w,
+                              colorFilter: const ColorFilter.mode(
+                                CaseTimeMachineColors.primaryGreen,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                            onPressed: () => Navigator.of(context).pop(),
+                          ),
+                        ],
                       ),
                     ),
                     Text(
@@ -475,20 +459,31 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                     // 台灣繁體中文教學註解：
                     // 左側返回鍵，完全移除 Material Icons，改用自訂的 iOS 風格 SVG 返回圖示，並去除內距與約束靠最左側對齊。
                     Positioned(
-                      left: 0,
-                      child: IconButton(
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                        icon: SvgPicture.string(
-                          _svgBackIcon,
-                          width: 20.w,
-                          height: 20.w,
-                          colorFilter: const ColorFilter.mode(
-                            CaseTimeMachineColors.primaryGreen,
-                            BlendMode.srcIn,
+                      left: 12.w,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CtmSvgIcon(
+                            CtmSvgIcons.waveform3,
+                            size: 20.w,
+                            color: CaseTimeMachineColors.primaryGreen,
                           ),
-                        ),
-                        onPressed: () => Navigator.of(context).pop(),
+                          SizedBox(width: 8.w),
+                          IconButton(
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                            icon: SvgPicture.string(
+                              _svgBackIcon,
+                              width: 20.w,
+                              height: 20.w,
+                              colorFilter: const ColorFilter.mode(
+                                CaseTimeMachineColors.primaryGreen,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                            onPressed: () => Navigator.of(context).pop(),
+                          ),
+                        ],
                       ),
                     ),
                     // 台灣繁體中文教學註解：
@@ -548,13 +543,14 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
             ),
 
             Expanded(
-              child: Stack(
-                key: _scrollAreaKey,
-                children: [
-                  ListView(
-                    controller: _scrollController,
-                    padding: EdgeInsets.zero,
-                    children: [
+              child: NestedScrollView(
+                headerSliverBuilder: (context, innerBoxIsScrolled) {
+                  return [
+                    SliverToBoxAdapter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+
                       // 1. Swipable Image Gallery (PageView)
                       SizedBox(
                         height: 200.h,
@@ -957,133 +953,111 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                               ],
                             ),
                             SizedBox(height: 24.h),
-                            // 3. Tab Bar & Contents
-                            _buildDossierTabBar(context, key: _tabBarKey),
-                            SizedBox(height: 12.h),
-                            Padding(
-                        padding: EdgeInsets.fromLTRB(18.w, 0, 18.w, 32.h),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            // 台灣繁體中文教學註解：
-                            // 為了避免當 Tab 內容過短時，整個 ListView 的滾動範圍不足以將 Tab 頂到最上方固定，
-                            // 進而導致「浮動固定 TabBar」與「下方靜態 TabBar」同時出現的重複問題。
-                            // 這裡我們使用 LayoutBuilder 動態獲取螢幕高度，並為 Tab Content 設置一個
-                            // 最小高度約束（螢幕高度扣除頂部 Appbar、圖片、Header 的空間），確保不夠高時會自動用空白補足。
-                            LayoutBuilder(
-                              builder: (context, constraints) {
-                                // 估算剩餘高度：螢幕高度 - 狀態欄與 AppBar(約 80.h) - 底部導覽欄(約 72.h)
-                                final screenHeight = MediaQuery.of(context).size.height;
-                                final minTabContentHeight = screenHeight - 150.h;
-                                return ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    minHeight: minTabContentHeight,
-                                  ),
-                                  child: _buildActiveTabContent(context),
-                                );
-                              },
+                        ],
+                      ),
+                    ),
+                    SliverPersistentHeader(
+                      pinned: true,
+                      delegate: _SliverTabBarDelegate(
+                        child: _buildDossierTabBar(context, pinned: true),
+                      ),
+                    ),
+                  ];
+                },
+                body: SingleChildScrollView(
+                  padding: EdgeInsets.fromLTRB(18.w, 12.h, 18.w, 32.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildActiveTabContent(context),
+                      SizedBox(height: 24.h),
+                      // 台灣繁體中文教學註解：
+                      // 在此處實作精誠且簡潔的「小法助 AI 捷徑」橫幅（Banner）。
+                      // 點擊後會帶入本案專屬的 prompt 提問，引導用戶進入小法助進行深度法律問答。
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            CupertinoPageRoute<void>(
+                              builder: (_) => LawAssistantSearchPage(
+                                initialPrompt:
+                                    '我想了解關於「${book.titleZh}」的法律爭點與實務見解。',
+                              ),
                             ),
-                            SizedBox(height: 24.h),
-                            // 台灣繁體中文教學註解：
-                            // 在此處實作精誠且簡潔的「小法助 AI 捷徑」橫幅（Banner）。
-                            // 點擊後會帶入本案專屬的 prompt 提問，引導用戶進入小法助進行深度法律問答。
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  CupertinoPageRoute<void>(
-                                    builder: (_) => LawAssistantSearchPage(
-                                      initialPrompt:
-                                          '我想了解關於「${book.titleZh}」的法律爭點與實務見解。',
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 16.w, vertical: 14.h),
-                                decoration: BoxDecoration(
-                                  gradient: const LinearGradient(
-                                    colors: [
-                                      Color(0xFFE9F2F1),
-                                      Color(0xFFD5EAE6)
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
-                                  borderRadius: BorderRadius.circular(12.r),
-                                  border: Border.all(
-                                    color: CaseTimeMachineColors.primaryGreen
-                                        .withValues(alpha: 0.15),
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color:
-                                          Colors.black.withValues(alpha: 0.02),
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                  ],
-                                ),
-                                child: Row(
+                          );
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 16.w, vertical: 14.h),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [
+                                Color(0xFFE9F2F1),
+                                Color(0xFFD5EAE6)
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(12.r),
+                            border: Border.all(
+                              color: CaseTimeMachineColors.primaryGreen
+                                  .withValues(alpha: 0.15),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color:
+                                    Colors.black.withValues(alpha: 0.02),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.psychology_alt_rounded,
+                                color: CaseTimeMachineColors.primaryGreen,
+                                size: 26.sp,
+                              ),
+                              SizedBox(width: 12.w),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
                                   children: [
-                                    Icon(
-                                      Icons.psychology_alt_rounded,
-                                      color: CaseTimeMachineColors.primaryGreen,
-                                      size: 26.sp,
-                                    ),
-                                    SizedBox(width: 12.w),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            '對本案還有疑問？問問「小法助」AI',
-                                            style: TextStyle(
-                                              fontSize: 13.sp,
-                                              fontWeight: FontWeight.w900,
-                                              color: CaseTimeMachineColors
-                                                  .primaryGreen,
-                                            ),
-                                          ),
-                                          SizedBox(height: 2.h),
-                                          Text(
-                                            '快速為你分析本案涉及的法律關係與裁判意旨',
-                                            style: TextStyle(
-                                              fontSize: 10.5.sp,
-                                              color: CaseTimeMachineColors
-                                                  .textSecondary,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
+                                    Text(
+                                      '對本案還有疑問？問問「小法助」AI',
+                                      style: TextStyle(
+                                        fontSize: 13.sp,
+                                        fontWeight: FontWeight.w900,
+                                        color: CaseTimeMachineColors
+                                            .primaryGreen,
                                       ),
                                     ),
-                                    CtmSvgIcon(
-                                      CtmSvgIcons.chevronRight,
-                                      size: 12.sp,
-                                      color: CaseTimeMachineColors.primaryGreen,
+                                    SizedBox(height: 2.h),
+                                    Text(
+                                      '快速為你分析本案涉及的法律關係與裁判意旨',
+                                      style: TextStyle(
+                                        fontSize: 10.5.sp,
+                                        color: CaseTimeMachineColors
+                                            .textSecondary,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ),
-                          ],
+                              CtmSvgIcon(
+                                CtmSvgIcons.chevronRight,
+                                size: 12.sp,
+                                color: CaseTimeMachineColors.primaryGreen,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
-            if (_isTabBarPinned)
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      child: _buildDossierTabBar(context, pinned: true),
-                    ),
-                ],
               ),
             ),
 
@@ -3649,4 +3623,30 @@ class _LiteratureItem {
   final String author;
   final String journal;
   final String sourceType;
+}
+
+class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverTabBarDelegate({required this.child});
+
+  final Widget child;
+
+  @override
+  double get minExtent => 54.h;
+
+  @override
+  double get maxExtent => 54.h;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return SizedBox.expand(child: child);
+  }
+
+  @override
+  bool shouldRebuild(covariant _SliverTabBarDelegate oldDelegate) {
+    return oldDelegate.child != child;
+  }
 }
