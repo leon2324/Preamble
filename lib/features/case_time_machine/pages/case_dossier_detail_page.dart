@@ -239,6 +239,11 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
     if (_getLiteratures(book.id).isNotEmpty) tabs.add('學術文獻');
     if (book.mediaReferences.isNotEmpty) tabs.add('延伸媒體');
     if (book.relatedCases.isNotEmpty) tabs.add('相關案件');
+    final hasDiscussions = book.id == '318' ||
+        book.id == '161' ||
+        book.id == '124' ||
+        (_netizenComments[book.id]?.isNotEmpty == true);
+    if (hasDiscussions) tabs.add('鄉民討論');
     return tabs;
   }
 
