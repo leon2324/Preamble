@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
+import 'package:lawapp/features/case_time_machine/data/case_time_machine_repository.dart';
 import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
 import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
@@ -11,7 +12,9 @@ import 'package:lawapp/features/case_time_machine/pages/case_netizen_chat_room_p
 import 'package:lawapp/features/case_time_machine/pages/case_judge_practice_page.dart';
 import 'package:lawapp/features/case_time_machine/pages/case_opinion_spectrum_page.dart';
 import 'package:lawapp/features/case_time_machine/pages/case_legal_vocabulary_page.dart';
-import 'package:lawapp/features/case_time_machine/pages/case_timeline_detail_page.dart';
+import 'package:lawapp/features/case_time_machine/pages/case_witness_cross_page.dart';
+import 'package:lawapp/features/case_time_machine/pages/case_social_graph_page.dart';
+import 'package:lawapp/features/case_time_machine/pages/case_opinion_board_page.dart';
 import 'package:lawapp/pages/learning/know_law_page.dart';
 class LightTextStyles {
   static TextStyle displayTitle(BuildContext context) =>
@@ -49,6 +52,9 @@ class CaseDossierDetailPage extends StatefulWidget {
 }
 
 class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
+  CaseBook? _detailedBook;
+  bool _isLoading = true;
+
   late String _selectedTab;
   bool _isSaved = false;
   bool _isFollowed = false;
@@ -217,19 +223,20 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
   };
 
   List<String> get _availableTabs {
+    final book = _detailedBook ?? widget.book;
     final tabs = <String>[];
-    if (widget.book.background.isNotEmpty) tabs.add('事件背景');
-    if (widget.book.timeline.isNotEmpty) tabs.add('事件脈絡');
-    final hasLitigation = _getTrialSteps(widget.book.id).isNotEmpty ||
-        widget.book.judgmentResult.isNotEmpty;
+    if (book.background.isNotEmpty) tabs.add('事件背景');
+    if (book.timeline.isNotEmpty) tabs.add('事件脈絡');
+    final hasLitigation = _getTrialSteps(book.id).isNotEmpty ||
+        book.judgmentResult.isNotEmpty;
     if (hasLitigation) tabs.add('審判進程');
-    if (widget.book.legalIssues.isNotEmpty) tabs.add('法律爭點');
-    if (_getGlossaries(widget.book.id).isNotEmpty) tabs.add('法律詞典');
-    if (widget.book.relatedLaws.isNotEmpty) tabs.add('相關法條');
-    if (widget.book.socialImpact.isNotEmpty) tabs.add('社會影響');
-    if (_getLiteratures(widget.book.id).isNotEmpty) tabs.add('學術文獻');
-    if (widget.book.mediaReferences.isNotEmpty) tabs.add('延伸媒體');
-    if (widget.book.relatedCases.isNotEmpty) tabs.add('相關案件');
+    if (book.legalIssues.isNotEmpty) tabs.add('法律爭點');
+    if (_getGlossaries(book.id).isNotEmpty) tabs.add('法律詞典');
+    if (book.relatedLaws.isNotEmpty) tabs.add('相關法條');
+    if (book.socialImpact.isNotEmpty) tabs.add('社會影響');
+    if (_getLiteratures(book.id).isNotEmpty) tabs.add('學術文獻');
+    if (book.mediaReferences.isNotEmpty) tabs.add('延伸媒體');
+    if (book.relatedCases.isNotEmpty) tabs.add('相關案件');
     return tabs;
   }
 
@@ -238,11 +245,38 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
     super.initState();
     _galleryController = PageController();
     _scrollController.addListener(_updatePinnedTabBar);
-    _isFollowed = widget.book.isFollowing;
-    _isSaved = widget.book.isFavorite;
+    _isFollowed = book.isFollowing;
+    _isSaved = book.isFavorite;
+    
+    // 優先初始化預設 Tab，等資料載入完成會再次更新
     final tabs = _availableTabs;
     _selectedTab = tabs.isNotEmpty ? tabs.first : '事件背景';
+    
+    _loadDetails();
   }
+
+  Future<void> _loadDetails() async {
+    try {
+      final detail = await CaseTimeMachineRepository.instance.getCaseDetail(book.id);
+      if (mounted) {
+        setState(() {
+          _detailedBook = detail;
+          _isLoading = false;
+          // 重新計算 Tab，防 Placeholder 空欄位導致 Tab 被隱藏
+          final tabs = _availableTabs;
+          _selectedTab = tabs.isNotEmpty ? tabs.first : '事件背景';
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  CaseBook get book => _detailedBook ?? widget.book;
 
   @override
   void dispose() {
@@ -324,10 +358,86 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
     );
   }
 
+  Widget _buildLoadingState(BuildContext context) {
+    return Scaffold(
+      backgroundColor: CaseTimeMachineColors.bgCream,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(10.w, 4.h, 10.w, 2.h),
+              child: SizedBox(
+                width: double.infinity,
+                height: 48.h,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Positioned(
+                      left: 0,
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        icon: SvgPicture.string(
+                          _svgBackIcon,
+                          width: 20.w,
+                          height: 20.w,
+                          colorFilter: const ColorFilter.mode(
+                            CaseTimeMachineColors.primaryGreen,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                    ),
+                    Text(
+                      book.shortTitleZh.isNotEmpty
+                          ? book.shortTitleZh
+                          : book.titleZh,
+                      style: LightTextStyles.cardTitle(context)
+                          .copyWith(fontSize: 16.sp, fontWeight: FontWeight.w900),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        CaseTimeMachineColors.primaryGreen,
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                    Text(
+                      '正在安全調閱雲端卷宗...',
+                      style: TextStyle(
+                        fontSize: 13.5.sp,
+                        fontWeight: FontWeight.bold,
+                        color: CaseTimeMachineColors.primaryGreen,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final displayImages = widget.book.images.isNotEmpty
-        ? widget.book.images
+    if (_isLoading) {
+      return _buildLoadingState(context);
+    }
+
+    final book = _detailedBook ?? widget.book;
+    final displayImages = book.images.isNotEmpty
+        ? book.images
         : const [
             CaseImage(
               url: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80',
@@ -386,9 +496,9 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 80.w),
                       child: Text(
-                        widget.book.shortTitleZh.isNotEmpty
-                            ? widget.book.shortTitleZh
-                            : widget.book.titleZh,
+                        book.shortTitleZh.isNotEmpty
+                            ? book.shortTitleZh
+                            : book.titleZh,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
@@ -552,7 +662,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                             Row(
                               children: [
                                 Text(
-                                  '${widget.book.year}',
+                                  '${book.year}',
                                   style: TextStyle(
                                     fontSize: 13.sp,
                                     fontWeight: FontWeight.w900,
@@ -561,7 +671,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                 ),
                                 SizedBox(width: 8.w),
                                 Text(
-                                  '|  ${widget.book.location}  |  ${widget.book.status}',
+                                  '|  ${book.location}  |  ${book.status}',
                                   style: TextStyle(
                                     fontSize: 11.sp,
                                     fontWeight: FontWeight.bold,
@@ -572,7 +682,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                             ),
                             SizedBox(height: 8.h),
                             Text(
-                              widget.book.titleZh,
+                              book.titleZh,
                               style: TextStyle(
                                 fontFamily: 'Songti TC',
                                 fontFamilyFallback: const [
@@ -595,7 +705,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                               scrollDirection: Axis.horizontal,
                               physics: const BouncingScrollPhysics(),
                               child: Row(
-                                children: widget.book.tags.map((tag) {
+                                children: book.tags.map((tag) {
                                   return GestureDetector(
                                     onTap: () {
                                       Navigator.of(context).push(
@@ -643,7 +753,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                 borderRadius: BorderRadius.circular(10.r),
                               ),
                               child: Text(
-                                '「${widget.book.oneSentenceSummary}」',
+                                '「${book.oneSentenceSummary}」',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontFamily: 'Songti TC',
@@ -673,7 +783,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                             ),
                             SizedBox(height: 8.h),
                             Text(
-                              widget.book.background,
+                              book.background,
                               style: LightTextStyles.body(context)
                                   .copyWith(
                                 fontSize: 13.sp,
@@ -694,7 +804,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                             ),
                             SizedBox(height: 8.h),
                             Column(
-                              children: widget.book.legalIssues.map((issue) {
+                              children: book.legalIssues.map((issue) {
                                 return Padding(
                                   padding: EdgeInsets.only(bottom: 10.h),
                                   child: Row(
@@ -754,7 +864,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                         foregroundColor: const Color(0xFF357A53),
                                         onTap: () => Navigator.of(context).push(
                                           CupertinoPageRoute<void>(
-                                            builder: (_) => CaseJudgePracticePage(book: widget.book),
+                                            builder: (_) => CaseJudgePracticePage(book: book),
                                           ),
                                         ),
                                       ),
@@ -769,7 +879,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                         foregroundColor: const Color(0xFF6D649A),
                                         onTap: () => Navigator.of(context).push(
                                           CupertinoPageRoute<void>(
-                                            builder: (_) => CaseOpinionSpectrumPage(book: widget.book),
+                                            builder: (_) => CaseOpinionSpectrumPage(book: book),
                                           ),
                                         ),
                                       ),
@@ -781,14 +891,14 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                   children: [
                                     Expanded(
                                       child: _ExploreShortcutTile(
-                                        iconSvg: CtmSvgIcons.timeline,
-                                        title: '案件時間軸',
-                                        subtitle: '循時間軌跡還原現場',
+                                        iconSvg: CtmSvgIcons.message,
+                                        title: '虛擬詰問室',
+                                        subtitle: 'AI詰問關係人證詞',
                                         backgroundColor: const Color(0xFFEAF4F7),
                                         foregroundColor: const Color(0xFF4A7C8C),
                                         onTap: () => Navigator.of(context).push(
                                           CupertinoPageRoute<void>(
-                                            builder: (_) => CaseTimelineDetailPage(book: widget.book),
+                                            builder: (_) => CaseWitnessCrossPage(book: book),
                                           ),
                                         ),
                                       ),
@@ -810,11 +920,47 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                     ),
                                   ],
                                 ),
+                                SizedBox(height: 8.h),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: _ExploreShortcutTile(
+                                        iconSvg: CtmSvgIcons.brain,
+                                        title: '社會效應圖譜',
+                                        subtitle: '探索本案社會變革',
+                                        backgroundColor: const Color(0xFFFAF7F0),
+                                        foregroundColor: const Color(0xFF8B928D),
+                                        onTap: () => Navigator.of(context).push(
+                                          CupertinoPageRoute<void>(
+                                            builder: (_) => CaseSocialGraphPage(book: book),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 8.w),
+                                    Expanded(
+                                      child: _ExploreShortcutTile(
+                                        iconSvg: CtmSvgIcons.filePen,
+                                        title: '意見塗鴉牆',
+                                        subtitle: '發表你的理性見解',
+                                        backgroundColor: const Color(0xFFFDECEE),
+                                        foregroundColor: const Color(0xFFCD5C5C),
+                                        onTap: () => Navigator.of(context).push(
+                                          CupertinoPageRoute<void>(
+                                            builder: (_) => CaseOpinionBoardPage(book: book),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                             SizedBox(height: 24.h),
-                            // 3. Tab Contents
-                      Padding(
+                            // 3. Tab Bar & Contents
+                            _buildDossierTabBar(context, key: _tabBarKey),
+                            SizedBox(height: 12.h),
+                            Padding(
                         padding: EdgeInsets.fromLTRB(18.w, 0, 18.w, 32.h),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -847,7 +993,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                   CupertinoPageRoute<void>(
                                     builder: (_) => LawAssistantSearchPage(
                                       initialPrompt:
-                                          '我想了解關於「${widget.book.titleZh}」的法律爭點與實務見解。',
+                                          '我想了解關於「${book.titleZh}」的法律爭點與實務見解。',
                                     ),
                                   ),
                                 );
@@ -1053,19 +1199,19 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
   // 2. 發表觀點欄：使用者可撰寫意見並挑選立場 (合理派/不合理派/中立派)，發言後即時以 setState 動態插入留言板首位。
   // 3. 鄉民留言板 (Salon Comments)：展示多方不同立場的思辨留言，並可點擊愛心進行按讚/取消讚。
   Widget _buildDiscussionsTab(BuildContext context) {
-    final votes = _caseVotes[widget.book.id] ?? [50, 50];
+    final votes = _caseVotes[book.id] ?? [50, 50];
     final agreeCount = votes[0];
     final disagreeCount = votes[1];
     final totalVotes = agreeCount + disagreeCount;
     final agreePercent =
         totalVotes > 0 ? (agreeCount / totalVotes * 100).round() : 50;
     final disagreePercent = totalVotes > 0 ? 100 - agreePercent : 50;
-    final hasVoted = _myVotes.containsKey(widget.book.id);
-    final myChoice = _myVotes[widget.book.id];
+    final hasVoted = _myVotes.containsKey(book.id);
+    final myChoice = _myVotes[book.id];
 
     // 初始化該案件留言列表，若無則提供預設留言
-    if (!_netizenComments.containsKey(widget.book.id)) {
-      _netizenComments[widget.book.id] = [
+    if (!_netizenComments.containsKey(book.id)) {
+      _netizenComments[book.id] = [
         {
           'avatar': '理',
           'name': '理性旁觀者',
@@ -1089,15 +1235,15 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
         },
       ];
     }
-    final comments = _netizenComments[widget.book.id]!;
+    final comments = _netizenComments[book.id]!;
 
     // 依據案件設定思辨投開票所題目
     String pollQuestion = '對於本案定讞裁定與後續處理，你覺得合理嗎？';
-    if (widget.book.id == '318') {
+    if (book.id == '318') {
       pollQuestion = '法院認同本案抗爭符合「公民不服從」而宣判黃國昌等 22 人無罪，你覺得合理嗎？';
-    } else if (widget.book.id == '161') {
+    } else if (book.id == '161') {
       pollQuestion = '涉案幼兒園與教保員性侵幼童之刑事判決刑度與行政處罰，你覺得合理嗎？';
-    } else if (widget.book.id == '124') {
+    } else if (book.id == '124') {
       pollQuestion = '台鐵事故案中，對於事故主因與第一線人員及行政主管責任歸屬判決，你覺得合理嗎？';
     }
 
@@ -1189,8 +1335,8 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                             style: TextStyle(fontWeight: FontWeight.bold)),
                         onPressed: () {
                           setState(() {
-                            _myVotes[widget.book.id] = 'agree';
-                            _caseVotes[widget.book.id] = [
+                            _myVotes[book.id] = 'agree';
+                            _caseVotes[book.id] = [
                               agreeCount + 1,
                               disagreeCount
                             ];
@@ -1222,8 +1368,8 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                             style: TextStyle(fontWeight: FontWeight.bold)),
                         onPressed: () {
                           setState(() {
-                            _myVotes[widget.book.id] = 'disagree';
-                            _caseVotes[widget.book.id] = [
+                            _myVotes[book.id] = 'disagree';
+                            _caseVotes[book.id] = [
                               agreeCount,
                               disagreeCount + 1
                             ];
@@ -1671,7 +1817,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.book.background.isNotEmpty) ...[
+        if (book.background.isNotEmpty) ...[
           Text(
             '事件背景與始末',
             style: LightTextStyles.sectionTitle(context).copyWith(
@@ -1681,7 +1827,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
           ),
           SizedBox(height: 10.h),
           Text(
-            widget.book.background,
+            book.background,
             style: LightTextStyles.body(context).copyWith(
               fontSize: 13.sp,
               height: 1.6,
@@ -1689,7 +1835,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
           ),
           SizedBox(height: 20.h),
         ],
-        if (widget.book.fullStory.isNotEmpty) ...[
+        if (book.fullStory.isNotEmpty) ...[
           Text(
             '事件詳細經過',
             style: LightTextStyles.sectionTitle(context).copyWith(
@@ -1699,7 +1845,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
           ),
           SizedBox(height: 10.h),
           Text(
-            widget.book.fullStory,
+            book.fullStory,
             style: LightTextStyles.body(context).copyWith(
               fontSize: 13.sp,
               height: 1.6,
@@ -1722,7 +1868,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              for (final source in widget.book.sources) ...[
+              for (final source in book.sources) ...[
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 4.h),
                   child: Row(
@@ -1773,7 +1919,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.book.judgmentResult.isNotEmpty) ...[
+        if (book.judgmentResult.isNotEmpty) ...[
           Text(
             '最終審判結果',
             style: LightTextStyles.sectionTitle(context).copyWith(
@@ -1789,7 +1935,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
               children: [
                 Expanded(
                   child: Text(
-                    widget.book.judgmentResult,
+                    book.judgmentResult,
                     style: TextStyle(
                       fontSize: 13.sp,
                       height: 1.6,
@@ -1851,7 +1997,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
         _buildContentCard(
           accentColor: const Color(0xFF8E24AA),
           child: Text(
-            widget.book.socialImpact,
+            book.socialImpact,
             style: LightTextStyles.body(context).copyWith(
               fontSize: 13.sp,
               height: 1.6,
@@ -1878,7 +2024,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
           ),
         ),
         SizedBox(height: 10.h),
-        for (final ref in widget.book.mediaReferences) ...[
+        for (final ref in book.mediaReferences) ...[
           Container(
             margin: EdgeInsets.only(bottom: 10.h),
             decoration: BoxDecoration(
@@ -1968,7 +2114,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
 
   // --- TAB 0: 脈絡 ---
   Widget _buildTimelineTab(BuildContext context) {
-    final timelineNodes = widget.book.timeline;
+    final timelineNodes = book.timeline;
     final displayNodes =
         _isTimelineExpanded ? timelineNodes : timelineNodes.take(3).toList();
 
@@ -2103,7 +2249,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
         ],
 
         // 案件結果 card
-        if (widget.book.judgmentResult.isNotEmpty) ...[
+        if (book.judgmentResult.isNotEmpty) ...[
           Text(
             '案件結果',
             style: LightTextStyles.sectionTitle(context).copyWith(
@@ -2119,7 +2265,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
               children: [
                 Expanded(
                   child: Text(
-                    widget.book.judgmentResult,
+                    book.judgmentResult,
                     style: TextStyle(
                       fontSize: 13.sp,
                       height: 1.6,
@@ -2176,7 +2322,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
           ),
         ),
         SizedBox(height: 12.h),
-        for (final issue in widget.book.legalIssues) ...[
+        for (final issue in book.legalIssues) ...[
           _buildContentCard(
             accentColor: const Color(0xFF1F4E5B),
             child: Column(
@@ -2245,7 +2391,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
           ),
         ),
         SizedBox(height: 12.h),
-        for (final law in widget.book.relatedLaws) ...[
+        for (final law in book.relatedLaws) ...[
           _buildContentCard(
             accentColor: CaseTimeMachineColors.accentGold,
             child: Column(
@@ -2303,7 +2449,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 延伸影音資訊
-        if (widget.book.mediaReferences.isNotEmpty) ...[
+        if (book.mediaReferences.isNotEmpty) ...[
           Text(
             '延伸影音資訊',
             style: LightTextStyles.sectionTitle(context).copyWith(
@@ -2315,9 +2461,9 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: widget.book.mediaReferences.length,
+            itemCount: book.mediaReferences.length,
             itemBuilder: (context, index) {
-              final ref = widget.book.mediaReferences[index];
+              final ref = book.mediaReferences[index];
               String iconSvg = CtmSvgIcons.link;
               Color iconColor = CaseTimeMachineColors.accentGold;
 
@@ -2405,7 +2551,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
         ],
 
         // 相關案件
-        if (widget.book.relatedCases.isNotEmpty) ...[
+        if (book.relatedCases.isNotEmpty) ...[
           Text(
             '相關案件推薦',
             style: LightTextStyles.sectionTitle(context).copyWith(
@@ -2414,7 +2560,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
             ),
           ),
           SizedBox(height: 10.h),
-          for (final rel in widget.book.relatedCases) ...[
+          for (final rel in book.relatedCases) ...[
             GestureDetector(
               onTap: () => _openRelatedCase(context, rel.caseId),
               child: Container(
@@ -2494,7 +2640,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              for (final source in widget.book.sources) ...[
+              for (final source in book.sources) ...[
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 4.h),
                   child: Row(
@@ -2580,7 +2726,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
               Navigator.of(context).push(
                 CupertinoPageRoute<void>(
                   builder: (_) => LawAssistantSearchPage(
-                    initialPrompt: '我想了解關於「${widget.book.titleZh}」的法律爭點與實務見解。',
+                    initialPrompt: '我想了解關於「${book.titleZh}」的法律爭點與實務見解。',
                   ),
                 ),
               );
@@ -2721,24 +2867,24 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
     return [
       _TrialStep(
         stage: '第一審',
-        courtName: widget.book.basicInfo.courtLevel.contains('/')
-            ? widget.book.basicInfo.courtLevel.split('/').last.trim()
-            : widget.book.basicInfo.courtLevel,
-        caseNumber: '【模擬案號】${widget.book.year} 年度矚訴字第 999 號',
-        outcome: '裁判結果：${widget.book.status}',
-        date: widget.book.basicInfo.updatedAt,
+        courtName: book.basicInfo.courtLevel.contains('/')
+            ? book.basicInfo.courtLevel.split('/').last.trim()
+            : book.basicInfo.courtLevel,
+        caseNumber: '【模擬案號】${book.year} 年度矚訴字第 999 號',
+        outcome: '裁判結果：${book.status}',
+        date: book.basicInfo.updatedAt,
         holdingDetail:
-            '【判決概要】\n本案為 ${widget.book.category}，經第一審法院審判，考量相關法條事證與社會大眾爭點後做成決議。\n\n【核心判決意旨】\n詳細判決內容請參考司法院裁判書公開查詢系統。本系統已收錄該案件之核心法律關係與爭點。',
+            '【判決概要】\n本案為 ${book.category}，經第一審法院審判，考量相關法條事證與社會大眾爭點後做成決議。\n\n【核心判決意旨】\n詳細判決內容請參考司法院裁判書公開查詢系統。本系統已收錄該案件之核心法律關係與爭點。',
       ),
-      if (widget.book.status == '判決確定' || widget.book.status == '已結案')
+      if (book.status == '判決確定' || book.status == '已結案')
         _TrialStep(
           stage: '終審確定',
-          courtName: widget.book.basicInfo.courtLevel.contains('/')
-              ? widget.book.basicInfo.courtLevel.split('/').first.trim()
-              : widget.book.basicInfo.courtLevel,
-          caseNumber: '【模擬案號】${widget.book.year + 1} 年度台上字第 888 號',
+          courtName: book.basicInfo.courtLevel.contains('/')
+              ? book.basicInfo.courtLevel.split('/').first.trim()
+              : book.basicInfo.courtLevel,
+          caseNumber: '【模擬案號】${book.year + 1} 年度台上字第 888 號',
           outcome: '上訴駁回，維持原判決確定',
-          date: widget.book.basicInfo.updatedAt,
+          date: book.basicInfo.updatedAt,
           holdingDetail:
               '【終審裁判概要】\n本案上訴至終審法院，認原審判決認事用法尚無違誤，裁定駁回上訴或宣判確定。\n\n【判決效力】\n全案定讞，對當事人具有實質確定力。',
         ),
@@ -2913,7 +3059,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
   }
 
   Widget _buildLitigationTimeline(BuildContext context) {
-    final steps = _getTrialSteps(widget.book.id);
+    final steps = _getTrialSteps(book.id);
 
     return Container(
       padding: EdgeInsets.all(16.w),
@@ -3111,7 +3257,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
   }
 
   Widget _buildGlossarySection(BuildContext context) {
-    final items = _getGlossaries(widget.book.id);
+    final items = _getGlossaries(book.id);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -3255,7 +3401,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
   }
 
   Widget _buildLiteratureSection(BuildContext context) {
-    final items = _getLiteratures(widget.book.id);
+    final items = _getLiteratures(book.id);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
