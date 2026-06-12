@@ -359,30 +359,19 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                   children: [
                     Positioned(
                       left: 12.w,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CtmSvgIcon(
-                            CtmSvgIcons.waveform3,
-                            size: 20.w,
-                            color: CaseTimeMachineColors.primaryGreen,
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        icon: SvgPicture.string(
+                          _svgBackIcon,
+                          width: 20.w,
+                          height: 20.w,
+                          colorFilter: const ColorFilter.mode(
+                            CaseTimeMachineColors.primaryGreen,
+                            BlendMode.srcIn,
                           ),
-                          SizedBox(width: 8.w),
-                          IconButton(
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(),
-                            icon: SvgPicture.string(
-                              _svgBackIcon,
-                              width: 20.w,
-                              height: 20.w,
-                              colorFilter: const ColorFilter.mode(
-                                CaseTimeMachineColors.primaryGreen,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                            onPressed: () => Navigator.of(context).pop(),
-                          ),
-                        ],
+                        ),
+                        onPressed: () => Navigator.of(context).pop(),
                       ),
                     ),
                     Text(
@@ -475,30 +464,19 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                     // 左側返回鍵，完全移除 Material Icons，改用自訂的 iOS 風格 SVG 返回圖示，並去除內距與約束靠最左側對齊。
                     Positioned(
                       left: 12.w,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CtmSvgIcon(
-                            CtmSvgIcons.waveform3,
-                            size: 20.w,
-                            color: CaseTimeMachineColors.primaryGreen,
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        icon: SvgPicture.string(
+                          _svgBackIcon,
+                          width: 20.w,
+                          height: 20.w,
+                          colorFilter: const ColorFilter.mode(
+                            CaseTimeMachineColors.primaryGreen,
+                            BlendMode.srcIn,
                           ),
-                          SizedBox(width: 8.w),
-                          IconButton(
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(),
-                            icon: SvgPicture.string(
-                              _svgBackIcon,
-                              width: 20.w,
-                              height: 20.w,
-                              colorFilter: const ColorFilter.mode(
-                                CaseTimeMachineColors.primaryGreen,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                            onPressed: () => Navigator.of(context).pop(),
-                          ),
-                        ],
+                        ),
+                        onPressed: () => Navigator.of(context).pop(),
                       ),
                     ),
                     // 台灣繁體中文教學註解：
@@ -519,20 +497,16 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                       ),
                     ),
                     // 台灣繁體中文教學註解：
-                    // 右側僅放置單一討論功能按鈕，移除原有的分享按鈕，改用自訂 SVG 圖示，並去除內距與約束靠最右側對齊。
+                    // 右側僅放置單一討論功能按鈕，將原有的聊天室圖示替換為音波圖示，並防切邊右移 12.w 對齊。
                     Positioned(
-                      right: 0,
+                      right: 12.w,
                       child: IconButton(
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
-                        icon: SvgPicture.string(
-                          _svgForumIcon,
-                          width: 22.w,
-                          height: 22.w,
-                          colorFilter: const ColorFilter.mode(
-                            CaseTimeMachineColors.primaryGreen,
-                            BlendMode.srcIn,
-                          ),
+                        icon: CtmSvgIcon(
+                          CtmSvgIcons.waveform3,
+                          size: 22.w,
+                          color: CaseTimeMachineColors.primaryGreen,
                         ),
                         tooltip: '查看鄉民思辨討論',
                         onPressed: () {
