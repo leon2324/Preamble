@@ -419,16 +419,18 @@ class CaseDossierSqliteDb {
     List<dynamic>? whereArgs;
 
     if (category != null && query != null) {
-      whereClause = 'category = ? AND (titleZh LIKE ? OR shortDescription LIKE ? OR background LIKE ?)';
+      whereClause =
+          'category = ? AND (id = ? OR titleZh LIKE ? OR shortDescription LIKE ? OR background LIKE ?)';
       final likeQuery = '%$query%';
-      whereArgs = [category, likeQuery, likeQuery, likeQuery];
+      whereArgs = [category, query.trim(), likeQuery, likeQuery, likeQuery];
     } else if (category != null) {
       whereClause = 'category = ?';
       whereArgs = [category];
     } else if (query != null) {
-      whereClause = 'titleZh LIKE ? OR category LIKE ? OR shortDescription LIKE ? OR background LIKE ?';
+      whereClause =
+          'id = ? OR titleZh LIKE ? OR category LIKE ? OR shortDescription LIKE ? OR background LIKE ?';
       final likeQuery = '%$query%';
-      whereArgs = [likeQuery, likeQuery, likeQuery, likeQuery];
+      whereArgs = [query.trim(), likeQuery, likeQuery, likeQuery, likeQuery];
     }
 
     final List<Map<String, dynamic>> maps = await db.query(

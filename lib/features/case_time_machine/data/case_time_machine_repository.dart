@@ -121,6 +121,14 @@ class CaseTimeMachineRepository {
             merged.add(c);
           }
         }
+        if (query != null && query.trim().isNotEmpty) {
+          final q = query.trim().toLowerCase();
+          merged.sort((a, b) {
+            if (a.id.toLowerCase() == q && b.id.toLowerCase() != q) return -1;
+            if (b.id.toLowerCase() == q && a.id.toLowerCase() != q) return 1;
+            return 0;
+          });
+        }
         return merged;
       } catch (e) {
         print('Supabase fetch query failed, fallback to local: $e');
@@ -128,12 +136,21 @@ class CaseTimeMachineRepository {
     }
 
     try {
-      return await CaseDossierSqliteDb.instance.getCasesPaginated(
+      final localResults = await CaseDossierSqliteDb.instance.getCasesPaginated(
         limit,
         offset,
         category: category,
         query: query,
       );
+      if (query != null && query.trim().isNotEmpty) {
+        final q = query.trim().toLowerCase();
+        localResults.sort((a, b) {
+          if (a.id.toLowerCase() == q && b.id.toLowerCase() != q) return -1;
+          if (b.id.toLowerCase() == q && a.id.toLowerCase() != q) return 1;
+          return 0;
+        });
+      }
+      return localResults;
     } catch (e) {
       // 若在不支援 SQLite 的測試環境中，降級由記憶體快取進行過濾與分頁切片
       print('SQLite query failed, falling back to cache: $e');

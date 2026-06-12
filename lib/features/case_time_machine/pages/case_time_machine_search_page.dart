@@ -412,6 +412,7 @@ class _CaseTimeMachineSearchPageState extends State<CaseTimeMachineSearchPage> {
                         CaseTimeMachineTextStyles.cardTitle(context).copyWith(
                       fontSize: 13.5.sp,
                       fontWeight: FontWeight.w900,
+                      color: CaseTimeMachineColors.primaryGreen,
                     ),
                   ),
                   SizedBox(height: 2.h),

@@ -42,8 +42,9 @@ class SupabaseCaseService {
       }
 
       if (query != null && query.trim().isNotEmpty) {
-        final lowerQuery = query.toLowerCase();
+        final lowerQuery = query.toLowerCase().trim();
         filtered = filtered.where((c) =>
+            c.id.toLowerCase() == lowerQuery ||
             c.titleZh.toLowerCase().contains(lowerQuery) ||
             c.shortDescription.toLowerCase().contains(lowerQuery) ||
             c.memoryLine.toLowerCase().contains(lowerQuery) ||
@@ -52,6 +53,11 @@ class SupabaseCaseService {
 
       final sorted = filtered.toList()
         ..sort((a, b) {
+          if (query != null && query.trim().isNotEmpty) {
+            final q = query.trim().toLowerCase();
+            if (a.id.toLowerCase() == q && b.id.toLowerCase() != q) return -1;
+            if (b.id.toLowerCase() == q && a.id.toLowerCase() != q) return 1;
+          }
           final yearCompare = b.year.compareTo(a.year);
           if (yearCompare != 0) return yearCompare;
           return b.id.compareTo(a.id);
@@ -76,10 +82,11 @@ class SupabaseCaseService {
       }
 
       if (query != null && query.trim().isNotEmpty) {
-        final escapedQuery = '%${query.trim()}%';
-        // 使用 Postgres 的 or 條件做模糊搜尋
+        final trimmed = query.trim();
+        final escapedQuery = '%$trimmed%';
+        // 使用 Postgres 的 or 條件做模糊搜尋，並加入 id 的精確匹配
         queryParams.add(
-            'or=(titleZh.ilike.${Uri.encodeComponent(escapedQuery)},shortDescription.ilike.${Uri.encodeComponent(escapedQuery)},memoryLine.ilike.${Uri.encodeComponent(escapedQuery)})');
+            'or=(id.eq.${Uri.encodeComponent(trimmed)},titleZh.ilike.${Uri.encodeComponent(escapedQuery)},shortDescription.ilike.${Uri.encodeComponent(escapedQuery)},memoryLine.ilike.${Uri.encodeComponent(escapedQuery)})');
       }
 
       final url = Uri.parse('$supabaseUrl/rest/v1/cases?${queryParams.join('&')}');
@@ -87,7 +94,16 @@ class SupabaseCaseService {
 
       if (response.statusCode == 200) {
         final List<dynamic> list = jsonDecode(response.body) as List<dynamic>;
-        return list.map((item) => _mapJsonToCaseBook(item as Map<String, dynamic>)).toList();
+        final cases = list.map((item) => _mapJsonToCaseBook(item as Map<String, dynamic>)).toList();
+        if (query != null && query.trim().isNotEmpty) {
+          final q = query.trim().toLowerCase();
+          cases.sort((a, b) {
+            if (a.id.toLowerCase() == q && b.id.toLowerCase() != q) return -1;
+            if (b.id.toLowerCase() == q && a.id.toLowerCase() != q) return 1;
+            return 0;
+          });
+        }
+        return cases;
       } else {
         throw Exception('Supabase fetch error: ${response.statusCode} ${response.body}');
       }
