@@ -22,14 +22,32 @@ class CaseTimeMachineScaffold extends StatelessWidget {
     required this.child,
     this.scene = CaseTimeMachineScene.entry,
     this.showBackButton = true,
+    this.useSafeArea = true,
   });
 
   final Widget child;
   final CaseTimeMachineScene scene;
   final bool showBackButton;
+  final bool useSafeArea;
 
   @override
   Widget build(BuildContext context) {
+    // 台灣繁體中文教學註解：
+    // 舊版沉浸式圖書館頁面需要共用 scaffold 代管 SafeArea 與返回鍵；
+    // 新版有自己 AppBar 的頁面則會把 useSafeArea 關掉，讓頁面背景能覆蓋狀態列，
+    // 再由頁面內部只保留一層 SafeArea，避免舊圖層或舊返回鍵疊在新 AppBar 上。
+    final foreground = Stack(
+      children: [
+        child,
+        if (showBackButton)
+          Positioned(
+            top: 8.h,
+            left: 12.w,
+            child: _BackButton(),
+          ),
+      ],
+    );
+
     return Scaffold(
       backgroundColor: CaseTimeMachineColors.libraryMidnight,
       body: Stack(
@@ -60,20 +78,10 @@ class CaseTimeMachineScaffold extends StatelessWidget {
             ),
           ),
           CustomPaint(painter: _GoldFrameAndDustPainter(scene)),
-          SafeArea(
-            bottom: false,
-            child: Stack(
-              children: [
-                child,
-                if (showBackButton)
-                  Positioned(
-                    top: 8.h,
-                    left: 12.w,
-                    child: _BackButton(),
-                  ),
-              ],
-            ),
-          ),
+          if (useSafeArea)
+            SafeArea(bottom: false, child: foreground)
+          else
+            foreground,
         ],
       ),
     );

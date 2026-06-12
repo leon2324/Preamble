@@ -117,7 +117,7 @@ class _HomeDiscussionSectionState extends State<HomeDiscussionSection> {
       );
     }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((__) {
       if (!mounted) return;
       scrollIntoView();
       Future<void>.delayed(const Duration(milliseconds: 280), () {
@@ -229,7 +229,7 @@ class _HomeDiscussionSectionState extends State<HomeDiscussionSection> {
                                   _expandedIndex = index;
                                 }
                               });
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                              WidgetsBinding.instance.addPostFrameCallback((__) {
                                 _scrollTimelineToIndex(0);
                               });
                             },
@@ -416,7 +416,7 @@ class _HomeDiscussionSectionState extends State<HomeDiscussionSection> {
                                   });
                                   if (_isTimelineExpanded) {
                                     WidgetsBinding.instance
-                                        .addPostFrameCallback((_) {
+                                        .addPostFrameCallback((__) {
                                       _scrollTimelineToIndex(
                                           _activeTimelineIndex);
                                     });

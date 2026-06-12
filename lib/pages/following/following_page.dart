@@ -5,7 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lawapp/app/app_state.dart';
 import 'package:lawapp/data/documents/document_models.dart';
 import 'package:lawapp/data/following/following_models.dart';
-import 'package:lawapp/features/case_time_machine/pages/case_time_machine_entry_page.dart';
+import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
+import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart';
 import 'package:lawapp/pages/learning/statute_database_page.dart';
 import 'package:lawapp/pages/tools/legal_tools_page.dart';
 
@@ -328,23 +329,43 @@ class _FollowingPageState extends State<FollowingPage> {
     if (_selectedItem.kind == _FollowDetailKind.statute) {
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (_) =>
+          builder: (__) =>
               StatuteDatabasePage(initialQuery: _selectedItem.title),
         ),
       );
       return;
     }
 
+    // 台灣繁體中文教學註解：
+    // 將追蹤的 FollowItem 標題映射至新版案件圖書館的 CaseBook，
+    // 以便點選「前往案件頁面」時能直接進入全新設計的 Morandi 風格 Tab 詳情頁，而不是大門入口。
+    String caseId = '318';
+    final title = _selectedItem.title;
+    if (title.contains('太陽花')) {
+      caseId = '318';
+    } else if (title.contains('鄭性澤')) {
+      caseId = 'cheng-2021';
+    } else if (title.contains('詐欺') || title.contains('洗錢')) {
+      caseId = '228';
+    } else if (title.contains('車禍')) {
+      caseId = '104';
+    } else if (title.contains('租屋')) {
+      caseId = '176';
+    } else if (title.contains('勞資')) {
+      caseId = 'hung-2013';
+    }
+
+    final book = caseTimeMachineCaseById(caseId);
     Navigator.of(context).push(
       CupertinoPageRoute<void>(
-        builder: (_) => const CaseTimeMachineEntryPage(),
+        builder: (__) => CaseDossierDetailPage(book: book),
       ),
     );
   }
 
   void _openLegalTools() {
     Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const LegalToolsPage()),
+      MaterialPageRoute<void>(builder: (__) => const LegalToolsPage()),
     );
   }
 
@@ -844,7 +865,7 @@ class _ProfileView extends StatelessWidget {
       children: [
         _MemberCard(appState: appState),
         SizedBox(height: 14.h),
-        _SummaryGrid(summary: appState.followingSummary, onTrackTab: (_) {}),
+        _SummaryGrid(summary: appState.followingSummary, onTrackTab: (__) {}),
         SizedBox(height: 14.h),
         _InfoCard(
           title: '自前為 ${appState.accessTier.label}',

@@ -135,7 +135,7 @@ class LawAssistantApiService {
       if (decoded is Map && decoded['message'] != null) {
         message = decoded['message'].toString();
       }
-    } catch (_) {
+    } catch (__) {
       // 後端錯誤格式不可控，解析失敗時使用給 UI 的預設訊息即可。
     }
 

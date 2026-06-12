@@ -56,8 +56,8 @@ class _AppSearchBarState extends State<AppSearchBar> {
           child: TextField(
             controller: widget.controller,
             focusNode: _focusNode,
-            onSubmitted: (_) => FocusScope.of(context).unfocus(),
-            onTapOutside: (_) => FocusScope.of(context).unfocus(),
+            onSubmitted: (__) => FocusScope.of(context).unfocus(),
+            onTapOutside: (__) => FocusScope.of(context).unfocus(),
             textAlignVertical: TextAlignVertical.center,
             decoration: InputDecoration(
               hintText: widget.hintText,

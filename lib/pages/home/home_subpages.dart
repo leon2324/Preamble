@@ -109,7 +109,7 @@ class _OfficialFeedPageState extends State<OfficialFeedPage> {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (_) => OfficialFeedDetailPage(item: item),
+                            builder: (__) => OfficialFeedDetailPage(item: item),
                           ),
                         );
                       },
@@ -225,14 +225,14 @@ class CommonLegalIssuesPage extends StatelessWidget {
   void _openIssue(BuildContext context, HomeV2IssueItem item) {
     if (item.label == '法規查詢') {
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => const StatuteDatabasePage()),
+        MaterialPageRoute(builder: (__) => const StatuteDatabasePage()),
       );
       return;
     }
 
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => LawAssistantSearchPage(
+        builder: (__) => LawAssistantSearchPage(
           initialPrompt: '我想了解${item.label}常見法律問題，可以先看哪些方向？',
         ),
       ),
@@ -315,7 +315,7 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
       });
     });
     // 台灣繁體中文教學註解：本週精選固定取前五則，之後改接 API 時可改成後端排序結果。
-    _featuredTimer = Timer.periodic(const Duration(seconds: 4), (_) {
+    _featuredTimer = Timer.periodic(const Duration(seconds: 4), (__) {
       if (!_featuredController.hasClients) return;
       final next = (_featuredIndex + 1) % 5;
       _featuredController.animateToPage(
@@ -438,7 +438,7 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
 
   void _openTip(BuildContext context, HomeNewsletterItem item) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => LifeLegalTipDetailPage(item: item)),
+      MaterialPageRoute(builder: (__) => LifeLegalTipDetailPage(item: item)),
     );
   }
 }
@@ -576,7 +576,7 @@ class LifeLegalTipDetailPage extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => LawAssistantSearchPage(
+                    builder: (__) => LawAssistantSearchPage(
                       initialPrompt: '我想了解「${item.title}」這個生活法律問題，可以怎麼處理？',
                     ),
                   ),
@@ -592,7 +592,7 @@ class LifeLegalTipDetailPage extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => StatuteDatabasePage(
+                    builder: (__) => StatuteDatabasePage(
                       initialQuery: _statuteQueryForTip(item),
                     ),
                   ),
@@ -712,7 +712,7 @@ class HomeLearningTopicsPage extends StatelessWidget {
   void _openArticle(BuildContext context, LearningMockArticle article) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => LearningMockDetailPage(article: article),
+        builder: (__) => LearningMockDetailPage(article: article),
       ),
     );
   }

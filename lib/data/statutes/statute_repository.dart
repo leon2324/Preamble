@@ -32,7 +32,7 @@ class StatuteRepository {
     try {
       _cache = await _apiService.fetchChineseLawItems();
       return _cache!;
-    } catch (_) {
+    } catch (__) {
       _cache = _mockStatutes;
       return _cache!;
     }

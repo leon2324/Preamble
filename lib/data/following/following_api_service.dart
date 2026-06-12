@@ -145,7 +145,7 @@ class FollowingApiService {
       if (decoded is Map && decoded['message'] != null) {
         message = decoded['message'].toString();
       }
-    } catch (_) {
+    } catch (__) {
       // 台灣繁體中文教學註解：
       // 後端錯誤格式不可控，解析失敗時保留 UI 可讀的預設訊息即可。
     }

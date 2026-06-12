@@ -279,7 +279,7 @@ class DocumentRepository extends ChangeNotifier {
       if (decoded is Map && decoded['message'] != null) {
         message = decoded['message'].toString();
       }
-    } catch (_) {
+    } catch (__) {
       // 台灣繁體中文教學註解：
       // 後端錯誤格式可能隨部署版本變動，解析失敗時保留預設文案讓 UI 可讀。
     }

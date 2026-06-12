@@ -643,7 +643,7 @@ class _AssistantInlineTabs extends StatelessWidget {
     return _AssistantSegmentTabs(
       labels: labels,
       selectedIndex: 0,
-      onChanged: (_) {},
+      onChanged: (__) {},
     );
   }
 }

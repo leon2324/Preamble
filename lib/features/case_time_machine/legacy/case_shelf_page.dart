@@ -4,10 +4,10 @@ import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_da
 import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
 import 'package:lawapp/features/case_time_machine/pages/case_book_preview_page.dart';
 import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
-import 'package:lawapp/features/case_time_machine/widgets/case_info_card.dart';
-import 'package:lawapp/features/case_time_machine/widgets/case_shelf_header.dart';
+import 'package:lawapp/features/case_time_machine/legacy/case_info_card.dart';
+import 'package:lawapp/features/case_time_machine/legacy/case_shelf_header.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_scaffold.dart';
-import 'package:lawapp/features/case_time_machine/widgets/immersive_bookshelf.dart';
+import 'package:lawapp/features/case_time_machine/legacy/immersive_bookshelf.dart';
 
 class CaseShelfPage extends StatelessWidget {
   const CaseShelfPage({super.key, required this.hall, required this.shelf});
@@ -18,7 +18,7 @@ class CaseShelfPage extends StatelessWidget {
   void _openPreview(BuildContext context, CaseBook book) {
     Navigator.of(context).push(
       CupertinoPageRoute<void>(
-        builder: (_) => CaseBookPreviewPage(book: book),
+        builder: (__) => CaseBookPreviewPage(book: book),
       ),
     );
   }

@@ -98,7 +98,7 @@ class _CaseStoryDetailPageState extends State<CaseStoryDetailPage> {
   void _openCaseAssistant(CaseStoryItem item) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => LawAssistantSearchPage(
+        builder: (__) => LawAssistantSearchPage(
           initialPrompt: _caseAssistantPrompt(item),
         ),
       ),

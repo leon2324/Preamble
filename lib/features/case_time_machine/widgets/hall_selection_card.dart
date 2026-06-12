@@ -51,6 +51,7 @@ class _HallIcon extends StatelessWidget {
       CaseLibraryHallType.timeline => caseTimeMachineV2EraEmblemAsset,
       CaseLibraryHallType.theme => caseTimeMachineV2ThemeEmblemAsset,
       CaseLibraryHallType.classic => caseTimeMachineV2ClassicEmblemAsset,
+      CaseLibraryHallType.status => caseTimeMachineV2ClassicEmblemAsset,
     };
     return Container(
       width: 78.w,

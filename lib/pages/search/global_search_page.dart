@@ -516,7 +516,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
     // 真正的額度、訪客限制與追問記錄仍集中在 LawAssistantSearchPage 維護。
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => LawAssistantSearchPage(initialPrompt: keyword),
+        builder: (__) => LawAssistantSearchPage(initialPrompt: keyword),
       ),
     );
   }

@@ -130,7 +130,7 @@ void main() {
     );
     expect(statuteResult.officialUrl, 'https://law.moj.gov.tw/');
     expect(statuteResult.preferredSourceUrl, 'https://law.moj.gov.tw/');
-    expect(journalResults.map((item) => item.title), contains('公共安全爭議案'));
+    expect(journalResults.map((item) => item.title), contains('台鐵太魯閣號列車出軌事故案'));
   });
 
   test('JournalRepository searches trends, dossiers, and case books', () async {

@@ -46,3 +46,7 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 /android/local*.properties
+
+# Agent Scratch Directory
+/scratch/
+

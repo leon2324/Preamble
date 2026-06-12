@@ -13,15 +13,14 @@ import 'package:lawapp/data/statutes/statute_api_service.dart';
 import 'package:lawapp/data/statutes/statute_item.dart';
 import 'package:lawapp/data/statutes/statute_repository.dart';
 import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
-import 'package:lawapp/features/case_time_machine/pages/case_shelf_page.dart';
+import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart';
 import 'package:lawapp/features/case_time_machine/pages/case_time_machine_entry_page.dart';
 import 'package:lawapp/main.dart';
 import 'package:lawapp/pages/home/home_subpages.dart';
 import 'package:lawapp/pages/following/following_page.dart';
-import 'package:lawapp/pages/journal/case_story_detail_page.dart';
-import 'package:lawapp/pages/journal/journal_archive_page.dart';
+import 'package:lawapp/pages/journal/legacy/case_story_detail_page.dart';
+import 'package:lawapp/pages/journal/legacy/journal_archive_page.dart';
 import 'package:lawapp/pages/journal/widgets/archive_activity_section.dart';
-import 'package:lawapp/pages/journal/widgets/case_angle_section.dart';
 import 'package:lawapp/pages/journal/widgets/case_time_machine_card.dart';
 import 'package:lawapp/pages/journal/widgets/discussing_now_section.dart';
 import 'package:lawapp/pages/journal/widgets/journal_page_header.dart';
@@ -83,7 +82,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('大家都在討論'), findsOneWidget);
-    expect(find.text('從哪種案件開始？'), findsOneWidget);
+    expect(find.text('案件圖書館'), findsOneWidget);
   });
 
   testWidgets('Learning page shows redesigned sections', (
@@ -360,19 +359,19 @@ void main() {
     expect(find.byType(JournalPageHeader), findsOneWidget);
     expect(find.text('大家都在討論'), findsOneWidget);
     await tester.scrollUntilVisible(
-      find.text('案件時光機'),
+      find.text('案件圖書館'),
       180,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    expect(find.text('案件時光機'), findsOneWidget);
+    expect(find.text('案件圖書館'), findsOneWidget);
     await tester.scrollUntilVisible(
-      find.text('資料館動態'),
+      find.text('圖書館動態'),
       180,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    expect(find.text('資料館動態'), findsOneWidget);
+    expect(find.text('圖書館動態'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
     await tester.pumpWidget(
@@ -418,7 +417,7 @@ void main() {
     expect(tester.takeException(), isNull);
 
     await tester.scrollUntilVisible(
-      find.text('從哪種案件開始？'),
+      find.text('大家都在討論'),
       180,
       scrollable: find.byType(Scrollable).first,
     );
@@ -426,7 +425,7 @@ void main() {
     expect(tester.takeException(), isNull);
 
     await tester.scrollUntilVisible(
-      find.text('案件時光機'),
+      find.text('案件圖書館'),
       180,
       scrollable: find.byType(Scrollable).first,
     );
@@ -434,7 +433,7 @@ void main() {
     expect(tester.takeException(), isNull);
 
     await tester.scrollUntilVisible(
-      find.text('資料館動態'),
+      find.text('圖書館動態'),
       180,
       scrollable: find.byType(Scrollable).first,
     );
@@ -578,15 +577,6 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
 
-    await tester.pumpWidget(
-      testFrame(Builder(
-        builder: (context) => CaseAngleSection(
-          palette: JournalPalette.of(context),
-        ),
-      )),
-    );
-    await tester.pumpAndSettle();
-    expect(tester.takeException(), isNull);
 
     await tester.pumpWidget(
       testFrame(Builder(
@@ -769,7 +759,7 @@ void main() {
     await tester.tap(find.text('案件').first);
     await tester.pumpAndSettle();
 
-    expect(find.text('詐騙車手與洗錢鏈'), findsAtLeastNWidgets(1));
+    expect(find.textContaining('詐欺案'), findsAtLeastNWidgets(1));
 
     // 台灣繁體中文教學註解：
     // 結果頁沒有大標題列時，仍要保留回主搜尋頁的路徑，避免使用者卡在子頁。
@@ -887,54 +877,41 @@ void main() {
     // 台灣繁體中文教學註解：
     // 案件時光機的核心不是列表，而是「館 → 書架 → 書 → 卷宗」；
     // 這個測試守住完整沉浸式路徑，避免未來重構退回普通卡片清單。
-    expect(find.text('案件時光機'), findsOneWidget);
-    await tester.tap(find.text('進入案件圖書館'));
+    expect(find.text('案件圖書館'), findsOneWidget);
+    await tester.tap(find.text('查看全部').first);
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('年代館'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('1990s 書架'));
+
+    await tester.tap(find.text('查看案件').first);
     await tester.pumpAndSettle();
 
-    expect(find.text('案件書架'), findsOneWidget);
-    expect(find.text('案件資訊卡'), findsOneWidget);
-    await tester.tap(find.text('代表性社會案件').first);
-    await tester.pumpAndSettle();
+    // 台灣繁體中文教學註解：
+    // 在一體化滾動的直向版面上，我們需要向上滑動以露出「案件背景」與「關鍵時間軸」等內容。
+    for (int i = 0; i < 3; i++) {
+      await tester.drag(find.byType(ListView).first, const Offset(0, -250));
+      await tester.pumpAndSettle();
+    }
 
-    expect(find.text('你即將翻開一本案件之書'), findsOneWidget);
+    expect(find.text('案件背景'), findsWidgets);
+    
+    // 台灣繁體中文教學註解：
+    // 所有卷宗內容皆在同一個 ListView 中，我們直接向上滾動以尋找「關鍵時間軸」區塊。
     await tester.scrollUntilVisible(
-      find.text('收藏案件'),
-      220,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('收藏案件'));
-    await tester.pumpAndSettle();
-    expect(find.text('建立你的案件書櫃'), findsOneWidget);
-    await tester.tap(find.text('稍後再說'));
-    await tester.pumpAndSettle();
-
-    await tester.scrollUntilVisible(
-      find.text('翻開卷宗'),
-      -220,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('翻開卷宗'));
-    await tester.pumpAndSettle();
-
-    expect(find.text('卷宗導讀'), findsWidgets);
-    await tester.scrollUntilVisible(
-      find.text('關鍵時間軸'),
+      find.text('關鍵時間軸').last,
       260,
-      scrollable: find.byType(Scrollable).first,
+      scrollable: find.byType(Scrollable).last,
     );
     await tester.pumpAndSettle();
-    expect(find.text('關鍵時間軸'), findsOneWidget);
+    expect(find.text('關鍵時間軸'), findsWidgets);
+    
+    // 台灣繁體中文教學註解：
+    // 繼續向下滾動以檢索「延伸書架 / 相關案件」區塊。
     await tester.scrollUntilVisible(
       find.text('延伸書架 / 相關案件'),
       260,
-      scrollable: find.byType(Scrollable).first,
+      scrollable: find.byType(Scrollable).last,
     );
     await tester.pumpAndSettle();
     expect(find.text('延伸書架 / 相關案件'), findsOneWidget);
@@ -957,14 +934,22 @@ void main() {
     final shelf = hall.shelves.first;
 
     await tester.pumpWidget(
-      _mvpTestFrame(appState, CaseShelfPage(hall: hall, shelf: shelf)),
+      _mvpTestFrame(appState, CaseDossierDetailPage(book: caseTimeMachineCases.first)),
     );
     await tester.pumpAndSettle();
 
     // 台灣繁體中文教學註解：
-    // 橫向模式要變成左書架、右資訊的雙欄，而不是把直式畫面硬拉寬。
-    expect(find.text('案件書架'), findsOneWidget);
-    expect(find.text('案件資訊卡'), findsOneWidget);
+    // 橫向模式要變成雙欄佈局（包含卷宗導讀、案件基本資料等版面）。
+    // 台灣繁體中文教學註解：
+    // 橫向模式下，TabBarView 的高度受限，基本資料卡片預設在畫面下方尚未被 Lazy-load 建立。
+    // 我們需要先向上滑動外層的 SingleChildScrollView 將 TabBarView 帶上來，
+    // 再向上滑動內層的 ListView 露出「案件基本資料」。
+    // 在 2x3 六宮格與大圖的雙吸頂新版面上，橫向模式高度受限，需要多次向上滑動外層滾動區以露出詳細 Tab 內容。
+    for (int i = 0; i < 5; i++) {
+      await tester.dragFrom(const Offset(200, 250), const Offset(0, -250));
+      await tester.pumpAndSettle();
+    }
+    expect(find.text('案件基本資料'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

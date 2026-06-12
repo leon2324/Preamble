@@ -317,7 +317,7 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
                               onTap: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (_) =>
+                                    builder: (__) =>
                                         StatuteDetailPage(item: item),
                                   ),
                                 );
@@ -481,7 +481,7 @@ class _StatuteDetailPageState extends State<StatuteDetailPage> {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) => LawAssistantSearchPage(
+                        builder: (__) => LawAssistantSearchPage(
                           initialPrompt:
                               '我想了解「${item.displayTitle}」在生活案例中怎麼使用？',
                         ),

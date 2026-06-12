@@ -8,13 +8,18 @@ import 'package:lawapp/pages/search/global_search_page.dart';
 import 'package:lawapp/pages/journal/journal_page.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
 import 'package:lawapp/theme/app_colors.dart';
+import 'package:lawapp/features/case_time_machine/data/case_time_machine_repository.dart';
 
 /// 應用程式進入點。
 ///
 /// `ScreenUtilInit` 會先建立設計稿基準尺寸，後面的 widget 才能安全使用
 /// `.w` / `.h` / `.sp` 做響應式換算。
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // 初始化本地 SQLite 資料庫與記憶體快取倉庫
+  await CaseTimeMachineRepository.instance.initialize();
+
   runApp(
     ScreenUtilInit(
       designSize: const Size(375, 812),

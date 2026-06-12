@@ -20,7 +20,7 @@ class CaseBookPreviewPage extends StatelessWidget {
   void _openDossier(BuildContext context) {
     Navigator.of(context).push(
       CupertinoPageRoute<void>(
-        builder: (_) => CaseDossierDetailPage(book: book),
+        builder: (__) => CaseDossierDetailPage(book: book),
       ),
     );
   }

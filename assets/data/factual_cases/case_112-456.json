@@ -1,0 +1,83 @@
+{
+  "id": "112-456",
+  "titleZh": "王大德與李明華車禍損害賠償案",
+  "titleEn": "Wang v. Li (Traffic Accident Damages)",
+  "shortTitleZh": "王大德損賠案",
+  "shortTitleEn": "Wang v. Li",
+  "displayCode": "CRM-112-456",
+  "year": 2023,
+  "location": "台北市",
+  "status": "判決確定",
+  "category": "民事案件",
+  "tags": [
+    "交通車禍",
+    "損害賠償",
+    "侵權行為"
+  ],
+  "memoryLine": "行人於穿越道被闖紅燈車輛撞擊之損害賠償認定。",
+  "shortDescription": "被告因闖紅燈行經行人穿越道撞擊原告致傷，原告依法起訴請求醫療費及精神慰撫金，法院判定被告具完全過失折讓賠償。",
+  "caseType": "民事訴訟",
+  "procedureStage": "一審判決",
+  "courtLevel": "臺灣台北地方法院",
+  "updatedAt": "2023/06/15",
+  "oneSentenceSummary": "行人於斑馬線遭闖紅燈撞傷起訴國賠，法院判賠30萬。",
+  "background": "原告於過斑馬線時，遭被告駕駛之車輛闖紅燈撞擊倒地致脛骨骨折。",
+  "fullStory": "原告王大德於111年12月1日行經台北市南京東路斑馬線，遭未注意車前狀況且闖紅燈之被告李明華開車撞擊，原告送醫住院10天。原告起訴請求醫療、看護費及慰撫金。法院經審查交通事故鑑定報告，認定被告違規屬實，原告行經行人穿越道具絕對優先權，最終判決被告應賠償30萬元。",
+  "timeline": [
+    {
+      "dateLabel": "2022/12/01",
+      "title": "車禍事故發生",
+      "description": "被告駕駛車輛於南京東路口闖紅燈撞擊原告。"
+    },
+    {
+      "dateLabel": "2023/06/15",
+      "title": "地院一審宣判",
+      "description": "法院判決被告應給付原告30萬元。"
+    }
+  ],
+  "people": [
+    {
+      "role": "原告",
+      "description": "王大德，受害行人。"
+    },
+    {
+      "role": "被告",
+      "description": "李明華，肇事駕駛。"
+    }
+  ],
+  "legalIssues": [
+    {
+      "title": "原告是否有過失相抵之適用？",
+      "plainExplanation": "被告主張原告未注意來車具部分過失。法院認定原告行經行人穿越道有絕對路權，無過失。",
+      "relationToCase": "判定被告須負100%賠償責任之依據。",
+      "relatedLawIds": [
+        "civ-217"
+      ]
+    }
+  ],
+  "investigationAndTrial": "地院經審查道路交通事故調查表、診斷書，確認被告闖紅燈為車禍肇事主因。",
+  "courtReasoning": "法院指出行人穿越道為行人絕對路權保障範疇。被告闖紅燈撞擊行人，違規侵權行為明確，應負全部賠償責任。慰撫金部分依雙方資力調整為18萬合理。",
+  "judgmentResult": "被告應給付原告30萬元，其餘原告之訴駁回。",
+  "relatedLaws": [
+    {
+      "lawName": "民法",
+      "articleNumber": "第 184 條",
+      "plainSummary": "因故意或過失，不法侵害他人之權利者，負損害賠償責任。",
+      "relationToCase": "原告請求侵權行為損害賠償之法源基礎。"
+    }
+  ],
+  "relatedCases": [],
+  "sources": [
+    {
+      "title": "臺灣台北地方法院 112 年度訴字第 456 號民事判決",
+      "sourceType": "judgement",
+      "updatedAt": "2023/06/15"
+    }
+  ],
+  "images": [
+    {
+      "url": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=400",
+      "source": "網路搜尋配圖"
+    }
+  ]
+}

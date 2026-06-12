@@ -31,7 +31,7 @@ class _HomeV2HeroHeaderState extends State<HomeV2HeroHeader> {
     // 台灣繁體中文教學註解：
     // 頂部法規快訊每 4 秒往上換一則，先使用 mock data；
     // 未來接 API 時只要替換 homeV2TickerItems 的資料來源即可。
-    _tickerTimer = Timer.periodic(const Duration(seconds: 4), (_) {
+    _tickerTimer = Timer.periodic(const Duration(seconds: 4), (__) {
       if (!_tickerController.hasClients || homeV2TickerItems.isEmpty) return;
       final nextIndex = (_tickerIndex + 1) % homeV2TickerItems.length;
       _tickerController.animateToPage(

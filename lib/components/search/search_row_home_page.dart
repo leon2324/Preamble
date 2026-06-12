@@ -169,7 +169,7 @@ class _SearchRowHomePageState extends State<SearchRowHomePage> {
                     widget.onSubmitted?.call(value.trim());
                     FocusScope.of(context).unfocus();
                   },
-                  onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                  onTapOutside: (__) => FocusScope.of(context).unfocus(),
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputDecoration(
                     hintText: widget.hintText,

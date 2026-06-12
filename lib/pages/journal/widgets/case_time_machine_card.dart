@@ -81,7 +81,7 @@ class CaseTimeMachineCard extends StatelessWidget {
                     left: width * 0.08,
                     right: width * 0.08,
                     child: _GradientPosterText(
-                      text: '案件時光機',
+                      text: '案件圖書館',
                       fontSize: width * 0.128,
                       letterSpacing: width * 0.006,
                     ),
@@ -103,7 +103,7 @@ class CaseTimeMachineCard extends StatelessWidget {
                     child: Column(
                       children: [
                         _PosterBodyLine(
-                          text: '走進案件資料館',
+                          text: '走進案件圖書館',
                           fontSize: width * 0.05,
                         ),
                         SizedBox(height: height * 0.018),
@@ -122,7 +122,7 @@ class CaseTimeMachineCard extends StatelessWidget {
                     child: _ArchiveEntryButton(
                       onTap: () => Navigator.of(context).push(
                         CupertinoPageRoute<void>(
-                          builder: (_) => const CaseTimeMachineEntryPage(),
+                          builder: (__) => const CaseTimeMachineEntryPage(),
                         ),
                       ),
                     ),

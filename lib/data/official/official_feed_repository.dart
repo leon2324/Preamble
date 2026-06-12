@@ -10,7 +10,7 @@ class OfficialFeedRepository {
   Future<List<MojFeedItem>> fetchOfficialNews() async {
     try {
       return _mojFeedService.fetchItems(MojFeedCategory.news);
-    } catch (_) {
+    } catch (__) {
       return _mockOfficialItems;
     }
   }
@@ -20,7 +20,7 @@ class OfficialFeedRepository {
   Future<List<MojFeedItem>> fetchAnnouncements() async {
     try {
       return _mojFeedService.fetchItems(MojFeedCategory.lawUpdates);
-    } catch (_) {
+    } catch (__) {
       return _mockOfficialItems;
     }
   }

@@ -141,7 +141,7 @@ class _DataGrid extends StatelessWidget {
           '${appState.savedCaseIds.length} 件',
           Icons.bookmark_rounded,
           () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => const FollowingPage()))),
+              .push(MaterialPageRoute(builder: (__) => const FollowingPage()))),
       _DataItem('我的筆記', '2 則 mock', Icons.note_alt_rounded,
           () => _showMockSheet(context, '我的筆記', '案件筆記與法條筆記會在正式同步後顯示在這裡。')),
       _DataItem(
@@ -154,13 +154,13 @@ class _DataGrid extends StatelessWidget {
           '1 份草稿',
           Icons.description_rounded,
           () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => const LegalToolsPage()))),
+              .push(MaterialPageRoute(builder: (__) => const LegalToolsPage()))),
       _DataItem(
           '我的追蹤',
           '案件 / 法條 / 主題',
           Icons.notifications_active_rounded,
           () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => const FollowingPage()))),
+              .push(MaterialPageRoute(builder: (__) => const FollowingPage()))),
     ];
 
     return Wrap(

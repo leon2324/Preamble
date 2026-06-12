@@ -1,4 +1,4 @@
-enum CaseLibraryHallType { timeline, theme, classic }
+enum CaseLibraryHallType { timeline, theme, classic, status }
 
 /// 案件圖書館第一層：館別。
 ///
@@ -70,6 +70,11 @@ class CaseBook {
     required this.sources,
     this.isFavorite = false,
     this.isFollowing = false,
+    this.concurringDissentingOpinions = const [],
+    this.courtArguments = const [],
+    this.expertOpinions = const [],
+    this.mediaReferences = const [],
+    this.images = const [],
   });
 
   final String id;
@@ -101,6 +106,88 @@ class CaseBook {
   final List<CaseSource> sources;
   final bool isFavorite;
   final bool isFollowing;
+  final List<CaseOpinion> concurringDissentingOpinions;
+  final List<CourtArgument> courtArguments;
+  final List<ExpertOpinion> expertOpinions;
+  final List<MediaReference> mediaReferences;
+  final List<CaseImage> images;
+
+  // Getter to filter image sources for display
+  List<CaseSource> get displayImages => sources.where((s) => s.sourceType == 'image').toList();
+
+  CaseBook copyWith({
+    String? id,
+    String? titleZh,
+    String? titleEn,
+    String? shortTitleZh,
+    String? shortTitleEn,
+    String? displayCode,
+    int? year,
+    String? location,
+    String? status,
+    String? category,
+    List<String>? tags,
+    String? memoryLine,
+    String? shortDescription,
+    CaseBasicInfo? basicInfo,
+    String? oneSentenceSummary,
+    String? background,
+    String? fullStory,
+    List<CaseTimelineItem>? timeline,
+    List<CasePersonRole>? people,
+    List<LegalIssue>? legalIssues,
+    String? investigationAndTrial,
+    String? courtReasoning,
+    String? judgmentResult,
+    List<RelatedLaw>? relatedLaws,
+    String? socialImpact,
+    List<RelatedCase>? relatedCases,
+    List<CaseSource>? sources,
+    bool? isFavorite,
+    bool? isFollowing,
+    List<CaseOpinion>? concurringDissentingOpinions,
+    List<CourtArgument>? courtArguments,
+    List<ExpertOpinion>? expertOpinions,
+    List<MediaReference>? mediaReferences,
+    List<CaseImage>? images,
+  }) {
+    return CaseBook(
+      id: id ?? this.id,
+      titleZh: titleZh ?? this.titleZh,
+      titleEn: titleEn ?? this.titleEn,
+      shortTitleZh: shortTitleZh ?? this.shortTitleZh,
+      shortTitleEn: shortTitleEn ?? this.shortTitleEn,
+      displayCode: displayCode ?? this.displayCode,
+      year: year ?? this.year,
+      location: location ?? this.location,
+      status: status ?? this.status,
+      category: category ?? this.category,
+      tags: tags ?? this.tags,
+      memoryLine: memoryLine ?? this.memoryLine,
+      shortDescription: shortDescription ?? this.shortDescription,
+      basicInfo: basicInfo ?? this.basicInfo,
+      oneSentenceSummary: oneSentenceSummary ?? this.oneSentenceSummary,
+      background: background ?? this.background,
+      fullStory: fullStory ?? this.fullStory,
+      timeline: timeline ?? this.timeline,
+      people: people ?? this.people,
+      legalIssues: legalIssues ?? this.legalIssues,
+      investigationAndTrial: investigationAndTrial ?? this.investigationAndTrial,
+      courtReasoning: courtReasoning ?? this.courtReasoning,
+      judgmentResult: judgmentResult ?? this.judgmentResult,
+      relatedLaws: relatedLaws ?? this.relatedLaws,
+      socialImpact: socialImpact ?? this.socialImpact,
+      relatedCases: relatedCases ?? this.relatedCases,
+      sources: sources ?? this.sources,
+      isFavorite: isFavorite ?? this.isFavorite,
+      isFollowing: isFollowing ?? this.isFollowing,
+      concurringDissentingOpinions: concurringDissentingOpinions ?? this.concurringDissentingOpinions,
+      courtArguments: courtArguments ?? this.courtArguments,
+      expertOpinions: expertOpinions ?? this.expertOpinions,
+      mediaReferences: mediaReferences ?? this.mediaReferences,
+      images: images ?? this.images,
+    );
+  }
 }
 
 class CaseBasicInfo {
@@ -186,9 +273,69 @@ class CaseSource {
     required this.title,
     required this.sourceType,
     required this.updatedAt,
+    this.url,
   });
 
   final String title;
   final String sourceType;
   final String updatedAt;
+  final String? url;
+}
+
+class CaseOpinion {
+  const CaseOpinion({
+    required this.justiceName,
+    required this.opinionType,
+    required this.summary,
+  });
+
+  final String justiceName;
+  final String opinionType;
+  final String summary;
+}
+
+class CourtArgument {
+  const CourtArgument({
+    required this.partyName,
+    required this.mainPoint,
+  });
+
+  final String partyName;
+  final String mainPoint;
+}
+
+class ExpertOpinion {
+  const ExpertOpinion({
+    required this.expertName,
+    required this.title,
+    required this.summary,
+  });
+
+  final String expertName;
+  final String title;
+  final String summary;
+}
+
+class MediaReference {
+  const MediaReference({
+    required this.title,
+    required this.platform,
+    required this.url,
+    required this.mediaType,
+  });
+
+  final String title;
+  final String platform;
+  final String url;
+  final String mediaType;
+}
+
+class CaseImage {
+  const CaseImage({
+    required this.url,
+    required this.source,
+  });
+
+  final String url;
+  final String source;
 }

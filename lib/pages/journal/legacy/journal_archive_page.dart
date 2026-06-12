@@ -54,7 +54,7 @@ class _JournalArchivePageState extends State<JournalArchivePage> {
   void _openDossier(ArchiveDossierItem item) {
     Navigator.of(context).push(
       CupertinoPageRoute<void>(
-        builder: (_) => ArchiveDossierDetailPage(item: item),
+        builder: (__) => ArchiveDossierDetailPage(item: item),
       ),
     );
   }

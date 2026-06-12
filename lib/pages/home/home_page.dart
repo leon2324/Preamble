@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
   void _openMissionQuiz() {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => const HomeMissionQuizPage(),
+        builder: (__) => const HomeMissionQuizPage(),
       ),
     );
   }
@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
     // 最近對話讀取與 LAWAPP_API_BASE_URL 判斷都由同一份頁面邏輯處理。
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => const LawAssistantSearchPage(),
+        builder: (__) => const LawAssistantSearchPage(),
       ),
     );
   }
@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
   void _openLegalTools() {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => const LegalToolsPage(),
+        builder: (__) => const LegalToolsPage(),
       ),
     );
   }
@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
   void _openCommonLegalIssues() {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => const CommonLegalIssuesPage(),
+        builder: (__) => const CommonLegalIssuesPage(),
       ),
     );
   }
@@ -79,14 +79,14 @@ class _HomePageState extends State<HomePage> {
     // 其他生活情境則先帶著預填 prompt 進小法助，讓使用者可以補充細節。
     if (item.label == '法規查詢') {
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => const StatuteDatabasePage()),
+        MaterialPageRoute(builder: (__) => const StatuteDatabasePage()),
       );
       return;
     }
 
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => LawAssistantSearchPage(
+        builder: (__) => LawAssistantSearchPage(
           initialPrompt: '我想了解${item.label}常見法律問題，可以先看哪些方向？',
         ),
       ),
@@ -95,27 +95,27 @@ class _HomePageState extends State<HomePage> {
 
   void _openStatuteDatabase() {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const StatuteDatabasePage()),
+      MaterialPageRoute(builder: (__) => const StatuteDatabasePage()),
     );
   }
 
   void _openOfficialFeed(MojFeedCategory category) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => OfficialFeedPage(category: category),
+        builder: (__) => OfficialFeedPage(category: category),
       ),
     );
   }
 
   void _openLifeLegalTips() {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const LifeLegalTipsPage()),
+      MaterialPageRoute(builder: (__) => const LifeLegalTipsPage()),
     );
   }
 
   void _openLearningTopics() {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const HomeLearningTopicsPage()),
+      MaterialPageRoute(builder: (__) => const HomeLearningTopicsPage()),
     );
   }
 
@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
     // 首頁的「我的」現在直接開會員頁，不再依賴底部第 5 個 tab；
     // 這樣底部導覽可以改成新的「追蹤」，同時保留原本會員功能入口。
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const ProfilePage()),
+      MaterialPageRoute(builder: (__) => const ProfilePage()),
     );
   }
 
@@ -216,7 +216,7 @@ class _HomePageState extends State<HomePage> {
                             items: homeNewsItems,
                             onMoreTap: () =>
                                 _openOfficialFeed(MojFeedCategory.news),
-                            onItemTap: (_) =>
+                            onItemTap: (__) =>
                                 _openOfficialFeed(MojFeedCategory.news),
                             showHeader: false,
                           ),
@@ -243,7 +243,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           SizedBox(height: 10.h),
                           HomeV2TopicSeries(
-                            onTopicTap: (_) => _openLearningTopics(),
+                            onTopicTap: (__) => _openLearningTopics(),
                           ),
                           SizedBox(height: 112.h),
                         ],

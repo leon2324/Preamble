@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/data/journal/journal_repository.dart';
 import 'package:lawapp/pages/journal/widgets/archive_activity_section.dart';
-import 'package:lawapp/pages/journal/widgets/case_angle_section.dart';
 import 'package:lawapp/pages/journal/widgets/case_time_machine_card.dart';
 import 'package:lawapp/pages/journal/widgets/discussing_now_section.dart';
 import 'package:lawapp/pages/journal/widgets/journal_page_header.dart';
@@ -16,7 +15,7 @@ import 'package:lawapp/theme/app_colors.dart';
 /// 台灣繁體中文教學註解：
 /// 這一版先把記事定位成「社會事件到案件資料館」的入口，
 /// 主頁只負責展示趨勢、策展角度與資料館動態；子頁與搜尋流程之後再接。
-/// 版型刻意承襲首頁的柔和卡片語言，但用案件時光機做出記事頁自己的記憶感。
+/// 版型刻意承襲首頁的柔和卡片語言，但用案件圖書館做出記事頁自己的記憶感。
 class JournalPage extends StatefulWidget {
   const JournalPage({
     super.key,
@@ -96,22 +95,6 @@ class _JournalPageState extends State<JournalPage> {
             children: [
               JournalPageHeader(palette: palette),
               SizedBox(height: 14.h),
-              _JournalSearchField(
-                controller: _searchController,
-                palette: palette,
-                onChanged: (value) {
-                  final query = value.trim();
-                  setState(() {
-                    _query = query;
-                    _searchFuture = query.isEmpty
-                        ? null
-                        : widget.repository.searchJournal(query);
-                  });
-                },
-                onSubmitted: _submitJournalQuery,
-                onClear: _clearJournalQuery,
-              ),
-              SizedBox(height: 20.h),
               if (hasQuery)
                 FutureBuilder<List<JournalSearchResult>>(
                   future: _searchFuture,
@@ -143,8 +126,7 @@ class _JournalPageState extends State<JournalPage> {
                 // 這裡會切成前端資料結果，清楚告訴使用者目前查的是已整理資料。
                 DiscussingNowSection(palette: palette),
                 SizedBox(height: 20.h),
-                CaseAngleSection(palette: palette),
-                SizedBox(height: 20.h),
+
                 CaseTimeMachineCard(palette: palette),
                 SizedBox(height: 20.h),
                 OnThisDayCard(palette: palette),
@@ -215,7 +197,7 @@ class _JournalSearchField extends StatelessWidget {
         textInputAction: TextInputAction.search,
         textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
-          hintText: '搜尋案件、社會議題或資料館關鍵字',
+          hintText: '搜尋案件、社會議題或圖書館關鍵字',
           hintStyle: TextStyle(
             fontSize: 13.sp,
             color: palette.secondaryText,
@@ -271,7 +253,7 @@ class _JournalSearchResults extends StatelessWidget {
         ),
         SizedBox(height: 6.h),
         Text(
-          '目前先搜尋記事頁已整理的趨勢、資料館更新與精選卷宗；完整後端索引接上後，這裡可改成真正案件搜尋。',
+          '目前先搜尋記事頁已整理的趨勢、圖書館更新與精選卷宗；完整後端索引接上後，這裡可改成真正案件搜尋。',
           style: TextStyle(
             fontSize: 12.sp,
             height: 1.45,

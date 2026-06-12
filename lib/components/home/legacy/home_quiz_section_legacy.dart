@@ -89,7 +89,7 @@ class _HomeQuizSectionState extends State<HomeQuizSection> {
     // 題目切換後，把上一題展開的術語泡泡清乾淨，避免殘留錯誤內容。
     if ((oldWidget.question != widget.question || !_showExplanation) &&
         _activeTerms.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((__) {
         if (!mounted) return;
         setState(() {
           _activeTerms.clear();
@@ -135,8 +135,8 @@ class _HomeQuizSectionState extends State<HomeQuizSection> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: GestureDetector(
-                        onTapDown: (_) => _setNextIconPressed(true),
-                        onTapUp: (_) => _setNextIconPressed(false),
+                        onTapDown: (__) => _setNextIconPressed(true),
+                        onTapUp: (__) => _setNextIconPressed(false),
                         onTapCancel: () => _setNextIconPressed(false),
                         onTap: _showNextQuestion,
                         child: Padding(

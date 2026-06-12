@@ -14,6 +14,25 @@ abstract final class CaseTimeMachineColors {
   static const libraryCardGlass = Color(0xE60B2A24);
   static const libraryBorderGold = Color(0xBFC6A96C);
   static const libraryBorderMist = Color(0x99A8C7C7);
+
+  // Missing light-theme Morandi fallback colors referenced across search and spectrum pages
+  static const bgCream = Color(0xFFFAF8F5);
+  static const borderLight = Color(0xFFE6E2D8);
+  static const accentGold = Color(0xFFC8A261);
+  static const primaryGreen = Color(0xFF1C3A27);
+  static const textPrimary = Color(0xFF2E332F);
+  static const textSecondary = Color(0xFF5A615C);
+  static const textMuted = Color(0xFF8B928D);
+  static const bgWhite = Colors.white;
+
+  // Morandi Accent Colors for Light Theme Cards
+  static const morandiGreen = Color(0xFF8FA89B);    // 莫蘭迪粉綠 (基本資料、法律爭點、延伸書架)
+  static const morandiBlue = Color(0xFF8F9DA8);     // 莫蘭迪霧藍 (時間軸、相關法條)
+  static const morandiLavender = Color(0xFF9F8FA8); // 莫蘭迪藕紫 (關鍵人物、大法官意見書)
+  static const morandiTaupe = Color(0xFFAB9D95);    // 莫蘭迪暖灰 (案件背景、學者評析、更新時間)
+  static const morandiRose = Color(0xFFAB8E8F);     // 莫蘭迪玫瑰粉 (事件經過、法庭攻防)
+  static const morandiSlate = Color(0xFF8FA8A7);    // 莫蘭迪石板灰 (審理歷程、媒體報導)
+  static const morandiGold = Color(0xFFB09E81);     // 莫蘭迪土黃 (法院認定重點)
 }
 
 abstract final class CaseTimeMachineTextStyles {
@@ -116,5 +135,17 @@ abstract final class CaseTimeMachineShadows {
         blurRadius: 22,
         spreadRadius: -6,
         offset: const Offset(0, 10),
+      );
+
+  static BoxShadow get softShadow => BoxShadow(
+        color: Colors.black.withValues(alpha: 0.04),
+        blurRadius: 10,
+        offset: const Offset(0, 4),
+      );
+
+  static BoxShadow get cardShadow => BoxShadow(
+        color: Colors.black.withValues(alpha: 0.06),
+        blurRadius: 12,
+        offset: const Offset(0, 6),
       );
 }

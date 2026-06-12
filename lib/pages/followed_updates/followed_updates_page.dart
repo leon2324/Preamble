@@ -3,7 +3,8 @@ import 'package:lawapp/app/app_state.dart';
 import 'package:lawapp/components/search/search_page_layout.dart';
 import 'package:lawapp/data/mock_data/cases/case_story_mock_data.dart';
 import 'package:lawapp/data/mock_data/followed_updates/followed_updates_mock_data.dart';
-import 'package:lawapp/pages/journal/case_story_detail_page.dart';
+import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
+import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart';
 
 /// 追蹤頁展示「我已追蹤」主題的最新整理與更新。
 class FollowedUpdatesPage extends StatefulWidget {
@@ -176,9 +177,21 @@ class _SavedCaseFollowCard extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(18),
       onTap: () {
+        // 台灣繁體中文教學註解：
+        // 將舊的 CaseStoryItem 映射到新版案件圖書館的 CaseBook，
+        // 確保點擊收藏清單中的項目時，能進入全新設計的 Morandi 風格 Tab 詳情頁。
+        String caseId = '318';
+        if (item.title.contains('死刑') || item.title.contains('廢死')) {
+          caseId = '103';
+        } else if (item.title.contains('詐騙') || item.title.contains('車手')) {
+          caseId = '228';
+        } else if (item.title.contains('租屋') || item.title.contains('解約')) {
+          caseId = '176';
+        }
+        final book = caseTimeMachineCaseById(caseId);
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) => CaseStoryDetailPage(item: item),
+            builder: (__) => CaseDossierDetailPage(book: book),
           ),
         );
       },

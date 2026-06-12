@@ -199,7 +199,7 @@ class _HomeMissionQuizPageState extends State<HomeMissionQuizPage> {
                                 child: _MissionFrontFace(
                                   item: nextItem,
                                   selectedIndex: null,
-                                  onAnswerTap: (_) {},
+                                  onAnswerTap: (__) {},
                                   showHint: false,
                                 ),
                               ),

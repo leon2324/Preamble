@@ -44,6 +44,9 @@ dependencies:
   url_launcher: ^6.3.1
   shared_preferences: ^2.3.3
   image: ^4.8.0
+  google_fonts: ^8.1.0
+  sqflite: ^2.4.2
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:
@@ -75,8 +78,40 @@ flutter:
     - assets/images/case_time_machine_v2/
     - assets/images/assistant/law_assistant_home.png
     - assets/images/assistant/law_assistant_empty.png
+    - assets/fonts/open_source/licenses/
 
   fonts:
+    # 台灣繁體中文教學註解：
+    # Inter 用來承接英文與數字 UI；CJK 字型則放在 fallback，
+    # 讓同一段文字混用 English / 繁中 / 簡中 / 日本語 時不會掉成系統預設字。
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/open_source/InterVariable.ttf
+        - asset: assets/fonts/open_source/InterVariable-Italic.ttf
+          style: italic
+    # 台灣繁體中文教學註解：
+    # Source Han Sans TW/CN/JP 是黑體系，適合 App 主要 UI、按鈕與一般內文。
+    # 這裡使用 Subset Variable TTF，保留多字重能力，同時避免把完整 CJK 大包塞進 App。
+    - family: SourceHanSansTW
+      fonts:
+        - asset: assets/fonts/open_source/SourceHanSansTW-VF.ttf
+    - family: SourceHanSansCN
+      fonts:
+        - asset: assets/fonts/open_source/SourceHanSansCN-VF.ttf
+    - family: SourceHanSansJP
+      fonts:
+        - asset: assets/fonts/open_source/SourceHanSansJP-VF.ttf
+    # 台灣繁體中文教學註解：
+    # Source Han Serif TW/CN/JP 是明體系，適合法律條文、案例節錄或需要書卷感的區塊。
+    - family: SourceHanSerifTW
+      fonts:
+        - asset: assets/fonts/open_source/SourceHanSerifTW-VF.ttf
+    - family: SourceHanSerifCN
+      fonts:
+        - asset: assets/fonts/open_source/SourceHanSerifCN-VF.ttf
+    - family: SourceHanSerifJP
+      fonts:
+        - asset: assets/fonts/open_source/SourceHanSerifJP-VF.ttf
     - family: Kai
       fonts:
         - asset: assets/fonts/kai08mz.ttc

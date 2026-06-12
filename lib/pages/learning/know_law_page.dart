@@ -44,7 +44,7 @@ class KnowLawPageState extends State<KnowLawPage> {
   void _openArticle(LearningMockArticle article) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => LearningMockDetailPage(article: article),
+        builder: (__) => LearningMockDetailPage(article: article),
       ),
     );
   }
@@ -52,7 +52,7 @@ class KnowLawPageState extends State<KnowLawPage> {
   void _openLearningSearch() {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => const LawAssistantSearchPage(),
+        builder: (__) => const LawAssistantSearchPage(),
       ),
     );
   }
@@ -60,7 +60,7 @@ class KnowLawPageState extends State<KnowLawPage> {
   void _openStatuteDatabase({String initialQuery = ''}) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => StatuteDatabasePage(initialQuery: initialQuery),
+        builder: (__) => StatuteDatabasePage(initialQuery: initialQuery),
       ),
     );
   }
@@ -102,7 +102,7 @@ class KnowLawPageState extends State<KnowLawPage> {
             onTap: () => _openArticle(learningTopic.heroArticle),
             onQuizTap: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const LearningQuizPage()),
+                MaterialPageRoute(builder: (__) => const LearningQuizPage()),
               );
             },
           ),
@@ -124,7 +124,7 @@ class KnowLawPageState extends State<KnowLawPage> {
           _LearningReviewAndGlossaryRow(
             onQuizTap: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const LearningQuizPage()),
+                MaterialPageRoute(builder: (__) => const LearningQuizPage()),
               );
             },
             onGlossaryTap: () =>
@@ -485,7 +485,7 @@ class _LearningRouteCard extends StatelessWidget {
                   isDone: unit.stepLabel == '01' || unit.stepLabel == '02',
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) =>
+                      builder: (__) =>
                           LearningMockDetailPage(article: unit.article),
                     ),
                   ),
