@@ -358,7 +358,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                   alignment: Alignment.center,
                   children: [
                     Positioned(
-                      left: 12.w,
+                      left: 0,
                       child: IconButton(
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
@@ -463,7 +463,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                     // 台灣繁體中文教學註解：
                     // 左側返回鍵，完全移除 Material Icons，改用自訂的 iOS 風格 SVG 返回圖示，並去除內距與約束靠最左側對齊。
                     Positioned(
-                      left: 12.w,
+                      left: 0,
                       child: IconButton(
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
@@ -499,7 +499,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                     // 台灣繁體中文教學註解：
                     // 右側僅放置單一討論功能按鈕，將原有的聊天室圖示替換為音波圖示，並防切邊右移 12.w 對齊。
                     Positioned(
-                      right: 12.w,
+                      right: 0,
                       child: IconButton(
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
