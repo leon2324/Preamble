@@ -111,6 +111,9 @@ void main() {
     expect(find.text('學堂與工具箱'), findsOneWidget);
     expect(find.text('法學課堂'), findsOneWidget);
     expect(find.text('公民法律小擂台'), findsOneWidget);
+    expect(find.text('精選專題'), findsOneWidget);
+    expect(find.text('租屋糾紛'), findsOneWidget);
+    expect(find.text('全部專題'), findsOneWidget);
 
     // 台灣繁體中文教學註解：
     // 新版學習頁把工具內容收進「生活工具箱」分頁，測試需點分頁，而不是沿用舊版向下滑找工具卡。
@@ -601,7 +604,6 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
 
-
     await tester.pumpWidget(
       testFrame(Builder(
         builder: (context) => CaseTimeMachineCard(
@@ -919,7 +921,7 @@ void main() {
     }
 
     expect(find.text('案件背景'), findsWidgets);
-    
+
     // 台灣繁體中文教學註解：
     // 所有卷宗內容皆在同一個 ListView 中，我們直接向上滾動以尋找「關鍵時間軸」區塊。
     await tester.scrollUntilVisible(
@@ -929,7 +931,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('關鍵時間軸'), findsWidgets);
-    
+
     // 台灣繁體中文教學註解：
     // 繼續向下滾動以檢索「延伸書架 / 相關案件」區塊。
     await tester.scrollUntilVisible(
@@ -958,7 +960,8 @@ void main() {
     final shelf = hall.shelves.first;
 
     await tester.pumpWidget(
-      _mvpTestFrame(appState, CaseDossierDetailPage(book: caseTimeMachineCases.first)),
+      _mvpTestFrame(
+          appState, CaseDossierDetailPage(book: caseTimeMachineCases.first)),
     );
     await tester.pumpAndSettle();
 

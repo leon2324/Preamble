@@ -4,6 +4,51 @@ import 'dart:convert';
 
 /// 小法助成長檔案與成就系統的狀態管理
 class LearningGameState extends ChangeNotifier {
+  static const int totalLevels = 10;
+  static const int experiencePerLevel = 100;
+
+  // 台灣繁體中文教學註解：
+  // Level、稱號、頭像與輔助符號都用同一個 index 對齊；
+  // 日後若要增減等級，請同步調整 totalLevels 與下方三個清單。
+  static const List<String> _levelTitles = [
+    '法學見習生',
+    '條文閱讀員',
+    '案例整理員',
+    '證據守門員',
+    '租屋權益顧問',
+    '消費調解員',
+    '交通責任顧問',
+    '職場權益顧問',
+    '法庭溝通者',
+    '首席法律導師',
+  ];
+
+  static const List<String> _levelSymbols = [
+    '📘',
+    '🔖',
+    '🗂️',
+    '🔎',
+    '⚖️',
+    '🛡️',
+    '🚗',
+    '💼',
+    '🏛️',
+    '🌿',
+  ];
+
+  static const List<String> _levelAvatarAssets = [
+    'assets/images/learning/levels/level_01_legal_beginner.png',
+    'assets/images/learning/levels/level_02_article_reader.png',
+    'assets/images/learning/levels/level_03_case_organizer.png',
+    'assets/images/learning/levels/level_04_evidence_keeper.png',
+    'assets/images/learning/levels/level_05_housing_guide.png',
+    'assets/images/learning/levels/level_06_consumer_mediator.png',
+    'assets/images/learning/levels/level_07_traffic_guide.png',
+    'assets/images/learning/levels/level_08_workplace_consultant.png',
+    'assets/images/learning/levels/level_09_courtroom_communicator.png',
+    'assets/images/learning/levels/level_10_chief_legal_mentor.png',
+  ];
+
   static final LearningGameState instance = LearningGameState._internal();
 
   LearningGameState._internal() {
@@ -26,29 +71,41 @@ class LearningGameState extends ChangeNotifier {
   Set<String> get unlockedBadges => _unlockedBadges;
 
   // 經驗值升級閥值
-  int get nextLevelXp => 100;
+  int get nextLevelXp => experiencePerLevel;
+  int get maxLevel => totalLevels;
+  int get currentLevelIndex => _level.clamp(1, totalLevels).toInt() - 1;
+  int get xpToNextLevel => _level >= totalLevels
+      ? 0
+      : (nextLevelXp - _experience).clamp(0, nextLevelXp).toInt();
+  double get levelProgress => _level >= totalLevels
+      ? 1
+      : (_experience / nextLevelXp).clamp(0.0, 1.0).toDouble();
 
   // 取得當前表情與稱號
-  String get mascotExpression {
-    if (_level >= 3) return '🎓'; // Level 3: 金牌大法官
-    if (_level == 2) return '⚖️'; // Level 2: 實習法官助理 (替換 🧐)
-    return '🤖'; // Level 1: 法學見習生 (替換 😮)
-  }
+  String get mascotExpression => _levelSymbols[currentLevelIndex];
 
-  String get levelTitle {
-    if (_level >= 3) return '金牌大法官';
-    if (_level == 2) return '實習法官助理';
-    return '法學見習生';
+  String get levelTitle => _levelTitles[currentLevelIndex];
+  String get mascotAsset => _levelAvatarAssets[currentLevelIndex];
+
+  String? get nextLevelTitle {
+    if (_level >= totalLevels) return null;
+    return _levelTitles[currentLevelIndex + 1];
   }
 
   // 載入狀態
   Future<void> _loadState() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      _level = prefs.getInt('learning_level') ?? 1;
+      _level =
+          (prefs.getInt('learning_level') ?? 1).clamp(1, totalLevels).toInt();
       _experience = prefs.getInt('learning_experience') ?? 10;
+      if (_level >= totalLevels) {
+        _experience = nextLevelXp;
+      } else {
+        _experience = _experience.clamp(0, nextLevelXp - 1).toInt();
+      }
       _translatorUsageCount = prefs.getInt('learning_translator_count') ?? 0;
-      
+
       final stepsRaw = prefs.getStringList('learning_completed_steps');
       if (stepsRaw != null) {
         _completedSteps = stepsRaw.toSet();
@@ -63,12 +120,14 @@ class LearningGameState extends ChangeNotifier {
 
       final incorrectRaw = prefs.getString('learning_incorrect_questions');
       if (incorrectRaw != null) {
-        _incorrectQuestions = List<Map<String, dynamic>>.from(jsonDecode(incorrectRaw));
+        _incorrectQuestions =
+            List<Map<String, dynamic>>.from(jsonDecode(incorrectRaw));
       }
 
       final evidenceRaw = prefs.getString('learning_saved_evidences');
       if (evidenceRaw != null) {
-        _savedEvidenceLists = List<Map<String, dynamic>>.from(jsonDecode(evidenceRaw));
+        _savedEvidenceLists =
+            List<Map<String, dynamic>>.from(jsonDecode(evidenceRaw));
       }
       notifyListeners();
     } catch (e) {
@@ -83,10 +142,14 @@ class LearningGameState extends ChangeNotifier {
       await prefs.setInt('learning_level', _level);
       await prefs.setInt('learning_experience', _experience);
       await prefs.setInt('learning_translator_count', _translatorUsageCount);
-      await prefs.setStringList('learning_completed_steps', _completedSteps.toList());
-      await prefs.setStringList('learning_unlocked_badges', _unlockedBadges.toList());
-      await prefs.setString('learning_incorrect_questions', jsonEncode(_incorrectQuestions));
-      await prefs.setString('learning_saved_evidences', jsonEncode(_savedEvidenceLists));
+      await prefs.setStringList(
+          'learning_completed_steps', _completedSteps.toList());
+      await prefs.setStringList(
+          'learning_unlocked_badges', _unlockedBadges.toList());
+      await prefs.setString(
+          'learning_incorrect_questions', jsonEncode(_incorrectQuestions));
+      await prefs.setString(
+          'learning_saved_evidences', jsonEncode(_savedEvidenceLists));
     } catch (e) {
       debugPrint('Error saving learning game state: $e');
     }
@@ -94,16 +157,28 @@ class LearningGameState extends ChangeNotifier {
 
   // 增加經驗值
   void addExperience(int amount) {
+    if (amount <= 0) return;
+
+    // 台灣繁體中文教學註解：
+    // 10 階是目前成長系統的天花板；達到最高階後經驗條固定顯示滿格，
+    // 避免舊資料或大量加分把玩家推到未設計的 Level 11 之後。
+    if (_level >= totalLevels) {
+      _level = totalLevels;
+      _experience = nextLevelXp;
+      _saveState();
+      notifyListeners();
+      return;
+    }
+
     _experience += amount;
-    if (_experience >= nextLevelXp) {
+    while (_experience >= nextLevelXp && _level < totalLevels) {
       _experience = _experience - nextLevelXp;
       _level++;
-      // 解鎖稱號對應的徽章
-      if (_level == 2) {
-        unlockBadge('實習法助');
-      } else if (_level >= 3) {
-        unlockBadge('金牌大法官');
-      }
+    }
+
+    if (_level >= totalLevels) {
+      _level = totalLevels;
+      _experience = nextLevelXp;
     }
     _saveState();
     notifyListeners();
@@ -114,13 +189,13 @@ class LearningGameState extends ChangeNotifier {
     if (!_completedSteps.contains(stepId)) {
       _completedSteps.add(stepId);
       addExperience(20); // 每個單元給 20 XP
-      
+
       // 檢查是否通關租屋糾紛所有 STEP (除 STEP 5 Quiz 之外為 1~4)
       final rentSteps = {'STEP 1', 'STEP 2', 'STEP 3', 'STEP 4'};
       if (_completedSteps.containsAll(rentSteps)) {
         unlockBadge('租屋達人');
       }
-      
+
       _saveState();
       notifyListeners();
     }
@@ -145,7 +220,8 @@ class LearningGameState extends ChangeNotifier {
   }
 
   // 新增錯題
-  void addIncorrectQuestion(String question, String wrongAnswer, String correctAnswer, String explanation) {
+  void addIncorrectQuestion(String question, String wrongAnswer,
+      String correctAnswer, String explanation) {
     // 避免重複加入同一個問題
     _incorrectQuestions.removeWhere((item) => item['question'] == question);
     _incorrectQuestions.add({
@@ -168,7 +244,8 @@ class LearningGameState extends ChangeNotifier {
   }
 
   // 儲存證據清單
-  void saveEvidenceList(String title, List<String> checkedItems, List<String> allItems) {
+  void saveEvidenceList(
+      String title, List<String> checkedItems, List<String> allItems) {
     _savedEvidenceLists.add({
       'title': title,
       'checkedItems': checkedItems,

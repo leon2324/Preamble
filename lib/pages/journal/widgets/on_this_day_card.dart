@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/features/on_this_day/data/on_this_day_mock_data.dart';
-import 'package:lawapp/features/on_this_day/models/on_this_day_models.dart';
 import 'package:lawapp/features/on_this_day/pages/on_this_day_home_page.dart';
 import 'package:lawapp/pages/journal/data/journal_page_items.dart';
 import 'package:lawapp/pages/journal/widgets/journal_palette.dart';

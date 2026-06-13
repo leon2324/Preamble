@@ -20,6 +20,7 @@ import 'package:lawapp/pages/learning/widgets/mock_court_challenge.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
 
 import 'dart:async';
+import 'dart:ui' show ImageFilter;
 
 part 'law_assistant/law_assistant_palette.dart';
 part 'law_assistant/law_assistant_search_page.dart';
@@ -35,12 +36,40 @@ class KnowLawPage extends StatefulWidget {
 }
 
 class KnowLawPageState extends State<KnowLawPage> {
+  static const String _rentCourseHeroAsset =
+      'assets/images/learning/rent_course_room.png';
+  static const List<_LearningTopicOption> _featuredTopics = [
+    _LearningTopicOption('租屋糾紛', '主修中', true),
+    _LearningTopicOption('車禍事故', '整理中', false),
+    _LearningTopicOption('職場權益', '整理中', false),
+    _LearningTopicOption('網購消費', '整理中', false),
+    _LearningTopicOption('個資隱私', '整理中', false),
+  ];
+  static const Map<String, List<String>> _topicCatalogSections = {
+    '最近更新': ['租屋糾紛', '車禍事故', '網購消費'],
+    '生活必修': ['租屋糾紛', '消費退貨', '鄰里噪音', '修繕責任'],
+    '工作與金錢': ['職場權益', '薪資加班', '離職交接', '借貸糾紛'],
+    '交通與事故': ['車禍事故', '行車紀錄器', '調解流程', '保險理賠'],
+    '網路與隱私': ['個資隱私', '截圖轉傳', '網路罵人', '帳號盜用'],
+  };
+
   int _selectedTabIndex = 0; // 0: 法學課堂, 1: 生活工具箱
 
   void _openArticle(LearningMockArticle article) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (__) => LearningMockDetailPage(article: article),
+      ),
+    );
+  }
+
+  void _openUnitStep(LearningTopicUnit unit) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (__) => LearningMockDetailPage(
+          article: unit.article,
+          unitStepLabel: unit.stepLabel,
+        ),
       ),
     );
   }
@@ -58,6 +87,89 @@ class KnowLawPageState extends State<KnowLawPage> {
       MaterialPageRoute(
         builder: (__) => const AchievementRoomPage(),
       ),
+    );
+  }
+
+  void _showTopicComingSoon(String topic) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text('$topic 專題正在整理中，之後會加入主修課。'),
+          backgroundColor: HomeV2Palette.trustGreen,
+        ),
+      );
+  }
+
+  void _openLearningTopicCatalog() {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (sheetContext) {
+        final isDark = Theme.of(sheetContext).brightness == Brightness.dark;
+        return DraggableScrollableSheet(
+          initialChildSize: 0.72,
+          minChildSize: 0.44,
+          maxChildSize: 0.88,
+          expand: false,
+          builder: (context, scrollController) {
+            return Container(
+              decoration: BoxDecoration(
+                color:
+                    isDark ? const Color(0xFF161C23) : const Color(0xFFFFFCF4),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+              ),
+              child: ListView(
+                controller: scrollController,
+                padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 28.h),
+                children: [
+                  Center(
+                    child: Container(
+                      width: 42.w,
+                      height: 4.h,
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? const Color(0xFF354454)
+                            : const Color(0xFFD8D0C2),
+                        borderRadius: BorderRadius.circular(99.r),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  Text(
+                    '全部專題',
+                    style: TextStyle(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    '首頁先放精選與正在學的主題，完整內容集中在這裡，之後更新專題時不會把學習頁塞滿。',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      height: 1.45,
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  ..._topicCatalogSections.entries.map(
+                    (section) => _buildCatalogSection(
+                      section.key,
+                      section.value,
+                      isDark,
+                      sheetContext,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
@@ -143,7 +255,8 @@ class KnowLawPageState extends State<KnowLawPage> {
               color: isDark ? const Color(0xFF26303D) : const Color(0xFFF3EDE0),
               shape: BoxShape.circle,
               border: Border.all(
-                color: isDark ? const Color(0xFF354454) : const Color(0xFFE4D9C4),
+                color:
+                    isDark ? const Color(0xFF354454) : const Color(0xFFE4D9C4),
                 width: 1.5.w,
               ),
             ),
@@ -181,7 +294,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                   borderRadius: BorderRadius.circular(10.r),
                   border: _selectedTabIndex == 0
                       ? Border.all(
-                          color: isDark ? const Color(0xFF2D3845) : const Color(0xFFECE6DB),
+                          color: isDark
+                              ? const Color(0xFF2D3845)
+                              : const Color(0xFFECE6DB),
                           width: 1.2.w,
                         )
                       : null,
@@ -192,7 +307,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                     CtmSvgIcon(
                       CtmSvgIcons.bookOpen,
                       size: 16.sp,
-                      color: _selectedTabIndex == 0 ? HomeV2Palette.trustGreen : AppColors.textSecondary,
+                      color: _selectedTabIndex == 0
+                          ? HomeV2Palette.trustGreen
+                          : AppColors.textSecondary,
                     ),
                     SizedBox(width: 6.w),
                     Text(
@@ -200,7 +317,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                       style: TextStyle(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.bold,
-                        color: _selectedTabIndex == 0 ? HomeV2Palette.trustGreen : AppColors.textSecondary,
+                        color: _selectedTabIndex == 0
+                            ? HomeV2Palette.trustGreen
+                            : AppColors.textSecondary,
                       ),
                     ),
                   ],
@@ -220,7 +339,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                   borderRadius: BorderRadius.circular(10.r),
                   border: _selectedTabIndex == 1
                       ? Border.all(
-                          color: isDark ? const Color(0xFF2D3845) : const Color(0xFFECE6DB),
+                          color: isDark
+                              ? const Color(0xFF2D3845)
+                              : const Color(0xFFECE6DB),
                           width: 1.2.w,
                         )
                       : null,
@@ -231,7 +352,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                     CtmSvgIcon(
                       CtmSvgIcons.gavel,
                       size: 16.sp,
-                      color: _selectedTabIndex == 1 ? HomeV2Palette.trustGreen : AppColors.textSecondary,
+                      color: _selectedTabIndex == 1
+                          ? HomeV2Palette.trustGreen
+                          : AppColors.textSecondary,
                     ),
                     SizedBox(width: 6.w),
                     Text(
@@ -239,7 +362,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                       style: TextStyle(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.bold,
-                        color: _selectedTabIndex == 1 ? HomeV2Palette.trustGreen : AppColors.textSecondary,
+                        color: _selectedTabIndex == 1
+                            ? HomeV2Palette.trustGreen
+                            : AppColors.textSecondary,
                       ),
                     ),
                   ],
@@ -254,16 +379,19 @@ class KnowLawPageState extends State<KnowLawPage> {
 
   // 3) 法學課堂的列表項目
   List<Widget> _buildClassroomItems(bool isDark, LearningGameState gameState) {
-    final rentSteps = {'STEP 1', 'STEP 2', 'STEP 3', 'STEP 4'};
-    final completedRentCount = gameState.completedSteps.intersection(rentSteps).length;
-    final rentProgress = completedRentCount / 4;
+    final rentUnits = learningTopic.units.take(4).toList(growable: false);
+    final completedRentCount = rentUnits
+        .where((unit) => gameState.completedSteps.contains(unit.stepLabel))
+        .length;
+    final rentProgress = completedRentCount / rentUnits.length;
 
     return [
       // 1. 公民法律小擂台入口 Banner
       NotebookCard(
         hasBookmark: true,
         bookmarkColor: const Color(0xFFE8B95F),
-        backgroundColor: isDark ? const Color(0xFF202A24) : const Color(0xFFFFFDF5),
+        backgroundColor:
+            isDark ? const Color(0xFF202A24) : const Color(0xFFFFFDF5),
         child: Row(
           children: [
             Container(
@@ -308,13 +436,15 @@ class KnowLawPageState extends State<KnowLawPage> {
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (__) => const MockCourtChallengePage()),
+                  MaterialPageRoute(
+                      builder: (__) => const MockCourtChallengePage()),
                 );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: HomeV2Palette.trustGreen,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r)),
                 padding: EdgeInsets.symmetric(horizontal: 14.w),
               ),
               child: const Text('開始挑戰'),
@@ -323,85 +453,22 @@ class KnowLawPageState extends State<KnowLawPage> {
         ),
       ),
 
-      // 2. 租屋糾紛主專題卡片
-      NotebookCard(
-        hasBinderRings: true,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
-                  decoration: BoxDecoration(
-                    color: HomeV2Palette.mint,
-                    borderRadius: BorderRadius.circular(6.r),
-                  ),
-                  child: Text(
-                    '主修課',
-                    style: TextStyle(
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.bold,
-                      color: HomeV2Palette.trustGreen,
-                    ),
-                  ),
-                ),
-                const Spacer(),
-                Text(
-                  '進度：${(rentProgress * 100).toInt()}%',
-                  style: TextStyle(
-                    fontSize: 11.5.sp,
-                    fontWeight: FontWeight.bold,
-                    color: HomeV2Palette.trustGreen,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              '租屋糾紛怎麼看懂',
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w900,
-                color: AppColors.textPrimary,
-              ),
-            ),
-            SizedBox(height: 6.h),
-            Text(
-              '從押金、提前解約到修繕責任，用一條完整的邏輯線，帶你拆解最常見的租賃糾紛。',
-              style: TextStyle(
-                fontSize: 12.sp,
-                height: 1.45,
-                color: AppColors.textSecondary,
-              ),
-            ),
-            SizedBox(height: 10.h),
-            // 進度條
-            ClipRRect(
-              borderRadius: BorderRadius.circular(99.r),
-              child: LinearProgressIndicator(
-                value: rentProgress,
-                minHeight: 6.h,
-                backgroundColor: isDark ? const Color(0xFF2D3845) : const Color(0xFFEFECE6),
-                valueColor: const AlwaysStoppedAnimation<Color>(
-                  HomeV2Palette.trustGreen,
-                ),
-              ),
-            ),
-            SizedBox(height: 12.h),
-            // 單元列表
-            ...learningTopic.units.take(4).map((unit) {
-              final isDone = gameState.completedSteps.contains(unit.stepLabel);
-              return _buildUnitStepRow(unit, isDone);
-            }),
-          ],
-        ),
+      _buildFeaturedTopicSwitcher(isDark),
+      SizedBox(height: 12.h),
+
+      _buildMainCourseCard(
+        isDark: isDark,
+        gameState: gameState,
+        rentUnits: rentUnits,
+        completedRentCount: completedRentCount,
+        rentProgress: rentProgress,
       ),
 
       // 3. 混合排列的卡片：插圖故事卡片
       NotebookCard(
         hasPaperClip: true,
-        backgroundColor: isDark ? const Color(0xFF242C36) : const Color(0xFFEAF0F8),
+        backgroundColor:
+            isDark ? const Color(0xFF242C36) : const Color(0xFFEAF0F8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -421,7 +488,10 @@ class KnowLawPageState extends State<KnowLawPage> {
                   ),
                   child: Text(
                     '車禍防護課',
-                    style: TextStyle(fontSize: 9.5.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1F4E87)),
+                    style: TextStyle(
+                        fontSize: 9.5.sp,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF1F4E87)),
                   ),
                 ),
               ],
@@ -438,17 +508,21 @@ class KnowLawPageState extends State<KnowLawPage> {
             SizedBox(height: 6.h),
             Text(
               '道路事故現場的黃金三步驟：安全防範、拍照存證、定位通報。答對測驗可解鎖車禍徽章！',
-              style: TextStyle(fontSize: 12.sp, height: 1.4, color: AppColors.textSecondary),
+              style: TextStyle(
+                  fontSize: 12.sp, height: 1.4, color: AppColors.textSecondary),
             ),
             SizedBox(height: 10.h),
             ElevatedButton.icon(
-              icon: CtmSvgIcon(CtmSvgIcons.chevronRight, size: 14.sp, color: Colors.white),
+              icon: CtmSvgIcon(CtmSvgIcons.chevronRight,
+                  size: 14.sp, color: Colors.white),
               label: const Text('研讀此案例'),
-              onPressed: () => _openArticle(learningTopic.supportItems[2].article),
+              onPressed: () =>
+                  _openArticle(learningTopic.supportItems[2].article),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF3F7FBF),
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.r)),
               ),
             ),
           ],
@@ -470,7 +544,10 @@ class KnowLawPageState extends State<KnowLawPage> {
                 SizedBox(width: 8.w),
                 Text(
                   '模擬對話故事',
-                  style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: HomeV2Palette.trustGreen),
+                  style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.bold,
+                      color: HomeV2Palette.trustGreen),
                 ),
               ],
             ),
@@ -479,7 +556,8 @@ class KnowLawPageState extends State<KnowLawPage> {
             Container(
               padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF1E252D) : const Color(0xFFF7F7F7),
+                color:
+                    isDark ? const Color(0xFF1E252D) : const Color(0xFFF7F7F7),
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Column(
@@ -510,7 +588,8 @@ class KnowLawPageState extends State<KnowLawPage> {
             SizedBox(height: 4.h),
             Text(
               '學會區分自然折舊與人為損壞，保障租屋權益。',
-              style: TextStyle(fontSize: 11.5.sp, color: AppColors.textSecondary),
+              style:
+                  TextStyle(fontSize: 11.5.sp, color: AppColors.textSecondary),
             ),
             SizedBox(height: 8.h),
             TextButton(
@@ -518,9 +597,11 @@ class KnowLawPageState extends State<KnowLawPage> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text('看白話解析', style: TextStyle(fontWeight: FontWeight.bold)),
+                  const Text('看白話解析',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   SizedBox(width: 4.w),
-                  CtmSvgIcon(CtmSvgIcons.chevronRight, size: 12.sp, color: HomeV2Palette.trustGreen),
+                  CtmSvgIcon(CtmSvgIcons.chevronRight,
+                      size: 12.sp, color: HomeV2Palette.trustGreen),
                 ],
               ),
             ),
@@ -528,6 +609,532 @@ class KnowLawPageState extends State<KnowLawPage> {
         ),
       ),
     ];
+  }
+
+  Widget _buildFeaturedTopicSwitcher(bool isDark) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              '精選專題',
+              style: TextStyle(
+                fontSize: 13.sp,
+                fontWeight: FontWeight.w900,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            const Spacer(),
+            GestureDetector(
+              onTap: _openLearningTopicCatalog,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '全部專題',
+                    style: TextStyle(
+                      fontSize: 11.5.sp,
+                      fontWeight: FontWeight.w900,
+                      color: HomeV2Palette.trustGreen,
+                    ),
+                  ),
+                  SizedBox(width: 2.w),
+                  CtmSvgIcon(
+                    CtmSvgIcons.chevronRight,
+                    size: 13.sp,
+                    color: HomeV2Palette.trustGreen,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 8.h),
+        // 台灣繁體中文教學註解：
+        // 學習首頁只展示少量精選專題，避免活躍 App 內容增加後把首頁塞成百科列表；
+        // 更多專題集中到「全部專題」面板，未來接 API 時只要替換資料來源。
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          child: Row(
+            children: _featuredTopics.map((topic) {
+              return Padding(
+                padding: EdgeInsets.only(right: 8.w),
+                child: _buildTopicChip(topic, isDark),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTopicChip(_LearningTopicOption topic, bool isDark) {
+    final isSelected = topic.isAvailable;
+    return GestureDetector(
+      onTap: () {
+        if (!topic.isAvailable) {
+          _showTopicComingSoon(topic.title);
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? HomeV2Palette.trustGreen
+              : (isDark ? const Color(0xFF161C23) : Colors.white),
+          borderRadius: BorderRadius.circular(999.r),
+          border: Border.all(
+            color: isSelected
+                ? HomeV2Palette.trustGreen
+                : (isDark ? const Color(0xFF2D3845) : const Color(0xFFECE6DB)),
+            width: 1.1.w,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              topic.title,
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w900,
+                color: isSelected ? Colors.white : AppColors.textPrimary,
+              ),
+            ),
+            SizedBox(width: 6.w),
+            Text(
+              topic.badge,
+              style: TextStyle(
+                fontSize: 9.5.sp,
+                fontWeight: FontWeight.w800,
+                color: isSelected
+                    ? Colors.white.withValues(alpha: 0.78)
+                    : AppColors.textMuted,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCatalogSection(
+    String title,
+    List<String> topics,
+    bool isDark,
+    BuildContext sheetContext,
+  ) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 18.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w900,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Wrap(
+            spacing: 8.w,
+            runSpacing: 8.h,
+            children: topics.map((topic) {
+              final isAvailable = topic == '租屋糾紛';
+              return GestureDetector(
+                onTap: () {
+                  Navigator.of(sheetContext).pop();
+                  if (!isAvailable) {
+                    _showTopicComingSoon(topic);
+                  }
+                },
+                child: Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                  decoration: BoxDecoration(
+                    color: isAvailable
+                        ? HomeV2Palette.trustGreen.withValues(alpha: 0.12)
+                        : (isDark ? const Color(0xFF1D252E) : Colors.white),
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: isAvailable
+                          ? HomeV2Palette.trustGreen.withValues(alpha: 0.42)
+                          : (isDark
+                              ? const Color(0xFF2D3845)
+                              : const Color(0xFFECE6DB)),
+                    ),
+                  ),
+                  child: Text(
+                    isAvailable ? '$topic｜主修中' : topic,
+                    style: TextStyle(
+                      fontSize: 11.5.sp,
+                      fontWeight: FontWeight.w800,
+                      color: isAvailable
+                          ? HomeV2Palette.trustGreen
+                          : AppColors.textPrimary,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMainCourseCard({
+    required bool isDark,
+    required LearningGameState gameState,
+    required List<LearningTopicUnit> rentUnits,
+    required int completedRentCount,
+    required double rentProgress,
+  }) {
+    final cardColor = isDark ? const Color(0xFF161C23) : Colors.white;
+    final nextUnit = rentUnits.firstWhere(
+      (unit) => !gameState.completedSteps.contains(unit.stepLabel),
+      orElse: () => rentUnits.last,
+    );
+    final isComplete = completedRentCount == rentUnits.length;
+    final ctaLabel = isComplete
+        ? '複習主修課'
+        : completedRentCount == 0
+            ? '開始學習'
+            : '繼續學習';
+
+    return NotebookCard(
+      hasBinderRings: true,
+      padding: EdgeInsets.zero,
+      backgroundColor: cardColor,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            height: 292.h,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.asset(
+                  _rentCourseHeroAsset,
+                  fit: BoxFit.cover,
+                ),
+                // 台灣繁體中文教學註解：
+                // 這裡用兩層同圖柔焦做「景深式」過渡：中段先開始微糊，底部再加重糊。
+                // 這樣照片仍會延伸到底部，不會變成一塊紙色霧面造成斷層。
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: ShaderMask(
+                      blendMode: BlendMode.dstIn,
+                      shaderCallback: (bounds) => const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.transparent,
+                          Colors.black26,
+                          Colors.black,
+                        ],
+                        stops: [0.0, 0.18, 0.38, 1.0],
+                      ).createShader(bounds),
+                      child: ImageFiltered(
+                        imageFilter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+                        child: Transform.scale(
+                          scale: 1.03,
+                          child: Image.asset(
+                            _rentCourseHeroAsset,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: ShaderMask(
+                      blendMode: BlendMode.dstIn,
+                      shaderCallback: (bounds) => const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.transparent,
+                          Colors.black38,
+                          Colors.black,
+                        ],
+                        stops: [0.0, 0.46, 0.64, 1.0],
+                      ).createShader(bounds),
+                      child: ImageFiltered(
+                        imageFilter: ImageFilter.blur(sigmaX: 42, sigmaY: 42),
+                        child: Transform.scale(
+                          scale: 1.08,
+                          child: Image.asset(
+                            _rentCourseHeroAsset,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.black.withValues(alpha: isDark ? 0.12 : 0.02),
+                        (isDark ? Colors.black : Colors.white)
+                            .withValues(alpha: isDark ? 0.10 : 0.18),
+                        (isDark ? Colors.black : const Color(0xFFD7B27C))
+                            .withValues(alpha: isDark ? 0.24 : 0.18),
+                        (isDark ? Colors.black : const Color(0xFF8C5D24))
+                            .withValues(alpha: isDark ? 0.48 : 0.34),
+                      ],
+                      stops: const [0.0, 0.42, 0.74, 1.0],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 12.h,
+                  left: 12.w,
+                  right: 12.w,
+                  child: Row(
+                    children: [
+                      _buildCourseBadge('主修課', isDark),
+                      SizedBox(width: 8.w),
+                      _buildCourseBadge('${rentUnits.length} 個單元', isDark),
+                      const Spacer(),
+                      _buildCourseBadge('租屋生活必修', isDark),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  left: 14.w,
+                  right: 14.w,
+                  bottom: 14.h,
+                  // 台灣繁體中文教學註解：
+                  // 文字直接壓在已經糊化的照片上，不再另做局部霧面卡；
+                  // 可讀性靠底圖重糊、全寬漸層與文字陰影共同處理。
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '租屋糾紛怎麼看懂',
+                        style: TextStyle(
+                          fontSize: 21.sp,
+                          height: 1.18,
+                          fontWeight: FontWeight.w900,
+                          color:
+                              isDark ? Colors.white : const Color(0xFF17243A),
+                          shadows: [
+                            Shadow(
+                              color: (isDark ? Colors.black : Colors.white)
+                                  .withValues(alpha: isDark ? 0.40 : 0.70),
+                              blurRadius: 12,
+                            ),
+                            Shadow(
+                              color: (isDark ? Colors.black : Colors.white)
+                                  .withValues(alpha: isDark ? 0.22 : 0.50),
+                              blurRadius: 24,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 6.h),
+                      Text(
+                        '學完後，你會知道押金能不能扣、提前解約怎麼判斷、點交證據怎麼留。',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          height: 1.45,
+                          fontWeight: FontWeight.w800,
+                          color: isDark
+                              ? Colors.white.withValues(alpha: 0.78)
+                              : const Color(0xFF53657B),
+                          shadows: [
+                            Shadow(
+                              color: (isDark ? Colors.black : Colors.white)
+                                  .withValues(alpha: isDark ? 0.34 : 0.58),
+                              blurRadius: 14,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+                      GestureDetector(
+                        onTap: () => _openUnitStep(nextUnit),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 12.w, vertical: 10.h),
+                          decoration: BoxDecoration(
+                            color: HomeV2Palette.trustGreen,
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      ctaLabel,
+                                      style: TextStyle(
+                                        fontSize: 13.sp,
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    SizedBox(height: 2.h),
+                                    Text(
+                                      isComplete
+                                          ? '已完成 ${rentUnits.length} 個單元，回頭複習判斷順序'
+                                          : '下一步：${nextUnit.stepLabel} ${nextUnit.title}',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 10.5.sp,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white
+                                            .withValues(alpha: 0.82),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              CtmSvgIcon(
+                                CtmSvgIcons.arrowRight,
+                                size: 18.sp,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(14.w, 4.h, 14.w, 14.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      '學習路徑',
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w900,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      '已完成 $completedRentCount / ${rentUnits.length}',
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.w800,
+                        color: HomeV2Palette.trustGreen,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8.h),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(99.r),
+                  child: LinearProgressIndicator(
+                    value: rentProgress,
+                    minHeight: 6.h,
+                    backgroundColor: isDark
+                        ? const Color(0xFF2D3845)
+                        : const Color(0xFFEFECE6),
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                      HomeV2Palette.trustGreen,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                ...rentUnits.asMap().entries.map((entry) {
+                  final unit = entry.value;
+                  final isDone =
+                      gameState.completedSteps.contains(unit.stepLabel);
+                  final isNext =
+                      unit.stepLabel == nextUnit.stepLabel && !isComplete;
+                  return _buildCoursePathStepRow(
+                    unit,
+                    isDone: isDone,
+                    isNext: isNext,
+                    isLast: entry.key == rentUnits.length - 1,
+                    isDark: isDark,
+                  );
+                }),
+                SizedBox(height: 10.h),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(10.w),
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? const Color(0xFF1E2622)
+                        : const Color(0xFFF2FAF6),
+                    borderRadius: BorderRadius.circular(10.r),
+                    border: Border.all(
+                      color: isDark
+                          ? const Color(0xFF2E3C36)
+                          : const Color(0xFFD2E6DE),
+                    ),
+                  ),
+                  child: Text(
+                    '學到點交與修繕時，可以到「生活工具箱」整理租屋證據清單。',
+                    style: TextStyle(
+                      fontSize: 11.5.sp,
+                      height: 1.35,
+                      fontWeight: FontWeight.w700,
+                      color: isDark
+                          ? const Color(0xFF99C3B3)
+                          : const Color(0xFF1B4D3E),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCourseBadge(String label, bool isDark) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+      decoration: BoxDecoration(
+        color: isDark
+            ? const Color(0xFF10161D).withValues(alpha: 0.74)
+            : Colors.white.withValues(alpha: 0.74),
+        borderRadius: BorderRadius.circular(999.r),
+        border: Border.all(
+          color: isDark
+              ? const Color(0xFF2D3845)
+              : Colors.white.withValues(alpha: 0.72),
+        ),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 10.sp,
+          fontWeight: FontWeight.w900,
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.9)
+              : HomeV2Palette.trustGreen,
+        ),
+      ),
+    );
   }
 
   // 4) 生活工具箱的列表項目
@@ -546,44 +1153,124 @@ class KnowLawPageState extends State<KnowLawPage> {
     ];
   }
 
-  Widget _buildUnitStepRow(LearningTopicUnit unit, bool isDone) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: CtmSvgIcon(
-        isDone ? CtmSvgIcons.star : CtmSvgIcons.timeline,
-        size: 18.sp,
-        color: isDone ? HomeV2Palette.trustGreen : Colors.grey,
-      ),
-      title: Text(
-        '${unit.stepLabel}：${unit.title}',
-        style: TextStyle(
-          fontSize: 13.sp,
-          fontWeight: FontWeight.bold,
-          decoration: isDone ? TextDecoration.lineThrough : null,
-          color: isDone ? AppColors.textMuted : AppColors.textPrimary,
-        ),
-      ),
-      subtitle: Text(
-        '${unit.goal} • ${unit.readTime}',
-        style: TextStyle(fontSize: 11.sp),
-      ),
-      trailing: CtmSvgIcon(CtmSvgIcons.chevronRight, size: 16.sp, color: Colors.grey),
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (__) => LearningMockDetailPage(
-              article: unit.article,
-              unitStepLabel: unit.stepLabel,
+  Widget _buildCoursePathStepRow(
+    LearningTopicUnit unit, {
+    required bool isDone,
+    required bool isNext,
+    required bool isLast,
+    required bool isDark,
+  }) {
+    final activeColor = isDone
+        ? HomeV2Palette.trustGreen
+        : isNext
+            ? const Color(0xFFE8B95F)
+            : AppColors.textMuted;
+    final paperColor =
+        isDark ? const Color(0xFF1D252E) : const Color(0xFFFAF7F0);
+
+    return GestureDetector(
+      onTap: () => _openUnitStep(unit),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 26.w,
+            child: Column(
+              children: [
+                Container(
+                  width: 24.w,
+                  height: 24.w,
+                  decoration: BoxDecoration(
+                    color: activeColor.withValues(
+                        alpha: isDone || isNext ? 0.18 : 0.10),
+                    shape: BoxShape.circle,
+                    border: Border.all(color: activeColor, width: 1.4.w),
+                  ),
+                  child: Center(
+                    child: CtmSvgIcon(
+                      isDone ? CtmSvgIcons.star : CtmSvgIcons.timeline,
+                      size: 13.sp,
+                      color: activeColor,
+                    ),
+                  ),
+                ),
+                if (!isLast)
+                  Container(
+                    width: 1.2.w,
+                    height: 42.h,
+                    color: activeColor.withValues(alpha: 0.24),
+                  ),
+              ],
             ),
           ),
-        );
-      },
+          SizedBox(width: 9.w),
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.only(bottom: isLast ? 0 : 8.h),
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 9.h),
+              decoration: BoxDecoration(
+                color: paperColor,
+                borderRadius: BorderRadius.circular(10.r),
+                border: Border.all(
+                  color: isNext
+                      ? const Color(0xFFE8B95F)
+                      : (isDark
+                          ? const Color(0xFF2D3845)
+                          : const Color(0xFFECE6DB)),
+                  width: isNext ? 1.4.w : 1.w,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${unit.stepLabel}：${unit.title}',
+                          style: TextStyle(
+                            fontSize: 12.5.sp,
+                            fontWeight: FontWeight.w900,
+                            decoration:
+                                isDone ? TextDecoration.lineThrough : null,
+                            color: isDone
+                                ? AppColors.textMuted
+                                : AppColors.textPrimary,
+                          ),
+                        ),
+                        SizedBox(height: 3.h),
+                        Text(
+                          '${unit.goal} • ${unit.readTime}',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 10.5.sp,
+                            height: 1.35,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+                  CtmSvgIcon(
+                    CtmSvgIcons.chevronRight,
+                    size: 15.sp,
+                    color: activeColor,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildChatBubble({required String sender, required String text, required bool isMe}) {
+  Widget _buildChatBubble(
+      {required String sender, required String text, required bool isMe}) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
@@ -592,22 +1279,27 @@ class KnowLawPageState extends State<KnowLawPage> {
           CircleAvatar(
             radius: 14.r,
             backgroundColor: Colors.grey.shade300,
-            child: Text(sender.substring(0, 1), style: TextStyle(fontSize: 11.sp)),
+            child:
+                Text(sender.substring(0, 1), style: TextStyle(fontSize: 11.sp)),
           ),
           SizedBox(width: 8.w),
         ],
         Flexible(
           child: Column(
-            crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            crossAxisAlignment:
+                isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
-              Text(sender, style: TextStyle(fontSize: 9.sp, color: Colors.grey)),
+              Text(sender,
+                  style: TextStyle(fontSize: 9.sp, color: Colors.grey)),
               SizedBox(height: 2.h),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
                 decoration: BoxDecoration(
-                  color: isMe 
-                      ? HomeV2Palette.mint 
-                      : (isDark ? const Color(0xFF26303D) : const Color(0xFFE8E8E8)),
+                  color: isMe
+                      ? HomeV2Palette.mint
+                      : (isDark
+                          ? const Color(0xFF26303D)
+                          : const Color(0xFFE8E8E8)),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(isMe ? 12.r : 2.r),
                     topRight: Radius.circular(isMe ? 2.r : 12.r),
@@ -628,7 +1320,9 @@ class KnowLawPageState extends State<KnowLawPage> {
           CircleAvatar(
             radius: 14.r,
             backgroundColor: HomeV2Palette.trustGreen.withValues(alpha: 0.2),
-            child: Text(sender.substring(0, 1), style: TextStyle(fontSize: 11.sp, color: HomeV2Palette.trustGreen)),
+            child: Text(sender.substring(0, 1),
+                style: TextStyle(
+                    fontSize: 11.sp, color: HomeV2Palette.trustGreen)),
           ),
         ],
       ],
@@ -651,17 +1345,22 @@ class KnowLawPageState extends State<KnowLawPage> {
 
     return NotebookCard(
       hasPaperClip: true,
-      backgroundColor: isDark ? const Color(0xFF28241B) : const Color(0xFFFFFDF8),
+      backgroundColor:
+          isDark ? const Color(0xFF28241B) : const Color(0xFFFFFDF8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.gavel, color: const Color(0xFF94610D), size: 20.sp),
+              CtmSvgIcon(CtmSvgIcons.gavel,
+                  color: const Color(0xFF94610D), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
                 '法律術語白話翻譯機',
-                style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                style: TextStyle(
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimary),
               ),
             ],
           ),
@@ -673,21 +1372,27 @@ class KnowLawPageState extends State<KnowLawPage> {
               hintText: '輸入判決書難懂字眼，或點擊下方快捷詞晶片...',
               hintStyle: TextStyle(fontSize: 12.sp, color: Colors.grey),
               filled: true,
-              fillColor: isDark ? const Color(0xFF1E252D) : const Color(0xFFFFFAEC),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.r), borderSide: BorderSide.none),
+              fillColor:
+                  isDark ? const Color(0xFF1E252D) : const Color(0xFFFFFAEC),
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.r),
+                  borderSide: BorderSide.none),
               contentPadding: EdgeInsets.all(10.w),
             ),
             maxLines: 2,
           ),
           SizedBox(height: 8.h),
-          
+
           // 快捷晶片 (Chips)
           Wrap(
             spacing: 6.w,
             children: _termsMap.keys.map((term) {
               return ActionChip(
-                label: Text(term, style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.bold)),
-                backgroundColor: isDark ? const Color(0xFF2C353F) : const Color(0xFFEAE5DB),
+                label: Text(term,
+                    style: TextStyle(
+                        fontSize: 11.sp, fontWeight: FontWeight.bold)),
+                backgroundColor:
+                    isDark ? const Color(0xFF2C353F) : const Color(0xFFEAE5DB),
                 padding: EdgeInsets.zero,
                 onPressed: () {
                   setState(() {
@@ -709,14 +1414,16 @@ class KnowLawPageState extends State<KnowLawPage> {
                   final text = _translatorController.text.trim();
                   if (text.isEmpty) return;
                   setState(() {
-                    _translationOutput = _termsMap[text] ?? '白話翻譯：該詞彙正在整理中。法律概念通常指「依照規定做對應處置，並保障當事人權利」。';
+                    _translationOutput = _termsMap[text] ??
+                        '白話翻譯：該詞彙正在整理中。法律概念通常指「依照規定做對應處置，並保障當事人權利」。';
                     LearningGameState.instance.incrementTranslatorUsage();
                   });
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF94610D),
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.r)),
                 ),
                 child: const Text('翻譯'),
               ),
@@ -742,7 +1449,8 @@ class KnowLawPageState extends State<KnowLawPage> {
               width: double.infinity,
               padding: EdgeInsets.all(10.w),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF332B1E) : const Color(0xFFFFFAEC),
+                color:
+                    isDark ? const Color(0xFF332B1E) : const Color(0xFFFFFAEC),
                 borderRadius: BorderRadius.circular(10.r),
                 border: Border.all(color: const Color(0xFFE4C179)),
               ),
@@ -751,7 +1459,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                 style: TextStyle(
                   fontSize: 12.5.sp,
                   height: 1.4,
-                  color: isDark ? Colors.orange.shade100 : const Color(0xFF5D4017),
+                  color:
+                      isDark ? Colors.orange.shade100 : const Color(0xFF5D4017),
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -783,7 +1492,8 @@ class KnowLawPageState extends State<KnowLawPage> {
   Widget _buildEvidenceChecklistWidget(LearningGameState gameState) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final currentList = _evidenceTabType == 0 ? _carEvidences : _rentEvidences;
-    final String currentTitle = _evidenceTabType == 0 ? '🚗 車禍責任釐清證據包' : '🏠 租屋點交扣押金證據包';
+    final String currentTitle =
+        _evidenceTabType == 0 ? '🚗 車禍責任釐清證據包' : '🏠 租屋點交扣押金證據包';
 
     return NotebookCard(
       hasBinderRings: true,
@@ -792,16 +1502,20 @@ class KnowLawPageState extends State<KnowLawPage> {
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.filePen, color: HomeV2Palette.trustGreen, size: 20.sp),
+              CtmSvgIcon(CtmSvgIcons.filePen,
+                  color: HomeV2Palette.trustGreen, size: 20.sp),
               SizedBox(width: 8.w),
               Text(
                 '證據準備與文件清單',
-                style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                style: TextStyle(
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimary),
               ),
             ],
           ),
           SizedBox(height: 8.h),
-          
+
           // 切換車禍/租屋
           Row(
             children: [
@@ -829,7 +1543,7 @@ class KnowLawPageState extends State<KnowLawPage> {
             ],
           ),
           SizedBox(height: 10.h),
-          
+
           // 核取清單
           ...currentList.map((item) {
             final isChecked = _checkedEvidences.contains(item);
@@ -841,7 +1555,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                 style: TextStyle(
                   fontSize: 12.5.sp,
                   decoration: isChecked ? TextDecoration.lineThrough : null,
-                  color: isChecked ? AppColors.textMuted : AppColors.textPrimary,
+                  color:
+                      isChecked ? AppColors.textMuted : AppColors.textPrimary,
                 ),
               ),
               value: isChecked,
@@ -857,17 +1572,19 @@ class KnowLawPageState extends State<KnowLawPage> {
               },
             );
           }),
-          
+
           SizedBox(height: 12.h),
-          
+
           // 備忘/導出按鈕
           Row(
             children: [
               ElevatedButton.icon(
-                icon: CtmSvgIcon(CtmSvgIcons.bookmark, size: 14.sp, color: Colors.white),
+                icon: CtmSvgIcon(CtmSvgIcons.bookmark,
+                    size: 14.sp, color: Colors.white),
                 label: const Text('儲存備忘'),
                 onPressed: () {
-                  gameState.saveEvidenceList(currentTitle, _checkedEvidences.toList(), currentList);
+                  gameState.saveEvidenceList(
+                      currentTitle, _checkedEvidences.toList(), currentList);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('已成功儲存證據清單至小法助的「備忘錄」中！'),
@@ -878,7 +1595,8 @@ class KnowLawPageState extends State<KnowLawPage> {
               ),
               SizedBox(width: 10.w),
               OutlinedButton.icon(
-                icon: CtmSvgIcon(CtmSvgIcons.externalLink, size: 14.sp, color: HomeV2Palette.trustGreen),
+                icon: CtmSvgIcon(CtmSvgIcons.externalLink,
+                    size: 14.sp, color: HomeV2Palette.trustGreen),
                 label: const Text('導出 PDF'),
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -887,7 +1605,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                       backgroundColor: HomeV2Palette.trustGreen,
                     ),
                   );
-                  gameState.saveEvidenceList('$currentTitle (PDF 導出版)', _checkedEvidences.toList(), currentList);
+                  gameState.saveEvidenceList('$currentTitle (PDF 導出版)',
+                      _checkedEvidences.toList(), currentList);
                 },
               ),
             ],
@@ -907,16 +1626,19 @@ class KnowLawPageState extends State<KnowLawPage> {
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.search, color: const Color(0xFF3F7FBF), size: 20.sp),
+              CtmSvgIcon(CtmSvgIcons.search,
+                  color: const Color(0xFF3F7FBF), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
                 '常用法規快速查詢',
-                style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                style: TextStyle(
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimary),
               ),
             ],
           ),
           SizedBox(height: 10.h),
-          
           Wrap(
             spacing: 8.w,
             runSpacing: 6.h,
@@ -934,13 +1656,26 @@ class KnowLawPageState extends State<KnowLawPage> {
 
   Widget _buildStatuteChip(String label, {String? actual}) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return ActionChip(
-      label: Text(label, style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1F4E87))),
-      backgroundColor: isDark ? const Color(0xFF1F2B38) : const Color(0xFFE8F0FE),
+      label: Text(label,
+          style: TextStyle(
+              fontSize: 11.sp,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFF1F4E87))),
+      backgroundColor:
+          isDark ? const Color(0xFF1F2B38) : const Color(0xFFE8F0FE),
       onPressed: () => _openStatuteDatabase(initialQuery: actual ?? label),
     );
   }
+}
+
+class _LearningTopicOption {
+  const _LearningTopicOption(this.title, this.badge, this.isAvailable);
+
+  final String title;
+  final String badge;
+  final bool isAvailable;
 }
 
 // 🤖 智慧小法助輪播提問氣泡元件 (整合等級表情與自訂印花)
@@ -988,9 +1723,12 @@ class _AssistantPromptBubbleState extends State<_AssistantPromptBubble> {
     final currentPrompt = _prompts[_currentIndex];
     final gameState = LearningGameState.instance;
 
-    final bubbleBgColor = isDark ? const Color(0xFF1E2622) : const Color(0xFFF2FAF6);
-    final bubbleBorderColor = isDark ? const Color(0xFF2E3C36) : const Color(0xFFD2E6DE);
-    final textColor = isDark ? const Color(0xFF99C3B3) : const Color(0xFF1B4D3E);
+    final bubbleBgColor =
+        isDark ? const Color(0xFF1E2622) : const Color(0xFFF2FAF6);
+    final bubbleBorderColor =
+        isDark ? const Color(0xFF2E3C36) : const Color(0xFFD2E6DE);
+    final textColor =
+        isDark ? const Color(0xFF99C3B3) : const Color(0xFF1B4D3E);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -1004,7 +1742,8 @@ class _AssistantPromptBubbleState extends State<_AssistantPromptBubble> {
               padding: EdgeInsets.all(2.w),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: HomeV2Palette.trustGreen, width: 1.5.w),
+                border:
+                    Border.all(color: HomeV2Palette.trustGreen, width: 1.5.w),
               ),
               child: ClipOval(
                 child: Image.asset(
@@ -1024,7 +1763,8 @@ class _AssistantPromptBubbleState extends State<_AssistantPromptBubble> {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => LawAssistantSearchPage(initialPrompt: currentPrompt),
+                  builder: (_) =>
+                      LawAssistantSearchPage(initialPrompt: currentPrompt),
                 ),
               );
             },
@@ -1066,7 +1806,8 @@ class _AssistantPromptBubbleState extends State<_AssistantPromptBubble> {
                         ClipRect(
                           child: AnimatedSwitcher(
                             duration: const Duration(milliseconds: 250),
-                            layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
+                            layoutBuilder: (Widget? currentChild,
+                                List<Widget> previousChildren) {
                               return Stack(
                                 alignment: Alignment.centerLeft,
                                 children: <Widget>[
@@ -1076,12 +1817,15 @@ class _AssistantPromptBubbleState extends State<_AssistantPromptBubble> {
                               );
                             },
                             transitionBuilder: (child, animation) {
-                              final isNew = child.key == ValueKey<int>(_currentIndex);
+                              final isNew =
+                                  child.key == ValueKey<int>(_currentIndex);
                               return FadeTransition(
                                 opacity: animation,
                                 child: SlideTransition(
                                   position: Tween<Offset>(
-                                    begin: isNew ? const Offset(0.0, 0.2) : const Offset(0.0, -0.2),
+                                    begin: isNew
+                                        ? const Offset(0.0, 0.2)
+                                        : const Offset(0.0, -0.2),
                                     end: Offset.zero,
                                   ).animate(animation),
                                   child: child,
