@@ -38,6 +38,24 @@ class KnowLawPage extends StatefulWidget {
 
 class KnowLawPageState extends State<KnowLawPage> {
   String _activeTopic = '租屋糾紛';
+  String _illuActiveCategory = '車禍事故';
+  String _dialogActiveCategory = '租屋糾紛';
+
+  void _rotateIllustrationTopic() {
+    final categories = ['租屋糾紛', '車禍事故', '職場權益', '網購消費', '個資隱私'];
+    final currentIndex = categories.indexOf(_illuActiveCategory);
+    setState(() {
+      _illuActiveCategory = categories[(currentIndex + 1) % categories.length];
+    });
+  }
+
+  void _rotateDialogTopic() {
+    final categories = ['租屋糾紛', '車禍事故', '職場權益', '網購消費', '個資隱私'];
+    final currentIndex = categories.indexOf(_dialogActiveCategory);
+    setState(() {
+      _dialogActiveCategory = categories[(currentIndex + 1) % categories.length];
+    });
+  }
 
   static const Map<String, _IllustrationStoryData> _illustrationStories = {
     '租屋糾紛': _IllustrationStoryData(
@@ -488,14 +506,6 @@ class KnowLawPageState extends State<KnowLawPage> {
 
   // 3) 法學課堂的列表項目
   // Mappings of recommendations: activeTopic -> [IllustrationTopic, DialogTopic]
-  static const Map<String, List<String>> _recommendationMap = {
-    '租屋糾紛': ['車禍事故', '職場權益'],
-    '車禍事故': ['職場權益', '租屋糾紛'],
-    '職場權益': ['網購消費', '車禍事故'],
-    '網購消費': ['個資隱私', '租屋糾紛'],
-    '個資隱私': ['租屋糾紛', '網購消費'],
-  };
-
   List<Widget> _buildClassroomItems(bool isDark, LearningGameState gameState) {
     final currentTopic = featuredLearningTopics[_activeTopic] ?? learningTopic;
     final rentUnits = currentTopic.units;
@@ -504,22 +514,15 @@ class KnowLawPageState extends State<KnowLawPage> {
         .length;
     final rentProgress = rentUnits.isEmpty ? 0.0 : completedRentCount / rentUnits.length;
 
-    // 取得當前專題的推薦專題
-    final recs = _recommendationMap[_activeTopic] ?? ['車禍事故', '職場權益'];
-    final recTopic1 = recs[0];
-    final recTopic2 = recs[1];
-
-    final illuStory = _illustrationStories[recTopic1] ?? _illustrationStories['車禍事故']!;
-    final illuTopicData = featuredLearningTopics[recTopic1] ?? learningTopicCarAccident;
-    final illuAccentColor = _getTopicColor(recTopic1);
-    final illuCardBg = _getTopicCardBg(recTopic1, isDark);
+    // 取得下方的獨立精選專題與對話專題資料
+    final illuStory = _illustrationStories[_illuActiveCategory] ?? _illustrationStories['車禍事故']!;
+    final illuTopicData = featuredLearningTopics[_illuActiveCategory] ?? learningTopicCarAccident;
     final illuTargetArticle = (illuTopicData.units.length > illuStory.targetUnitIndex)
         ? illuTopicData.units[illuStory.targetUnitIndex].article
         : illuTopicData.heroArticle;
 
-    final dialogStory = _dialogStories[recTopic2] ?? _dialogStories['職場權益']!;
-    final dialogTopicData = featuredLearningTopics[recTopic2] ?? learningTopicWorkplace;
-    final dialogAccentColor = _getTopicColor(recTopic2);
+    final dialogStory = _dialogStories[_dialogActiveCategory] ?? _dialogStories['租屋糾紛']!;
+    final dialogTopicData = featuredLearningTopics[_dialogActiveCategory] ?? learningTopic;
     final dialogTargetArticle = (dialogTopicData.units.length > dialogStory.targetUnitIndex)
         ? dialogTopicData.units[dialogStory.targetUnitIndex].article
         : dialogTopicData.heroArticle;
@@ -607,7 +610,8 @@ class KnowLawPageState extends State<KnowLawPage> {
       // 3. 混合排列的卡片：插圖故事卡片
       NotebookCard(
         hasPaperClip: true,
-        backgroundColor: illuCardBg,
+        backgroundColor:
+            isDark ? const Color(0xFF242C36) : const Color(0xFFEAF0F8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -616,7 +620,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                 CtmSvgIcon(
                   CtmSvgIcons.star,
                   size: 20.sp,
-                  color: illuAccentColor,
+                  color: const Color(0xFF3F7FBF),
                 ),
                 SizedBox(width: 8.w),
                 Container(
@@ -626,11 +630,34 @@ class KnowLawPageState extends State<KnowLawPage> {
                     borderRadius: BorderRadius.circular(4.r),
                   ),
                   child: Text(
-                    '大家都在看 • ${illuStory.tag}',
+                    illuStory.tag,
                     style: TextStyle(
                         fontSize: 9.5.sp,
                         fontWeight: FontWeight.bold,
-                        color: illuAccentColor.withValues(alpha: 0.86)),
+                        color: const Color(0xFF1F4E87)),
+                  ),
+                ),
+                const Spacer(),
+                GestureDetector(
+                  onTap: _rotateIllustrationTopic,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '換主題',
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF1F4E87).withValues(alpha: 0.7),
+                        ),
+                      ),
+                      SizedBox(width: 2.w),
+                      Icon(
+                        Icons.refresh,
+                        size: 11.sp,
+                        color: const Color(0xFF1F4E87).withValues(alpha: 0.7),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -657,7 +684,7 @@ class KnowLawPageState extends State<KnowLawPage> {
               label: const Text('研讀此案例'),
               onPressed: () => _openArticle(illuTargetArticle),
               style: ElevatedButton.styleFrom(
-                backgroundColor: illuAccentColor,
+                backgroundColor: const Color(0xFF3F7FBF),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.r)),
@@ -677,15 +704,38 @@ class KnowLawPageState extends State<KnowLawPage> {
                 CtmSvgIcon(
                   CtmSvgIcons.message,
                   size: 16.sp,
-                  color: dialogAccentColor,
+                  color: HomeV2Palette.trustGreen,
                 ),
                 SizedBox(width: 8.w),
                 Text(
-                  '大家都在談 • 模擬對話故事',
+                  '模擬對話故事',
                   style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.bold,
-                      color: dialogAccentColor),
+                      color: HomeV2Palette.trustGreen),
+                ),
+                const Spacer(),
+                GestureDetector(
+                  onTap: _rotateDialogTopic,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '換一換',
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.bold,
+                          color: HomeV2Palette.trustGreen.withValues(alpha: 0.78),
+                        ),
+                      ),
+                      SizedBox(width: 2.w),
+                      Icon(
+                        Icons.refresh,
+                        size: 11.sp,
+                        color: HomeV2Palette.trustGreen.withValues(alpha: 0.78),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -737,14 +787,14 @@ class KnowLawPageState extends State<KnowLawPage> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('看白話解析',
+                  const Text('看白話解析',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: dialogAccentColor,
+                        color: HomeV2Palette.trustGreen,
                       )),
                   SizedBox(width: 4.w),
                   CtmSvgIcon(CtmSvgIcons.chevronRight,
-                      size: 12.sp, color: dialogAccentColor),
+                      size: 12.sp, color: HomeV2Palette.trustGreen),
                 ],
               ),
             ),
