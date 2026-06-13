@@ -4,6 +4,7 @@ import 'package:lawapp/data/learning/learning_game_state.dart';
 import 'package:lawapp/pages/learning/widgets/notebook_aesthetics.dart';
 import 'package:lawapp/theme/app_colors.dart';
 import 'package:lawapp/components/home/v2/home_v2_palette.dart';
+import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
 
 class MockCourtChallengePage extends StatefulWidget {
   const MockCourtChallengePage({super.key});
@@ -218,6 +219,17 @@ class _MockCourtChallengePageState extends State<MockCourtChallengePage> {
                 borderCol = const Color(0xFFE8B95F);
               }
 
+              Widget iconWidget;
+              if (isCorrectOpt) {
+                iconWidget = CtmSvgIcon(CtmSvgIcons.star, size: 18.sp, color: Colors.green);
+              } else if (isWrongOpt) {
+                iconWidget = CtmSvgIcon(CtmSvgIcons.xCircle, size: 18.sp, color: Colors.red);
+              } else if (isSelected) {
+                iconWidget = CtmSvgIcon(CtmSvgIcons.star, size: 18.sp, color: const Color(0xFFE8B95F));
+              } else {
+                iconWidget = CtmSvgIcon(CtmSvgIcons.timeline, size: 18.sp, color: Colors.grey);
+              }
+
               return GestureDetector(
                 onTap: _isAnswered ? null : () {
                   setState(() {
@@ -230,15 +242,7 @@ class _MockCourtChallengePageState extends State<MockCourtChallengePage> {
                   margin: EdgeInsets.only(bottom: 10.h),
                   child: Row(
                     children: [
-                      Icon(
-                        isCorrectOpt 
-                            ? Icons.check_circle_rounded 
-                            : (isWrongOpt ? Icons.cancel_rounded : (isSelected ? Icons.radio_button_checked_rounded : Icons.radio_button_off_rounded)),
-                        color: isCorrectOpt 
-                            ? Colors.green 
-                            : (isWrongOpt ? Colors.red : (isSelected ? const Color(0xFFE8B95F) : Colors.grey)),
-                        size: 20.sp,
-                      ),
+                      iconWidget,
                       SizedBox(width: 10.w),
                       Expanded(
                         child: Text(

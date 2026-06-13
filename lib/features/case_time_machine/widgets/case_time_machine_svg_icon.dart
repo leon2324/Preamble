@@ -314,4 +314,78 @@ abstract final class CtmSvgIcons {
   <path d="M17 10v4"></path>
 </svg>
 ''';
+
+  static const sprout = '''
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 12C12 7.02944 16.0294 3 21 3C21 7.97056 16.9706 12 12 12Z"></path>
+  <path d="M12 12C12 7.02944 7.97056 3 3 3C3 7.97056 7.02944 12 12 12Z"></path>
+  <path d="M12 12V21"></path>
+</svg>
+''';
+
+  static const home = '''
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+''';
+
+  static const car = '''
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="1" y="12" width="22" height="8" rx="2"></rect>
+  <path d="M3 12V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5"></path>
+  <circle cx="6" cy="20" r="2"></circle>
+  <circle cx="18" cy="20" r="2"></circle>
+</svg>
+''';
+
+  static const briefcase = '''
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+</svg>
+''';
+
+  static const smartphone = '''
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+  <line x1="12" y1="18" x2="12.01" y2="18"></line>
+</svg>
+''';
+
+  static const shoppingBag = '''
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+  <line x1="3" y1="6" x2="21" y2="6"></line>
+  <path d="M16 10a4 4 0 0 1-8 0"></path>
+</svg>
+''';
+
+  static const trophy = '''
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+  <path d="M4 22h16"></path>
+  <path d="M10 14.66V17c0 .55-.45 1-1 1H4v2h16v-2h-5c-.55 0-1-.45-1-1v-2.34"></path>
+  <path d="M12 2a6 6 0 0 1 6 6v3.5c0 3.3-2.7 6-6 6s-6-2.7-6-6V8a6 6 0 0 1 6-6Z"></path>
+</svg>
+''';
+
+  static const save = '''
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+  <polyline points="17 21 17 13 7 13 7 21"></polyline>
+  <polyline points="7 3 7 8 15 8"></polyline>
+</svg>
+''';
+
+  static const bot = '''
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 8V4H8"></path>
+  <rect x="5" y="8" width="14" height="12" rx="2"></rect>
+  <circle cx="9" cy="13" r="1"></circle>
+  <circle cx="15" cy="13" r="1"></circle>
+  <path d="M9 16h6"></path>
+</svg>
+''';
 }

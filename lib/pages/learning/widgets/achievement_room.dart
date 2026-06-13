@@ -5,6 +5,7 @@ import 'package:lawapp/pages/learning/widgets/notebook_aesthetics.dart';
 import 'package:lawapp/theme/app_colors.dart';
 import 'package:lawapp/components/home/v2/home_v2_palette.dart';
 import 'package:lawapp/data/mock_data/learning/learning_mock_data.dart';
+import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
 import 'package:intl/intl.dart';
 
 class AchievementRoomPage extends StatefulWidget {
@@ -19,56 +20,65 @@ class _AchievementRoomPageState extends State<AchievementRoomPage> {
   final List<Map<String, dynamic>> _badgesInfo = [
     {
       'name': '初學乍練',
-      'icon': '🌱',
+      'icon': CtmSvgIcons.sprout,
       'color': const Color(0xFFE2F0D9),
+      'iconColor': const Color(0xFF385623),
       'desc': '加入法學學堂並開始學習。',
     },
     {
       'name': '租屋達人',
-      'icon': '🏠',
+      'icon': CtmSvgIcons.home,
       'color': const Color(0xFFFFF2CC),
+      'iconColor': const Color(0xFF7F6000),
       'desc': '通關「租屋糾紛」所有單元即可解鎖。',
     },
     {
       'name': '車禍防護',
-      'icon': '🚗',
+      'icon': CtmSvgIcons.car,
       'color': const Color(0xFFFCE4D6),
+      'iconColor': const Color(0xFFC65911),
       'desc': '通關「車禍訴訟」課堂並答對測驗解鎖。',
     },
     {
       'name': '職場精英',
-      'icon': '💼',
+      'icon': CtmSvgIcons.briefcase,
       'color': const Color(0xFFE8F0FE),
+      'iconColor': const Color(0xFF1F4E79),
       'desc': '通關「職場權益」課堂單元解鎖。',
     },
     {
       'name': '網路先鋒',
-      'icon': '📱',
+      'icon': CtmSvgIcons.smartphone,
       'color': const Color(0xFFEAF0F8),
+      'iconColor': const Color(0xFF2F5597),
       'desc': '通關「肖像權與社群發文」課堂解鎖。',
     },
     {
       'name': '消費專家',
-      'icon': '🛍️',
+      'icon': CtmSvgIcons.shoppingBag,
       'color': const Color(0xFFFDE8E8),
+      'iconColor': const Color(0xFFC00000),
       'desc': '通關「網購退貨與消保」課堂解鎖。',
     },
     {
       'name': '擂台霸主',
-      'icon': '🏆',
+      'icon': CtmSvgIcons.trophy,
       'color': const Color(0xFFFFF0C2),
+      'iconColor': const Color(0xFF806000),
       'desc': '在「公民法律小擂台」獲得全對。',
     },
     {
       'name': '翻譯大師',
-      'icon': '🧰',
+      'icon': CtmSvgIcons.gavel,
       'color': const Color(0xFFE1F5FE),
+      'iconColor': const Color(0xFF0070C0),
       'desc': '使用過「白話文翻譯機」達 3 次。',
     },
     {
       'name': '備忘行家',
-      'icon': '💾',
+      'icon': CtmSvgIcons.save,
       'color': const Color(0xFFECEFF1),
+      'iconColor': const Color(0xFF37474F),
       'desc': '導出或儲存過一份證據準備清單。',
     },
   ];
@@ -212,7 +222,11 @@ class _AchievementRoomPageState extends State<AchievementRoomPage> {
         children: [
           Row(
             children: [
-              Icon(Icons.military_tech_rounded, color: const Color(0xFFE8B95F), size: 24.sp),
+              CtmSvgIcon(
+                CtmSvgIcons.award, 
+                color: const Color(0xFFE8B95F), 
+                size: 20.sp
+              ),
               SizedBox(width: 8.w),
               Text(
                 '榮譽法律徽章牆 (3x3)',
@@ -257,18 +271,13 @@ class _AchievementRoomPageState extends State<AchievementRoomPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // 灰階或彩色
-                      isUnlocked 
-                          ? Text(badge['icon'], style: TextStyle(fontSize: 28.sp))
-                          : ColorFiltered(
-                              colorFilter: const ColorFilter.matrix([
-                                0.2126, 0.7152, 0.0722, 0, 0,
-                                0.2126, 0.7152, 0.0722, 0, 0,
-                                0.2126, 0.7152, 0.0722, 0, 0,
-                                0,      0,      0,      1, 0,
-                              ]),
-                              child: Text(badge['icon'], style: TextStyle(fontSize: 28.sp)),
-                            ),
+                      CtmSvgIcon(
+                        badge['icon'],
+                        size: 28.sp,
+                        color: isUnlocked 
+                            ? badge['iconColor'] 
+                            : (isDark ? const Color(0xFF526273) : const Color(0xFFB0BEC5)),
+                      ),
                       SizedBox(height: 6.h),
                       Text(
                         badge['name'],
@@ -310,7 +319,11 @@ class _AchievementRoomPageState extends State<AchievementRoomPage> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
           title: Row(
             children: [
-              Text(badge['icon'], style: TextStyle(fontSize: 28.sp)),
+              CtmSvgIcon(
+                badge['icon'],
+                size: 28.sp,
+                color: isUnlocked ? badge['iconColor'] : Colors.grey,
+              ),
               SizedBox(width: 8.w),
               Text(badge['name']),
             ],
@@ -357,7 +370,11 @@ class _AchievementRoomPageState extends State<AchievementRoomPage> {
         children: [
           Row(
             children: [
-              Icon(Icons.collections_bookmark_rounded, color: HomeV2Palette.trustGreen, size: 24.sp),
+              CtmSvgIcon(
+                CtmSvgIcons.bookmark, 
+                color: HomeV2Palette.trustGreen, 
+                size: 20.sp
+              ),
               SizedBox(width: 8.w),
               Text(
                 '我的備忘錄',
@@ -373,7 +390,11 @@ class _AchievementRoomPageState extends State<AchievementRoomPage> {
           
           // 錯題本入口
           ListTile(
-            leading: Icon(Icons.menu_book_rounded, color: const Color(0xFFE88B8B), size: 22.sp),
+            leading: CtmSvgIcon(
+              CtmSvgIcons.bookOpen, 
+              color: const Color(0xFFE88B8B), 
+              size: 20.sp
+            ),
             title: Text(
               '📕 我的錯題本',
               style: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.bold),
@@ -382,14 +403,18 @@ class _AchievementRoomPageState extends State<AchievementRoomPage> {
               '目前有 ${gameState.incorrectQuestions.length} 題答錯的題目',
               style: TextStyle(fontSize: 11.sp),
             ),
-            trailing: Icon(Icons.chevron_right_rounded, size: 20.sp),
+            trailing: CtmSvgIcon(CtmSvgIcons.chevronRight, size: 16.sp, color: Colors.grey),
             onTap: () => _openIncorrectQuestions(gameState),
           ),
           const Divider(),
 
           // 證據清單入口
           ListTile(
-            leading: Icon(Icons.save_as_rounded, color: const Color(0xFF6FA8DC), size: 22.sp),
+            leading: CtmSvgIcon(
+              CtmSvgIcons.filePen, 
+              color: const Color(0xFF6FA8DC), 
+              size: 20.sp
+            ),
             title: Text(
               '💾 儲存的證據清單',
               style: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.bold),
@@ -398,7 +423,7 @@ class _AchievementRoomPageState extends State<AchievementRoomPage> {
               '目前已儲存 ${gameState.savedEvidenceLists.length} 份清單',
               style: TextStyle(fontSize: 11.sp),
             ),
-            trailing: Icon(Icons.chevron_right_rounded, size: 20.sp),
+            trailing: CtmSvgIcon(CtmSvgIcons.chevronRight, size: 16.sp, color: Colors.grey),
             onTap: () => _openSavedEvidenceLists(gameState),
           ),
         ],
@@ -450,7 +475,7 @@ class _AchievementRoomPageState extends State<AchievementRoomPage> {
                               ),
                               const Spacer(),
                               IconButton(
-                                icon: const Icon(Icons.delete_outline, color: Colors.grey),
+                                icon: CtmSvgIcon(CtmSvgIcons.xCircle, size: 18.sp, color: Colors.grey),
                                 onPressed: () {
                                   setState(() {
                                     gameState.incorrectQuestions.removeAt(index);
@@ -491,7 +516,7 @@ class _AchievementRoomPageState extends State<AchievementRoomPage> {
                           ),
                           SizedBox(height: 12.h),
                           ElevatedButton.icon(
-                            icon: const Icon(Icons.refresh_rounded),
+                            icon: CtmSvgIcon(CtmSvgIcons.clock, size: 14.sp, color: HomeV2Palette.trustGreen),
                             label: const Text('重新挑戰'),
                             onPressed: () => _rechallengeQuestion(item),
                           ),
@@ -510,7 +535,6 @@ class _AchievementRoomPageState extends State<AchievementRoomPage> {
 
   // 重新挑戰錯題
   void _rechallengeQuestion(Map<String, dynamic> incorrectItem) {
-    // 找出對應的 Quiz question
     final question = learningQuizQuestions.firstWhere(
       (q) => q.question == incorrectItem['question'],
       orElse: () => learningQuizQuestions.first,
@@ -596,10 +620,8 @@ class _AchievementRoomPageState extends State<AchievementRoomPage> {
                           isAnswered = true;
                           final pickedCorrect = question.options[tempSelectedIndex!].isCorrect;
                           if (pickedCorrect) {
-                            // 答對了！移出錯題
                             LearningGameState.instance.removeIncorrectQuestion(question.question);
                           } else {
-                            // 答錯，把當前答案更新進去
                             LearningGameState.instance.addIncorrectQuestion(
                               question.question,
                               question.options[tempSelectedIndex!].title,
@@ -677,7 +699,7 @@ class _AchievementRoomPageState extends State<AchievementRoomPage> {
                                 ),
                               ),
                               IconButton(
-                                icon: const Icon(Icons.delete_outline, color: Colors.grey),
+                                icon: CtmSvgIcon(CtmSvgIcons.xCircle, size: 18.sp, color: Colors.grey),
                                 onPressed: () {
                                   gameState.deleteEvidenceList(index);
                                 },
@@ -695,8 +717,8 @@ class _AchievementRoomPageState extends State<AchievementRoomPage> {
                               padding: EdgeInsets.symmetric(vertical: 2.h),
                               child: Row(
                                 children: [
-                                  Icon(
-                                    isChecked ? Icons.check_box_rounded : Icons.check_box_outline_blank_rounded,
+                                  CtmSvgIcon(
+                                    isChecked ? CtmSvgIcons.star : CtmSvgIcons.timeline,
                                     color: isChecked ? HomeV2Palette.trustGreen : Colors.grey,
                                     size: 18.sp,
                                   ),
@@ -722,7 +744,7 @@ class _AchievementRoomPageState extends State<AchievementRoomPage> {
                               ),
                               const Spacer(),
                               ElevatedButton.icon(
-                                icon: const Icon(Icons.share, size: 16),
+                                icon: CtmSvgIcon(CtmSvgIcons.externalLink, size: 14.sp, color: Colors.white),
                                 label: const Text('導出清單'),
                                 onPressed: () {
                                   ScaffoldMessenger.of(context).showSnackBar(

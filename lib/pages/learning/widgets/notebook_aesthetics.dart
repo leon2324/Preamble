@@ -69,14 +69,13 @@ class _GridPainter extends CustomPainter {
       canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
     }
 
-    // 畫左側紅色筆記本邊緣線
+    // 畫左側紅色筆記本邊緣線 (簡化為單一淡線，靠邊 8.w，避免佔用大量水平空間)
     final marginPaint = Paint()
-      ..color = marginColor
-      ..strokeWidth = 1.5.w;
+      ..color = isDark ? const Color(0xFF1E262F) : lineColor.withValues(alpha: 0.8)
+      ..strokeWidth = 1.w;
     
-    final double leftMargin = 32.w;
+    final double leftMargin = 8.w;
     canvas.drawLine(Offset(leftMargin, 0), Offset(leftMargin, size.height), marginPaint);
-    canvas.drawLine(Offset(leftMargin + 3.w, 0), Offset(leftMargin + 3.w, size.height), marginPaint);
   }
 
   @override
@@ -112,21 +111,17 @@ class NotebookCard extends StatelessWidget {
     final defaultBg = isDark ? const Color(0xFF161C23) : Colors.white;
     final cardColor = backgroundColor ?? defaultBg;
 
-    Widget cardContent = Container(
-      padding: padding ?? EdgeInsets.all(16.w),
+    // 簡化為極簡紙片卡片，移除過度裝飾以釋放寬度與高度空間
+    return Container(
+      margin: margin ?? EdgeInsets.only(bottom: 12.h),
       decoration: BoxDecoration(
         color: cardColor,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.07),
-            blurRadius: 12,
-            offset: const Offset(0, 5),
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
-            blurRadius: 2,
-            offset: const Offset(0, 1),
+            color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
           ),
         ],
         border: Border.all(
@@ -134,55 +129,12 @@ class NotebookCard extends StatelessWidget {
           width: 1.w,
         ),
       ),
-      child: child,
-    );
-
-    // 套用裝飾
-    return Container(
-      margin: margin ?? EdgeInsets.only(bottom: 16.h),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          cardContent,
-          // 迴紋針裝飾
-          if (hasPaperClip)
-            Positioned(
-              top: -8.h,
-              right: 20.w,
-              child: CustomPaint(
-                size: Size(18.w, 36.h),
-                painter: _PaperClipPainter(isDark: isDark),
-              ),
-            ),
-          // 書籤裝飾
-          if (hasBookmark)
-            Positioned(
-              top: -2.h,
-              left: 24.w,
-              child: CustomPaint(
-                size: Size(16.w, 24.h),
-                painter: _BookmarkPainter(
-                  color: bookmarkColor ?? const Color(0xFFE88B8B),
-                ),
-              ),
-            ),
-          // 活頁線圈裝飾
-          if (hasBinderRings)
-            Positioned(
-              left: -8.w,
-              top: 0,
-              bottom: 0,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: List.generate(4, (_) {
-                  return CustomPaint(
-                    size: Size(18.w, 16.h),
-                    painter: _BinderRingPainter(isDark: isDark),
-                  );
-                }),
-              ),
-            ),
-        ],
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12.r),
+        child: Padding(
+          padding: padding ?? EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+          child: child,
+        ),
       ),
     );
   }
