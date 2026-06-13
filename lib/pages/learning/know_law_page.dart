@@ -37,8 +37,56 @@ class KnowLawPage extends StatefulWidget {
 }
 
 class KnowLawPageState extends State<KnowLawPage> {
-  static const String _rentCourseHeroAsset =
-      'assets/images/learning/rent_course_room.png';
+  String _activeTopic = '租屋糾紛';
+
+  String _getHeroAsset(String topicTitle) {
+    switch (topicTitle) {
+      case '車禍事故':
+        return 'assets/images/learning/car_course_room.png';
+      case '職場權益':
+        return 'assets/images/learning/work_course_room.png';
+      case '網購消費':
+        return 'assets/images/learning/consumer_course_room.png';
+      case '個資隱私':
+        return 'assets/images/learning/privacy_course_room.png';
+      case '租屋糾紛':
+      default:
+        return 'assets/images/learning/rent_course_room.png';
+    }
+  }
+
+  String _getTopicBadgeText(String topicTitle) {
+    switch (topicTitle) {
+      case '車禍事故':
+        return '道路安全必備';
+      case '職場權益':
+        return '勞資權益保障';
+      case '網購消費':
+        return '網購消保常識';
+      case '個資隱私':
+        return '資訊安全防護';
+      case '租屋糾紛':
+      default:
+        return '租屋生活必修';
+    }
+  }
+
+  String _getTopicTip(String topicTitle) {
+    switch (topicTitle) {
+      case '車禍事故':
+        return '遇到事故鑑定與折舊問題時，可以到「生活工具箱」使用工具來協助計算或準備。';
+      case '職場權益':
+        return '了解加班與勞退爭議後，可以到「生活工具箱」查閱常用法規與調解文件。';
+      case '網購消費':
+        return '發生七天鑑賞期與退貨爭議時，可以使用「生活工具箱」準備存證信函範本。';
+      case '個資隱私':
+        return '面臨個資洩露或網路詐騙時，可以使用「生活工具箱」查詢權益自保步驟。';
+      case '租屋糾紛':
+      default:
+        return '學到點交與修繕時，可以到「生活工具箱」整理租屋證據清單。';
+    }
+  }
+
   static const List<_LearningTopicOption> _featuredTopics = [
     _LearningTopicOption('租屋糾紛', '主修中', true),
     _LearningTopicOption('車禍事故', '看全部', false),
@@ -316,11 +364,12 @@ class KnowLawPageState extends State<KnowLawPage> {
 
   // 3) 法學課堂的列表項目
   List<Widget> _buildClassroomItems(bool isDark, LearningGameState gameState) {
-    final rentUnits = learningTopic.units.take(4).toList(growable: false);
+    final currentTopic = featuredLearningTopics[_activeTopic] ?? learningTopic;
+    final rentUnits = currentTopic.units;
     final completedRentCount = rentUnits
         .where((unit) => gameState.completedSteps.contains(unit.stepLabel))
         .length;
-    final rentProgress = completedRentCount / rentUnits.length;
+    final rentProgress = rentUnits.isEmpty ? 0.0 : completedRentCount / rentUnits.length;
 
     return [
       // 1. 公民法律小擂台入口 Banner
@@ -399,6 +448,7 @@ class KnowLawPageState extends State<KnowLawPage> {
         rentUnits: rentUnits,
         completedRentCount: completedRentCount,
         rentProgress: rentProgress,
+        topicData: currentTopic,
       ),
 
       // 3. 混合排列的卡片：插圖故事卡片
@@ -653,13 +703,14 @@ class KnowLawPageState extends State<KnowLawPage> {
   }
 
   Widget _buildTopicChip(_LearningTopicOption topic, bool isDark) {
-    final isSelected = topic.isAvailable;
+    final isSelected = topic.title == _activeTopic;
+    final badgeText = topic.title == _activeTopic ? '主修中' : '選修';
     return GestureDetector(
       onTap: () {
-        if (topic.title == '租屋糾紛') {
-          // 租屋糾紛是主修課，點擊不執行動作（直接由下方的主修卡片開啟）
-        } else {
-          _openLearningTopicCatalog(initialCategory: topic.title);
+        if (_activeTopic != topic.title) {
+          setState(() {
+            _activeTopic = topic.title;
+          });
         }
       },
       child: Container(
@@ -689,7 +740,7 @@ class KnowLawPageState extends State<KnowLawPage> {
             ),
             SizedBox(width: 6.w),
             Text(
-              topic.badge,
+              badgeText,
               style: TextStyle(
                 fontSize: 9.5.sp,
                 fontWeight: FontWeight.w800,
@@ -711,6 +762,7 @@ class KnowLawPageState extends State<KnowLawPage> {
     required List<LearningTopicUnit> rentUnits,
     required int completedRentCount,
     required double rentProgress,
+    required LearningTopicData topicData,
   }) {
     final cardColor = isDark ? const Color(0xFF161C23) : Colors.white;
     final nextUnit = rentUnits.firstWhere(
@@ -723,6 +775,8 @@ class KnowLawPageState extends State<KnowLawPage> {
         : completedRentCount == 0
             ? '開始學習'
             : '繼續學習';
+
+    final heroAsset = _getHeroAsset(_activeTopic);
 
     return NotebookCard(
       hasBinderRings: true,
@@ -737,7 +791,7 @@ class KnowLawPageState extends State<KnowLawPage> {
               fit: StackFit.expand,
               children: [
                 Image.asset(
-                  _rentCourseHeroAsset,
+                  heroAsset,
                   fit: BoxFit.cover,
                 ),
                 // 台灣繁體中文教學註解：
@@ -763,7 +817,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                         child: Transform.scale(
                           scale: 1.03,
                           child: Image.asset(
-                            _rentCourseHeroAsset,
+                            heroAsset,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -791,7 +845,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                         child: Transform.scale(
                           scale: 1.08,
                           child: Image.asset(
-                            _rentCourseHeroAsset,
+                            heroAsset,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -827,7 +881,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                       SizedBox(width: 8.w),
                       _buildCourseBadge('${rentUnits.length} 個單元', isDark),
                       const Spacer(),
-                      _buildCourseBadge('租屋生活必修', isDark),
+                      _buildCourseBadge(_getTopicBadgeText(_activeTopic), isDark),
                     ],
                   ),
                 ),
@@ -842,7 +896,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '租屋糾紛怎麼看懂',
+                        topicData.title,
                         style: TextStyle(
                           fontSize: 21.sp,
                           height: 1.18,
@@ -865,7 +919,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                       ),
                       SizedBox(height: 6.h),
                       Text(
-                        '學完後，你會知道押金能不能扣、提前解約怎麼判斷、點交證據怎麼留。',
+                        topicData.reasonToLearn,
                         style: TextStyle(
                           fontSize: 12.sp,
                           height: 1.45,
@@ -1009,7 +1063,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                     ),
                   ),
                   child: Text(
-                    '學到點交與修繕時，可以到「生活工具箱」整理租屋證據清單。',
+                    _getTopicTip(_activeTopic),
                     style: TextStyle(
                       fontSize: 11.5.sp,
                       height: 1.35,
@@ -2043,7 +2097,7 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
                                 crossAxisCount: 2,
                                 mainAxisSpacing: 10.h,
                                 crossAxisSpacing: 10.w,
-                                childAspectRatio: 0.88,
+                                childAspectRatio: 1.06,
                               ),
                               delegate: SliverChildBuilderDelegate(
                                 (context, index) {
@@ -2141,21 +2195,26 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
                                                   ),
                                                 ),
                                               ),
+                                              const Spacer(),
+                                              if (LearningGameState.instance.savedArticles.contains(article.title))
+                                                CtmSvgIcon(
+                                                  CtmSvgIcons.bookmark,
+                                                  size: 11.sp,
+                                                  color: const Color(0xFFE8B95F),
+                                                ),
                                             ],
                                           ),
                                           SizedBox(height: 8.h),
-                                          Expanded(
-                                            child: Text(
-                                              article.title,
-                                              style: TextStyle(
-                                                fontSize: 12.5.sp,
-                                                fontWeight: FontWeight.w900,
-                                                color: textColor,
-                                                height: 1.3,
-                                              ),
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
+                                          Text(
+                                            article.title,
+                                            style: TextStyle(
+                                              fontSize: 12.5.sp,
+                                              fontWeight: FontWeight.w900,
+                                              color: textColor,
+                                              height: 1.3,
                                             ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                           SizedBox(height: 6.h),
                                           Text(
@@ -2168,7 +2227,7 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
                                           ),
-                                          SizedBox(height: 8.h),
+                                          const Spacer(),
                                           Row(
                                             children: [
                                               CtmSvgIcon(
@@ -2182,6 +2241,15 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
                                                 style: TextStyle(
                                                   fontSize: 9.5.sp,
                                                   color: widget.isDark ? Colors.white38 : Colors.grey,
+                                                ),
+                                              ),
+                                              const Spacer(),
+                                              Text(
+                                                '★' * ((article.title.length % 3) + 1) + '☆' * (3 - ((article.title.length % 3) + 1)),
+                                                style: TextStyle(
+                                                  fontSize: 10.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: const Color(0xFFE8B95F),
                                                 ),
                                               ),
                                             ],
