@@ -79,34 +79,43 @@ class OnThisDayCalendarSheet extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(height: 10.h),
-                        Text(
-                          '$year',
-                          style: TextStyle(
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.w900,
-                            color: const Color(0xFF6A5842),
-                            letterSpacing: 1.2,
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            '$year',
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w900,
+                              color: const Color(0xFF6A5842),
+                              letterSpacing: 1.2,
+                            ),
                           ),
                         ),
                         const Spacer(),
-                        Text(
-                          monthDay,
-                          style: TextStyle(
-                            fontSize: 24.sp,
-                            height: 1.0,
-                            fontWeight: FontWeight.w900,
-                            color: OnThisDayColors.primaryGreen,
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            monthDay,
+                            style: TextStyle(
+                              fontSize: 24.sp,
+                              height: 1.0,
+                              fontWeight: FontWeight.w900,
+                              color: OnThisDayColors.primaryGreen,
+                            ),
                           ),
                         ),
                         const Spacer(),
-                        Text(
-                          location,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 9.sp,
-                            fontWeight: FontWeight.w800,
-                            color: const Color(0xFF6A5842),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            location,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 9.sp,
+                              fontWeight: FontWeight.w800,
+                              color: const Color(0xFF6A5842),
+                            ),
                           ),
                         ),
                         SizedBox(height: 4.h),

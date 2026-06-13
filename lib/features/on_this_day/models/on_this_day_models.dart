@@ -88,3 +88,16 @@ class OnThisDaySource {
   final String url;
   final String updatedAt;
 }
+
+class OnThisDayLegalQuote {
+  const OnThisDayLegalQuote({
+    required this.quote,
+    required this.author,
+    required this.reflectiveQuestion,
+  });
+
+  final String quote;
+  final String author;
+  final String reflectiveQuestion;
+}
+

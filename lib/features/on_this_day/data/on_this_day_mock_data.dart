@@ -625,3 +625,37 @@ OnThisDayCase? onThisDayCaseById(String id) {
 List<OnThisDayCase> onThisDayCasesForDate(int month, int day) {
   return onThisDayCases.where((c) => c.month == month && c.day == day).toList();
 }
+
+const List<OnThisDayLegalQuote> onThisDayLegalQuotes = [
+  OnThisDayLegalQuote(
+    quote: '法律的生命不在於邏輯，而在於經驗。',
+    author: '奧利弗·溫德爾·霍姆斯',
+    reflectiveQuestion: '你認為在判決中，法官應該更看重邏輯推理還是社會現實？',
+  ),
+  OnThisDayLegalQuote(
+    quote: '正義不僅要實現，而且要以看得見的方式實現。',
+    author: '戈登·休厄特',
+    reflectiveQuestion: '當法庭審判過程不透明時，即使結果正確，公眾還會相信正義嗎？',
+  ),
+  OnThisDayLegalQuote(
+    quote: '法律如果推不開特權的門，也擋不住暴力的風。',
+    author: '梁啟超',
+    reflectiveQuestion: '在威權體制或特權面前，法律如何能保持其尊嚴與公正？',
+  ),
+  OnThisDayLegalQuote(
+    quote: '在民主國家，法律就是國王；在專制國家，國王就是法律。',
+    author: '湯瑪斯·潘恩',
+    reflectiveQuestion: '我們如何防範擁有權力的人將自己的意志凌駕於法律之上？',
+  ),
+  OnThisDayLegalQuote(
+    quote: '一個不公正的法律根本就不是法律。',
+    author: '聖奧古斯丁',
+    reflectiveQuestion: '當法律與社會的道德正義發生嚴重衝突時，公民該如何面對？',
+  ),
+  OnThisDayLegalQuote(
+    quote: '法律應當與正義同行，否則它只是有組織的暴力。',
+    author: '古斯塔夫·拉德布魯赫',
+    reflectiveQuestion: '當惡法被制定並執行時，司法人員應當選擇恪守條文還是拒絕執行？',
+  ),
+];
+

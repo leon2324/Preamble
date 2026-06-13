@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +13,8 @@ import 'package:lawapp/features/case_time_machine/pages/case_library_hall_select
 import 'package:lawapp/features/case_time_machine/pages/case_netizen_chat_room_page.dart';
 import 'package:lawapp/features/case_time_machine/pages/case_time_machine_search_page.dart';
 import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
-import 'package:lawapp/features/case_time_machine/widgets/case_library_active_case_card.dart';
-import 'package:lawapp/features/case_time_machine/widgets/case_library_category_exploration.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_scaffold.dart';
 import 'package:lawapp/features/case_time_machine/data/case_time_machine_repository.dart';
-import 'package:lawapp/features/case_time_machine/widgets/immersive_bookshelf.dart';
 
 // 台灣繁體中文教學註解：
 // 定義導覽圖示的 SVG 字串。
@@ -72,7 +70,6 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
   // 書架精選案件清單，由原本的寫死 ID 改為動態拉取 Supabase。
   List<CaseBook> _heroBooks = [];
   bool _heroLoading = true;
-  int _heroIndex = 0;
 
   // 台灣繁體中文教學註解：討論室數據，跨頁面共享
   final Map<String, List<int>> _caseVotes = {
@@ -246,76 +243,93 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
                 child: ListView(
                   padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 40.h),
                   children: [
-                    // 1. 搜尋引擎入口區塊 (為 10 萬案件引流)
-                    _buildSearchEngineSection(context),
+                    // 熱搜跑馬燈條
+                    Container(
+                      height: 32.h,
+                      margin: EdgeInsets.only(bottom: 16.h),
+                      padding: EdgeInsets.symmetric(horizontal: 12.w),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF7F5F0),
+                        borderRadius: BorderRadius.circular(20.r),
+                        border: Border.all(
+                          color: CaseTimeMachineColors.borderLight,
+                          width: 0.8,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.trending_up_rounded,
+                            size: 14.sp,
+                            color: CaseTimeMachineColors.accentGold,
+                          ),
+                          SizedBox(width: 8.w),
+                          Expanded(
+                            child: _HotSearchMarquee(
+                              queries: const ['318 太陽花', '釋字 799 號', '幼兒園案', '集會自由', '車禍過失'],
+                              onTap: (q) {
+                                Navigator.of(context).push(
+                                  CupertinoPageRoute<void>(
+                                    builder: (__) => CaseTimeMachineSearchPage(initialQuery: q),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
 
-                    // 2. 3D 沉浸式書架區塊
+                    // 1. 矚目大案聚焦 (3D 疊加縮放輪播)
                     _heroLoading
-                        ? const Center(
-                            child: CupertinoActivityIndicator(
-                              radius: 14,
-                              color: CaseTimeMachineColors.primaryGreen,
+                        ? SizedBox(
+                            height: 180.h,
+                            child: const Center(
+                              child: CupertinoActivityIndicator(
+                                radius: 14,
+                                color: CaseTimeMachineColors.primaryGreen,
+                              ),
                             ),
                           )
                         : Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ImmersiveBookshelf(
-                                books: _heroBooks,
-                                compact: true,
-                                onBookTap: (book) {
-                                  setState(() {
-                                    _heroIndex = _heroBooks.indexOf(book);
-                                  });
-                                },
+                              Text(
+                                '矚目大案聚焦',
+                                style: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.w900,
+                                  color: CaseTimeMachineColors.primaryGreen,
+                                ),
                               ),
-                              SizedBox(height: 16.h),
-                              // 顯示當前「抽出來的案件之書」的詳細資訊卡與入口
-                              if (_heroBooks.isNotEmpty && _heroIndex < _heroBooks.length) ...[
-                                Text(
-                                  '已抽出案件之書：',
-                                  style: TextStyle(
-                                    fontSize: 11.5.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: CaseTimeMachineColors.primaryGreen,
-                                  ),
-                                ),
-                                SizedBox(height: 8.h),
-                                CaseLibraryHeroCard(
-                                  book: _heroBooks[_heroIndex],
-                                  discussionCount: _discussionCounts[_heroBooks[_heroIndex].id] ??
-                                      (_heroBooks[_heroIndex].id.hashCode % 80 + 10).abs(),
-                                  hasActiveVote: _hasVoteIds.contains(_heroBooks[_heroIndex].id) ||
-                                      (_heroBooks[_heroIndex].id.hashCode % 3 == 0),
-                                  onReadDossierTap: () =>
-                                      _openCaseDetail(context, _heroBooks[_heroIndex]),
-                                  onJoinDiscussionTap: () =>
-                                      _openChatRoom(context, _heroBooks[_heroIndex]),
-                                ),
-                              ],
+                              SizedBox(height: 12.h),
+                              _ThreeDStackedCarousel(
+                                books: _heroBooks,
+                                onBookTap: (book) => _openCaseDetail(context, book),
+                                onChatTap: (book) => _openChatRoom(context, book),
+                              ),
                             ],
                           ),
 
+                    SizedBox(height: 16.h),
 
-                    SizedBox(height: 24.h),
-
-                    // 4. 圖書館分館探索區塊
-                    CaseLibraryCategoryExploration(
-                      onOpenHall: (hallId) => _openHall(context, hallId),
-                      onViewAllTap: () => _openSelection(context),
-                    ),
-
-                    SizedBox(height: 24.h),
-
-                    // 5. 檢索館藏目錄格線區塊 (年代 / 議題 / 法院 / 網友思辨)
+                    // 2. 檢索館藏目錄格線區塊 (年代 / 議題 / 法院 / 網友思辨)
                     _buildDirectoryCards(context),
 
-                    SizedBox(height: 28.h),
+                    SizedBox(height: 24.h),
 
-                    // 6. 熱門思辨案例 - 本地 SQLite 異步分頁加載饋送 (Infinite Scroll Feed)
-                    _FactualCaseFeed(
-                      onCaseTap: (book) => _openCaseDetail(context, book),
-                    ),
+                    // 2.5 館長今日推薦 (Curated Bookcase)
+                    _buildCuratedBookcase(context),
+
+                    SizedBox(height: 24.h),
+
+                    // 3. 重大焦點案卷 (取代原本普通小案 feed)
+                    _heroLoading
+                        ? const Center(child: CupertinoActivityIndicator())
+                        : _LandmarkSpotlights(
+                            books: _heroBooks,
+                            onCaseTap: (book) => _openCaseDetail(context, book),
+                          ),
                   ],
                 ),
               ),
@@ -326,56 +340,63 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
     );
   }
 
-  // 全局搜尋引擎 Banner 區塊
-  Widget _buildSearchEngineSection(BuildContext context) {
-    return GestureDetector(
-      onTap: () => _openSearch(context),
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-        margin: EdgeInsets.only(bottom: 20.h),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14.r),
-          border: Border.all(color: const Color(0xFFE6E2D8)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Icon(Icons.search_rounded, color: CaseTimeMachineColors.morandiGreen, size: 20.w),
-            SizedBox(width: 12.w),
-            Text(
-              '搜尋 10 萬件真實裁判與法理案卷...',
-              style: TextStyle(
-                fontSize: 12.5.sp,
-                color: CaseTimeMachineColors.textMuted,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   // 檢索館藏目錄導覽卡
   Widget _buildDirectoryCards(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '檢索館藏目錄',
-          style: TextStyle(
-            fontSize: 15.sp,
-            fontWeight: FontWeight.w900,
-            color: CaseTimeMachineColors.primaryGreen,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '檢索館藏目錄',
+              style: TextStyle(
+                fontSize: 15.sp,
+                fontWeight: FontWeight.w900,
+                color: CaseTimeMachineColors.primaryGreen,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                if (_heroBooks.isNotEmpty) {
+                  final listCopy = List<CaseBook>.from(_heroBooks);
+                  listCopy.shuffle();
+                  _openCaseDetail(context, listCopy.first);
+                }
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF7F5F0),
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(
+                    color: CaseTimeMachineColors.accentGold.withValues(alpha: 0.3),
+                    width: 0.8,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.casino_outlined,
+                      size: 13.w,
+                      color: CaseTimeMachineColors.accentGold,
+                    ),
+                    SizedBox(width: 4.w),
+                    Text(
+                      '隨機選書',
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.w900,
+                        color: CaseTimeMachineColors.accentGold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
         SizedBox(height: 12.h),
         Row(
@@ -383,7 +404,7 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
             Expanded(
               child: _DirectoryCard(
                 title: '年代紀元',
-                subtitle: '歷年司法軌跡',
+                subtitle: '收錄 1950 至今歷年人權與法治軌跡',
                 icon: Icons.history_toggle_off_rounded,
                 color: CaseTimeMachineColors.morandiBlue,
                 onTap: () => _openHall(context, 'timeline'),
@@ -393,7 +414,7 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
             Expanded(
               child: _DirectoryCard(
                 title: '法律議題',
-                subtitle: '民刑與憲政爭議',
+                subtitle: '聚焦車禍、租屋、解雇等 8 大核心爭議',
                 icon: Icons.gavel_rounded,
                 color: CaseTimeMachineColors.morandiGreen,
                 onTap: () => _openHall(context, 'theme'),
@@ -407,7 +428,7 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
             Expanded(
               child: _DirectoryCard(
                 title: '法院層級',
-                subtitle: '審級裁判體系',
+                subtitle: '橫跨地院至最高法院裁判',
                 icon: Icons.account_balance_rounded,
                 color: CaseTimeMachineColors.morandiGold,
                 onTap: () => _openHall(context, 'classic'),
@@ -417,13 +438,50 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
             Expanded(
               child: _DirectoryCard(
                 title: '思辨討論',
-                subtitle: '與網友法庭對質',
+                subtitle: '參與觀點對質，投下關鍵票',
                 icon: Icons.forum_rounded,
                 color: CaseTimeMachineColors.morandiLavender,
                 onTap: () => _openSelection(context),
               ),
             ),
           ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCuratedBookcase(BuildContext context) {
+    if (_heroBooks.isEmpty) return const SizedBox.shrink();
+
+    // 取 4 筆不同的案件作為館長今日推薦（過濾掉 318 學運，讓其他大案露臉）
+    final curatedBooks = _heroBooks.where((b) => b.id != '318').take(4).toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '館長今日推薦',
+          style: TextStyle(
+            fontSize: 15.sp,
+            fontWeight: FontWeight.w900,
+            color: CaseTimeMachineColors.primaryGreen,
+          ),
+        ),
+        SizedBox(height: 12.h),
+        SizedBox(
+          height: 145.h,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            itemCount: curatedBooks.length,
+            itemBuilder: (context, index) {
+              final book = curatedBooks[index];
+              return _CuratedBookCard(
+                book: book,
+                onTap: () => _openCaseDetail(context, book),
+              );
+            },
+          ),
         ),
       ],
     );
@@ -487,8 +545,11 @@ class _DirectoryCard extends StatelessWidget {
             SizedBox(height: 2.h),
             Text(
               subtitle,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                fontSize: 10.sp,
+                fontSize: 9.5.sp,
+                height: 1.35,
                 color: CaseTimeMachineColors.textMuted,
                 fontWeight: FontWeight.w500,
               ),
@@ -500,194 +561,672 @@ class _DirectoryCard extends StatelessWidget {
   }
 }
 
-// 本地 SQLite 異步分頁 Feed
-class _FactualCaseFeed extends StatefulWidget {
-  const _FactualCaseFeed({required this.onCaseTap});
-  final Function(CaseBook) onCaseTap;
+class _HotSearchMarquee extends StatefulWidget {
+  const _HotSearchMarquee({required this.queries, required this.onTap});
+  final List<String> queries;
+  final ValueChanged<String> onTap;
 
   @override
-  State<_FactualCaseFeed> createState() => _FactualCaseFeedState();
+  State<_HotSearchMarquee> createState() => _HotSearchMarqueeState();
 }
 
-class _FactualCaseFeedState extends State<_FactualCaseFeed> {
-  final List<CaseBook> _loadedCases = [];
-  int _offset = 0;
-  bool _loading = false;
-  bool _hasMore = true;
-  final int _limit = 10;
+class _HotSearchMarqueeState extends State<_HotSearchMarquee> {
+  int _currentIndex = 0;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    _loadMore();
-  }
-
-  Future<void> _loadMore() async {
-    if (_loading || !_hasMore) return;
-    if (mounted) setState(() => _loading = true);
-
-    try {
-      final newCases = await CaseTimeMachineRepository.instance.getCasesPaginated(_limit, _offset);
-      if (newCases.length < _limit) {
-        _hasMore = false;
-      }
+    _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
       if (mounted) {
         setState(() {
-          _loadedCases.addAll(newCases);
-          _offset += newCases.length;
+          _currentIndex = (_currentIndex + 1) % widget.queries.length;
         });
       }
-    } catch (e) {
-      print('Error loading paginated cases: $e');
-    } finally {
-      if (mounted) {
-        setState(() => _loading = false);
-      }
-    }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '熱門思辨案例',
-              style: TextStyle(
-                fontSize: 15.sp,
-                fontWeight: FontWeight.w900,
-                color: CaseTimeMachineColors.primaryGreen,
+    if (widget.queries.isEmpty) return const SizedBox.shrink();
+    final query = widget.queries[_currentIndex];
+    return GestureDetector(
+      onTap: () => widget.onTap(query),
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 500),
+        transitionBuilder: (child, animation) {
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(
+              position: animation.drive(
+                Tween<Offset>(
+                  begin: const Offset(0, 0.3),
+                  end: Offset.zero,
+                ).chain(CurveTween(curve: Curves.easeOut)),
               ),
+              child: child,
             ),
-            Text(
-              '已加載 ${_loadedCases.length} 案',
-              style: TextStyle(
-                fontSize: 11.sp,
-                color: CaseTimeMachineColors.textMuted,
-                fontWeight: FontWeight.w600,
-              ),
+          );
+        },
+        child: Text(
+          '熱搜：$query',
+          key: ValueKey<String>(query),
+          style: TextStyle(
+            fontSize: 10.5.sp,
+            color: CaseTimeMachineColors.primaryGreen,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _CuratedBookCard extends StatelessWidget {
+  const _CuratedBookCard({required this.book, required this.onTap});
+  final CaseBook book;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final accentColor = _getCategoryColor(book.category);
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 140.w,
+        margin: EdgeInsets.only(right: 12.w, bottom: 4.h),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 6.r,
+              offset: const Offset(0, 3),
             ),
           ],
+          border: Border.all(
+            color: CaseTimeMachineColors.borderLight,
+            width: 0.8,
+          ),
         ),
-        SizedBox(height: 12.h),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: _loadedCases.length + (_hasMore ? 1 : 0),
-          itemBuilder: (context, index) {
-            if (index == _loadedCases.length) {
-              return Padding(
-                padding: EdgeInsets.symmetric(vertical: 12.h),
-                child: Center(
-                  child: _loading
-                      ? const CupertinoActivityIndicator()
-                      : TextButton(
-                          onPressed: _loadMore,
-                          child: Text(
-                            '點擊加載更多案例...',
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              color: CaseTimeMachineColors.morandiGreen,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12.r),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 48.h,
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      accentColor,
+                      accentColor.withValues(alpha: 0.75),
+                    ],
+                  ),
                 ),
-              );
-            }
-
-            final book = _loadedCases[index];
-            return Container(
-              margin: EdgeInsets.only(bottom: 12.h),
-              padding: EdgeInsets.all(14.w),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(14.r),
-                border: Border.all(color: const Color(0xFFE6E2D8)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(3.r),
+                      ),
+                      child: Text(
+                        book.category,
+                        style: TextStyle(
+                          fontSize: 8.sp,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '${book.year}',
+                      style: TextStyle(
+                        fontSize: 9.sp,
+                        color: Colors.white.withValues(alpha: 0.9),
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              child: Row(
-                children: [
-                  Expanded(
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.all(10.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        book.titleZh,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          height: 1.3,
+                          fontWeight: FontWeight.w900,
+                          color: const Color(0xFF1B3F38),
+                        ),
+                      ),
+                      Text(
+                        book.oneSentenceSummary,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 8.5.sp,
+                          height: 1.3,
+                          color: CaseTimeMachineColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Color _getCategoryColor(String cat) {
+    const map = {
+      '車禍賠償': Color(0xFF4A7C8C),
+      '借款返還': Color(0xFF6D649A),
+      '租屋糾紛': Color(0xFF8C4A5A),
+      '給付價金': Color(0xFF357A53),
+      '不當解雇': Color(0xFF9E7B2D),
+      '離婚親權': Color(0xFF8C5C4A),
+      '竊盜': Color(0xFF5C5C45),
+      '傷害': Color(0xFF7A3535),
+    };
+    return map[cat] ?? CaseTimeMachineColors.primaryGreen;
+  }
+}
+
+class _ThreeDStackedCarousel extends StatefulWidget {
+  const _ThreeDStackedCarousel({
+    required this.books,
+    required this.onBookTap,
+    required this.onChatTap,
+  });
+
+  final List<CaseBook> books;
+  final ValueChanged<CaseBook> onBookTap;
+  final ValueChanged<CaseBook> onChatTap;
+
+  @override
+  State<_ThreeDStackedCarousel> createState() => _ThreeDStackedCarouselState();
+}
+
+class _ThreeDStackedCarouselState extends State<_ThreeDStackedCarousel> {
+  late PageController _pageController;
+  double _currentPage = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(viewportFraction: 0.82);
+    _pageController.addListener(() {
+      if (mounted) {
+        setState(() {
+          _currentPage = _pageController.page ?? 0.0;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  String _getUnsplashImageUrl(String category, String id) {
+    const images = {
+      '車禍賠償': 'https://images.unsplash.com/photo-1518364538800-6bcb3f25da49?q=80&w=400&auto=format&fit=crop',
+      '借款返還': 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=400&auto=format&fit=crop',
+      '租屋糾紛': 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=400&auto=format&fit=crop',
+      '給付價金': 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=400&auto=format&fit=crop',
+      '不當解雇': 'https://images.unsplash.com/photo-1521791136368-1a869372658b?q=80&w=400&auto=format&fit=crop',
+      '離婚親權': 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=400&auto=format&fit=crop',
+      '竊盜': 'https://images.unsplash.com/photo-1508962914676-134849a727f0?q=80&w=400&auto=format&fit=crop',
+      '傷害': 'https://images.unsplash.com/photo-1505664194779-8beaceb93744?q=80&w=400&auto=format&fit=crop',
+    };
+    
+    if (id == '318') {
+      return 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=400&auto=format&fit=crop';
+    }
+    if (id == '799') {
+      return 'https://images.unsplash.com/photo-1450133064473-71024230f91b?q=80&w=400&auto=format&fit=crop';
+    }
+
+    return images[category] ?? 'https://images.unsplash.com/photo-1447069387593-a5de0862481e?q=80&w=400&auto=format&fit=crop';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.books.isEmpty) return const SizedBox.shrink();
+    final cardWidth = MediaQuery.of(context).size.width * 0.82;
+
+    return SizedBox(
+      height: cardWidth + 12.h,
+      child: PageView.builder(
+        controller: _pageController,
+        physics: const BouncingScrollPhysics(),
+        itemCount: widget.books.length,
+        itemBuilder: (context, index) {
+          final book = widget.books[index];
+          
+          final difference = (index - _currentPage);
+          final scale = (1 - (difference.abs() * 0.08)).clamp(0.88, 1.0);
+          final opacity = (1 - (difference.abs() * 0.35)).clamp(0.6, 1.0);
+
+          return Transform.scale(
+            scale: scale,
+            child: Opacity(
+              opacity: opacity,
+              child: _buildCarouselCard(book, cardWidth),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildCarouselCard(CaseBook book, double cardWidth) {
+    final discussionCount = (book.id.hashCode % 80 + 10).abs();
+    final hasActiveVote = book.id == '318' || book.id == '799' || book.id == '103' || book.id == '101';
+    final accentColor = _getCategoryColor(book.category);
+    final bgImageUrl = _getUnsplashImageUrl(book.category, book.id);
+
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 6.h, horizontal: 4.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 12.r,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16.r),
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Image.network(
+                bgImageUrl,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset(
+                    'assets/images/case_time_machine_v2/ctm_v2_case_book_cover.png',
+                    fit: BoxFit.cover,
+                  );
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Image.asset(
+                    'assets/images/case_time_machine_v2/ctm_v2_case_book_cover.png',
+                    fit: BoxFit.cover,
+                  );
+                },
+              ),
+            ),
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withValues(alpha: 0.2),
+                      Colors.transparent,
+                      Colors.transparent,
+                    ],
+                    stops: const [0.0, 0.4, 1.0],
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: cardWidth * 0.46,
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(16.r),
+                  bottomRight: Radius.circular(16.r),
+                ),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                  child: Container(
+                    color: Colors.white.withValues(alpha: 0.72),
+                    padding: EdgeInsets.fromLTRB(14.w, 10.h, 14.w, 10.h),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                              padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 2.h),
                               decoration: BoxDecoration(
-                                color: CaseTimeMachineColors.morandiGreen.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(6.r),
+                                color: accentColor.withValues(alpha: 0.15),
+                                borderRadius: BorderRadius.circular(4.r),
                               ),
                               child: Text(
                                 book.category,
                                 style: TextStyle(
-                                  fontSize: 9.sp,
-                                  color: CaseTimeMachineColors.morandiGreen,
+                                  fontSize: 8.5.sp,
                                   fontWeight: FontWeight.bold,
+                                  color: accentColor,
                                 ),
                               ),
                             ),
-                            SizedBox(width: 8.w),
                             Text(
                               '${book.year} 年',
                               style: TextStyle(
                                 fontSize: 10.sp,
-                                color: CaseTimeMachineColors.textMuted,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.bold,
+                                color: CaseTimeMachineColors.accentGold,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 8.h),
                         Text(
                           book.titleZh,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 13.5.sp,
-                            fontWeight: FontWeight.w800,
-                            color: const Color(0xFF1C3A27),
+                            fontWeight: FontWeight.w900,
+                            color: const Color(0xFF1B3F38),
                           ),
                         ),
-                        SizedBox(height: 4.h),
                         Text(
-                          book.shortDescription,
+                          book.oneSentenceSummary,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            fontSize: 11.sp,
+                            fontSize: 10.sp,
+                            height: 1.35,
+                            fontWeight: FontWeight.w500,
                             color: CaseTimeMachineColors.textSecondary,
-                            height: 1.4,
                           ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () => widget.onChatTap(book),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                                decoration: BoxDecoration(
+                                  color: accentColor.withValues(alpha: 0.08),
+                                  borderRadius: BorderRadius.circular(6.r),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.forum_outlined,
+                                      size: 11.sp,
+                                      color: accentColor,
+                                    ),
+                                    SizedBox(width: 4.w),
+                                    Text(
+                                      '$discussionCount 討論',
+                                      style: TextStyle(
+                                        fontSize: 9.sp,
+                                        fontWeight: FontWeight.bold,
+                                        color: accentColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (hasActiveVote) ...[
+                                  GestureDetector(
+                                    onTap: () => widget.onChatTap(book),
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFFAF6EE),
+                                        borderRadius: BorderRadius.circular(6.r),
+                                        border: Border.all(
+                                          color: CaseTimeMachineColors.accentGold.withValues(alpha: 0.35),
+                                          width: 0.8,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        '投票',
+                                        style: TextStyle(
+                                          fontSize: 9.5.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: CaseTimeMachineColors.accentGold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 6.w),
+                                ],
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: CaseTimeMachineColors.primaryGreen,
+                                    foregroundColor: Colors.white,
+                                    elevation: 0,
+                                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                                    minimumSize: Size.zero,
+                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(6.r),
+                                    ),
+                                  ),
+                                  onPressed: () => widget.onBookTap(book),
+                                  child: Text(
+                                    '研讀案卷',
+                                    style: TextStyle(
+                                      fontSize: 9.5.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(width: 12.w),
-                  GestureDetector(
-                    onTap: () => widget.onCaseTap(book),
-                    child: Container(
-                      padding: EdgeInsets.all(10.w),
-                      decoration: BoxDecoration(
-                        color: CaseTimeMachineColors.morandiGreen.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Color _getCategoryColor(String cat) {
+    const map = {
+      '車禍賠償': Color(0xFF4A7C8C),
+      '借款返還': Color(0xFF6D649A),
+      '租屋糾紛': Color(0xFF8C4A5A),
+      '給付價金': Color(0xFF357A53),
+      '不當解雇': Color(0xFF9E7B2D),
+      '離婚親權': Color(0xFF8C5C4A),
+      '竊盜': Color(0xFF5C5C45),
+      '傷害': Color(0xFF7A3535),
+    };
+    return map[cat] ?? CaseTimeMachineColors.primaryGreen;
+  }
+}
+
+class _LandmarkSpotlights extends StatelessWidget {
+  const _LandmarkSpotlights({required this.books, required this.onCaseTap});
+
+  final List<CaseBook> books;
+  final ValueChanged<CaseBook> onCaseTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final landmarks = books.where((b) => b.id == '318' || b.id == '799' || b.id == '103' || b.id == '101' || b.id == 'hung-2013').toList();
+    
+    if (landmarks.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '重大焦點案卷',
+          style: TextStyle(
+            fontSize: 15.sp,
+            fontWeight: FontWeight.w900,
+            color: CaseTimeMachineColors.primaryGreen,
+          ),
+        ),
+        SizedBox(height: 12.h),
+        for (final book in landmarks) ...[
+          Container(
+            margin: EdgeInsets.only(bottom: 12.h),
+            padding: EdgeInsets.all(14.w),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(14.r),
+              border: Border.all(color: const Color(0xFFE6E2D8)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.01),
+                  blurRadius: 8.r,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                            decoration: BoxDecoration(
+                              color: CaseTimeMachineColors.accentGold.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(4.r),
+                            ),
+                            child: Text(
+                              '重大焦點',
+                              style: TextStyle(
+                                fontSize: 9.sp,
+                                color: CaseTimeMachineColors.accentGold,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 8.w),
+                          Text(
+                            '${book.year} 年 • ${book.category}',
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              color: CaseTimeMachineColors.textMuted,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
-                      child: Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: CaseTimeMachineColors.morandiGreen,
-                        size: 14.w,
+                      SizedBox(height: 8.h),
+                      Text(
+                        book.titleZh,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 13.5.sp,
+                          fontWeight: FontWeight.w900,
+                          color: const Color(0xFF1C3A27),
+                        ),
                       ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        book.shortDescription,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          color: CaseTimeMachineColors.textSecondary,
+                          height: 1.4,
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: book.tags.map((t) => Container(
+                            margin: EdgeInsets.only(right: 6.w),
+                            padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                            decoration: BoxDecoration(
+                              color: CaseTimeMachineColors.primaryGreen.withValues(alpha: 0.05),
+                              borderRadius: BorderRadius.circular(4.r),
+                            ),
+                            child: Text(
+                              '#$t',
+                              style: TextStyle(
+                                fontSize: 8.5.sp,
+                                color: CaseTimeMachineColors.primaryGreen,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          )).toList(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 12.w),
+                GestureDetector(
+                  onTap: () => onCaseTap(book),
+                  child: Container(
+                    padding: EdgeInsets.all(10.w),
+                    decoration: BoxDecoration(
+                      color: CaseTimeMachineColors.primaryGreen.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: CaseTimeMachineColors.primaryGreen,
+                      size: 14.w,
                     ),
                   ),
-                ],
-              ),
-            );
-          },
-        ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ],
     );
   }

@@ -1973,12 +1973,11 @@ class _TranslatorCard extends StatelessWidget {
   const _TranslatorCard({
     required this.article,
     required this.onTap,
-    this.variant = _TranslatorCardVariant.defaultStyle,
   });
 
   final LearningMockArticle article;
   final VoidCallback onTap;
-  final _TranslatorCardVariant variant;
+  final _TranslatorCardVariant variant = _TranslatorCardVariant.defaultStyle;
 
   @override
   Widget build(BuildContext context) {

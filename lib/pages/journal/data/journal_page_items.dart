@@ -98,6 +98,8 @@ class ArchiveUpdateItem {
     required this.summary,
     required this.timeLabel,
     required this.tint,
+    required this.caseId,
+    this.initialTab,
   });
 
   final String type;
@@ -105,6 +107,8 @@ class ArchiveUpdateItem {
   final String summary;
   final String timeLabel;
   final Color tint;
+  final String caseId;
+  final String? initialTab;
 }
 
 /// 沉浸式資料館頁的精選卷宗。
@@ -266,31 +270,39 @@ const onThisDayItem = OnThisDayItem(
 const archiveUpdateItems = [
   ArchiveUpdateItem(
     type: '新增判決',
-    title: '詐騙車手與洗錢鏈',
-    summary: '補上二審判決摘要、量刑理由與上下游分工圖。',
+    title: '太魯閣列車事故',
+    summary: '補上二審判決摘要、過失責任與相關法條。',
     timeLabel: '2 小時前',
     tint: Color(0xFF6EAE46),
+    caseId: '124',
+    initialTab: '完整判決書',
   ),
   ArchiveUpdateItem(
     type: '時間軸更新',
-    title: '廢死釋憲相關案件',
+    title: '113年憲判8',
     summary: '新增庭訊節點、聲請理由與歷次社會討論脈絡。',
     timeLabel: '5 小時前',
     tint: Color(0xFF4C8CCB),
+    caseId: '103',
+    initialTab: '事件與訴訟脈絡',
   ),
   ArchiveUpdateItem(
     type: '資料補完',
-    title: '租屋押金與提前解約',
-    summary: '補齊契約重點、爭點整理與常見判決走向。',
+    title: '鄭性澤平反事件',
+    summary: '補齊再審新事證、彈道鑑定與無罪平反歷程。',
     timeLabel: '1 天前',
     tint: Color(0xFF8B6DB4),
+    caseId: 'cheng-2021',
+    initialTab: '事件背景',
   ),
   ArchiveUpdateItem(
     type: '新增卷宗',
-    title: '幼兒園餵藥案',
-    summary: '整理採證爭議、行政調查與刑事程序差異。',
+    title: '信義幼兒園性侵案',
+    summary: '整理教保員侵害爭議、兒少法保密限制與公眾知情權討論。',
     timeLabel: '2 天前',
     tint: Color(0xFFC08C44),
+    caseId: '161',
+    initialTab: '事件背景',
   ),
 ];
 
@@ -438,3 +450,45 @@ const archiveDossierItems = [
 ];
 
 const archiveEraLabels = ['1980s', '1990s', '2000s', '2010s', '近年熱議'];
+
+/// 主題策展特展架模型。
+class CuratedExhibition {
+  const CuratedExhibition({
+    required this.title,
+    required this.description,
+    required this.caseIds,
+    required this.readProgress,
+    required this.themeColor,
+  });
+
+  final String title;
+  final String description;
+  final List<String> caseIds;
+  final String readProgress;
+  final Color themeColor;
+}
+
+const curatedExhibitionItems = [
+  CuratedExhibition(
+    title: '言論自由的邊界特展',
+    description: '從街頭抗爭到數位言論，回顧台灣言論自由與憲法保障的演進歷程。',
+    caseIds: ['318', '799', '499'],
+    readProgress: '1 / 3',
+    themeColor: Color(0xFF1E7B66),
+  ),
+  CuratedExhibition(
+    title: '性別與婚姻平權之路',
+    description: '多元性別與婚姻自由的憲法審查，見證平權路上的重要司法判決。',
+    caseIds: ['520', '103', '161'],
+    readProgress: '2 / 3',
+    themeColor: Color(0xFF7A5D9A),
+  ),
+  CuratedExhibition(
+    title: '重大職災與公共安全',
+    description: '從太魯閣事故到公共安全事件，釐清過失責任與制度防線。',
+    caseIds: ['124', 'cheng-2021', 'hung-2013'],
+    readProgress: '0 / 3',
+    themeColor: Color(0xFF9F6A26),
+  ),
+];
+

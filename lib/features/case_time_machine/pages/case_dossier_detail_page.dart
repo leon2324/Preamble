@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lawapp/theme/app_fonts.dart';
 import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
 import 'package:lawapp/features/case_time_machine/data/case_time_machine_repository.dart';
 import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
@@ -52,9 +55,14 @@ class LightTextStyles {
 }
 
 class CaseDossierDetailPage extends StatefulWidget {
-  const CaseDossierDetailPage({super.key, required this.book});
+  const CaseDossierDetailPage({
+    super.key,
+    required this.book,
+    this.initialTab,
+  });
 
   final CaseBook book;
+  final String? initialTab;
 
   @override
   State<CaseDossierDetailPage> createState() => _CaseDossierDetailPageState();
@@ -71,6 +79,13 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
 
   late final PageController _galleryController;
   int _galleryIndex = 0;
+
+  // 台灣繁體中文教學註解：
+  // 完整判決書分頁錨點滾動所使用的 GlobalKey，維持跨 Build 的狀態一致性。
+  final GlobalKey _mainVerdictKey = GlobalKey();
+  final GlobalKey _proceduralKey = GlobalKey();
+  final GlobalKey _reasoningKey = GlobalKey();
+  final GlobalKey _lawsKey = GlobalKey();
 
   // 台灣繁體中文教學註解：
   // 定義自訂的 SVG 圖示字串，避免使用 Google Material Icons。
@@ -227,23 +242,30 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
   List<String> get _availableTabs {
     final book = _detailedBook ?? widget.book;
     final tabs = <String>[];
-    if (book.background.isNotEmpty) tabs.add('事件背景');
-    if (book.timeline.isNotEmpty) tabs.add('事件脈絡');
-    final hasLitigation =
-        _getTrialSteps(book.id).isNotEmpty || book.judgmentResult.isNotEmpty;
-    if (hasLitigation) tabs.add('審判進程');
-    if (book.legalIssues.isNotEmpty) tabs.add('法律爭點');
-    if (_getGlossaries(book.id).isNotEmpty) tabs.add('法律詞典');
-    if (book.relatedLaws.isNotEmpty) tabs.add('相關法條');
+    
+    // Core Fixed Tabs (always display to form a consistent wiki structure)
+    tabs.add('事件背景');
+    tabs.add('事件與訴訟脈絡');
+    tabs.add('法律爭點');
+    tabs.add('相關法條');
+    tabs.add('完整判決書');
+    
+    // Optional Dynamic Tabs (only show if data is present in database)
+    if (book.people.isNotEmpty) tabs.add('關係人角色');
+    if (book.courtReasoning.isNotEmpty || book.courtArguments.isNotEmpty || book.investigationAndTrial.isNotEmpty) {
+      tabs.add('裁判心證');
+    }
     if (book.socialImpact.isNotEmpty) tabs.add('社會影響');
     if (_getLiteratures(book.id).isNotEmpty) tabs.add('學術文獻');
     if (book.mediaReferences.isNotEmpty) tabs.add('延伸媒體');
     if (book.relatedCases.isNotEmpty) tabs.add('相關案件');
+    
     final hasDiscussions = book.id == '318' ||
         book.id == '161' ||
         book.id == '124' ||
         (_netizenComments[book.id]?.isNotEmpty == true);
     if (hasDiscussions) tabs.add('鄉民討論');
+    
     return tabs;
   }
 
@@ -257,7 +279,11 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
 
     // 優先初始化預設 Tab，等資料載入完成會再次更新
     final tabs = _availableTabs;
-    _selectedTab = tabs.isNotEmpty ? tabs.first : '事件背景';
+    if (widget.initialTab != null && tabs.contains(widget.initialTab)) {
+      _selectedTab = widget.initialTab!;
+    } else {
+      _selectedTab = tabs.isNotEmpty ? tabs.first : '事件背景';
+    }
 
     _loadDetails();
   }
@@ -272,7 +298,11 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
           _isLoading = false;
           // 重新計算 Tab，防 Placeholder 空欄位導致 Tab 被隱藏
           final tabs = _availableTabs;
-          _selectedTab = tabs.isNotEmpty ? tabs.first : '事件背景';
+          if (widget.initialTab != null && tabs.contains(widget.initialTab)) {
+            _selectedTab = widget.initialTab!;
+          } else {
+            _selectedTab = tabs.isNotEmpty ? tabs.first : '事件背景';
+          }
         });
       }
     } catch (e) {
@@ -736,7 +766,84 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                     }).toList(),
                                   ),
                                 ),
-                                SizedBox(height: 16.h),
+                                SizedBox(height: 12.h),
+
+                                // Verdict Outcome Badge
+                                if (book.judgmentResult.isNotEmpty) ...[
+                                  () {
+                                    Color badgeBgColor;
+                                    Color badgeTextColor;
+                                    Color badgeBorderColor;
+                                    String badgeTitle = '裁判結果';
+                                    final result = book.judgmentResult;
+                                    if (result.contains('無罪')) {
+                                      badgeBgColor = const Color(0xFFEAF5F0);
+                                      badgeTextColor = const Color(0xFF2E6B4E);
+                                      badgeBorderColor = const Color(0xFFC7E6D7);
+                                      badgeTitle = '無罪宣告';
+                                    } else if (result.contains('違憲') || result.contains('合憲')) {
+                                      badgeBgColor = const Color(0xFFFFF7E6);
+                                      badgeTextColor = const Color(0xFFB37D14);
+                                      badgeBorderColor = const Color(0xFFFFE7B3);
+                                      badgeTitle = '憲法裁決';
+                                    } else if (result.contains('徒刑') || result.contains('有罪') || result.contains('罰')) {
+                                      badgeBgColor = const Color(0xFFFFF1F0);
+                                      badgeTextColor = const Color(0xFFAD352B);
+                                      badgeBorderColor = const Color(0xFFFFA39E);
+                                      badgeTitle = '刑事處置';
+                                    } else {
+                                      badgeBgColor = const Color(0xFFF0F4F8);
+                                      badgeTextColor = const Color(0xFF3C5A80);
+                                      badgeBorderColor = const Color(0xFFD0E1FD);
+                                      badgeTitle = '最終裁決';
+                                    }
+                                    return Container(
+                                      width: double.infinity,
+                                      margin: EdgeInsets.only(bottom: 14.h),
+                                      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+                                      decoration: BoxDecoration(
+                                        color: badgeBgColor,
+                                        borderRadius: BorderRadius.circular(10.r),
+                                        border: Border.all(
+                                          color: badgeBorderColor,
+                                          width: 1.2,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                                            decoration: BoxDecoration(
+                                              color: badgeTextColor.withValues(alpha: 0.12),
+                                              borderRadius: BorderRadius.circular(4.r),
+                                            ),
+                                            child: Text(
+                                              badgeTitle,
+                                              style: TextStyle(
+                                                fontSize: 10.sp,
+                                                fontWeight: FontWeight.bold,
+                                                color: badgeTextColor,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 8.w),
+                                          Expanded(
+                                            child: Text(
+                                              book.judgmentResult,
+                                              style: TextStyle(
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.bold,
+                                                color: badgeTextColor,
+                                                height: 1.45,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }(),
+                                ],
 
                                 // Quote card block
                                 Container(
@@ -776,9 +883,10 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                   ),
                                 ),
                                 SizedBox(height: 8.h),
-                                Text(
+                                _buildRichTextWithGlossary(
+                                  context,
                                   book.background,
-                                  style: LightTextStyles.body(context).copyWith(
+                                  LightTextStyles.body(context).copyWith(
                                     fontSize: 13.sp,
                                     height: 1.6,
                                   ),
@@ -1005,15 +1113,19 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                           _buildActiveTabContent(context),
                           SizedBox(height: 24.h),
                           // 台灣繁體中文教學註解：
-                          // 在此處實作精誠且簡潔的「小法助 AI 捷徑」橫幅（Banner）。
-                          // 點擊後會帶入本案專屬的 prompt 提問，引導用戶進入小法助進行深度法律問答。
+                          // 實作精緻的莫蘭迪粉綠漸層「小法助 AI 捷徑」橫幅（Banner），並改用 sparkling 圖示。
                           GestureDetector(
                             onTap: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('✨ 正在開啟 AI 小法助對話，為您解析本案判決...'),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
                               Navigator.of(context).push(
                                 CupertinoPageRoute<void>(
                                   builder: (_) => LawAssistantSearchPage(
-                                    initialPrompt:
-                                        '我想了解關於「${book.titleZh}」的法律爭點與實務見解。',
+                                    initialPrompt: '對「${book.titleZh}」的判決有疑問，請 AI 小法助協助解答。',
                                   ),
                                 ),
                               );
@@ -1023,14 +1135,14 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                   horizontal: 16.w, vertical: 14.h),
                               decoration: BoxDecoration(
                                 gradient: const LinearGradient(
-                                  colors: [Color(0xFFE9F2F1), Color(0xFFD5EAE6)],
+                                  colors: [Color(0xFFFAF8F5), Color(0xFFE6EFEA)],
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                 ),
                                 borderRadius: BorderRadius.circular(12.r),
                                 border: Border.all(
-                                  color: CaseTimeMachineColors.primaryGreen
-                                      .withValues(alpha: 0.15),
+                                  color: const Color(0xFFC7DED1),
+                                  width: 1.2,
                                 ),
                                 boxShadow: [
                                   BoxShadow(
@@ -1042,10 +1154,17 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                               ),
                               child: Row(
                                 children: [
-                                  Icon(
-                                    Icons.psychology_alt_rounded,
-                                    color: CaseTimeMachineColors.primaryGreen,
-                                    size: 26.sp,
+                                  Container(
+                                    padding: EdgeInsets.all(8.w),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withValues(alpha: 0.7),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: CtmSvgIcon(
+                                      CtmSvgIcons.sparkles,
+                                      size: 20.sp,
+                                      color: CaseTimeMachineColors.primaryGreen,
+                                    ),
                                   ),
                                   SizedBox(width: 12.w),
                                   Expanded(
@@ -1053,21 +1172,19 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          '對本案還有疑問？問問「小法助」AI',
+                                          '對本案判決有疑問？點擊詢問 AI 小法助',
                                           style: TextStyle(
                                             fontSize: 13.sp,
-                                            fontWeight: FontWeight.w900,
-                                            color:
-                                                CaseTimeMachineColors.primaryGreen,
+                                            fontWeight: FontWeight.bold,
+                                            color: CaseTimeMachineColors.primaryGreen,
                                           ),
                                         ),
-                                        SizedBox(height: 2.h),
+                                        SizedBox(height: 3.h),
                                         Text(
-                                          '快速為你分析本案涉及的法律關係與裁判意旨',
+                                          '為您快速分析裁判意旨與涉及的法律爭點',
                                           style: TextStyle(
                                             fontSize: 10.5.sp,
-                                            color:
-                                                CaseTimeMachineColors.textSecondary,
+                                            color: CaseTimeMachineColors.textSecondary,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
@@ -1103,16 +1220,18 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
     switch (_selectedTab) {
       case '事件背景':
         return _buildBackgroundTab(context);
-      case '事件脈絡':
-        return _buildTimelineTab(context);
-      case '審判進程':
-        return _buildLitigationTab(context);
+      case '事件與訴訟脈絡':
+        return _buildCombinedTimelineTab(context);
       case '法律爭點':
         return _buildDisputesTab(context);
-      case '法律詞典':
-        return _buildGlossaryTab(context);
       case '相關法條':
         return _buildLawsTab(context);
+      case '關係人角色':
+        return _buildPeopleTab(context);
+      case '裁判心證':
+        return _buildCourtReasoningTab(context);
+      case '完整判決書':
+        return _buildFullJudgmentTab(context);
       case '社會影響':
         return _buildSocialImpactTab(context);
       case '學術文獻':
@@ -1830,9 +1949,10 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
             ),
           ),
           SizedBox(height: 10.h),
-          Text(
+          _buildRichTextWithGlossary(
+            context,
             book.background,
-            style: LightTextStyles.body(context).copyWith(
+            LightTextStyles.body(context).copyWith(
               fontSize: 13.sp,
               height: 1.6,
             ),
@@ -1848,9 +1968,10 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
             ),
           ),
           SizedBox(height: 10.h),
-          Text(
+          _buildRichTextWithGlossary(
+            context,
             book.fullStory,
-            style: LightTextStyles.body(context).copyWith(
+            LightTextStyles.body(context).copyWith(
               fontSize: 13.sp,
               height: 1.6,
             ),
@@ -1919,13 +2040,46 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
     );
   }
 
-  Widget _buildLitigationTab(BuildContext context) {
+  Widget _buildCombinedTimelineTab(BuildContext context) {
+    // 1. Gather all timeline nodes and trial steps, deduplicate by date
+    final Map<String, _CombinedTimelineNode> mergedNodes = {};
+
+    for (final item in book.timeline) {
+      mergedNodes[item.dateLabel] = _CombinedTimelineNode(
+        date: item.dateLabel,
+        title: item.title,
+        description: item.description,
+        type: 'event',
+      );
+    }
+
+    final trialSteps = _getTrialSteps(book.id);
+    for (final step in trialSteps) {
+      mergedNodes[step.date] = _CombinedTimelineNode(
+        date: step.date,
+        title: '${step.stage} · ${step.courtName}',
+        description: step.outcome,
+        type: 'trial',
+        trialStep: step,
+      );
+    }
+
+    // 2. Sort by date ascending
+    final sortedNodes = mergedNodes.values.toList()
+      ..sort((a, b) => a.date.compareTo(b.date));
+
+    // 3. Handle expand/collapse logic
+    final displayNodes = _isTimelineExpanded
+        ? sortedNodes
+        : sortedNodes.take(3).toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // 案件結果 card (if judgmentResult exists)
         if (book.judgmentResult.isNotEmpty) ...[
           Text(
-            '最終審判結果',
+            '最終裁判結果',
             style: LightTextStyles.sectionTitle(context).copyWith(
               fontSize: 15.sp,
               fontWeight: FontWeight.w900,
@@ -1949,6 +2103,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                   ),
                 ),
                 SizedBox(width: 12.w),
+                // Gavel emblem inside circle
                 Container(
                   width: 48.w,
                   height: 48.w,
@@ -1967,23 +2122,272 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
               ],
             ),
           ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 24.h),
         ],
+
         Text(
-          '訴訟程序與審級進程',
+          '完整事件與訴訟脈絡',
           style: LightTextStyles.sectionTitle(context).copyWith(
             fontSize: 15.sp,
             fontWeight: FontWeight.w900,
           ),
         ),
         SizedBox(height: 12.h),
-        _buildLitigationTimeline(context),
+
+        // Vertical Timeline list
+        Column(
+          children: List.generate(displayNodes.length, (index) {
+            final node = displayNodes[index];
+            final isLast = index == displayNodes.length - 1;
+
+            if (node.type == 'event') {
+              return IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Date label (left)
+                    SizedBox(
+                      width: 76.w,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 2.h),
+                        child: Text(
+                          node.date,
+                          style: TextStyle(
+                            fontSize: 11.5.sp,
+                            fontWeight: FontWeight.w900,
+                            color: CaseTimeMachineColors.accentGold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Middle Line & Dot
+                    Column(
+                      children: [
+                        Container(
+                          width: 10.w,
+                          height: 10.w,
+                          decoration: BoxDecoration(
+                            color: CaseTimeMachineColors.primaryGreen,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                color: CaseTimeMachineColors.bgCream, width: 2),
+                          ),
+                        ),
+                        if (!isLast)
+                          Expanded(
+                            child: Container(
+                              width: 1.5.w,
+                              color: CaseTimeMachineColors.primaryGreen
+                                  .withValues(alpha: 0.3),
+                            ),
+                          ),
+                      ],
+                    ),
+                    SizedBox(width: 14.w),
+                    // Content (right)
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 20.h),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              node.title,
+                              style: TextStyle(
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w900,
+                                color: CaseTimeMachineColors.primaryGreen,
+                              ),
+                            ),
+                            SizedBox(height: 4.h),
+                            Text(
+                              node.description,
+                              style: LightTextStyles.bodySmall(context).copyWith(
+                                fontSize: 11.5.sp,
+                                height: 1.45,
+                                color: CaseTimeMachineColors.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              // Trial node (no card box, rendered directly like event items)
+              final step = node.trialStep!;
+              return IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Date label (left)
+                    SizedBox(
+                      width: 76.w,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 2.h),
+                        child: Text(
+                          node.date,
+                          style: TextStyle(
+                            fontSize: 11.5.sp,
+                            fontWeight: FontWeight.w900,
+                            color: CaseTimeMachineColors.accentGold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Timeline line & dot
+                    Column(
+                      children: [
+                        Container(
+                          width: 10.w,
+                          height: 10.w,
+                          decoration: BoxDecoration(
+                            color: CaseTimeMachineColors.accentGold,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                color: CaseTimeMachineColors.bgCream, width: 2),
+                          ),
+                        ),
+                        if (!isLast)
+                          Expanded(
+                            child: Container(
+                              width: 1.5.w,
+                              color: CaseTimeMachineColors.primaryGreen
+                                  .withValues(alpha: 0.3),
+                            ),
+                          ),
+                      ],
+                    ),
+                    SizedBox(width: 14.w),
+                    // Trial Content (right)
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 20.h),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Stage Badge + Court Name
+                            Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 6.w, vertical: 2.h),
+                                  decoration: BoxDecoration(
+                                    color: CaseTimeMachineColors.accentGold
+                                        .withValues(alpha: 0.15),
+                                    borderRadius: BorderRadius.circular(4.r),
+                                  ),
+                                  child: Text(
+                                    step.stage,
+                                    style: TextStyle(
+                                      fontSize: 9.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: CaseTimeMachineColors.accentGold,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 8.w),
+                                Expanded(
+                                  child: Text(
+                                    step.courtName,
+                                    style: TextStyle(
+                                      fontSize: 13.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: CaseTimeMachineColors.primaryGreen,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 6.h),
+                            Text(
+                              step.caseNumber,
+                              style: TextStyle(
+                                fontSize: 10.5.sp,
+                                color: CaseTimeMachineColors.textSecondary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 6.h),
+                            Text(
+                              step.outcome,
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: const Color(0xFF2E7D32),
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            SizedBox(height: 8.h),
+                            GestureDetector(
+                              onTap: () => _showHoldingBottomSheet(context, step),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    '檢視裁判理由',
+                                    style: TextStyle(
+                                      fontSize: 11.sp,
+                                      color: CaseTimeMachineColors.accentGold,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                  SizedBox(width: 4.w),
+                                  CtmSvgIcon(
+                                    CtmSvgIcons.article,
+                                    size: 13.sp,
+                                    color: CaseTimeMachineColors.accentGold,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+          }),
+        ),
+
+        // Expand / Collapse Timeline button
+        if (sortedNodes.length > 3) ...[
+          Center(
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _isTimelineExpanded = !_isTimelineExpanded;
+                });
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    _isTimelineExpanded ? '收合時間軸' : '查看更多時間軸',
+                    style: TextStyle(
+                      fontSize: 11.5.sp,
+                      color: CaseTimeMachineColors.accentGold,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  CtmSvgIcon(
+                    _isTimelineExpanded
+                        ? CtmSvgIcons.chevronUp
+                        : CtmSvgIcons.chevronRight,
+                    size: 16.sp,
+                    color: CaseTimeMachineColors.accentGold,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 24.h),
+        ],
       ],
     );
-  }
-
-  Widget _buildGlossaryTab(BuildContext context) {
-    return _buildGlossarySection(context);
   }
 
   Widget _buildSocialImpactTab(BuildContext context) {
@@ -2349,10 +2753,10 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                   ),
                 ),
                 SizedBox(height: 2.h),
-                Text(
+                _buildRichTextWithGlossary(
+                  context,
                   issue.plainExplanation,
-                  style:
-                      LightTextStyles.body(context).copyWith(fontSize: 12.sp),
+                  LightTextStyles.body(context).copyWith(fontSize: 12.sp),
                 ),
                 SizedBox(height: 8.h),
                 Text(
@@ -2364,9 +2768,10 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                   ),
                 ),
                 SizedBox(height: 2.h),
-                Text(
+                _buildRichTextWithGlossary(
+                  context,
                   issue.relationToCase,
-                  style: LightTextStyles.bodySmall(context).copyWith(
+                  LightTextStyles.bodySmall(context).copyWith(
                     fontSize: 11.5.sp,
                     color: CaseTimeMachineColors.textSecondary,
                   ),
@@ -2376,7 +2781,6 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
           ),
           SizedBox(height: 12.h),
         ],
-        _buildGlossarySection(context),
       ],
     );
   }
@@ -2395,53 +2799,194 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
         ),
         SizedBox(height: 12.h),
         for (final law in book.relatedLaws) ...[
-          _buildContentCard(
-            accentColor: CaseTimeMachineColors.accentGold,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        '${law.lawName} ${law.articleNumber}',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w900,
-                          color: CaseTimeMachineColors.accentGold,
+          GestureDetector(
+            onTap: () => _showLawBottomSheet(context, law),
+            child: _buildContentCard(
+              accentColor: CaseTimeMachineColors.accentGold,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '${law.lawName} ${law.articleNumber}',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w900,
+                            color: CaseTimeMachineColors.accentGold,
+                          ),
                         ),
                       ),
-                    ),
-                    CtmSvgIcon(
-                      CtmSvgIcons.externalLink,
-                      size: 16.sp,
-                      color: CaseTimeMachineColors.accentGold,
+                      CtmSvgIcon(
+                        CtmSvgIcons.chevronRight,
+                        size: 16.sp,
+                        color: CaseTimeMachineColors.accentGold,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    law.plainSummary,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style:
+                        LightTextStyles.body(context).copyWith(fontSize: 12.sp),
+                  ),
+                  if (law.relationToCase.isNotEmpty) ...[
+                    SizedBox(height: 6.h),
+                    Text(
+                      '法規關聯：${law.relationToCase}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: LightTextStyles.bodySmall(context).copyWith(
+                        fontSize: 11.sp,
+                        color: CaseTimeMachineColors.textMuted,
+                      ),
                     ),
                   ],
-                ),
-                SizedBox(height: 8.h),
-                Text(
-                  law.plainSummary,
-                  style:
-                      LightTextStyles.body(context).copyWith(fontSize: 12.sp),
-                ),
-                if (law.relationToCase.isNotEmpty) ...[
-                  SizedBox(height: 6.h),
-                  Text(
-                    '法規關聯：${law.relationToCase}',
-                    style: LightTextStyles.bodySmall(context).copyWith(
-                      fontSize: 11.sp,
-                      color: CaseTimeMachineColors.textMuted,
-                    ),
-                  ),
                 ],
-              ],
+              ),
             ),
           ),
           SizedBox(height: 12.h),
         ],
       ],
+    );
+  }
+
+  // 台灣繁體中文教學註解：
+  // 點擊法條卡片時彈出的莫蘭迪米白 (Cream) 精緻底頁，顯示完整條文概要與該案之關聯。
+  void _showLawBottomSheet(BuildContext context, RelatedLaw law) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: CaseTimeMachineColors.bgCream,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.15),
+                blurRadius: 20,
+                offset: const Offset(0, -5),
+              ),
+            ],
+          ),
+          padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 36.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: CaseTimeMachineColors.borderLight,
+                    borderRadius: BorderRadius.circular(2.r),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20.h),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Expanded(
+                    child: Text(
+                      '${law.lawName} ${law.articleNumber}',
+                      style: TextStyle(
+                        fontFamily: 'Songti TC',
+                        fontFamilyFallback: const ['BiauKai', 'Songti SC', 'STSong'],
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                        color: CaseTimeMachineColors.primaryGreen,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                    decoration: BoxDecoration(
+                      color: CaseTimeMachineColors.accentGold.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
+                    child: Text(
+                      '關聯法條',
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.bold,
+                        color: CaseTimeMachineColors.accentGold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16.h),
+              const Divider(color: CaseTimeMachineColors.borderLight),
+              SizedBox(height: 16.h),
+              Text(
+                '【條文概要與釋義】',
+                style: TextStyle(
+                  fontSize: 11.5.sp,
+                  fontWeight: FontWeight.w900,
+                  color: CaseTimeMachineColors.accentGold,
+                ),
+              ),
+              SizedBox(height: 6.h),
+              Text(
+                law.plainSummary,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  height: 1.6,
+                  color: CaseTimeMachineColors.textPrimary,
+                ),
+              ),
+              if (law.relationToCase.isNotEmpty) ...[
+                SizedBox(height: 20.h),
+                Text(
+                  '【本案關聯與適用】',
+                  style: TextStyle(
+                    fontSize: 11.5.sp,
+                    fontWeight: FontWeight.w900,
+                    color: CaseTimeMachineColors.accentGold,
+                  ),
+                ),
+                SizedBox(height: 6.h),
+                Text(
+                  law.relationToCase,
+                  style: TextStyle(
+                    fontSize: 12.5.sp,
+                    height: 1.6,
+                    color: CaseTimeMachineColors.textSecondary,
+                  ),
+                ),
+              ],
+              SizedBox(height: 28.h),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: CaseTimeMachineColors.primaryGreen,
+                    foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(vertical: 12.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: const Text('我知道了', style: TextStyle(fontWeight: FontWeight.bold)),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -3258,110 +3803,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
     ];
   }
 
-  Widget _buildGlossarySection(BuildContext context) {
-    final items = _getGlossaries(book.id);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 24.h),
-        Text(
-          '重要法律術語小辭典',
-          style: LightTextStyles.sectionTitle(context).copyWith(
-            fontSize: 15.sp,
-            fontWeight: FontWeight.w900,
-          ),
-        ),
-        SizedBox(height: 12.h),
-        for (final item in items) ...[
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(14.w),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF9F8F3),
-              borderRadius: BorderRadius.circular(10.r),
-              border: Border.all(color: CaseTimeMachineColors.borderLight),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  spacing: 6.w,
-                  runSpacing: 4.h,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CtmSvgIcon(
-                          CtmSvgIcons.bookOpen,
-                          size: 16.sp,
-                          color: CaseTimeMachineColors.accentGold,
-                        ),
-                        SizedBox(width: 8.w),
-                        Text(
-                          item.term,
-                          style: TextStyle(
-                            fontSize: 13.5.sp,
-                            fontWeight: FontWeight.bold,
-                            color: CaseTimeMachineColors.primaryGreen,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      '(${item.pinyin})',
-                      style: TextStyle(
-                        fontSize: 9.5.sp,
-                        fontStyle: FontStyle.italic,
-                        color: CaseTimeMachineColors.textMuted,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8.h),
-                Text(
-                  '【名詞釋義】',
-                  style: TextStyle(
-                    fontSize: 10.5.sp,
-                    fontWeight: FontWeight.w900,
-                    color: CaseTimeMachineColors.accentGold,
-                  ),
-                ),
-                Text(
-                  item.definition,
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    height: 1.5,
-                    color: CaseTimeMachineColors.textPrimary,
-                  ),
-                ),
-                SizedBox(height: 6.h),
-                Text(
-                  '【本案關聯】',
-                  style: TextStyle(
-                    fontSize: 10.5.sp,
-                    fontWeight: FontWeight.w900,
-                    color: CaseTimeMachineColors.accentGold,
-                  ),
-                ),
-                Text(
-                  item.importance,
-                  style: TextStyle(
-                    fontSize: 11.5.sp,
-                    height: 1.45,
-                    color: CaseTimeMachineColors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 10.h),
-        ],
-      ],
-    );
-  }
 
   List<_LiteratureItem> _getLiteratures(String caseId) {
     if (caseId == '318') {
@@ -3491,6 +3933,695 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
           ),
         ],
       ],
+    );
+  }
+
+  Widget _buildRichTextWithGlossary(BuildContext context, String text, TextStyle baseStyle) {
+    final glossaries = _getGlossaries(book.id);
+    if (glossaries.isEmpty) {
+      return Text(text, style: baseStyle);
+    }
+
+    final sortedGlossaries = List<_GlossaryItem>.from(glossaries)
+      ..sort((a, b) => b.term.length.compareTo(a.term.length));
+
+    final terms = sortedGlossaries.map((g) => RegExp.escape(g.term)).join('|');
+    final regex = RegExp('($terms)');
+    final matches = regex.allMatches(text);
+
+    if (matches.isEmpty) {
+      return Text(text, style: baseStyle);
+    }
+
+    final List<InlineSpan> spans = [];
+    int lastMatchEnd = 0;
+
+    for (final match in matches) {
+      if (match.start > lastMatchEnd) {
+        spans.add(TextSpan(
+          text: text.substring(lastMatchEnd, match.start),
+          style: baseStyle,
+        ));
+      }
+
+      final matchedTerm = match.group(0)!;
+      final glossaryItem = sortedGlossaries.firstWhere((g) => g.term == matchedTerm);
+
+      spans.add(TextSpan(
+        text: matchedTerm,
+        style: baseStyle.copyWith(
+          color: const Color(0xFF2E7D32),
+          fontWeight: FontWeight.bold,
+          decoration: TextDecoration.underline,
+          decorationColor: const Color(0xFF2E7D32),
+        ),
+        recognizer: TapGestureRecognizer()
+          ..onTap = () {
+            _showGlossaryBottomSheet(context, glossaryItem);
+          },
+      ));
+
+      lastMatchEnd = match.end;
+    }
+
+    if (lastMatchEnd < text.length) {
+      spans.add(TextSpan(
+        text: text.substring(lastMatchEnd),
+        style: baseStyle,
+      ));
+    }
+
+    return RichText(
+      text: TextSpan(children: spans),
+    );
+  }
+
+  void _showGlossaryBottomSheet(BuildContext context, _GlossaryItem item) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: CaseTimeMachineColors.bgCream,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+          ),
+          padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 36.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: CaseTimeMachineColors.borderLight,
+                    borderRadius: BorderRadius.circular(2.r),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20.h),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Text(
+                    item.term,
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                      color: CaseTimeMachineColors.primaryGreen,
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Text(
+                      '(${item.pinyin})',
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        fontStyle: FontStyle.italic,
+                        color: CaseTimeMachineColors.textMuted,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16.h),
+              const Divider(color: CaseTimeMachineColors.borderLight),
+              SizedBox(height: 16.h),
+              Text(
+                '【名詞釋義】',
+                style: TextStyle(
+                  fontSize: 11.5.sp,
+                  fontWeight: FontWeight.w900,
+                  color: CaseTimeMachineColors.accentGold,
+                ),
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                item.definition,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  height: 1.5,
+                  color: CaseTimeMachineColors.textPrimary,
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Text(
+                '【本案關聯】',
+                style: TextStyle(
+                  fontSize: 11.5.sp,
+                  fontWeight: FontWeight.w900,
+                  color: CaseTimeMachineColors.accentGold,
+                ),
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                item.importance,
+                style: TextStyle(
+                  fontSize: 12.5.sp,
+                  height: 1.5,
+                  color: CaseTimeMachineColors.textSecondary,
+                ),
+              ),
+              SizedBox(height: 24.h),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: CaseTimeMachineColors.primaryGreen,
+                    foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(vertical: 12.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                  ),
+                  child: const Text('我知道了', style: TextStyle(fontWeight: FontWeight.bold)),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildPeopleTab(BuildContext context) {
+    final book = _detailedBook ?? widget.book;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '關係人與角色分工',
+          style: LightTextStyles.sectionTitle(context).copyWith(
+            fontSize: 15.sp,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        SizedBox(height: 10.h),
+        for (final person in book.people) ...[
+          Container(
+            margin: EdgeInsets.only(bottom: 12.h),
+            decoration: BoxDecoration(
+              color: CaseTimeMachineColors.bgWhite,
+              borderRadius: BorderRadius.circular(10.r),
+              border: Border.all(color: CaseTimeMachineColors.borderLight),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(14.w),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 20.r,
+                    backgroundColor: CaseTimeMachineColors.primaryGreen.withValues(alpha: 0.1),
+                    child: Text(
+                      person.role.isNotEmpty ? person.role.substring(0, 1) : '人',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
+                        color: CaseTimeMachineColors.primaryGreen,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          person.role,
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.bold,
+                            color: CaseTimeMachineColors.textPrimary,
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          person.description,
+                          style: LightTextStyles.bodySmall(context).copyWith(
+                            fontSize: 12.sp,
+                            height: 1.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildCourtReasoningTab(BuildContext context) {
+    final book = _detailedBook ?? widget.book;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (book.investigationAndTrial.isNotEmpty) ...[
+          Text(
+            '審判程序簡述',
+            style: LightTextStyles.sectionTitle(context).copyWith(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          _buildRichTextWithGlossary(
+            context,
+            book.investigationAndTrial,
+            LightTextStyles.body(context).copyWith(
+              fontSize: 13.sp,
+              height: 1.6,
+            ),
+          ),
+          SizedBox(height: 20.h),
+        ],
+        if (book.courtReasoning.isNotEmpty) ...[
+          Text(
+            '法院心證與裁判理由',
+            style: LightTextStyles.sectionTitle(context).copyWith(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          _buildRichTextWithGlossary(
+            context,
+            book.courtReasoning,
+            LightTextStyles.body(context).copyWith(
+              fontSize: 13.sp,
+              height: 1.6,
+            ),
+          ),
+          SizedBox(height: 20.h),
+        ],
+        if (book.courtArguments.isNotEmpty) ...[
+          Text(
+            '兩造辯論與攻防重點',
+            style: LightTextStyles.sectionTitle(context).copyWith(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          for (final arg in book.courtArguments) ...[
+            Container(
+              margin: EdgeInsets.only(bottom: 12.h),
+              decoration: BoxDecoration(
+                color: CaseTimeMachineColors.bgWhite,
+                borderRadius: BorderRadius.circular(10.r),
+                border: Border.all(color: CaseTimeMachineColors.borderLight),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(14.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                          decoration: BoxDecoration(
+                            color: (arg.partyName.contains('被告') || arg.partyName.contains('辯護'))
+                                ? const Color(0xFFC62828).withValues(alpha: 0.1)
+                                : CaseTimeMachineColors.primaryGreen.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(4.r),
+                          ),
+                          child: Text(
+                            arg.partyName,
+                            style: TextStyle(
+                              fontSize: 10.5.sp,
+                              fontWeight: FontWeight.bold,
+                              color: (arg.partyName.contains('被告') || arg.partyName.contains('辯護'))
+                                  ? const Color(0xFFC62828)
+                                  : CaseTimeMachineColors.primaryGreen,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8.h),
+                    _buildRichTextWithGlossary(
+                      context,
+                      arg.mainPoint,
+                      LightTextStyles.body(context).copyWith(
+                        fontSize: 12.5.sp,
+                        height: 1.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ],
+      ],
+    );
+  }
+
+  Widget _buildFullJudgmentTab(BuildContext context) {
+    final book = _detailedBook ?? widget.book;
+
+    // Helper to format date into Taiwanese Minguo date format
+    String formattedDate = '';
+    try {
+      final parts = book.basicInfo.updatedAt.split('/');
+      if (parts.length == 3) {
+        final year = int.parse(parts[0]);
+        final minguoYear = year - 1911;
+        formattedDate = '中華民國 $minguoYear 年 ${parts[1]} 月 ${parts[2]} 日';
+      }
+    } catch (_) {
+      formattedDate = '中華民國 ${book.year - 1911} 年';
+    }
+
+    final minguoYearLabel = book.year - 1911;
+
+    // Build the parts of the judgment
+    final metadataText = '【裁判機關】${book.basicInfo.courtLevel}\n'
+        '【裁判字號】中華民國 $minguoYearLabel 年度特字第 ${book.id} 號\n'
+        '【裁判日期】$formattedDate\n'
+        '【裁判案由】${book.category}（${book.titleZh}）';
+
+    final mainVerdictText = book.judgmentResult.isNotEmpty ? book.judgmentResult : "上訴駁回。";
+
+    final proceduralText = book.investigationAndTrial.isNotEmpty 
+        ? book.investigationAndTrial 
+        : '本案經檢察官提起公訴，歷經言詞辯論，本院依法審判之程序完備。';
+
+    final reasoningText = book.courtReasoning.isNotEmpty 
+        ? book.courtReasoning 
+        : (book.fullStory.isNotEmpty ? book.fullStory : book.background);
+
+    final List<String> lawLines = [];
+    if (book.relatedLaws.isNotEmpty) {
+      for (final law in book.relatedLaws) {
+        lawLines.add('依${law.lawName}${law.articleNumber}（${law.plainSummary}）之規定，本案據此裁判。');
+      }
+    } else {
+      lawLines.add('依相關法律之規定，本案據此裁判。');
+    }
+
+    final baseTextStyle = TextStyle(
+      fontFamily: AppFonts.serifTW,
+      fontFamilyFallback: AppFonts.serifFallbacks,
+      fontSize: 12.5.sp,
+      height: 1.8,
+      letterSpacing: 1.1,
+      color: const Color(0xFF2B2B2B), // Traditional charcoal black
+    );
+
+    final sectionTitleStyle = TextStyle(
+      fontFamily: AppFonts.serifTW,
+      fontFamilyFallback: AppFonts.serifFallbacks,
+      fontSize: 14.sp,
+      fontWeight: FontWeight.bold,
+      color: CaseTimeMachineColors.primaryGreen,
+      height: 2.0,
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '判決書全文（模擬書卷）',
+              style: LightTextStyles.sectionTitle(context).copyWith(
+                fontSize: 15.sp,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                final fullTextBuffer = StringBuffer()
+                  ..writeln(metadataText)
+                  ..writeln('\n【主文】\n$mainVerdictText\n')
+                  ..writeln('【事實與理由】\n')
+                  ..writeln('壹、程序概述\n$proceduralText\n')
+                  ..writeln('貳、實體理由與心證闡述\n$reasoningText\n')
+                  ..writeln('參、適用法條');
+                for (final line in lawLines) {
+                  fullTextBuffer.writeln(line);
+                }
+                fullTextBuffer.writeln('\n\n中華民國法院刑事/民事法庭\n'
+                    '審判長法官  黃國法\n'
+                    '      法官  林憲法\n'
+                    '      法官  陳民法\n'
+                    '\n以上正本證明與原本無異。');
+
+                Clipboard.setData(ClipboardData(text: fullTextBuffer.toString()));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('已複製判決書全文至剪貼簿')),
+                );
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                decoration: BoxDecoration(
+                  color: CaseTimeMachineColors.primaryGreen.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(6.r),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CtmSvgIcon(
+                      CtmSvgIcons.copy,
+                      size: 13.sp,
+                      color: CaseTimeMachineColors.primaryGreen,
+                    ),
+                    SizedBox(width: 4.w),
+                    Text(
+                      '複製全文',
+                      style: TextStyle(
+                        fontSize: 10.5.sp,
+                        fontWeight: FontWeight.bold,
+                        color: CaseTimeMachineColors.primaryGreen,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 12.h),
+
+        // Horizontal anchor bar at the top of the judgment card
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          padding: EdgeInsets.only(bottom: 12.h),
+          child: Row(
+            children: [
+              _buildAnchorButton('主文', _mainVerdictKey),
+              _buildAnchorButton('程序概述', _proceduralKey),
+              _buildAnchorButton('理由與心證', _reasoningKey),
+              _buildAnchorButton('適用法條', _lawsKey),
+            ],
+          ),
+        ),
+
+        // Parchment styled scroll view containing distinct visual sections
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: const Color(0xFFFAF9F6), // Parchment ivory/cream
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(
+              color: const Color(0xFF8D7F67).withValues(alpha: 0.5),
+              width: 1.2,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.04),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          padding: EdgeInsets.all(4.w), // Outer frame spacing
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.r),
+              border: Border.all(
+                color: const Color(0xFF8D7F67).withValues(alpha: 0.25),
+                width: 0.8,
+              ),
+            ),
+            padding: EdgeInsets.all(16.w), // Inner frame spacing
+            child: SelectionArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Metadata block
+                  Text(
+                    metadataText,
+                    style: baseTextStyle.copyWith(
+                      color: const Color(0xFF555555),
+                      fontSize: 11.5.sp,
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  const Divider(color: Color(0xFF8D7F67), thickness: 0.5),
+                  SizedBox(height: 16.h),
+
+                  // 1. 主文 Section
+                  Container(
+                    key: _mainVerdictKey,
+                    width: double.infinity,
+                    padding: EdgeInsets.all(12.w),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFAF8F2),
+                      borderRadius: BorderRadius.circular(8.r),
+                      border: Border.all(
+                        color: const Color(0xFF8D7F67).withValues(alpha: 0.2),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('【主文】', style: sectionTitleStyle),
+                        SizedBox(height: 4.h),
+                        Text(
+                          mainVerdictText,
+                          style: baseTextStyle.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF1B3F38),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+
+                  // 2. 程序概述 Section
+                  Column(
+                    key: _proceduralKey,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('壹、程序概述', style: sectionTitleStyle),
+                      SizedBox(height: 6.h),
+                      Text(
+                        proceduralText,
+                        style: baseTextStyle,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20.h),
+
+                  // 3. 理由與心證 Section
+                  Column(
+                    key: _reasoningKey,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('貳、實體理由與心證闡述', style: sectionTitleStyle),
+                      SizedBox(height: 6.h),
+                      Text(
+                        reasoningText,
+                        style: baseTextStyle,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20.h),
+
+                  // 4. 適用法條 Section
+                  Column(
+                    key: _lawsKey,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('參、適用法條', style: sectionTitleStyle),
+                      SizedBox(height: 6.h),
+                      for (final line in lawLines)
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 6.h),
+                          child: Text(
+                            line,
+                            style: baseTextStyle,
+                          ),
+                        ),
+                    ],
+                  ),
+                  SizedBox(height: 24.h),
+                  const Divider(color: Color(0xFF8D7F67), thickness: 0.3),
+                  SizedBox(height: 16.h),
+
+                  // Footer block
+                  Text(
+                    '中華民國法院刑事/民事法庭\n'
+                    '審判長法官  黃國法\n'
+                    '      法官  林憲法\n'
+                    '      法官  陳民法\n\n'
+                    '以上正本證明與原本無異。',
+                    style: baseTextStyle.copyWith(
+                      color: const Color(0xFF666666),
+                      fontSize: 11.5.sp,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _scrollToSection(GlobalKey key) {
+    final context = key.currentContext;
+    if (context != null) {
+      Scrollable.ensureVisible(
+        context,
+        duration: const Duration(milliseconds: 400),
+        alignment: 0.1, // Align near the top of the viewport
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  Widget _buildAnchorButton(String label, GlobalKey key) {
+    return GestureDetector(
+      onTap: () => _scrollToSection(key),
+      child: Container(
+        margin: EdgeInsets.only(right: 8.w),
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          color: const Color(0xFFEAF2F1),
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(
+            color: CaseTimeMachineColors.primaryGreen.withValues(alpha: 0.2),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CtmSvgIcon(
+              CtmSvgIcons.article,
+              size: 12.sp,
+              color: CaseTimeMachineColors.primaryGreen,
+            ),
+            SizedBox(width: 4.w),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11.5.sp,
+                fontWeight: FontWeight.bold,
+                color: CaseTimeMachineColors.primaryGreen,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -3624,6 +4755,22 @@ class _TrialStep {
   final String outcome;
   final String date;
   final String holdingDetail;
+}
+
+class _CombinedTimelineNode {
+  final String date;
+  final String title;
+  final String description;
+  final String type; // 'event' or 'trial'
+  final _TrialStep? trialStep;
+
+  const _CombinedTimelineNode({
+    required this.date,
+    required this.title,
+    required this.description,
+    required this.type,
+    this.trialStep,
+  });
 }
 
 class _GlossaryItem {

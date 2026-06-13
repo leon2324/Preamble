@@ -8,6 +8,7 @@ import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.
 import 'package:lawapp/pages/journal/data/journal_page_items.dart';
 import 'package:lawapp/pages/journal/widgets/journal_palette.dart';
 import 'package:lawapp/pages/journal/widgets/journal_section_header.dart';
+import 'package:lawapp/pages/journal/widgets/discussion_detail_page.dart';
 
 class DiscussingNowSection extends StatelessWidget {
   const DiscussingNowSection({super.key, required this.palette});
@@ -61,7 +62,17 @@ class _DiscussionTrendCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(16.r),
-        onTap: () => _openPreviewSheet(context),
+        onTap: () {
+          Navigator.of(context).push(
+            CupertinoPageRoute<void>(
+              builder: (context) => DiscussionDetailPage(
+                item: item,
+                palette: palette,
+              ),
+            ),
+          );
+        },
+        onLongPress: () => _openPreviewSheet(context),
         child: Ink(
           height: adaptiveHeight,
           padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -83,17 +94,26 @@ class _DiscussionTrendCard extends StatelessWidget {
           ),
           child: Row(
             children: [
-              _CompactRankBadge(rank: item.rank, tint: item.tint),
+              Hero(
+                tag: 'discussion-rank-${item.rank}',
+                child: _CompactRankBadge(rank: item.rank, tint: item.tint),
+              ),
               SizedBox(width: 10.w),
               Expanded(
-                child: Text(
-                  item.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 13.8.sp,
-                    fontWeight: FontWeight.w900,
-                    color: palette.primaryText,
+                child: Hero(
+                  tag: 'discussion-title-${item.rank}',
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Text(
+                      item.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 13.8.sp,
+                        fontWeight: FontWeight.w900,
+                        color: palette.primaryText,
+                      ),
+                    ),
                   ),
                 ),
               ),

@@ -67,7 +67,14 @@ final caseTimeMachineCasesSeed = <CaseBook>[
       RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 14 條', plainSummary: '人民有集會及結社之自由。', relationToCase: '本案關於言論與集會自由保護範疇之根本依據。')
     ],
     socialImpact: '此案件促成了立法院監督條例的討論，深化了台灣公民社會對程序正義與集會自由界線的討論。',
-    relatedCases: const [],
+    relatedCases: const [
+      RelatedCase(
+        caseId: '799',
+        title: '司法院釋字第 799 號解釋',
+        yearLabel: '2020 年',
+        reason: '關於公權力限制人身自由與集會界線之比例原則審查。',
+      ),
+    ],
     sources: const [
       CaseSource(
         title: '司法院公開法學檢索系統與裁判書彙編',
@@ -78,7 +85,26 @@ final caseTimeMachineCasesSeed = <CaseBook>[
     concurringDissentingOpinions: const [],
     courtArguments: const [],
     expertOpinions: const [],
-    mediaReferences: const [],
+    mediaReferences: const [
+      MediaReference(
+        title: '【專題】太陽花學運十週年：那些改變台灣的歷史瞬間',
+        platform: '公共電視',
+        url: 'https://news.pts.org.tw',
+        mediaType: 'news',
+      ),
+      MediaReference(
+        title: '【Podcast】法客電台：從太陽花學運看憲法防禦權的實踐',
+        platform: '法律白話文運動',
+        url: 'https://plainlaw.me',
+        mediaType: 'podcast',
+      ),
+      MediaReference(
+        title: '紀錄片《街頭的民主思辨》完整版影像紀錄',
+        platform: 'YouTube',
+        url: 'https://youtube.com',
+        mediaType: 'youtube',
+      ),
+    ],
     images: const [],
   ),
   CaseBook(

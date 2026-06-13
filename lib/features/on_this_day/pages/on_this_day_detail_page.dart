@@ -4,6 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/features/on_this_day/data/on_this_day_mock_data.dart';
 import 'package:lawapp/features/on_this_day/models/on_this_day_models.dart';
 import 'package:lawapp/features/on_this_day/theme/on_this_day_theme.dart';
+import 'package:lawapp/features/case_time_machine/data/case_time_machine_repository.dart';
+import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart';
+import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
 
 class OnThisDayDetailPage extends StatefulWidget {
   const OnThisDayDetailPage({super.key, required this.caseId});
@@ -28,6 +31,29 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
     _case = onThisDayCaseById(widget.caseId) ?? onThisDayCases.first;
     _tabs = ['案件簡略', '時間線', '歷史照片', '時代背景', '延伸影響', '資料來源'];
     _mediaController = PageController();
+    _initRepository();
+  }
+
+  Future<void> _initRepository() async {
+    final repo = CaseTimeMachineRepository.instance;
+    if (repo.cases.isEmpty) {
+      await repo.initialize();
+      if (mounted) {
+        setState(() {});
+      }
+    }
+  }
+
+  CaseBook? _findDossierSync(OnThisDayCase mainCase) {
+    final cases = CaseTimeMachineRepository.instance.cases;
+    for (final book in cases) {
+      if (book.id == mainCase.id ||
+          book.titleZh.contains(mainCase.title) || mainCase.title.contains(book.titleZh) ||
+          (book.shortTitleZh.isNotEmpty && (book.shortTitleZh.contains(mainCase.title) || mainCase.title.contains(book.shortTitleZh)))) {
+        return book;
+      }
+    }
+    return null;
   }
 
   @override
@@ -732,6 +758,9 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
   }
 
   Widget _buildBottomActionBar() {
+    final matchedBook = _findDossierSync(_case);
+    final hasDossier = matchedBook != null;
+
     return Container(
       padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 20.h),
       decoration: BoxDecoration(
@@ -749,14 +778,22 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
             ),
           ),
           onPressed: () {
-            // Pop back to OnThisDayHomePage (or list page)
-            Navigator.of(context).popUntil((route) => route.isFirst);
+            if (hasDossier) {
+              Navigator.of(context).push(
+                CupertinoPageRoute<void>(
+                  builder: (__) => CaseDossierDetailPage(book: matchedBook),
+                ),
+              );
+            } else {
+              // Pop back to OnThisDayHomePage (or list page)
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            }
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                '查看更多歷史案件',
+                hasDossier ? '調閱法治卷宗' : '查看更多歷史案件',
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w900,

@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +10,10 @@ import 'package:lawapp/features/on_this_day/pages/on_this_day_list_page.dart';
 import 'package:lawapp/features/on_this_day/pages/on_this_day_detail_page.dart';
 import 'package:lawapp/features/on_this_day/widgets/on_this_day_calendar_sheet.dart';
 import 'package:lawapp/features/on_this_day/widgets/on_this_day_postcard_elements.dart';
+import 'package:lawapp/features/on_this_day/widgets/retro_date_dial_picker.dart';
+import 'package:lawapp/features/case_time_machine/data/case_time_machine_repository.dart';
+import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart';
+import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
 
 class OnThisDayHomePage extends StatefulWidget {
   const OnThisDayHomePage({super.key});
@@ -21,13 +26,37 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
   late DateTime _selectedDate;
   OnThisDayCase? _mainCase;
   List<OnThisDayCase> _otherCases = [];
+  OnThisDayLegalQuote? _selectedQuote;
+
+  late PageController _pageController;
+  final DateTime _anchorDate = DateTime(2026, 4, 7);
+  final int _initialPage = 10000;
+  late int _currentPage;
 
   @override
   void initState() {
     super.initState();
-    // Default to April 7th for demonstration (Zheng Nan-rong Event)
     _selectedDate = DateTime(2026, 4, 7);
+    _currentPage = _initialPage;
+    _pageController = PageController(initialPage: _initialPage);
+    _initRepository();
     _loadCasesForSelectedDate();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _initRepository() async {
+    final repo = CaseTimeMachineRepository.instance;
+    if (repo.cases.isEmpty) {
+      await repo.initialize();
+      if (mounted) {
+        setState(() {}); // refresh to check dossiers
+      }
+    }
   }
 
   void _loadCasesForSelectedDate() {
@@ -36,18 +65,83 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
       if (dayCases.isNotEmpty) {
         _mainCase = dayCases.first;
         _otherCases = dayCases.skip(1).toList();
+        _selectedQuote = null;
       } else {
         _mainCase = null;
         _otherCases = [];
+        final index = (_selectedDate.month * 31 + _selectedDate.day) % onThisDayLegalQuotes.length;
+        _selectedQuote = onThisDayLegalQuotes[index];
       }
     });
   }
 
-  void _goToPreviousDay() {
+  void _timeTravel() {
+    final random = math.Random();
+    final availableCases = onThisDayCases.where((c) => !(c.month == _selectedDate.month && c.day == _selectedDate.day)).toList();
+    final casesToUse = availableCases.isNotEmpty ? availableCases : onThisDayCases;
+    if (casesToUse.isEmpty) return;
+
+    final randomCase = casesToUse[random.nextInt(casesToUse.length)];
+    final targetDate = DateTime(_anchorDate.year, randomCase.month, randomCase.day);
+
     setState(() {
-      _selectedDate = _selectedDate.subtract(const Duration(days: 1));
+      _selectedDate = targetDate;
+      final page = _initialPage + targetDate.difference(_anchorDate).inDays;
+      _currentPage = page;
+      if (_pageController.hasClients) {
+        _pageController.animateToPage(
+          page,
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeInOutCubic,
+        );
+      }
       _loadCasesForSelectedDate();
     });
+  }
+
+  void _goToPreviousDay() {
+    if (_pageController.hasClients) {
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  CaseBook? _findDossierSync(OnThisDayCase? mainCase) {
+    if (mainCase == null) return null;
+    final cases = CaseTimeMachineRepository.instance.cases;
+    for (final book in cases) {
+      if (book.id == mainCase.id ||
+          book.titleZh.contains(mainCase.title) || mainCase.title.contains(book.titleZh) ||
+          (book.shortTitleZh.isNotEmpty && (book.shortTitleZh.contains(mainCase.title) || mainCase.title.contains(book.shortTitleZh)))) {
+        return book;
+      }
+    }
+    return null;
+  }
+
+  void _showRetroDatePicker() {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return RetroDateDialPicker(
+          initialDate: _selectedDate,
+          onDateSelected: (newDate) {
+            setState(() {
+              _selectedDate = newDate;
+              final page = _initialPage + newDate.difference(_anchorDate).inDays;
+              _currentPage = page;
+              if (_pageController.hasClients) {
+                _pageController.jumpToPage(page);
+              }
+              _loadCasesForSelectedDate();
+            });
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -93,16 +187,35 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CustomPaint(
-                      size: Size(54.w, 20.h),
-                      painter: PostmarkPainter(),
-                    ),
-                    SizedBox(width: 4.w),
-                    const PostageStamp(),
-                  ],
+                SizedBox(
+                  width: 130.w,
+                  height: 60.h,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Positioned(
+                        right: 0,
+                        top: 4.h,
+                        child: const PostageStamp(),
+                      ),
+                      Positioned(
+                        left: 0,
+                        top: 0,
+                        child: IgnorePointer(
+                          child: CustomPaint(
+                            size: Size(100.w, 54.h),
+                            painter: ProgrammaticPostmarkPainter(
+                              dateText: _mainCase != null 
+                                  ? '${_mainCase!.year}.${_mainCase!.month.toString().padLeft(2, '0')}.${_mainCase!.day.toString().padLeft(2, '0')}' 
+                                  : '${_selectedDate.year}.${_selectedDate.month.toString().padLeft(2, '0')}.${_selectedDate.day.toString().padLeft(2, '0')}',
+                              locationText: _mainCase != null ? _mainCase!.location : '歷史歲月',
+                              color: const Color(0xFF8C7B6B),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -124,6 +237,83 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
   }
 
   Widget _buildFeaturedCaseCard() {
+    final textScale = MediaQuery.textScalerOf(context).scale(1.0);
+    final pageHeight = (textScale > 1.6 ? 410 : (textScale > 1.25 ? 350 : 255)).h;
+
+    return SizedBox(
+      height: pageHeight,
+      child: PageView.builder(
+        controller: _pageController,
+        onPageChanged: (page) {
+          setState(() {
+            _currentPage = page;
+            _selectedDate = _anchorDate.add(Duration(days: page - _initialPage));
+            _loadCasesForSelectedDate();
+          });
+        },
+        itemBuilder: (context, index) {
+          final date = _anchorDate.add(Duration(days: index - _initialPage));
+          final dayCases = onThisDayCasesForDate(date.month, date.day);
+          final mainCase = dayCases.isNotEmpty ? dayCases.first : null;
+          
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 4.w),
+            child: _buildFeaturedCaseCardForDate(date, mainCase),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildFeaturedCaseCardForDate(DateTime date, OnThisDayCase? mainCase) {
+    final textScale = MediaQuery.textScalerOf(context).scale(1.0);
+    final useStackedLayout = textScale > 1.25;
+    final matchedBook = _findDossierSync(mainCase);
+
+    final cardContent = useStackedLayout
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Column(
+                  children: [
+                    OnThisDayCalendarSheet(
+                      year: mainCase != null ? mainCase.year : date.year,
+                      monthDay: '${date.month} / ${date.day}',
+                      location: mainCase != null ? mainCase.location : '歷史歲月',
+                    ),
+                    SizedBox(height: 8.h),
+                    _buildPreviousDayButton(),
+                  ],
+                ),
+              ),
+              SizedBox(height: 16.h),
+              _buildFeaturedCardTextContent(date, mainCase, matchedBook),
+            ],
+          )
+        : Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Left Column: Vintage Calendar Card
+              Column(
+                children: [
+                  OnThisDayCalendarSheet(
+                    year: mainCase != null ? mainCase.year : date.year,
+                    monthDay: '${date.month} / ${date.day}',
+                    location: mainCase != null ? mainCase.location : '歷史歲月',
+                  ),
+                  SizedBox(height: 12.h),
+                  _buildPreviousDayButton(),
+                ],
+              ),
+              SizedBox(width: 16.w),
+              // Right Column: Summary text and button
+              Expanded(
+                child: _buildFeaturedCardTextContent(date, mainCase, matchedBook),
+              ),
+            ],
+          );
+
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -138,160 +328,234 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
           ),
         ],
       ),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Left Column: Vintage Calendar Card
-              Column(
-                children: [
-                  OnThisDayCalendarSheet(
-                    year: _mainCase != null ? _mainCase!.year : _selectedDate.year,
-                    monthDay: '${_selectedDate.month} / ${_selectedDate.day}',
-                    location: _mainCase != null ? _mainCase!.location : '歷史歲月',
+      child: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
+        child: Column(
+          children: [
+            cardContent,
+            if (mainCase != null) ...[
+              SizedBox(height: 12.h),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFF9EE),
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(color: const Color(0xFFD5C3A3).withValues(alpha: 0.5)),
+                ),
+                child: Text(
+                  '「${mainCase.quote}」',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 10.5.sp,
+                    fontWeight: FontWeight.w800,
+                    fontStyle: FontStyle.italic,
+                    color: const Color(0xFF6C5437),
                   ),
-                  SizedBox(height: 12.h),
-                  GestureDetector(
-                    onTap: _goToPreviousDay,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-                      decoration: BoxDecoration(
-                        color: OnThisDayColors.paperBeige.withValues(alpha: 0.25),
-                        borderRadius: BorderRadius.circular(20.r),
-                        border: Border.all(color: OnThisDayColors.borderLight),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.arrow_back_rounded, size: 10.sp, color: OnThisDayColors.secondaryGreen),
-                          SizedBox(width: 4.w),
-                          Text(
-                            '倒回前一天',
-                            style: TextStyle(
-                              fontSize: 9.sp,
-                              fontWeight: FontWeight.w800,
-                              color: OnThisDayColors.secondaryGreen,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(width: 16.w),
-
-              // Right Column: Summary text and button
-              Expanded(
-                child: _mainCase != null
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _mainCase!.title,
-                            style: OnThisDayTextStyles.titleSerif(context).copyWith(
-                              fontSize: 18.sp,
-                              height: 1.2,
-                            ),
-                          ),
-                          SizedBox(height: 8.h),
-                          Text(
-                            _mainCase!.summary,
-                            maxLines: 4,
-                            overflow: TextOverflow.ellipsis,
-                            style: OnThisDayTextStyles.body(context).copyWith(
-                              fontSize: 11.5.sp,
-                              height: 1.5,
-                            ),
-                          ),
-                          SizedBox(height: 14.h),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                CupertinoPageRoute<void>(
-                                  builder: (__) => OnThisDayDetailPage(caseId: _mainCase!.id),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                              decoration: BoxDecoration(
-                                color: OnThisDayColors.primaryGreen,
-                                borderRadius: BorderRadius.circular(20.r),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    '回到那一天',
-                                    style: TextStyle(
-                                      fontSize: 11.sp,
-                                      fontWeight: FontWeight.w900,
-                                      color: OnThisDayColors.bgPaperLight,
-                                    ),
-                                  ),
-                                  SizedBox(width: 4.w),
-                                  Icon(
-                                    Icons.arrow_forward_rounded,
-                                    size: 11.sp,
-                                    color: OnThisDayColors.bgPaperLight,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '今日無大事',
-                            style: OnThisDayTextStyles.titleSerif(context).copyWith(
-                              fontSize: 18.sp,
-                              height: 1.2,
-                            ),
-                          ),
-                          SizedBox(height: 8.h),
-                          Text(
-                            '在這一天歷史上暫無收錄的重大案件整理。您可以點擊「倒回前一天」或「依日期探索」查詢其他日期。',
-                            style: OnThisDayTextStyles.body(context).copyWith(
-                              fontSize: 11.5.sp,
-                              height: 1.5,
-                            ),
-                          ),
-                        ],
-                      ),
+                ),
               ),
             ],
-          ),
-          if (_mainCase != null) ...[
-            SizedBox(height: 12.h),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFF9EE),
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(color: const Color(0xFFD5C3A3).withValues(alpha: 0.5)),
-              ),
-              child: Text(
-                '「${_mainCase!.quote}」',
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 10.5.sp,
-                  fontWeight: FontWeight.w800,
-                  fontStyle: FontStyle.italic,
-                  color: const Color(0xFF6C5437),
-                ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPreviousDayButton() {
+    return GestureDetector(
+      onTap: _goToPreviousDay,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+        decoration: BoxDecoration(
+          color: OnThisDayColors.paperBeige.withValues(alpha: 0.25),
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(color: OnThisDayColors.borderLight),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.arrow_back_rounded, size: 10.sp, color: OnThisDayColors.secondaryGreen),
+            SizedBox(width: 4.w),
+            Text(
+              '倒回前一天',
+              style: TextStyle(
+                fontSize: 9.sp,
+                fontWeight: FontWeight.w800,
+                color: OnThisDayColors.secondaryGreen,
               ),
             ),
           ],
-        ],
+        ),
       ),
     );
+  }
+
+  Widget _buildFeaturedCardTextContent(DateTime date, OnThisDayCase? mainCase, CaseBook? matchedBook) {
+    final hasDossier = matchedBook != null;
+
+    if (mainCase != null) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            mainCase.title,
+            style: OnThisDayTextStyles.titleSerif(context).copyWith(
+              fontSize: 18.sp,
+              height: 1.2,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            mainCase.summary,
+            maxLines: 4,
+            overflow: TextOverflow.ellipsis,
+            style: OnThisDayTextStyles.body(context).copyWith(
+              fontSize: 11.5.sp,
+              height: 1.5,
+            ),
+          ),
+          SizedBox(height: 14.h),
+          GestureDetector(
+            onTap: () {
+              if (hasDossier) {
+                Navigator.of(context).push(
+                  CupertinoPageRoute<void>(
+                    builder: (__) => CaseDossierDetailPage(book: matchedBook),
+                  ),
+                );
+              } else {
+                Navigator.of(context).push(
+                  CupertinoPageRoute<void>(
+                    builder: (__) => OnThisDayDetailPage(caseId: mainCase.id),
+                  ),
+                );
+              }
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+              decoration: BoxDecoration(
+                color: OnThisDayColors.primaryGreen,
+                borderRadius: BorderRadius.circular(20.r),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    hasDossier ? '調閱法治卷宗' : '回到那一天',
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w900,
+                      color: OnThisDayColors.bgPaperLight,
+                    ),
+                  ),
+                  SizedBox(width: 4.w),
+                  Icon(
+                    Icons.arrow_forward_rounded,
+                    size: 11.sp,
+                    color: OnThisDayColors.bgPaperLight,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    } else {
+      final index = (date.month * 31 + date.day) % onThisDayLegalQuotes.length;
+      final quoteItem = onThisDayLegalQuotes[index];
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.format_quote_rounded, color: OnThisDayColors.accentGold, size: 16.sp),
+              SizedBox(width: 4.w),
+              Text(
+                '思辨格言',
+                style: TextStyle(
+                  fontFamily: 'Songti TC',
+                  fontFamilyFallback: const ['BiauKai', 'serif'],
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w900,
+                  color: OnThisDayColors.secondaryGreen,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 6.h),
+          Text(
+            '「${quoteItem.quote}」',
+            style: TextStyle(
+              fontFamily: 'Songti TC',
+              fontFamilyFallback: const ['BiauKai', 'serif'],
+              fontSize: 13.sp,
+              fontWeight: FontWeight.bold,
+              height: 1.4,
+              color: const Color(0xFF6C5437),
+            ),
+          ),
+          SizedBox(height: 4.h),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              '—— ${quoteItem.author}',
+              style: TextStyle(
+                fontSize: 10.sp,
+                fontWeight: FontWeight.w800,
+                color: OnThisDayColors.textSecondary,
+              ),
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            '思辨問題：${quoteItem.reflectiveQuestion}',
+            style: TextStyle(
+              fontSize: 10.5.sp,
+              height: 1.4,
+              color: OnThisDayColors.textSecondary,
+            ),
+          ),
+          SizedBox(height: 12.h),
+          GestureDetector(
+            onTap: _timeTravel,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+              decoration: BoxDecoration(
+                color: OnThisDayColors.accentGold,
+                borderRadius: BorderRadius.circular(20.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: OnThisDayColors.accentGold.withValues(alpha: 0.15),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '歷史時空漫遊 🃏',
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w900,
+                      color: OnThisDayColors.bgPaperLight,
+                    ),
+                  ),
+                  SizedBox(width: 4.w),
+                  Icon(
+                    Icons.casino_outlined,
+                    size: 11.sp,
+                    color: OnThisDayColors.bgPaperLight,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    }
   }
 
   // Removed internal _buildCalendarSheet to use the shared OnThisDayCalendarSheet widget
@@ -410,9 +674,14 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildExplorePill('今天', isSelected: true, onTap: () {
+            _buildExplorePill('今天', isSelected: _selectedDate.month == 4 && _selectedDate.day == 7, onTap: () {
               setState(() {
                 _selectedDate = DateTime(2026, 4, 7);
+                final page = _initialPage + _selectedDate.difference(_anchorDate).inDays;
+                _currentPage = page;
+                if (_pageController.hasClients) {
+                  _pageController.jumpToPage(page);
+                }
                 _loadCasesForSelectedDate();
               });
             }),
@@ -420,7 +689,7 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
             _buildExplorePill('今年', onTap: () => _openDiscovery('今年')),
             _buildExplorePill('重大事件', onTap: () => _openDiscovery('重大事件')),
             GestureDetector(
-              onTap: () => _openDiscovery('全部'),
+              onTap: _showRetroDatePicker,
               child: Container(
                 padding: EdgeInsets.all(8.w),
                 decoration: BoxDecoration(

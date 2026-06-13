@@ -1,35 +1,148 @@
+import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lawapp/features/on_this_day/data/on_this_day_mock_data.dart';
+import 'package:lawapp/features/on_this_day/models/on_this_day_models.dart';
 import 'package:lawapp/features/on_this_day/pages/on_this_day_home_page.dart';
 import 'package:lawapp/pages/journal/data/journal_page_items.dart';
 import 'package:lawapp/pages/journal/widgets/journal_palette.dart';
+import 'package:lawapp/features/case_time_machine/data/case_time_machine_repository.dart';
+import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart';
+import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
 
 const _onThisDayCardRadius = 20.0;
 
-class OnThisDayCard extends StatelessWidget {
+class OnThisDayCard extends StatefulWidget {
   const OnThisDayCard({super.key, required this.palette});
 
   final JournalPalette palette;
 
   @override
+  State<OnThisDayCard> createState() => _OnThisDayCardState();
+}
+
+class _OnThisDayCardState extends State<OnThisDayCard> {
+  late DateTime _currentDate;
+  CaseBook? _matchedBook;
+  bool _checkingDossier = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentDate = DateTime.now();
+    _checkDossier();
+  }
+
+  Future<void> _checkDossier() async {
+    try {
+      final repository = CaseTimeMachineRepository.instance;
+      if (repository.cases.isEmpty) {
+        await repository.initialize();
+      }
+      final cases = repository.cases;
+      final dayCases = onThisDayCasesForDate(_currentDate.month, _currentDate.day);
+      if (dayCases.isEmpty) {
+        if (mounted) {
+          setState(() {
+            _matchedBook = null;
+            _checkingDossier = false;
+          });
+        }
+        return;
+      }
+      final mainCase = dayCases.first;
+      final title = mainCase.title;
+      final fullDateStr = '${mainCase.year}.${mainCase.month.toString().padLeft(2, '0')}.${mainCase.day.toString().padLeft(2, '0')}';
+      CaseBook? found;
+      for (final book in cases) {
+        if (book.id == fullDateStr.replaceAll('.', '-') ||
+            book.titleZh.contains(title) || title.contains(book.titleZh) ||
+            (book.shortTitleZh.isNotEmpty && (book.shortTitleZh.contains(title) || title.contains(book.shortTitleZh)))) {
+          found = book;
+          break;
+        }
+      }
+      if (mounted) {
+        setState(() {
+          _matchedBook = found;
+          _checkingDossier = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _matchedBook = null;
+          _checkingDossier = false;
+        });
+      }
+    }
+  }
+
+  void _randomRoam() {
+    final random = math.Random();
+    final randomCase = onThisDayCases[random.nextInt(onThisDayCases.length)];
+    setState(() {
+      _currentDate = DateTime(randomCase.year, randomCase.month, randomCase.day);
+      _checkingDossier = true;
+    });
+    _checkDossier();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final item = onThisDayItem;
+    final dayCases = onThisDayCasesForDate(_currentDate.month, _currentDate.day);
     final textScale = MediaQuery.textScalerOf(context).scale(1);
+    final bool hasCase = dayCases.isNotEmpty;
+
+    final OnThisDayItem item;
+    if (hasCase) {
+      final mainCase = dayCases.first;
+      item = OnThisDayItem(
+        label: '那年今日',
+        monthDay: '${mainCase.month} / ${mainCase.day}',
+        fullDate: '${mainCase.year}.${mainCase.month.toString().padLeft(2, '0')}.${mainCase.day.toString().padLeft(2, '0')}',
+        location: mainCase.location,
+        title: mainCase.title,
+        summary: mainCase.summary,
+        quote: mainCase.quote,
+        buttonLabel: '回到那一天',
+      );
+    } else {
+      final quoteIndex = (_currentDate.month * 31 + _currentDate.day) % onThisDayLegalQuotes.length;
+      final quoteItem = onThisDayLegalQuotes[quoteIndex];
+      item = OnThisDayItem(
+        label: '那年今日 • 思辨格言',
+        monthDay: '${_currentDate.month} / ${_currentDate.day}',
+        fullDate: '${_currentDate.year}.${_currentDate.month.toString().padLeft(2, '0')}.${_currentDate.day.toString().padLeft(2, '0')}',
+        location: '思辨空間',
+        title: '思辨格言 • ${quoteItem.author}',
+        summary: '思辨問題：${quoteItem.reflectiveQuestion}',
+        quote: quoteItem.quote,
+        buttonLabel: '隨機漫遊 🎲',
+      );
+    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
         final useStackedLayout = constraints.maxWidth < 338 || textScale > 1.1;
 
-        // 台灣繁體中文教學註解：
-        // 這張卡改成完全由 Flutter 自己畫紙張、外框與插圖，
-        // 不再依賴固定構圖的 PNG，之後想調留白、圓角或插圖透明度都能直接改程式。
         return _OnThisDayPaperCard(
           child: Padding(
             padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 14.h),
             child: useStackedLayout
-                ? _OnThisDayStackedLayout(item: item)
-                : _OnThisDayFlowLayout(item: item),
+                ? _OnThisDayStackedLayout(
+                    item: item,
+                    matchedBook: _matchedBook,
+                    hasCase: hasCase,
+                    onRoamTap: _randomRoam,
+                  )
+                : _OnThisDayFlowLayout(
+                    item: item,
+                    matchedBook: _matchedBook,
+                    hasCase: hasCase,
+                    onRoamTap: _randomRoam,
+                  ),
           ),
         );
       },
@@ -110,9 +223,17 @@ class _OnThisDayPaperCard extends StatelessWidget {
 }
 
 class _OnThisDayFlowLayout extends StatelessWidget {
-  const _OnThisDayFlowLayout({required this.item});
+  const _OnThisDayFlowLayout({
+    required this.item,
+    this.matchedBook,
+    required this.hasCase,
+    this.onRoamTap,
+  });
 
   final OnThisDayItem item;
+  final CaseBook? matchedBook;
+  final bool hasCase;
+  final VoidCallback? onRoamTap;
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +270,9 @@ class _OnThisDayFlowLayout extends StatelessWidget {
                 bodySize: 11.8.sp,
                 quoteSize: 11.1.sp,
                 buttonSize: 11.5.sp,
+                matchedBook: matchedBook,
+                hasCase: hasCase,
+                onRoamTap: onRoamTap,
               ),
             ),
           ],
@@ -159,9 +283,17 @@ class _OnThisDayFlowLayout extends StatelessWidget {
 }
 
 class _OnThisDayStackedLayout extends StatelessWidget {
-  const _OnThisDayStackedLayout({required this.item});
+  const _OnThisDayStackedLayout({
+    required this.item,
+    this.matchedBook,
+    required this.hasCase,
+    this.onRoamTap,
+  });
 
   final OnThisDayItem item;
+  final CaseBook? matchedBook;
+  final bool hasCase;
+  final VoidCallback? onRoamTap;
 
   @override
   Widget build(BuildContext context) {
@@ -191,6 +323,9 @@ class _OnThisDayStackedLayout extends StatelessWidget {
           bodySize: 10.9.sp,
           quoteSize: 10.5.sp,
           buttonSize: 10.9.sp,
+          matchedBook: matchedBook,
+          hasCase: hasCase,
+          onRoamTap: onRoamTap,
         ),
       ],
     );
@@ -372,37 +507,46 @@ class _MemoryDateBadgeSheet extends StatelessWidget {
                     ),
                     borderRadius: BorderRadius.circular(999.r),
                   ),
-                  child: Text(
-                    yearLabel,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: yearSize,
-                      fontWeight: FontWeight.w900,
-                      color: const Color(0xFF6A5842),
-                      letterSpacing: 1.6,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      yearLabel,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: yearSize,
+                        fontWeight: FontWeight.w900,
+                        color: const Color(0xFF6A5842),
+                        letterSpacing: 1.6,
+                      ),
                     ),
                   ),
                 ),
                 const Spacer(),
-                Text(
-                  monthDay,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: monthDaySize,
-                    height: 0.94,
-                    fontWeight: FontWeight.w900,
-                    color: const Color(0xFF16504A),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    monthDay,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: monthDaySize,
+                      height: 0.94,
+                      fontWeight: FontWeight.w900,
+                      color: const Color(0xFF16504A),
+                    ),
                   ),
                 ),
                 const Spacer(),
-                Text(
-                  location,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: locationSize,
-                    height: 1.35,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF6A5842),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    location,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: locationSize,
+                      height: 1.35,
+                      fontWeight: FontWeight.w800,
+                      color: const Color(0xFF6A5842),
+                    ),
                   ),
                 ),
                 SizedBox(height: 4.h),
@@ -488,6 +632,9 @@ class _MemoryStoryFlow extends StatelessWidget {
     required this.bodySize,
     required this.quoteSize,
     required this.buttonSize,
+    this.matchedBook,
+    required this.hasCase,
+    this.onRoamTap,
   });
 
   final OnThisDayItem item;
@@ -495,9 +642,15 @@ class _MemoryStoryFlow extends StatelessWidget {
   final double bodySize;
   final double quoteSize;
   final double buttonSize;
+  final CaseBook? matchedBook;
+  final bool hasCase;
+  final VoidCallback? onRoamTap;
 
   @override
   Widget build(BuildContext context) {
+    final hasDossier = matchedBook != null;
+    final label = hasDossier ? '調閱法治卷宗' : item.buttonLabel;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -549,13 +702,27 @@ class _MemoryStoryFlow extends StatelessWidget {
         Align(
           alignment: Alignment.centerRight,
           child: _MemoryArrowButton(
-            label: item.buttonLabel,
+            label: label,
             fontSize: buttonSize,
-            onTap: () => Navigator.of(context).push(
-              CupertinoPageRoute<void>(
-                builder: (__) => const OnThisDayHomePage(),
-              ),
-            ),
+            onTap: () {
+              if (hasCase) {
+                if (hasDossier) {
+                  Navigator.of(context).push(
+                    CupertinoPageRoute<void>(
+                      builder: (__) => CaseDossierDetailPage(book: matchedBook!),
+                    ),
+                  );
+                } else {
+                  Navigator.of(context).push(
+                    CupertinoPageRoute<void>(
+                      builder: (__) => const OnThisDayHomePage(),
+                    ),
+                  );
+                }
+              } else {
+                onRoamTap?.call();
+              }
+            },
           ),
         ),
       ],
