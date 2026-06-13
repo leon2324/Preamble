@@ -8,6 +8,7 @@ import 'package:lawapp/data/law_assistant/guest_law_assistant_usage.dart';
 import 'package:lawapp/data/law_assistant/law_assistant_models.dart';
 import 'package:lawapp/data/law_assistant/law_assistant_repository.dart';
 import 'package:lawapp/data/mock_data/learning/learning_mock_data.dart';
+import 'package:lawapp/data/mock_data/learning/extended_stories_data.dart';
 import 'package:lawapp/pages/learning/learning_mock_detail_page.dart';
 import 'package:lawapp/pages/learning/statute_database_page.dart';
 import 'package:lawapp/theme/app_colors.dart';
@@ -38,115 +39,20 @@ class KnowLawPage extends StatefulWidget {
 
 class KnowLawPageState extends State<KnowLawPage> {
   String _activeTopic = '租屋糾紛';
-  String _illuActiveCategory = '車禍事故';
-  String _dialogActiveCategory = '租屋糾紛';
+  int _illuStoryIndex = 0;
+  int _dialogStoryIndex = 0;
 
   void _rotateIllustrationTopic() {
-    final categories = ['租屋糾紛', '車禍事故', '職場權益', '網購消費', '個資隱私'];
-    final currentIndex = categories.indexOf(_illuActiveCategory);
     setState(() {
-      _illuActiveCategory = categories[(currentIndex + 1) % categories.length];
+      _illuStoryIndex = (_illuStoryIndex + 1) % fullIllustrationStories.length;
     });
   }
 
   void _rotateDialogTopic() {
-    final categories = ['租屋糾紛', '車禍事故', '職場權益', '網購消費', '個資隱私'];
-    final currentIndex = categories.indexOf(_dialogActiveCategory);
     setState(() {
-      _dialogActiveCategory = categories[(currentIndex + 1) % categories.length];
+      _dialogStoryIndex = (_dialogStoryIndex + 1) % fullDialogStories.length;
     });
   }
-
-  static const Map<String, _IllustrationStoryData> _illustrationStories = {
-    '租屋糾紛': _IllustrationStoryData(
-      tag: '租屋防護課',
-      title: '退租時，房東說牆壁有污漬要扣一萬押金合理嗎？',
-      description: '了解自然折舊與故意損壞的界線，學會點交拍照的自保關鍵。',
-      targetUnitIndex: 2,
-    ),
-    '車禍事故': _IllustrationStoryData(
-      tag: '車禍防護課',
-      title: '車禍被撞了！第一時間該拍照還是移車？',
-      description: '道路事故現場的黃金三步驟：安全防範、拍照存證、定位通報。答對測驗可解鎖車禍徽章！',
-      targetUnitIndex: 0,
-    ),
-    '職場權益': _IllustrationStoryData(
-      tag: '勞動權益課',
-      title: '老闆要求下班在 LINE 回工作算加班嗎？該如何留存證據？',
-      description: '學習通訊軟體交辦工作之加班認定標準與對話截圖自保技巧。',
-      targetUnitIndex: 1,
-    ),
-    '網購消費': _IllustrationStoryData(
-      tag: '消費消保課',
-      title: '網購拆封了就不能退？賣家寫「拆封不退」真的站得住腳嗎？',
-      description: '拆開鑑賞期的法律真相，分清合理檢查與惡意使用的退貨邊界。',
-      targetUnitIndex: 0,
-    ),
-    '個資隱私': _IllustrationStoryData(
-      tag: '個資隱私課',
-      title: '接到佯稱客服的詐騙電話，是誰洩露了我的購物個資？',
-      description: '探討企業洩漏個資的民事賠償責任，以及接到詐騙電話的標準查證三步驟。',
-      targetUnitIndex: 0,
-    ),
-  };
-
-  static const Map<String, _DialogStoryData> _dialogStories = {
-    '租屋糾紛': _DialogStoryData(
-      senderA: '房東 👩‍🦳',
-      avatarA: '房',
-      textA: '冷氣吹不冷喔？那台舊了啦，要換你自己換，合約寫修繕自行負責喔！',
-      senderB: '房客 🧑',
-      avatarB: '客',
-      textB: '房東太太，可是民法第429條規定，除非契約另有約定，否則修繕責任應由房東承擔...',
-      title: '房東說「合約寫自行負責」真的有效嗎？',
-      description: '學會區分自然折舊與人為損壞，保障租屋權益。',
-      targetUnitIndex: 1,
-    ),
-    '車禍事故': _DialogStoryData(
-      senderA: '對方駕駛 👨',
-      avatarA: '對',
-      textA: '是你自己撞上來的，而且我的車子零件換新你要全額賠償！',
-      senderB: '我方駕駛 🧑',
-      avatarB: '我',
-      textB: '但法律規定零件折舊要按使用年限計算，不能直接要求全新價格賠償喔...',
-      title: '車禍求償零件「以新品算」合理嗎？',
-      description: '了解折舊計算公式，避免在民事理賠中被多索賠。',
-      targetUnitIndex: 2,
-    ),
-    '職場權益': _DialogStoryData(
-      senderA: '主管 👨‍💼',
-      avatarA: '管',
-      textA: '下個月專案要趕工，大家自動加班一下，沒有加班費但可以換補休！',
-      senderB: '員工 🧑',
-      avatarB: '員',
-      textB: '經理，勞基法規定加班必須先經工會或勞資會議同意，且加班費率不能打折...',
-      title: '強迫加班換補休，合法嗎？',
-      description: '掌握加班費計算與補休選擇權，捍衛勞工基本權益。',
-      targetUnitIndex: 1,
-    ),
-    '網購消費': _DialogStoryData(
-      senderA: '網拍賣家 👩‍💻',
-      avatarA: '賣',
-      textA: '不好意思，我們賣場首頁有寫特價商品與福利品不適用七天鑑賞期喔！',
-      senderB: '買家 🧑',
-      avatarB: '買',
-      textB: '但消保法規定網路交易是特種買賣，除排外商品外，不能以約定排除鑑賞期...',
-      title: '賣場自訂「特價品不退換」有效嗎？',
-      description: '識破賣家的免責條款，保障網購退換貨消費者權利。',
-      targetUnitIndex: 0,
-    ),
-    '個資隱私': _DialogStoryData(
-      senderA: '佯稱客服 📞',
-      avatarA: '騙',
-      textA: '您好，因為我們系統設定錯誤，誤將您設為高級會員，請提供金融卡密碼...',
-      senderB: '消費者 🧑',
-      avatarB: '消',
-      textB: '等等，銀行跟客服是不會向用戶索取卡片密碼的，這明顯是個資外洩後的詐騙...',
-      title: '接到佯稱客服的電話，如何防範個資詐騙？',
-      description: '學習個資外洩後的查證與自保程序，防止金融帳戶被騙。',
-      targetUnitIndex: 1,
-    ),
-  };
 
   Color _getTopicColor(String category) {
     switch (category) {
@@ -515,14 +421,14 @@ class KnowLawPageState extends State<KnowLawPage> {
     final rentProgress = rentUnits.isEmpty ? 0.0 : completedRentCount / rentUnits.length;
 
     // 取得下方的獨立精選專題與對話專題資料
-    final illuStory = _illustrationStories[_illuActiveCategory] ?? _illustrationStories['車禍事故']!;
-    final illuTopicData = featuredLearningTopics[_illuActiveCategory] ?? learningTopicCarAccident;
+    final illuStory = fullIllustrationStories[_illuStoryIndex % fullIllustrationStories.length];
+    final illuTopicData = featuredLearningTopics[illuStory.category] ?? learningTopicCarAccident;
     final illuTargetArticle = (illuTopicData.units.length > illuStory.targetUnitIndex)
         ? illuTopicData.units[illuStory.targetUnitIndex].article
         : illuTopicData.heroArticle;
 
-    final dialogStory = _dialogStories[_dialogActiveCategory] ?? _dialogStories['租屋糾紛']!;
-    final dialogTopicData = featuredLearningTopics[_dialogActiveCategory] ?? learningTopic;
+    final dialogStory = fullDialogStories[_dialogStoryIndex % fullDialogStories.length];
+    final dialogTopicData = featuredLearningTopics[dialogStory.category] ?? learningTopic;
     final dialogTargetArticle = (dialogTopicData.units.length > dialogStory.targetUnitIndex)
         ? dialogTopicData.units[dialogStory.targetUnitIndex].article
         : dialogTopicData.heroArticle;
@@ -1861,41 +1767,7 @@ class _LearningTopicOption {
   final bool isAvailable;
 }
 
-class _IllustrationStoryData {
-  const _IllustrationStoryData({
-    required this.tag,
-    required this.title,
-    required this.description,
-    required this.targetUnitIndex,
-  });
-  final String tag;
-  final String title;
-  final String description;
-  final int targetUnitIndex;
-}
 
-class _DialogStoryData {
-  const _DialogStoryData({
-    required this.senderA,
-    required this.avatarA,
-    required this.textA,
-    required this.senderB,
-    required this.avatarB,
-    required this.textB,
-    required this.title,
-    required this.description,
-    required this.targetUnitIndex,
-  });
-  final String senderA;
-  final String avatarA;
-  final String textA;
-  final String senderB;
-  final String avatarB;
-  final String textB;
-  final String title;
-  final String description;
-  final int targetUnitIndex;
-}
 
 // 🤖 智慧小法助輪播提問氣泡元件 (整合等級表情與自訂印花)
 class _AssistantPromptBubble extends StatefulWidget {
