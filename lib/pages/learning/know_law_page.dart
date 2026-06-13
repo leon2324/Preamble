@@ -487,6 +487,15 @@ class KnowLawPageState extends State<KnowLawPage> {
   }
 
   // 3) 法學課堂的列表項目
+  // Mappings of recommendations: activeTopic -> [IllustrationTopic, DialogTopic]
+  static const Map<String, List<String>> _recommendationMap = {
+    '租屋糾紛': ['車禍事故', '職場權益'],
+    '車禍事故': ['職場權益', '租屋糾紛'],
+    '職場權益': ['網購消費', '車禍事故'],
+    '網購消費': ['個資隱私', '租屋糾紛'],
+    '個資隱私': ['租屋糾紛', '網購消費'],
+  };
+
   List<Widget> _buildClassroomItems(bool isDark, LearningGameState gameState) {
     final currentTopic = featuredLearningTopics[_activeTopic] ?? learningTopic;
     final rentUnits = currentTopic.units;
@@ -494,6 +503,26 @@ class KnowLawPageState extends State<KnowLawPage> {
         .where((unit) => gameState.completedSteps.contains(unit.stepLabel))
         .length;
     final rentProgress = rentUnits.isEmpty ? 0.0 : completedRentCount / rentUnits.length;
+
+    // 取得當前專題的推薦專題
+    final recs = _recommendationMap[_activeTopic] ?? ['車禍事故', '職場權益'];
+    final recTopic1 = recs[0];
+    final recTopic2 = recs[1];
+
+    final illuStory = _illustrationStories[recTopic1] ?? _illustrationStories['車禍事故']!;
+    final illuTopicData = featuredLearningTopics[recTopic1] ?? learningTopicCarAccident;
+    final illuAccentColor = _getTopicColor(recTopic1);
+    final illuCardBg = _getTopicCardBg(recTopic1, isDark);
+    final illuTargetArticle = (illuTopicData.units.length > illuStory.targetUnitIndex)
+        ? illuTopicData.units[illuStory.targetUnitIndex].article
+        : illuTopicData.heroArticle;
+
+    final dialogStory = _dialogStories[recTopic2] ?? _dialogStories['職場權益']!;
+    final dialogTopicData = featuredLearningTopics[recTopic2] ?? learningTopicWorkplace;
+    final dialogAccentColor = _getTopicColor(recTopic2);
+    final dialogTargetArticle = (dialogTopicData.units.length > dialogStory.targetUnitIndex)
+        ? dialogTopicData.units[dialogStory.targetUnitIndex].article
+        : dialogTopicData.heroArticle;
 
     return [
       // 1. 公民法律小擂台入口 Banner
@@ -578,8 +607,7 @@ class KnowLawPageState extends State<KnowLawPage> {
       // 3. 混合排列的卡片：插圖故事卡片
       NotebookCard(
         hasPaperClip: true,
-        backgroundColor:
-            isDark ? const Color(0xFF242C36) : const Color(0xFFEAF0F8),
+        backgroundColor: illuCardBg,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -588,7 +616,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                 CtmSvgIcon(
                   CtmSvgIcons.star,
                   size: 20.sp,
-                  color: const Color(0xFF3F7FBF),
+                  color: illuAccentColor,
                 ),
                 SizedBox(width: 8.w),
                 Container(
@@ -598,18 +626,18 @@ class KnowLawPageState extends State<KnowLawPage> {
                     borderRadius: BorderRadius.circular(4.r),
                   ),
                   child: Text(
-                    '車禍防護課',
+                    '大家都在看 • ${illuStory.tag}',
                     style: TextStyle(
                         fontSize: 9.5.sp,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1F4E87)),
+                        color: illuAccentColor.withValues(alpha: 0.86)),
                   ),
                 ),
               ],
             ),
             SizedBox(height: 10.h),
             Text(
-              '車禍被撞了！第一時間該拍照還是移車？',
+              illuStory.title,
               style: TextStyle(
                 fontSize: 14.5.sp,
                 fontWeight: FontWeight.w900,
@@ -618,7 +646,7 @@ class KnowLawPageState extends State<KnowLawPage> {
             ),
             SizedBox(height: 6.h),
             Text(
-              '道路事故現場的黃金三步驟：安全防範、拍照存證、定位通報。答對測驗可解鎖車禍徽章！',
+              illuStory.description,
               style: TextStyle(
                   fontSize: 12.sp, height: 1.4, color: AppColors.textSecondary),
             ),
@@ -627,10 +655,9 @@ class KnowLawPageState extends State<KnowLawPage> {
               icon: CtmSvgIcon(CtmSvgIcons.chevronRight,
                   size: 14.sp, color: Colors.white),
               label: const Text('研讀此案例'),
-              onPressed: () =>
-                  _openArticle(learningTopic.supportItems[2].article),
+              onPressed: () => _openArticle(illuTargetArticle),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF3F7FBF),
+                backgroundColor: illuAccentColor,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.r)),
@@ -650,15 +677,15 @@ class KnowLawPageState extends State<KnowLawPage> {
                 CtmSvgIcon(
                   CtmSvgIcons.message,
                   size: 16.sp,
-                  color: HomeV2Palette.trustGreen,
+                  color: dialogAccentColor,
                 ),
                 SizedBox(width: 8.w),
                 Text(
-                  '模擬對話故事',
+                  '大家都在談 • 模擬對話故事',
                   style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.bold,
-                      color: HomeV2Palette.trustGreen),
+                      color: dialogAccentColor),
                 ),
               ],
             ),
@@ -674,24 +701,24 @@ class KnowLawPageState extends State<KnowLawPage> {
               child: Column(
                 children: [
                   _buildChatBubble(
-                    sender: '房東 👩‍🦳',
-                    text: '冷氣吹不冷喔？那台舊了啦，要換你自己換，合約寫修繕自行負責喔！',
+                    sender: dialogStory.senderA,
+                    text: dialogStory.textA,
                     isMe: false,
-                    avatarInitial: '房',
+                    avatarInitial: dialogStory.avatarA,
                   ),
                   SizedBox(height: 8.h),
                   _buildChatBubble(
-                    sender: '房客 🧑',
-                    text: '房東太太，可是民法第429條規定，除非契約另有約定，否則修繕責任應由房東承擔...',
+                    sender: dialogStory.senderB,
+                    text: dialogStory.textB,
                     isMe: true,
-                    avatarInitial: '客',
+                    avatarInitial: dialogStory.avatarB,
                   ),
                 ],
               ),
             ),
             SizedBox(height: 10.h),
             Text(
-              '房東說「合約寫自行負責」真的有效嗎？',
+              dialogStory.title,
               style: TextStyle(
                 fontSize: 13.5.sp,
                 fontWeight: FontWeight.bold,
@@ -700,21 +727,24 @@ class KnowLawPageState extends State<KnowLawPage> {
             ),
             SizedBox(height: 4.h),
             Text(
-              '學會區分自然折舊與人為損壞，保障租屋權益。',
+              dialogStory.description,
               style:
                   TextStyle(fontSize: 11.5.sp, color: AppColors.textSecondary),
             ),
             SizedBox(height: 8.h),
             TextButton(
-              onPressed: () => _openArticle(learningTopic.units[2].article),
+              onPressed: () => _openArticle(dialogTargetArticle),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text('看白話解析',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text('看白話解析',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: dialogAccentColor,
+                      )),
                   SizedBox(width: 4.w),
                   CtmSvgIcon(CtmSvgIcons.chevronRight,
-                      size: 12.sp, color: HomeV2Palette.trustGreen),
+                      size: 12.sp, color: dialogAccentColor),
                 ],
               ),
             ),
