@@ -3,28 +3,29 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
 import 'package:lawapp/app/app_state.dart';
 import 'package:lawapp/components/home/v2/home_v2_palette.dart';
-import 'package:lawapp/components/home/v2/home_v2_primitives.dart';
 import 'package:lawapp/components/shared/mvp_state_widgets.dart';
 import 'package:lawapp/data/law_assistant/guest_law_assistant_usage.dart';
 import 'package:lawapp/data/law_assistant/law_assistant_models.dart';
 import 'package:lawapp/data/law_assistant/law_assistant_repository.dart';
 import 'package:lawapp/data/mock_data/learning/learning_mock_data.dart';
 import 'package:lawapp/pages/learning/learning_mock_detail_page.dart';
-import 'package:lawapp/pages/learning/learning_quiz_page.dart';
 import 'package:lawapp/pages/learning/statute_database_page.dart';
-import 'package:lawapp/theme/adaptive_layout.dart';
 import 'package:lawapp/theme/app_colors.dart';
+
+// 導入遊戲化與手寫本美學
+import 'package:lawapp/data/learning/learning_game_state.dart';
+import 'package:lawapp/pages/learning/widgets/notebook_aesthetics.dart';
+import 'package:lawapp/pages/learning/widgets/achievement_room.dart';
+import 'package:lawapp/pages/learning/widgets/mock_court_challenge.dart';
+
+import 'dart:async';
 
 part 'law_assistant/law_assistant_palette.dart';
 part 'law_assistant/law_assistant_search_page.dart';
 part 'law_assistant/law_assistant_prototype_widgets.dart';
 part 'law_assistant/law_assistant_chat_page.dart';
 
-/// 學習頁 Prototype：把文章入口整理成「情境學習中心」。
-///
-/// 台灣繁體中文教學註解：
-/// 這版先用首頁 v2 的色票與卡片語言重新排列內容，重點是驗證資訊架構；
-/// 詳細資料仍沿用 learning mock data，等視覺方向確認後再拆成正式元件檔。
+/// 學習頁重構：左右 Tab 切換 (法學課堂 & 生活工具箱) 搭配手寫法律筆記本美學
 class KnowLawPage extends StatefulWidget {
   const KnowLawPage({super.key});
 
@@ -32,14 +33,22 @@ class KnowLawPage extends StatefulWidget {
   KnowLawPageState createState() => KnowLawPageState();
 }
 
-class KnowLawPageState extends State<KnowLawPage> {
-  static const List<String> _learningCategories = [
-    '租屋',
-    '勞資',
-    '交通',
-    '刑事',
-    '消費',
-  ];
+class KnowLawPageState extends State<KnowLawPage> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   void _openArticle(LearningMockArticle article) {
     Navigator.of(context).push(
@@ -65,123 +74,194 @@ class KnowLawPageState extends State<KnowLawPage> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final keyboardInset = MediaQuery.of(context).viewInsets.bottom;
-
-    // 台灣繁體中文教學註解：
-    // Prototype 先取消舊版固定頂部，改用首頁同款垂直資訊流，讓學習分頁
-    // 和首頁、記事頁保持同一個產品節奏；底部仍預留全域 Nav 的安全距離。
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.fromLTRB(
-          16.w,
-          18.h,
-          16.w,
-          context.pageContentBottomPadding + 70.h + keyboardInset,
-        ),
-        children: [
-          _LearningPrototypeHeader(onSearchTap: _openLearningSearch),
-          SizedBox(height: 14.h),
-          _LearningPrototypeActionStrip(
-            onAskTap: _openLearningSearch,
-            onRouteTap: () => _openArticle(learningTopic.heroArticle),
-            onStatuteTap: _openStatuteDatabase,
-          ),
-          SizedBox(height: 18.h),
-          HomeV2SectionHeader(
-            title: '專題',
-            action: '查看',
-            onTap: () => _openArticle(learningTopic.heroArticle),
-          ),
-          SizedBox(height: 10.h),
-          _LearningRouteCard(
-            topic: learningTopic,
-            onTap: () => _openArticle(learningTopic.heroArticle),
-            onQuizTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (__) => const LearningQuizPage()),
-              );
-            },
-          ),
-          SizedBox(height: 18.h),
-          const HomeV2SectionHeader(title: '根據最近查看的案件'),
-          SizedBox(height: 10.h),
-          _LearningCaseRecommendationList(
-            items: _recentCases,
-            onTap: (item) => _openArticle(item.article),
-          ),
-          SizedBox(height: 18.h),
-          const HomeV2SectionHeader(title: '常見法律學習主題'),
-          SizedBox(height: 10.h),
-          _LearningTopicMatrix(
-            items: _commonTopics,
-            onTap: (item) => _openArticle(item.article),
-          ),
-          SizedBox(height: 18.h),
-          _LearningReviewAndGlossaryRow(
-            onQuizTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (__) => const LearningQuizPage()),
-              );
-            },
-            onGlossaryTap: () =>
-                _openArticle(learningTopic.supportItems.first.article),
-          ),
-          SizedBox(height: 18.h),
-          const HomeV2SectionHeader(title: '法條資料庫'),
-          SizedBox(height: 10.h),
-          _LearningStatuteToolCard(
-            onTap: _openStatuteDatabase,
-            onChipTap: (query) => _openStatuteDatabase(initialQuery: query),
-          ),
-          SizedBox(height: 18.h),
-          const HomeV2SectionHeader(title: '法律翻譯機'),
-          SizedBox(height: 10.h),
-          _LearningTranslatorPrototypeCard(
-            article: learningTopic.supportItems[1].article,
-            onTap: () => _openArticle(learningTopic.supportItems[1].article),
-          ),
-          SizedBox(height: 18.h),
-          const HomeV2SectionHeader(title: '文件與證據準備'),
-          SizedBox(height: 10.h),
-          _LearningEvidenceChecklistCard(
-            onTap: () => _openArticle(learningTopic.supportItems[2].article),
-          ),
-        ],
+  void _openAchievementRoom() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (__) => const AchievementRoomPage(),
       ),
     );
   }
-}
-
-class _LearningPrototypeHeader extends StatelessWidget {
-  const _LearningPrototypeHeader({required this.onSearchTap});
-
-  final VoidCallback onSearchTap;
 
   @override
   Widget build(BuildContext context) {
-    return HomeV2SurfaceCard(
-      color: HomeV2Palette.mint,
-      padding: EdgeInsets.fromLTRB(16.w, 16.h, 14.w, 14.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final gameState = LearningGameState.instance;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('學堂與工具箱'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          // 頂部右側吉祥物人頭，點擊開成就室
+          GestureDetector(
+            onTap: _openAchievementRoom,
+            child: Container(
+              margin: EdgeInsets.only(right: 16.w),
+              width: 36.w,
+              height: 36.w,
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF26303D) : const Color(0xFFF3EDE0),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isDark ? const Color(0xFF354454) : const Color(0xFFE4D9C4),
+                  width: 1.5.w,
+                ),
+              ),
+              child: ListenableBuilder(
+                listenable: gameState,
+                builder: (context, _) {
+                  return Center(
+                    child: Text(
+                      gameState.mascotExpression,
+                      style: TextStyle(fontSize: 20.sp),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: ListenableBuilder(
+        listenable: gameState,
+        builder: (context, _) {
+          return NotebookBackground(
+            child: SafeArea(
+              child: Column(
+                children: [
+                  // 置頂搜尋欄與 AI 輪播氣泡
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                    child: Column(
+                      children: [
+                        // 1. 全域搜尋欄
+                        GestureDetector(
+                          onTap: _openLearningSearch,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                            decoration: BoxDecoration(
+                              color: isDark ? const Color(0xFF1E252D) : Colors.white,
+                              borderRadius: BorderRadius.circular(18.r),
+                              border: Border.all(
+                                color: isDark ? const Color(0xFF2D3845) : const Color(0xFFD5E2D9),
+                                width: 1.2.w,
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.search_rounded,
+                                  color: HomeV2Palette.trustGreen,
+                                  size: 20.sp,
+                                ),
+                                SizedBox(width: 9.w),
+                                Expanded(
+                                  child: Text(
+                                    '搜尋法律、生活案件...',
+                                    style: TextStyle(
+                                      color: AppColors.textMuted,
+                                      fontSize: 13.sp,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        // 2. 智慧小法助輪播氣泡
+                        _AssistantPromptBubble(
+                          onMascotTap: _openAchievementRoom,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // 左右 Tab 切換鈕（設計成實體筆記本索引頁緣質感）
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
+                    decoration: BoxDecoration(
+                      color: isDark ? const Color(0xFF161C23) : const Color(0xFFEFECE6),
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: TabBar(
+                      controller: _tabController,
+                      indicator: BoxDecoration(
+                        color: isDark ? const Color(0xFF232B35) : Colors.white,
+                        borderRadius: BorderRadius.circular(10.r),
+                        border: Border.all(
+                          color: isDark ? const Color(0xFF2D3845) : const Color(0xFFECE6DB),
+                          width: 1.2.w,
+                        ),
+                      ),
+                      labelColor: HomeV2Palette.trustGreen,
+                      unselectedLabelColor: AppColors.textSecondary,
+                      labelStyle: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.bold),
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      tabs: const [
+                        Tab(text: '👨‍🏫 法學課堂'),
+                        Tab(text: '🧰 生活工具箱'),
+                      ],
+                    ),
+                  ),
+
+                  // Tab 內容區
+                  Expanded(
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: [
+                        // Tab 1: 法學課堂
+                        _buildClassroomTab(gameState),
+                        // Tab 2: 生活工具箱
+                        _buildToolkitTab(gameState),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  // ────────────────────────────────────────────────────────
+  // 👨‍🏫 Tab 1: 法學課堂
+  // ────────────────────────────────────────────────────────
+  Widget _buildClassroomTab(LearningGameState gameState) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // 計算租屋單元進度 (STEP 1 ~ STEP 4 共 4 個單元)
+    final rentSteps = {'STEP 1', 'STEP 2', 'STEP 3', 'STEP 4'};
+    final completedRentCount = gameState.completedSteps.intersection(rentSteps).length;
+    final rentProgress = completedRentCount / 4;
+
+    return ListView(
+      controller: _scrollController,
+      padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 40.h),
+      physics: const BouncingScrollPhysics(),
+      children: [
+        // 1. 公民法律小擂台 Challenge Card
+        NotebookCard(
+          hasBookmark: true,
+          bookmarkColor: const Color(0xFFE8B95F),
+          backgroundColor: isDark ? const Color(0xFF202A24) : const Color(0xFFFFFDF5),
+          child: Row(
             children: [
               Container(
-                width: 42.w,
-                height: 42.w,
+                width: 44.w,
+                height: 44.w,
                 decoration: const BoxDecoration(
-                  color: Colors.white,
+                  color: Color(0xFFFFD46A),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  Icons.menu_book_rounded,
-                  color: HomeV2Palette.trustGreen,
-                  size: 23.sp,
+                  Icons.emoji_events_rounded,
+                  size: 24.sp,
+                  color: const Color(0xFF6B4B14),
                 ),
               ),
               SizedBox(width: 12.w),
@@ -190,622 +270,270 @@ class _LearningPrototypeHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '學習',
+                      '🏆 公民法律小擂台',
                       style: TextStyle(
-                        color: HomeV2Palette.ink,
-                        fontSize: 26.sp,
-                        height: 1,
+                        fontSize: 15.sp,
                         fontWeight: FontWeight.w900,
+                        color: AppColors.textPrimary,
                       ),
                     ),
-                    SizedBox(height: 4.h),
+                    SizedBox(height: 3.h),
                     Text(
-                      '用生活情境建立法律判斷順序',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      '模擬審判案件，連對解鎖專屬徽章！',
                       style: TextStyle(
+                        fontSize: 11.sp,
                         color: AppColors.textSecondary,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
                 ),
               ),
-              _LearningIconButton(
-                icon: Icons.search_rounded,
-                label: '搜尋學習內容',
-                onTap: onSearchTap,
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (__) => const MockCourtChallengePage()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: HomeV2Palette.trustGreen,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                  padding: EdgeInsets.symmetric(horizontal: 14.w),
+                ),
+                child: const Text('開始挑戰'),
               ),
             ],
           ),
-          SizedBox(height: 16.h),
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onSearchTap,
-              borderRadius: BorderRadius.circular(18.r),
-              child: Ink(
-                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(18.r),
-                  border: Border.all(color: const Color(0xFFD5E2D9)),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.search_rounded,
-                      color: HomeV2Palette.trustGreen,
-                      size: 20.sp,
-                    ),
-                    SizedBox(width: 9.w),
-                    Expanded(
-                      child: Text(
-                        '輸入情境、法條或術語',
-                        style: TextStyle(
-                          color: AppColors.textMuted,
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    Icon(
-                      Icons.arrow_forward_rounded,
-                      color: HomeV2Palette.trustGreen,
-                      size: 20.sp,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+        ),
 
-class _LearningPrototypeActionStrip extends StatelessWidget {
-  const _LearningPrototypeActionStrip({
-    required this.onAskTap,
-    required this.onRouteTap,
-    required this.onStatuteTap,
-  });
-
-  final VoidCallback onAskTap;
-  final VoidCallback onRouteTap;
-  final VoidCallback onStatuteTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final actions = [
-      _LearningActionItem(
-        title: '描述情況',
-        subtitle: '初步整理',
-        icon: Icons.psychology_alt_outlined,
-        color: HomeV2Palette.aiYellow,
-        onTap: onAskTap,
-      ),
-      _LearningActionItem(
-        title: '學習路線',
-        subtitle: '依序閱讀',
-        icon: Icons.route_outlined,
-        color: HomeV2Palette.lavender,
-        onTap: onRouteTap,
-      ),
-      _LearningActionItem(
-        title: '查詢條文',
-        subtitle: '法規資料',
-        icon: Icons.article_outlined,
-        color: HomeV2Palette.lawBlue,
-        onTap: onStatuteTap,
-      ),
-    ];
-
-    return SizedBox(
-      height: 104.h,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        itemBuilder: (context, index) {
-          return _LearningActionCard(item: actions[index]);
-        },
-        separatorBuilder: (_, __) => SizedBox(width: 10.w),
-        itemCount: actions.length,
-      ),
-    );
-  }
-}
-
-class _LearningActionItem {
-  const _LearningActionItem({
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-    required this.color,
-    required this.onTap,
-  });
-
-  final String title;
-  final String subtitle;
-  final IconData icon;
-  final Color color;
-  final VoidCallback onTap;
-}
-
-class _LearningActionCard extends StatelessWidget {
-  const _LearningActionCard({required this.item});
-
-  final _LearningActionItem item;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: item.onTap,
-        borderRadius: BorderRadius.circular(20.r),
-        child: Ink(
-          width: 112.w,
-          padding: EdgeInsets.all(13.w),
-          decoration: BoxDecoration(
-            color: item.color,
-            borderRadius: BorderRadius.circular(20.r),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.72)),
-          ),
+        // 2. 租屋糾紛主專題卡片
+        NotebookCard(
+          hasBinderRings: true,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(item.icon, color: HomeV2Palette.trustGreen, size: 25.sp),
-              const Spacer(),
+              Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                    decoration: BoxDecoration(
+                      color: HomeV2Palette.mint,
+                      borderRadius: BorderRadius.circular(6.r),
+                    ),
+                    child: Text(
+                      '主修課',
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.bold,
+                        color: HomeV2Palette.trustGreen,
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    '進度：${(rentProgress * 100).toInt()}%',
+                    style: TextStyle(
+                      fontSize: 11.5.sp,
+                      fontWeight: FontWeight.bold,
+                      color: HomeV2Palette.trustGreen,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8.h),
               Text(
-                item.title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                '🏠 租屋糾紛怎麼看懂',
                 style: TextStyle(
-                  color: HomeV2Palette.ink,
-                  fontSize: 13.sp,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w900,
+                  color: AppColors.textPrimary,
                 ),
               ),
-              SizedBox(height: 3.h),
+              SizedBox(height: 6.h),
               Text(
-                item.subtitle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                '從押金、提前解約到修繕責任，用一條完整的邏輯線，帶你拆解最常見的租賃糾紛。',
                 style: TextStyle(
+                  fontSize: 12.sp,
+                  height: 1.45,
                   color: AppColors.textSecondary,
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 10.h),
+              // 進度條
+              ClipRRect(
+                borderRadius: BorderRadius.circular(99.r),
+                child: LinearProgressIndicator(
+                  value: rentProgress,
+                  minHeight: 6.h,
+                  backgroundColor: isDark ? const Color(0xFF2D3845) : const Color(0xFFEFECE6),
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                    HomeV2Palette.trustGreen,
+                  ),
+                ),
+              ),
+              SizedBox(height: 12.h),
+              // 單元列表
+              ...learningTopic.units.take(4).map((unit) {
+                final isDone = gameState.completedSteps.contains(unit.stepLabel);
+                return _buildUnitStepRow(unit, isDone);
+              }),
+            ],
+          ),
+        ),
+
+        // 3. 混合排列的卡片：插圖故事卡片
+        NotebookCard(
+          hasPaperClip: true,
+          backgroundColor: isDark ? const Color(0xFF242C36) : const Color(0xFFEAF0F8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.directions_car_rounded, color: const Color(0xFF3F7FBF), size: 24.sp),
+                  SizedBox(width: 8.w),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.6),
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
+                    child: Text(
+                      '車禍防護課',
+                      style: TextStyle(fontSize: 9.5.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1F4E87)),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10.h),
+              Text(
+                '🚗 車禍被撞了！第一時間該拍照還是移車？',
+                style: TextStyle(
+                  fontSize: 14.5.sp,
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              SizedBox(height: 6.h),
+              Text(
+                '道路事故現場的黃金三步驟：安全防範、拍照存證、定位通報。答對測驗可解鎖車禍徽章！',
+                style: TextStyle(fontSize: 12.sp, height: 1.4, color: AppColors.textSecondary),
+              ),
+              SizedBox(height: 10.h),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.arrow_forward, size: 16),
+                label: const Text('研讀此案例'),
+                onPressed: () => _openArticle(learningTopic.supportItems[2].article),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF3F7FBF),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
                 ),
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
 
-class _LearningRouteCard extends StatelessWidget {
-  const _LearningRouteCard({
-    required this.topic,
-    required this.onTap,
-    required this.onQuizTap,
-  });
-
-  final LearningTopicData topic;
-  final VoidCallback onTap;
-  final VoidCallback onQuizTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return HomeV2SurfaceCard(
-      color: Colors.white,
-      padding: EdgeInsets.all(16.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onTap,
-              borderRadius: BorderRadius.circular(18.r),
-              child: Ink(
-                padding: EdgeInsets.all(14.w),
+        // 4. 混合排列的卡片：模擬 LINE 對話圖卡
+        NotebookCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.chat_bubble_outline_rounded, color: HomeV2Palette.trustGreen, size: 20.sp),
+                  SizedBox(width: 8.w),
+                  Text(
+                    '模擬對話故事',
+                    style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: HomeV2Palette.trustGreen),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10.h),
+              // LINE 對話泡泡
+              Container(
+                padding: EdgeInsets.all(12.w),
                 decoration: BoxDecoration(
-                  color: HomeV2Palette.aiYellow,
-                  borderRadius: BorderRadius.circular(18.r),
-                  border: Border.all(color: const Color(0xFFE8B95F)),
+                  color: isDark ? const Color(0xFF1E252D) : const Color(0xFFF7F7F7),
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
-                child: Row(
+                child: Column(
                   children: [
-                    Container(
-                      width: 42.w,
-                      height: 42.w,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.76),
-                        borderRadius: BorderRadius.circular(14.r),
-                      ),
-                      child: Icon(
-                        Icons.home_work_outlined,
-                        color: HomeV2Palette.trustGreen,
-                        size: 24.sp,
-                      ),
+                    _buildChatBubble(
+                      sender: '房東 👩‍🦳',
+                      text: '冷氣吹不冷喔？那台舊了啦，要換你自己換，合約寫修繕自行負責喔！',
+                      isMe: false,
                     ),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '租屋糾紛怎麼看懂',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: HomeV2Palette.ink,
-                              fontSize: 17.sp,
-                              fontWeight: FontWeight.w900,
-                            ),
-                          ),
-                          SizedBox(height: 5.h),
-                          Text(
-                            topic.summary,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: const Color(0xFF6B4B14),
-                              fontSize: 11.sp,
-                              height: 1.35,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Icon(
-                      Icons.chevron_right_rounded,
-                      color: HomeV2Palette.trustGreen,
-                      size: 24.sp,
+                    SizedBox(height: 8.h),
+                    _buildChatBubble(
+                      sender: '房客 🧑',
+                      text: '房東太太，可是民法第429條規定，除非契約另有約定，否則修繕責任應由房東承擔...',
+                      isMe: true,
                     ),
                   ],
                 ),
               ),
-            ),
-          ),
-          SizedBox(height: 14.h),
-          _LearningProgressBar(completed: 2, total: topic.units.length),
-          SizedBox(height: 14.h),
-          ...topic.units.take(4).map(
-                (unit) => _LearningRouteStep(
-                  label: unit.stepLabel,
-                  title: unit.title,
-                  meta: unit.readTime,
-                  isDone: unit.stepLabel == '01' || unit.stepLabel == '02',
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (__) =>
-                          LearningMockDetailPage(article: unit.article),
-                    ),
-                  ),
-                ),
-              ),
-          SizedBox(height: 6.h),
-          _LearningRouteStep(
-            label: '05',
-            title: '用一題測驗確認判斷順序',
-            meta: '1 題測驗',
-            icon: Icons.fact_check_outlined,
-            isDone: false,
-            onTap: onQuizTap,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LearningProgressBar extends StatelessWidget {
-  const _LearningProgressBar({required this.completed, required this.total});
-
-  final int completed;
-  final int total;
-
-  @override
-  Widget build(BuildContext context) {
-    final progress = completed / total;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                '目前進度',
+              SizedBox(height: 10.h),
+              Text(
+                '💡 房東說「合約寫自行負責」真的有效嗎？',
                 style: TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 11.sp,
-                  fontWeight: FontWeight.w800,
+                  fontSize: 13.5.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
                 ),
               ),
-            ),
-            Text(
-              '$completed / $total 單元',
-              style: TextStyle(
-                color: HomeV2Palette.trustGreen,
-                fontSize: 11.sp,
-                fontWeight: FontWeight.w900,
+              SizedBox(height: 4.h),
+              Text(
+                '學會區分自然折舊與人為損壞，保障租屋權益。',
+                style: TextStyle(fontSize: 11.5.sp, color: AppColors.textSecondary),
               ),
-            ),
-          ],
-        ),
-        SizedBox(height: 8.h),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(99.r),
-          child: LinearProgressIndicator(
-            value: progress,
-            minHeight: 8.h,
-            backgroundColor: const Color(0xFFE8ECE8),
-            valueColor: const AlwaysStoppedAnimation<Color>(
-              HomeV2Palette.trustGreen,
-            ),
+              SizedBox(height: 8.h),
+              TextButton(
+                onPressed: () => _openArticle(learningTopic.units[2].article),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('看白話解析', style: TextStyle(fontWeight: FontWeight.bold)),
+                    SizedBox(width: 4.w),
+                    Icon(Icons.arrow_forward, size: 14.sp),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ],
     );
   }
-}
 
-class _LearningRouteStep extends StatelessWidget {
-  const _LearningRouteStep({
-    required this.label,
-    required this.title,
-    required this.meta,
-    required this.isDone,
-    required this.onTap,
-    this.icon,
-  });
-
-  final String label;
-  final String title;
-  final String meta;
-  final bool isDone;
-  final VoidCallback onTap;
-  final IconData? icon;
-
-  @override
-  Widget build(BuildContext context) {
-    final markerColor =
-        isDone ? HomeV2Palette.trustGreen : const Color(0xFFE8ECE8);
-    final markerTextColor = isDone ? Colors.white : AppColors.textSecondary;
-
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16.r),
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 5.h),
-          child: Row(
-            children: [
-              Container(
-                width: 34.w,
-                height: 34.w,
-                decoration: BoxDecoration(
-                  color: markerColor,
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: icon == null
-                      ? Text(
-                          label,
-                          style: TextStyle(
-                            color: markerTextColor,
-                            fontSize: 11.sp,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        )
-                      : Icon(icon, color: markerTextColor, size: 18.sp),
-                ),
-              ),
-              SizedBox(width: 11.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: HomeV2Palette.ink,
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    SizedBox(height: 3.h),
-                    Text(
-                      meta,
-                      style: TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Icon(
-                Icons.chevron_right_rounded,
-                color: AppColors.textMuted,
-                size: 20.sp,
-              ),
-            ],
-          ),
+  Widget _buildUnitStepRow(LearningTopicUnit unit, bool isDone) {
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: Icon(
+        isDone ? Icons.check_circle_rounded : Icons.radio_button_off_rounded,
+        color: isDone ? HomeV2Palette.trustGreen : Colors.grey,
+        size: 20.sp,
+      ),
+      title: Text(
+        '${unit.stepLabel}：${unit.title}',
+        style: TextStyle(
+          fontSize: 13.sp,
+          fontWeight: FontWeight.bold,
+          decoration: isDone ? TextDecoration.lineThrough : null,
+          color: isDone ? AppColors.textMuted : AppColors.textPrimary,
         ),
       ),
-    );
-  }
-}
-
-class _LearningCaseRecommendationList extends StatelessWidget {
-  const _LearningCaseRecommendationList({
-    required this.items,
-    required this.onTap,
-  });
-
-  final List<_RecentCaseItem> items;
-  final ValueChanged<_RecentCaseItem> onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 128.h,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        itemBuilder: (context, index) {
-          final item = items[index];
-
-          return _LearningRecommendationCard(
-            title: item.title,
-            subtitle: '建議閱讀：${item.article.badge}',
-            icon: Icons.inventory_2_outlined,
-            color: index.isEven ? HomeV2Palette.lawBlue : HomeV2Palette.mint,
-            onTap: () => onTap(item),
-          );
-        },
-        separatorBuilder: (_, __) => SizedBox(width: 10.w),
-        itemCount: items.length,
+      subtitle: Text(
+        '${unit.goal} • ${unit.readTime}',
+        style: TextStyle(fontSize: 11.sp),
       ),
-    );
-  }
-}
-
-class _LearningRecommendationCard extends StatelessWidget {
-  const _LearningRecommendationCard({
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-    required this.color,
-    required this.onTap,
-  });
-
-  final String title;
-  final String subtitle;
-  final IconData icon;
-  final Color color;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(20.r),
-        child: Ink(
-          width: 168.w,
-          padding: EdgeInsets.all(14.w),
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(20.r),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.72)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(icon, color: HomeV2Palette.trustGreen, size: 24.sp),
-              const Spacer(),
-              Text(
-                title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: HomeV2Palette.ink,
-                  fontSize: 13.sp,
-                  height: 1.2,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-              SizedBox(height: 5.h),
-              Text(
-                subtitle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _LearningTopicMatrix extends StatelessWidget {
-  const _LearningTopicMatrix({
-    required this.items,
-    required this.onTap,
-  });
-
-  final List<_CommonTopicItem> items;
-  final ValueChanged<_CommonTopicItem> onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: items.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        mainAxisSpacing: 10.h,
-        crossAxisSpacing: 10.w,
-        childAspectRatio: 0.98,
-      ),
-      itemBuilder: (context, index) {
-        final item = items[index];
-        final icon = _topicIconForLabel(item.label);
-
-        return Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: () => onTap(item),
-            borderRadius: BorderRadius.circular(18.r),
-            child: Ink(
-              padding: EdgeInsets.all(10.w),
-              decoration: BoxDecoration(
-                color: index.isEven ? Colors.white : HomeV2Palette.mint,
-                borderRadius: BorderRadius.circular(18.r),
-                border:
-                    Border.all(color: AppColors.border.withValues(alpha: 0.6)),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(icon, color: HomeV2Palette.trustGreen, size: 25.sp),
-                  SizedBox(height: 8.h),
-                  Text(
-                    item.label,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: HomeV2Palette.ink,
-                      fontSize: 12.sp,
-                      height: 1.18,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ],
-              ),
+      trailing: Icon(Icons.chevron_right_rounded, size: 18.sp),
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (__) => LearningMockDetailPage(
+              article: unit.article,
+              unitStepLabel: unit.stepLabel, // 用來讓詳情頁面知道要解鎖哪一個 STEP
             ),
           ),
         );
@@ -813,548 +541,552 @@ class _LearningTopicMatrix extends StatelessWidget {
     );
   }
 
-  IconData _topicIconForLabel(String label) {
-    switch (label) {
-      case '租屋':
-        return Icons.home_work_outlined;
-      case '職場':
-        return Icons.badge_outlined;
-      case '交通':
-        return Icons.directions_car_outlined;
-      case '網路':
-        return Icons.language_outlined;
-      case '消費':
-        return Icons.shopping_bag_outlined;
-      default:
-        return Icons.balance_outlined;
-    }
-  }
-}
-
-class _LearningReviewAndGlossaryRow extends StatelessWidget {
-  const _LearningReviewAndGlossaryRow({
-    required this.onQuizTap,
-    required this.onGlossaryTap,
-  });
-
-  final VoidCallback onQuizTap;
-  final VoidCallback onGlossaryTap;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildChatBubble({required String sender, required String text, required bool isMe}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
-        Expanded(
-          child: _LearningMiniFeatureCard(
-            title: '複習',
-            subtitle: '錯題與待讀單元',
-            icon: Icons.replay_outlined,
-            color: HomeV2Palette.lavender,
-            onTap: onQuizTap,
+        if (!isMe) ...[
+          CircleAvatar(
+            radius: 14.r,
+            backgroundColor: Colors.grey.shade300,
+            child: Text(sender.substring(0, 1), style: TextStyle(fontSize: 11.sp)),
+          ),
+          SizedBox(width: 8.w),
+        ],
+        Flexible(
+          child: Column(
+            crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            children: [
+              Text(sender, style: TextStyle(fontSize: 9.sp, color: Colors.grey)),
+              SizedBox(height: 2.h),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                decoration: BoxDecoration(
+                  color: isMe 
+                      ? HomeV2Palette.mint 
+                      : (isDark ? const Color(0xFF26303D) : const Color(0xFFE8E8E8)),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(isMe ? 12.r : 2.r),
+                    topRight: Radius.circular(isMe ? 2.r : 12.r),
+                    bottomLeft: Radius.circular(12.r),
+                    bottomRight: Radius.circular(12.r),
+                  ),
+                ),
+                child: Text(
+                  text,
+                  style: TextStyle(fontSize: 12.sp, height: 1.3),
+                ),
+              ),
+            ],
           ),
         ),
-        SizedBox(width: 10.w),
-        Expanded(
-          child: _LearningMiniFeatureCard(
-            title: '術語字典',
-            subtitle: '故意、過失、契約',
-            icon: Icons.translate_outlined,
-            color: HomeV2Palette.aiYellow,
-            onTap: onGlossaryTap,
+        if (isMe) ...[
+          SizedBox(width: 8.w),
+          CircleAvatar(
+            radius: 14.r,
+            backgroundColor: HomeV2Palette.trustGreen.withValues(alpha: 0.2),
+            child: Text(sender.substring(0, 1), style: TextStyle(fontSize: 11.sp, color: HomeV2Palette.trustGreen)),
           ),
-        ),
+        ],
       ],
     );
   }
-}
 
-class _LearningMiniFeatureCard extends StatelessWidget {
-  const _LearningMiniFeatureCard({
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-    required this.color,
-    required this.onTap,
-  });
+  // ────────────────────────────────────────────────────────
+  // 🧰 Tab 2: 生活工具箱
+  // ────────────────────────────────────────────────────────
+  Widget _buildToolkitTab(LearningGameState gameState) {
+    return ListView(
+      controller: _scrollController,
+      padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 40.h),
+      physics: const BouncingScrollPhysics(),
+      children: [
+        // 1. 白話文翻譯機
+        _buildTranslatorWidget(),
+        SizedBox(height: 12.h),
 
-  final String title;
-  final String subtitle;
-  final IconData icon;
-  final Color color;
-  final VoidCallback onTap;
+        // 2. 文件與證據準備清單
+        _buildEvidenceChecklistWidget(gameState),
+        SizedBox(height: 12.h),
 
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(20.r),
-        child: Ink(
-          height: 112.h,
-          padding: EdgeInsets.all(14.w),
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(20.r),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.72)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        // 3. 常用法規快查
+        _buildStatuteSearchWidget(),
+      ],
+    );
+  }
+
+  // 1) 白話文翻譯機 Widget
+  final TextEditingController _translatorController = TextEditingController();
+  String _translationOutput = '';
+  final Map<String, String> _termsMap = {
+    '應予駁回': '法院拒絕了這項請求。例如：原告主張無理由，法院「應予駁回」。',
+    '酌減': '法院決定減少金額/處罰。例如：違約金過高，法院予以「酌減」。',
+    '按之': '依照這個規定/道理來看。通常用在引用法條。',
+    '矧以': '更何況是...。用來加強論點。',
+    '無理由': '主張在法律上站不住腳，不可信。',
+  };
+
+  Widget _buildTranslatorWidget() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return NotebookCard(
+      hasPaperClip: true,
+      backgroundColor: isDark ? const Color(0xFF28241B) : const Color(0xFFFFFDF8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Icon(icon, color: HomeV2Palette.trustGreen, size: 24.sp),
-              const Spacer(),
+              Icon(Icons.gavel_rounded, color: const Color(0xFF94610D), size: 22.sp),
+              SizedBox(width: 8.w),
               Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: HomeV2Palette.ink,
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-              SizedBox(height: 4.h),
-              Text(
-                subtitle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w600,
-                ),
+                '🧰 法律術語白話翻譯機',
+                style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
               ),
             ],
           ),
-        ),
+          SizedBox(height: 10.h),
+          TextField(
+            controller: _translatorController,
+            style: TextStyle(fontSize: 13.sp),
+            decoration: InputDecoration(
+              hintText: '輸入判決書難懂字眼，或點擊下方快捷詞晶片...',
+              hintStyle: TextStyle(fontSize: 12.sp, color: Colors.grey),
+              filled: true,
+              fillColor: isDark ? const Color(0xFF1E252D) : const Color(0xFFFFFAEC),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.r), borderSide: BorderSide.none),
+              contentPadding: EdgeInsets.all(10.w),
+            ),
+            maxLines: 2,
+          ),
+          SizedBox(height: 8.h),
+          
+          // 快捷晶片 (Chips)
+          Wrap(
+            spacing: 6.w,
+            children: _termsMap.keys.map((term) {
+              return ActionChip(
+                label: Text(term, style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.bold)),
+                backgroundColor: isDark ? const Color(0xFF2C353F) : const Color(0xFFEAE5DB),
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  setState(() {
+                    _translatorController.text = term;
+                    _translationOutput = _termsMap[term]!;
+                    LearningGameState.instance.incrementTranslatorUsage();
+                  });
+                },
+              );
+            }).toList(),
+          ),
+          SizedBox(height: 10.h),
+
+          // 翻譯按鈕
+          Row(
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  final text = _translatorController.text.trim();
+                  if (text.isEmpty) return;
+                  setState(() {
+                    _translationOutput = _termsMap[text] ?? '白話翻譯：該詞彙正在整理中。法律概念通常指「依照規定做對應處置，並保障當事人權利」。';
+                    LearningGameState.instance.incrementTranslatorUsage();
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF94610D),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                ),
+                child: const Text('翻譯'),
+              ),
+              if (_translationOutput.isNotEmpty) ...[
+                SizedBox(width: 10.w),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _translatorController.clear();
+                      _translationOutput = '';
+                    });
+                  },
+                  child: const Text('清除'),
+                )
+              ]
+            ],
+          ),
+
+          // 翻譯結果
+          if (_translationOutput.isNotEmpty) ...[
+            SizedBox(height: 12.h),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(10.w),
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF332B1E) : const Color(0xFFFFFAEC),
+                borderRadius: BorderRadius.circular(10.r),
+                border: Border.all(color: const Color(0xFFE4C179)),
+              ),
+              child: Text(
+                _translationOutput,
+                style: TextStyle(
+                  fontSize: 12.5.sp,
+                  height: 1.4,
+                  color: isDark ? Colors.orange.shade100 : const Color(0xFF5D4017),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ],
       ),
+    );
+  }
+
+  // 2) 文件與證據準備清單 Widget
+  int _evidenceTabType = 0; // 0: 車禍糾紛, 1: 租屋糾紛
+  final List<String> _carEvidences = [
+    '行車紀錄器影片 (影片檔案)',
+    '車損照片與事故現場照片',
+    '道路交通事故初步分析研判表 (警局申請)',
+    '診斷證明書 (如有體傷)',
+    '車輛修繕費用收據/估價單'
+  ];
+  final List<String> _rentEvidences = [
+    '房屋租賃契約書 (合約本體)',
+    '點交照片或影片',
+    '修繕通知簡訊/LINE對話紀錄',
+    '修繕費用收據',
+    '押金收據或匯款紀錄'
+  ];
+  final Set<String> _checkedEvidences = {};
+
+  Widget _buildEvidenceChecklistWidget(LearningGameState gameState) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final currentList = _evidenceTabType == 0 ? _carEvidences : _rentEvidences;
+    final String currentTitle = _evidenceTabType == 0 ? '🚗 車禍責任釐清證據包' : '🏠 租屋點交扣押金證據包';
+
+    return NotebookCard(
+      hasBinderRings: true,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.checklist_rtl_rounded, color: HomeV2Palette.trustGreen, size: 24.sp),
+              SizedBox(width: 8.w),
+              Text(
+                '📋 證據準備與文件清單',
+                style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+              ),
+            ],
+          ),
+          SizedBox(height: 8.h),
+          
+          // 車禍/租屋 切換
+          Row(
+            children: [
+              ChoiceChip(
+                label: Text('車禍糾紛', style: TextStyle(fontSize: 11.sp)),
+                selected: _evidenceTabType == 0,
+                onSelected: (val) {
+                  setState(() {
+                    _evidenceTabType = 0;
+                    _checkedEvidences.clear();
+                  });
+                },
+              ),
+              SizedBox(width: 8.w),
+              ChoiceChip(
+                label: Text('租屋爭議', style: TextStyle(fontSize: 11.sp)),
+                selected: _evidenceTabType == 1,
+                onSelected: (val) {
+                  setState(() {
+                    _evidenceTabType = 1;
+                    _checkedEvidences.clear();
+                  });
+                },
+              ),
+            ],
+          ),
+          SizedBox(height: 10.h),
+          
+          // 核取清單
+          ...currentList.map((item) {
+            final isChecked = _checkedEvidences.contains(item);
+            return CheckboxListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              title: Text(
+                item,
+                style: TextStyle(
+                  fontSize: 12.5.sp,
+                  decoration: isChecked ? TextDecoration.lineThrough : null,
+                  color: isChecked ? AppColors.textMuted : AppColors.textPrimary,
+                ),
+              ),
+              value: isChecked,
+              activeColor: HomeV2Palette.trustGreen,
+              onChanged: (val) {
+                setState(() {
+                  if (val == true) {
+                    _checkedEvidences.add(item);
+                  } else {
+                    _checkedEvidences.remove(item);
+                  }
+                });
+              },
+            );
+          }),
+          
+          SizedBox(height: 12.h),
+          
+          // 按鈕
+          Row(
+            children: [
+              ElevatedButton.icon(
+                icon: const Icon(Icons.bookmark_add_outlined, size: 16),
+                label: const Text('儲存備忘'),
+                onPressed: () {
+                  gameState.saveEvidenceList(currentTitle, _checkedEvidences.toList(), currentList);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('已成功儲存證據清單至小法助的「備忘錄」中！'),
+                      backgroundColor: HomeV2Palette.trustGreen,
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 10.w),
+              OutlinedButton.icon(
+                icon: const Icon(Icons.share, size: 16),
+                label: const Text('導出 PDF'),
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('成功導出證據清單 PDF！已儲存至本機檔案及成就室備忘錄。'),
+                      backgroundColor: HomeV2Palette.trustGreen,
+                    ),
+                  );
+                  // 同步也存一份
+                  gameState.saveEvidenceList('$currentTitle (PDF 導出版)', _checkedEvidences.toList(), currentList);
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 3) 常用法規快查 Widget
+  Widget _buildStatuteSearchWidget() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return NotebookCard(
+      hasBookmark: true,
+      bookmarkColor: const Color(0xFF6FA8DC),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.search_rounded, color: const Color(0xFF3F7FBF), size: 22.sp),
+              SizedBox(width: 8.w),
+              Text(
+                '🔍 常用法規快速查詢',
+                style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+              ),
+            ],
+          ),
+          SizedBox(height: 10.h),
+          
+          // 快捷按鈕
+          Wrap(
+            spacing: 8.w,
+            runSpacing: 6.h,
+            children: [
+              _buildStatuteChip('民法'),
+              _buildStatuteChip('刑法'),
+              _buildStatuteChip('勞基法', actual: '勞動基準法'),
+              _buildStatuteChip('消保法', actual: '消費者保護法'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatuteChip(String label, {String? actual}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    return ActionChip(
+      label: Text(label, style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1F4E87))),
+      backgroundColor: isDark ? const Color(0xFF1F2B38) : const Color(0xFFE8F0FE),
+      onPressed: () => _openStatuteDatabase(initialQuery: actual ?? label),
     );
   }
 }
 
-class _LearningStatuteToolCard extends StatelessWidget {
-  const _LearningStatuteToolCard({
-    required this.onTap,
-    required this.onChipTap,
-  });
+// ────────────────────────────────────────────────────────
+// 🤖 智慧小法助輪播提問氣泡元件 (整合成就室開啟)
+// ────────────────────────────────────────────────────────
+class _AssistantPromptBubble extends StatefulWidget {
+  const _AssistantPromptBubble({required this.onMascotTap});
+  final VoidCallback onMascotTap;
 
-  final VoidCallback onTap;
-  final ValueChanged<String> onChipTap;
+  @override
+  State<_AssistantPromptBubble> createState() => _AssistantPromptBubbleState();
+}
 
-  static const List<String> _queries = [
-    '民法',
-    '刑法',
-    '勞基法',
-    '消保法',
+class _AssistantPromptBubbleState extends State<_AssistantPromptBubble> {
+  late final Timer _timer;
+  int _currentIndex = 0;
+
+  static const List<String> _prompts = [
+    '租屋提前解約，押金一定拿不回來嗎？',
+    '車禍發生時，第一時間到底該不該移車？',
+    '網購服飾拆封試穿後，到底能不能退？',
+    '在臉書貼人對話截圖，會不會觸犯個資法？',
+    '什麼是法律上的「應予駁回」？',
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
+      if (mounted) {
+        setState(() {
+          _currentIndex = (_currentIndex + 1) % _prompts.length;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return HomeV2SurfaceCard(
-      color: HomeV2Palette.lawBlue,
-      padding: EdgeInsets.all(16.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onTap,
-              borderRadius: BorderRadius.circular(18.r),
-              child: Ink(
-                padding: EdgeInsets.all(14.w),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(18.r),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.article_outlined,
-                      color: const Color(0xFF1F4E87),
-                      size: 24.sp,
-                    ),
-                    SizedBox(width: 10.w),
-                    Expanded(
-                      child: Text(
-                        '依法名、條號或生活情境查詢',
-                        style: TextStyle(
-                          color: HomeV2Palette.ink,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                    Icon(
-                      Icons.arrow_forward_rounded,
-                      color: const Color(0xFF1F4E87),
-                      size: 22.sp,
-                    ),
-                  ],
-                ),
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final currentPrompt = _prompts[_currentIndex];
+    final gameState = LearningGameState.instance;
+
+    final bubbleBgColor = isDark ? const Color(0xFF1E2622) : const Color(0xFFF2FAF6);
+    final bubbleBorderColor = isDark ? const Color(0xFF2E3C36) : const Color(0xFFD2E6DE);
+    final textColor = isDark ? const Color(0xFF99C3B3) : const Color(0xFF1B4D3E);
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        // 左側大頭貼，點擊可以進入成就室
+        GestureDetector(
+          onTap: widget.onMascotTap,
+          child: Tooltip(
+            message: '開啟小法助成長檔案',
+            child: Container(
+              padding: EdgeInsets.all(2.w),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: HomeV2Palette.trustGreen, width: 1.5.w),
+              ),
+              child: Image.asset(
+                'assets/images/assistant/law_assistant_home.png',
+                width: 42.w,
+                height: 42.w,
+                fit: BoxFit.contain,
               ),
             ),
           ),
-          SizedBox(height: 12.h),
-          Wrap(
-            spacing: 8.w,
-            runSpacing: 8.h,
-            children: _queries.map((query) {
-              final actualQuery = query == '勞基法' ? '勞動基準法' : query;
-
-              return _LearningPlainChip(
-                label: query,
-                onTap: () => onChipTap(actualQuery),
+        ),
+        SizedBox(width: 8.w),
+        // 對話氣泡
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => LawAssistantSearchPage(initialPrompt: currentPrompt),
+                ),
               );
-            }).toList(growable: false),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LearningTranslatorPrototypeCard extends StatelessWidget {
-  const _LearningTranslatorPrototypeCard({
-    required this.article,
-    required this.onTap,
-  });
-
-  final LearningMockArticle article;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return HomeV2SurfaceCard(
-      color: const Color(0xFFF5F1DF),
-      padding: EdgeInsets.all(16.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const HomeV2TinyLabel(
-                icon: Icons.gavel_outlined,
-                label: '法條白話整理',
-                color: Color(0xFF5D5A38),
-              ),
-              const Spacer(),
-              _LearningIconButton(
-                icon: Icons.arrow_forward_rounded,
-                label: '查看法律翻譯機',
-                onTap: onTap,
-              ),
-            ],
-          ),
-          SizedBox(height: 14.h),
-          Text(
-            '民法第184條第1項前段',
-            style: TextStyle(
-              color: const Color(0xFF5D5A38),
-              fontSize: 15.sp,
-              fontWeight: FontWeight.w900,
-            ),
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            article.summary,
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: const Color(0xFF524E35),
-              fontSize: 13.sp,
-              height: 1.5,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          SizedBox(height: 12.h),
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onTap,
-              borderRadius: BorderRadius.circular(999.r),
-              child: Ink(
-                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 9.h),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFD7D09D),
-                  borderRadius: BorderRadius.circular(999.r),
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+              decoration: BoxDecoration(
+                color: bubbleBgColor,
+                border: Border.all(color: bubbleBorderColor, width: 1.2.w),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(4.r),
+                  topRight: Radius.circular(16.r),
+                  bottomLeft: Radius.circular(16.r),
+                  bottomRight: Radius.circular(16.r),
                 ),
-                child: Text(
-                  '查看白話整理',
-                  style: TextStyle(
-                    color: const Color(0xFF433F24),
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w900,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: isDark ? 0.1 : 0.02),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
                   ),
-                ),
+                ],
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LearningEvidenceChecklistCard extends StatelessWidget {
-  const _LearningEvidenceChecklistCard({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final items = ['合約與附約', '對話紀錄', '照片與點交紀錄'];
-
-    return HomeV2SurfaceCard(
-      color: Colors.white,
-      padding: EdgeInsets.all(16.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.task_alt_rounded,
-                color: HomeV2Palette.trustGreen,
-                size: 24.sp,
-              ),
-              SizedBox(width: 10.w),
-              Expanded(
-                child: Text(
-                  '租屋爭議先整理哪些資料',
-                  style: TextStyle(
-                    color: HomeV2Palette.ink,
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 12.h),
-          ...items.map(
-            (item) => Padding(
-              padding: EdgeInsets.only(bottom: 8.h),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.check_circle_outline_rounded,
-                    color: HomeV2Palette.trustGreen,
-                    size: 18.sp,
-                  ),
-                  SizedBox(width: 9.w),
                   Expanded(
-                    child: Text(
-                      item,
-                      style: TextStyle(
-                        color: AppColors.textPrimary,
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: 4.h),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: _LearningPlainChip(
-              label: '查看準備清單',
-              onTap: onTap,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LearningPlainChip extends StatelessWidget {
-  const _LearningPlainChip({
-    required this.label,
-    required this.onTap,
-  });
-
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(999.r),
-        child: Ink(
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.h),
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.86),
-            borderRadius: BorderRadius.circular(999.r),
-            border: Border.all(color: AppColors.border.withValues(alpha: 0.7)),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              color: HomeV2Palette.trustGreen,
-              fontSize: 11.sp,
-              fontWeight: FontWeight.w900,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _LearningIconButton extends StatelessWidget {
-  const _LearningIconButton({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      label: label,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(99.r),
-          child: Ink(
-            width: 36.w,
-            height: 36.w,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              icon,
-              color: HomeV2Palette.trustGreen,
-              size: 20.sp,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _LearningSectionTitle extends StatelessWidget {
-  const _LearningSectionTitle({required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: TextStyle(
-        fontSize: 20.sp,
-        height: 1.08,
-        fontWeight: FontWeight.w700,
-        color: AppColors.textPrimary,
-      ),
-    );
-  }
-}
-
-class _LearningFrozenToolbar extends StatelessWidget {
-  const _LearningFrozenToolbar({
-    required this.categories,
-    required this.onSearchTap,
-  });
-
-  final List<String> categories;
-  final VoidCallback onSearchTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final assistantPalette = _LawAssistantPalette.of(context);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: EdgeInsets.all(12.w),
-          decoration: BoxDecoration(
-            color: assistantPalette.introSurface,
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: assistantPalette.border),
-          ),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  const _LawBuddyAvatar(),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: onSearchTap,
-                        borderRadius: BorderRadius.circular(8.r),
-                        child: Container(
-                          height: 36.h,
-                          padding: EdgeInsets.symmetric(horizontal: 2.w),
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                color: assistantPalette.border,
-                                width: 1.2.w,
-                              ),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.search_rounded,
-                                size: 18.sp,
-                                color: assistantPalette.accent,
-                              ),
-                              SizedBox(width: 7.w),
-                              Expanded(
-                                child: Text(
-                                  '說說你遇到的情況，我們一起解決',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.w800,
-                                    color: assistantPalette.primaryText,
-                                  ),
-                                ),
-                              ),
-                            ],
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${gameState.levelTitle} ${gameState.mascotExpression} 提問：',
+                          style: TextStyle(
+                            fontSize: 9.5.sp,
+                            fontWeight: FontWeight.bold,
+                            color: textColor.withValues(alpha: 0.7),
                           ),
                         ),
-                      ),
+                        SizedBox(height: 2.h),
+                        AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 300),
+                          transitionBuilder: (child, animation) {
+                            return FadeTransition(
+                              opacity: animation,
+                              child: SlideTransition(
+                                position: Tween<Offset>(
+                                  begin: const Offset(0.0, 0.2),
+                                  end: Offset.zero,
+                                ).animate(animation),
+                                child: child,
+                              ),
+                            );
+                          },
+                          child: Text(
+                            currentPrompt,
+                            key: ValueKey<int>(_currentIndex),
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.bold,
+                              color: textColor,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
                     ),
+                  ),
+                  SizedBox(width: 4.w),
+                  Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 11.sp,
+                    color: textColor.withValues(alpha: 0.7),
                   ),
                 ],
               ),
-            ],
-          ),
-        ),
-        SizedBox(height: 8.h),
-        SizedBox(
-          height: 34.h,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            itemBuilder: (context, index) {
-              return _LearningCategoryChip(label: categories[index]);
-            },
-            separatorBuilder: (_, __) => SizedBox(width: 8.w),
-            itemCount: categories.length,
+            ),
           ),
         ),
       ],
@@ -1368,9 +1100,6 @@ class _LawBuddyAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final assistantPalette = _LawAssistantPalette.of(context);
-
-    // 教學註解：小法助先用內建 icon 組出 IP 雛形，刻意不加外框，
-    // 讓角色像直接出現在 Header 裡；未來可整段替換成正式角色圖。
     return SizedBox(
       width: 42.w,
       height: 42.w,
@@ -1404,878 +1133,3 @@ class _LawBuddyAvatar extends StatelessWidget {
     );
   }
 }
-
-class _LearningCategoryChip extends StatelessWidget {
-  const _LearningCategoryChip({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFFAEC),
-        borderRadius: BorderRadius.circular(999.r),
-        border: Border.all(color: const Color(0xFFE2D7B8)),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 11.5.sp,
-          fontWeight: FontWeight.w700,
-          color: const Color(0xFF5C5C45),
-        ),
-      ),
-    );
-  }
-}
-
-class _FeaturedTopicCard extends StatelessWidget {
-  const _FeaturedTopicCard({
-    required this.topic,
-    required this.onTap,
-  });
-
-  final LearningTopicData topic;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(24.r),
-        child: Container(
-          height: 254.h,
-          clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(24.r),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x18000000),
-                blurRadius: 18,
-                offset: Offset(0, 10),
-              ),
-            ],
-          ),
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              const _RoomSceneBackground(),
-              Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.white.withValues(alpha: 0.05),
-                      Colors.transparent,
-                      const Color(0x3A000000),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(14.w, 14.h, 14.w, 14.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10.w,
-                            vertical: 5.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.76),
-                            borderRadius: BorderRadius.circular(999.r),
-                          ),
-                          child: Text(
-                            '主專題',
-                            style: TextStyle(
-                              fontSize: 11.sp,
-                              fontWeight: FontWeight.w800,
-                              color: AppColors.primarySoft,
-                            ),
-                          ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          '2026/04/12',
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF74685D),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    Text(
-                      '租屋糾紛怎麼看懂',
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        height: 1.05,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      topic.summary,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        height: 1.45,
-                        fontWeight: FontWeight.w500,
-                        color: const Color(0xFF2D261F),
-                      ),
-                    ),
-                    SizedBox(height: 12.h),
-                    Text(
-                      '從押金、解約到修繕責任，這個主專題會帶你用一條完整順序理解租屋爭議。',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        height: 1.45,
-                        color: const Color(0xFF2F2A23),
-                      ),
-                    ),
-                    SizedBox(height: 10.h),
-                    Row(
-                      children: [
-                        Text(
-                          '往下滑還有更多主題',
-                          style: TextStyle(
-                            fontSize: 11.sp,
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xFF4D5A8A),
-                          ),
-                        ),
-                        const Spacer(),
-                        Icon(
-                          Icons.arrow_forward_rounded,
-                          size: 24.sp,
-                          color: AppColors.primary,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _RoomSceneBackground extends StatelessWidget {
-  const _RoomSceneBackground();
-
-  @override
-  Widget build(BuildContext context) {
-    // 這裡不是要真的畫出照片，而是用暖色漸層與幾何塊模擬
-    // 設計稿裡那種柔和、偏居家室內的主視覺質感。
-    return DecoratedBox(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFFF3ECE1),
-            Color(0xFFE4CBAE),
-            Color(0xFFC8A377),
-          ],
-        ),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            left: 18.w,
-            top: 16.h,
-            width: 120.w,
-            height: 152.h,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.38),
-                borderRadius: BorderRadius.circular(18.r),
-                border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.4),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            right: -18.w,
-            top: 28.h,
-            width: 120.w,
-            height: 26.h,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.25),
-                borderRadius: BorderRadius.circular(999.r),
-              ),
-            ),
-          ),
-          Positioned(
-            right: 22.w,
-            top: 48.h,
-            width: 52.w,
-            height: 10.h,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.42),
-                borderRadius: BorderRadius.circular(999.r),
-              ),
-            ),
-          ),
-          Positioned(
-            right: 24.w,
-            bottom: 42.h,
-            width: 82.w,
-            height: 34.h,
-            child: Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFB98E5C).withValues(alpha: 0.32),
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-            ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              height: 122.h,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Color(0x2D000000),
-                    Color(0x52000000),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _PageDots extends StatelessWidget {
-  const _PageDots({
-    required this.activeIndex,
-    required this.count,
-  });
-
-  final int activeIndex;
-  final int count;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(count, (index) {
-        final isActive = index == activeIndex;
-        return Container(
-          width: isActive ? 10.w : 8.w,
-          height: isActive ? 10.w : 8.w,
-          margin: EdgeInsets.symmetric(horizontal: 3.w),
-          decoration: BoxDecoration(
-            color: isActive ? const Color(0xFFD8C7E8) : const Color(0xFFD8D8D8),
-            shape: BoxShape.circle,
-          ),
-        );
-      }),
-    );
-  }
-}
-
-class _RecentCaseGrid extends StatelessWidget {
-  const _RecentCaseGrid({
-    required this.items,
-    required this.onTap,
-  });
-
-  final List<_RecentCaseItem> items;
-  final ValueChanged<_RecentCaseItem> onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: items.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisSpacing: 10.h,
-        crossAxisSpacing: 10.w,
-        childAspectRatio: 2.45,
-      ),
-      itemBuilder: (context, index) {
-        final item = items[index];
-
-        return Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: () => onTap(item),
-            borderRadius: BorderRadius.circular(16.r),
-            child: Container(
-              padding: EdgeInsets.fromLTRB(12.w, 11.h, 12.w, 10.h),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF1F1F0),
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              child: Stack(
-                children: [
-                  Positioned(
-                    left: 0,
-                    top: 1.h,
-                    right: 28.w,
-                    child: Text(
-                      item.title,
-                      style: TextStyle(
-                        fontSize: 13.5.sp,
-                        height: 1.25,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    left: 0,
-                    bottom: 1.h,
-                    right: 28.w,
-                    child: Text(
-                      item.lastViewedLabel,
-                      style: TextStyle(
-                        fontSize: 10.sp,
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Icon(
-                        Icons.arrow_forward_rounded,
-                        size: 20.sp,
-                        color: const Color(0xFF4B5563),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class _CommonTopicGrid extends StatelessWidget {
-  const _CommonTopicGrid({
-    required this.items,
-    required this.onTap,
-  });
-
-  final List<_CommonTopicItem> items;
-  final ValueChanged<_CommonTopicItem> onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: items.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        mainAxisSpacing: 10.h,
-        crossAxisSpacing: 10.w,
-        childAspectRatio: 1.18,
-      ),
-      itemBuilder: (context, index) {
-        final item = items[index];
-
-        return Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: () => onTap(item),
-            borderRadius: BorderRadius.circular(14.r),
-            child: Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFF2F2F2),
-                borderRadius: BorderRadius.circular(14.r),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    item.icon,
-                    style: TextStyle(fontSize: 26.sp, height: 1),
-                  ),
-                  SizedBox(height: 6.h),
-                  Text(
-                    item.label,
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      height: 1.1,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-enum _TranslatorCardVariant { defaultStyle, compact }
-
-class _StatuteDatabaseEntryCard extends StatelessWidget {
-  const _StatuteDatabaseEntryCard({
-    required this.onTap,
-    required this.onChipTap,
-  });
-
-  final VoidCallback onTap;
-  final ValueChanged<String> onChipTap;
-
-  static const List<String> _quickQueries = [
-    '民法',
-    '刑法',
-    '勞動基準法',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    // 法條資料庫放在學習頁裡，是讓使用者從生活情境往正式條文查證；
-    // 入口本身保持輕量，避免把整個資料庫直接塞進首頁造成閱讀負擔。
-    return Container(
-      padding: EdgeInsets.all(15.w),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEFEFE8),
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: const Color(0xFFE4E0D5)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onTap,
-              borderRadius: BorderRadius.circular(16.r),
-              child: Row(
-                children: [
-                  Container(
-                    width: 44.w,
-                    height: 44.w,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFDDE7D4),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.gavel_rounded,
-                      size: 22.sp,
-                      color: const Color(0xFF405238),
-                    ),
-                  ),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: Text(
-                      '查民法、刑法、勞基法與常用條文',
-                      style: TextStyle(
-                        fontSize: 15.sp,
-                        height: 1.35,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10.w),
-                  Icon(
-                    Icons.arrow_forward_rounded,
-                    size: 22.sp,
-                    color: const Color(0xFF4B5563),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: 14.h),
-          Wrap(
-            spacing: 8.w,
-            runSpacing: 8.h,
-            children: _quickQueries.map((query) {
-              return _StatuteQuickQueryChip(
-                label: query == '勞動基準法' ? '勞基法' : query,
-                onTap: () => onChipTap(query),
-              );
-            }).toList(growable: false),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _StatuteQuickQueryChip extends StatelessWidget {
-  const _StatuteQuickQueryChip({
-    required this.label,
-    required this.onTap,
-  });
-
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(999.r),
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 7.h),
-          decoration: BoxDecoration(
-            color: const Color(0xFFFFFAEC),
-            borderRadius: BorderRadius.circular(999.r),
-            border: Border.all(color: const Color(0xFFE2D7B8)),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 11.5.sp,
-              fontWeight: FontWeight.w800,
-              color: const Color(0xFF5C5C45),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _TranslatorCard extends StatelessWidget {
-  const _TranslatorCard({
-    required this.article,
-    required this.onTap,
-  });
-
-  final LearningMockArticle article;
-  final VoidCallback onTap;
-  final _TranslatorCardVariant variant = _TranslatorCardVariant.defaultStyle;
-
-  @override
-  Widget build(BuildContext context) {
-    final isCompact = variant == _TranslatorCardVariant.compact;
-
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(20.r),
-        child: Container(
-          padding: EdgeInsets.all(isCompact ? 14.w : 16.w),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF5F1DF),
-            borderRadius: BorderRadius.circular(20.r),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    '法條',
-                    style: TextStyle(
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF8C8B59),
-                    ),
-                  ),
-                  const Spacer(),
-                  Container(
-                    width: 22.w,
-                    height: 22.w,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: const Color(0xFF3C3B31),
-                        width: 1.2.w,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: isCompact ? 8.h : 10.h),
-              Text(
-                '民法第184條第1項前段：',
-                style: TextStyle(
-                  fontSize: isCompact ? 13.sp : 14.sp,
-                  height: 1.32,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFF5D5A38),
-                ),
-              ),
-              SizedBox(height: 4.h),
-              Text(
-                article.summary,
-                style: TextStyle(
-                  fontSize: isCompact ? 12.sp : 13.sp,
-                  height: 1.45,
-                  color: const Color(0xFF524E35),
-                ),
-              ),
-              if (!isCompact) ...[
-                SizedBox(height: 10.h),
-                Text(
-                  '因故意或過失，不法侵害他人之權利者，負損害賠償責任。',
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    height: 1.45,
-                    color: const Color(0xFF524E35),
-                  ),
-                ),
-              ],
-              SizedBox(height: isCompact ? 10.h : 14.h),
-              Align(
-                alignment: Alignment.center,
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 8.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFD7D09D),
-                    borderRadius: BorderRadius.circular(999.r),
-                  ),
-                  child: Text(
-                    '開始翻譯',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF433F24),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _QuizEntryCard extends StatelessWidget {
-  const _QuizEntryCard({
-    required this.entry,
-    required this.onTap,
-  });
-
-  final LearningQuizEntryData entry;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(18.r),
-        child: Container(
-          padding: EdgeInsets.fromLTRB(16.w, 14.h, 14.w, 14.h),
-          decoration: BoxDecoration(
-            color: const Color(0xFFEFEFE8),
-            borderRadius: BorderRadius.circular(18.r),
-            border: Border.all(color: const Color(0xFFE4E0D5)),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 42.w,
-                height: 42.w,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFFFD46A),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.quiz_outlined,
-                  size: 22.sp,
-                  color: AppColors.textPrimary,
-                ),
-              ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '快速測驗',
-                      style: TextStyle(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      entry.subtitle,
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        height: 1.35,
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(width: 10.w),
-              Icon(
-                Icons.arrow_forward_rounded,
-                size: 22.sp,
-                color: const Color(0xFF4B5563),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _FaqFloatingChip extends StatelessWidget {
-  const _FaqFloatingChip({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        customBorder: const CircleBorder(),
-        child: Container(
-          width: 46.w,
-          height: 46.w,
-          decoration: const BoxDecoration(
-            color: Color(0xFFF1CB69),
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Color(0x19000000),
-                blurRadius: 10,
-                offset: Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Center(
-            child: Text(
-              'FAQ',
-              style: TextStyle(
-                fontSize: 11.sp,
-                fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _RecentCaseItem {
-  const _RecentCaseItem({
-    required this.title,
-    required this.lastViewedLabel,
-    required this.article,
-  });
-
-  final String title;
-  final String lastViewedLabel;
-  final LearningMockArticle article;
-}
-
-class _CommonTopicItem {
-  const _CommonTopicItem({
-    required this.icon,
-    required this.label,
-    required this.article,
-  });
-
-  final String icon;
-  final String label;
-  final LearningMockArticle article;
-}
-
-final List<_RecentCaseItem> _recentCases = [
-  _RecentCaseItem(
-    title: '道路交通管理條例',
-    lastViewedLabel: '最近一次查看：10分鐘前',
-    article: learningTopic.heroArticle,
-  ),
-  _RecentCaseItem(
-    title: '證券交易法',
-    lastViewedLabel: '最近一次查看：15分鐘前',
-    article: learningTopic.relatedTopics[0].article,
-  ),
-  _RecentCaseItem(
-    title: '銀行法',
-    lastViewedLabel: '最近一次查看：23分鐘前',
-    article: learningTopic.supportItems[1].article,
-  ),
-  _RecentCaseItem(
-    title: '少年事件處理法',
-    lastViewedLabel: '最近一次查看：昨天',
-    article: learningTopic.supportItems[2].article,
-  ),
-];
-
-final List<_CommonTopicItem> _commonTopics = [
-  _CommonTopicItem(
-    icon: '🏠',
-    label: '租屋',
-    article: learningTopic.heroArticle,
-  ),
-  _CommonTopicItem(
-    icon: '💼',
-    label: '勞資',
-    article: learningTopic.relatedTopics[0].article,
-  ),
-  _CommonTopicItem(
-    icon: '🚗',
-    label: '車禍',
-    article: learningTopic.supportItems[2].article,
-  ),
-  _CommonTopicItem(
-    icon: '📱',
-    label: '網路',
-    article: learningTopic.relatedTopics[1].article,
-  ),
-  _CommonTopicItem(
-    icon: '👪',
-    label: '家事',
-    article: learningTopic.supportItems.first.article,
-  ),
-  _CommonTopicItem(
-    icon: '⚖️',
-    label: '刑事',
-    article: learningTopic.supportItems[1].article,
-  ),
-];

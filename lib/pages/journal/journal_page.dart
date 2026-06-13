@@ -8,8 +8,6 @@ import 'package:lawapp/pages/journal/widgets/discussing_now_section.dart';
 import 'package:lawapp/pages/journal/widgets/journal_page_header.dart';
 import 'package:lawapp/pages/journal/widgets/journal_palette.dart';
 import 'package:lawapp/pages/journal/widgets/on_this_day_card.dart';
-import 'package:lawapp/pages/journal/widgets/assistant_prompt_bubble.dart';
-import 'package:lawapp/pages/learning/know_law_page.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
 import 'package:lawapp/theme/app_colors.dart';
 
@@ -127,8 +125,6 @@ class _JournalPageState extends State<JournalPage> {
                 // 台灣繁體中文教學註解：
                 // 沒有搜尋字時仍維持原本策展首頁；一旦從全站搜尋帶 query 進來，
                 // 這裡會切成前端資料結果，清楚告訴使用者目前查的是已整理資料。
-                AssistantPromptBubble(palette: palette),
-                SizedBox(height: 14.h),
                 DiscussingNowSection(palette: palette),
                 SizedBox(height: 20.h),
 
