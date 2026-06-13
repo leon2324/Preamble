@@ -9,6 +9,8 @@ class LearningMockArticle {
     required this.heroNote,
     required this.keyPoints,
     required this.sections,
+    this.category,
+    this.quizData,
   });
 
   final String badge;
@@ -18,6 +20,8 @@ class LearningMockArticle {
   final String heroNote;
   final List<String> keyPoints;
   final List<LearningMockSection> sections;
+  final String? category;
+  final Map<String, dynamic>? quizData;
 }
 
 class LearningMockSection {

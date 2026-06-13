@@ -18,6 +18,7 @@ import 'package:lawapp/pages/learning/widgets/notebook_aesthetics.dart';
 import 'package:lawapp/pages/learning/widgets/achievement_room.dart';
 import 'package:lawapp/pages/learning/widgets/mock_court_challenge.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:lawapp/data/learning/supabase_learning_service.dart';
 
 import 'dart:async';
 import 'dart:ui' show ImageFilter;
@@ -40,18 +41,11 @@ class KnowLawPageState extends State<KnowLawPage> {
       'assets/images/learning/rent_course_room.png';
   static const List<_LearningTopicOption> _featuredTopics = [
     _LearningTopicOption('租屋糾紛', '主修中', true),
-    _LearningTopicOption('車禍事故', '整理中', false),
-    _LearningTopicOption('職場權益', '整理中', false),
-    _LearningTopicOption('網購消費', '整理中', false),
-    _LearningTopicOption('個資隱私', '整理中', false),
+    _LearningTopicOption('車禍事故', '看全部', false),
+    _LearningTopicOption('職場權益', '看全部', false),
+    _LearningTopicOption('網購消費', '看全部', false),
+    _LearningTopicOption('個資隱私', '看全部', false),
   ];
-  static const Map<String, List<String>> _topicCatalogSections = {
-    '最近更新': ['租屋糾紛', '車禍事故', '網購消費'],
-    '生活必修': ['租屋糾紛', '消費退貨', '鄰里噪音', '修繕責任'],
-    '工作與金錢': ['職場權益', '薪資加班', '離職交接', '借貸糾紛'],
-    '交通與事故': ['車禍事故', '行車紀錄器', '調解流程', '保險理賠'],
-    '網路與隱私': ['個資隱私', '截圖轉傳', '網路罵人', '帳號盜用'],
-  };
 
   int _selectedTabIndex = 0; // 0: 法學課堂, 1: 生活工具箱
 
@@ -101,71 +95,420 @@ class KnowLawPageState extends State<KnowLawPage> {
       );
   }
 
-  void _openLearningTopicCatalog() {
+  void _openLearningTopicCatalog({String? initialCategory}) {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (sheetContext) {
         final isDark = Theme.of(sheetContext).brightness == Brightness.dark;
-        return DraggableScrollableSheet(
-          initialChildSize: 0.72,
-          minChildSize: 0.44,
-          maxChildSize: 0.88,
-          expand: false,
-          builder: (context, scrollController) {
-            return Container(
-              decoration: BoxDecoration(
-                color:
-                    isDark ? const Color(0xFF161C23) : const Color(0xFFFFFCF4),
-                borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+        return _LearningTopicCatalogBottomSheet(
+          initialCategory: initialCategory,
+          isDark: isDark,
+          onArticleTap: _openArticle,
+        );
+      },
+    );
+  }
+}
+
+class _LearningTopicCatalogBottomSheet extends StatefulWidget {
+  const _LearningTopicCatalogBottomSheet({
+    required this.initialCategory,
+    required this.isDark,
+    required this.onArticleTap,
+  });
+
+  final String? initialCategory;
+  final bool isDark;
+  final Function(LearningMockArticle) onArticleTap;
+
+  @override
+  State<_LearningTopicCatalogBottomSheet> createState() => _LearningTopicCatalogBottomSheetState();
+}
+
+class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogBottomSheet> {
+  late String _selectedCategory;
+  String _searchQuery = '';
+  late Future<List<LearningMockArticle>> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedCategory = widget.initialCategory ?? '全部';
+    _fetchData();
+  }
+
+  void _fetchData() {
+    _future = SupabaseLearningService.instance.fetchArticles(
+      category: _selectedCategory == '全部' ? null : _selectedCategory,
+      query: _searchQuery.isEmpty ? null : _searchQuery,
+      limit: 50,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final List<String> catalogCategories = [
+      '全部',
+      '租屋糾紛',
+      '車禍事故',
+      '職場權益',
+      '網購消費',
+      '個資隱私',
+      '鄰里生活',
+      '婚姻家庭',
+      '防詐騙常識'
+    ];
+
+    return DraggableScrollableSheet(
+      initialChildSize: 0.82,
+      minChildSize: 0.50,
+      maxChildSize: 0.95,
+      expand: false,
+      builder: (sheetContext, scrollController) {
+        return Container(
+          decoration: BoxDecoration(
+            color: widget.isDark ? const Color(0xFF161C23) : const Color(0xFFFFFCF4),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+          ),
+          child: Column(
+            children: [
+              SizedBox(height: 10.h),
+              Center(
+                child: Container(
+                  width: 42.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: widget.isDark ? const Color(0xFF354454) : const Color(0xFFD8D0C2),
+                    borderRadius: BorderRadius.circular(99.r),
+                  ),
+                ),
               ),
-              child: ListView(
-                controller: scrollController,
-                padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 28.h),
-                children: [
-                  Center(
-                    child: Container(
-                      width: 42.w,
-                      height: 4.h,
-                      decoration: BoxDecoration(
-                        color: isDark
-                            ? const Color(0xFF354454)
-                            : const Color(0xFFD8D0C2),
-                        borderRadius: BorderRadius.circular(99.r),
+              SizedBox(height: 16.h),
+              
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Row(
+                  children: [
+                    Text(
+                      '全部專題分類庫 📚',
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w900,
+                        color: AppColors.textPrimary,
                       ),
                     ),
-                  ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    '全部專題',
-                    style: TextStyle(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    '首頁先放精選與正在學的主題，完整內容集中在這裡，之後更新專題時不會把學習頁塞滿。',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      height: 1.45,
-                      color: AppColors.textSecondary,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-                  ..._topicCatalogSections.entries.map(
-                    (section) => _buildCatalogSection(
-                      section.key,
-                      section.value,
-                      isDark,
-                      sheetContext,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+              SizedBox(height: 12.h),
+
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value;
+                      _fetchData();
+                    });
+                  },
+                  decoration: InputDecoration(
+                    hintText: '搜尋生活法律情境、關鍵字...',
+                    hintStyle: TextStyle(fontSize: 12.sp, color: Colors.grey),
+                    prefixIcon: Padding(
+                      padding: EdgeInsets.all(10.w),
+                      child: CtmSvgIcon(
+                        CtmSvgIcons.search,
+                        size: 16.sp,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: widget.isDark ? const Color(0xFF232B35) : const Color(0xFFF5EFE2),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14.r),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: EdgeInsets.symmetric(vertical: 8.h),
+                  ),
+                  style: TextStyle(fontSize: 13.sp, color: AppColors.textPrimary),
+                ),
+              ),
+              SizedBox(height: 12.h),
+
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: Row(
+                  children: catalogCategories.map((cat) {
+                    final isSelected = _selectedCategory == cat;
+                    return Padding(
+                      padding: EdgeInsets.only(right: 6.w),
+                      child: ChoiceChip(
+                        label: Text(
+                          cat,
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.bold,
+                            color: isSelected ? Colors.white : AppColors.textPrimary,
+                          ),
+                        ),
+                        selected: isSelected,
+                        onSelected: (selected) {
+                          if (selected) {
+                            setState(() {
+                              _selectedCategory = cat;
+                              _fetchData();
+                            });
+                          }
+                        },
+                        selectedColor: HomeV2Palette.trustGreen,
+                        backgroundColor: widget.isDark ? const Color(0xFF232B35) : const Color(0xFFF5EFE2),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(999.r),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+              SizedBox(height: 10.h),
+
+              Expanded(
+                child: FutureBuilder<List<LearningMockArticle>>(
+                  future: _future,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return ListView(
+                        controller: scrollController,
+                        children: const [
+                          SizedBox(height: 120),
+                          Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(HomeV2Palette.trustGreen),
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      return ListView(
+                        controller: scrollController,
+                        children: const [
+                          SizedBox(height: 120),
+                          Center(
+                            child: Text('載入失敗，請稍後再試'),
+                          ),
+                        ],
+                      );
+                    }
+                    final list = snapshot.data ?? [];
+                    if (list.isEmpty) {
+                      return ListView(
+                        controller: scrollController,
+                        children: [
+                          const SizedBox(height: 100),
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('🔍', style: TextStyle(fontSize: 32.sp)),
+                                SizedBox(height: 8.h),
+                                Text(
+                                  '找不到符合的情境專題',
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+
+                    return GridView.builder(
+                      controller: scrollController,
+                      padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 20.h),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 10.h,
+                        crossAxisSpacing: 10.w,
+                        childAspectRatio: 0.88,
+                      ),
+                      itemCount: list.length,
+                      itemBuilder: (context, index) {
+                        final article = list[index];
+                        final cat = article.category ?? '法律常識';
+                        
+                        Color cardBg;
+                        Color textColor;
+                        Color accentColor;
+                        
+                        if (widget.isDark) {
+                          cardBg = const Color(0xFF1E252E);
+                          textColor = Colors.white;
+                          accentColor = HomeV2Palette.trustGreen;
+                        } else {
+                          switch (cat) {
+                            case '租屋糾紛':
+                              cardBg = const Color(0xFFE8F5E9);
+                              accentColor = const Color(0xFF2E7D32);
+                              break;
+                            case '車禍事故':
+                              cardBg = const Color(0xFFE3F2FD);
+                              accentColor = const Color(0xFF1565C0);
+                              break;
+                            case '職場權益':
+                              cardBg = const Color(0xFFFFF3E0);
+                              accentColor = const Color(0xFFE65100);
+                              break;
+                            case '網購消費':
+                              cardBg = const Color(0xFFFCE4EC);
+                              accentColor = const Color(0xFFC2185B);
+                              break;
+                            case '個資隱私':
+                              cardBg = const Color(0xFFEDE7F6);
+                              accentColor = const Color(0xFF512DA8);
+                              break;
+                            case '鄰里生活':
+                              cardBg = const Color(0xFFE0F2F1);
+                              accentColor = const Color(0xFF00796B);
+                              break;
+                            case '婚姻家庭':
+                              cardBg = const Color(0xFFFDF2E9);
+                              accentColor = const Color(0xFFA04000);
+                              break;
+                            case '防詐騙常識':
+                              cardBg = const Color(0xFFECEFF1);
+                              accentColor = const Color(0xFF37474F);
+                              break;
+                            default:
+                              cardBg = const Color(0xFFFFFDF5);
+                              accentColor = HomeV2Palette.trustGreen;
+                          }
+                          textColor = AppColors.textPrimary;
+                        }
+
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.of(sheetContext).pop();
+                            widget.onArticleTap(article);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(12.w),
+                            decoration: BoxDecoration(
+                              color: cardBg,
+                              borderRadius: BorderRadius.circular(16.r),
+                              border: Border.all(
+                                color: widget.isDark ? const Color(0xFF2C3845) : accentColor.withValues(alpha: 0.15),
+                                width: 1.w,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.03),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                                      decoration: BoxDecoration(
+                                        color: widget.isDark ? const Color(0xFF354454) : Colors.white.withValues(alpha: 0.72),
+                                        borderRadius: BorderRadius.circular(6.r),
+                                      ),
+                                      child: Text(
+                                        cat,
+                                        style: TextStyle(
+                                          fontSize: 9.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: widget.isDark ? Colors.white70 : accentColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 8.h),
+                                Expanded(
+                                  child: Text(
+                                    article.title,
+                                    style: TextStyle(
+                                      fontSize: 12.5.sp,
+                                      fontWeight: FontWeight.w900,
+                                      color: textColor,
+                                      height: 1.3,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                SizedBox(height: 6.h),
+                                Text(
+                                  article.summary,
+                                  style: TextStyle(
+                                    fontSize: 10.sp,
+                                    color: widget.isDark ? Colors.white60 : AppColors.textSecondary,
+                                    height: 1.3,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 8.h),
+                                Row(
+                                  children: [
+                                    CtmSvgIcon(
+                                      CtmSvgIcons.clock,
+                                      size: 11.sp,
+                                      color: widget.isDark ? Colors.white38 : Colors.grey,
+                                    ),
+                                    SizedBox(width: 4.w),
+                                    Text(
+                                      article.readTime,
+                                      style: TextStyle(
+                                        fontSize: 9.5.sp,
+                                        color: widget.isDark ? Colors.white38 : Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }                  ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
             );
           },
         );
@@ -612,9 +955,54 @@ class KnowLawPageState extends State<KnowLawPage> {
   }
 
   Widget _buildFeaturedTopicSwitcher(bool isDark) {
+    final gameState = LearningGameState.instance;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // 膠囊顯示曾經看過案件的議題
+        if (gameState.viewedCategories.isNotEmpty) ...[
+          Text(
+            '最近關注的議題',
+            style: TextStyle(
+              fontSize: 11.5.sp,
+              fontWeight: FontWeight.w900,
+              color: AppColors.textSecondary,
+            ),
+          ),
+          SizedBox(height: 6.h),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            child: Row(
+              children: gameState.viewedCategories.map((cat) {
+                return Padding(
+                  padding: EdgeInsets.only(right: 6.w),
+                  child: ActionChip(
+                    label: Text(
+                      cat,
+                      style: TextStyle(
+                        fontSize: 10.5.sp,
+                        fontWeight: FontWeight.bold,
+                        color: HomeV2Palette.trustGreen,
+                      ),
+                    ),
+                    backgroundColor: HomeV2Palette.mint,
+                    side: BorderSide(
+                      color: HomeV2Palette.trustGreen.withValues(alpha: 0.25),
+                      width: 1.w,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(999.r),
+                    ),
+                    onPressed: () => _openLearningTopicCatalog(initialCategory: cat),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+          SizedBox(height: 14.h),
+        ],
+
         Row(
           children: [
             Text(
@@ -627,7 +1015,7 @@ class KnowLawPageState extends State<KnowLawPage> {
             ),
             const Spacer(),
             GestureDetector(
-              onTap: _openLearningTopicCatalog,
+              onTap: () => _openLearningTopicCatalog(),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -653,7 +1041,7 @@ class KnowLawPageState extends State<KnowLawPage> {
         SizedBox(height: 8.h),
         // 台灣繁體中文教學註解：
         // 學習首頁只展示少量精選專題，避免活躍 App 內容增加後把首頁塞成百科列表；
-        // 更多專題集中到「全部專題」面板，未來接 API 時只要替換資料來源。
+        // 更多專題集中到「全部專題」面板，未來接 API 時阻擋並直接以 drawer 代替。
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           physics: const BouncingScrollPhysics(),
@@ -674,8 +1062,10 @@ class KnowLawPageState extends State<KnowLawPage> {
     final isSelected = topic.isAvailable;
     return GestureDetector(
       onTap: () {
-        if (!topic.isAvailable) {
-          _showTopicComingSoon(topic.title);
+        if (topic.title == '租屋糾紛') {
+          // 租屋糾紛是主修課，點擊不執行動作（直接由下方的主修卡片開啟）
+        } else {
+          _openLearningTopicCatalog(initialCategory: topic.title);
         }
       },
       child: Container(
@@ -720,72 +1110,6 @@ class KnowLawPageState extends State<KnowLawPage> {
     );
   }
 
-  Widget _buildCatalogSection(
-    String title,
-    List<String> topics,
-    bool isDark,
-    BuildContext sheetContext,
-  ) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 18.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w900,
-              color: AppColors.textPrimary,
-            ),
-          ),
-          SizedBox(height: 8.h),
-          Wrap(
-            spacing: 8.w,
-            runSpacing: 8.h,
-            children: topics.map((topic) {
-              final isAvailable = topic == '租屋糾紛';
-              return GestureDetector(
-                onTap: () {
-                  Navigator.of(sheetContext).pop();
-                  if (!isAvailable) {
-                    _showTopicComingSoon(topic);
-                  }
-                },
-                child: Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-                  decoration: BoxDecoration(
-                    color: isAvailable
-                        ? HomeV2Palette.trustGreen.withValues(alpha: 0.12)
-                        : (isDark ? const Color(0xFF1D252E) : Colors.white),
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(
-                      color: isAvailable
-                          ? HomeV2Palette.trustGreen.withValues(alpha: 0.42)
-                          : (isDark
-                              ? const Color(0xFF2D3845)
-                              : const Color(0xFFECE6DB)),
-                    ),
-                  ),
-                  child: Text(
-                    isAvailable ? '$topic｜主修中' : topic,
-                    style: TextStyle(
-                      fontSize: 11.5.sp,
-                      fontWeight: FontWeight.w800,
-                      color: isAvailable
-                          ? HomeV2Palette.trustGreen
-                          : AppColors.textPrimary,
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildMainCourseCard({
     required bool isDark,

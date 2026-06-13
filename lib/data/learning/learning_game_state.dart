@@ -63,12 +63,34 @@ class LearningGameState extends ChangeNotifier {
   Set<String> _unlockedBadges = {'初學乍練'}; // 預設解鎖第一個徽章
   int _translatorUsageCount = 0;
 
+  // 筆記與收藏狀態屬性
+  Set<String> _savedArticles = {};
+  List<Map<String, dynamic>> _savedQuotes = [];
+  List<Map<String, dynamic>> _savedHighlights = [];
+  Set<String> _viewedCategories = {};
+  Map<String, String> _articleNotes = {};
+
   int get level => _level;
   int get experience => _experience;
   Set<String> get completedSteps => _completedSteps;
   List<Map<String, dynamic>> get incorrectQuestions => _incorrectQuestions;
   List<Map<String, dynamic>> get savedEvidenceLists => _savedEvidenceLists;
   Set<String> get unlockedBadges => _unlockedBadges;
+
+  // 筆記與收藏 Getters
+  Set<String> get savedArticles => _savedArticles;
+  List<Map<String, dynamic>> get savedQuotes => _savedQuotes;
+  List<Map<String, dynamic>> get savedHighlights => _savedHighlights;
+  Set<String> get viewedCategories => _viewedCategories;
+  Map<String, String> get articleNotes => _articleNotes;
+
+  String getArticleNote(String title) => _articleNotes[title] ?? '';
+
+  void setArticleNote(String title, String noteText) {
+    _articleNotes[title] = noteText;
+    _saveState();
+    notifyListeners();
+  }
 
   // 經驗值升級閥值
   int get nextLevelXp => experiencePerLevel;
@@ -129,6 +151,41 @@ class LearningGameState extends ChangeNotifier {
         _savedEvidenceLists =
             List<Map<String, dynamic>>.from(jsonDecode(evidenceRaw));
       }
+
+      // 載入單元收藏
+      final articlesRaw = prefs.getStringList('learning_saved_articles');
+      if (articlesRaw != null) {
+        _savedArticles = articlesRaw.toSet();
+      }
+
+      // 載入思考金句
+      final quotesRaw = prefs.getString('learning_saved_quotes');
+      if (quotesRaw != null) {
+        _savedQuotes = List<Map<String, dynamic>>.from(jsonDecode(quotesRaw));
+      }
+
+      // 載入螢光筆劃記重點
+      final highlightsRaw = prefs.getString('learning_saved_highlights');
+      if (highlightsRaw != null) {
+        _savedHighlights = List<Map<String, dynamic>>.from(jsonDecode(highlightsRaw));
+      }
+
+      // 載入看過的議題/分類
+      final viewedRaw = prefs.getStringList('learning_viewed_categories');
+      if (viewedRaw != null) {
+        _viewedCategories = viewedRaw.toSet();
+      }
+
+      // 載入自訂單元筆記
+      final notesRaw = prefs.getString('learning_article_notes');
+      if (notesRaw != null) {
+        try {
+          _articleNotes = Map<String, String>.from(jsonDecode(notesRaw));
+        } catch (e) {
+          debugPrint('Error parsing article notes: $e');
+        }
+      }
+
       notifyListeners();
     } catch (e) {
       debugPrint('Error loading learning game state: $e');
@@ -150,6 +207,13 @@ class LearningGameState extends ChangeNotifier {
           'learning_incorrect_questions', jsonEncode(_incorrectQuestions));
       await prefs.setString(
           'learning_saved_evidences', jsonEncode(_savedEvidenceLists));
+
+      // 儲存筆記與收藏
+      await prefs.setStringList('learning_saved_articles', _savedArticles.toList());
+      await prefs.setString('learning_saved_quotes', jsonEncode(_savedQuotes));
+      await prefs.setString('learning_saved_highlights', jsonEncode(_savedHighlights));
+      await prefs.setStringList('learning_viewed_categories', _viewedCategories.toList());
+      await prefs.setString('learning_article_notes', jsonEncode(_articleNotes));
     } catch (e) {
       debugPrint('Error saving learning game state: $e');
     }
@@ -263,6 +327,78 @@ class LearningGameState extends ChangeNotifier {
       _savedEvidenceLists.removeAt(index);
       _saveState();
       notifyListeners();
+    }
+  }
+
+  // === 筆記與收藏管理方法 ===
+
+  // 1) 單元整體收藏
+  bool isArticleSaved(String title) => _savedArticles.contains(title);
+
+  void toggleArticleSave(String title) {
+    if (_savedArticles.contains(title)) {
+      _savedArticles.remove(title);
+    } else {
+      _savedArticles.add(title);
+    }
+    _saveState();
+    notifyListeners();
+  }
+
+  // 2) 思考金句收藏
+  bool isQuoteSaved(String quote) {
+    return _savedQuotes.any((item) => item['quote'] == quote);
+  }
+
+  void toggleQuoteSave(String quote, String articleTitle) {
+    final exists = _savedQuotes.any((item) => item['quote'] == quote);
+    if (exists) {
+      _savedQuotes.removeWhere((item) => item['quote'] == quote);
+    } else {
+      _savedQuotes.add({
+        'quote': quote,
+        'articleTitle': articleTitle,
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+      unlockBadge('備忘行家'); // 使用收藏可解鎖備忘行家
+    }
+    _saveState();
+    notifyListeners();
+  }
+
+  // 3) 螢光筆劃記重點
+  void addHighlight(String text, String articleTitle) {
+    if (text.trim().isEmpty) return;
+    // 避免重複劃記一模一樣的句子
+    final exists = _savedHighlights.any((item) => item['highlight'] == text && item['articleTitle'] == articleTitle);
+    if (!exists) {
+      _savedHighlights.add({
+        'highlight': text,
+        'articleTitle': articleTitle,
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+      _saveState();
+      notifyListeners();
+    }
+  }
+
+  void removeHighlight(int index) {
+    if (index >= 0 && index < _savedHighlights.length) {
+      _savedHighlights.removeAt(index);
+      _saveState();
+      notifyListeners();
+    }
+  }
+
+  // 4) 標記看過的議題/分類
+  void markCategoryViewed(String category) {
+    if (category.trim().isEmpty) return;
+    if (!_viewedCategories.contains(category)) {
+      _viewedCategories.add(category);
+      _saveState();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        notifyListeners();
+      });
     }
   }
 }
