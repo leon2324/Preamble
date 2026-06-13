@@ -108,13 +108,26 @@ void main() {
     await tester.tap(find.byIcon(Icons.menu_book_outlined));
     await tester.pumpAndSettle();
 
-    expect(find.text('專題'), findsOneWidget);
+    expect(find.text('學堂與工具箱'), findsOneWidget);
+    expect(find.text('法學課堂'), findsOneWidget);
+    expect(find.text('公民法律小擂台'), findsOneWidget);
 
-    await tester.drag(find.byType(ListView).first, const Offset(0, -900));
+    // 台灣繁體中文教學註解：
+    // 新版學習頁把工具內容收進「生活工具箱」分頁，測試需點分頁，而不是沿用舊版向下滑找工具卡。
+    await tester.tap(find.text('生活工具箱'));
     await tester.pumpAndSettle();
 
-    expect(find.text('法條資料庫'), findsOneWidget);
-    expect(find.text('法律翻譯機'), findsOneWidget);
+    expect(find.text('法律術語白話翻譯機'), findsOneWidget);
+    expect(find.text('證據準備與文件清單'), findsOneWidget);
+
+    await tester.scrollUntilVisible(
+      find.text('常用法規快速查詢'),
+      120,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('常用法規快速查詢'), findsOneWidget);
   });
 
   testWidgets('Home AI assistant card opens law assistant search page', (
@@ -179,10 +192,21 @@ void main() {
     await tester.tap(find.byIcon(Icons.menu_book_outlined));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('租屋糾紛怎麼看懂').first);
+    final firstUnit = find.text('STEP 1：押金的法律角色是什麼？');
+    // 台灣繁體中文教學註解：
+    // 主題標題只負責展示進度；真正會開啟詳情頁的是下方 STEP 單元列。
+    await tester.scrollUntilVisible(
+      firstUnit,
+      120,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
 
-    expect(find.text('這頁會帶你先抓住三個重點'), findsOneWidget);
+    await tester.tap(firstUnit);
+    await tester.pumpAndSettle();
+
+    expect(find.text('單元 1：押金的法律角色是什麼？'), findsOneWidget);
+    expect(find.textContaining('三個核心法律思考點'), findsOneWidget);
   });
 
   testWidgets('Home mission opens quiz detail page', (

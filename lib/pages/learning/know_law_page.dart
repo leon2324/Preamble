@@ -45,14 +45,6 @@ class KnowLawPageState extends State<KnowLawPage> {
     );
   }
 
-  void _openLearningSearch() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (__) => const LawAssistantSearchPage(),
-      ),
-    );
-  }
-
   void _openStatuteDatabase({String initialQuery = ''}) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -88,17 +80,17 @@ class KnowLawPageState extends State<KnowLawPage> {
                   _buildHeaderRow(isDark, gameState),
                   SizedBox(height: 12.h),
 
-                  // 3. 智慧小法助輪播提問氣泡
+                  // 2. 智慧小法助輪播提問氣泡
                   _AssistantPromptBubble(
                     onMascotTap: _openAchievementRoom,
                   ),
                   SizedBox(height: 16.h),
 
-                  // 4. 左右切換分頁 Tab 按鈕（單一 Scroll 結構下的切換按鈕）
+                  // 3. 左右切換分頁 Tab 按鈕（單一 Scroll 結構下的切換按鈕）
                   _buildTabSwitcher(isDark),
                   SizedBox(height: 16.h),
 
-                  // 5. 根據切換選取的 Tab 渲染不同內容
+                  // 4. 根據切換選取的 Tab 渲染不同內容
                   if (_selectedTabIndex == 0)
                     ..._buildClassroomItems(isDark, gameState)
                   else
@@ -167,8 +159,7 @@ class KnowLawPageState extends State<KnowLawPage> {
     );
   }
 
-
-  // 3) 左右切換分頁按鈕
+  // 2) 左右切換分頁按鈕
   Widget _buildTabSwitcher(bool isDark) {
     return Container(
       decoration: BoxDecoration(
@@ -261,7 +252,7 @@ class KnowLawPageState extends State<KnowLawPage> {
     );
   }
 
-  // 4) 👩‍🏫 法學課堂的列表項目
+  // 3) 法學課堂的列表項目
   List<Widget> _buildClassroomItems(bool isDark, LearningGameState gameState) {
     final rentSteps = {'STEP 1', 'STEP 2', 'STEP 3', 'STEP 4'};
     final completedRentCount = gameState.completedSteps.intersection(rentSteps).length;
@@ -539,7 +530,7 @@ class KnowLawPageState extends State<KnowLawPage> {
     ];
   }
 
-  // 5) 🧰 生活工具箱的列表項目
+  // 4) 生活工具箱的列表項目
   List<Widget> _buildToolkitItems(bool isDark, LearningGameState gameState) {
     return [
       // 1. 白話文翻譯機
