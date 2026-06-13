@@ -31,8 +31,8 @@ class LearningGameState extends ChangeNotifier {
   // 取得當前表情與稱號
   String get mascotExpression {
     if (_level >= 3) return '🎓'; // Level 3: 金牌大法官
-    if (_level == 2) return '🧐'; // Level 2: 實習法官助理
-    return '😮'; // Level 1: 法學見習生
+    if (_level == 2) return '⚖️'; // Level 2: 實習法官助理 (替換 🧐)
+    return '🤖'; // Level 1: 法學見習生 (替換 😮)
   }
 
   String get levelTitle {

@@ -88,10 +88,6 @@ class KnowLawPageState extends State<KnowLawPage> {
                   _buildHeaderRow(isDark, gameState),
                   SizedBox(height: 12.h),
 
-                  // 2. 置頂搜尋欄
-                  _buildSearchBar(isDark),
-                  SizedBox(height: 12.h),
-
                   // 3. 智慧小法助輪播提問氣泡
                   _AssistantPromptBubble(
                     onMascotTap: _openAchievementRoom,
@@ -171,50 +167,6 @@ class KnowLawPageState extends State<KnowLawPage> {
     );
   }
 
-  // 2) 搜尋欄 Widget
-  Widget _buildSearchBar(bool isDark) {
-    return GestureDetector(
-      onTap: _openLearningSearch,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-        decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF1E252D) : Colors.white,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(
-            color: isDark ? const Color(0xFF2D3845) : const Color(0xFFD5E2D9),
-            width: 1.2.w,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            CtmSvgIcon(
-              CtmSvgIcons.search,
-              size: 18.sp,
-              color: HomeV2Palette.trustGreen,
-            ),
-            SizedBox(width: 9.w),
-            Expanded(
-              child: Text(
-                '搜尋法律、生活案件...',
-                style: TextStyle(
-                  color: AppColors.textMuted,
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   // 3) 左右切換分頁按鈕
   Widget _buildTabSwitcher(bool isDark) {
@@ -1063,11 +1015,13 @@ class _AssistantPromptBubbleState extends State<_AssistantPromptBubble> {
                 shape: BoxShape.circle,
                 border: Border.all(color: HomeV2Palette.trustGreen, width: 1.5.w),
               ),
-              child: Image.asset(
-                'assets/images/assistant/law_assistant_home.png',
-                width: 40.w,
-                height: 40.w,
-                fit: BoxFit.contain,
+              child: ClipOval(
+                child: Image.asset(
+                  'assets/images/assistant/law_assistant_home.png',
+                  width: 40.w,
+                  height: 40.w,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
