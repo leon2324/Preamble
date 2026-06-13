@@ -1992,212 +1992,210 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
                 child: FutureBuilder<List<LearningMockArticle>>(
                   future: _future,
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return ListView(
-                        controller: scrollController,
-                        children: const [
-                          SizedBox(height: 120),
-                          Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(HomeV2Palette.trustGreen),
-                            ),
-                          ),
-                        ],
-                      );
-                    }
-                    if (snapshot.hasError) {
-                      return ListView(
-                        controller: scrollController,
-                        children: const [
-                          SizedBox(height: 120),
-                          Center(
-                            child: Text('載入失敗，請稍後再試'),
-                          ),
-                        ],
-                      );
-                    }
-                    final list = snapshot.data ?? [];
-                    if (list.isEmpty) {
-                      return ListView(
-                        controller: scrollController,
-                        children: [
-                          const SizedBox(height: 100),
-                          Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text('🔍', style: TextStyle(fontSize: 32.sp)),
-                                SizedBox(height: 8.h),
-                                Text(
-                                  '找不到符合的情境專題',
-                                  style: TextStyle(
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.textSecondary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      );
-                    }
-
-                    return GridView.builder(
+                    final List<LearningMockArticle> list = snapshot.data ?? [];
+                    
+                    return CustomScrollView(
                       controller: scrollController,
-                      padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 20.h),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 10.h,
-                        crossAxisSpacing: 10.w,
-                        childAspectRatio: 0.88,
-                      ),
-                      itemCount: list.length,
-                      itemBuilder: (context, index) {
-                        final article = list[index];
-                        final cat = article.category ?? '法律常識';
-                        
-                        Color cardBg;
-                        Color textColor;
-                        Color accentColor;
-                        
-                        if (widget.isDark) {
-                          cardBg = const Color(0xFF1E252E);
-                          textColor = Colors.white;
-                          accentColor = HomeV2Palette.trustGreen;
-                        } else {
-                          switch (cat) {
-                            case '租屋糾紛':
-                              cardBg = const Color(0xFFE8F5E9);
-                              accentColor = const Color(0xFF2E7D32);
-                              break;
-                            case '車禍事故':
-                              cardBg = const Color(0xFFE3F2FD);
-                              accentColor = const Color(0xFF1565C0);
-                              break;
-                            case '職場權益':
-                              cardBg = const Color(0xFFFFF3E0);
-                              accentColor = const Color(0xFFE65100);
-                              break;
-                            case '網購消費':
-                              cardBg = const Color(0xFFFCE4EC);
-                              accentColor = const Color(0xFFC2185B);
-                              break;
-                            case '個資隱私':
-                              cardBg = const Color(0xFFEDE7F6);
-                              accentColor = const Color(0xFF512DA8);
-                              break;
-                            case '鄰里生活':
-                              cardBg = const Color(0xFFE0F2F1);
-                              accentColor = const Color(0xFF00796B);
-                              break;
-                            case '婚姻家庭':
-                              cardBg = const Color(0xFFFDF2E9);
-                              accentColor = const Color(0xFFA04000);
-                              break;
-                            case '防詐騙常識':
-                              cardBg = const Color(0xFFECEFF1);
-                              accentColor = const Color(0xFF37474F);
-                              break;
-                            default:
-                              cardBg = const Color(0xFFFFFDF5);
-                              accentColor = HomeV2Palette.trustGreen;
-                          }
-                          textColor = AppColors.textPrimary;
-                        }
-
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.of(sheetContext).pop();
-                            widget.onArticleTap(article);
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(12.w),
-                            decoration: BoxDecoration(
-                              color: cardBg,
-                              borderRadius: BorderRadius.circular(16.r),
-                              border: Border.all(
-                                color: widget.isDark ? const Color(0xFF2C3845) : accentColor.withValues(alpha: 0.15),
-                                width: 1.w,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      slivers: [
+                        if (snapshot.connectionState == ConnectionState.waiting)
+                          SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(HomeV2Palette.trustGreen),
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.03),
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-                                      decoration: BoxDecoration(
-                                        color: widget.isDark ? const Color(0xFF354454) : Colors.white.withValues(alpha: 0.72),
-                                        borderRadius: BorderRadius.circular(6.r),
-                                      ),
-                                      child: Text(
-                                        cat,
-                                        style: TextStyle(
-                                          fontSize: 9.sp,
-                                          fontWeight: FontWeight.bold,
-                                          color: widget.isDark ? Colors.white70 : accentColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 8.h),
-                                Expanded(
-                                  child: Text(
-                                    article.title,
+                          )
+                        else if (snapshot.hasError)
+                          const SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: Center(
+                              child: Text('載入失敗，請稍後再試'),
+                            ),
+                          )
+                        else if (list.isEmpty)
+                          SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text('🔍', style: TextStyle(fontSize: 32.sp)),
+                                  SizedBox(height: 8.h),
+                                  Text(
+                                    '找不到符合的情境專題',
                                     style: TextStyle(
-                                      fontSize: 12.5.sp,
-                                      fontWeight: FontWeight.w900,
-                                      color: textColor,
-                                      height: 1.3,
+                                      fontSize: 13.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.textSecondary,
                                     ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                ),
-                                SizedBox(height: 6.h),
-                                Text(
-                                  article.summary,
-                                  style: TextStyle(
-                                    fontSize: 10.sp,
-                                    color: widget.isDark ? Colors.white60 : AppColors.textSecondary,
-                                    height: 1.3,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                SizedBox(height: 8.h),
-                                Row(
-                                  children: [
-                                    CtmSvgIcon(
-                                      CtmSvgIcons.clock,
-                                      size: 11.sp,
-                                      color: widget.isDark ? Colors.white38 : Colors.grey,
-                                    ),
-                                    SizedBox(width: 4.w),
-                                    Text(
-                                      article.readTime,
-                                      style: TextStyle(
-                                        fontSize: 9.5.sp,
-                                        color: widget.isDark ? Colors.white38 : Colors.grey,
+                                ],
+                              ),
+                            ),
+                          )
+                        else
+                          SliverPadding(
+                            padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 20.h),
+                            sliver: SliverGrid(
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 10.h,
+                                crossAxisSpacing: 10.w,
+                                childAspectRatio: 0.88,
+                              ),
+                              delegate: SliverChildBuilderDelegate(
+                                (context, index) {
+                                  final article = list[index];
+                                  final cat = article.category ?? '法律常識';
+                                  
+                                  Color cardBg;
+                                  Color textColor;
+                                  Color accentColor;
+                                  
+                                  if (widget.isDark) {
+                                    cardBg = const Color(0xFF1E252E);
+                                    textColor = Colors.white;
+                                    accentColor = HomeV2Palette.trustGreen;
+                                  } else {
+                                    switch (cat) {
+                                      case '租屋糾紛':
+                                        cardBg = const Color(0xFFE8F5E9);
+                                        accentColor = const Color(0xFF2E7D32);
+                                        break;
+                                      case '車禍事故':
+                                        cardBg = const Color(0xFFE3F2FD);
+                                        accentColor = const Color(0xFF1565C0);
+                                        break;
+                                      case '職場權益':
+                                        cardBg = const Color(0xFFFFF3E0);
+                                        accentColor = const Color(0xFFE65100);
+                                        break;
+                                      case '網購消費':
+                                        cardBg = const Color(0xFFFCE4EC);
+                                        accentColor = const Color(0xFFC2185B);
+                                        break;
+                                      case '個資隱私':
+                                        cardBg = const Color(0xFFEDE7F6);
+                                        accentColor = const Color(0xFF512DA8);
+                                        break;
+                                      case '鄰里生活':
+                                        cardBg = const Color(0xFFE0F2F1);
+                                        accentColor = const Color(0xFF00796B);
+                                        break;
+                                      case '婚姻家庭':
+                                        cardBg = const Color(0xFFFDF2E9);
+                                        accentColor = const Color(0xFFA04000);
+                                        break;
+                                      case '防詐騙常識':
+                                        cardBg = const Color(0xFFECEFF1);
+                                        accentColor = const Color(0xFF37474F);
+                                        break;
+                                      default:
+                                        cardBg = const Color(0xFFFFFDF5);
+                                        accentColor = HomeV2Palette.trustGreen;
+                                    }
+                                    textColor = AppColors.textPrimary;
+                                  }
+
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(sheetContext).pop();
+                                      widget.onArticleTap(article);
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.all(12.w),
+                                      decoration: BoxDecoration(
+                                        color: cardBg,
+                                        borderRadius: BorderRadius.circular(16.r),
+                                        border: Border.all(
+                                          color: widget.isDark ? const Color(0xFF2C3845) : accentColor.withValues(alpha: 0.15),
+                                          width: 1.w,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withValues(alpha: 0.03),
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                                                decoration: BoxDecoration(
+                                                  color: widget.isDark ? const Color(0xFF354454) : Colors.white.withValues(alpha: 0.72),
+                                                  borderRadius: BorderRadius.circular(6.r),
+                                                ),
+                                                child: Text(
+                                                  cat,
+                                                  style: TextStyle(
+                                                    fontSize: 9.sp,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: widget.isDark ? Colors.white70 : accentColor,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 8.h),
+                                          Expanded(
+                                            child: Text(
+                                              article.title,
+                                              style: TextStyle(
+                                                fontSize: 12.5.sp,
+                                                fontWeight: FontWeight.w900,
+                                                color: textColor,
+                                                height: 1.3,
+                                              ),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                          SizedBox(height: 6.h),
+                                          Text(
+                                            article.summary,
+                                            style: TextStyle(
+                                              fontSize: 10.sp,
+                                              color: widget.isDark ? Colors.white60 : AppColors.textSecondary,
+                                              height: 1.3,
+                                            ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          SizedBox(height: 8.h),
+                                          Row(
+                                            children: [
+                                              CtmSvgIcon(
+                                                CtmSvgIcons.clock,
+                                                size: 11.sp,
+                                                color: widget.isDark ? Colors.white38 : Colors.grey,
+                                              ),
+                                              SizedBox(width: 4.w),
+                                              Text(
+                                                article.readTime,
+                                                style: TextStyle(
+                                                  fontSize: 9.5.sp,
+                                                  color: widget.isDark ? Colors.white38 : Colors.grey,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ],
+                                  );
+                                },
+                                childCount: list.length,
+                              ),
                             ),
                           ),
-                        );
-                      },
+                      ],
                     );
                   },
                 ),
