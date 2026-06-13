@@ -1212,7 +1212,7 @@ void _showShareCardDialog(BuildContext context, String highlightText, String art
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: const Text('🎨 成功生成精美圖卡！已儲存至相簿，您可以直接分享！'),
+                        content: const Text('🎨 成功產生精美圖卡！已儲存至相簿，您可以直接分享！'),
                         backgroundColor: HomeV2Palette.trustGreen,
                         action: SnackBarAction(
                           label: '分享',

@@ -5,7 +5,7 @@ import 'package:lawapp/config/supabase_config.dart';
 
 void main() async {
   print('========================================');
-  print('🚀 開始生成並批量上傳 10,000 筆真實司法裁判案卷至 Supabase...');
+  print('🚀 開始產生並批量上傳 10,000 筆真實司法裁判案卷至 Supabase...');
   print('雲端 URL: $supabaseUrl');
   print('========================================');
 

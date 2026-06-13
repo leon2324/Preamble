@@ -79,7 +79,7 @@ class _CaseWitnessCrossPageState extends State<CaseWitnessCrossPage> {
   }
 
   // 台灣繁體中文教學註解：
-  // 模擬 AI 根據角色立场與案件事實生成擬真、有建設性的第一人稱回答
+  // 模擬 AI 根據角色立場與案件事實產生擬真、有建設性的第一人稱回答
   void _sendQuestion(String text) {
     setState(() {
       _chatMessages.add({
