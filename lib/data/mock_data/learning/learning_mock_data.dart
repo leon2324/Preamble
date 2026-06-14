@@ -11,6 +11,9 @@ class LearningMockArticle {
     required this.sections,
     this.category,
     this.quizData,
+    this.topicId,
+    this.stepNumber,
+    this.heroImageUrl,
   });
 
   final String badge;
@@ -22,6 +25,9 @@ class LearningMockArticle {
   final List<LearningMockSection> sections;
   final String? category;
   final Map<String, dynamic>? quizData;
+  final int? topicId;
+  final int? stepNumber;
+  final String? heroImageUrl;
 }
 
 class LearningMockSection {

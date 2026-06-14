@@ -62,6 +62,7 @@ class LearningGameState extends ChangeNotifier {
   List<Map<String, dynamic>> _savedEvidenceLists = [];
   Set<String> _unlockedBadges = {'初學乍練'}; // 預設解鎖第一個徽章
   int _translatorUsageCount = 0;
+  List<Map<String, dynamic>> _quizHistory = [];
 
   // 筆記與收藏狀態屬性
   Set<String> _savedArticles = {};
@@ -76,6 +77,7 @@ class LearningGameState extends ChangeNotifier {
   List<Map<String, dynamic>> get incorrectQuestions => _incorrectQuestions;
   List<Map<String, dynamic>> get savedEvidenceLists => _savedEvidenceLists;
   Set<String> get unlockedBadges => _unlockedBadges;
+  List<Map<String, dynamic>> get quizHistory => _quizHistory;
 
   // 筆記與收藏 Getters
   Set<String> get savedArticles => _savedArticles;
@@ -152,6 +154,12 @@ class LearningGameState extends ChangeNotifier {
             List<Map<String, dynamic>>.from(jsonDecode(evidenceRaw));
       }
 
+      final quizHistoryRaw = prefs.getString('learning_quiz_history');
+      if (quizHistoryRaw != null) {
+        _quizHistory =
+            List<Map<String, dynamic>>.from(jsonDecode(quizHistoryRaw));
+      }
+
       // 載入單元收藏
       final articlesRaw = prefs.getStringList('learning_saved_articles');
       if (articlesRaw != null) {
@@ -207,6 +215,8 @@ class LearningGameState extends ChangeNotifier {
           'learning_incorrect_questions', jsonEncode(_incorrectQuestions));
       await prefs.setString(
           'learning_saved_evidences', jsonEncode(_savedEvidenceLists));
+      await prefs.setString(
+          'learning_quiz_history', jsonEncode(_quizHistory));
 
       // 儲存筆記與收藏
       await prefs.setStringList('learning_saved_articles', _savedArticles.toList());
@@ -255,7 +265,12 @@ class LearningGameState extends ChangeNotifier {
       addExperience(20); // 每個單元給 20 XP
 
       // 檢查是否通關租屋糾紛所有 STEP (除 STEP 5 Quiz 之外為 1~4)
-      final rentSteps = {'STEP 1', 'STEP 2', 'STEP 3', 'STEP 4'};
+      final rentSteps = {
+        '租屋糾紛_STEP 1',
+        '租屋糾紛_STEP 2',
+        '租屋糾紛_STEP 3',
+        '租屋糾紛_STEP 4',
+      };
       if (_completedSteps.containsAll(rentSteps)) {
         unlockBadge('租屋達人');
       }
@@ -303,6 +318,38 @@ class LearningGameState extends ChangeNotifier {
   void removeIncorrectQuestion(String question) {
     _incorrectQuestions.removeWhere((item) => item['question'] == question);
     addExperience(15); // 重新挑戰答對加 15 XP
+    _saveState();
+    notifyListeners();
+  }
+
+  // 紀錄答題歷史
+  void recordQuizHistory({
+    required String question,
+    required List<String> options,
+    required String selectedAnswer,
+    required String correctAnswer,
+    required bool isCorrect,
+    required String category,
+    required String stepLabel,
+    required String explanation,
+  }) {
+    // 避免重複加入同一個問題，若有則移除舊紀錄
+    _quizHistory.removeWhere((item) => item['question'] == question);
+    _quizHistory.insert(0, {
+      'question': question,
+      'options': options,
+      'selectedAnswer': selectedAnswer,
+      'correctAnswer': correctAnswer,
+      'isCorrect': isCorrect,
+      'category': category,
+      'stepLabel': stepLabel,
+      'explanation': explanation,
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+    // 限制最多保存 50 筆紀錄
+    if (_quizHistory.length > 50) {
+      _quizHistory.removeLast();
+    }
     _saveState();
     notifyListeners();
   }

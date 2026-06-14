@@ -41,6 +41,48 @@ class KnowLawPageState extends State<KnowLawPage> {
   String _activeTopic = '租屋糾紛';
   int _illuStoryIndex = 0;
   int _dialogStoryIndex = 0;
+  List<LearningTopicData> _dailyTopics = [];
+  final List<LearningTopicData> _customTopics = [];
+  bool _isLoadingTopics = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _initDailyTopics();
+  }
+
+  Future<void> _initDailyTopics() async {
+    try {
+      final topics = await SupabaseLearningService.instance.fetchDailyFeaturedTopics(DateTime.now());
+      if (mounted) {
+        setState(() {
+          _dailyTopics = topics;
+          _isLoadingTopics = false;
+          if (_dailyTopics.isNotEmpty) {
+            _activeTopic = _dailyTopics.first.title;
+          }
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoadingTopics = false;
+        });
+      }
+    }
+  }
+
+  String _extractCategory(String title) {
+    if (title.contains('租屋糾紛') || title.contains('租屋')) return '租屋糾紛';
+    if (title.contains('車禍事故') || title.contains('車禍') || title.contains('交通事故')) return '車禍事故';
+    if (title.contains('職場權益') || title.contains('加班') || title.contains('勞基法') || title.contains('離職')) return '職場權益';
+    if (title.contains('網購消費') || title.contains('網購') || title.contains('消保法') || title.contains('退貨')) return '網購消費';
+    if (title.contains('個資隱私') || title.contains('個資') || title.contains('隱私') || title.contains('洩露')) return '個資隱私';
+    if (title.contains('鄰里生活') || title.contains('漏水') || title.contains('天花板') || title.contains('鄰居')) return '鄰里生活';
+    if (title.contains('婚姻家庭') || title.contains('離婚') || title.contains('財產制') || title.contains('夫妻')) return '婚姻家庭';
+    if (title.contains('防詐騙') || title.contains('詐騙') || title.contains('警示') || title.contains('人頭帳戶')) return '防詐騙常識';
+    return '法律常識';
+  }
 
   void _rotateIllustrationTopic() {
     setState(() {
@@ -55,7 +97,8 @@ class KnowLawPageState extends State<KnowLawPage> {
   }
 
   Color _getTopicColor(String category) {
-    switch (category) {
+    final cat = _extractCategory(category);
+    switch (cat) {
       case '車禍事故':
         return const Color(0xFF3F7FBF);
       case '職場權益':
@@ -72,7 +115,8 @@ class KnowLawPageState extends State<KnowLawPage> {
 
   Color _getTopicCardBg(String category, bool isDark) {
     if (isDark) return const Color(0xFF242C36);
-    switch (category) {
+    final cat = _extractCategory(category);
+    switch (cat) {
       case '車禍事故':
         return const Color(0xFFEAF0F8);
       case '職場權益':
@@ -88,7 +132,8 @@ class KnowLawPageState extends State<KnowLawPage> {
   }
 
   String _getHeroAsset(String topicTitle) {
-    switch (topicTitle) {
+    final cat = _extractCategory(topicTitle);
+    switch (cat) {
       case '車禍事故':
         return 'assets/images/learning/car_course_room.png';
       case '職場權益':
@@ -104,7 +149,8 @@ class KnowLawPageState extends State<KnowLawPage> {
   }
 
   String _getTopicBadgeText(String topicTitle) {
-    switch (topicTitle) {
+    final cat = _extractCategory(topicTitle);
+    switch (cat) {
       case '車禍事故':
         return '道路安全必備';
       case '職場權益':
@@ -120,7 +166,8 @@ class KnowLawPageState extends State<KnowLawPage> {
   }
 
   String _getTopicTip(String topicTitle) {
-    switch (topicTitle) {
+    final cat = _extractCategory(topicTitle);
+    switch (cat) {
       case '車禍事故':
         return '遇到事故鑑定與折舊問題時，可以到「生活工具箱」使用工具來協助計算或準備。';
       case '職場權益':
@@ -143,6 +190,320 @@ class KnowLawPageState extends State<KnowLawPage> {
     _LearningTopicOption('個資隱私', '看全部', false),
   ];
 
+  List<_LearningTopicOption> get _currentFeaturedTopicOptions {
+    final List<_LearningTopicOption> options = [];
+    
+    // 1. 優先放入客製化訂製專題
+    for (final topic in _customTopics) {
+      final isMain = topic.title == _activeTopic;
+      options.add(_LearningTopicOption(
+        topic.title,
+        isMain ? '主修中' : '自訂專題',
+        true,
+      ));
+    }
+
+    // 2. 放入每日精選專題
+    if (_dailyTopics.isNotEmpty) {
+      options.addAll(_dailyTopics.map((topic) {
+        final isMain = topic.title == _activeTopic;
+        return _LearningTopicOption(
+          topic.title,
+          isMain ? '主修中' : '看全部',
+          true,
+        );
+      }));
+    } else {
+      options.addAll(_featuredTopics);
+    }
+    return options;
+  }
+
+  LearningTopicData get _currentTopicData {
+    // 1. 優先在自訂專題中尋找
+    for (final topic in _customTopics) {
+      if (topic.title == _activeTopic) {
+        return topic;
+      }
+    }
+    // 2. 再從每日隨機專題中尋找
+    for (final topic in _dailyTopics) {
+      if (topic.title == _activeTopic) {
+        return topic;
+      }
+    }
+    return featuredLearningTopics[_activeTopic] ?? learningTopic;
+  }
+
+  /// 🧠 客製化專題資料產生器
+  LearningTopicData _generateCustomTopicData(String prompt) {
+    final category = _extractCategory(prompt);
+    final keyText = prompt.trim().isNotEmpty ? prompt.trim() : '自訂法律疑難';
+    
+    // 限制顯示長度，避免選單晶片文字過長
+    final shortKey = keyText.length > 8 ? '${keyText.substring(0, 8)}...' : keyText;
+    final topicTitle = '「$shortKey」專屬法律課堂';
+
+    final step1Article = LearningMockArticle(
+      badge: '學習單元',
+      title: '單元 1：關於「$shortKey」的法律觀念起點',
+      summary: '建立正確的法律邏輯，理清核心爭點與法律關係。',
+      readTime: '3 分鐘',
+      heroNote: '遇到糾紛時，千萬不要憑直覺處理，理清基本權益是自保的關鍵。',
+      keyPoints: [
+        '釐清法律關係是民事契約還是侵權求償。',
+        '確認自己具有法律上的請求權基礎。',
+        '切勿隨意進行私力救濟，以免得不償失。',
+      ],
+      sections: [
+        LearningMockSection(
+          title: '觀念起點',
+          body: '在日常生活中，遇到「$keyText」的糾紛非常多。許多人一開始容易陷入情緒，但法律上最先看的是『雙方的法律關係』與『誰有請求權基礎』。',
+        ),
+        LearningMockSection(
+          title: '初步解析',
+          body: '針對您關注的「$keyText」情境，我們需要先釐清這屬於民法契約糾紛（例如買賣、租賃契約）、還是侵權行為求償，或是特定的特別法保障範疇。',
+        ),
+      ],
+      category: category,
+      quizData: {
+        'question': '面對「$keyText」的法律糾紛時，第一步最正確的作法是什麼？',
+        'options': [
+          'A. 收集對話與契約等關鍵證據，釐清請求權基礎。',
+          'B. 聯絡親友一起去現場向對方爭論。',
+          'C. 直接在網路上公開發文爆料。',
+        ],
+        'correctIndex': 0,
+        'explanation': '解決法律爭議應以證據為先，理性分析法律關係與請求權基礎才是自保正道。',
+      },
+      topicId: 9999,
+      stepNumber: 1,
+    );
+
+    final step2Article = LearningMockArticle(
+      badge: '學習單元',
+      title: '單元 2：實務案例解析：當我們碰上「$shortKey」',
+      summary: '透過具體情境，看懂實務中責任與損失如何劃分。',
+      readTime: '4 分鐘',
+      heroNote: '看懂他人發生的糾紛過程，能幫助我們在自己遇到時做出正確判斷。',
+      keyPoints: [
+        '分析案例中各方的行為是否構成違約或侵權。',
+        '找出該糾紛最關鍵的法條（例如民法或特別法）。',
+        '確認雙方是否有協商或減輕損害之義務。',
+      ],
+      sections: [
+        LearningMockSection(
+          title: '案例情境',
+          body: '阿榮碰上了「$keyText」的情況。對方態度強硬，宣稱阿榮必須全額負責賠償。阿榮對此感到困惑，不知道法律上的權責界線到底在哪裡。',
+        ),
+        LearningMockSection(
+          title: '權責剖析',
+          body: '在類似「$keyText」的情境中，民法通常講求『損害賠償範圍』與『過失相抵原則』。更換零件通常必須計算折舊率，自然損耗與老化由所有人負擔，非故意損壞也應妥善舉證。',
+        ),
+      ],
+      category: category,
+      quizData: {
+        'question': '在類似「$keyText」的損害賠償案件中，折舊率是以什麼為計算基礎？',
+        'options': [
+          'A. 物品購買時的全新品價格，全額理賠。',
+          'B. 依行政院固定資產耐用年數表與已使用年限進行折舊計算。',
+          'C. 雙方自由喊價，誰大聲誰就贏。',
+        ],
+        'correctIndex': 1,
+        'explanation': '民事賠償更換零件需扣除折舊，以符合禁止不當得利原則。',
+      },
+      topicId: 9999,
+      stepNumber: 2,
+    );
+
+    final step3Article = LearningMockArticle(
+      badge: '學習單元',
+      title: '單元 3：處理「$shortKey」最常見的直覺誤區',
+      summary: '避開自以為合理、其實違法的隱藏陷阱。',
+      readTime: '3 分鐘',
+      heroNote: '常見的法律誤解會讓我們在談判或調解時落入下風。',
+      keyPoints: [
+        '不要口頭承諾任何賠償或退讓，口頭合意同樣可能成立契約。',
+        '切勿一時氣憤在公開平台上傳播對方個資，以免反遭控告。',
+        '並非只要自己有理就可以強行採取私力救濟，須循合法程序。',
+      ],
+      sections: [
+        LearningMockSection(
+          title: '直覺陷阱',
+          body: '許多人獲悉「$keyText」時，直覺會認為『既然是他不對，那我就可以把他的東西扣下來當質押，或者把我們的 LINE 聊天紀錄公開發上網』。然而這往往觸犯了个資法或刑法。',
+        ),
+        LearningMockSection(
+          title: '法律紅線',
+          body: '未經同意公開轉傳內含對方可識別資訊（姓名、電話等）的截圖，可能會違反個人資料保護法。強行扣留對方私人物品亦涉妨害自由或強制罪。合法討公道應循民事調解或訴訟。',
+        ),
+      ],
+      category: category,
+      quizData: {
+        'question': '為了澄清事實，把內含對方姓名與聯絡電話的「$keyText」對話截圖無遮蔽直接發到公開爆料群組，是否安全？',
+        'options': [
+          'A. 安全，說實話是憲法言論自由保障。',
+          'B. 不安全，已構成個資法違法利用與侵害隱私，可能會反遭起訴。',
+          'C. 只要我們是受害者就絕對沒事。',
+        ],
+        'correctIndex': 1,
+        'explanation': '即使對話屬實，直接公開他人可識別個資仍構成個資侵權。',
+      },
+      topicId: 9999,
+      stepNumber: 3,
+    );
+
+    final step4Article = LearningMockArticle(
+      badge: '學習單元',
+      title: '單元 4：實務維權指南：證據清單與存證信函寫法',
+      summary: '學會保留鐵證，並寫出具法律效果的通知信。',
+      readTime: '4 分鐘',
+      heroNote: '在法律的世界裡，「沒有證據就等於沒有事實」。做好證據保存是贏得訴訟的關鍵。',
+      keyPoints: [
+        '妥善保留所有對話紀錄、合約、發票、收據與現場照片。',
+        '利用存證信函明確傳達意思表示，並留下郵局的正式郵戳證明。',
+        '存證信函不是判決書，但能起到正式催告與警告的效果。',
+      ],
+      sections: [
+        LearningMockSection(
+          title: '證據搜集',
+          body: '要贏得「$keyText」的爭議，證據是唯一的武器。請務必保留：1. 雙方通訊紀錄。 2. 發票、收據、維修估價單。 3. 現場拍照或錄影存證。',
+        ),
+        LearningMockSection(
+          title: '存證信函寫法',
+          body: '若對方避不處理，應寄發存證信函。內容載明本件「$keyText」的經過、我方明確訴求（如限期履行合約）、以及限期於 7 日內解決、逾期將循法律途徑之聲明，以此作為正式催告鐵證。',
+        ),
+      ],
+      category: category,
+      quizData: {
+        'question': '面對「$keyText」糾紛，寄發存證信函最核心的作用是什麼？',
+        'options': [
+          'A. 警告對方郵局會去抄他的家。',
+          'B. 留存我方確已進行限期催告與意思表示的正式書面法理證明。',
+          'C. 存證信函是一張欠條。',
+        ],
+        'correctIndex': 1,
+        'explanation': '存證信函是郵局存證的書面催告信，主要用以作為日後訴訟中已進行告知的證據。',
+      },
+      topicId: 9999,
+      stepNumber: 4,
+    );
+
+    final step5Article = LearningMockArticle(
+      badge: '學習單元',
+      title: '單元 5：綜合實戰測驗與通關驗證',
+      summary: '綜合前面單元學習，用一題測驗確認您已掌握維權核心。',
+      readTime: '1 題測驗',
+      heroNote: '恭喜您來到最後一關，讓我們用這題測驗完成通關認證吧！',
+      keyPoints: [
+        '堅持證據優先，以存證信函與調解為首要解決手段。',
+        '遵守法律程序，切勿訴諸私力救濟或情緒化爆料。',
+        '調解成立具備法院確定判決同等效力。',
+      ],
+      sections: [
+        LearningMockSection(
+          title: '綜合實戰',
+          body: '因為「$keyText」的事情，透過存證信函催告對方無效。此時最理想的解決方法是？',
+        ),
+        LearningMockSection(
+          title: '自保解答',
+          body: '應向當地的鄉鎮市區公所免費聲請民事調解。調解一旦成立，經法院核定後與民事三審確定判決有同等效力，對方不配合即可直接強制執行，既省時又省力。',
+        ),
+      ],
+      category: category,
+      quizData: {
+        'question': '當「$keyText」糾紛寄信催告無效，雙方依舊僵持不下時，下列哪一個是成本最低且極具法律效力的做法？',
+        'options': [
+          'A. 認賠退出。',
+          'B. 向鄉鎮市區公所聲請免費民事調解，取得與法院確定判決同等效力的調解書。',
+          'C. 提起漫長且昂貴的三審訴訟。',
+        ],
+        'correctIndex': 1,
+        'explanation': '免費的民事調解是成本最低、速度最快且最具備法律執行效力的維權途徑。',
+      },
+      topicId: 9999,
+      stepNumber: 5,
+    );
+
+    return LearningTopicData(
+      title: topicTitle,
+      summary: '特別為您遇到的「$shortKey」量身打造的實務法學分析專題。',
+      reasonToLearn: '客製化訂製專題能精準指引您當前糾紛的法理脈絡，提供最立即的自保指引。',
+      unitSummary: '5 個學習單元',
+      heroArticle: LearningMockArticle(
+        badge: '主專題',
+        title: '針對「$shortKey」自訂專題：情境拆解與應對技巧',
+        summary: '本專案由 5 個單元組成，帶你循序漸進建立關於 $category 的精準判斷架構。',
+        readTime: '5 個學習單元',
+        heroNote: '不要憑直覺解決爭議。先搞懂權利，再掌握證據，最後才談具體求償。',
+        keyPoints: [
+          '理解 $category 的法律概念與自身法律關係。',
+          '學習如何避開常見的個資隱私直覺誤區。',
+          '掌握證據保存與鄉鎮市區公所民事調解的申辦步驟。',
+        ],
+        sections: const [
+          LearningMockSection(
+            title: '這個自訂專題在學什麼',
+            body: '它會針對您輸入的情境，從基礎概念、案例解析、盲點避讓，一路講到存證信函寫法與調解指引。',
+          ),
+          LearningMockSection(
+            title: '訂製的好處',
+            body: '這能將枯燥的法律文字具體對接到您現在正面臨的痛點，以最快的速度幫您建立底氣。',
+          ),
+        ],
+      ),
+      units: [
+        LearningTopicUnit(stepLabel: 'STEP 1', title: step1Article.title, goal: step1Article.summary, readTime: step1Article.readTime, article: step1Article),
+        LearningTopicUnit(stepLabel: 'STEP 2', title: step2Article.title, goal: step2Article.summary, readTime: step2Article.readTime, article: step2Article),
+        LearningTopicUnit(stepLabel: 'STEP 3', title: step3Article.title, goal: step3Article.summary, readTime: step3Article.readTime, article: step3Article),
+        LearningTopicUnit(stepLabel: 'STEP 4', title: step4Article.title, goal: step4Article.summary, readTime: step4Article.readTime, article: step4Article),
+        LearningTopicUnit(stepLabel: 'STEP 5', title: step5Article.title, goal: step5Article.summary, readTime: step5Article.readTime, article: step5Article),
+      ],
+      relatedTopics: const [],
+      supportItems: const [],
+      quizEntry: const LearningQuizEntryData(
+        title: '專題測驗',
+        subtitle: '用 1 題小測驗確認你能不能分辨此情境的法律責任。',
+        actionLabel: '開始測驗',
+      ),
+    );
+  }
+
+  Widget _buildCustomClassroomCard(bool isDark) {
+    return _TappableCustomClassroomCard(
+      isDark: isDark,
+      onTap: _showCustomClassroomDialog,
+    );
+  }
+
+  void _showCustomClassroomDialog() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return _CustomClassroomDialog(
+          isDark: isDark,
+          onGenerate: (userInput) {
+            Navigator.pop(dialogContext);
+            final newTopic = _generateCustomTopicData(userInput);
+            setState(() {
+              _customTopics.add(newTopic);
+              _activeTopic = newTopic.title;
+            });
+            HapticFeedback.heavyImpact();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('🎉 成功訂製您的專屬課程「${newTopic.title}」！'),
+                backgroundColor: HomeV2Palette.trustGreen,
+                duration: const Duration(seconds: 3),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   int _selectedTabIndex = 0; // 0: 法學課堂, 1: 生活工具箱
 
   void _openArticle(LearningMockArticle article) {
@@ -159,6 +520,7 @@ class KnowLawPageState extends State<KnowLawPage> {
         builder: (__) => LearningMockDetailPage(
           article: unit.article,
           unitStepLabel: unit.stepLabel,
+          category: _activeTopic,
         ),
       ),
     );
@@ -176,6 +538,55 @@ class KnowLawPageState extends State<KnowLawPage> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (__) => const AchievementRoomPage(),
+      ),
+    );
+  }
+
+  void _switchToNextTopic() {
+    final List<String> topicNames = _dailyTopics.isNotEmpty
+        ? _dailyTopics.map((t) => t.title).toList()
+        : featuredLearningTopics.keys.toList();
+    final currentIndex = topicNames.indexOf(_activeTopic);
+    final gameState = LearningGameState.instance;
+    String? nextTopicName;
+
+    // 優先尋找下一個未完成全部單元的專題
+    for (int i = 1; i <= topicNames.length; i++) {
+      final idx = (currentIndex + i) % topicNames.length;
+      final name = topicNames[idx];
+      final topicData = _dailyTopics.isNotEmpty
+          ? _dailyTopics[idx]
+          : featuredLearningTopics[name]!;
+      
+      bool hasUncompleted = false;
+      for (final unit in topicData.units) {
+        if (!gameState.completedSteps.contains("${name}_${unit.stepLabel}")) {
+          hasUncompleted = true;
+          break;
+        }
+      }
+      
+      if (hasUncompleted) {
+        nextTopicName = name;
+        break;
+      }
+    }
+
+    // 若全部專題皆已通關，則循環切換至下一個
+    if (nextTopicName == null) {
+      final idx = (currentIndex + 1) % topicNames.length;
+      nextTopicName = topicNames[idx];
+    }
+
+    setState(() {
+      _activeTopic = nextTopicName!;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('已為您切換至選修專題：$nextTopicName 📚'),
+        backgroundColor: HomeV2Palette.trustGreen,
+        duration: const Duration(seconds: 2),
       ),
     );
   }
@@ -413,25 +824,71 @@ class KnowLawPageState extends State<KnowLawPage> {
   // 3) 法學課堂的列表項目
   // Mappings of recommendations: activeTopic -> [IllustrationTopic, DialogTopic]
   List<Widget> _buildClassroomItems(bool isDark, LearningGameState gameState) {
-    final currentTopic = featuredLearningTopics[_activeTopic] ?? learningTopic;
+    if (_isLoadingTopics) {
+      return [
+        // 1. 公民法律小擂台入口 Banner
+        NotebookCard(
+          hasBookmark: true,
+          bookmarkColor: const Color(0xFFE8B95F),
+          backgroundColor: isDark ? const Color(0xFF161C23) : Colors.white,
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('公民法律小擂台', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w900)),
+                    SizedBox(height: 4.h),
+                    Text('挑戰每日一題法律隨堂考！', style: TextStyle(fontSize: 10.5.sp, color: AppColors.textSecondary)),
+                  ],
+                ),
+              ),
+              ElevatedButton(
+                onPressed: null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: HomeV2Palette.trustGreen,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                  padding: EdgeInsets.symmetric(horizontal: 14.w),
+                ),
+                child: const Text('開始挑戰'),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 12.h),
+        // Pulsing skeleton for switcher title/chips
+        _PulsingSkeleton(width: 80.w, height: 16.h),
+        SizedBox(height: 8.h),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const NeverScrollableScrollPhysics(),
+          child: Row(
+            children: List.generate(4, (index) => Padding(
+              padding: EdgeInsets.only(right: 8.w),
+              child: _PulsingSkeleton(width: 80.w, height: 32.h, borderRadius: BorderRadius.circular(999.r)),
+            )),
+          ),
+        ),
+        SizedBox(height: 12.h),
+        // Pulsing skeleton for Main Course Card
+        _PulsingSkeleton(width: double.infinity, height: 260.h, borderRadius: BorderRadius.circular(16.r)),
+      ];
+    }
+
+    final currentTopic = _currentTopicData;
     final rentUnits = currentTopic.units;
     final completedRentCount = rentUnits
-        .where((unit) => gameState.completedSteps.contains(unit.stepLabel))
+        .where((unit) => gameState.completedSteps.contains("${_activeTopic}_${unit.stepLabel}"))
         .length;
     final rentProgress = rentUnits.isEmpty ? 0.0 : completedRentCount / rentUnits.length;
 
-    // 取得下方的獨立精選專題與對話專題資料
+    // 取得下方的獨立精選專題與對話專題資料，並動態生成一對一專屬文章
     final illuStory = fullIllustrationStories[_illuStoryIndex % fullIllustrationStories.length];
-    final illuTopicData = featuredLearningTopics[illuStory.category] ?? learningTopicCarAccident;
-    final illuTargetArticle = (illuTopicData.units.length > illuStory.targetUnitIndex)
-        ? illuTopicData.units[illuStory.targetUnitIndex].article
-        : illuTopicData.heroArticle;
+    final illuTargetArticle = generateArticleForIllustration(illuStory);
 
     final dialogStory = fullDialogStories[_dialogStoryIndex % fullDialogStories.length];
-    final dialogTopicData = featuredLearningTopics[dialogStory.category] ?? learningTopic;
-    final dialogTargetArticle = (dialogTopicData.units.length > dialogStory.targetUnitIndex)
-        ? dialogTopicData.units[dialogStory.targetUnitIndex].article
-        : dialogTopicData.heroArticle;
+    final dialogTargetArticle = generateArticleForDialog(dialogStory);
 
     return [
       // 1. 公民法律小擂台入口 Banner
@@ -512,6 +969,9 @@ class KnowLawPageState extends State<KnowLawPage> {
         rentProgress: rentProgress,
         topicData: currentTopic,
       ),
+
+      _buildCustomClassroomCard(isDark),
+      SizedBox(height: 12.h),
 
       // 3. 混合排列的卡片：插圖故事卡片
       NotebookCard(
@@ -802,7 +1262,7 @@ class KnowLawPageState extends State<KnowLawPage> {
           scrollDirection: Axis.horizontal,
           physics: const BouncingScrollPhysics(),
           child: Row(
-            children: _featuredTopics.map((topic) {
+            children: _currentFeaturedTopicOptions.map((topic) {
               return Padding(
                 padding: EdgeInsets.only(right: 8.w),
                 child: _buildTopicChip(topic, isDark),
@@ -814,9 +1274,22 @@ class KnowLawPageState extends State<KnowLawPage> {
     );
   }
 
+  String _getTopicChipLabel(String title) {
+    if (title.startsWith('「') && title.endsWith('」專屬法律課堂')) {
+      final regExp = RegExp(r'^「(.*?)」專屬法律課堂$');
+      final match = regExp.firstMatch(title);
+      if (match != null) {
+        return match.group(1)!;
+      }
+    }
+    return _extractCategory(title);
+  }
+
   Widget _buildTopicChip(_LearningTopicOption topic, bool isDark) {
     final isSelected = topic.title == _activeTopic;
-    final badgeText = topic.title == _activeTopic ? '主修中' : '選修';
+    final badgeText = topic.title == _activeTopic
+        ? '主修中'
+        : (topic.badge == '自訂專題' ? '自訂' : '選修');
     return GestureDetector(
       onTap: () {
         if (_activeTopic != topic.title) {
@@ -843,7 +1316,7 @@ class KnowLawPageState extends State<KnowLawPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              topic.title,
+              _getTopicChipLabel(topic.title),
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w900,
@@ -868,6 +1341,42 @@ class KnowLawPageState extends State<KnowLawPage> {
   }
 
 
+  Widget _buildHeroImage({
+    required String? imageUrl,
+    required String localAsset,
+    required BoxFit fit,
+  }) {
+    if (imageUrl != null && imageUrl.isNotEmpty) {
+      return Image.network(
+        imageUrl,
+        fit: fit,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.asset(localAsset, fit: fit),
+              const Center(
+                child: SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white70),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset(localAsset, fit: fit);
+        },
+      );
+    }
+    return Image.asset(localAsset, fit: fit);
+  }
+
   Widget _buildMainCourseCard({
     required bool isDark,
     required LearningGameState gameState,
@@ -878,7 +1387,7 @@ class KnowLawPageState extends State<KnowLawPage> {
   }) {
     final cardColor = isDark ? const Color(0xFF161C23) : Colors.white;
     final nextUnit = rentUnits.firstWhere(
-      (unit) => !gameState.completedSteps.contains(unit.stepLabel),
+      (unit) => !gameState.completedSteps.contains("${_activeTopic}_${unit.stepLabel}"),
       orElse: () => rentUnits.last,
     );
     final isComplete = completedRentCount == rentUnits.length;
@@ -889,6 +1398,7 @@ class KnowLawPageState extends State<KnowLawPage> {
             : '繼續學習';
 
     final heroAsset = _getHeroAsset(_activeTopic);
+    final heroImageUrl = topicData.heroArticle.heroImageUrl;
 
     return NotebookCard(
       hasBinderRings: true,
@@ -902,8 +1412,9 @@ class KnowLawPageState extends State<KnowLawPage> {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                Image.asset(
-                  heroAsset,
+                _buildHeroImage(
+                  imageUrl: heroImageUrl,
+                  localAsset: heroAsset,
                   fit: BoxFit.cover,
                 ),
                 // 台灣繁體中文教學註解：
@@ -928,8 +1439,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                         imageFilter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
                         child: Transform.scale(
                           scale: 1.03,
-                          child: Image.asset(
-                            heroAsset,
+                          child: _buildHeroImage(
+                            imageUrl: heroImageUrl,
+                            localAsset: heroAsset,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -956,8 +1468,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                         imageFilter: ImageFilter.blur(sigmaX: 42, sigmaY: 42),
                         child: Transform.scale(
                           scale: 1.08,
-                          child: Image.asset(
-                            heroAsset,
+                          child: _buildHeroImage(
+                            imageUrl: heroImageUrl,
+                            localAsset: heroAsset,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -1049,55 +1562,163 @@ class KnowLawPageState extends State<KnowLawPage> {
                         ),
                       ),
                       SizedBox(height: 12.h),
-                      GestureDetector(
-                        onTap: () => _openUnitStep(nextUnit),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 12.w, vertical: 10.h),
-                          decoration: BoxDecoration(
-                            color: HomeV2Palette.trustGreen,
-                            borderRadius: BorderRadius.circular(10.r),
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      ctaLabel,
-                                      style: TextStyle(
-                                        fontSize: 13.sp,
-                                        fontWeight: FontWeight.w900,
+                      if (isComplete) ...[
+                        Row(
+                          children: [
+                            // 按鈕 A: 前往成就室
+                            Expanded(
+                              flex: 5,
+                              child: GestureDetector(
+                                onTap: _openAchievementRoom,
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10.w, vertical: 10.h),
+                                  decoration: BoxDecoration(
+                                    color: HomeV2Palette.trustGreen,
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '🎉 前往成就室',
+                                              style: TextStyle(
+                                                fontSize: 12.5.sp,
+                                                fontWeight: FontWeight.w900,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            SizedBox(height: 2.h),
+                                            Text(
+                                              '去給智慧樹澆水',
+                                              style: TextStyle(
+                                                fontSize: 9.5.sp,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.white.withValues(alpha: 0.82),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.park,
+                                        size: 16.sp,
                                         color: Colors.white,
                                       ),
-                                    ),
-                                    SizedBox(height: 2.h),
-                                    Text(
-                                      isComplete
-                                          ? '已完成 ${rentUnits.length} 個單元，回頭複習判斷順序'
-                                          : '下一步：${nextUnit.stepLabel} ${nextUnit.title}',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 10.5.sp,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.white
-                                            .withValues(alpha: 0.82),
-                                      ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                              CtmSvgIcon(
-                                CtmSvgIcons.arrowRight,
-                                size: 18.sp,
-                                color: Colors.white,
+                            ),
+                            SizedBox(width: 8.w),
+                            // 按鈕 B: 切換選修新專題
+                            Expanded(
+                              flex: 5,
+                              child: GestureDetector(
+                                onTap: _switchToNextTopic,
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10.w, vertical: 10.h),
+                                  decoration: BoxDecoration(
+                                    color: isDark ? const Color(0xFF1E293B) : Colors.white,
+                                    borderRadius: BorderRadius.circular(10.r),
+                                    border: Border.all(
+                                      color: HomeV2Palette.trustGreen,
+                                      width: 1.2.w,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '切換新專題',
+                                              style: TextStyle(
+                                                fontSize: 12.5.sp,
+                                                fontWeight: FontWeight.w900,
+                                                color: HomeV2Palette.trustGreen,
+                                              ),
+                                            ),
+                                            SizedBox(height: 2.h),
+                                            Text(
+                                              '修讀下一個法律領域',
+                                              style: TextStyle(
+                                                fontSize: 9.5.sp,
+                                                fontWeight: FontWeight.w600,
+                                                color: HomeV2Palette.trustGreen.withValues(alpha: 0.82),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.arrow_forward,
+                                        size: 16.sp,
+                                        color: HomeV2Palette.trustGreen,
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                            ],
+                            ),
+                          ],
+                        ),
+                      ] else ...[
+                        GestureDetector(
+                          onTap: () => _openUnitStep(nextUnit),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 12.w, vertical: 10.h),
+                            decoration: BoxDecoration(
+                              color: HomeV2Palette.trustGreen,
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        ctaLabel,
+                                        style: TextStyle(
+                                          fontSize: 13.sp,
+                                          fontWeight: FontWeight.w900,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      SizedBox(height: 2.h),
+                                      Text(
+                                        '下一步：${nextUnit.stepLabel} ${nextUnit.title}',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 10.5.sp,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white
+                                              .withValues(alpha: 0.82),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                CtmSvgIcon(
+                                  CtmSvgIcons.arrowRight,
+                                  size: 18.sp,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ],
                   ),
                 ),
@@ -1148,7 +1769,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                 ...rentUnits.asMap().entries.map((entry) {
                   final unit = entry.value;
                   final isDone =
-                      gameState.completedSteps.contains(unit.stepLabel);
+                      gameState.completedSteps.contains("${_activeTopic}_${unit.stepLabel}");
                   final isNext =
                       unit.stepLabel == nextUnit.stepLabel && !isComplete;
                   return _buildCoursePathStepRow(
@@ -1221,21 +1842,7 @@ class KnowLawPageState extends State<KnowLawPage> {
     );
   }
 
-  // 4) 生活工具箱的列表項目
-  List<Widget> _buildToolkitItems(bool isDark, LearningGameState gameState) {
-    return [
-      // 1. 白話文翻譯機
-      _buildTranslatorWidget(),
-      SizedBox(height: 12.h),
 
-      // 2. 文件與證據準備清單
-      _buildEvidenceChecklistWidget(gameState),
-      SizedBox(height: 12.h),
-
-      // 3. 常用法規快查
-      _buildStatuteSearchWidget(),
-    ];
-  }
 
   Widget _buildCoursePathStepRow(
     LearningTopicUnit unit, {
@@ -1429,127 +2036,599 @@ class KnowLawPageState extends State<KnowLawPage> {
     '無理由': '主張在法律上站不住腳，不可信。',
   };
 
-  Widget _buildTranslatorWidget() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+  // 側邊標籤切換分頁狀態
+  String _activeToolTab = '翻譯機';
 
+  // 車禍計算器狀態
+  final TextEditingController _partsCostController = TextEditingController();
+  final TextEditingController _laborCostController = TextEditingController();
+  final TextEditingController _carAgeYearsController = TextEditingController();
+  final TextEditingController _carAgeMonthsController = TextEditingController();
+  String _depreciationResult = '';
+  bool _carDepreciationIsMotorcycle = false;
+  bool _carDepreciationIsDecliningBalance = true;
+
+  // 租屋催告起草狀態
+  final TextEditingController _landlordNameController = TextEditingController();
+  final TextEditingController _rentAddressController = TextEditingController();
+  final TextEditingController _brokenItemController = TextEditingController();
+  final TextEditingController _noticeDaysController = TextEditingController();
+  final TextEditingController _leaseExpiryDateController = TextEditingController();
+  final TextEditingController _depositAmountController = TextEditingController();
+  String _rentNoticeResult = '';
+  int _rentNoticeType = 0; // 0: 設備修繕, 1: 押金返還
+
+  // 加班費計算器狀態
+  final TextEditingController _salaryController = TextEditingController();
+  final TextEditingController _weekdayOvertimeController = TextEditingController();
+  final TextEditingController _holidayOvertimeController = TextEditingController();
+  String _overtimeResult = '';
+
+  // 網購退貨起草狀態
+  final TextEditingController _sellerNameController = TextEditingController();
+  final TextEditingController _productNameController = TextEditingController();
+  final TextEditingController _receiveDateController = TextEditingController();
+  String _consumerNoticeResult = '';
+
+  // 夫妻財產分配計算器狀態
+  final TextEditingController _husbandPropertyController = TextEditingController();
+  final TextEditingController _husbandDebtController = TextEditingController();
+  final TextEditingController _wifePropertyController = TextEditingController();
+  final TextEditingController _wifeDebtController = TextEditingController();
+  String _marriagePropertyResult = '';
+
+  // 自救與蒐證 Checklists 狀態
+  final Set<String> _checkedPrivacyEvidences = {};
+  final Set<String> _checkedNeighborEvidences = {};
+  final Set<String> _checkedAntiFraudEvidences = {};
+
+  final List<String> _privacySops = [
+    '立即通知相關發卡銀行或電信業者進行圈存與掛失。',
+    '更改所有使用相同密碼之社群與金融帳戶密碼，並啟用兩步驟驗證。',
+    '蒐集個資外洩的簡訊、Email 或通知截圖作為證據。',
+    '向警政署刑事警察局或撥打 165 進行諮詢備案。',
+    '填寫個資侵害申訴書送交主管機關（如國家通訊傳播委員會）。'
+  ];
+
+  final List<String> _neighborSops = [
+    '聯絡水電技師前來檢修，並開立「漏水原因鑑定報告書」。',
+    '拍攝漏水天花板、牆面剝落及受損家具之彩色高畫質照片與錄影。',
+    '進行漏水修繕工程之估價，並保存修繕估價單與工程合約。',
+    '噪音爭議：準備分貝計或合格錄音器材，在不同時段進行分貝量測與錄影。',
+    '記錄每次與鄰居/管委會溝通協調的時間、參與人員與對話音檔或簡訊。'
+  ];
+
+  final List<String> _antiFraudSops = [
+    '撥打 165 反詐騙專線，提供「詐騙帳戶」、「匯款時間」與「金額」進行黃金30分鐘緊急圈存扣押。',
+    '親自攜帶身分證、印章、匯款單據或網銀轉帳成功截圖，前往派出所製作筆錄，取得警示帳戶公文。',
+    '妥善保存與詐騙集團之所有對話截圖，特別是涉及保證獲利、信用修補等引導字眼，作為訴訟證據。'
+  ];
+
+  // ==================== 自訂手繪手帳風 UI 元件 ====================
+
+  Widget _buildHanddrawnCheckbox({
+    required String label,
+    required bool value,
+    required ValueChanged<bool?> onChanged,
+    required bool isDark,
+  }) {
+    return InkWell(
+      onTap: () => onChanged(!value),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 6.h),
+        child: Row(
+          children: [
+            Container(
+              width: 18.w,
+              height: 18.w,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: value
+                      ? HomeV2Palette.trustGreen
+                      : (isDark ? const Color(0xFF4C5B6B) : const Color(0xFFC4B89F)),
+                  width: 1.6.w,
+                ),
+                color: value
+                    ? HomeV2Palette.trustGreen.withValues(alpha: 0.12)
+                    : Colors.transparent,
+              ),
+              child: Center(
+                child: value
+                    ? Icon(
+                        Icons.star,
+                        size: 10.sp,
+                        color: HomeV2Palette.trustGreen,
+                      )
+                    : null,
+              ),
+            ),
+            SizedBox(width: 9.w),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  decoration: value ? TextDecoration.lineThrough : null,
+                  decorationColor: isDark ? Colors.grey : const Color(0xFFC4B89F),
+                  decorationThickness: 1.6,
+                  color: value
+                      ? AppColors.textMuted
+                      : AppColors.textPrimary,
+                  fontWeight: value ? FontWeight.normal : FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPostItInput({
+    required TextEditingController controller,
+    required String hintText,
+    required bool isDark,
+    int maxLines = 1,
+  }) {
+    final bgColor = isDark ? const Color(0xFF2E2719) : const Color(0xFFFFFAD6);
+    final borderCol = isDark ? const Color(0xFF7A6539) : const Color(0xFFEAD8A8);
+    return Container(
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(8.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 4,
+            offset: const Offset(1, 2),
+          ),
+        ],
+        border: Border.all(color: borderCol, width: 1.w),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 2.h),
+      child: TextField(
+        controller: controller,
+        maxLines: maxLines,
+        style: TextStyle(
+          fontSize: 12.5.sp,
+          fontWeight: FontWeight.bold,
+          color: isDark ? Colors.amber.shade100 : const Color(0xFF5D4817),
+        ),
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(
+            fontSize: 12.sp,
+            color: isDark ? Colors.amber.shade100.withValues(alpha: 0.4) : const Color(0xFFC0AE83),
+          ),
+          border: InputBorder.none,
+          isDense: true,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNotebookInput({
+    required TextEditingController controller,
+    required String labelText,
+    required String hintText,
+    required bool isDark,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    final lineCol = isDark ? const Color(0xFF2D3845) : const Color(0xFFE5CEB1);
+    final textCol = isDark ? Colors.blue.shade100 : const Color(0xFF374E6F);
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 6.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (labelText.isNotEmpty)
+            Text(
+              labelText,
+              style: TextStyle(
+                fontSize: 11.sp,
+                fontWeight: FontWeight.w900,
+                color: isDark ? Colors.grey : const Color(0xFF7A6B53),
+              ),
+            ),
+          Container(
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: lineCol, width: 1.4.w)),
+            ),
+            padding: EdgeInsets.symmetric(vertical: 2.h),
+            child: TextField(
+              controller: controller,
+              keyboardType: keyboardType,
+              style: TextStyle(
+                fontSize: 13.sp,
+                color: textCol,
+                fontWeight: FontWeight.bold,
+              ),
+              decoration: InputDecoration(
+                hintText: hintText,
+                hintStyle: TextStyle(
+                  fontSize: 11.5.sp,
+                  color: isDark ? Colors.grey.shade600 : const Color(0xFFC1B8AA),
+                ),
+                border: InputBorder.none,
+                isDense: true,
+                contentPadding: EdgeInsets.symmetric(vertical: 4.h),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStationeryToggle<T>({
+    required T value,
+    required T selectedValue,
+    required String label,
+    required ValueChanged<T> onChanged,
+    required bool isDark,
+    required Color activeColor,
+  }) {
+    final isSelected = value == selectedValue;
+    return GestureDetector(
+      onTap: () {
+        onChanged(value);
+        HapticFeedback.lightImpact();
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 5.h),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? activeColor.withValues(alpha: isDark ? 0.3 : 0.12)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(8.r),
+          border: Border.all(
+            color: isSelected
+                ? activeColor
+                : (isDark ? const Color(0xFF2D3845) : const Color(0xFFE5CEB1)),
+            width: isSelected ? 1.5.w : 1.w,
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 11.sp,
+            fontWeight: isSelected ? FontWeight.w900 : FontWeight.bold,
+            color: isSelected
+                ? (isDark ? Colors.white : activeColor)
+                : (isDark ? Colors.grey : const Color(0xFF7A6B53)),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSealButton({
+    required String label,
+    required VoidCallback onPressed,
+    required Color color,
+  }) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 100),
+        padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24.r),
+          border: Border.all(color: color, width: 2.2.w),
+          color: color.withValues(alpha: 0.08),
+          boxShadow: [
+            BoxShadow(
+              color: color.withValues(alpha: 0.15),
+              blurRadius: 4,
+              offset: const Offset(1, 2),
+            ),
+          ],
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 12.5.sp,
+            fontWeight: FontWeight.w900,
+            color: color,
+            letterSpacing: 1.5,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWashiTapeButton({
+    required String label,
+    required VoidCallback onPressed,
+    required Color color,
+  }) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.18),
+          borderRadius: BorderRadius.circular(2.r),
+          border: Border.all(
+            color: color.withValues(alpha: 0.35),
+            width: 1.w,
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 11.sp,
+            fontWeight: FontWeight.w900,
+            color: color,
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ==================== 8 大生活法律工具與計算機實作 ====================
+
+  void _calculateCarDepreciation() {
+    final partsText = _partsCostController.text.trim();
+    final laborText = _laborCostController.text.trim();
+    final yearsText = _carAgeYearsController.text.trim();
+    final monthsText = _carAgeMonthsController.text.trim();
+
+    if (partsText.isEmpty) return;
+
+    final double P = double.tryParse(partsText) ?? 0;
+    final double L = double.tryParse(laborText) ?? 0;
+    final int Y = int.tryParse(yearsText) ?? 0;
+    final int M = int.tryParse(monthsText) ?? 0;
+
+    final int N = _carDepreciationIsMotorcycle ? 3 : 5;
+    final double r = _carDepreciationIsMotorcycle ? 0.533 : 0.369;
+    final double minResidual = P / (N + 1.0);
+
+    double residual = P;
+    double D = 0;
+
+    if (_carDepreciationIsDecliningBalance) {
+      // 定律遞減法 (定律折舊)
+      // 先計算完整年份的折舊
+      for (int i = 0; i < Y; i++) {
+        double d = residual * r;
+        residual -= d;
+        D += d;
+      }
+      // 再計算剩餘不足一年的月份折舊 (按月比例)
+      if (M > 0) {
+        double d = residual * r * (M / 12.0);
+        residual -= d;
+        D += d;
+      }
+    } else {
+      // 平均法 (定額折舊)
+      // 每年折舊額 = P / (N + 1)
+      final double monthlyDep = P / ((N + 1.0) * 12.0);
+      D = monthlyDep * (Y * 12 + M);
+      residual = P - D;
+    }
+
+    // 限制度：殘值不得小於法定基本殘值
+    if (residual < minResidual) {
+      residual = minResidual;
+      D = P - minResidual;
+    }
+
+    final double totalClaim = residual + L;
+
+    final vehicleTypeStr = _carDepreciationIsMotorcycle ? '🛵 機車 (耐用 3 年)' : '🚗 汽車 (耐用 5 年)';
+    final methodStr = _carDepreciationIsDecliningBalance ? '定律遞減法 (定律折舊)' : '平均法 (定額折舊)';
+
+    setState(() {
+      _depreciationResult = '【試算結果】\n'
+          '• 車輛種類：$vehicleTypeStr\n'
+          '• 計算方法：$methodStr\n'
+          '• 零件原始費：\$${P.toStringAsFixed(0)} 元\n'
+          '• 零件累計折舊：-\$${D.toStringAsFixed(0)} 元\n'
+          '• 零件折舊後殘值：\$${residual.toStringAsFixed(0)} 元 (依法保留基本殘值)\n'
+          '• 工資、烤漆與鈑金費：\$${L.toStringAsFixed(0)} 元 (工資不折舊)\n'
+          '---------------------------\n'
+          '💰 法院認定合理請求總額：\$${totalClaim.toStringAsFixed(0)} 元';
+      LearningGameState.instance.incrementTranslatorUsage();
+    });
+  }
+
+  void _calculateOvertime() {
+    final salaryText = _salaryController.text.trim();
+    final weekdayText = _weekdayOvertimeController.text.trim();
+    final holidayText = _holidayOvertimeController.text.trim();
+
+    if (salaryText.isEmpty) return;
+
+    final double salary = double.tryParse(salaryText) ?? 0;
+    final double weekdayHours = double.tryParse(weekdayText) ?? 0;
+    final double holidayHours = double.tryParse(holidayText) ?? 0;
+
+    // 時薪估算基數為 240 小時
+    final double hourlyRate = salary / 240.0;
+
+    // 平日加班費計算
+    double weekdayPay = 0;
+    if (weekdayHours <= 2) {
+      weekdayPay = weekdayHours * hourlyRate * (4.0 / 3.0);
+    } else {
+      weekdayPay = (2 * hourlyRate * (4.0 / 3.0)) + ((weekdayHours - 2) * hourlyRate * (5.0 / 3.0));
+    }
+
+    // 休息日加班費計算
+    double holidayPay = 0;
+    if (holidayHours > 0) {
+      if (holidayHours <= 2) {
+        holidayPay = holidayHours * hourlyRate * 1.34;
+      } else if (holidayHours <= 8) {
+        holidayPay = (2 * hourlyRate * 1.34) + ((holidayHours - 2) * hourlyRate * 1.67);
+      } else {
+        holidayPay = (2 * hourlyRate * 1.34) + (6 * hourlyRate * 1.67) + ((holidayHours - 8) * hourlyRate * 2.67);
+      }
+    }
+
+    final double totalPay = weekdayPay + holidayPay;
+
+    setState(() {
+      _overtimeResult = '【計算結果】\n'
+          '• 您的平日平均時薪：\$${hourlyRate.toStringAsFixed(1)} 元 / 小時\n'
+          '• 平日累計加班費：\$${weekdayPay.toStringAsFixed(0)} 元\n'
+          '• 休息日累計加班費：\$${holidayPay.toStringAsFixed(0)} 元\n'
+          '---------------------------\n'
+          '💰 勞基法標準加班費應領：\$${totalPay.toStringAsFixed(0)} 元';
+      LearningGameState.instance.incrementTranslatorUsage();
+    });
+  }
+
+  void _calculateMarriageProperty() {
+    final hpText = _husbandPropertyController.text.trim();
+    final hdText = _husbandDebtController.text.trim();
+    final wpText = _wifePropertyController.text.trim();
+    final wdText = _wifeDebtController.text.trim();
+
+    if (hpText.isEmpty && wpText.isEmpty) return;
+
+    final double hp = double.tryParse(hpText) ?? 0;
+    final double hd = double.tryParse(hdText) ?? 0;
+    final double wp = double.tryParse(wpText) ?? 0;
+    final double wd = double.tryParse(wdText) ?? 0;
+
+    double hNet = hp - hd;
+    if (hNet < 0) hNet = 0;
+
+    double wNet = wp - wd;
+    if (wNet < 0) wNet = 0;
+
+    final double diff = (hNet - wNet).abs();
+    final double claim = diff / 2.0;
+
+    String whoClaims = '';
+    if (hNet > wNet) {
+      whoClaims = '妻可向夫請求分配差額';
+    } else if (wNet > hNet) {
+      whoClaims = '夫可向妻請求分配差額';
+    } else {
+      whoClaims = '雙方賸餘財產均等，無須分配';
+    }
+
+    setState(() {
+      _marriagePropertyResult = '【分配試算結果】\n'
+          '• 夫之婚後淨財產：\$${hNet.toStringAsFixed(0)} 元\n'
+          '• 妻之婚後淨財產：\$${wNet.toStringAsFixed(0)} 元\n'
+          '• 雙方婚後財產差額：\$${diff.toStringAsFixed(0)} 元\n'
+          '---------------------------\n'
+          '💍 分配判定：$whoClaims\n'
+          '💰 依法可請求差額分配額：\$${claim.toStringAsFixed(0)} 元';
+      LearningGameState.instance.incrementTranslatorUsage();
+    });
+  }
+
+  Widget _buildTranslatorTool(bool isDark) {
     return NotebookCard(
       hasPaperClip: true,
-      backgroundColor:
-          isDark ? const Color(0xFF28241B) : const Color(0xFFFFFDF8),
+      backgroundColor: isDark ? const Color(0xFF28241B) : const Color(0xFFFFFDF8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.gavel,
-                  color: const Color(0xFF94610D), size: 20.sp),
+              CtmSvgIcon(CtmSvgIcons.gavel, color: const Color(0xFF94610D), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
                 '法律術語白話翻譯機',
-                style: TextStyle(
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.textPrimary),
+                style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
               ),
             ],
           ),
           SizedBox(height: 10.h),
-          TextField(
+          _buildPostItInput(
             controller: _translatorController,
-            style: TextStyle(fontSize: 13.sp),
-            decoration: InputDecoration(
-              hintText: '輸入判決書難懂字眼，或點擊下方快捷詞晶片...',
-              hintStyle: TextStyle(fontSize: 12.sp, color: Colors.grey),
-              filled: true,
-              fillColor:
-                  isDark ? const Color(0xFF1E252D) : const Color(0xFFFFFAEC),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.r),
-                  borderSide: BorderSide.none),
-              contentPadding: EdgeInsets.all(10.w),
-            ),
+            hintText: '輸入判決書難懂字眼（例如：應予駁回、酌減、矧以...）',
+            isDark: isDark,
             maxLines: 2,
           ),
-          SizedBox(height: 8.h),
-
-          // 快捷晶片 (Chips)
+          SizedBox(height: 10.h),
           Wrap(
             spacing: 6.w,
+            runSpacing: 6.h,
             children: _termsMap.keys.map((term) {
-              return ActionChip(
-                label: Text(term,
-                    style: TextStyle(
-                        fontSize: 11.sp, fontWeight: FontWeight.bold)),
-                backgroundColor:
-                    isDark ? const Color(0xFF2C353F) : const Color(0xFFEAE5DB),
-                padding: EdgeInsets.zero,
-                onPressed: () {
+              return GestureDetector(
+                onTap: () {
                   setState(() {
                     _translatorController.text = term;
                     _translationOutput = _termsMap[term]!;
                     LearningGameState.instance.incrementTranslatorUsage();
                   });
                 },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: isDark ? const Color(0xFF2C353F) : const Color(0xFFEAE5DB),
+                    borderRadius: BorderRadius.circular(16.r),
+                    border: Border.all(
+                      color: isDark ? const Color(0xFF3B4856) : const Color(0xFFD7CDBC),
+                      width: 1.w,
+                    ),
+                  ),
+                  child: Text(
+                    term,
+                    style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.bold, color: isDark ? Colors.grey.shade300 : const Color(0xFF5A4E3A)),
+                  ),
+                ),
               );
             }).toList(),
           ),
-          SizedBox(height: 10.h),
-
-          // 翻譯按鈕
+          SizedBox(height: 12.h),
           Row(
             children: [
-              ElevatedButton(
+              _buildSealButton(
+                label: '翻譯',
                 onPressed: () {
                   final text = _translatorController.text.trim();
                   if (text.isEmpty) return;
                   setState(() {
                     _translationOutput = _termsMap[text] ??
-                        '白話翻譯：該詞彙正在整理中。法律概念通常指「依照規定做對應處置，並保障當事人權利」。';
+                        '白話翻譯：該詞彙正在整理中。通常指「依照法律規定執行對應的法律效果或程序處置，以保障權利人權益」。';
                     LearningGameState.instance.incrementTranslatorUsage();
                   });
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF94610D),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.r)),
-                ),
-                child: const Text('翻譯'),
+                color: const Color(0xFF94610D),
               ),
               if (_translationOutput.isNotEmpty) ...[
-                SizedBox(width: 10.w),
-                TextButton(
+                SizedBox(width: 12.w),
+                _buildWashiTapeButton(
+                  label: '清除便籤',
                   onPressed: () {
                     setState(() {
                       _translatorController.clear();
                       _translationOutput = '';
                     });
                   },
-                  child: const Text('清除'),
-                )
-              ]
+                  color: isDark ? Colors.red.shade300 : const Color(0xFFC04E4E),
+                ),
+              ],
             ],
           ),
-
-          // 翻譯結果
           if (_translationOutput.isNotEmpty) ...[
             SizedBox(height: 12.h),
             Container(
               width: double.infinity,
               padding: EdgeInsets.all(10.w),
               decoration: BoxDecoration(
-                color:
-                    isDark ? const Color(0xFF332B1E) : const Color(0xFFFFFAEC),
+                color: isDark ? const Color(0xFF332B1E) : const Color(0xFFFFFAEC),
                 borderRadius: BorderRadius.circular(10.r),
-                border: Border.all(color: const Color(0xFFE4C179)),
+                border: Border.all(color: const Color(0xFFE4C179), width: 1.2.w),
               ),
               child: Text(
                 _translationOutput,
                 style: TextStyle(
                   fontSize: 12.5.sp,
-                  height: 1.4,
-                  color:
-                      isDark ? Colors.orange.shade100 : const Color(0xFF5D4017),
+                  height: 1.45,
+                  color: isDark ? Colors.orange.shade100 : const Color(0xFF5D4017),
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -1560,149 +2639,1214 @@ class KnowLawPageState extends State<KnowLawPage> {
     );
   }
 
-  // 2) 文件與證據準備清單 Widget
-  int _evidenceTabType = 0; // 0: 車禍糾紛, 1: 租屋糾紛
-  final List<String> _carEvidences = [
-    '行車紀錄器影片 (影片檔案)',
-    '車損照片與事故現場照片',
-    '道路交通事故初步分析研判表 (警局申請)',
-    '診斷證明書 (如有體傷)',
-    '車輛修繕費用收據/估價單'
-  ];
-  final List<String> _rentEvidences = [
-    '房屋租賃契約書 (合約本體)',
-    '點交照片或影片',
-    '修繕通知簡訊/LINE對話紀錄',
-    '修繕費用收據',
-    '押金收據或匯款紀錄'
-  ];
-  final Set<String> _checkedEvidences = {};
-
-  Widget _buildEvidenceChecklistWidget(LearningGameState gameState) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final currentList = _evidenceTabType == 0 ? _carEvidences : _rentEvidences;
-    final String currentTitle =
-        _evidenceTabType == 0 ? '🚗 車禍責任釐清證據包' : '🏠 租屋點交扣押金證據包';
-
+  Widget _buildCarDepreciationTool(bool isDark) {
     return NotebookCard(
       hasBinderRings: true,
+      backgroundColor: isDark ? const Color(0xFF1B232E) : const Color(0xFFF0F5FA),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.filePen,
-                  color: HomeV2Palette.trustGreen, size: 20.sp),
+              CtmSvgIcon(CtmSvgIcons.scale, color: const Color(0xFF3F7FBF), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
-                '證據準備與文件清單',
-                style: TextStyle(
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.textPrimary),
-              ),
-            ],
-          ),
-          SizedBox(height: 8.h),
-
-          // 切換車禍/租屋
-          Row(
-            children: [
-              ChoiceChip(
-                label: Text('車禍糾紛', style: TextStyle(fontSize: 11.sp)),
-                selected: _evidenceTabType == 0,
-                onSelected: (val) {
-                  setState(() {
-                    _evidenceTabType = 0;
-                    _checkedEvidences.clear();
-                  });
-                },
-              ),
-              SizedBox(width: 8.w),
-              ChoiceChip(
-                label: Text('租屋爭議', style: TextStyle(fontSize: 11.sp)),
-                selected: _evidenceTabType == 1,
-                onSelected: (val) {
-                  setState(() {
-                    _evidenceTabType = 1;
-                    _checkedEvidences.clear();
-                  });
-                },
+                '車禍零件折舊與工資計算機',
+                style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
               ),
             ],
           ),
           SizedBox(height: 10.h),
-
-          // 核取清單
-          ...currentList.map((item) {
-            final isChecked = _checkedEvidences.contains(item);
-            return CheckboxListTile(
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              title: Text(
-                item,
+          Text(
+            '說明：車禍更換全新零件需扣除折舊，但「工資與鈑金」免計折舊。本工具依法規提供雙重車種與折舊公式試算，並自動保留法定最低殘值。',
+            style: TextStyle(fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
+          ),
+          SizedBox(height: 12.h),
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 6.w,
+            runSpacing: 4.h,
+            children: [
+              Text(
+                '車輛種類：',
                 style: TextStyle(
-                  fontSize: 12.5.sp,
-                  decoration: isChecked ? TextDecoration.lineThrough : null,
-                  color:
-                      isChecked ? AppColors.textMuted : AppColors.textPrimary,
+                  fontSize: 11.sp,
+                  fontWeight: FontWeight.w900,
+                  color: isDark ? Colors.grey : const Color(0xFF7A6B53),
                 ),
               ),
+              _buildStationeryToggle<bool>(
+                value: false,
+                selectedValue: _carDepreciationIsMotorcycle,
+                label: '🚗 汽車 (耐用5年)',
+                onChanged: (val) => setState(() => _carDepreciationIsMotorcycle = val),
+                isDark: isDark,
+                activeColor: const Color(0xFF3F7FBF),
+              ),
+              _buildStationeryToggle<bool>(
+                value: true,
+                selectedValue: _carDepreciationIsMotorcycle,
+                label: '🛵 機車 (耐用3年)',
+                onChanged: (val) => setState(() => _carDepreciationIsMotorcycle = val),
+                isDark: isDark,
+                activeColor: const Color(0xFF3F7FBF),
+              ),
+            ],
+          ),
+          SizedBox(height: 8.h),
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 6.w,
+            runSpacing: 4.h,
+            children: [
+              Text(
+                '計算方法：',
+                style: TextStyle(
+                  fontSize: 11.sp,
+                  fontWeight: FontWeight.w900,
+                  color: isDark ? Colors.grey : const Color(0xFF7A6B53),
+                ),
+              ),
+              _buildStationeryToggle<bool>(
+                value: true,
+                selectedValue: _carDepreciationIsDecliningBalance,
+                label: '定律遞減法 (定律)',
+                onChanged: (val) => setState(() => _carDepreciationIsDecliningBalance = val),
+                isDark: isDark,
+                activeColor: const Color(0xFF3F7FBF),
+              ),
+              _buildStationeryToggle<bool>(
+                value: false,
+                selectedValue: _carDepreciationIsDecliningBalance,
+                label: '平均法 (定額)',
+                onChanged: (val) => setState(() => _carDepreciationIsDecliningBalance = val),
+                isDark: isDark,
+                activeColor: const Color(0xFF3F7FBF),
+              ),
+            ],
+          ),
+          SizedBox(height: 8.h),
+          _buildNotebookInput(
+            controller: _partsCostController,
+            labelText: '更換零件費 (元)',
+            hintText: '例如：12000',
+            isDark: isDark,
+            keyboardType: TextInputType.number,
+          ),
+          _buildNotebookInput(
+            controller: _laborCostController,
+            labelText: '鈑金與工資費 (元，免折舊)',
+            hintText: '例如：8000',
+            isDark: isDark,
+            keyboardType: TextInputType.number,
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: _buildNotebookInput(
+                  controller: _carAgeYearsController,
+                  labelText: '車輛已使用年數 (年)',
+                  hintText: '例如：3',
+                  isDark: isDark,
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: _buildNotebookInput(
+                  controller: _carAgeMonthsController,
+                  labelText: '使用剩餘月數 (月)',
+                  hintText: '例如：4',
+                  isDark: isDark,
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 14.h),
+          Row(
+            children: [
+              _buildSealButton(
+                label: '試算理賠額',
+                onPressed: _calculateCarDepreciation,
+                color: const Color(0xFF3F7FBF),
+              ),
+              if (_depreciationResult.isNotEmpty) ...[
+                SizedBox(width: 12.w),
+                _buildWashiTapeButton(
+                  label: '清除',
+                  onPressed: () {
+                    setState(() {
+                      _partsCostController.clear();
+                      _laborCostController.clear();
+                      _carAgeYearsController.clear();
+                      _carAgeMonthsController.clear();
+                      _depreciationResult = '';
+                    });
+                  },
+                  color: isDark ? Colors.red.shade300 : const Color(0xFFC04E4E),
+                ),
+              ],
+            ],
+          ),
+          if (_depreciationResult.isNotEmpty) ...[
+            SizedBox(height: 12.h),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(10.w),
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF232B36) : const Color(0xFFEAF1F9),
+                borderRadius: BorderRadius.circular(10.r),
+                border: Border.all(color: const Color(0xFF8CAECC), width: 1.2.w),
+              ),
+              child: Text(
+                _depreciationResult,
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  height: 1.45,
+                  color: isDark ? Colors.blue.shade100 : const Color(0xFF1F4C75),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+          SizedBox(height: 12.h),
+          Container(
+            padding: EdgeInsets.all(8.w),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF26211C) : const Color(0xFFFFF9E6),
+              borderRadius: BorderRadius.circular(8.r),
+              border: Border.all(
+                color: isDark ? const Color(0xFF4C3D26) : const Color(0xFFFBE4A0),
+                width: 1.w,
+              ),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.info_outline,
+                  size: 14.sp,
+                  color: isDark ? const Color(0xFFD49C40) : const Color(0xFFB37410),
+                ),
+                SizedBox(width: 6.w),
+                Expanded(
+                  child: Text(
+                    '💡 法律小常識：民事損害賠償更換零件需扣除折舊，但『工資與烤漆費』不予折舊。折舊上限最高保留 1/6 (汽車) 或 1/4 (機車) 之基本殘值，避免被折舊歸零！',
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      height: 1.4,
+                      color: isDark ? const Color(0xFFD49C40) : const Color(0xFF8E5A0B),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRentNoticeTool(bool isDark) {
+    return NotebookCard(
+      hasPaperClip: true,
+      backgroundColor: isDark ? const Color(0xFF1E281F) : const Color(0xFFF1FAF2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CtmSvgIcon(CtmSvgIcons.bookOpen, color: const Color(0xFF2E7D32), size: 20.sp),
+              SizedBox(width: 8.w),
+              Text(
+                '租屋存證信函起草器',
+                style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+              ),
+            ],
+          ),
+          SizedBox(height: 10.h),
+          Text(
+            '說明：當遇到租屋糾紛時，寄發存證信函能留下正式的法律意思表示與催告事實證明。本工具支持設備修繕催告與到期退押金催告兩種模式。',
+            style: TextStyle(fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
+          ),
+          SizedBox(height: 12.h),
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 6.w,
+            runSpacing: 4.h,
+            children: [
+              Text(
+                '通知類型：',
+                style: TextStyle(
+                  fontSize: 11.sp,
+                  fontWeight: FontWeight.w900,
+                  color: isDark ? Colors.grey : const Color(0xFF7A6B53),
+                ),
+              ),
+              _buildStationeryToggle<int>(
+                value: 0,
+                selectedValue: _rentNoticeType,
+                label: '🔧 設備損壞修繕',
+                onChanged: (val) => setState(() {
+                  _rentNoticeType = val;
+                  _rentNoticeResult = '';
+                }),
+                isDark: isDark,
+                activeColor: const Color(0xFF2E7D32),
+              ),
+              _buildStationeryToggle<int>(
+                value: 1,
+                selectedValue: _rentNoticeType,
+                label: '💰 租約期滿退押金',
+                onChanged: (val) => setState(() {
+                  _rentNoticeType = val;
+                  _rentNoticeResult = '';
+                }),
+                isDark: isDark,
+                activeColor: const Color(0xFF2E7D32),
+              ),
+            ],
+          ),
+          SizedBox(height: 8.h),
+          _buildNotebookInput(
+            controller: _landlordNameController,
+            labelText: '房東姓名',
+            hintText: '例如：王太太',
+            isDark: isDark,
+          ),
+          _buildNotebookInput(
+            controller: _rentAddressController,
+            labelText: '承租房屋地址',
+            hintText: '例如：台北市大安區忠孝東路三段XX號',
+            isDark: isDark,
+          ),
+          if (_rentNoticeType == 0) ...[
+            Row(
+              children: [
+                Expanded(
+                  child: _buildNotebookInput(
+                    controller: _brokenItemController,
+                    labelText: '損壞故障設備',
+                    hintText: '例如：客廳冷氣漏水',
+                    isDark: isDark,
+                  ),
+                ),
+                SizedBox(width: 16.w),
+                Expanded(
+                  child: _buildNotebookInput(
+                    controller: _noticeDaysController,
+                    labelText: '限期完成天數 (天)',
+                    hintText: '例如：7',
+                    isDark: isDark,
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+              ],
+            ),
+          ] else ...[
+            Row(
+              children: [
+                Expanded(
+                  child: _buildNotebookInput(
+                    controller: _leaseExpiryDateController,
+                    labelText: '租約到期日 (年月日)',
+                    hintText: '例如：2026年6月1日',
+                    isDark: isDark,
+                  ),
+                ),
+                SizedBox(width: 16.w),
+                Expanded(
+                  child: _buildNotebookInput(
+                    controller: _depositAmountController,
+                    labelText: '押金總金額 (元)',
+                    hintText: '例如：30000',
+                    isDark: isDark,
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+              ],
+            ),
+            _buildNotebookInput(
+              controller: _noticeDaysController,
+              labelText: '限期退還天數 (天)',
+              hintText: '例如：7',
+              isDark: isDark,
+              keyboardType: TextInputType.number,
+            ),
+          ],
+          SizedBox(height: 14.h),
+          Row(
+            children: [
+              _buildSealButton(
+                label: '起草催告書',
+                onPressed: () {
+                  final landlord = _landlordNameController.text.trim();
+                  final addr = _rentAddressController.text.trim();
+                  final days = _noticeDaysController.text.trim().isEmpty ? '7' : _noticeDaysController.text.trim();
+
+                  if (landlord.isEmpty || addr.isEmpty) return;
+
+                  if (_rentNoticeType == 0) {
+                    final item = _brokenItemController.text.trim();
+                    if (item.isEmpty) return;
+
+                    setState(() {
+                      _rentNoticeResult = 
+                          '郵局存證信函草稿 (設備修繕催告)\n'
+                          '---------------------------\n'
+                          '寄件人（承租人）：（請填寫您的姓名）\n'
+                          '收件人（出租人）：$landlord\n'
+                          '房屋地址：$addr\n\n'
+                          '【主旨】\n'
+                          '為請求儘速修繕房屋內「$item」設備事。\n\n'
+                          '【說明】\n'
+                          '一、本人向台端承租位於上述地址之房屋，合約存續期間，因室內配置之「$item」設備發生損壞故障，非人為故意或過失所致，已嚴重影響本人日常基本生活使用。\n'
+                          '二、依中華民國民法第 429 條之規定，租賃物之修繕義務除特約外由出租人負擔。本人特以此函限期台端於收到本函起 $days 日內前來修繕完畢。\n'
+                          '三、倘屆期台端仍未履行修繕義務，本人將依民法第 430 條之規定，自行雇工修繕。該次修繕所支出之所有必要估價及維修費，本人將逕自下月份應付租金中全額扣除，特此催告通知。';
+                      LearningGameState.instance.incrementTranslatorUsage();
+                    });
+                  } else {
+                    final expiryDate = _leaseExpiryDateController.text.trim();
+                    final deposit = _depositAmountController.text.trim();
+                    if (expiryDate.isEmpty || deposit.isEmpty) return;
+
+                    setState(() {
+                      _rentNoticeResult = 
+                          '郵局存證信函草稿 (期滿退還押金催告)\n'
+                          '---------------------------\n'
+                          '寄件人（承租人）：（請填寫您的姓名）\n'
+                          '收件人（出租人）：$landlord\n'
+                          '房屋地址：$addr\n\n'
+                          '【主旨】\n'
+                          '為請求依法儘速返還租賃房屋押租金新台幣 $deposit 元整事。\n\n'
+                          '【說明】\n'
+                          '一、本人前向台端承租位於上述地址之房屋，租賃期限於 $expiryDate 屆滿。本件租賃契約業已期滿消滅，且本人已與台端完成房屋現場點交、返還房屋手續，並無欠繳租金、管理費或任何違約損害之情事。\n'
+                          '二、依民法不當得利與租賃契約返還義務，台端應將本人原交付之押租金新台幣 $deposit 元整全額無息返還。特以此函限期台端於收到本函起 $days 日內返還該筆押金。\n'
+                          '三、倘屆期台端仍未返還押金，本人將依法請求加計法定年利率 5% 之遲延利息，並逕循民事調解或訴訟途徑追討，特不另行通知，希勿自誤。';
+                      LearningGameState.instance.incrementTranslatorUsage();
+                    });
+                  }
+                },
+                color: const Color(0xFF2E7D32),
+              ),
+              if (_rentNoticeResult.isNotEmpty) ...[
+                SizedBox(width: 12.w),
+                _buildWashiTapeButton(
+                  label: '清除',
+                  onPressed: () {
+                    setState(() {
+                      _landlordNameController.clear();
+                      _rentAddressController.clear();
+                      _brokenItemController.clear();
+                      _noticeDaysController.clear();
+                      _leaseExpiryDateController.clear();
+                      _depositAmountController.clear();
+                      _rentNoticeResult = '';
+                    });
+                  },
+                  color: isDark ? Colors.red.shade300 : const Color(0xFFC04E4E),
+                ),
+              ],
+            ],
+          ),
+          if (_rentNoticeResult.isNotEmpty) ...[
+            SizedBox(height: 12.h),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(10.w),
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF1B2E1D) : const Color(0xFFFAFDFB),
+                borderRadius: BorderRadius.circular(10.r),
+                border: Border.all(color: const Color(0xFF8CBE91), width: 1.2.w),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _rentNoticeResult,
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      height: 1.5,
+                      color: isDark ? Colors.green.shade100 : const Color(0xFF1E4E21),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton.icon(
+                        icon: Icon(Icons.copy, size: 12.sp, color: Colors.white),
+                        label: Text('複製文字', style: TextStyle(fontSize: 10.5.sp)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF2E7D32),
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                        ),
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: _rentNoticeResult));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('已複製催告信函草稿至剪貼簿！')),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+          SizedBox(height: 12.h),
+          Container(
+            padding: EdgeInsets.all(8.w),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF1E2620) : const Color(0xFFF1FAF2),
+              borderRadius: BorderRadius.circular(8.r),
+              border: Border.all(
+                color: isDark ? const Color(0xFF2B472E) : const Color(0xFF8CBE91),
+                width: 1.w,
+              ),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.info_outline,
+                  size: 14.sp,
+                  color: isDark ? Colors.green.shade400 : const Color(0xFF2E7D32),
+                ),
+                SizedBox(width: 6.w),
+                Expanded(
+                  child: Text(
+                    '💡 法律小常識：民法規定，除非有特別約定，否則房東有義務維持設備正常使用。如故意不修繕，房客自行雇工維修後，可依法從租金直接抵扣。退租時房東亦不得以折舊自然耗損為由任意扣發押金。',
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      height: 1.4,
+                      color: isDark ? Colors.green.shade200 : const Color(0xFF1E4E21),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOvertimeTool(bool isDark) {
+    return NotebookCard(
+      hasBinderRings: true,
+      backgroundColor: isDark ? const Color(0xFF2B211A) : const Color(0xFFFAF5F0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CtmSvgIcon(CtmSvgIcons.clock, color: const Color(0xFFD87D32), size: 20.sp),
+              SizedBox(width: 8.w),
+              Text(
+                '加班費與特休折算計算機',
+                style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+              ),
+            ],
+          ),
+          SizedBox(height: 10.h),
+          Text(
+            '說明：依勞基法平日加班 2 小時內乘 1.34 倍，後 2 小時乘 1.67 倍；休息日加班前 2 小時 1.34，後 6 小時 1.67，超過 8 小時 2.67。',
+            style: TextStyle(fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
+          ),
+          SizedBox(height: 10.h),
+          _buildNotebookInput(
+            controller: _salaryController,
+            labelText: '月薪薪資 (元，以底薪計算)',
+            hintText: '例如：36000',
+            isDark: isDark,
+            keyboardType: TextInputType.number,
+          ),
+          _buildNotebookInput(
+            controller: _weekdayOvertimeController,
+            labelText: '本月平日加班時數 (時)',
+            hintText: '例如：10',
+            isDark: isDark,
+            keyboardType: TextInputType.number,
+          ),
+          _buildNotebookInput(
+            controller: _holidayOvertimeController,
+            labelText: '本月休息日加班時數 (時)',
+            hintText: '例如：8',
+            isDark: isDark,
+            keyboardType: TextInputType.number,
+          ),
+          SizedBox(height: 14.h),
+          Row(
+            children: [
+              _buildSealButton(
+                label: '計算加班費',
+                onPressed: _calculateOvertime,
+                color: const Color(0xFFD87D32),
+              ),
+              if (_overtimeResult.isNotEmpty) ...[
+                SizedBox(width: 12.w),
+                _buildWashiTapeButton(
+                  label: '清除',
+                  onPressed: () {
+                    setState(() {
+                      _salaryController.clear();
+                      _weekdayOvertimeController.clear();
+                      _holidayOvertimeController.clear();
+                      _overtimeResult = '';
+                    });
+                  },
+                  color: isDark ? Colors.red.shade300 : const Color(0xFFC04E4E),
+                ),
+              ],
+            ],
+          ),
+          if (_overtimeResult.isNotEmpty) ...[
+            SizedBox(height: 12.h),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(10.w),
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF352B24) : const Color(0xFFFAF4EE),
+                borderRadius: BorderRadius.circular(10.r),
+                border: Border.all(color: const Color(0xFFECC2A8), width: 1.2.w),
+              ),
+              child: Text(
+                _overtimeResult,
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  height: 1.45,
+                  color: isDark ? Colors.orange.shade100 : const Color(0xFF7A4A28),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+          SizedBox(height: 12.h),
+          Container(
+            padding: EdgeInsets.all(8.w),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF2B211A) : const Color(0xFFFFF7F0),
+              borderRadius: BorderRadius.circular(8.r),
+              border: Border.all(
+                color: isDark ? const Color(0xFF5A4433) : const Color(0xFFECC2A8),
+                width: 1.w,
+              ),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.info_outline,
+                  size: 14.sp,
+                  color: isDark ? const Color(0xFFD87D32) : const Color(0xFFB35A10),
+                ),
+                SizedBox(width: 6.w),
+                Expanded(
+                  child: Text(
+                    '💡 勞基法小常識：時薪計算基礎為『月薪除以 240 小時』。休息日加班前 2 小時按時薪 1.34 倍計算，第 3 到 8 小時按 1.67 倍計算。例假日原則上禁止加班，若違法加班除工資應加倍發給外，還必須給予補假一日喔！',
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      height: 1.4,
+                      color: isDark ? const Color(0xFFE3A06E) : const Color(0xFF8E4A10),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildConsumerNoticeTool(bool isDark) {
+    return NotebookCard(
+      hasPaperClip: true,
+      backgroundColor: isDark ? const Color(0xFF2C1C24) : const Color(0xFFFAF1F4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CtmSvgIcon(CtmSvgIcons.filePen, color: const Color(0xFFC2185B), size: 20.sp),
+              SizedBox(width: 8.w),
+              Text(
+                '網購退貨存證信函起草器',
+                style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+              ),
+            ],
+          ),
+          SizedBox(height: 10.h),
+          Text(
+            '說明：通訊交易消費者，得於收受商品後七日內無條件退回商品或解除契約，無須說明理由及負擔任何費用。本工具起草退換貨存證催告信以主張權益。',
+            style: TextStyle(fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
+          ),
+          SizedBox(height: 10.h),
+          _buildNotebookInput(
+            controller: _sellerNameController,
+            labelText: '賣家/平台名稱',
+            hintText: '例如：蝦皮某某小鋪 / 某電商公司',
+            isDark: isDark,
+          ),
+          _buildNotebookInput(
+            controller: _productNameController,
+            labelText: '退貨商品名稱',
+            hintText: '例如：藍牙無線耳機一件',
+            isDark: isDark,
+          ),
+          _buildNotebookInput(
+            controller: _receiveDateController,
+            labelText: '收到商品日期 (年月日)',
+            hintText: '例如：2026年6月10日',
+            isDark: isDark,
+          ),
+          SizedBox(height: 14.h),
+          Row(
+            children: [
+              _buildSealButton(
+                label: '起草退貨信',
+                onPressed: () {
+                  final seller = _sellerNameController.text.trim();
+                  final product = _productNameController.text.trim();
+                  final date = _receiveDateController.text.trim();
+
+                  if (seller.isEmpty || product.isEmpty || date.isEmpty) return;
+
+                  setState(() {
+                    _consumerNoticeResult = 
+                        '郵局存證信函草稿\n'
+                        '---------------------------\n'
+                        '寄件人（買受人）：（請填寫您的姓名）\n'
+                        '收件人（出賣人）：$seller\n\n'
+                        '【主旨】\n'
+                        '為請求解除「$product」買賣契約並全額退還價金事。\n\n'
+                        '【說明】\n'
+                        '一、本人於 $date 收受向台端購買之商品「$product」，金額共計...元整並已付清。\n'
+                        '二、依消費者保護法第 19 條第 1 項規定，通訊交易或訪問交易之消費者，得於收受商品或服務後七日內，以退回商品或書面通知方式解除契約，無須說明理由及負擔任何費用或對價。\n'
+                        '三、本人特以此函通知台端，依法解除本件買賣契約。請台端於收到本函後儘速聯絡本人收回商品，並將本人支付之全部價金返還，特此催告通知。';
+                    LearningGameState.instance.incrementTranslatorUsage();
+                  });
+                },
+                color: const Color(0xFFC2185B),
+              ),
+              if (_consumerNoticeResult.isNotEmpty) ...[
+                SizedBox(width: 12.w),
+                _buildWashiTapeButton(
+                  label: '清除',
+                  onPressed: () {
+                    setState(() {
+                      _sellerNameController.clear();
+                      _productNameController.clear();
+                      _receiveDateController.clear();
+                      _consumerNoticeResult = '';
+                    });
+                  },
+                  color: isDark ? Colors.red.shade300 : const Color(0xFFC04E4E),
+                ),
+              ],
+            ],
+          ),
+          if (_consumerNoticeResult.isNotEmpty) ...[
+            SizedBox(height: 12.h),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(10.w),
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF2E1C23) : const Color(0xFFFAF2F4),
+                borderRadius: BorderRadius.circular(10.r),
+                border: Border.all(color: const Color(0xFFCE8CAE), width: 1.2.w),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _consumerNoticeResult,
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      height: 1.5,
+                      color: isDark ? Colors.pink.shade100 : const Color(0xFF6E2849),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton.icon(
+                        icon: Icon(Icons.copy, size: 12.sp, color: Colors.white),
+                        label: Text('複製文字', style: TextStyle(fontSize: 10.5.sp)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFC2185B),
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                        ),
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: _consumerNoticeResult));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('已複製退貨催告信函草稿至剪貼簿！')),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+          SizedBox(height: 12.h),
+          Container(
+            padding: EdgeInsets.all(8.w),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF2E1C24) : const Color(0xFFFAF1F4),
+              borderRadius: BorderRadius.circular(8.r),
+              border: Border.all(
+                color: isDark ? const Color(0xFF5E2E3E) : const Color(0xFFCE8CAE),
+                width: 1.w,
+              ),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.info_outline,
+                  size: 14.sp,
+                  color: isDark ? const Color(0xFFC2185B) : const Color(0xFF9E0D43),
+                ),
+                SizedBox(width: 6.w),
+                Expanded(
+                  child: Text(
+                    '💡 溫馨提醒：消保法七天鑑賞期僅適用於『企業經營者』與消費者之通訊交易。若向個人二手賣家購買、或屬於海外代購（客製化給付）、拆封後之影音或衛生用品等，依法排除適用七天無條件退貨。',
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      height: 1.4,
+                      color: isDark ? const Color(0xFFEAA0C2) : const Color(0xFF8E1045),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPrivacySopTool(bool isDark, LearningGameState gameState) {
+    return NotebookCard(
+      hasBinderRings: true,
+      backgroundColor: isDark ? const Color(0xFF211D2B) : const Color(0xFFFAF7FD),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CtmSvgIcon(CtmSvgIcons.sparkles, color: const Color(0xFF512DA8), size: 20.sp),
+              SizedBox(width: 8.w),
+              Text(
+                '個資外洩防範自救清單',
+                style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+              ),
+            ],
+          ),
+          SizedBox(height: 10.h),
+          Text(
+            '說明：當發生帳密外洩或可疑扣款時，請照下方步驟迅速自保。勾選項目可同步記錄，完成後可將證據清單儲存備忘。',
+            style: TextStyle(fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
+          ),
+          SizedBox(height: 10.h),
+          ..._privacySops.map((sop) {
+            final isChecked = _checkedPrivacyEvidences.contains(sop);
+            return _buildHanddrawnCheckbox(
+              label: sop,
               value: isChecked,
-              activeColor: HomeV2Palette.trustGreen,
               onChanged: (val) {
                 setState(() {
                   if (val == true) {
-                    _checkedEvidences.add(item);
+                    _checkedPrivacyEvidences.add(sop);
                   } else {
-                    _checkedEvidences.remove(item);
+                    _checkedPrivacyEvidences.remove(sop);
                   }
                 });
               },
+              isDark: isDark,
             );
           }),
-
           SizedBox(height: 12.h),
-
-          // 備忘/導出按鈕
           Row(
             children: [
-              ElevatedButton.icon(
-                icon: CtmSvgIcon(CtmSvgIcons.bookmark,
-                    size: 14.sp, color: Colors.white),
-                label: const Text('儲存備忘'),
+              _buildSealButton(
+                label: '儲存備忘',
                 onPressed: () {
                   gameState.saveEvidenceList(
-                      currentTitle, _checkedEvidences.toList(), currentList);
+                    '個資外洩應變清單',
+                    _checkedPrivacyEvidences.toList(),
+                    _privacySops,
+                  );
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('已成功儲存證據清單至小法助的「備忘錄」中！'),
-                      backgroundColor: HomeV2Palette.trustGreen,
-                    ),
+                    const SnackBar(content: Text('已成功儲存自救步驟至小法助的「備忘錄」中！')),
                   );
                 },
-              ),
-              SizedBox(width: 10.w),
-              OutlinedButton.icon(
-                icon: CtmSvgIcon(CtmSvgIcons.externalLink,
-                    size: 14.sp, color: HomeV2Palette.trustGreen),
-                label: const Text('導出 PDF'),
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('成功導出證據清單 PDF！已儲存至本機檔案及成就室備忘錄。'),
-                      backgroundColor: HomeV2Palette.trustGreen,
-                    ),
-                  );
-                  gameState.saveEvidenceList('$currentTitle (PDF 導出版)',
-                      _checkedEvidences.toList(), currentList);
-                },
+                color: const Color(0xFF512DA8),
               ),
             ],
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildNeighborLeakTool(bool isDark, LearningGameState gameState) {
+    return NotebookCard(
+      hasPaperClip: true,
+      backgroundColor: isDark ? const Color(0xFF1D282B) : const Color(0xFFF0FAF9),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CtmSvgIcon(CtmSvgIcons.timeline, color: const Color(0xFF00796B), size: 20.sp),
+              SizedBox(width: 8.w),
+              Text(
+                '鄰里漏水與噪音證據包',
+                style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+              ),
+            ],
+          ),
+          SizedBox(height: 10.h),
+          Text(
+            '說明：天花板漏水與噪音是常見鄰里爭端。請落實以下要點以便未來在調解或民事起訴中能拿出「法官採信的關鍵證據」。',
+            style: TextStyle(fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
+          ),
+          SizedBox(height: 10.h),
+          ..._neighborSops.map((sop) {
+            final isChecked = _checkedNeighborEvidences.contains(sop);
+            return _buildHanddrawnCheckbox(
+              label: sop,
+              value: isChecked,
+              onChanged: (val) {
+                setState(() {
+                  if (val == true) {
+                    _checkedNeighborEvidences.add(sop);
+                  } else {
+                    _checkedNeighborEvidences.remove(sop);
+                  }
+                });
+              },
+              isDark: isDark,
+            );
+          }),
+          SizedBox(height: 12.h),
+          Row(
+            children: [
+              _buildSealButton(
+                label: '儲存備忘',
+                onPressed: () {
+                  gameState.saveEvidenceList(
+                    '鄰里糾紛蒐證清單',
+                    _checkedNeighborEvidences.toList(),
+                    _neighborSops,
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('已將證據蒐證清單儲存至小法助的「備忘錄」中！')),
+                  );
+                },
+                color: const Color(0xFF00796B),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMarriagePropertyTool(bool isDark) {
+    return NotebookCard(
+      hasBinderRings: true,
+      backgroundColor: isDark ? const Color(0xFF281E2C) : const Color(0xFFFAF0FB),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CtmSvgIcon(CtmSvgIcons.bookOpen, color: const Color(0xFF8E24AA), size: 20.sp),
+              SizedBox(width: 8.w),
+              Text(
+                '夫妻財產分配試算器',
+                style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+              ),
+            ],
+          ),
+          SizedBox(height: 10.h),
+          Text(
+            '說明：法定財產制下，當婚姻關係消滅時，夫或妻現存之婚後財產扣除婚姻關係存續中所負債務後，如有剩餘，雙方應平均分配其差額（即「賸餘財產分配請求權」）。',
+            style: TextStyle(fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
+          ),
+          SizedBox(height: 10.h),
+          Row(
+            children: [
+              Expanded(
+                child: _buildNotebookInput(
+                  controller: _husbandPropertyController,
+                  labelText: '夫的婚後財產 (元)',
+                  hintText: '例如：500000',
+                  isDark: isDark,
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: _buildNotebookInput(
+                  controller: _husbandDebtController,
+                  labelText: '夫的婚後債務 (元)',
+                  hintText: '例如：100000',
+                  isDark: isDark,
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: _buildNotebookInput(
+                  controller: _wifePropertyController,
+                  labelText: '妻的婚後財產 (元)',
+                  hintText: '例如：800000',
+                  isDark: isDark,
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: _buildNotebookInput(
+                  controller: _wifeDebtController,
+                  labelText: '妻的婚後債務 (元)',
+                  hintText: '例如：50000',
+                  isDark: isDark,
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 14.h),
+          Row(
+            children: [
+              _buildSealButton(
+                label: '試算分配差額',
+                onPressed: _calculateMarriageProperty,
+                color: const Color(0xFF8E24AA),
+              ),
+              if (_marriagePropertyResult.isNotEmpty) ...[
+                SizedBox(width: 12.w),
+                _buildWashiTapeButton(
+                  label: '清除',
+                  onPressed: () {
+                    setState(() {
+                      _husbandPropertyController.clear();
+                      _husbandDebtController.clear();
+                      _wifePropertyController.clear();
+                      _wifeDebtController.clear();
+                      _marriagePropertyResult = '';
+                    });
+                  },
+                  color: isDark ? Colors.red.shade300 : const Color(0xFFC04E4E),
+                ),
+              ],
+            ],
+          ),
+          if (_marriagePropertyResult.isNotEmpty) ...[
+            SizedBox(height: 12.h),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(10.w),
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF332039) : const Color(0xFFF9EEFB),
+                borderRadius: BorderRadius.circular(10.r),
+                border: Border.all(color: const Color(0xFFD3A2DF), width: 1.2.w),
+              ),
+              child: Text(
+                _marriagePropertyResult,
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  height: 1.45,
+                  color: isDark ? Colors.purple.shade100 : const Color(0xFF6A1B9A),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAntiFraudTool(bool isDark, LearningGameState gameState) {
+    return NotebookCard(
+      hasPaperClip: true,
+      backgroundColor: isDark ? const Color(0xFF2D1E1E) : const Color(0xFFFDF0F0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CtmSvgIcon(CtmSvgIcons.bookmark, color: const Color(0xFFD32F2F), size: 20.sp),
+              SizedBox(width: 8.w),
+              Text(
+                '詐騙通報與帳戶警示自救清單',
+                style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+              ),
+            ],
+          ),
+          SizedBox(height: 10.h),
+          Text(
+            '說明：如果遭受詐騙並已匯款，黃金 30 分鐘內可對詐騙帳戶執行緊急「圈存扣押」，延緩資金流出。請按以下 SOP 行動。',
+            style: TextStyle(fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
+          ),
+          SizedBox(height: 10.h),
+          ..._antiFraudSops.map((sop) {
+            final isChecked = _checkedAntiFraudEvidences.contains(sop);
+            return _buildHanddrawnCheckbox(
+              label: sop,
+              value: isChecked,
+              onChanged: (val) {
+                setState(() {
+                  if (val == true) {
+                    _checkedAntiFraudEvidences.add(sop);
+                  } else {
+                    _checkedAntiFraudEvidences.remove(sop);
+                  }
+                });
+              },
+              isDark: isDark,
+            );
+          }),
+          SizedBox(height: 12.h),
+          Row(
+            children: [
+              _buildSealButton(
+                label: '儲存備忘',
+                onPressed: () {
+                  gameState.saveEvidenceList(
+                    '防詐騙自救清單',
+                    _checkedAntiFraudEvidences.toList(),
+                    _antiFraudSops,
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('已將防詐自救步驟儲存至小法助「備忘錄」中！')),
+                  );
+                },
+                color: const Color(0xFFD32F2F),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildToolkitTabs(bool isDark) {
+    final List<Map<String, dynamic>> tabs = [
+      {'name': '翻譯機', 'color': const Color(0xFFD8B273)},
+      {'name': '車禍計算', 'color': const Color(0xFF7FAECC)},
+      {'name': '租屋催告', 'color': const Color(0xFF8CBE91)},
+      {'name': '加班計算', 'color': const Color(0xFFECC2A8)},
+      {'name': '網購退貨', 'color': const Color(0xFFCE8CAE)},
+      {'name': '自救清單', 'color': const Color(0xFF9E8CCA)},
+      {'name': '鄰里蒐證', 'color': const Color(0xFF8CBEC2)},
+      {'name': '財產分配', 'color': const Color(0xFFD3A2DF)},
+      {'name': '防詐騙', 'color': const Color(0xFFE89191)},
+    ];
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
+      child: Row(
+        children: tabs.map((tab) {
+          final String name = tab['name'];
+          final Color tabColor = tab['color'];
+          final isSelected = _activeToolTab == name;
+          final fontCol = isDark ? Colors.white : const Color(0xFF3B3324);
+
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                _activeToolTab = name;
+              });
+            },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 150),
+              margin: EdgeInsets.only(right: 6.w, top: isSelected ? 0.h : 4.h, bottom: isSelected ? 4.h : 0.h),
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 7.h),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? tabColor
+                    : (isDark ? const Color(0xFF252C34) : const Color(0xFFECE6DB)),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8.r),
+                  topRight: Radius.circular(8.r),
+                  bottomLeft: Radius.circular(isSelected ? 0 : 8.r),
+                  bottomRight: Radius.circular(isSelected ? 0 : 8.r),
+                ),
+                border: Border.all(
+                  color: isSelected ? tabColor : (isDark ? const Color(0xFF343F4C) : const Color(0xFFD7CDBC)),
+                  width: 1.w,
+                ),
+              ),
+              child: Text(
+                name,
+                style: TextStyle(
+                  fontSize: 11.5.sp,
+                  fontWeight: FontWeight.w900,
+                  color: isSelected ? Colors.white : fontCol.withValues(alpha: 0.8),
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildActiveTool(bool isDark, LearningGameState gameState) {
+    switch (_activeToolTab) {
+      case '車禍計算':
+        return _buildCarDepreciationTool(isDark);
+      case '租屋催告':
+        return _buildRentNoticeTool(isDark);
+      case '加班計算':
+        return _buildOvertimeTool(isDark);
+      case '網購退貨':
+        return _buildConsumerNoticeTool(isDark);
+      case '自救清單':
+        return _buildPrivacySopTool(isDark, gameState);
+      case '鄰里蒐證':
+        return _buildNeighborLeakTool(isDark, gameState);
+      case '財產分配':
+        return _buildMarriagePropertyTool(isDark);
+      case '防詐騙':
+        return _buildAntiFraudTool(isDark, gameState);
+      case '翻譯機':
+      default:
+        return _buildTranslatorTool(isDark);
+    }
+  }
+
+  List<Widget> _buildToolkitItems(bool isDark, LearningGameState gameState) {
+    return [
+      _buildToolkitTabs(isDark),
+      SizedBox(height: 12.h),
+      _buildActiveTool(isDark, gameState),
+      SizedBox(height: 12.h),
+      _buildStatuteSearchWidget(),
+    ];
   }
 
   // 3) 常用法規快查 Widget
@@ -1715,15 +3859,11 @@ class KnowLawPageState extends State<KnowLawPage> {
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.search,
-                  color: const Color(0xFF3F7FBF), size: 20.sp),
+              CtmSvgIcon(CtmSvgIcons.search, color: const Color(0xFF3F7FBF), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
                 '常用法規快速查詢',
-                style: TextStyle(
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.textPrimary),
+                style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
               ),
             ],
           ),
@@ -1745,16 +3885,27 @@ class KnowLawPageState extends State<KnowLawPage> {
 
   Widget _buildStatuteChip(String label, {String? actual}) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return ActionChip(
-      label: Text(label,
+    return GestureDetector(
+      onTap: () => _openStatuteDatabase(initialQuery: actual ?? label),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+        decoration: BoxDecoration(
+          color: isDark ? const Color(0xFF1F2B38) : const Color(0xFFE8F0FE),
+          borderRadius: BorderRadius.circular(6.r),
+          border: Border.all(
+            color: isDark ? const Color(0xFF2C3E52) : const Color(0xFFB5CFF7),
+            width: 1.w,
+          ),
+        ),
+        child: Text(
+          label,
           style: TextStyle(
-              fontSize: 11.sp,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFF1F4E87))),
-      backgroundColor:
-          isDark ? const Color(0xFF1F2B38) : const Color(0xFFE8F0FE),
-      onPressed: () => _openStatuteDatabase(initialQuery: actual ?? label),
+            fontSize: 11.sp,
+            fontWeight: FontWeight.bold,
+            color: isDark ? Colors.blue.shade100 : const Color(0xFF1F4E87),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -2391,6 +4542,465 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
           ),
         );
       },
+    );
+  }
+}
+
+// 🤖 每日專題非同步載入骨架屏 (Pulsing Skeleton Card)
+class _PulsingSkeleton extends StatefulWidget {
+  const _PulsingSkeleton({required this.width, required this.height, this.borderRadius});
+  final double width;
+  final double height;
+  final BorderRadiusGeometry? borderRadius;
+
+  @override
+  State<_PulsingSkeleton> createState() => _PulsingSkeletonState();
+}
+
+class _PulsingSkeletonState extends State<_PulsingSkeleton> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..repeat(reverse: true);
+    _animation = Tween<double>(begin: 0.4, end: 0.8).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return FadeTransition(
+      opacity: _animation,
+      child: Container(
+        width: widget.width,
+        height: widget.height,
+        decoration: BoxDecoration(
+          color: isDark ? const Color(0xFF2C3540) : const Color(0xFFE5E9EC),
+          borderRadius: widget.borderRadius ?? BorderRadius.circular(8.r),
+        ),
+      ),
+    );
+  }
+}
+
+class _TappableCustomClassroomCard extends StatefulWidget {
+  final bool isDark;
+  final VoidCallback onTap;
+
+  const _TappableCustomClassroomCard({
+    required this.isDark,
+    required this.onTap,
+  });
+
+  @override
+  State<_TappableCustomClassroomCard> createState() => _TappableCustomClassroomCardState();
+}
+
+class _TappableCustomClassroomCardState extends State<_TappableCustomClassroomCard> {
+  double _scale = 1.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final cardBg = widget.isDark ? const Color(0xFF2E2D24) : const Color(0xFFFFFDE7);
+    final circleBg = widget.isDark ? const Color(0xFF4A4930) : const Color(0xFFFFF59D);
+    final iconColor = widget.isDark ? const Color(0xFFFFD54F) : const Color(0xFFF57F17);
+
+    return GestureDetector(
+      onTapDown: (_) => setState(() => _scale = 0.97),
+      onTapUp: (_) => setState(() => _scale = 1.0),
+      onTapCancel: () => setState(() => _scale = 1.0),
+      onTap: widget.onTap,
+      child: AnimatedScale(
+        scale: _scale,
+        duration: const Duration(milliseconds: 100),
+        child: NotebookCard(
+          backgroundColor: cardBg,
+          child: Row(
+            children: [
+              Container(
+                width: 40.w,
+                height: 40.w,
+                decoration: BoxDecoration(
+                  color: circleBg,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: CtmSvgIcon(
+                    CtmSvgIcons.idea,
+                    size: 20.sp,
+                    color: iconColor,
+                  ),
+                ),
+              ),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '訂製專屬法學課堂',
+                      style: TextStyle(
+                        fontSize: 14.5.sp,
+                        fontWeight: FontWeight.w900,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      '輸入您的生活狀況，AI 將量身打造 5 個學習單元與測驗！',
+                      style: TextStyle(
+                        fontSize: 10.5.sp,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 8.w),
+              Icon(
+                Icons.chevron_right,
+                size: 20.sp,
+                color: iconColor.withValues(alpha: 0.8),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _CustomClassroomDialog extends StatefulWidget {
+  final bool isDark;
+  final Function(String) onGenerate;
+
+  const _CustomClassroomDialog({
+    required this.isDark,
+    required this.onGenerate,
+  });
+
+  @override
+  State<_CustomClassroomDialog> createState() => _CustomClassroomDialogState();
+}
+
+class _CustomClassroomDialogState extends State<_CustomClassroomDialog> {
+  final TextEditingController _controller = TextEditingController();
+  bool _isGenerating = false;
+  int _loadingStep = 0;
+  Timer? _timer;
+
+  final List<String> _quickTags = [
+    '租屋修繕責任',
+    '車禍折舊與工資',
+    '網路購物退貨',
+    '加班費與離職預告',
+  ];
+
+  final List<String> _loadingMessages = [
+    '📝 正在為您起草專屬案例關係人與糾紛情境...',
+    '⚖️ 正在檢索中華民國相關法律之請求權基礎...',
+    '📚 正在編排專屬 STEP 1 至 STEP 5 單元課程...',
+    '🎯 正在產生各關卡之法律小測驗與解析...',
+  ];
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _startGeneration() {
+    final text = _controller.text.trim();
+    if (text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('請輸入您的生活糾紛情境或選擇快速標籤！'),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isGenerating = true;
+      _loadingStep = 0;
+    });
+
+    _timer = Timer.periodic(const Duration(milliseconds: 800), (timer) {
+      if (_loadingStep < _loadingMessages.length - 1) {
+        setState(() {
+          _loadingStep++;
+        });
+      } else {
+        _timer?.cancel();
+        widget.onGenerate(text);
+      }
+    });
+  }
+
+  Widget _buildLoadingView() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 24.h),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                width: 70.w,
+                height: 70.w,
+                child: const CircularProgressIndicator(
+                  strokeWidth: 3.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFF57F17)),
+                  backgroundColor: Color(0xFFFAF6EE),
+                ),
+              ),
+              CtmSvgIcon(
+                CtmSvgIcons.idea,
+                size: 30.sp,
+                color: const Color(0xFFF57F17),
+              ),
+            ],
+          ),
+          SizedBox(height: 24.h),
+          Text(
+            '法律 AI 起草中',
+            style: TextStyle(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w900,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          SizedBox(height: 12.h),
+          Container(
+            height: 48.h,
+            alignment: Alignment.center,
+            padding: EdgeInsets.symmetric(horizontal: 12.w),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (Widget child, Animation<double> animation) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: SlideTransition(
+                    position: Tween<Offset>(
+                      begin: const Offset(0.0, 0.2),
+                      end: Offset.zero,
+                    ).animate(animation),
+                    child: child,
+                  ),
+                );
+              },
+              child: Text(
+                _loadingMessages[_loadingStep],
+                key: ValueKey<int>(_loadingStep),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12.5.sp,
+                  color: AppColors.textSecondary,
+                  height: 1.4,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInputView() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(6.w),
+              decoration: const BoxDecoration(
+                color: Color(0xFFFFF176),
+                shape: BoxShape.circle,
+              ),
+              child: CtmSvgIcon(
+                CtmSvgIcons.idea,
+                size: 20.sp,
+                color: const Color(0xFFF57F17),
+              ),
+            ),
+            SizedBox(width: 10.w),
+            Expanded(
+              child: Text(
+                '訂製專屬法學課堂',
+                style: TextStyle(
+                  fontSize: 16.5.sp,
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.close, size: 20.sp),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        ),
+        SizedBox(height: 12.h),
+        Text(
+          '請描述您面臨的生活法學困境或糾紛：',
+          style: TextStyle(
+            fontSize: 12.5.sp,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        SizedBox(height: 8.h),
+        TextField(
+          controller: _controller,
+          maxLines: 4,
+          style: TextStyle(fontSize: 13.sp, color: AppColors.textPrimary),
+          decoration: InputDecoration(
+            hintText: '例如：鄰居把私人物品與垃圾堆在樓梯公用走道上，勸導多次也不肯清理...',
+            hintStyle: TextStyle(
+              fontSize: 12.sp,
+              color: AppColors.textSecondary.withValues(alpha: 0.7),
+            ),
+            filled: true,
+            fillColor: widget.isDark ? const Color(0xFF1E252D) : const Color(0xFFFAF6EE),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(
+                color: widget.isDark ? const Color(0xFF354454) : const Color(0xFFD8D0C2),
+                width: 1.w,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(
+                color: HomeV2Palette.trustGreen,
+                width: 1.5.w,
+              ),
+            ),
+            contentPadding: EdgeInsets.all(12.w),
+          ),
+        ),
+        SizedBox(height: 16.h),
+        Text(
+          '快速點選常見主題標籤：',
+          style: TextStyle(
+            fontSize: 12.5.sp,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        SizedBox(height: 8.h),
+        Wrap(
+          spacing: 8.w,
+          runSpacing: 8.h,
+          children: _quickTags.map((tag) {
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  _controller.text = tag;
+                });
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                decoration: BoxDecoration(
+                  color: widget.isDark
+                      ? const Color(0xFF1E252D)
+                      : const Color(0xFFF9F7F0),
+                  borderRadius: BorderRadius.circular(20.r),
+                  border: Border.all(
+                    color: _controller.text == tag
+                        ? HomeV2Palette.trustGreen
+                        : (widget.isDark ? const Color(0xFF354454) : const Color(0xFFD8D0C2)),
+                    width: _controller.text == tag ? 1.5.w : 1.w,
+                  ),
+                ),
+                child: Text(
+                  '#$tag',
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    fontWeight: _controller.text == tag
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                    color: _controller.text == tag
+                        ? HomeV2Palette.trustGreen
+                        : AppColors.textSecondary,
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+        SizedBox(height: 24.h),
+        SizedBox(
+          width: double.infinity,
+          height: 44.h,
+          child: ElevatedButton(
+            onPressed: _startGeneration,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: HomeV2Palette.trustGreen,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              elevation: 0,
+            ),
+            child: Text(
+              '開始訂製專屬課堂',
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 450.w),
+        decoration: BoxDecoration(
+          color: widget.isDark ? const Color(0xFF161C23) : const Color(0xFFFFFCF4),
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(
+            color: widget.isDark ? const Color(0xFF26323E) : const Color(0xFFECE6DB),
+            width: 1.5.w,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.3),
+              blurRadius: 16,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(20.w),
+            child: _isGenerating ? _buildLoadingView() : _buildInputView(),
+          ),
+        ),
+      ),
     );
   }
 }

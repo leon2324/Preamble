@@ -4680,7 +4680,7 @@ class _ExploreShortcutTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 88.h,
+        constraints: BoxConstraints(minHeight: 88.h),
         padding: EdgeInsets.fromLTRB(11.w, 10.h, 11.w, 9.h),
         decoration: BoxDecoration(
           color: backgroundColor,

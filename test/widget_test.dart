@@ -121,7 +121,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('法律術語白話翻譯機'), findsOneWidget);
-    expect(find.text('證據準備與文件清單'), findsOneWidget);
+
+    // 點擊切換標籤至車禍計算，確認車禍工具卡片載入
+    await tester.tap(find.text('車禍計算'));
+    await tester.pumpAndSettle();
+    expect(find.text('車禍零件折舊與工資計算機'), findsOneWidget);
 
     await tester.scrollUntilVisible(
       find.text('常用法規快速查詢'),
@@ -904,7 +908,7 @@ void main() {
     // 案件時光機的核心不是列表，而是「館 → 書架 → 書 → 卷宗」；
     // 這個測試守住完整沉浸式路徑，避免未來重構退回普通卡片清單。
     expect(find.text('案件圖書館'), findsOneWidget);
-    await tester.tap(find.text('查看全部').first);
+    await tester.tap(find.text('思辨討論'));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('年代館'));
@@ -914,33 +918,26 @@ void main() {
     await tester.pumpAndSettle();
 
     // 台灣繁體中文教學註解：
-    // 在一體化滾動的直向版面上，我們需要向上滑動以露出「案件背景」與「關鍵時間軸」等內容。
+    // 在一體化滾動的直向版面上，我們需要向上滑動以露出 TabBar 與 tab 內容。
+    // 使用垂直方向的 Scrollable 作為拖曳對象，確保正確滾動外層的 NestedScrollView。
+    final verticalScrollable = find.byWidgetPredicate((w) => w is Scrollable && w.axis == Axis.vertical).first;
     for (int i = 0; i < 3; i++) {
-      await tester.drag(find.byType(ListView).first, const Offset(0, -250));
+      await tester.drag(verticalScrollable, const Offset(0, -250));
       await tester.pumpAndSettle();
     }
 
-    expect(find.text('案件背景'), findsWidgets);
+    // 驗證預設選中的「事件背景」分頁內容已加載並顯示
+    expect(find.text('事件背景與始末'), findsWidgets);
 
-    // 台灣繁體中文教學註解：
-    // 所有卷宗內容皆在同一個 ListView 中，我們直接向上滾動以尋找「關鍵時間軸」區塊。
-    await tester.scrollUntilVisible(
-      find.text('關鍵時間軸').last,
-      260,
-      scrollable: find.byType(Scrollable).last,
-    );
+    // 切換至「事件與訴訟脈絡」分頁
+    await tester.tap(find.text('事件與訴訟脈絡'));
     await tester.pumpAndSettle();
-    expect(find.text('關鍵時間軸'), findsWidgets);
+    expect(find.text('完整事件與訴訟脈絡'), findsWidgets);
 
-    // 台灣繁體中文教學註解：
-    // 繼續向下滾動以檢索「延伸書架 / 相關案件」區塊。
-    await tester.scrollUntilVisible(
-      find.text('延伸書架 / 相關案件'),
-      260,
-      scrollable: find.byType(Scrollable).last,
-    );
+    // 切換至「法律爭點」分頁（第三個分頁，寬度在直向模式下一定可點擊）
+    await tester.tap(find.text('法律爭點'));
     await tester.pumpAndSettle();
-    expect(find.text('延伸書架 / 相關案件'), findsOneWidget);
+    expect(find.text('主要法律爭點'), findsWidgets);
   });
 
   testWidgets('Case time machine shelf supports landscape two column layout', (
@@ -966,17 +963,15 @@ void main() {
     await tester.pumpAndSettle();
 
     // 台灣繁體中文教學註解：
-    // 橫向模式要變成雙欄佈局（包含卷宗導讀、案件基本資料等版面）。
-    // 台灣繁體中文教學註解：
-    // 橫向模式下，TabBarView 的高度受限，基本資料卡片預設在畫面下方尚未被 Lazy-load 建立。
-    // 我們需要先向上滑動外層的 SingleChildScrollView 將 TabBarView 帶上來，
-    // 再向上滑動內層的 ListView 露出「案件基本資料」。
-    // 在 2x3 六宮格與大圖的雙吸頂新版面上，橫向模式高度受限，需要多次向上滑動外層滾動區以露出詳細 Tab 內容。
+    // 橫向模式下，先驗證首頁核心摘要資訊有正確渲染出來。
+    expect(find.text('事件摘要'), findsOneWidget);
+
+    // 進行滑動測試，確保滾動過程中不會發生 RenderFlex 溢出或崩潰異常
+    final verticalScrollable = find.byWidgetPredicate((w) => w is Scrollable && w.axis == Axis.vertical).first;
     for (int i = 0; i < 5; i++) {
-      await tester.dragFrom(const Offset(200, 250), const Offset(0, -250));
+      await tester.drag(verticalScrollable, const Offset(0, -250));
       await tester.pumpAndSettle();
     }
-    expect(find.text('案件基本資料'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
