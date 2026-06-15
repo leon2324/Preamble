@@ -69,12 +69,20 @@ void main() {
     expect(find.text('專題'), findsOneWidget);
 
     // 台灣繁體中文教學註解：
-    // 搜尋現在是底部 Nav 的中間分頁；這裡確認使用者不必回首頁也能進全站搜尋。
-    await tester.tap(find.text('搜尋'));
+    // 底部 Nav 的中間分頁已從單純「搜尋」升級為「小法助」；
+    // 全站搜尋仍留在小法助首頁，確保原本的關鍵字搜尋能力沒有消失。
+    await tester.tap(find.text('小法助'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('全站搜尋'), findsOneWidget);
+    await tester.tap(find.text('全站搜尋'));
     await tester.pumpAndSettle();
 
     expect(find.text('搜尋法條、案件、生活筆記、官方資料'), findsOneWidget);
     expect(find.text('熱門搜尋'), findsOneWidget);
+
+    Navigator.of(tester.element(find.byType(GlobalSearchPage))).pop();
+    await tester.pumpAndSettle();
 
     // 台灣繁體中文教學註解：
     // 原本底部 Nav 的「案例」已改為「記事」，這裡同時守住 label 與入口內容。

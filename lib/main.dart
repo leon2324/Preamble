@@ -16,7 +16,7 @@ import 'package:lawapp/features/case_time_machine/data/case_time_machine_reposit
 /// `.w` / `.h` / `.sp` 做響應式換算。
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // 初始化本地 SQLite 資料庫與記憶體快取倉庫
   await CaseTimeMachineRepository.instance.initialize();
 
@@ -56,9 +56,9 @@ class _MylawAppState extends State<MylawApp> {
       selectedIcon: Icons.menu_book_rounded,
     ),
     _BottomNavItemData(
-      label: '搜尋',
-      icon: Icons.search_rounded,
-      selectedIcon: Icons.search_rounded,
+      label: '小法助',
+      icon: Icons.support_agent_outlined,
+      selectedIcon: Icons.support_agent_rounded,
     ),
     _BottomNavItemData(
       label: '記事',
@@ -101,8 +101,11 @@ class _MylawAppState extends State<MylawApp> {
       ),
       const KnowLawPage(),
       // 台灣繁體中文教學註解：
-      // 搜尋提升為底部 Nav 中間分頁，讓它成為全站入口，而不是只藏在首頁。
-      const GlobalSearchPage(),
+      // 第三格從單純全站搜尋升級為 AI 小法助；全站搜尋仍保留在小法助首頁，
+      // 讓使用者可以先問生活法律問題，也能改用關鍵字搜尋案例、法條與官方資料。
+      LawAssistantSearchPage(
+        globalSearchBuilder: (_) => const GlobalSearchPage(),
+      ),
       const JournalPage(),
       // 台灣繁體中文教學註解：
       // 台灣繁體中文教學註解：

@@ -16,9 +16,11 @@ class LawAssistantSearchPage extends StatefulWidget {
   const LawAssistantSearchPage({
     super.key,
     this.initialPrompt,
+    this.globalSearchBuilder,
   });
 
   final String? initialPrompt;
+  final WidgetBuilder? globalSearchBuilder;
 
   @override
   State<LawAssistantSearchPage> createState() => _LawAssistantSearchPageState();
@@ -122,6 +124,20 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
       _controller.clear();
     });
     _focusNode.requestFocus();
+  }
+
+  void _openGlobalSearch() {
+    final builder = widget.globalSearchBuilder;
+    if (builder == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('全站搜尋入口尚未在此頁啟用。')),
+      );
+      return;
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: builder),
+    );
   }
 
   void _openConversation(LawAssistantConversation conversation) {
@@ -511,6 +527,17 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
           onTap: () => setState(() => _page = _AssistantPrototypePage.input),
           onMic: () => _showVoiceSnack(),
         ),
+        if (widget.globalSearchBuilder != null) ...[
+          SizedBox(height: 12.h),
+          _AssistantCard(
+            child: _AssistantActionRow(
+              icon: Icons.manage_search_rounded,
+              title: '全站搜尋',
+              subtitle: '搜尋法條、案件、生活筆記與官方資料',
+              onTap: _openGlobalSearch,
+            ),
+          ),
+        ],
         SizedBox(height: 18.h),
         _AssistantSectionHeader(
           title: '熱門提問',

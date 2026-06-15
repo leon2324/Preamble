@@ -7,6 +7,7 @@ import 'package:lawapp/components/shared/mvp_state_widgets.dart';
 import 'package:lawapp/data/law_assistant/guest_law_assistant_usage.dart';
 import 'package:lawapp/data/law_assistant/law_assistant_models.dart';
 import 'package:lawapp/data/law_assistant/law_assistant_repository.dart';
+import 'package:lawapp/data/mock_data/learning/daily_quiz_questions.dart';
 import 'package:lawapp/data/mock_data/learning/learning_mock_data.dart';
 import 'package:lawapp/data/mock_data/learning/extended_stories_data.dart';
 import 'package:lawapp/pages/learning/learning_mock_detail_page.dart';
@@ -76,14 +77,30 @@ class KnowLawPageState extends State<KnowLawPage> {
   }
 
   String _extractCategory(String title) {
-    if (title.contains('租屋糾紛') || title.contains('租屋')) return '租屋糾紛';
-    if (title.contains('車禍事故') || title.contains('車禍') || title.contains('交通事故')) return '車禍事故';
-    if (title.contains('職場權益') || title.contains('加班') || title.contains('勞基法') || title.contains('離職')) return '職場權益';
-    if (title.contains('網購消費') || title.contains('網購') || title.contains('消保法') || title.contains('退貨')) return '網購消費';
-    if (title.contains('個資隱私') || title.contains('個資') || title.contains('隱私') || title.contains('洩露')) return '個資隱私';
-    if (title.contains('鄰里生活') || title.contains('漏水') || title.contains('天花板') || title.contains('鄰居')) return '鄰里生活';
-    if (title.contains('婚姻家庭') || title.contains('離婚') || title.contains('財產制') || title.contains('夫妻')) return '婚姻家庭';
-    if (title.contains('防詐騙') || title.contains('詐騙') || title.contains('警示') || title.contains('人頭帳戶')) return '防詐騙常識';
+    if (title.contains('租屋糾紛') || title.contains('租屋')) {
+      return '租屋糾紛';
+    }
+    if (title.contains('車禍事故') || title.contains('車禍') || title.contains('交通事故')) {
+      return '車禍事故';
+    }
+    if (title.contains('職場權益') || title.contains('加班') || title.contains('勞基法') || title.contains('離職')) {
+      return '職場權益';
+    }
+    if (title.contains('網購消費') || title.contains('網購') || title.contains('消保法') || title.contains('退貨')) {
+      return '網購消費';
+    }
+    if (title.contains('個資隱私') || title.contains('個資') || title.contains('隱私') || title.contains('洩露')) {
+      return '個資隱私';
+    }
+    if (title.contains('鄰里生活') || title.contains('漏水') || title.contains('天花板') || title.contains('鄰居')) {
+      return '鄰里生活';
+    }
+    if (title.contains('婚姻家庭') || title.contains('離婚') || title.contains('財產制') || title.contains('夫妻')) {
+      return '婚姻家庭';
+    }
+    if (title.contains('防詐騙') || title.contains('詐騙') || title.contains('警示') || title.contains('人頭帳戶')) {
+      return '防詐騙常識';
+    }
     return '法律常識';
   }
 
@@ -4075,44 +4092,11 @@ class KnowLawPageState extends State<KnowLawPage> {
     );
   }
 
-  static const List<Map<String, dynamic>> _dailyQuestions = [
-    {
-      'question': '朋友跟我借車開，不幸撞傷行人，車主我也需要負擔民事連帶賠償責任嗎？',
-      'options': ['A. 不需要，開車肇事的人又不是我。', 'B. 原則上不用，除非車主明知朋友無照、酒駕仍借車，有共同過失責任。', 'C. 絕對要，因為我是所有人。'],
-      'correctIndex': 1,
-      'explanation': '依台灣司法實務，開車肇事由駕駛人負侵權賠償責任。車主原則上不負連帶責任，除非有「借車給無照或酒駕者」等重大保管過失。',
-    },
-    {
-      'question': '租屋合約寫著「房東有權隨時進入房間檢查」，房東如果真的一聲不吭開鎖進來，合法嗎？',
-      'options': ['A. 合法，房子是房東的財產。', 'B. 不合法，已侵犯承租人的居住隱私權，甚至涉嫌刑法「侵入住宅罪」。', 'C. 只要房東是為了維修就合法。'],
-      'correctIndex': 1,
-      'explanation': '房屋出租後，使用支配權已移轉給承租人。房東未經同意擅自進入，即侵害居住安寧，涉嫌刑法侵入住宅罪，契約中的隨時檢查條款多屬無效。',
-    },
-    {
-      'question': '在通訊軟體群組中，指名道姓辱罵他人「垃圾」，即使隨後立刻收回訊息，仍會構成公然侮辱罪嗎？',
-      'options': ['A. 不會，因為已經收回，沒有證據。', 'B. 會，只要在收回前已被群組內不特定人或多數人共見共聞，即已成立。', 'C. 只要對方沒有截圖就不算。'],
-      'correctIndex': 1,
-      'explanation': '公然侮辱罪為狀態犯，只要在多數人能共見共聞的群組中發送辱罵文字，犯罪即已既遂，事後收回訊息並不影響犯罪的成立，僅屬事後態度問題。',
-    },
-    {
-      'question': '網購七天鑑賞期退貨時，如果賣家堅持「消費者必須自付退貨運費」，這符合消保法嗎？',
-      'options': ['A. 符合，買家反悔本就該自付郵資。', 'B. 不符合，消保法明定退回商品之運費應由企業經營者（賣家）負擔。', 'C. 雙方約定好誰付就合法。'],
-      'correctIndex': 1,
-      'explanation': '中華民國消費者保護法第 19 條規定，七天鑑賞期內無條件退貨，消費者無須說明理由及負擔任何費用或對價。退貨運費應由商家全額負擔。',
-    },
-    {
-      'question': '大廈住戶在自家陽台抽菸，二手菸飄散鄰居家中。鄰居可以依法請求法院禁止其在陽台抽菸嗎？',
-      'options': ['A. 不可以，自家陽台是私人財產範圍。', 'B. 可以，鄰居可依民法「氣味侵入禁止」及公寓大廈管理條例請求排除此侵害。', 'C. 只能報警處理，法院管不到抽菸。'],
-      'correctIndex': 1,
-      'explanation': '民法第 793 條保障土地/建築物所有人有權禁止氣味、煙塵侵入。陽台抽菸若產生二手菸害，鄰居舉證後，法院可依法判決禁止在陽台抽菸。',
-    }
-  ];
-
   Widget _buildDailyQuizCard(bool isDark, LearningGameState gameState) {
-    final todayStr = DateTime.now().toIso8601String().substring(0, 10);
+    final now = DateTime.now();
+    final todayStr = now.toIso8601String().substring(0, 10);
     final hasCompletedToday = gameState.lastDailyQuizDate == todayStr;
-    final int qIndex = DateTime.now().day % _dailyQuestions.length;
-    final q = _dailyQuestions[qIndex];
+    final q = dailyQuizQuestionForDate(now);
 
     if (hasCompletedToday) {
       return NotebookCard(
@@ -4167,13 +4151,13 @@ class KnowLawPageState extends State<KnowLawPage> {
           ),
           SizedBox(height: 8.h),
           Text(
-            q['question'] as String,
+            q.question,
             style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
           ),
           SizedBox(height: 10.h),
           // 選項
-          ...List.generate((q['options'] as List).length, (index) {
-            final optionText = q['options'][index] as String;
+          ...List.generate(q.options.length, (index) {
+            final optionText = q.options[index];
             final isSelected = _selectedDailyAnswer == index;
 
             return GestureDetector(
@@ -4222,22 +4206,22 @@ class KnowLawPageState extends State<KnowLawPage> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ElevatedButton(
-                onPressed: _selectedDailyAnswer == null 
-                    ? null 
+                onPressed: _selectedDailyAnswer == null
+                    ? null
                     : () {
-                        final isCorrect = _selectedDailyAnswer == q['correctIndex'];
+                        final isCorrect = _selectedDailyAnswer == q.correctIndex;
                         gameState.completeDailyQuiz(isCorrect);
                         if (!isCorrect) {
                           // 加入錯題本
                           gameState.addIncorrectQuestion(
-                            q['question'] as String,
-                            q['options'][_selectedDailyAnswer!] as String,
-                            q['options'][q['correctIndex'] as int] as String,
-                            q['explanation'] as String,
-                            List<String>.from(q['options']),
+                            q.question,
+                            q.options[_selectedDailyAnswer!],
+                            q.options[q.correctIndex],
+                            q.explanation,
+                            q.options,
                           );
                         }
-                        _showDailyQuizResultDialog(isCorrect, q['explanation'] as String, gameState);
+                        _showDailyQuizResultDialog(isCorrect, q.explanation, gameState);
                         setState(() {
                           _selectedDailyAnswer = null; // 重置
                         });
