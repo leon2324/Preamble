@@ -455,41 +455,46 @@ class _LegalToolsPageState extends State<LegalToolsPage> {
     final appState = LawAppScope.of(context);
     final topPadding = MediaQuery.paddingOf(context).top;
 
-    return Scaffold(
-      backgroundColor: _ToolColors.background,
-      body: ListView(
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        padding: EdgeInsets.fromLTRB(16.w, topPadding + 8.h, 16.w, 32.h),
-        children: [
-          _TopBar(
-            title: _headerTitle,
-            stepLabel: _stepLabel,
-            onBack: _handleBack,
-            actions: _page == _ToolPage.home
-                ? [
-                    _MiniTopAction(
-                      icon: Icons.description_outlined,
-                      label: '草稿',
-                      onTap: () => _openPage(_ToolPage.drafts),
-                    ),
-                    SizedBox(width: 8.w),
-                    _MiniTopAction(
-                      icon: Icons.info_outline_rounded,
-                      label: '說明',
-                      onTap: () => _openPage(_ToolPage.notice),
-                    ),
-                  ]
-                : const [],
-          ),
-          SizedBox(height: 14.h),
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 180),
-            child: KeyedSubtree(
-              key: ValueKey(_page),
-              child: _currentPage(appState),
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: _ToolColors.background,
+        body: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          padding: EdgeInsets.fromLTRB(16.w, topPadding + 8.h, 16.w, 32.h),
+          children: [
+            _TopBar(
+              title: _headerTitle,
+              stepLabel: _stepLabel,
+              onBack: _handleBack,
+              actions: _page == _ToolPage.home
+                  ? [
+                      _MiniTopAction(
+                        icon: Icons.description_outlined,
+                        label: '草稿',
+                        onTap: () => _openPage(_ToolPage.drafts),
+                      ),
+                      SizedBox(width: 8.w),
+                      _MiniTopAction(
+                        icon: Icons.info_outline_rounded,
+                        label: '說明',
+                        onTap: () => _openPage(_ToolPage.notice),
+                      ),
+                    ]
+                  : const [],
             ),
-          ),
-        ],
+            SizedBox(height: 14.h),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 180),
+              child: KeyedSubtree(
+                key: ValueKey(_page),
+                child: _currentPage(appState),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1567,44 +1572,48 @@ class _AddEvidenceSheet extends StatelessWidget {
         curve: Curves.easeOut,
         padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h + keyboardInset),
         child: _ProtoCard(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('新增證據', style: _ToolText.section()),
-              SizedBox(height: 8.h),
-              Text(
-                '先記錄證據名稱與說明；目前不會真的上傳檔案，會把文字帶入草稿。',
-                style: _ToolText.body(),
-              ),
-              SizedBox(height: 14.h),
-              _SheetTextField(
-                label: '證據名稱',
-                hint: '例如：LINE 對話截圖、維修報價單',
-                controller: titleController,
-              ),
-              _SheetTextField(
-                label: '補充說明',
-                hint: '例如：可證明對方同意退押金',
-                controller: noteController,
-                minLines: 2,
-              ),
-              SizedBox(height: 10.h),
-              Row(
-                children: [
-                  Expanded(
-                    child: _SecondaryButton(
-                      label: '取消',
-                      onPressed: () => Navigator.of(context).pop(),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('新增證據', style: _ToolText.section()),
+                SizedBox(height: 8.h),
+                Text(
+                  '先記錄證據名稱與說明；目前不會真的上傳檔案，會把文字帶入草稿。',
+                  style: _ToolText.body(),
+                ),
+                SizedBox(height: 14.h),
+                _SheetTextField(
+                  label: '證據名稱',
+                  hint: '例如：LINE 對話截圖、維修報價單',
+                  controller: titleController,
+                ),
+                _SheetTextField(
+                  label: '補充說明',
+                  hint: '例如：可證明對方同意退押金',
+                  controller: noteController,
+                  minLines: 2,
+                ),
+                SizedBox(height: 10.h),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _SecondaryButton(
+                        label: '取消',
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 10.w),
-                  Expanded(
-                    child: _PrimaryButton(label: '新增並帶入', onPressed: onAdd),
-                  ),
-                ],
-              ),
-            ],
+                    SizedBox(width: 10.w),
+                    Expanded(
+                      child: _PrimaryButton(label: '新增並帶入', onPressed: onAdd),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
