@@ -11,6 +11,7 @@ import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_
 import 'package:intl/intl.dart';
 import 'package:lawapp/pages/learning/learning_mock_detail_page.dart';
 import 'package:lawapp/data/learning/supabase_learning_service.dart';
+import 'package:lawapp/pages/learning/widgets/notebook_cover_editor_page.dart';
 
 class AchievementRoomPage extends StatefulWidget {
   const AchievementRoomPage({super.key});
@@ -343,6 +344,25 @@ class _AchievementRoomPageState extends State<AchievementRoomPage> with SingleTi
                     fontSize: 9.sp,
                     color: AppColors.textMuted,
                   ),
+                ),
+                SizedBox(height: 12.h),
+                const Divider(),
+                SizedBox(height: 6.h),
+                ElevatedButton.icon(
+                  icon: Icon(Icons.palette_rounded, size: 14.sp),
+                  label: Text('自訂我的法學筆記本封面', style: TextStyle(fontSize: 11.5.sp, fontWeight: FontWeight.bold)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: HomeV2Palette.mint,
+                    foregroundColor: HomeV2Palette.trustGreen,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                    padding: EdgeInsets.symmetric(vertical: 10.h),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const NotebookCoverEditorPage()),
+                    );
+                  },
                 ),
               ],
             ),
@@ -1350,9 +1370,11 @@ class _AchievementRoomPageState extends State<AchievementRoomPage> with SingleTi
 
   // 重新挑戰錯題
   void _rechallengeQuestion(Map<String, dynamic> incorrectItem) {
-    final question = learningQuizQuestions.firstWhere(
-      (q) => q.question == incorrectItem['question'],
-      orElse: () => learningQuizQuestions.first,
+    final String qText = incorrectItem['question'];
+    final String correctAns = incorrectItem['correctAnswer'];
+    final String explanation = incorrectItem['explanation'] ?? '';
+    final List<String> options = List<String>.from(
+      incorrectItem['options'] ?? [incorrectItem['wrongAnswer'], correctAns],
     );
 
     int? tempSelectedIndex;
@@ -1383,23 +1405,23 @@ class _AchievementRoomPageState extends State<AchievementRoomPage> with SingleTi
                   ),
                   SizedBox(height: 12.h),
                   Text(
-                    question.question,
+                    qText,
                     style:
                         TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 14.h),
-                  ...List.generate(question.options.length, (index) {
-                    final opt = question.options[index];
+                  ...List.generate(options.length, (index) {
+                    final optTitle = options[index];
                     final isSelected = tempSelectedIndex == index;
-                    final isCorrect = isAnswered && opt.isCorrect;
-                    final isWrong = isAnswered && isSelected && !opt.isCorrect;
+                    final isCorrectOpt = isAnswered && optTitle == correctAns;
+                    final isWrongOpt = isAnswered && isSelected && optTitle != correctAns;
 
                     Color cardBg = Colors.white;
                     Color borderCol = const Color(0xFFE8E4DC);
-                    if (isCorrect) {
+                    if (isCorrectOpt) {
                       cardBg = const Color(0xFFEAF6E2);
                       borderCol = const Color(0xFF9EC979);
-                    } else if (isWrong) {
+                    } else if (isWrongOpt) {
                       cardBg = const Color(0xFFFBE8E7);
                       borderCol = const Color(0xFFE4A29D);
                     } else if (isSelected) {
@@ -1426,7 +1448,7 @@ class _AchievementRoomPageState extends State<AchievementRoomPage> with SingleTi
                             borderRadius: BorderRadius.circular(12.r),
                           ),
                           child: Text(
-                            opt.title,
+                            optTitle,
                             style: TextStyle(
                                 fontSize: 13.sp, fontWeight: FontWeight.w600),
                           ),
@@ -1442,21 +1464,19 @@ class _AchievementRoomPageState extends State<AchievementRoomPage> with SingleTi
                           : () {
                               setModalState(() {
                                 isAnswered = true;
-                                final pickedCorrect = question
-                                    .options[tempSelectedIndex!].isCorrect;
+                                final pickedText = options[tempSelectedIndex!];
+                                final pickedCorrect = pickedText == correctAns;
                                 if (pickedCorrect) {
                                   LearningGameState.instance
-                                      .removeIncorrectQuestion(
-                                          question.question);
+                                      .removeIncorrectQuestion(qText);
                                 } else {
                                   LearningGameState.instance
                                       .addIncorrectQuestion(
-                                    question.question,
-                                    question.options[tempSelectedIndex!].title,
-                                    question.options
-                                        .firstWhere((o) => o.isCorrect)
-                                        .title,
-                                    question.explanation,
+                                    qText,
+                                    pickedText,
+                                    correctAns,
+                                    explanation,
+                                    options,
                                   );
                                 }
                               });
@@ -1467,12 +1487,12 @@ class _AchievementRoomPageState extends State<AchievementRoomPage> with SingleTi
                     )
                   else ...[
                     Text(
-                      question.options[tempSelectedIndex!].isCorrect
+                      options[tempSelectedIndex!] == correctAns
                           ? '答對了！🎉 經驗值 +15'
                           : '可惜又答錯了，再看一次白話解析吧！',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: question.options[tempSelectedIndex!].isCorrect
+                        color: options[tempSelectedIndex!] == correctAns
                             ? Colors.green.shade800
                             : Colors.red.shade800,
                       ),

@@ -18,6 +18,8 @@ import 'package:lawapp/data/learning/learning_game_state.dart';
 import 'package:lawapp/pages/learning/widgets/notebook_aesthetics.dart';
 import 'package:lawapp/pages/learning/widgets/achievement_room.dart';
 import 'package:lawapp/pages/learning/widgets/mock_court_challenge.dart';
+import 'package:lawapp/pages/learning/widgets/legal_document_export_page.dart';
+import 'package:lawapp/pages/learning/widgets/notebook_cover_editor_page.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
 import 'package:lawapp/data/learning/supabase_learning_service.dart';
 
@@ -44,6 +46,7 @@ class KnowLawPageState extends State<KnowLawPage> {
   List<LearningTopicData> _dailyTopics = [];
   final List<LearningTopicData> _customTopics = [];
   bool _isLoadingTopics = true;
+  int? _selectedDailyAnswer;
 
   @override
   void initState() {
@@ -690,6 +693,63 @@ class KnowLawPageState extends State<KnowLawPage> {
             ],
           ),
         ),
+        // 迷你虛筆記本封面，點擊開啟封面編輯器
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const NotebookCoverEditorPage()),
+            );
+          },
+          child: Tooltip(
+            message: '編輯我的筆記本封面',
+            child: Container(
+              width: 32.w,
+              height: 42.h,
+              margin: EdgeInsets.only(right: 12.w),
+              decoration: BoxDecoration(
+                color: Color(int.parse(gameState.coverColorHex.replaceFirst('#', '0xFF'))),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(5.r),
+                  bottomRight: Radius.circular(5.r),
+                  topLeft: Radius.circular(1.5.r),
+                  bottomLeft: Radius.circular(1.5.r),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.08),
+                    blurRadius: 3,
+                    offset: const Offset(1, 2),
+                  )
+                ],
+                border: Border.all(
+                  color: isDark ? Colors.white24 : Colors.black12,
+                  width: 0.8.w,
+                ),
+              ),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  // 書脊深色線
+                  Positioned(
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    width: 3.w,
+                    child: Container(color: Colors.black12),
+                  ),
+                  // 第一張貼紙縮影
+                  if (gameState.placedStickers.isNotEmpty)
+                    Text(
+                      _getStickerEmoji(gameState.placedStickers.first['id']),
+                      style: TextStyle(fontSize: 12.sp),
+                    )
+                  else
+                    Text('🌱', style: TextStyle(fontSize: 12.sp)),
+                ],
+              ),
+            ),
+          ),
+        ),
         // 吉祥物頭像按鈕，點擊開啟成就室
         GestureDetector(
           onTap: _openAchievementRoom,
@@ -715,6 +775,20 @@ class KnowLawPageState extends State<KnowLawPage> {
         ),
       ],
     );
+  }
+
+  String _getStickerEmoji(String id) {
+    switch (id) {
+      case 'sprout': return '🌱';
+      case 'gavel': return '🔨';
+      case 'shield': return '🛡️';
+      case 'trophy': return '🏆';
+      case 'star': return '⭐';
+      case 'heart': return '❤️';
+      case 'scale': return '⚖️';
+      case 'car': return '🚗';
+      default: return '🌿';
+    }
   }
 
   // 2) 左右切換分頁按鈕
@@ -958,9 +1032,11 @@ class KnowLawPageState extends State<KnowLawPage> {
           ],
         ),
       ),
+      SizedBox(height: 12.h),
+      _buildDailyQuizCard(isDark, gameState),
+      SizedBox(height: 12.h),
 
       _buildFeaturedTopicSwitcher(isDark),
-      SizedBox(height: 12.h),
 
       _buildMainCourseCard(
         isDark: isDark,
@@ -2800,14 +2876,61 @@ class KnowLawPageState extends State<KnowLawPage> {
                 borderRadius: BorderRadius.circular(10.r),
                 border: Border.all(color: const Color(0xFF8CAECC), width: 1.2.w),
               ),
-              child: Text(
-                _depreciationResult,
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  height: 1.45,
-                  color: isDark ? Colors.blue.shade100 : const Color(0xFF1F4C75),
-                  fontWeight: FontWeight.bold,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _depreciationResult,
+                    style: TextStyle(
+                      fontSize: 11.5.sp,
+                      height: 1.45,
+                      color: isDark ? Colors.blue.shade100 : const Color(0xFF1F4C75),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton.icon(
+                        icon: Icon(Icons.copy, size: 12.sp, color: Colors.white),
+                        label: Text('複製文字', style: TextStyle(fontSize: 10.5.sp)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF3F7FBF),
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                        ),
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: _depreciationResult));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('已複製折舊計算結果至剪貼簿！')),
+                          );
+                        },
+                      ),
+                      SizedBox(width: 8.w),
+                      ElevatedButton.icon(
+                        icon: Icon(Icons.picture_as_pdf_rounded, size: 12.sp, color: Colors.white),
+                        label: Text('預覽與導出', style: TextStyle(fontSize: 10.5.sp)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: HomeV2Palette.trustGreen,
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => LegalDocumentExportPage(
+                                title: '車禍折舊理賠計算明細表',
+                                content: _depreciationResult,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],
@@ -3090,6 +3213,27 @@ class KnowLawPageState extends State<KnowLawPage> {
                           Clipboard.setData(ClipboardData(text: _rentNoticeResult));
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('已複製催告信函草稿至剪貼簿！')),
+                          );
+                        },
+                      ),
+                      SizedBox(width: 8.w),
+                      ElevatedButton.icon(
+                        icon: Icon(Icons.picture_as_pdf_rounded, size: 12.sp, color: Colors.white),
+                        label: Text('預覽與導出', style: TextStyle(fontSize: 10.5.sp)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: HomeV2Palette.trustGreen,
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => LegalDocumentExportPage(
+                                title: _rentNoticeType == 0 ? '設備修繕催告存證信函' : '期滿退押金催告存證信函',
+                                content: _rentNoticeResult,
+                              ),
+                            ),
                           );
                         },
                       ),
@@ -3392,6 +3536,27 @@ class KnowLawPageState extends State<KnowLawPage> {
                           Clipboard.setData(ClipboardData(text: _consumerNoticeResult));
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('已複製退貨催告信函草稿至剪貼簿！')),
+                          );
+                        },
+                      ),
+                      SizedBox(width: 8.w),
+                      ElevatedButton.icon(
+                        icon: Icon(Icons.picture_as_pdf_rounded, size: 12.sp, color: Colors.white),
+                        label: Text('預覽與導出', style: TextStyle(fontSize: 10.5.sp)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: HomeV2Palette.trustGreen,
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => LegalDocumentExportPage(
+                                title: '網購退貨催告書狀',
+                                content: _consumerNoticeResult,
+                              ),
+                            ),
                           );
                         },
                       ),
@@ -3907,6 +4072,252 @@ class KnowLawPageState extends State<KnowLawPage> {
           ),
         ),
       ),
+    );
+  }
+
+  static const List<Map<String, dynamic>> _dailyQuestions = [
+    {
+      'question': '朋友跟我借車開，不幸撞傷行人，車主我也需要負擔民事連帶賠償責任嗎？',
+      'options': ['A. 不需要，開車肇事的人又不是我。', 'B. 原則上不用，除非車主明知朋友無照、酒駕仍借車，有共同過失責任。', 'C. 絕對要，因為我是所有人。'],
+      'correctIndex': 1,
+      'explanation': '依台灣司法實務，開車肇事由駕駛人負侵權賠償責任。車主原則上不負連帶責任，除非有「借車給無照或酒駕者」等重大保管過失。',
+    },
+    {
+      'question': '租屋合約寫著「房東有權隨時進入房間檢查」，房東如果真的一聲不吭開鎖進來，合法嗎？',
+      'options': ['A. 合法，房子是房東的財產。', 'B. 不合法，已侵犯承租人的居住隱私權，甚至涉嫌刑法「侵入住宅罪」。', 'C. 只要房東是為了維修就合法。'],
+      'correctIndex': 1,
+      'explanation': '房屋出租後，使用支配權已移轉給承租人。房東未經同意擅自進入，即侵害居住安寧，涉嫌刑法侵入住宅罪，契約中的隨時檢查條款多屬無效。',
+    },
+    {
+      'question': '在通訊軟體群組中，指名道姓辱罵他人「垃圾」，即使隨後立刻收回訊息，仍會構成公然侮辱罪嗎？',
+      'options': ['A. 不會，因為已經收回，沒有證據。', 'B. 會，只要在收回前已被群組內不特定人或多數人共見共聞，即已成立。', 'C. 只要對方沒有截圖就不算。'],
+      'correctIndex': 1,
+      'explanation': '公然侮辱罪為狀態犯，只要在多數人能共見共聞的群組中發送辱罵文字，犯罪即已既遂，事後收回訊息並不影響犯罪的成立，僅屬事後態度問題。',
+    },
+    {
+      'question': '網購七天鑑賞期退貨時，如果賣家堅持「消費者必須自付退貨運費」，這符合消保法嗎？',
+      'options': ['A. 符合，買家反悔本就該自付郵資。', 'B. 不符合，消保法明定退回商品之運費應由企業經營者（賣家）負擔。', 'C. 雙方約定好誰付就合法。'],
+      'correctIndex': 1,
+      'explanation': '中華民國消費者保護法第 19 條規定，七天鑑賞期內無條件退貨，消費者無須說明理由及負擔任何費用或對價。退貨運費應由商家全額負擔。',
+    },
+    {
+      'question': '大廈住戶在自家陽台抽菸，二手菸飄散鄰居家中。鄰居可以依法請求法院禁止其在陽台抽菸嗎？',
+      'options': ['A. 不可以，自家陽台是私人財產範圍。', 'B. 可以，鄰居可依民法「氣味侵入禁止」及公寓大廈管理條例請求排除此侵害。', 'C. 只能報警處理，法院管不到抽菸。'],
+      'correctIndex': 1,
+      'explanation': '民法第 793 條保障土地/建築物所有人有權禁止氣味、煙塵侵入。陽台抽菸若產生二手菸害，鄰居舉證後，法院可依法判決禁止在陽台抽菸。',
+    }
+  ];
+
+  Widget _buildDailyQuizCard(bool isDark, LearningGameState gameState) {
+    final todayStr = DateTime.now().toIso8601String().substring(0, 10);
+    final hasCompletedToday = gameState.lastDailyQuizDate == todayStr;
+    final int qIndex = DateTime.now().day % _dailyQuestions.length;
+    final q = _dailyQuestions[qIndex];
+
+    if (hasCompletedToday) {
+      return NotebookCard(
+        hasPaperClip: true,
+        backgroundColor: isDark ? const Color(0xFF1B2E21) : const Color(0xFFF1FAF2),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(
+                  '🔥 今日簽到已完成',
+                  style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w900, color: Colors.green),
+                ),
+                const Spacer(),
+                Text(
+                  '學習連擊：🔥 ${gameState.studyStreak} 天',
+                  style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.bold, color: Colors.orange.shade800),
+                ),
+              ],
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              '小法助提醒您：每天答對一題，法律觀念更清晰！\n明天別忘了再來簽到挑戰新題目喔！🌱',
+              style: TextStyle(fontSize: 11.sp, height: 1.45, color: AppColors.textSecondary),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return NotebookCard(
+      hasPaperClip: true,
+      backgroundColor: isDark ? const Color(0xFF2C241E) : const Color(0xFFFAF6F0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CtmSvgIcon(CtmSvgIcons.star, color: const Color(0xFFE8B95F), size: 18.sp),
+              SizedBox(width: 8.w),
+              Text(
+                '📅 每日隨堂簽到挑戰',
+                style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+              ),
+              const Spacer(),
+              Text(
+                '目前連擊：🔥 ${gameState.studyStreak} 天',
+                style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.bold, color: AppColors.textSecondary),
+              ),
+            ],
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            q['question'] as String,
+            style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+          ),
+          SizedBox(height: 10.h),
+          // 選項
+          ...List.generate((q['options'] as List).length, (index) {
+            final optionText = q['options'][index] as String;
+            final isSelected = _selectedDailyAnswer == index;
+
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  _selectedDailyAnswer = index;
+                });
+              },
+              child: Container(
+                margin: EdgeInsets.only(bottom: 6.h),
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                decoration: BoxDecoration(
+                  color: isSelected 
+                      ? (isDark ? const Color(0xFF3B3324) : const Color(0xFFFFF9EC))
+                      : (isDark ? const Color(0xFF1E242B) : Colors.white),
+                  border: Border.all(
+                    color: isSelected ? const Color(0xFFE8B95F) : (isDark ? Colors.white10 : const Color(0xFFECE5D9)),
+                    width: 1.w,
+                  ),
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      isSelected ? Icons.radio_button_checked_rounded : Icons.radio_button_off_rounded,
+                      size: 14.sp,
+                      color: isSelected ? const Color(0xFFE8B95F) : Colors.grey,
+                    ),
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Text(
+                        optionText,
+                        style: TextStyle(
+                          fontSize: 11.5.sp,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
+          SizedBox(height: 8.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ElevatedButton(
+                onPressed: _selectedDailyAnswer == null 
+                    ? null 
+                    : () {
+                        final isCorrect = _selectedDailyAnswer == q['correctIndex'];
+                        gameState.completeDailyQuiz(isCorrect);
+                        if (!isCorrect) {
+                          // 加入錯題本
+                          gameState.addIncorrectQuestion(
+                            q['question'] as String,
+                            q['options'][_selectedDailyAnswer!] as String,
+                            q['options'][q['correctIndex'] as int] as String,
+                            q['explanation'] as String,
+                            List<String>.from(q['options']),
+                          );
+                        }
+                        _showDailyQuizResultDialog(isCorrect, q['explanation'] as String, gameState);
+                        setState(() {
+                          _selectedDailyAnswer = null; // 重置
+                        });
+                      },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFE8B95F),
+                  foregroundColor: const Color(0xFF6B4B14),
+                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                ),
+                child: Text('提交答案並簽到', style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.bold)),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDailyQuizResultDialog(bool isCorrect, String explanation, LearningGameState gameState) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+          title: Text(
+            isCorrect ? '🎉 答對了！完成簽到' : '👏 答錯了，但簽到成功！',
+            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                isCorrect 
+                    ? '恭喜您答對了今日挑戰！獲得簽到經驗值 +30 XP！\n目前學習連擊：🔥 ${gameState.studyStreak} 天！' 
+                    : '真可惜選錯了，本題已自動幫您加入「📕 錯題本」。仍獲得基本簽到經驗值 +20 XP！\n目前學習連擊：🔥 ${gameState.studyStreak} 天！',
+                style: TextStyle(fontSize: 12.5.sp, height: 1.45),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 12.h),
+              Container(
+                padding: EdgeInsets.all(10.w),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF7F2EA),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '⚖️ 小法助白話解析：',
+                      style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: const Color(0xFF94610D)),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      explanation,
+                      style: TextStyle(fontSize: 11.5.sp, height: 1.4, color: AppColors.textSecondary),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            Center(
+              child: FilledButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                style: FilledButton.styleFrom(
+                  backgroundColor: HomeV2Palette.trustGreen,
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                ),
+                child: const Text('繼續學習'),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

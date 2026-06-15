@@ -64,6 +64,16 @@ class LearningGameState extends ChangeNotifier {
   int _translatorUsageCount = 0;
   List<Map<String, dynamic>> _quizHistory = [];
 
+  // 學習連擊與簽到狀態
+  int _studyStreak = 0;
+  String _lastStudyDate = '';
+  String _lastDailyQuizDate = '';
+
+  // 貼紙/印章封面自訂狀態
+  String _coverColorHex = '#EFECE6';
+  Set<String> _unlockedStickers = {'sprout'};
+  List<Map<String, dynamic>> _placedStickers = [];
+
   // 筆記與收藏狀態屬性
   Set<String> _savedArticles = {};
   List<Map<String, dynamic>> _savedQuotes = [];
@@ -78,6 +88,16 @@ class LearningGameState extends ChangeNotifier {
   List<Map<String, dynamic>> get savedEvidenceLists => _savedEvidenceLists;
   Set<String> get unlockedBadges => _unlockedBadges;
   List<Map<String, dynamic>> get quizHistory => _quizHistory;
+
+  // 學習連擊與簽到 getters
+  int get studyStreak => _studyStreak;
+  String get lastStudyDate => _lastStudyDate;
+  String get lastDailyQuizDate => _lastDailyQuizDate;
+
+  // 貼紙/印章封面自訂 getters
+  String get coverColorHex => _coverColorHex;
+  Set<String> get unlockedStickers => _unlockedStickers;
+  List<Map<String, dynamic>> get placedStickers => _placedStickers;
 
   // 筆記與收藏 Getters
   Set<String> get savedArticles => _savedArticles;
@@ -160,6 +180,26 @@ class LearningGameState extends ChangeNotifier {
             List<Map<String, dynamic>>.from(jsonDecode(quizHistoryRaw));
       }
 
+      // 載入學習連擊與簽到狀態
+      _studyStreak = prefs.getInt('learning_study_streak') ?? 0;
+      _lastStudyDate = prefs.getString('learning_last_study_date') ?? '';
+      _lastDailyQuizDate = prefs.getString('learning_last_daily_quiz_date') ?? '';
+
+      // 載入自訂貼紙封面狀態
+      _coverColorHex = prefs.getString('learning_cover_color_hex') ?? '#EFECE6';
+      final stickersRaw = prefs.getStringList('learning_unlocked_stickers');
+      if (stickersRaw != null) {
+        _unlockedStickers = stickersRaw.toSet();
+      } else {
+        _unlockedStickers = {'sprout'};
+      }
+      final placedRaw = prefs.getString('learning_placed_stickers');
+      if (placedRaw != null) {
+        _placedStickers = List<Map<String, dynamic>>.from(jsonDecode(placedRaw));
+      } else {
+        _placedStickers = [];
+      }
+
       // 載入單元收藏
       final articlesRaw = prefs.getStringList('learning_saved_articles');
       if (articlesRaw != null) {
@@ -217,6 +257,14 @@ class LearningGameState extends ChangeNotifier {
           'learning_saved_evidences', jsonEncode(_savedEvidenceLists));
       await prefs.setString(
           'learning_quiz_history', jsonEncode(_quizHistory));
+
+      // 儲存連擊與封面狀態
+      await prefs.setInt('learning_study_streak', _studyStreak);
+      await prefs.setString('learning_last_study_date', _lastStudyDate);
+      await prefs.setString('learning_last_daily_quiz_date', _lastDailyQuizDate);
+      await prefs.setString('learning_cover_color_hex', _coverColorHex);
+      await prefs.setStringList('learning_unlocked_stickers', _unlockedStickers.toList());
+      await prefs.setString('learning_placed_stickers', jsonEncode(_placedStickers));
 
       // 儲存筆記與收藏
       await prefs.setStringList('learning_saved_articles', _savedArticles.toList());
@@ -299,8 +347,9 @@ class LearningGameState extends ChangeNotifier {
   }
 
   // 新增錯題
+  // 新增錯題
   void addIncorrectQuestion(String question, String wrongAnswer,
-      String correctAnswer, String explanation) {
+      String correctAnswer, String explanation, [List<String>? options]) {
     // 避免重複加入同一個問題
     _incorrectQuestions.removeWhere((item) => item['question'] == question);
     _incorrectQuestions.add({
@@ -308,8 +357,73 @@ class LearningGameState extends ChangeNotifier {
       'wrongAnswer': wrongAnswer,
       'correctAnswer': correctAnswer,
       'explanation': explanation,
+      'options': options ?? [wrongAnswer, correctAnswer],
       'timestamp': DateTime.now().toIso8601String(),
     });
+    _saveState();
+    notifyListeners();
+  }
+
+  // 完成每日隨堂考與簽到
+  void completeDailyQuiz(bool isCorrect) {
+    final todayStr = DateTime.now().toIso8601String().substring(0, 10);
+    if (_lastDailyQuizDate == todayStr) return; // 本日已回答過
+
+    _lastDailyQuizDate = todayStr;
+
+    // 計算 Streak
+    if (_lastStudyDate.isNotEmpty) {
+      try {
+        final lastDate = DateTime.parse(_lastStudyDate);
+        final today = DateTime.parse(todayStr);
+        final diff = today.difference(lastDate).inDays;
+        
+        if (diff == 1) {
+          _studyStreak++;
+        } else if (diff > 1) {
+          _studyStreak = 1;
+        }
+      } catch (e) {
+        _studyStreak = 1;
+      }
+    } else {
+      _studyStreak = 1;
+    }
+    _lastStudyDate = todayStr;
+
+    // 給予答題獎勵與經驗值
+    addExperience(20);
+    if (isCorrect) {
+      addExperience(10); // 答對額外獎勵
+      _dailyQuizCorrectCount++;
+    }
+
+    // 檢查 Streak 獎勵與解鎖
+    if (_studyStreak >= 3) {
+      unlockSticker('trophy'); // 簽到滿 3 天解鎖獎盃貼紙
+    }
+    if (_studyStreak >= 7) {
+      unlockBadge('持久修煉者');
+      unlockSticker('star'); // 簽到滿 7 天解鎖星星貼紙
+    }
+
+    _saveState();
+    notifyListeners();
+  }
+
+  // 解鎖貼紙
+  void unlockSticker(String stickerId) {
+    if (!_unlockedStickers.contains(stickerId)) {
+      _unlockedStickers.add(stickerId);
+      _saveState();
+      notifyListeners();
+    }
+  }
+
+  // 保存筆記本封面自訂狀態
+  void saveNotebookCover(String colorHex, List<Map<String, dynamic>> placedStickers) {
+    _coverColorHex = colorHex;
+    _placedStickers = placedStickers;
     _saveState();
     notifyListeners();
   }
