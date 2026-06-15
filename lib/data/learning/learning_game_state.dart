@@ -68,6 +68,7 @@ class LearningGameState extends ChangeNotifier {
   int _studyStreak = 0;
   String _lastStudyDate = '';
   String _lastDailyQuizDate = '';
+  int _dailyQuizCorrectCount = 0;
 
   // 貼紙/印章封面自訂狀態
   String _coverColorHex = '#EFECE6';
@@ -184,6 +185,7 @@ class LearningGameState extends ChangeNotifier {
       _studyStreak = prefs.getInt('learning_study_streak') ?? 0;
       _lastStudyDate = prefs.getString('learning_last_study_date') ?? '';
       _lastDailyQuizDate = prefs.getString('learning_last_daily_quiz_date') ?? '';
+      _dailyQuizCorrectCount = prefs.getInt('learning_daily_quiz_correct_count') ?? 0;
 
       // 載入自訂貼紙封面狀態
       _coverColorHex = prefs.getString('learning_cover_color_hex') ?? '#EFECE6';
@@ -262,6 +264,7 @@ class LearningGameState extends ChangeNotifier {
       await prefs.setInt('learning_study_streak', _studyStreak);
       await prefs.setString('learning_last_study_date', _lastStudyDate);
       await prefs.setString('learning_last_daily_quiz_date', _lastDailyQuizDate);
+      await prefs.setInt('learning_daily_quiz_correct_count', _dailyQuizCorrectCount);
       await prefs.setString('learning_cover_color_hex', _coverColorHex);
       await prefs.setStringList('learning_unlocked_stickers', _unlockedStickers.toList());
       await prefs.setString('learning_placed_stickers', jsonEncode(_placedStickers));
