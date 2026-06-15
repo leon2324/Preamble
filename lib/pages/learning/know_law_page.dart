@@ -521,6 +521,7 @@ class KnowLawPageState extends State<KnowLawPage> {
           article: unit.article,
           unitStepLabel: unit.stepLabel,
           category: _activeTopic,
+          onSwitchTopic: _switchToNextTopic,
         ),
       ),
     );

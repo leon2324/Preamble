@@ -18,11 +18,13 @@ class LearningMockDetailPage extends StatefulWidget {
     required this.article,
     this.unitStepLabel,
     this.category,
+    this.onSwitchTopic,
   });
 
   final LearningMockArticle article;
   final String? unitStepLabel;
   final String? category;
+  final VoidCallback? onSwitchTopic;
 
   @override
   State<LearningMockDetailPage> createState() => _LearningMockDetailPageState();
@@ -67,7 +69,7 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
   Map<String, dynamic>? _getQuizForStep(String category, String? step) {
     if (step == null) return null;
 
-    if (category == '租屋糾紛') {
+    if (category.contains('租屋糾紛') || category.contains('租屋')) {
       switch (step) {
         case 'STEP 1':
           return {
@@ -127,7 +129,7 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
       }
     }
 
-    if (category == '車禍事故') {
+    if (category.contains('車禍事故') || category.contains('車禍')) {
       switch (step) {
         case 'STEP 1':
           return {
@@ -187,7 +189,7 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
       }
     }
 
-    if (category == '職場權益') {
+    if (category.contains('職場權益') || category.contains('職場')) {
       switch (step) {
         case 'STEP 1':
           return {
@@ -247,7 +249,7 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
       }
     }
 
-    if (category == '網購消費') {
+    if (category.contains('網購消費') || category.contains('網購')) {
       switch (step) {
         case 'STEP 1':
           return {
@@ -307,7 +309,7 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
       }
     }
 
-    if (category == '個資隱私') {
+    if (category.contains('個資隱私') || category.contains('個資')) {
       switch (step) {
         case 'STEP 1':
           return {
@@ -1176,6 +1178,66 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                     ),
                   ),
                 ],
+                if (quiz == null) ...[
+                  SizedBox(height: 20.h),
+                  Text(
+                    '📝 學習完成確認',
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  NotebookCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (isStepCompleted) ...[
+                          Row(
+                            children: [
+                              CtmSvgIcon(CtmSvgIcons.star, color: HomeV2Palette.trustGreen, size: 24.sp),
+                              SizedBox(width: 8.w),
+                              const Text('本單元已學習完成！', style: TextStyle(fontWeight: FontWeight.bold, color: HomeV2Palette.trustGreen)),
+                            ],
+                          ),
+                        ] else ...[
+                          Text(
+                            '恭喜您讀完本單元的內容！請點擊下方按鈕以確立學完狀態並累積經驗值。',
+                            style: TextStyle(fontSize: 13.5.sp, color: AppColors.textSecondary, height: 1.45),
+                          ),
+                          SizedBox(height: 14.h),
+                          SizedBox(
+                            width: double.infinity,
+                            child: FilledButton(
+                              onPressed: () {
+                                if (widget.unitStepLabel != null) {
+                                  final gameState = LearningGameState.instance;
+                                  final cat = widget.category ?? widget.article.category ?? _guessCategory(widget.article.title);
+                                  final uniqueStepId = "${cat}_${widget.unitStepLabel}";
+                                  final isFirstTimeComplete = !gameState.completedSteps.contains(uniqueStepId);
+
+                                  gameState.completeStep(uniqueStepId);
+
+                                  if (widget.unitStepLabel == 'STEP 5' && isFirstTimeComplete) {
+                                    Future.delayed(const Duration(milliseconds: 600), () {
+                                      _showCompletionDialog();
+                                    });
+                                  }
+                                } else {
+                                  LearningGameState.instance.addExperience(20);
+                                }
+                                setState(() {});
+                              },
+                              style: FilledButton.styleFrom(backgroundColor: HomeV2Palette.trustGreen),
+                              child: const Text('標記為已學完'),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
               ],
             ),
           );
@@ -1365,7 +1427,7 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                             onPressed: () {
                               Navigator.pop(context);
                             },
-                            child: const Text('留在本專題'),
+                            child: const Text('複習'),
                           ),
                         ),
                         SizedBox(width: 12.w),
@@ -1378,14 +1440,11 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
                             ),
                             onPressed: () {
-                              Navigator.pop(context);
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const AchievementRoomPage(),
-                                ),
-                              );
+                              Navigator.pop(context); // 關閉對話框
+                              Navigator.pop(context); // 返回學習首頁
+                              widget.onSwitchTopic?.call(); // 切換到下一個選修/隨機專題
                             },
-                            child: const Text('前往成就室'),
+                            child: const Text('進入別的專題'),
                           ),
                         ),
                       ],
