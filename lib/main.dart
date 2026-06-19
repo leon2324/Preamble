@@ -101,11 +101,9 @@ class _MylawAppState extends State<MylawApp> {
       ),
       const KnowLawPage(),
       // 台灣繁體中文教學註解：
-      // 第三格從單純全站搜尋升級為 AI 小法助；全站搜尋仍保留在小法助首頁，
-      // 讓使用者可以先問生活法律問題，也能改用關鍵字搜尋案例、法條與官方資料。
-      LawAssistantSearchPage(
-        globalSearchBuilder: (_) => const GlobalSearchPage(),
-      ),
+      // 全站搜尋與 AI 小法助已完美整合為同一頁 (GlobalSearchPage)，
+      // 結合了吉祥物插圖、語音搜尋、額度管理，以及強大的 AI overview 智慧卡片。
+      const GlobalSearchPage(),
       const JournalPage(),
       // 台灣繁體中文教學註解：
       // 台灣繁體中文教學註解：

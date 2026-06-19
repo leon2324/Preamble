@@ -201,8 +201,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
         _page == _SearchPage.caseDetail ||
         _page == _SearchPage.lifeDetail ||
         _page == _SearchPage.filters;
-    final showSearchField = _page == _SearchPage.home ||
-        _page == _SearchPage.results ||
+    final showSearchField = _page == _SearchPage.results ||
         _page == _SearchPage.statutes ||
         _page == _SearchPage.cases ||
         _page == _SearchPage.lifeNotes ||
@@ -242,11 +241,6 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
                   : null,
             ),
             SizedBox(height: 14.h),
-          ],
-          if (_page == _SearchPage.home) ...[
-            SizedBox(height: 12.h),
-            Center(child: Text('全站搜尋', style: _SearchText.hero())),
-            SizedBox(height: 18.h),
           ],
           if (showSearchField) _buildSearchHeader(),
           if (showSearchField) SizedBox(height: 16.h),
@@ -327,6 +321,8 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
           onCases: () => _openList(_SearchPage.cases),
           onOfficial: () => _openList(_SearchPage.official),
           onClearRecent: _clearRecent,
+          controller: _controller,
+          onVoice: _showVoiceSearchBottomSheet,
         );
       case _SearchPage.results:
         if (_isSearching) {
@@ -821,6 +817,8 @@ class _SearchHome extends StatelessWidget {
     required this.onCases,
     required this.onOfficial,
     required this.onClearRecent,
+    required this.controller,
+    required this.onVoice,
   });
 
   final List<String> recent;
@@ -830,10 +828,13 @@ class _SearchHome extends StatelessWidget {
   final VoidCallback onCases;
   final VoidCallback onOfficial;
   final VoidCallback onClearRecent;
+  final TextEditingController controller;
+  final VoidCallback onVoice;
 
   @override
   Widget build(BuildContext context) {
     final popular = ['詐欺', '租屋糾紛', '民法 184', '勞資爭議', '交通違規'];
+    final appState = LawAppScope.of(context);
     final quick = [
       _QuickAction('AI\n小法助搜尋', Icons.support_agent_rounded, onAssistant),
       _QuickAction('法規\n檢索重點', Icons.menu_book_outlined, onStatutes),
@@ -842,56 +843,120 @@ class _SearchHome extends StatelessWidget {
     ];
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _SectionHeader(
-          title: '最近搜尋',
-          action: '清除',
-          onAction: onClearRecent,
-        ),
-        SizedBox(height: 9.h),
-        _PrototypeChipGrid(
-          labels: recent.isEmpty ? popular.take(4).toList() : recent,
-          onTap: onQuery,
-        ),
-        SizedBox(height: 18.h),
-        const _SectionHeader(title: '熱門搜尋'),
-        SizedBox(height: 9.h),
-        _PrototypeChipGrid(labels: popular, onTap: onQuery),
-        SizedBox(height: 18.h),
-        const _SectionHeader(title: '快速操作'),
+        // 吉祥物插圖 (Mascot)
         SizedBox(height: 10.h),
-        Row(
-          children: [
-            for (final item in quick)
-              Expanded(child: _QuickActionTile(item: item)),
-          ],
+        Image.asset(
+          'assets/images/assistant/law_assistant_home.png',
+          width: 142.w,
+          height: 120.h,
+          fit: BoxFit.contain,
         ),
-        SizedBox(height: 18.h),
-        _ProtoCard(
-          background: _SearchColors.softMint,
-          padding: EdgeInsets.fromLTRB(16.w, 14.h, 0, 0),
-          child: SizedBox(
-            height: 116.h,
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Positioned(
-                  left: 0,
-                  top: 2.h,
-                  right: 112.w,
-                  child: Text(
-                    '在 LawApp 搜尋，\n整合多元法律資料，快速找到答案。',
-                    style: _SearchText.bodyStrong(),
-                  ),
+        SizedBox(height: 10.h),
+        Text(
+          '你好，我是小法助 👋',
+          style: _SearchText.heroSmall().copyWith(
+            color: _SearchColors.text,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        SizedBox(height: 4.h),
+        Text(
+          '有法律問題？我來幫你整理！',
+          style: _SearchText.body().copyWith(
+            color: _SearchColors.mutedText,
+            fontSize: 13.sp,
+          ),
+        ),
+        SizedBox(height: 20.h),
+
+        // 搜尋輸入框 (帶有麥克風)
+        _SearchField(
+          controller: controller,
+          onSubmitted: onQuery,
+          onClear: () => controller.clear(),
+          onVoice: onVoice,
+        ),
+        SizedBox(height: 24.h),
+
+        // 最近搜尋與熱門推薦
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _SectionHeader(
+                title: '最近搜尋',
+                action: '清除',
+                onAction: onClearRecent,
+              ),
+              SizedBox(height: 9.h),
+              _PrototypeChipGrid(
+                labels: recent.isEmpty ? popular.take(4).toList() : recent,
+                onTap: onQuery,
+              ),
+              SizedBox(height: 18.h),
+              const _SectionHeader(title: '熱門搜尋'),
+              SizedBox(height: 9.h),
+              _PrototypeChipGrid(labels: popular, onTap: onQuery),
+              SizedBox(height: 18.h),
+              const _SectionHeader(title: '快速操作'),
+              SizedBox(height: 10.h),
+              Row(
+                children: [
+                  for (final item in quick)
+                    Expanded(child: _QuickActionTile(item: item)),
+                ],
+              ),
+              SizedBox(height: 18.h),
+
+              // AI 額度方案管理卡片
+              _ProtoCard(
+                background: _SearchColors.softPaper,
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.account_circle_outlined,
+                      color: _SearchColors.primary,
+                      size: 22.sp,
+                    ),
+                    SizedBox(width: 10.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '今日 AI 小法助提問額度',
+                            style: _SearchText.captionStrong().copyWith(color: _SearchColors.text),
+                          ),
+                          SizedBox(height: 2.h),
+                          Text(
+                            '剩餘額度：${appState.remainingAiQuota} / ${appState.accessTier.defaultDailyAiQuota} 次',
+                            style: _SearchText.caption().copyWith(color: _SearchColors.mutedText),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                      decoration: BoxDecoration(
+                        color: _SearchColors.primary,
+                        borderRadius: BorderRadius.circular(999.r),
+                      ),
+                      child: Text(
+                        '升級 PRO',
+                        style: _SearchText.caption().copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                Positioned(
-                  right: -2.w,
-                  bottom: 0,
-                  child: SvgPicture.asset(_SearchAsset.plant, width: 126.w),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ],
