@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/data/learning/learning_game_state.dart';
 import 'package:lawapp/components/home/v2/home_v2_palette.dart';
 import 'package:lawapp/theme/app_colors.dart';
-import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
 
 class NotebookCoverEditorPage extends StatefulWidget {
   const NotebookCoverEditorPage({super.key});

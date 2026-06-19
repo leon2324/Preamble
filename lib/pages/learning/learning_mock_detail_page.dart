@@ -7,7 +7,6 @@ import 'package:lawapp/components/home/v2/home_v2_palette.dart';
 import 'package:lawapp/pages/learning/widgets/notebook_aesthetics.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
 import 'package:lawapp/pages/learning/know_law_page.dart'; // To access LawAssistantSearchPage
-import 'package:lawapp/pages/learning/widgets/achievement_room.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;

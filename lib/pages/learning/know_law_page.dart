@@ -643,40 +643,45 @@ class KnowLawPageState extends State<KnowLawPage> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final gameState = LearningGameState.instance;
 
-    return Scaffold(
-      body: ListenableBuilder(
-        listenable: gameState,
-        builder: (context, _) {
-          return NotebookBackground(
-            child: SafeArea(
-              child: ListView(
-                padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 80.h),
-                physics: const BouncingScrollPhysics(),
-                children: [
-                  // 1. 頂部自訂 Header列
-                  _buildHeaderRow(isDark, gameState),
-                  SizedBox(height: 12.h),
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        body: ListenableBuilder(
+          listenable: gameState,
+          builder: (context, _) {
+            return NotebookBackground(
+              child: SafeArea(
+                child: ListView(
+                  padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 80.h),
+                  physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                  children: [
+                    // 1. 頂部自訂 Header列
+                    _buildHeaderRow(isDark, gameState),
+                    SizedBox(height: 12.h),
 
-                  // 2. 智慧小法助輪播提問氣泡
-                  _AssistantPromptBubble(
-                    onMascotTap: _openAchievementRoom,
-                  ),
-                  SizedBox(height: 16.h),
+                    // 2. 智慧小法助輪播提問氣泡
+                    _AssistantPromptBubble(
+                      onMascotTap: _openAchievementRoom,
+                    ),
+                    SizedBox(height: 16.h),
 
-                  // 3. 左右切換分頁 Tab 按鈕（單一 Scroll 結構下的切換按鈕）
-                  _buildTabSwitcher(isDark),
-                  SizedBox(height: 16.h),
+                    // 3. 左右切換分頁 Tab 按鈕（單一 Scroll 結構下的切換按鈕）
+                    _buildTabSwitcher(isDark),
+                    SizedBox(height: 16.h),
 
-                  // 4. 根據切換選取的 Tab 渲染不同內容
-                  if (_selectedTabIndex == 0)
-                    ..._buildClassroomItems(isDark, gameState)
-                  else
-                    ..._buildToolkitItems(isDark, gameState),
-                ],
+                    // 4. 根據切換選取的 Tab 渲染不同內容
+                    if (_selectedTabIndex == 0)
+                      ..._buildClassroomItems(isDark, gameState)
+                    else
+                      ..._buildToolkitItems(isDark, gameState),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
