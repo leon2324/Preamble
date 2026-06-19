@@ -82,6 +82,11 @@ class LearningGameState extends ChangeNotifier {
   Set<String> _viewedCategories = {};
   Map<String, String> _articleNotes = {};
 
+  // 筆記本外觀與三段論狀態
+  bool _useHandwrittenFont = false;
+  String _notebookPaperStyle = 'grid'; // 'grid', 'lined', 'dotted', 'cornell'
+  List<Map<String, dynamic>> _cornellNotes = [];
+
   int get level => _level;
   int get experience => _experience;
   Set<String> get completedSteps => _completedSteps;
@@ -106,6 +111,11 @@ class LearningGameState extends ChangeNotifier {
   List<Map<String, dynamic>> get savedHighlights => _savedHighlights;
   Set<String> get viewedCategories => _viewedCategories;
   Map<String, String> get articleNotes => _articleNotes;
+
+  // 筆記本外觀與三段論 getters
+  bool get useHandwrittenFont => _useHandwrittenFont;
+  String get notebookPaperStyle => _notebookPaperStyle;
+  List<Map<String, dynamic>> get cornellNotes => _cornellNotes;
 
   String getArticleNote(String title) => _articleNotes[title] ?? '';
 
@@ -236,6 +246,16 @@ class LearningGameState extends ChangeNotifier {
         }
       }
 
+      // 載入筆記本外觀與三段論設定
+      _useHandwrittenFont = prefs.getBool('learning_use_handwritten_font') ?? false;
+      _notebookPaperStyle = prefs.getString('learning_notebook_paper_style') ?? 'grid';
+      final cornellRaw = prefs.getString('learning_cornell_notes');
+      if (cornellRaw != null) {
+        _cornellNotes = List<Map<String, dynamic>>.from(jsonDecode(cornellRaw));
+      } else {
+        _cornellNotes = [];
+      }
+
       notifyListeners();
     } catch (e) {
       debugPrint('Error loading learning game state: $e');
@@ -275,6 +295,11 @@ class LearningGameState extends ChangeNotifier {
       await prefs.setString('learning_saved_highlights', jsonEncode(_savedHighlights));
       await prefs.setStringList('learning_viewed_categories', _viewedCategories.toList());
       await prefs.setString('learning_article_notes', jsonEncode(_articleNotes));
+
+      // 儲存外觀與三段論
+      await prefs.setBool('learning_use_handwritten_font', _useHandwrittenFont);
+      await prefs.setString('learning_notebook_paper_style', _notebookPaperStyle);
+      await prefs.setString('learning_cornell_notes', jsonEncode(_cornellNotes));
     } catch (e) {
       debugPrint('Error saving learning game state: $e');
     }
@@ -540,6 +565,9 @@ class LearningGameState extends ChangeNotifier {
         'highlight': text,
         'articleTitle': articleTitle,
         'timestamp': DateTime.now().toIso8601String(),
+        'note': '',
+        'highlightColor': 'yellow',
+        'stickerId': null,
       });
       _saveState();
       notifyListeners();
@@ -563,6 +591,77 @@ class LearningGameState extends ChangeNotifier {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         notifyListeners();
       });
+    }
+  }
+
+  // 5) 筆記本外觀設定與三段論功能方法
+  void setUseHandwrittenFont(bool value) {
+    if (_useHandwrittenFont != value) {
+      _useHandwrittenFont = value;
+      _saveState();
+      notifyListeners();
+    }
+  }
+
+  void setNotebookPaperStyle(String value) {
+    if (_notebookPaperStyle != value) {
+      _notebookPaperStyle = value;
+      _saveState();
+      notifyListeners();
+    }
+  }
+
+  void addCornellNote(String title, String premise, String fact, String conclusion) {
+    _cornellNotes.insert(0, {
+      'id': DateTime.now().millisecondsSinceEpoch.toString(),
+      'title': title,
+      'premise': premise,
+      'fact': fact,
+      'conclusion': conclusion,
+      'date': DateTime.now().toIso8601String().substring(0, 10),
+      'stickerId': null,
+    });
+    unlockSticker('scale'); // 製作三段論筆記解鎖天平貼紙
+    _saveState();
+    notifyListeners();
+  }
+
+  void removeCornellNote(String id) {
+    _cornellNotes.removeWhere((item) => item['id'] == id);
+    _saveState();
+    notifyListeners();
+  }
+
+  void updateCornellSticker(String id, String? stickerId) {
+    final idx = _cornellNotes.indexWhere((item) => item['id'] == id);
+    if (idx != -1) {
+      _cornellNotes[idx]['stickerId'] = stickerId;
+      _saveState();
+      notifyListeners();
+    }
+  }
+
+  void updateHighlightNote(int index, String note) {
+    if (index >= 0 && index < _savedHighlights.length) {
+      _savedHighlights[index]['note'] = note;
+      _saveState();
+      notifyListeners();
+    }
+  }
+
+  void updateHighlightColor(int index, String colorName) {
+    if (index >= 0 && index < _savedHighlights.length) {
+      _savedHighlights[index]['highlightColor'] = colorName;
+      _saveState();
+      notifyListeners();
+    }
+  }
+
+  void updateHighlightSticker(int index, String? stickerId) {
+    if (index >= 0 && index < _savedHighlights.length) {
+      _savedHighlights[index]['stickerId'] = stickerId;
+      _saveState();
+      notifyListeners();
     }
   }
 }

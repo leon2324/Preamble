@@ -742,6 +742,24 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
           ),
         ),
         actions: [
+          // 📌 摘錄至筆記本按鈕
+          IconButton(
+            icon: Icon(Icons.bookmark_add_outlined, size: 22.sp, color: Colors.grey),
+            tooltip: '摘錄大綱至手帳',
+            onPressed: () {
+              gameState.addHighlight(
+                widget.article.summary,
+                widget.article.title,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('已成功將核心大綱摘錄至手帳筆記！📌'),
+                  backgroundColor: HomeV2Palette.trustGreen,
+                  duration: Duration(seconds: 1),
+                ),
+              );
+            },
+          ),
           ListenableBuilder(
             listenable: gameState,
             builder: (context, _) {
@@ -810,22 +828,22 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                       SizedBox(height: 16.h),
                       Text(
                         widget.article.title,
-                        style: TextStyle(
+                        style: getNotebookTextStyle(context, TextStyle(
                           fontSize: 20.sp,
                           height: 1.25,
                           fontWeight: FontWeight.w800,
                           color: AppColors.textPrimary,
-                        ),
+                        )),
                       ),
                       SizedBox(height: 12.h),
                       HighlightedSelectableText(
                         text: widget.article.summary,
                         highlights: currentHighlights,
-                        style: TextStyle(
+                        style: getNotebookTextStyle(context, TextStyle(
                           fontSize: 14.sp,
                           height: 1.55,
                           color: AppColors.textSecondary,
-                        ),
+                        )),
                         articleTitle: widget.article.title,
                       ),
                       SizedBox(height: 18.h),
@@ -840,12 +858,12 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                         child: HighlightedSelectableText(
                           text: widget.article.heroNote,
                           highlights: currentHighlights,
-                          style: TextStyle(
+                          style: getNotebookTextStyle(context, TextStyle(
                             fontSize: 13.5.sp,
                             height: 1.55,
                             fontWeight: FontWeight.w700,
                             color: isDark ? Colors.orange.shade100 : const Color(0xFF6B5439),
-                          ),
+                          )),
                           articleTitle: widget.article.title,
                         ),
                       ),
@@ -857,11 +875,11 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                 // 2. 重點思考框
                 Text(
                   '💡 三個核心法律思考點',
-                  style: TextStyle(
+                  style: getNotebookTextStyle(context, TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w800,
                     color: AppColors.textPrimary,
-                  ),
+                  )),
                 ),
                 SizedBox(height: 12.h),
                 ...widget.article.keyPoints.map((point) {

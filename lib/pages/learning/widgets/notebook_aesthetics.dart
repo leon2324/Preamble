@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lawapp/data/learning/learning_game_state.dart';
 
-/// 筆記本方格紙背景
+/// 全域手寫字體轉換器，當 useHandwrittenFont 啟用時套用
+TextStyle getNotebookTextStyle(BuildContext context, TextStyle baseStyle) {
+  final gameState = LearningGameState.instance;
+  if (gameState.useHandwrittenFont) {
+    return GoogleFonts.maShanZheng(
+      textStyle: baseStyle.copyWith(
+        fontSize: (baseStyle.fontSize ?? 14.sp) * 1.15,
+        fontWeight: FontWeight.normal, // 手寫字體不適合過粗的 font weight
+      ),
+    );
+  }
+  return baseStyle;
+}
+
+/// 筆記本底紙背景，支援多種格式底紋（方格、橫線、點陣、康乃爾）
 class NotebookBackground extends StatelessWidget {
   const NotebookBackground({
     super.key,
@@ -19,6 +35,8 @@ class NotebookBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final gameState = LearningGameState.instance;
+    final paperStyle = gameState.notebookPaperStyle;
     
     // 深色模式下的格線顏色
     final actualLineColor = isDark ? const Color(0xFF1E262F) : lineColor;
@@ -33,6 +51,7 @@ class NotebookBackground extends StatelessWidget {
           lineColor: actualLineColor,
           marginColor: actualMarginColor,
           isDark: isDark,
+          paperStyle: paperStyle,
         ),
         child: child,
       ),
@@ -46,12 +65,14 @@ class _GridPainter extends CustomPainter {
     required this.lineColor,
     required this.marginColor,
     required this.isDark,
+    required this.paperStyle,
   });
 
   final double gridSize;
   final Color lineColor;
   final Color marginColor;
   final bool isDark;
+  final String paperStyle;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -59,27 +80,68 @@ class _GridPainter extends CustomPainter {
       ..color = lineColor
       ..strokeWidth = 0.8.w;
 
-    // 畫水平格線
-    for (double y = 0; y < size.height; y += gridSize) {
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    if (paperStyle == 'grid') {
+      // 1) 方格紙：畫水平與垂直格線
+      for (double y = 0; y < size.height; y += gridSize) {
+        canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+      }
+      for (double x = 0; x < size.width; x += gridSize) {
+        canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
+      }
+    } else if (paperStyle == 'lined') {
+      // 2) 橫線紙：僅畫水平格線
+      for (double y = 0; y < size.height; y += gridSize) {
+        canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+      }
+    } else if (paperStyle == 'dotted') {
+      // 3) 點陣紙：在交叉點繪製隱約的點
+      final dotPaint = Paint()
+        ..color = lineColor.withOpacity(0.6)
+        ..style = PaintingStyle.fill;
+      for (double y = gridSize; y < size.height; y += gridSize) {
+        for (double x = gridSize; x < size.width; x += gridSize) {
+          canvas.drawCircle(Offset(x, y), 1.2.w, dotPaint);
+        }
+      }
+    } else if (paperStyle == 'cornell') {
+      // 4) 康乃爾紙：右側區塊畫水平線，並繪製 Cue Column 與 Summary Column 紅線
+      final double cueDivider = size.width * 0.28;
+      final double summaryDivider = size.height * 0.82;
+
+      // 筆記區（Notes Column）的水平線
+      for (double y = gridSize * 2; y < summaryDivider; y += gridSize) {
+        canvas.drawLine(Offset(cueDivider, y), Offset(size.width, y), paint);
+      }
+
+      // 畫分割紅線
+      final dividerPaint = Paint()
+        ..color = isDark ? const Color(0xFF4A282D) : const Color(0xFFF0ACB4)
+        ..strokeWidth = 1.2.w;
+
+      // 垂直分割線
+      canvas.drawLine(Offset(cueDivider, 0), Offset(cueDivider, summaryDivider), dividerPaint);
+      // 水平分割線
+      canvas.drawLine(Offset(0, summaryDivider), Offset(size.width, summaryDivider), dividerPaint);
     }
 
-    // 畫垂直格線
-    for (double x = 0; x < size.width; x += gridSize) {
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
+    // 畫左側紅色筆記本邊緣線 (僅在非康乃爾樣式下畫，避免干擾康乃爾版面)
+    if (paperStyle != 'cornell') {
+      final marginPaint = Paint()
+        ..color = isDark ? const Color(0xFF1E262F) : lineColor.withOpacity(0.8)
+        ..strokeWidth = 1.w;
+      
+      final double leftMargin = 8.w;
+      canvas.drawLine(Offset(leftMargin, 0), Offset(leftMargin, size.height), marginPaint);
     }
-
-    // 畫左側紅色筆記本邊緣線 (簡化為單一淡線，靠邊 8.w，避免佔用大量水平空間)
-    final marginPaint = Paint()
-      ..color = isDark ? const Color(0xFF1E262F) : lineColor.withValues(alpha: 0.8)
-      ..strokeWidth = 1.w;
-    
-    final double leftMargin = 8.w;
-    canvas.drawLine(Offset(leftMargin, 0), Offset(leftMargin, size.height), marginPaint);
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _GridPainter oldDelegate) =>
+      oldDelegate.gridSize != gridSize ||
+      oldDelegate.lineColor != lineColor ||
+      oldDelegate.marginColor != marginColor ||
+      oldDelegate.isDark != isDark ||
+      oldDelegate.paperStyle != paperStyle;
 }
 
 /// 模擬實體卡片效果，可選擇加裝「金屬裝訂線圈」、「迴紋針」或「書籤」
