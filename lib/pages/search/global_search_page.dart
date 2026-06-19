@@ -56,6 +56,12 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
   String? _searchError;
   var _searchRevision = 0;
 
+  // AI Assistant Overview state variables
+  bool _aiIsThinking = false;
+  String _aiTone = '白話'; // '白話' or '專業'
+  String _aiLength = '精簡'; // '精簡' or '詳細'
+  String _aiGeneratedSummary = '';
+
   @override
   void initState() {
     super.initState();
@@ -70,6 +76,57 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
       _searchRepository.dispose();
     }
     super.dispose();
+  }
+
+  // 模擬 AI 根據語氣與長度重新生成內容
+  void _triggerAiOverviewGeneration(String query) {
+    if (query.isEmpty) return;
+    setState(() {
+      _aiIsThinking = true;
+    });
+
+    // 模擬網路延遲與 AI 思考過程
+    Future.delayed(const Duration(milliseconds: 1200), () {
+      if (!mounted || _query != query) return;
+
+      String summaryBase = '';
+      if (query.contains('詐欺')) {
+        if (_aiTone == '白話') {
+          summaryBase = _aiLength == '精簡'
+              ? '「詐欺罪」就是用騙人的手段，讓對方做出錯誤決定而把財物交出來，導致對方受損。不履行合約如果一開始沒有騙人的意思，通常只是民事問題，不一定構成犯罪喔！'
+              : '「詐欺罪」是指用欺騙的手段，使他人陷入錯誤判斷，因而處分財產並造成損害。主要成立條件包括：\n1. 行為人有欺罔行為（說謊或刻意隱瞞）。\n2. 被害人因此產生錯誤認知。\n3. 被害人因為錯誤而交付財產。\n4. 造成財產上的損害。\n5. 行為人主觀上有故意及不法所有意圖。如果只是事後不履行契約，但一開始沒有騙人意圖，通常屬民事債務糾紛，不構成刑事詐欺罪。';
+        } else {
+          summaryBase = _aiLength == '精簡'
+              ? '依刑法第339條，本罪構成要件需具備施用詐術、被害人陷於錯誤、處分財產、財產損害及因果關係。契約不履行若欠缺主觀不法所有意圖，則屬民事不法而非刑事詐欺。'
+              : '刑事詐欺取財罪（刑法第339條）之成立，客觀要件須行為人施用詐術（欺罔手段），使相對人陷於錯誤，並因而為財產處分，致相對人或第三人受有財產上之損害，且各要件間具有相當因果關係；主觀要件則須具備詐欺故意及「意圖為自己或第三人不法之所有」。若係單純契約不履行，而無法證明行為人於締約之初即有詐欺故意及不法所有意圖，即屬民事債務不履行範疇，應循民事程序救濟。';
+        }
+      } else if (query.contains('瑕疵') || query.contains('退貨') || query.contains('消費')) {
+        if (_aiTone == '白話') {
+          summaryBase = _aiLength == '精簡'
+              ? '買到瑕疵商品，如果是網購可在7天內無條件退貨退款。若是一般實體店面，則需符合民法瑕疵擔保，要求退款或換貨，但要儘快通知賣家喔！'
+              : '買到瑕疵商品的權利依購買管道而定：\n1. 網路購物（郵購買賣）：享有消費者保護法第19條規定，7天鑑賞期內無條件退貨解約，不需說明理由或負擔任何費用。\n2. 實體店面購物：不適用7天鑑賞期。但如果商品有物理或價值上的瑕疵，可主張民法第354條瑕疵擔保責任，要求減少價金（打折）或解除契約（退款），若屬重大瑕疵甚至可請求損害賠償。提醒：收到貨後應立刻檢查，發現瑕疵須即時通知賣家。';
+        } else {
+          summaryBase = _aiLength == '精簡'
+              ? '消保法第19條賦予通訊交易消費者7日解約權。實體買賣則依民法第359條，買受人得主張物之瑕疵擔保，請求解除契約或減少價金；若受有損害且可歸責於出賣人，得依同法第360條請求不履行之損害賠償。'
+              : '就買受人物之瑕疵擔保權利分析如下：\n1. 特殊交易型態：若屬消費者保護法第2條之通訊交易（如網路購物），消費者得依同法第19條，於收受商品後7日內無條件解除契約，退回商品並請求返還價金。\n2. 一般買賣契約：依民法第354條規定，出賣人應負物之瑕疵擔保責任。買受人得依同法第359條，請求解除契約（退貨退款）或減少價金（折讓）。惟若瑕疵程度輕微，解除契約顯失公平者，買受人僅得請求減少價金。若商品欠缺出賣人所保證之品質，或出賣人故意不告知瑕疵者，買受人得依同法第360條，不請求減少價金或解除契約，而逕行請求不履行之損害賠償。買受人應依民法第356條負即時檢查與通知義務，以免喪失權利。';
+        }
+      } else {
+        if (_aiTone == '白話') {
+          summaryBase = _aiLength == '精簡'
+              ? '針對「$query」，建議您詳查相關民刑事責任。如有具體爭議，可善用我的法律摘錄本記錄重點，或進一步與小法助聊聊！'
+              : '針對您查詢的「$query」：\n我們已為您彙整了相關法規與裁判案例。法律問題的判定高度依賴個案具體事實與證據。建議您可以將有用的資訊「📌 摘錄」到您的筆記本中，或者點擊下方按鈕開啟與小法助的多輪深入對話，以獲得更精確的分析與解答。';
+        } else {
+          summaryBase = _aiLength == '精簡'
+              ? '關於「$query」之法律爭議，須視具體客觀構成要件與因果關係而定。建議保存實體證據並依法主張瑕疵擔保或侵權損害賠償責任。'
+              : '關於「$query」之研析：\n本件法律關係之釐清，端視具體事實是否符合特定法規之構成要件。建議關係人應預先整理並留存相關契約、對話紀錄或匯款憑證等書證。您可藉由「📌 摘錄」功能彙整檢索所得之法規與判決要旨，或點選「繼續與小法助聊聊」開啟完整問答介面進行法律實務與救濟途徑之深入剖析。';
+        }
+      }
+
+      setState(() {
+        _aiGeneratedSummary = summaryBase;
+        _aiIsThinking = false;
+      });
+    });
   }
 
   void _submit(String value, {_SearchPage nextPage = _SearchPage.results}) {
@@ -89,6 +146,9 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
       _searchError = null;
     });
     FocusManager.instance.primaryFocus?.unfocus();
+
+    // 觸發 AI 摘要生成
+    _triggerAiOverviewGeneration(query);
 
     // 台灣繁體中文教學註解：
     // 全站搜尋的 UI 保留 prototype 的分頁與子頁，但資料來源改由
@@ -123,6 +183,8 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
       _results = const [];
       _isSearching = false;
       _searchError = null;
+      _aiGeneratedSummary = '';
+      _aiIsThinking = false;
     });
     FocusManager.instance.primaryFocus?.unfocus();
   }
@@ -207,6 +269,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
       showFilter: _page != _SearchPage.home,
       onFilter: () => setState(() => _page = _SearchPage.filters),
       onClear: _goHome,
+      onVoice: _showVoiceSearchBottomSheet,
     );
 
     if (_page == _SearchPage.home) return searchField;
@@ -282,6 +345,20 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
           onOpenList: _openList,
           isSaved: (item) => _isSaved(LawAppScope.of(context), item),
           onSaved: _toggleSaved,
+          aiIsThinking: _aiIsThinking,
+          aiTone: _aiTone,
+          aiLength: _aiLength,
+          aiSummary: _aiGeneratedSummary,
+          onToneChanged: (newTone) {
+            setState(() => _aiTone = newTone);
+            _triggerAiOverviewGeneration(_query);
+          },
+          onLengthChanged: (newLength) {
+            setState(() => _aiLength = newLength);
+            _triggerAiOverviewGeneration(_query);
+          },
+          onNotebookSave: _saveAssistantSummaryToNotebook,
+          onContinueChat: _continueWithAssistant,
         );
       case _SearchPage.assistant:
         return _AssistantDetail(
@@ -521,6 +598,14 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
     );
   }
 
+  Future<void> _saveAssistantSummaryToNotebook() async {
+    final appState = LawAppScope.of(context);
+    final keyword = _query.trim().isEmpty ? 'AI 法律摘要' : _query.trim();
+    final interactionId = 'assistant-${_slugFor(keyword)}';
+    await appState.setArticleSaved(interactionId, true);
+    _showSnack('📌 已將「$keyword」的 AI 釋義摘要儲存至您的法律摘錄本！');
+  }
+
   Future<void> _openCaseJudgment(_SearchResult item) async {
     final lookupText = _caseLookupText(item);
     await Clipboard.setData(ClipboardData(text: lookupText));
@@ -561,6 +646,19 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
           ? '已開啟官方來源，並複製「${item.title}」供站內搜尋。'
           : '無法開啟官方來源，已先複製「${item.title}」。',
     );
+  }
+
+  void _showVoiceSearchBottomSheet() {
+    showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (sheetContext) => const _SearchVoiceBottomSheet(),
+    ).then((recognizedText) {
+      if (recognizedText != null && recognizedText.isNotEmpty) {
+        _submit(recognizedText);
+      }
+    });
   }
 
   void _showLifeNoteExplorer() {
@@ -856,6 +954,14 @@ class _MixedResults extends StatelessWidget {
     required this.onOpenList,
     required this.isSaved,
     required this.onSaved,
+    required this.aiIsThinking,
+    required this.aiTone,
+    required this.aiLength,
+    required this.aiSummary,
+    required this.onToneChanged,
+    required this.onLengthChanged,
+    required this.onNotebookSave,
+    required this.onContinueChat,
   });
 
   final String query;
@@ -867,6 +973,15 @@ class _MixedResults extends StatelessWidget {
   final ValueChanged<_SearchPage> onOpenList;
   final bool Function(_SearchResult item) isSaved;
   final ValueChanged<_SearchResult> onSaved;
+
+  final bool aiIsThinking;
+  final String aiTone;
+  final String aiLength;
+  final String aiSummary;
+  final ValueChanged<String> onToneChanged;
+  final ValueChanged<String> onLengthChanged;
+  final VoidCallback onNotebookSave;
+  final VoidCallback onContinueChat;
 
   @override
   Widget build(BuildContext context) {
@@ -882,7 +997,17 @@ class _MixedResults extends StatelessWidget {
         children: [
           _SearchTabs(tab: tab, onTab: onTab),
           SizedBox(height: 14.h),
-          _AssistantHint(query: query, onTap: () => onOpen(assistantResult)),
+          _AssistantOverviewCard(
+            query: query,
+            summary: aiSummary.isNotEmpty ? aiSummary : assistantResult.summary,
+            isThinking: aiIsThinking,
+            tone: aiTone,
+            length: aiLength,
+            onToneChanged: onToneChanged,
+            onLengthChanged: onLengthChanged,
+            onNotebookSave: onNotebookSave,
+            onContinueChat: onContinueChat,
+          ),
           SizedBox(height: 14.h),
           _ResultSection(
             title: '法規',
@@ -923,18 +1048,34 @@ class _MixedResults extends StatelessWidget {
       children: [
         _SearchTabs(tab: tab, onTab: onTab),
         SizedBox(height: 14.h),
-        if (visible.isEmpty)
+        if (tab == _SearchTab.assistant) ...[
+          _AssistantOverviewCard(
+            query: query,
+            summary: aiSummary.isNotEmpty ? aiSummary : assistantResult.summary,
+            isThinking: aiIsThinking,
+            tone: aiTone,
+            length: aiLength,
+            onToneChanged: onToneChanged,
+            onLengthChanged: onLengthChanged,
+            onNotebookSave: onNotebookSave,
+            onContinueChat: onContinueChat,
+          ),
+          SizedBox(height: 14.h),
+        ],
+        if (visible.isEmpty && tab != _SearchTab.assistant)
           const _SearchStateCard(message: '這個分類目前沒有符合的結果。')
         else
           for (final item in visible.take(5)) ...[
-            _ResultTile(
-              item: item,
-              onTap: () => onOpen(item),
-              showBookmark: item.type != _ResultType.official,
-              isSaved: isSaved(item),
-              onBookmark: () => onSaved(item),
-            ),
-            SizedBox(height: 10.h),
+            if (item.type != _ResultType.assistant) ...[
+              _ResultTile(
+                item: item,
+                onTap: () => onOpen(item),
+                showBookmark: item.type != _ResultType.official,
+                isSaved: isSaved(item),
+                onBookmark: () => onSaved(item),
+              ),
+              SizedBox(height: 10.h),
+            ],
           ],
         SizedBox(height: 10.h),
         _AdvancedRoutes(onOpen: onOpenList),
@@ -1527,6 +1668,7 @@ class _SearchField extends StatelessWidget {
     required this.onClear,
     this.showFilter = false,
     this.onFilter,
+    this.onVoice,
   });
 
   final TextEditingController controller;
@@ -1534,6 +1676,7 @@ class _SearchField extends StatelessWidget {
   final VoidCallback onClear;
   final bool showFilter;
   final VoidCallback? onFilter;
+  final VoidCallback? onVoice;
 
   @override
   Widget build(BuildContext context) {
@@ -1570,8 +1713,21 @@ class _SearchField extends StatelessWidget {
             color: _SearchColors.mutedText,
             size: 22.sp,
           ),
-          suffixIcon: showFilter
-              ? IconButton(
+          suffixIcon: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (onVoice != null && controller.text.isEmpty)
+                IconButton(
+                  tooltip: '語音搜尋',
+                  icon: Icon(
+                    Icons.mic_rounded,
+                    color: _SearchColors.primary,
+                    size: 21.sp,
+                  ),
+                  onPressed: onVoice,
+                ),
+              if (showFilter)
+                IconButton(
                   tooltip: '篩選',
                   icon: Icon(
                     Icons.tune_rounded,
@@ -1579,23 +1735,176 @@ class _SearchField extends StatelessWidget {
                     size: 21.sp,
                   ),
                   onPressed: onFilter,
-                )
-              : controller.text.isEmpty
-                  ? null
-                  : IconButton(
-                      tooltip: '清除搜尋',
-                      icon: Icon(
-                        Icons.close_rounded,
-                        color: _SearchColors.mutedText,
-                        size: 18.sp,
-                      ),
-                      onPressed: onClear,
-                    ),
+                ),
+              if (!showFilter && controller.text.isNotEmpty)
+                IconButton(
+                  tooltip: '清除搜尋',
+                  icon: Icon(
+                    Icons.close_rounded,
+                    color: _SearchColors.mutedText,
+                    size: 18.sp,
+                  ),
+                  onPressed: onClear,
+                ),
+            ],
+          ),
           filled: false,
           isCollapsed: true,
           contentPadding: EdgeInsets.zero,
           border: InputBorder.none,
         ),
+      ),
+    );
+  }
+}
+
+class _SearchVoiceBottomSheet extends StatefulWidget {
+  const _SearchVoiceBottomSheet();
+
+  @override
+  State<_SearchVoiceBottomSheet> createState() => _SearchVoiceBottomSheetState();
+}
+
+class _SearchVoiceBottomSheetState extends State<_SearchVoiceBottomSheet> with SingleTickerProviderStateMixin {
+  late final AnimationController _waveController;
+  String _statusText = '正在聆聽中...';
+  String _recognizedText = '';
+  bool _isFinished = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _waveController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    )..repeat();
+
+    // 模擬語音辨識過程：1.5秒後開始顯示辨識文字，3秒後自動送出
+    Future.delayed(const Duration(milliseconds: 1200), () {
+      if (!mounted) return;
+      setState(() {
+        _statusText = '語音辨識中...';
+      });
+      _simulateTyping('我買到瑕疵商品想要退貨，可以要求退款或賠償嗎？', 0);
+    });
+  }
+
+  void _simulateTyping(String fullText, int index) {
+    if (!mounted) return;
+    if (index <= fullText.length) {
+      setState(() {
+        _recognizedText = fullText.substring(0, index);
+      });
+      Future.delayed(const Duration(milliseconds: 50), () {
+        _simulateTyping(fullText, index + 1);
+      });
+    } else {
+      setState(() {
+        _isFinished = true;
+        _statusText = '辨識完成！即時搜尋';
+      });
+      Future.delayed(const Duration(milliseconds: 800), () {
+        if (!mounted) return;
+        Navigator.of(context).pop(fullText);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _waveController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.95),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x1A000000),
+            blurRadius: 20,
+            offset: Offset(0, -5),
+          ),
+        ],
+      ),
+      padding: EdgeInsets.fromLTRB(24.w, 20.h, 24.w, 40.h),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 46.w,
+            height: 5.h,
+            decoration: BoxDecoration(
+              color: _SearchColors.border,
+              borderRadius: BorderRadius.circular(999.r),
+            ),
+          ),
+          SizedBox(height: 24.h),
+          Text(
+            _statusText,
+            style: _SearchText.section().copyWith(color: _SearchColors.primary),
+          ),
+          SizedBox(height: 18.h),
+          Container(
+            height: 120.h,
+            width: double.infinity,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: _SearchColors.background,
+              borderRadius: BorderRadius.circular(18.r),
+              border: Border.all(color: _SearchColors.border.withValues(alpha: 0.5)),
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+            child: _recognizedText.isEmpty
+                ? AnimatedBuilder(
+                    animation: _waveController,
+                    builder: (context, child) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(5, (index) {
+                          final value = (_waveController.value + (index * 0.2)) % 1.0;
+                          final height = 15.h + (45.h * (0.5 - (0.5 - value).abs()));
+                          return Container(
+                            width: 6.w,
+                            height: height,
+                            margin: EdgeInsets.symmetric(horizontal: 4.w),
+                            decoration: BoxDecoration(
+                              color: _SearchColors.primary.withValues(alpha: 0.2 + (0.8 * value)),
+                              borderRadius: BorderRadius.circular(999.r),
+                            ),
+                          );
+                        }),
+                      );
+                    },
+                  )
+                : Text(
+                    _recognizedText,
+                    textAlign: TextAlign.center,
+                    style: _SearchText.heroSmall().copyWith(
+                      color: _SearchColors.text,
+                      height: 1.4,
+                    ),
+                  ),
+          ),
+          SizedBox(height: 28.h),
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+              decoration: BoxDecoration(
+                color: _SearchColors.softPaper,
+                borderRadius: BorderRadius.circular(999.r),
+              ),
+              child: Text(
+                '取消',
+                style: _SearchText.captionStrong().copyWith(color: _SearchColors.mutedText),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -1684,6 +1993,326 @@ class _TabStrip extends StatelessWidget {
                           : _SearchColors.mutedText)),
             ),
         ],
+      ),
+    );
+  }
+}
+
+class _AssistantThinkingIndicator extends StatefulWidget {
+  const _AssistantThinkingIndicator();
+
+  @override
+  State<_AssistantThinkingIndicator> createState() => _AssistantThinkingIndicatorState();
+}
+
+class _AssistantThinkingIndicatorState extends State<_AssistantThinkingIndicator> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(3, (index) {
+        return AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) {
+            final delay = index * 0.2;
+            final val = (_controller.value + delay) % 1.0;
+            final scale = 0.6 + 0.4 * (0.5 - (0.5 - val).abs());
+            return Transform.scale(
+              scale: scale,
+              child: Container(
+                width: 9.w,
+                height: 9.w,
+                margin: EdgeInsets.symmetric(horizontal: 3.w),
+                decoration: const BoxDecoration(
+                  color: _SearchColors.primary,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            );
+          },
+        );
+      }),
+    );
+  }
+}
+
+class TypewriterText extends StatefulWidget {
+  const TypewriterText({
+    super.key,
+    required this.text,
+    this.speed = const Duration(milliseconds: 15),
+  });
+
+  final String text;
+  final Duration speed;
+
+  @override
+  State<TypewriterText> createState() => _TypewriterTextState();
+}
+
+class _TypewriterTextState extends State<TypewriterText> {
+  String _displayedText = '';
+  int _currentIndex = 0;
+  bool _isTyping = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _startTyping();
+  }
+
+  @override
+  void didUpdateWidget(TypewriterText oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.text != widget.text) {
+      _startTyping();
+    }
+  }
+
+  void _startTyping() {
+    setState(() {
+      _displayedText = '';
+      _currentIndex = 0;
+      _isTyping = true;
+    });
+    _type();
+  }
+
+  void _type() {
+    if (!mounted || !_isTyping) return;
+    if (_currentIndex < widget.text.length) {
+      setState(() {
+        _currentIndex++;
+        _displayedText = widget.text.substring(0, _currentIndex);
+      });
+      Future.delayed(widget.speed, _type);
+    } else {
+      setState(() {
+        _isTyping = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _isTyping = false;
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      _displayedText,
+      style: _SearchText.bodyStrong().copyWith(
+        height: 1.6,
+        color: _SearchColors.text,
+      ),
+    );
+  }
+}
+
+class _AssistantOverviewCard extends StatelessWidget {
+  const _AssistantOverviewCard({
+    required this.query,
+    required this.summary,
+    required this.isThinking,
+    required this.tone,
+    required this.length,
+    required this.onToneChanged,
+    required this.onLengthChanged,
+    required this.onNotebookSave,
+    required this.onContinueChat,
+  });
+
+  final String query;
+  final String summary;
+  final bool isThinking;
+  final String tone;
+  final String length;
+  final ValueChanged<String> onToneChanged;
+  final ValueChanged<String> onLengthChanged;
+  final VoidCallback onNotebookSave;
+  final VoidCallback onContinueChat;
+
+  @override
+  Widget build(BuildContext context) {
+    return _ProtoCard(
+      background: _SearchColors.softMint,
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(6.w),
+                decoration: const BoxDecoration(
+                  color: _SearchColors.primary,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.support_agent_rounded, color: Colors.white, size: 16.sp),
+              ),
+              SizedBox(width: 8.w),
+              Text(
+                '小法助 AI 法律整理',
+                style: _SearchText.section().copyWith(color: _SearchColors.primary),
+              ),
+              const Spacer(),
+              if (isThinking)
+                const _AssistantThinkingIndicator()
+              else
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: _SearchColors.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(6.r),
+                  ),
+                  child: Text(
+                    '已生成',
+                    style: _SearchText.caption().copyWith(
+                      color: _SearchColors.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          SizedBox(height: 14.h),
+          Divider(color: _SearchColors.border.withValues(alpha: 0.5), height: 1),
+          SizedBox(height: 14.h),
+          if (isThinking)
+            Container(
+              height: 100.h,
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const _AssistantThinkingIndicator(),
+                  SizedBox(height: 12.h),
+                  Text(
+                    '正在彙整法律重點與實務裁判...',
+                    style: _SearchText.caption().copyWith(color: _SearchColors.mutedText),
+                  ),
+                ],
+              ),
+            )
+          else ...[
+            TypewriterText(text: summary),
+            SizedBox(height: 16.h),
+            Row(
+              children: [
+                Text('回答風格：', style: _SearchText.caption().copyWith(fontWeight: FontWeight.bold)),
+                _StyleChip(
+                  label: '白話',
+                  selected: tone == '白話',
+                  onTap: () => onToneChanged('白話'),
+                ),
+                SizedBox(width: 6.w),
+                _StyleChip(
+                  label: '專業',
+                  selected: tone == '專業',
+                  onTap: () => onToneChanged('專業'),
+                ),
+                SizedBox(width: 12.w),
+                Text('大綱長度：', style: _SearchText.caption().copyWith(fontWeight: FontWeight.bold)),
+                _StyleChip(
+                  label: '精簡',
+                  selected: length == '精簡',
+                  onTap: () => onLengthChanged('精簡'),
+                ),
+                SizedBox(width: 6.w),
+                _StyleChip(
+                  label: '詳細',
+                  selected: length == '詳細',
+                  onTap: () => onLengthChanged('詳細'),
+                ),
+              ],
+            ),
+            SizedBox(height: 16.h),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: _SearchColors.primary,
+                      side: const BorderSide(color: _SearchColors.border),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                      padding: EdgeInsets.symmetric(vertical: 8.h),
+                    ),
+                    icon: Icon(Icons.bookmark_add_outlined, size: 16.sp),
+                    label: Text('📌 摘錄筆記', style: _SearchText.captionStrong()),
+                    onPressed: onNotebookSave,
+                  ),
+                ),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: FilledButton.icon(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: _SearchColors.primary,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                      padding: EdgeInsets.symmetric(vertical: 8.h),
+                    ),
+                    icon: Icon(Icons.forum_outlined, size: 16.sp),
+                    label: Text('💬 繼續聊聊', style: _SearchText.captionStrong().copyWith(color: Colors.white)),
+                    onPressed: onContinueChat,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _StyleChip extends StatelessWidget {
+  const _StyleChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+        decoration: BoxDecoration(
+          color: selected ? _SearchColors.primary : Colors.white,
+          border: Border.all(color: selected ? _SearchColors.primary : _SearchColors.border),
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+        child: Text(
+          label,
+          style: _SearchText.caption().copyWith(
+            color: selected ? Colors.white : _SearchColors.text,
+            fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
       ),
     );
   }
