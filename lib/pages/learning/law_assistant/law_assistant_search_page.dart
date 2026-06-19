@@ -1319,6 +1319,9 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
                 padding: EdgeInsets.all(12.w),
                 child: TextField(
                   controller: controller,
+                  onTapOutside: (event) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
                   minLines: 3,
                   maxLines: 5,
                   decoration: InputDecoration(

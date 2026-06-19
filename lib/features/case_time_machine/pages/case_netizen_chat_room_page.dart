@@ -182,6 +182,7 @@ class _CaseNetizenChatRoomPageState extends State<CaseNetizenChatRoomPage> {
               _buildAppBar(context),
               Expanded(
                 child: ListView(
+                  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                   controller: _scrollController,
                   padding: EdgeInsets.fromLTRB(14.w, 12.h, 14.w, 18.h),
                   children: [
@@ -1209,6 +1210,9 @@ class _CaseNetizenChatRoomPageState extends State<CaseNetizenChatRoomPage> {
                   child: TextField(
                     controller: _messageController,
                     focusNode: _messageFocusNode,
+                    onTapOutside: (event) {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                    },
                     minLines: 1,
                     maxLines: 3,
                     style: TextStyle(

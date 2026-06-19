@@ -1553,6 +1553,9 @@ class _SearchField extends StatelessWidget {
       ),
       child: TextField(
         controller: controller,
+        onTapOutside: (event) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
         textInputAction: TextInputAction.search,
         onSubmitted: onSubmitted,
         textAlignVertical: TextAlignVertical.center,

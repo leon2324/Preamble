@@ -5329,6 +5329,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                     SizedBox(height: 6.h),
                     TextField(
                       controller: noteController,
+                      onTapOutside: (event) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
                       minLines: 2,
                       maxLines: 4,
                       style: getNotebookTextStyle(dialogContext, TextStyle(fontSize: 12.5.sp, color: AppColors.textPrimary)),
@@ -5447,6 +5450,7 @@ class KnowLawPageState extends State<KnowLawPage> {
           ),
           padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 16.h + MediaQuery.of(sheetContext).viewInsets.bottom),
           child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -5586,6 +5590,9 @@ class KnowLawPageState extends State<KnowLawPage> {
           SizedBox(height: 6.h),
           TextField(
             controller: controller,
+            onTapOutside: (event) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
             minLines: minLines,
             maxLines: minLines + 2,
             style: inputStyle,
@@ -6004,6 +6011,9 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: TextField(
+                  onTapOutside: (event) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
                   onChanged: (value) {
                     setState(() {
                       _searchQuery = value;
@@ -6080,6 +6090,7 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
                     final List<LearningMockArticle> list = snapshot.data ?? [];
                     
                     return CustomScrollView(
+                      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                       controller: scrollController,
                       physics: const AlwaysScrollableScrollPhysics(),
                       slivers: [
@@ -6629,6 +6640,9 @@ class _CustomClassroomDialogState extends State<_CustomClassroomDialog> {
         SizedBox(height: 8.h),
         TextField(
           controller: _controller,
+          onTapOutside: (event) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
           maxLines: 4,
           style: TextStyle(fontSize: 13.sp, color: AppColors.textPrimary),
           decoration: InputDecoration(
@@ -6756,6 +6770,7 @@ class _CustomClassroomDialogState extends State<_CustomClassroomDialog> {
           ],
         ),
         child: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           child: Padding(
             padding: EdgeInsets.all(20.w),
             child: _isGenerating ? _buildLoadingView() : _buildInputView(),

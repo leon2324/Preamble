@@ -195,6 +195,9 @@ class _JournalSearchField extends StatelessWidget {
       ),
       child: TextField(
         controller: controller,
+        onTapOutside: (event) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
         onChanged: onChanged,
         onSubmitted: (value) => onSubmitted(value.trim()),
         textInputAction: TextInputAction.search,

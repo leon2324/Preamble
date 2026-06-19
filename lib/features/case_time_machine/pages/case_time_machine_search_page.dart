@@ -211,6 +211,9 @@ class _CaseTimeMachineSearchPageState extends State<CaseTimeMachineSearchPage> {
                   ),
                   child: TextField(
                     controller: _searchController,
+                    onTapOutside: (event) {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                    },
                     autofocus: widget.initialQuery == null ||
                         widget.initialQuery!.isEmpty,
                     textInputAction: TextInputAction.search,
@@ -341,6 +344,7 @@ class _CaseTimeMachineSearchPageState extends State<CaseTimeMachineSearchPage> {
                     : results.isEmpty
                         ? _buildEmptyState()
                     : ListView.separated(
+                        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                         padding: EdgeInsets.fromLTRB(18.w, 0, 18.w, 24.h),
                         itemCount: results.length,
                         separatorBuilder: (_, __) => SizedBox(height: 12.h),

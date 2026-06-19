@@ -535,6 +535,9 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                           ),
                           child: TextField(
                             controller: noteController,
+                            onTapOutside: (event) {
+                              FocusManager.instance.primaryFocus?.unfocus();
+                            },
                             maxLines: 4,
                             onChanged: (val) {
                               gameState.setArticleNote(widget.article.title, val);
@@ -802,6 +805,7 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
 
           return NotebookBackground(
             child: ListView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 80.h), // 底部留白以防阻擋懸浮按鈕
               children: [
                 // 1. 主卡片

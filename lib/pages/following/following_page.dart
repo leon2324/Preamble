@@ -78,6 +78,7 @@ class _FollowingPageState extends State<FollowingPage> {
     return Scaffold(
       backgroundColor: _FollowColors.background,
       body: ListView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         physics: const BouncingScrollPhysics(),
         padding: EdgeInsets.fromLTRB(16.w, topPadding + 12.h, 16.w, 32.h),
         children: [
@@ -818,6 +819,9 @@ class _SearchView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextField(
+          onTapOutside: (event) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
           decoration: InputDecoration(
             hintText: '搜尋你追蹤的內容',
             prefixIcon: const Icon(Icons.search_rounded),

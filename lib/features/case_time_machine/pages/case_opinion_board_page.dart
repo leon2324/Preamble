@@ -352,6 +352,7 @@ class _CaseOpinionBoardPageState extends State<CaseOpinionBoardPage> {
             // 便利貼牆面 (錯落排列的 ListView)
             Expanded(
               child: ListView.builder(
+                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                 padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 16.h),
                 itemCount: _opinions.length,
                 itemBuilder: (context, index) {
@@ -452,6 +453,9 @@ class _CaseOpinionBoardPageState extends State<CaseOpinionBoardPage> {
                   Expanded(
                     child: TextField(
                       controller: _opinionController,
+                      onTapOutside: (event) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
                       style: TextStyle(fontSize: 12.5.sp),
                       decoration: InputDecoration(
                         hintText: '對本案說說你的理性與感性想法...',

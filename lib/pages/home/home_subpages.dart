@@ -354,6 +354,7 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
       body: Stack(
         children: [
           ListView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             physics: const BouncingScrollPhysics(),
             padding: EdgeInsets.fromLTRB(16.w, topPadding + 132.h, 16.w, 30.h),
             children: [
@@ -1029,6 +1030,9 @@ class _LifeTrapSearchBar extends StatelessWidget {
       ),
       child: TextField(
         controller: controller,
+        onTapOutside: (event) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
         textInputAction: TextInputAction.search,
         decoration: InputDecoration(
           hintText: '搜尋租屋、網購、養狗、交通...',

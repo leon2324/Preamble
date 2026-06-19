@@ -1102,6 +1102,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                   ];
                 },
                 body: CustomScrollView(
+                  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                   physics: const BouncingScrollPhysics(
                     parent: AlwaysScrollableScrollPhysics(),
                   ),
@@ -1640,6 +1641,9 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
               // 輸入框
               TextField(
                 controller: _commentController,
+                onTapOutside: (event) {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
                 maxLines: 3,
                 style: TextStyle(
                     fontSize: 12.5.sp,

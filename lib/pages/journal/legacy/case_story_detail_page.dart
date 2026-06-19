@@ -1192,6 +1192,9 @@ class _CaseNoteSheetState extends State<_CaseNoteSheet> {
               // 是為了讓目前真的能完成的動作和使用者看到的文案一致。
               TextField(
                 controller: _controller,
+                onTapOutside: (event) {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
                 minLines: 4,
                 maxLines: 7,
                 textInputAction: TextInputAction.newline,

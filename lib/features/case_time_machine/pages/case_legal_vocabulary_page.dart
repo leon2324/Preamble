@@ -148,6 +148,9 @@ class _CaseLegalVocabularyPageState extends State<CaseLegalVocabularyPage> {
                   border: Border.all(color: CaseTimeMachineColors.borderLight),
                 ),
                 child: TextField(
+                  onTapOutside: (event) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
                   onChanged: (val) {
                     setState(() {
                       _searchQuery = val;
@@ -225,6 +228,7 @@ class _CaseLegalVocabularyPageState extends State<CaseLegalVocabularyPage> {
                       ),
                     )
                   : GridView.builder(
+                      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                       padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 32.h),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 1, // 單欄大卡片，以容納豐富的白話解釋

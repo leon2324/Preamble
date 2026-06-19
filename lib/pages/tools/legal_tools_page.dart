@@ -1645,6 +1645,9 @@ class _SheetTextField extends StatelessWidget {
           SizedBox(height: 6.h),
           TextField(
             controller: controller,
+            onTapOutside: (event) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
             minLines: minLines,
             maxLines: minLines + 2,
             style: TextStyle(color: _ToolColors.text, fontSize: 13.sp),
