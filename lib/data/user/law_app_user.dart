@@ -18,6 +18,8 @@ class LawAppUser {
     this.followedTopicIds = const [],
     this.usageQuota = 1,
     this.usedQuotaToday = 0,
+    this.profession = 'citizen',
+    this.aiStyle = 'simple',
   });
 
   final String id;
@@ -31,6 +33,8 @@ class LawAppUser {
   final List<String> followedTopicIds;
   final int usageQuota;
   final int usedQuotaToday;
+  final String profession;
+  final String aiStyle;
 
   int get remainingAiQuota {
     final remaining = usageQuota - usedQuotaToday;
@@ -49,6 +53,8 @@ class LawAppUser {
       createdAt: now,
       updatedAt: now,
       usageQuota: LawAppAccessTier.guest.defaultDailyAiQuota,
+      profession: 'citizen',
+      aiStyle: 'simple',
     );
   }
 
@@ -62,6 +68,8 @@ class LawAppUser {
       createdAt: now,
       updatedAt: now,
       usageQuota: LawAppAccessTier.member.defaultDailyAiQuota,
+      profession: 'citizen',
+      aiStyle: 'simple',
     );
   }
 
@@ -75,6 +83,8 @@ class LawAppUser {
       createdAt: now,
       updatedAt: now,
       usageQuota: LawAppAccessTier.subscriber.defaultDailyAiQuota,
+      profession: 'lawyer',
+      aiStyle: 'pro_analysis',
     );
   }
 
@@ -84,6 +94,9 @@ class LawAppUser {
       (value) => value.name == tierText,
       orElse: () => LawAppAccessTier.guest,
     );
+
+    final prof = _stringValue(json, const ['profession']);
+    final style = _stringValue(json, const ['aiStyle', 'ai_style']);
 
     return LawAppUser(
       id: _stringValue(json, const ['id', 'userId', 'user_id']),
@@ -107,6 +120,8 @@ class LawAppUser {
         const ['usedQuotaToday', 'used_quota_today'],
         0,
       ),
+      profession: prof.isEmpty ? 'citizen' : prof,
+      aiStyle: style.isEmpty ? 'simple' : style,
     );
   }
 
@@ -123,6 +138,8 @@ class LawAppUser {
       'followedTopicIds': followedTopicIds,
       'usageQuota': usageQuota,
       'usedQuotaToday': usedQuotaToday,
+      'profession': profession,
+      'aiStyle': aiStyle,
     };
   }
 
@@ -138,6 +155,8 @@ class LawAppUser {
     List<String>? followedTopicIds,
     int? usageQuota,
     int? usedQuotaToday,
+    String? profession,
+    String? aiStyle,
   }) {
     return LawAppUser(
       id: id ?? this.id,
@@ -151,6 +170,8 @@ class LawAppUser {
       followedTopicIds: followedTopicIds ?? this.followedTopicIds,
       usageQuota: usageQuota ?? this.usageQuota,
       usedQuotaToday: usedQuotaToday ?? this.usedQuotaToday,
+      profession: profession ?? this.profession,
+      aiStyle: aiStyle ?? this.aiStyle,
     );
   }
 }

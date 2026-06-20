@@ -843,3 +843,758 @@ class _FeedbackSheetState extends State<FeedbackSheet> {
     }
   }
 }
+
+// 台灣繁體中文教學註解：
+// 以下為新增的個人中心功能擴充元件。
+// 包含學習成就歷程橫幅、成就室底頁、通知微調設定、以及帳號與安全模擬對話框。
+
+class LearningProgressBanner extends StatelessWidget {
+  const LearningProgressBanner({super.key, required this.appState});
+
+  final LawAppState appState;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardColor = isDark ? const Color(0xFF171C22) : Colors.white;
+    final borderColor = isDark ? const Color(0xFF2B3441) : AppColors.border;
+    final textMuted = isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
+
+    final savedStatuteCount = appState.followingSummary.savedStatuteIds.length;
+    
+    // 根據追蹤法條數計算等級
+    String levelName = '法學小白 🐣';
+    if (savedStatuteCount >= 1 && savedStatuteCount <= 2) {
+      levelName = '法學初學者 🔍';
+    } else if (savedStatuteCount >= 3) {
+      levelName = '法學進修者 🏛️';
+    }
+
+    return InkWell(
+      onTap: () {
+        showModalBottomSheet<void>(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (context) => AchievementRoomSheet(appState: appState),
+        );
+      },
+      borderRadius: BorderRadius.circular(20.r),
+      child: Container(
+        padding: EdgeInsets.all(14.w),
+        decoration: BoxDecoration(
+          color: cardColor,
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(color: borderColor),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(8.w),
+              decoration: BoxDecoration(
+                color: const Color(0xFFD6A85F).withOpacity(0.08),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.workspace_premium_rounded, color: const Color(0xFFD6A85F), size: 22.sp),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '我的學習歷程',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w900,
+                      color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
+                    ),
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    '等級：$levelName (已收藏 $savedStatuteCount 條法規)',
+                    style: TextStyle(
+                      fontSize: 11.5.sp,
+                      color: textMuted,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: isDark ? const Color(0xFF556070) : AppColors.placeholder,
+              size: 14.sp,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AchievementRoomSheet extends StatelessWidget {
+  const AchievementRoomSheet({super.key, required this.appState});
+
+  final LawAppState appState;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final surfaceColor = isDark ? const Color(0xFF171C22) : Colors.white;
+    final textMuted = isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
+
+    final savedStatuteCount = appState.followingSummary.savedStatuteIds.length;
+    final savedCaseCount = appState.savedCaseIds.length;
+    final noteCount = appState.caseNoteDrafts.length;
+
+    // 根據條件計算成就啟動狀態
+    final hasNovice = savedStatuteCount >= 1;
+    final hasScholar = savedStatuteCount >= 3;
+    final hasCaseMaster = savedCaseCount >= 1;
+    final hasNoteTaker = noteCount >= 1;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: surfaceColor,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+      ),
+      padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 24.h),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                width: 40.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: isDark ? const Color(0xFF2B3441) : AppColors.border,
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              '法律成就陳列室',
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w900,
+                color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20.h),
+
+            // 成就列表
+            _buildAchievementTile(
+              context,
+              title: '法學初學者',
+              description: '收藏至少 1 條法規 (已收藏 $savedStatuteCount 條)',
+              icon: Icons.search_rounded,
+              isUnlocked: hasNovice,
+              badgeColor: const Color(0xFF2E7D32),
+            ),
+            SizedBox(height: 10.h),
+            _buildAchievementTile(
+              context,
+              title: '法學進修者',
+              description: '收藏至少 3 條法規 (已收藏 $savedStatuteCount 條)',
+              icon: Icons.account_balance_rounded,
+              isUnlocked: hasScholar,
+              badgeColor: const Color(0xFFD6A85F),
+            ),
+            SizedBox(height: 10.h),
+            _buildAchievementTile(
+              context,
+              title: '修法達人',
+              description: '收藏至少 1 筆判決案件 (已收藏 $savedCaseCount 筆)',
+              icon: Icons.gavel_rounded,
+              isUnlocked: hasCaseMaster,
+              badgeColor: const Color(0xFFC96B3B),
+            ),
+            SizedBox(height: 10.h),
+            _buildAchievementTile(
+              context,
+              title: '卷宗推手',
+              description: '撰寫至少 1 筆案件筆記 (已撰寫 $noteCount 筆)',
+              icon: Icons.drive_file_rename_outline_rounded,
+              isUnlocked: hasNoteTaker,
+              badgeColor: const Color(0xFF3F51B5),
+            ),
+            SizedBox(height: 24.h),
+
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: () => Navigator.pop(context),
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                  padding: EdgeInsets.symmetric(vertical: 12.h),
+                ),
+                child: const Text('關閉'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAchievementTile(
+    BuildContext context, {
+    required String title,
+    required String description,
+    required IconData icon,
+    required bool isUnlocked,
+    required Color badgeColor,
+  }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textMuted = isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
+    final cardColor = isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2);
+    final borderSide = BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
+
+    return Container(
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(
+          color: isUnlocked ? badgeColor.withOpacity(0.4) : borderSide.color,
+          width: isUnlocked ? 1.5.w : 1.w,
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(8.w),
+            decoration: BoxDecoration(
+              color: isUnlocked ? badgeColor.withOpacity(0.12) : Colors.grey.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              color: isUnlocked ? badgeColor : Colors.grey,
+              size: 24.sp,
+            ),
+          ),
+          SizedBox(width: 14.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
+                        color: isUnlocked
+                            ? (isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary)
+                            : Colors.grey,
+                      ),
+                    ),
+                    if (isUnlocked) ...[
+                      SizedBox(width: 6.w),
+                      Icon(Icons.check_circle_rounded, color: badgeColor, size: 14.sp),
+                    ],
+                  ],
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  description,
+                  style: TextStyle(
+                    fontSize: 11.5.sp,
+                    color: isUnlocked ? textMuted : Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Text(
+            isUnlocked ? '已解鎖' : '未解鎖',
+            style: TextStyle(
+              fontSize: 11.sp,
+              fontWeight: FontWeight.bold,
+              color: isUnlocked ? badgeColor : Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class NotificationSettingsSheet extends StatefulWidget {
+  const NotificationSettingsSheet({super.key, required this.appState});
+
+  final LawAppState appState;
+
+  @override
+  State<NotificationSettingsSheet> createState() => _NotificationSettingsSheetState();
+}
+
+class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
+  late String _frequency;
+  late String _channel;
+
+  @override
+  void initState() {
+    super.initState();
+    _frequency = widget.appState.notifyFrequency;
+    _channel = widget.appState.notifyChannel;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final surfaceColor = isDark ? const Color(0xFF171C22) : Colors.white;
+    final borderSide = BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
+    final textMuted = isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: surfaceColor,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+      ),
+      padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 24.h),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              width: 40.w,
+              height: 4.h,
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF2B3441) : AppColors.border,
+                borderRadius: BorderRadius.circular(2.r),
+              ),
+            ),
+          ),
+          SizedBox(height: 16.h),
+          Text(
+            '通知精細設定',
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w900,
+              color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 20.h),
+
+          // 頻率選擇
+          Text('通知頻率', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: textMuted)),
+          SizedBox(height: 8.h),
+          Row(
+            children: [
+              _buildOptionCard(
+                type: 'frequency',
+                value: 'instant',
+                label: '即時推送',
+                icon: Icons.flash_on_rounded,
+              ),
+              SizedBox(width: 8.w),
+              _buildOptionCard(
+                type: 'frequency',
+                value: 'daily',
+                label: '每日摘要',
+                icon: Icons.today_rounded,
+              ),
+              SizedBox(width: 8.w),
+              _buildOptionCard(
+                type: 'frequency',
+                value: 'weekly',
+                label: '每週彙報',
+                icon: Icons.date_range_rounded,
+              ),
+            ],
+          ),
+          SizedBox(height: 20.h),
+
+          // 管道選擇
+          Text('通知管道', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: textMuted)),
+          SizedBox(height: 8.h),
+          Row(
+            children: [
+              _buildOptionCard(
+                type: 'channel',
+                value: 'push',
+                label: '系統推送',
+                icon: Icons.notifications_active_rounded,
+              ),
+              SizedBox(width: 8.w),
+              _buildOptionCard(
+                type: 'channel',
+                value: 'email',
+                label: '信箱副本',
+                icon: Icons.email_rounded,
+              ),
+              SizedBox(width: 8.w),
+              _buildOptionCard(
+                type: 'channel',
+                value: 'both',
+                label: '雙管齊下',
+                icon: Icons.all_inclusive_rounded,
+              ),
+            ],
+          ),
+          SizedBox(height: 24.h),
+
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: OutlinedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 12.h),
+                    side: borderSide,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+                  ),
+                  child: Text('取消', style: TextStyle(fontSize: 14.sp, color: textMuted)),
+                ),
+              ),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: FilledButton(
+                  onPressed: () {
+                    widget.appState.updateSettings(
+                      notifyFrequency: _frequency,
+                      notifyChannel: _channel,
+                    );
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('通知設定已成功儲存！'),
+                        backgroundColor: Color(0xFF2E7D32),
+                      ),
+                    );
+                  },
+                  style: FilledButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    padding: EdgeInsets.symmetric(vertical: 12.h),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+                  ),
+                  child: Text('儲存', style: TextStyle(fontSize: 14.sp, color: Colors.white, fontWeight: FontWeight.bold)),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOptionCard({
+    required String type,
+    required String value,
+    required String label,
+    required IconData icon,
+  }) {
+    final isSelected = type == 'frequency' ? _frequency == value : _channel == value;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            if (type == 'frequency') {
+              _frequency = value;
+            } else {
+              _channel = value;
+            }
+          });
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 4.w),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? (isDark ? const Color(0xFF243B63) : const Color(0xFFEAF0F8))
+                : (isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2)),
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(
+              color: isSelected
+                  ? AppColors.accent
+                  : (isDark ? const Color(0xFF2B3441) : AppColors.border),
+              width: isSelected ? 1.5.w : 1.w,
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                color: isSelected ? AppColors.accent : (isDark ? Colors.white70 : AppColors.textSecondary),
+                size: 20.sp,
+              ),
+              SizedBox(height: 6.h),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 11.sp,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  color: isSelected ? AppColors.accent : (isDark ? Colors.white70 : AppColors.textPrimary),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class AccountSecuritySheet extends StatefulWidget {
+  const AccountSecuritySheet({super.key, required this.appState});
+
+  final LawAppState appState;
+
+  @override
+  State<AccountSecuritySheet> createState() => _AccountSecuritySheetState();
+}
+
+class _AccountSecuritySheetState extends State<AccountSecuritySheet> {
+  bool _isGoogleLinked = true;
+  bool _isAppleLinked = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final surfaceColor = isDark ? const Color(0xFF171C22) : Colors.white;
+    final borderSide = BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
+    final textMuted = isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: surfaceColor,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+      ),
+      padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 24.h),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                width: 40.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: isDark ? const Color(0xFF2B3441) : AppColors.border,
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              '帳號與安全管理',
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w900,
+                color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20.h),
+
+            // 帳號綁定模擬
+            Text('第三方帳號綁定', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: textMuted)),
+            SizedBox(height: 8.h),
+            _buildLinkTile(
+              label: 'Google 帳號',
+              icon: Icons.g_mobiledata_rounded,
+              isLinked: _isGoogleLinked,
+              onChanged: (val) {
+                setState(() => _isGoogleLinked = val);
+                _showSnackBar('Google 帳號${val ? "連結成功" : "已解除連結"}');
+              },
+            ),
+            SizedBox(height: 8.h),
+            _buildLinkTile(
+              label: 'Apple 帳號',
+              icon: Icons.apple_rounded,
+              isLinked: _isAppleLinked,
+              onChanged: (val) {
+                setState(() => _isAppleLinked = val);
+                _showSnackBar('Apple 帳號${val ? "連結成功" : "已解除連結"}');
+              },
+            ),
+            SizedBox(height: 20.h),
+
+            // 重設密碼
+            Text('密碼安全', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: textMuted)),
+            SizedBox(height: 8.h),
+            ListTile(
+              leading: Icon(Icons.lock_reset_rounded, color: AppColors.primary, size: 22.sp),
+              title: const Text('重設登入密碼', style: TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: const Text('更換您用於登入 LawApp 的獨立密碼'),
+              trailing: Icon(Icons.arrow_forward_ios_rounded, size: 14.sp),
+              tileColor: isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
+                side: borderSide,
+              ),
+              onTap: _showResetPasswordDialog,
+            ),
+            SizedBox(height: 24.h),
+
+            // 刪除帳號（危險區域）
+            Text('危險區域', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: Colors.redAccent)),
+            SizedBox(height: 8.h),
+            ListTile(
+              leading: Icon(Icons.delete_forever_rounded, color: Colors.redAccent, size: 22.sp),
+              title: const Text('永久刪除帳號', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.redAccent)),
+              subtitle: const Text('刪除後所有收藏、追蹤與筆記紀錄皆無法復原'),
+              trailing: Icon(Icons.arrow_forward_ios_rounded, color: Colors.redAccent, size: 14.sp),
+              tileColor: isDark ? const Color(0x11FF5252) : const Color(0xFFFFF1F1),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
+                side: const BorderSide(color: Colors.redAccent, width: 0.8),
+              ),
+              onTap: _showDeleteAccountDialog,
+            ),
+            SizedBox(height: 24.h),
+
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: () => Navigator.pop(context),
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                  padding: EdgeInsets.symmetric(vertical: 12.h),
+                ),
+                child: const Text('關閉'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLinkTile({
+    required String label,
+    required IconData icon,
+    required bool isLinked,
+    required ValueChanged<bool> onChanged,
+  }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final borderSide = BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: borderSide.color),
+      ),
+      child: ListTile(
+        leading: Icon(icon, color: isLinked ? AppColors.accent : Colors.grey, size: 26.sp),
+        title: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(isLinked ? '已連結' : '未連結'),
+        trailing: Switch(
+          value: isLinked,
+          activeColor: AppColors.accent,
+          onChanged: onChanged,
+        ),
+      ),
+    );
+  }
+
+  void _showSnackBar(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        backgroundColor: const Color(0xFF2E7D32),
+      ),
+    );
+  }
+
+  void _showResetPasswordDialog() {
+    final controller = TextEditingController();
+    showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('重設密碼', style: TextStyle(fontWeight: FontWeight.bold)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text('請輸入新的登入密碼：'),
+              SizedBox(height: 12.h),
+              TextField(
+                controller: controller,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: '新密碼',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('取消'),
+            ),
+            TextButton(
+              onPressed: () {
+                final pw = controller.text.trim();
+                if (pw.length < 6) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('密碼長度需至少 6 字元！'), backgroundColor: Colors.redAccent),
+                  );
+                  return;
+                }
+                Navigator.pop(context);
+                _showSnackBar('密碼變更成功！');
+              },
+              child: const Text('確定變更', style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showDeleteAccountDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('⚠️ 高危警示：刪除帳號', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)),
+          content: const Text('您確定要永久刪除此帳號嗎？刪除後，您將被登出，並且所有的儲存、追蹤及筆記資料將被徹底清除，此操作無法復原。'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('取消'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // 關閉對話框
+                Navigator.pop(context); // 關閉 Bottom Sheet
+                widget.appState.signOut(); // 執行登出（回復訪客狀態）
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('帳號已刪除，已為您回復訪客身分！'),
+                    backgroundColor: Colors.redAccent,
+                  ),
+                );
+              },
+              child: const Text('確定刪除', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}

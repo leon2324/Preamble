@@ -110,6 +110,11 @@ class ProfilePage extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
+                if (!appState.isGuest) ...[
+                  SizedBox(height: 8.h),
+                  // 台灣繁體中文教學註解：依據使用者的專業身分顯示金色/金屬感標籤 Badge
+                  _buildProfessionBadge(context, appState.currentUser.profession),
+                ],
                 SizedBox(height: 12.h),
 
                 // 方案與額度膠囊 Badge
@@ -152,6 +157,9 @@ class ProfilePage extends StatelessWidget {
           _SectionTitle('我的資料'),
           SizedBox(height: 10.h),
           DashboardGrid(appState: appState),
+          SizedBox(height: 10.h),
+          // 台灣繁體中文教學註解：新增學習歷程與等級橫幅，顯示讀者法律智識等級
+          LearningProgressBanner(appState: appState),
           
           SizedBox(height: 20.h),
 
@@ -169,6 +177,27 @@ class ProfilePage extends StatelessWidget {
                   onChanged: appState.setDarkMode,
                   activeColor: AppColors.accent,
                 ),
+              ),
+              SettingsTile(
+                icon: Icons.format_size_rounded,
+                iconColor: Colors.teal,
+                title: '閱讀字型大小',
+                subtitle: '調整 App 內文字的大小比例',
+                onTap: () => _showFontSizeDialog(context, appState),
+              ),
+              SettingsTile(
+                icon: Icons.notifications_active_rounded,
+                iconColor: Colors.orange,
+                title: '通知推送設定',
+                subtitle: '自訂推播通知頻率與管道類型',
+                onTap: () => _showNotificationSettingsSheet(context, appState),
+              ),
+              SettingsTile(
+                icon: Icons.security_rounded,
+                iconColor: Colors.blueAccent,
+                title: '帳號與安全管理',
+                subtitle: '管理第三方帳號綁定與安全設定',
+                onTap: () => _showAccountSecuritySheet(context, appState),
               ),
               SettingsTile(
                 icon: Icons.delete_sweep_rounded,
@@ -535,6 +564,138 @@ class ProfilePage extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+
+  // 台灣繁體中文教學註解：依據使用者的專業身分代碼，顯示對應風格的金色或金屬質感標籤。
+  Widget _buildProfessionBadge(BuildContext context, String profession) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    String label = '一般民眾';
+    IconData icon = Icons.person_outline_rounded;
+    Color badgeColor = const Color(0xFFC96B3B);
+    Color badgeBg = const Color(0xFFFBF0EA);
+
+    if (profession == 'lawyer') {
+      label = '執業律師';
+      icon = Icons.gavel_rounded;
+      badgeColor = const Color(0xFFD6A85F);
+      badgeBg = isDark ? const Color(0xFF332715) : const Color(0xFFFAF2E6);
+    } else if (profession == 'legal_staff') {
+      label = '法務人員';
+      icon = Icons.business_center_rounded;
+      badgeColor = const Color(0xFF3F51B5);
+      badgeBg = isDark ? const Color(0xFF1B2245) : const Color(0xFFE8EAF6);
+    } else if (profession == 'law_student') {
+      label = '法學生';
+      icon = Icons.school_rounded;
+      badgeColor = const Color(0xFF2E7D32);
+      badgeBg = isDark ? const Color(0xFF133215) : const Color(0xFFE8F5E9);
+    } else {
+      label = '一般民眾';
+      icon = Icons.person_rounded;
+      badgeColor = isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
+      badgeBg = isDark ? const Color(0xFF2B3441) : AppColors.chipSurface;
+    }
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 3.h),
+      decoration: BoxDecoration(
+        color: badgeBg,
+        borderRadius: BorderRadius.circular(100.r),
+        border: Border.all(color: badgeColor.withOpacity(0.3), width: 1.w),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: badgeColor, size: 12.sp),
+          SizedBox(width: 4.w),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10.5.sp,
+              color: badgeColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 台灣繁體中文教學註解：點擊彈出字型大小調整 Dialog，點選後會將更新值儲存至 SharedPreferences。
+  void _showFontSizeDialog(BuildContext context, LawAppState appState) {
+    showDialog<void>(
+      context: context,
+      builder: (context) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        final surfaceColor = isDark ? const Color(0xFF171C22) : Colors.white;
+        final currentScale = appState.fontSizeScale;
+
+        return AlertDialog(
+          backgroundColor: surfaceColor,
+          title: const Text('閱讀字型大小', style: TextStyle(fontWeight: FontWeight.bold)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildFontSizeOption(context, appState, label: '小 (0.85)', scale: 0.85, current: currentScale),
+              _buildFontSizeOption(context, appState, label: '適中 (1.00)', scale: 1.0, current: currentScale),
+              _buildFontSizeOption(context, appState, label: '大 (1.15)', scale: 1.15, current: currentScale),
+              _buildFontSizeOption(context, appState, label: '特大 (1.30)', scale: 1.30, current: currentScale),
+            ],
+          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('關閉'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildFontSizeOption(
+    BuildContext context,
+    LawAppState appState, {
+    required String label,
+    required double scale,
+    required double current,
+  }) {
+    return RadioListTile<double>(
+      title: Text(label, style: TextStyle(fontSize: 14.sp * scale)),
+      value: scale,
+      groupValue: current,
+      activeColor: AppColors.accent,
+      onChanged: (val) {
+        if (val != null) {
+          appState.updateSettings(fontSizeScale: val);
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('閱讀字型大小已更新！'), backgroundColor: Color(0xFF2E7D32)),
+          );
+        }
+      },
+    );
+  }
+
+  // 台灣繁體中文教學註解：開啟通知精細設定 Bottom Sheet。
+  void _showNotificationSettingsSheet(BuildContext context, LawAppState appState) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => NotificationSettingsSheet(appState: appState),
+    );
+  }
+
+  // 台灣繁體中文教學註解：開啟帳號與安全管理底頁。
+  void _showAccountSecuritySheet(BuildContext context, LawAppState appState) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => AccountSecuritySheet(appState: appState),
     );
   }
 }

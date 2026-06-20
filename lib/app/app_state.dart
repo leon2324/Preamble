@@ -26,6 +26,9 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
   static const _followingSummaryKey = 'lawAppFollowingSummary';
   static const _caseNoteDraftsKey = 'lawAppCaseNoteDrafts';
   static const _currentUserKey = 'lawAppCurrentUser';
+  static const _fontSizeScaleKey = 'lawAppFontSizeScale';
+  static const _notifyFrequencyKey = 'lawAppNotifyFrequency';
+  static const _notifyChannelKey = 'lawAppNotifyChannel';
 
   LawAppState({AuthService? authService})
       : _authService = authService ?? DemoAuthService() {
@@ -43,6 +46,9 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
   final Set<String> _savedCaseIds = <String>{};
   FollowingSummary _followingSummary = FollowingSummary.empty();
   Map<String, String> _caseNoteDrafts = <String, String>{};
+  double _fontSizeScale = 1.0;
+  String _notifyFrequency = 'instant';
+  String _notifyChannel = 'push';
 
   LawAppAccessTier get accessTier => _accessTier;
   LawAppUser get currentUser => _currentUser;
@@ -51,6 +57,9 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
   bool get isGuest => _accessTier == LawAppAccessTier.guest;
   bool get isSignedIn => _accessTier != LawAppAccessTier.guest;
   bool get isSubscriber => _accessTier == LawAppAccessTier.subscriber;
+  double get fontSizeScale => _fontSizeScale;
+  String get notifyFrequency => _notifyFrequency;
+  String get notifyChannel => _notifyChannel;
 
   ThemeMode get themeMode => _isDarkMode ? ThemeMode.dark : ThemeMode.light;
 
@@ -119,6 +128,9 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
       _caseNoteDrafts = _decodeCaseNotes(
         preferences.getString(_caseNoteDraftsKey),
       );
+      _fontSizeScale = preferences.getDouble(_fontSizeScaleKey) ?? 1.0;
+      _notifyFrequency = preferences.getString(_notifyFrequencyKey) ?? 'instant';
+      _notifyChannel = preferences.getString(_notifyChannelKey) ?? 'push';
       await documentRepository.fetchDrafts();
     } on MissingPluginException {
       // 台灣繁體中文教學註解：
@@ -131,6 +143,9 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
       _savedCaseIds.clear();
       _followingSummary = FollowingSummary.empty();
       _caseNoteDrafts = <String, String>{};
+      _fontSizeScale = 1.0;
+      _notifyFrequency = 'instant';
+      _notifyChannel = 'push';
       await documentRepository.fetchDrafts();
     }
 
@@ -250,11 +265,32 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
     notifyListeners();
   }
 
-  Future<void> updateUserProfile({String? displayName, String? avatarUrl}) async {
+  Future<void> updateUserProfile({
+    String? displayName,
+    String? avatarUrl,
+    String? profession,
+    String? aiStyle,
+  }) async {
+    // 台灣繁體中文教學註解：更新使用者的專業身分與 AI 對話偏好，並持久化保存。
     _currentUser = _currentUser.copyWith(
       displayName: displayName ?? _currentUser.displayName,
       avatarUrl: avatarUrl ?? _currentUser.avatarUrl,
+      profession: profession ?? _currentUser.profession,
+      aiStyle: aiStyle ?? _currentUser.aiStyle,
     );
+    await _persist();
+    notifyListeners();
+  }
+
+  Future<void> updateSettings({
+    double? fontSizeScale,
+    String? notifyFrequency,
+    String? notifyChannel,
+  }) async {
+    // 台灣繁體中文教學註解：更新字型大小比例、通知頻率與通知管道設定，並寫入本機偏好設定中。
+    _fontSizeScale = fontSizeScale ?? _fontSizeScale;
+    _notifyFrequency = notifyFrequency ?? _notifyFrequency;
+    _notifyChannel = notifyChannel ?? _notifyChannel;
     await _persist();
     notifyListeners();
   }
@@ -280,6 +316,9 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
         await preferences.setString(_demoTokenKey, _authToken!);
       }
       await preferences.setString(_currentUserKey, jsonEncode(_currentUser));
+      await preferences.setDouble(_fontSizeScaleKey, _fontSizeScale);
+      await preferences.setString(_notifyFrequencyKey, _notifyFrequency);
+      await preferences.setString(_notifyChannelKey, _notifyChannel);
     } on MissingPluginException {
       // 測試環境沒有 SharedPreferences plugin 時略過寫入即可；
       // 記憶體內狀態仍會讓目前畫面即時更新。
