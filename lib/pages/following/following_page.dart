@@ -402,12 +402,26 @@ class _FollowingPageState extends State<FollowingPage> {
   }
 
   void _handleBack() {
+    // 台灣繁體中文教學註解：
+    // 若此頁面是從新版 ProfilePage 點擊卡片 push 進來的（canPop 為 true），
+    // 且目前正處於該子功能的主列表頁面，點選返回時應直接 Pop 路由回到 ProfilePage，
+    // 避免使用者退回已棄用的舊版 _HomeView 畫面中。
+    if (widget.initialTab != null) {
+      final initialPage = _parseInitialTab(widget.initialTab);
+      if (_page == initialPage) {
+        Navigator.of(context).pop();
+        return;
+      }
+    }
+
     setState(() {
       switch (_page) {
         case _FollowPage.detail:
           _page = _FollowPage.tabs;
+          break;
         case _FollowPage.noteDetail:
           _page = _FollowPage.notes;
+          break;
         case _FollowPage.updates:
         case _FollowPage.tabs:
         case _FollowPage.profile:
@@ -418,9 +432,17 @@ class _FollowingPageState extends State<FollowingPage> {
         case _FollowPage.plan:
         case _FollowPage.search:
         case _FollowPage.settings:
-          _page = _FollowPage.home;
+          if (Navigator.of(context).canPop()) {
+            Navigator.of(context).pop();
+          } else {
+            _page = _FollowPage.home;
+          }
+          break;
         case _FollowPage.home:
         case _FollowPage.guest:
+          if (Navigator.of(context).canPop()) {
+            Navigator.of(context).pop();
+          }
           break;
       }
     });

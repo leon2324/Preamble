@@ -37,80 +37,106 @@ class ProfilePage extends StatelessWidget {
         children: [
           if (canPop) _BackButton(onBack: () => Navigator.of(context).pop()),
           
-          // Header: 自訂個人頭像與狀態
-          GestureDetector(
-            onTap: () => _showProfileEditorSheet(context, appState),
-            child: Container(
-              padding: EdgeInsets.all(18.w),
-              decoration: BoxDecoration(
-                color: cardColor,
-                borderRadius: BorderRadius.circular(24.r),
-                border: Border.all(color: borderColor),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x0A000000), 
-                    blurRadius: 18, 
-                    offset: Offset(0, 8),
-                  )
-                ],
-              ),
-              child: Row(
-                children: [
-                  AvatarWidget(
-                    avatarUrl: appState.currentUser.avatarUrl,
-                    isSubscriber: appState.isSubscriber,
-                    isGuest: appState.isGuest,
-                    size: 58,
+          // Header: 自訂個人頭像與狀態（大頭像居中排列，偏上方視覺）
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 24.h),
+            decoration: BoxDecoration(
+              color: cardColor,
+              borderRadius: BorderRadius.circular(24.r),
+              border: Border.all(color: borderColor),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x0A000000), 
+                  blurRadius: 18, 
+                  offset: Offset(0, 8),
+                )
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // 居中大尺寸自訂頭像，點擊開啟編輯器
+                GestureDetector(
+                  onTap: () => _showProfileEditorSheet(context, appState),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      AvatarWidget(
+                        avatarUrl: appState.currentUser.avatarUrl,
+                        isSubscriber: appState.isSubscriber,
+                        isGuest: appState.isGuest,
+                        size: 88, // 放大頭像尺寸
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          padding: EdgeInsets.all(4.w),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: cardColor, width: 1.5.w),
+                          ),
+                          child: Icon(
+                            Icons.edit_rounded,
+                            color: Colors.white,
+                            size: 13.sp,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(width: 14.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                appState.isGuest ? '訪客個人中心' : appState.currentUser.displayName,
-                                style: TextStyle(
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.w900,
-                                  color: textColor,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            SizedBox(width: 6.w),
-                            Icon(
-                              Icons.edit_note_rounded,
-                              color: AppColors.accent,
-                              size: 18.sp,
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          appState.isGuest ? '點擊設定頭像與暱稱' : appState.currentUser.email,
-                          style: TextStyle(
-                            fontSize: 11.5.sp,
-                            color: textMutedColor,
-                          ),
-                        ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          '目前方案：${appState.accessTier.label}｜今日 AI 額度：${appState.remainingAiQuota}',
-                          style: TextStyle(
-                            fontSize: 11.sp,
-                            color: AppColors.accent,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                ),
+                SizedBox(height: 14.h),
+                
+                // 居中使用者名稱
+                Text(
+                  appState.isGuest ? '訪客個人中心' : appState.currentUser.displayName,
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w900,
+                    color: textColor,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 4.h),
+                
+                // 信箱或提示字
+                Text(
+                  appState.isGuest ? '點擊頭像編輯資料' : appState.currentUser.email,
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: textMutedColor,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 12.h),
+
+                // 方案與額度膠囊 Badge
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 5.h),
+                  decoration: BoxDecoration(
+                    color: appState.isSubscriber 
+                        ? AppColors.accent.withOpacity(0.12)
+                        : AppColors.primary.withOpacity(0.06),
+                    borderRadius: BorderRadius.circular(100.r),
+                    border: Border.all(
+                      color: appState.isSubscriber 
+                          ? AppColors.accent 
+                          : AppColors.primary.withOpacity(0.15),
+                      width: 1.w,
                     ),
                   ),
-                ],
-              ),
+                  child: Text(
+                    '${appState.accessTier.label}方案 ｜ 今日 AI 額度：${appState.remainingAiQuota}',
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      color: appState.isSubscriber ? AppColors.accent : AppColors.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           
