@@ -1076,28 +1076,30 @@ class _MixedResults extends StatelessWidget {
           SizedBox(height: 14.h),
           _ResultSection(
             title: '法規',
-            items: statutes.take(1).toList(),
+            items: statutes.take(2).toList(),
             onOpen: onOpen,
             isSaved: isSaved,
             onSaved: onSaved,
           ),
           _ResultSection(
             title: '案件 / 判例',
-            items: cases.take(1).toList(),
+            items: cases.take(3).toList(),
             onOpen: onOpen,
             isSaved: isSaved,
             onSaved: onSaved,
+            isCarousel: true,
           ),
           _ResultSection(
             title: '生活避坑筆記',
-            items: lifeNotes.take(1).toList(),
+            items: lifeNotes.take(3).toList(),
             onOpen: onOpen,
             isSaved: isSaved,
             onSaved: onSaved,
+            isCarousel: true,
           ),
           _ResultSection(
             title: '官方資料',
-            items: official.take(1).toList(),
+            items: official.take(2).toList(),
             onOpen: onOpen,
             isSaved: isSaved,
             onSaved: onSaved,
@@ -1177,6 +1179,7 @@ class _ResultSection extends StatelessWidget {
     required this.onOpen,
     required this.isSaved,
     required this.onSaved,
+    this.isCarousel = false,
   });
 
   final String title;
@@ -1184,24 +1187,56 @@ class _ResultSection extends StatelessWidget {
   final ValueChanged<_SearchResult> onOpen;
   final bool Function(_SearchResult item) isSaved;
   final ValueChanged<_SearchResult> onSaved;
+  final bool isCarousel;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 14.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _SectionHeader(title: title),
-          SizedBox(height: 8.h),
-          for (final item in items)
-            _ResultTile(
+    if (items.isEmpty) return const SizedBox.shrink();
+
+    Widget itemsContent;
+    if (isCarousel) {
+      itemsContent = SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        clipBehavior: Clip.none,
+        child: Row(
+          children: items.map((item) {
+            return _ResultTile(
+              item: item,
+              onTap: () => onOpen(item),
+              showBookmark: item.type != _ResultType.official,
+              isSaved: isSaved(item),
+              onBookmark: () => onSaved(item),
+              isCarouselCard: true,
+            );
+          }).toList(),
+        ),
+      );
+    } else {
+      itemsContent = Column(
+        children: items.map((item) {
+          return Padding(
+            padding: EdgeInsets.only(bottom: 10.h),
+            child: _ResultTile(
               item: item,
               onTap: () => onOpen(item),
               showBookmark: item.type != _ResultType.official,
               isSaved: isSaved(item),
               onBookmark: () => onSaved(item),
             ),
+          );
+        }).toList(),
+      );
+    }
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: 16.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _SectionHeader(title: title),
+          SizedBox(height: 8.h),
+          itemsContent,
         ],
       ),
     );
@@ -2280,6 +2315,8 @@ class _AssistantOverviewCard extends StatelessWidget {
             )
           else ...[
             TypewriterText(text: summary),
+            SizedBox(height: 14.h),
+            _AssistantCitationsRow(query: query),
             SizedBox(height: 16.h),
             Row(
               children: [
@@ -2345,6 +2382,98 @@ class _AssistantOverviewCard extends StatelessWidget {
           ],
         ],
       ),
+    );
+  }
+}
+
+class _AssistantCitationsRow extends StatelessWidget {
+  const _AssistantCitationsRow({required this.query});
+
+  final String query;
+
+  @override
+  Widget build(BuildContext context) {
+    // 依據搜尋詞動態決定引用來源
+    final List<Map<String, String>> citations = [];
+    if (query.contains('詐欺')) {
+      citations.addAll([
+        {'id': '[1]', 'title': '刑法第 339 條 (普通詐欺罪)', 'tag': '法規'},
+        {'id': '[2]', 'title': '最高法院 109 年台上字第 123 號判決', 'tag': '判例'},
+        {'id': '[3]', 'title': '警政署 165 全民防騙網', 'tag': '官方'},
+      ]);
+    } else if (query.contains('瑕疵') || query.contains('退貨') || query.contains('消費')) {
+      citations.addAll([
+        {'id': '[1]', 'title': '消保法第 19 條 (鑑賞期退貨)', 'tag': '法規'},
+        {'id': '[2]', 'title': '民法第 354 條 (物之瑕疵擔保)', 'tag': '法規'},
+        {'id': '[3]', 'title': '行政院消保處 消費申訴指南', 'tag': '官方'},
+      ]);
+    } else {
+      citations.addAll([
+        {'id': '[1]', 'title': '民法第 184 條 (獨立侵權責任)', 'tag': '法規'},
+        {'id': '[2]', 'title': '司法院法規檢索系統', 'tag': '官方'},
+      ]);
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.library_books_outlined, size: 12.sp, color: _SearchColors.primary),
+            SizedBox(width: 4.w),
+            Text(
+              '參考資料引用來源',
+              style: _SearchText.captionStrong().copyWith(
+                color: _SearchColors.primary,
+                fontSize: 10.sp,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 6.h),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          child: Row(
+            children: citations.map((citation) {
+              return Container(
+                margin: EdgeInsets.only(right: 8.w),
+                child: ActionChip(
+                  avatar: Text(
+                    citation['id']!,
+                    style: TextStyle(
+                      color: _SearchColors.primary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 9.sp,
+                    ),
+                  ),
+                  label: Text(citation['title']!),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          content: Text('已為您定位引用來源：${citation['title']} (${citation['tag']})'),
+                        ),
+                      );
+                  },
+                  backgroundColor: Colors.white.withValues(alpha: 0.6),
+                  side: const BorderSide(color: _SearchColors.border),
+                  visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                  labelStyle: _SearchText.caption().copyWith(
+                    color: _SearchColors.text,
+                    fontSize: 9.5.sp,
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -2429,6 +2558,103 @@ class _AssistantHint extends StatelessWidget {
   }
 }
 
+class _InteractiveCard extends StatefulWidget {
+  const _InteractiveCard({
+    required this.child,
+    this.onTap,
+    this.background = Colors.white,
+    this.padding,
+    this.borderColor,
+  });
+
+  final Widget child;
+  final VoidCallback? onTap;
+  final Color background;
+  final EdgeInsetsGeometry? padding;
+  final Color? borderColor;
+
+  @override
+  State<_InteractiveCard> createState() => _InteractiveCardState();
+}
+
+class _InteractiveCardState extends State<_InteractiveCard> with SingleTickerProviderStateMixin {
+  late final AnimationController _scaleController;
+  late final Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _scaleController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
+      lowerBound: 0.97,
+      upperBound: 1.0,
+      value: 1.0,
+    );
+    _scaleAnimation = _scaleController;
+  }
+
+  @override
+  void dispose() {
+    _scaleController.dispose();
+    super.dispose();
+  }
+
+  void _handleTapDown(TapDownDetails details) {
+    if (widget.onTap != null) {
+      _scaleController.animateTo(0.97, curve: Curves.easeInOut);
+    }
+  }
+
+  void _handleTapUp(TapUpDetails details) {
+    if (widget.onTap != null) {
+      _scaleController.animateTo(1.0, curve: Curves.easeInOut);
+    }
+  }
+
+  void _handleTapCancel() {
+    if (widget.onTap != null) {
+      _scaleController.animateTo(1.0, curve: Curves.easeInOut);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final borderCol = widget.borderColor ?? _SearchColors.border;
+
+    final card = Container(
+      width: double.infinity,
+      padding: widget.padding ?? EdgeInsets.all(13.w),
+      decoration: BoxDecoration(
+        color: widget.background,
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(color: borderCol),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x0A000000),
+            blurRadius: 12,
+            offset: Offset(0, 5),
+          )
+        ],
+      ),
+      child: widget.child,
+    );
+
+    if (widget.onTap == null) return card;
+
+    return GestureDetector(
+      onTapDown: _handleTapDown,
+      onTapUp: _handleTapUp,
+      onTapCancel: _handleTapCancel,
+      onTap: widget.onTap,
+      child: ScaleTransition(
+        scale: _scaleAnimation,
+        child: card,
+      ),
+    );
+  }
+}
+
 class _ResultTile extends StatelessWidget {
   const _ResultTile({
     required this.item,
@@ -2436,6 +2662,7 @@ class _ResultTile extends StatelessWidget {
     this.showBookmark = false,
     this.isSaved = false,
     this.onBookmark,
+    this.isCarouselCard = false,
   });
 
   final _SearchResult item;
@@ -2443,48 +2670,182 @@ class _ResultTile extends StatelessWidget {
   final bool showBookmark;
   final bool isSaved;
   final VoidCallback? onBookmark;
+  final bool isCarouselCard;
 
   @override
   Widget build(BuildContext context) {
-    return _ProtoCard(
-      onTap: onTap,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _IconBox(icon: _iconFor(item.type), color: _colorFor(item.type)),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(item.title, style: _SearchText.tileTitle()),
-                SizedBox(height: 5.h),
-                Text(item.summary, style: _SearchText.body()),
-                SizedBox(height: 7.h),
-                Text(item.source, style: _SearchText.caption()),
-              ],
-            ),
+    // 依據不同的結果類別設計高級莫蘭迪色系與視覺細節
+    Color cardBg;
+    Color borderCol;
+    Color iconColor;
+    String badgeText;
+    IconData typeIcon;
+
+    switch (item.type) {
+      case _ResultType.statute:
+        cardBg = const Color(0xFFEAF7F2); // 莫蘭迪薄荷綠
+        borderCol = const Color(0xFFD0E6DC);
+        iconColor = const Color(0xFF1E6D5A);
+        badgeText = item.title.contains('刑法') ? '⚖️ 刑事法規' : '⚖️ 民事法規';
+        typeIcon = Icons.menu_book_outlined;
+        break;
+      case _ResultType.caseItem:
+        cardBg = const Color(0xFFEBF2F7); // 莫蘭迪灰藍
+        borderCol = const Color(0xFFD2DFE6);
+        iconColor = const Color(0xFF4A7C9D);
+        badgeText = '💼 實務裁判';
+        typeIcon = Icons.gavel_outlined;
+        break;
+      case _ResultType.lifeNote:
+        cardBg = const Color(0xFFFCF6EA); // 莫蘭迪柔沙暖黃
+        borderCol = const Color(0xFFEFE2CB);
+        iconColor = const Color(0xFFC69C55);
+        badgeText = '💡 避坑指南';
+        typeIcon = Icons.explore_outlined;
+        break;
+      case _ResultType.official:
+        cardBg = const Color(0xFFEFF3F1); // 莫蘭迪茶綠
+        borderCol = const Color(0xFFDCE4E1);
+        iconColor = const Color(0xFF6B8A7E);
+        badgeText = '🛡️ 官方認證';
+        typeIcon = Icons.verified_user_outlined;
+        break;
+      case _ResultType.assistant:
+        cardBg = const Color(0xFFF9F6F0);
+        borderCol = const Color(0xFFEAE2D5);
+        iconColor = const Color(0xFFE7B76D);
+        badgeText = '🤖 AI 小法助';
+        typeIcon = Icons.support_agent_rounded;
+        break;
+    }
+
+    final cardContent = Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _IconBox(icon: typeIcon, color: iconColor),
+        SizedBox(width: 12.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                    decoration: BoxDecoration(
+                      color: iconColor.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(6.r),
+                    ),
+                    child: Text(
+                      badgeText,
+                      style: _SearchText.captionStrong().copyWith(
+                        color: iconColor,
+                        fontSize: 9.5.sp,
+                      ),
+                    ),
+                  ),
+                  if (item.type == _ResultType.lifeNote)
+                    Text(
+                      '⏱️ 3分閱讀',
+                      style: _SearchText.caption().copyWith(fontSize: 9.sp),
+                    ),
+                ],
+              ),
+              SizedBox(height: 7.h),
+              Text(
+                item.title,
+                maxLines: isCarouselCard ? 1 : 2,
+                overflow: TextOverflow.ellipsis,
+                style: _SearchText.tileTitle().copyWith(
+                  color: _SearchColors.text,
+                  fontSize: 13.5.sp,
+                ),
+              ),
+              SizedBox(height: 5.h),
+              Text(
+                item.summary,
+                maxLines: isCarouselCard ? 2 : 3,
+                overflow: TextOverflow.ellipsis,
+                style: _SearchText.body().copyWith(
+                  color: _SearchColors.mutedText,
+                  height: 1.45,
+                ),
+              ),
+              SizedBox(height: 8.h),
+              Row(
+                children: [
+                  Icon(
+                    item.type == _ResultType.official ? Icons.verified_outlined : Icons.link_rounded,
+                    size: 11.sp,
+                    color: _SearchColors.mutedText.withValues(alpha: 0.7),
+                  ),
+                  SizedBox(width: 4.w),
+                  Expanded(
+                    child: Text(
+                      item.source,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: _SearchText.caption().copyWith(
+                        color: _SearchColors.mutedText.withValues(alpha: 0.8),
+                        fontSize: 9.8.sp,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          if (showBookmark)
-            InkWell(
+        ),
+        if (showBookmark)
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
               onTap: onBookmark,
               borderRadius: BorderRadius.circular(999.r),
               child: Padding(
                 padding: EdgeInsets.all(4.w),
                 child: Icon(
-                  isSaved
-                      ? Icons.bookmark_rounded
-                      : Icons.bookmark_border_rounded,
+                  isSaved ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
                   color: _SearchColors.primary,
-                  size: 20.sp,
+                  size: 21.sp,
                 ),
               ),
-            )
-          else
-            Icon(Icons.chevron_right_rounded,
-                color: _SearchColors.mutedText, size: 20.sp),
-        ],
-      ),
+            ),
+          )
+        else if (item.type != _ResultType.official)
+          Padding(
+            padding: EdgeInsets.only(top: 2.h),
+            child: Icon(
+              Icons.chevron_right_rounded,
+              color: _SearchColors.mutedText,
+              size: 20.sp,
+            ),
+          ),
+      ],
+    );
+
+    if (isCarouselCard) {
+      return Container(
+        width: 250.w,
+        margin: EdgeInsets.only(right: 12.w),
+        child: _InteractiveCard(
+          onTap: onTap,
+          background: cardBg,
+          borderColor: borderCol,
+          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+          child: cardContent,
+        ),
+      );
+    }
+
+    return _InteractiveCard(
+      onTap: onTap,
+      background: cardBg,
+      borderColor: borderCol,
+      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 13.h),
+      child: cardContent,
     );
   }
 }
