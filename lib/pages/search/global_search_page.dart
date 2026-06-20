@@ -1057,6 +1057,7 @@ class _InspirationCarousel extends StatelessWidget {
               background: Colors.transparent,
               borderColor: item.textColor.withValues(alpha: 0.15),
               padding: EdgeInsets.zero,
+              width: null,
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -1226,6 +1227,7 @@ class _SearchHome extends StatelessWidget {
                   background: Colors.white,
                   borderColor: _SearchColors.border.withValues(alpha: 0.6),
                   padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+                  width: null,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -2854,6 +2856,7 @@ class _InteractiveCard extends StatefulWidget {
     this.background = Colors.white,
     this.padding,
     this.borderColor,
+    this.width = double.infinity,
   });
 
   final Widget child;
@@ -2861,6 +2864,7 @@ class _InteractiveCard extends StatefulWidget {
   final Color background;
   final EdgeInsetsGeometry? padding;
   final Color? borderColor;
+  final double? width;
 
   @override
   State<_InteractiveCard> createState() => _InteractiveCardState();
@@ -2912,7 +2916,7 @@ class _InteractiveCardState extends State<_InteractiveCard> with SingleTickerPro
     final borderCol = widget.borderColor ?? _SearchColors.border;
 
     final card = Container(
-      width: double.infinity,
+      width: widget.width,
       padding: widget.padding ?? EdgeInsets.all(13.w),
       decoration: BoxDecoration(
         color: widget.background,
@@ -3124,6 +3128,7 @@ class _ResultTile extends StatelessWidget {
           background: cardBg,
           borderColor: borderCol,
           padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+          width: null,
           child: cardContent,
         ),
       );
