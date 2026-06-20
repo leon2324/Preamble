@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/app/app_state.dart';
 import 'package:lawapp/theme/app_colors.dart';
+import 'package:lawapp/pages/following/following_page.dart';
 import 'profile_editor.dart';
 
 /// 專屬頭像組件，支援訪客、會員與 Pro 訂閱者特效。
@@ -125,9 +126,7 @@ class DashboardGrid extends StatelessWidget {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (__) => const Scaffold(
-                body: Center(child: Text('我的收藏 (此路徑原對接 FollowingPage)')),
-              ),
+              builder: (__) => const FollowingPage(initialTab: 'collections'),
             ),
           );
         },
@@ -140,9 +139,7 @@ class DashboardGrid extends StatelessWidget {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (__) => const Scaffold(
-                body: Center(child: Text('我的追蹤 (此路徑原對接 FollowingPage)')),
-              ),
+              builder: (__) => const FollowingPage(initialTab: 'tabs'),
             ),
           );
         },
@@ -153,7 +150,11 @@ class DashboardGrid extends StatelessWidget {
         icon: Icons.note_alt_rounded,
         color: const Color(0xFF2E7D32),
         onTap: () {
-          _showMockSheet(context, '我的筆記', '本機有 ${appState.caseNoteDrafts.length} 筆案件筆記。雲端同步功能正在對接中。');
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (__) => const FollowingPage(initialTab: 'notes'),
+            ),
+          );
         },
       ),
       _DashboardItemData(
@@ -162,7 +163,11 @@ class DashboardGrid extends StatelessWidget {
         icon: Icons.description_rounded,
         color: const Color(0xFFC96B3B),
         onTap: () {
-          _showMockSheet(context, '文件草稿', '本機有 ${appState.documentRepository.drafts.length} 份文件草稿。雲端儲存庫將在下個版本推出。');
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (__) => const FollowingPage(initialTab: 'drafts'),
+            ),
+          );
         },
       ),
     ];
@@ -195,7 +200,7 @@ class DashboardGrid extends StatelessWidget {
                       Container(
                         padding: EdgeInsets.all(6.w),
                         decoration: BoxDecoration(
-                          color: item.color.withOpacity(0.08),
+                          color: item.color.withValues(alpha: 0.08),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(item.icon, color: item.color, size: 20.sp),
@@ -249,7 +254,7 @@ class DashboardGrid extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(8.w),
                   decoration: BoxDecoration(
-                    color: AppColors.accent.withOpacity(0.08),
+                    color: AppColors.accent.withValues(alpha: 0.08),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(Icons.smart_toy_rounded, color: AppColors.accent, size: 22.sp),
@@ -401,11 +406,11 @@ class ProUpgradeBanner extends StatelessWidget {
               width: 100.w,
               height: 100.w,
               decoration: BoxDecoration(
-                color: AppColors.accent.withOpacity(0.12),
+                color: AppColors.accent.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.accent.withOpacity(0.12),
+                    color: AppColors.accent.withValues(alpha: 0.12),
                     blurRadius: 40,
                   ),
                 ],
@@ -522,7 +527,7 @@ class GroupedSettingsList extends StatelessWidget {
                     Divider(
                       height: 1.h,
                       thickness: 0.8.h,
-                      color: borderColor.withOpacity(0.7),
+                      color: borderColor.withValues(alpha: 0.7),
                       indent: 48.w, // 與標題對齊的縮排 (Align with title)
                     ),
                 ],
@@ -569,7 +574,7 @@ class SettingsTile extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(7.w),
               decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.08),
+                color: iconColor.withValues(alpha: 0.08),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: iconColor, size: 18.sp),

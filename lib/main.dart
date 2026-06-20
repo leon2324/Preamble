@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/app/app_state.dart';
 import 'package:lawapp/pages/following/following_page.dart';
+import 'package:lawapp/pages/profile/profile_page.dart';
 import 'package:lawapp/pages/home/home_page.dart';
 import 'package:lawapp/pages/learning/know_law_page.dart';
 import 'package:lawapp/pages/search/global_search_page.dart';
@@ -106,10 +107,9 @@ class _MylawAppState extends State<MylawApp> {
       const GlobalSearchPage(),
       const JournalPage(),
       // 台灣繁體中文教學註解：
-      // 台灣繁體中文教學註解：
-      // 第五格現在整合「追蹤」與「我的」成個人法律中心，
-      // 所以頁面檔名仍沿用 FollowingPage，但 UI 入口命名改為「我的」。
-      const FollowingPage(),
+      // 第五格現在改為使用重構後的個人資料與儀表板主頁面 (ProfilePage)；
+      // 當使用者點擊「我的收藏」或「我的追蹤」卡片時，再導航入對應的 FollowingPage 子分頁。
+      const ProfilePage(),
     ];
 
     return LawAppScope(
@@ -301,13 +301,31 @@ class _IslandBottomNav extends StatelessWidget {
                               width: 50,
                               height: iconBoxHeight,
                               alignment: Alignment.center,
-                              child: Icon(
-                                isSelected ? item.selectedIcon : item.icon,
-                                size: 25,
-                                color: isSelected
-                                    ? selectedColor
-                                    : unselectedColor,
-                              ),
+                              child: item.label == '小法助'
+                                  ? Opacity(
+                                      opacity: isSelected ? 1.0 : 0.6,
+                                      child: Container(
+                                        width: 25,
+                                        height: 25,
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: ClipOval(
+                                          child: Image.asset(
+                                            'assets/images/assistant/law_assistant_home.png',
+                                            fit: BoxFit.cover,
+                                            alignment: Alignment.topCenter,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : Icon(
+                                      isSelected ? item.selectedIcon : item.icon,
+                                      size: 25,
+                                      color: isSelected
+                                          ? selectedColor
+                                          : unselectedColor,
+                                    ),
                             ),
                             const SizedBox(height: 5),
                             Text(

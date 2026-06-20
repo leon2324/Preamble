@@ -38,7 +38,12 @@ class _ProfileAsset {
 }
 
 class FollowingPage extends StatefulWidget {
-  const FollowingPage({super.key});
+  const FollowingPage({super.key, this.initialTab});
+
+  /// 台灣繁體中文教學註解：
+  /// 可傳入初始分頁名稱（如 'collections', 'notes', 'drafts', 'questions', 'tabs'），
+  /// 便於從新的個人頁面直接導航至子畫面。
+  final String? initialTab;
 
   @override
   State<FollowingPage> createState() => _FollowingPageState();
@@ -52,12 +57,38 @@ class FollowingPage extends StatefulWidget {
 /// 目前先用 `_FollowPage` 做頁內切換，等後端 ID、通知設定與個人資料 API 穩定後，
 /// 再把各子頁抽成獨立路由與資料來源。
 class _FollowingPageState extends State<FollowingPage> {
-  _FollowPage _page = _FollowPage.home;
+  late _FollowPage _page;
   _FollowTab _tab = _FollowTab.cases;
   _FollowItem _selectedItem = _caseItems.first;
   _NoteItem _selectedNote = _notes.first;
   int _updatesTabIndex = 0;
   int _trackingSegmentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _page = _parseInitialTab(widget.initialTab);
+  }
+
+  _FollowPage _parseInitialTab(String? tab) {
+    if (tab == null) return _FollowPage.home;
+    switch (tab) {
+      case 'collections':
+        return _FollowPage.collections;
+      case 'notes':
+        return _FollowPage.notes;
+      case 'drafts':
+        return _FollowPage.drafts;
+      case 'questions':
+        return _FollowPage.questions;
+      case 'updates':
+        return _FollowPage.updates;
+      case 'tabs':
+        return _FollowPage.tabs;
+      default:
+        return _FollowPage.home;
+    }
+  }
   int _collectionTabIndex = 0;
   int _noteTabIndex = 0;
   int _questionTabIndex = 0;
