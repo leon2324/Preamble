@@ -1164,11 +1164,26 @@ class _SearchHome extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _MascotFloatingWrapper(
-              child: Image.asset(
-                'assets/images/assistant/law_assistant_home.png',
-                width: 78.w,
-                height: 84.h,
-                fit: BoxFit.contain,
+              child: Container(
+                width: 80.w,
+                height: 80.w,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: _SearchColors.primary.withValues(alpha: 0.15), width: 1.8.w),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.04),
+                      blurRadius: 7,
+                      offset: const Offset(0, 3.5),
+                    ),
+                  ],
+                ),
+                child: ClipOval(
+                  child: Image.asset(
+                    'assets/images/assistant/law_assistant_home.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
             SizedBox(width: 8.w),
@@ -1560,13 +1575,28 @@ class _SearchStateCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (showMascot) ...[
-            Image.asset(
-              'assets/images/assistant/law_assistant_empty.png',
+            Container(
               width: 80.w,
-              height: 85.h,
-              fit: BoxFit.contain,
+              height: 80.w,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: _SearchColors.border.withValues(alpha: 0.5), width: 1.8.w),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 7,
+                    offset: const Offset(0, 3.5),
+                  ),
+                ],
+              ),
+              child: ClipOval(
+                child: Image.asset(
+                  'assets/images/assistant/law_assistant_empty.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
-            SizedBox(height: 14.h),
+            SizedBox(height: 16.h),
           ],
           Text(
             message,
@@ -2633,11 +2663,26 @@ class _BreathingMascotState extends State<_BreathingMascot> with SingleTickerPro
   Widget build(BuildContext context) {
     return ScaleTransition(
       scale: _scaleAnimation,
-      child: Image.asset(
-        widget.imagePath,
+      child: Container(
         width: widget.width,
         height: widget.height,
-        fit: BoxFit.contain,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: _SearchColors.primary.withValues(alpha: 0.15), width: 1.5.w),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 6,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: ClipOval(
+          child: Image.asset(
+            widget.imagePath,
+            fit: BoxFit.cover,
+          ),
+        ),
       ),
     );
   }
@@ -2668,54 +2713,22 @@ class _AssistantReportHeader extends StatelessWidget {
                 color: _SearchColors.mutedText.withValues(alpha: 0.7),
               ),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-              decoration: BoxDecoration(
-                color: _SearchColors.primary.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(20.r),
-                border: Border.all(
-                  color: _SearchColors.primary.withValues(alpha: 0.2),
-                  width: 0.8.w,
-                ),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 4.w,
-                    height: 4.w,
-                    decoration: const BoxDecoration(
-                      color: _SearchColors.primary,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  SizedBox(width: 4.w),
-                  Text(
-                    'AI 信心指數 99%',
-                    style: _SearchText.caption().copyWith(
-                      color: _SearchColors.primary,
-                      fontSize: 9.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
         SizedBox(height: 6.h),
         Row(
           children: [
             Container(
-              padding: EdgeInsets.all(5.w),
+              padding: EdgeInsets.all(6.w),
               decoration: const BoxDecoration(
                 color: _SearchColors.primary,
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                Icons.description_outlined,
-                color: Colors.white,
-                size: 13.sp,
+              child: SvgPicture.asset(
+                'assets/images/search/search_clipboard.svg',
+                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                width: 13.w,
+                height: 13.w,
               ),
             ),
             SizedBox(width: 8.w),
@@ -2824,11 +2837,26 @@ class _AssistantOverviewCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 _MascotFloatingWrapper(
-                  child: Image.asset(
-                    'assets/images/assistant/law_assistant_home.png',
-                    width: 48.w,
-                    height: 52.h,
-                    fit: BoxFit.contain,
+                  child: Container(
+                    width: 50.w,
+                    height: 50.w,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: _SearchColors.primary.withValues(alpha: 0.15), width: 1.5.w),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.04),
+                          blurRadius: 6,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/images/assistant/law_assistant_home.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                 ),
                 SizedBox(width: 8.w),
@@ -2844,7 +2872,10 @@ class _AssistantOverviewCard extends StatelessWidget {
             SizedBox(height: 14.h),
             _AssistantCitationsRow(query: query),
             SizedBox(height: 16.h),
-            Row(
+            Wrap(
+              spacing: 6.w,
+              runSpacing: 8.h,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 Text('回答風格：', style: _SearchText.caption().copyWith(fontWeight: FontWeight.bold)),
                 _StyleChip(
@@ -2852,20 +2883,18 @@ class _AssistantOverviewCard extends StatelessWidget {
                   selected: tone == '白話',
                   onTap: () => onToneChanged('白話'),
                 ),
-                SizedBox(width: 6.w),
                 _StyleChip(
                   label: '專業',
                   selected: tone == '專業',
                   onTap: () => onToneChanged('專業'),
                 ),
-                SizedBox(width: 12.w),
+                SizedBox(width: 6.w),
                 Text('大綱長度：', style: _SearchText.caption().copyWith(fontWeight: FontWeight.bold)),
                 _StyleChip(
                   label: '精簡',
                   selected: length == '精簡',
                   onTap: () => onLengthChanged('精簡'),
                 ),
-                SizedBox(width: 6.w),
                 _StyleChip(
                   label: '詳細',
                   selected: length == '詳細',
@@ -2884,7 +2913,12 @@ class _AssistantOverviewCard extends StatelessWidget {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
                       padding: EdgeInsets.symmetric(vertical: 8.h),
                     ),
-                    icon: Icon(Icons.bookmark_add_outlined, size: 16.sp),
+                    icon: SvgPicture.asset(
+                      'assets/images/journal/book_icon.svg',
+                      colorFilter: const ColorFilter.mode(_SearchColors.primary, BlendMode.srcIn),
+                      width: 14.w,
+                      height: 14.w,
+                    ),
                     label: Text('📌 摘錄筆記', style: _SearchText.captionStrong()),
                     onPressed: onNotebookSave,
                   ),
@@ -2898,7 +2932,12 @@ class _AssistantOverviewCard extends StatelessWidget {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
                       padding: EdgeInsets.symmetric(vertical: 8.h),
                     ),
-                    icon: Icon(Icons.forum_outlined, size: 16.sp),
+                    icon: SvgPicture.asset(
+                      'assets/images/journal/scale_icon.svg',
+                      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                      width: 14.w,
+                      height: 14.w,
+                    ),
                     label: Text('💬 繼續聊聊', style: _SearchText.captionStrong().copyWith(color: Colors.white)),
                     onPressed: onContinueChat,
                   ),
@@ -2945,7 +2984,12 @@ class _AssistantCitationsRow extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(Icons.library_books_outlined, size: 12.sp, color: _SearchColors.primary),
+            SvgPicture.asset(
+              'assets/images/journal/book_icon.svg',
+              colorFilter: const ColorFilter.mode(_SearchColors.primary, BlendMode.srcIn),
+              width: 12.w,
+              height: 12.w,
+            ),
             SizedBox(width: 4.w),
             Text(
               '參考資料引用來源',

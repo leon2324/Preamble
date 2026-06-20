@@ -334,6 +334,15 @@ const archiveUpdateItems = [
     caseId: 'three-party-fraud-notes',
     initialTab: '詐騙手法剖析',
   ),
+  ArchiveUpdateItem(
+    type: '生活避坑',
+    title: '網購七日鑑賞期退貨指南',
+    summary: '詳細整理網購七日無條件退貨權利範圍、不適用商品清單與遇到賣家刁難時的申訴步驟。',
+    timeLabel: '4 小時前',
+    tint: Color(0xFF1E7B66),
+    caseId: 'online-shopping-return-2025',
+    initialTab: '退貨權利範圍',
+  ),
 ];
 
 const archiveDossierItems = [

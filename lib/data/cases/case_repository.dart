@@ -237,4 +237,38 @@ final _mockCases = [
       ),
     ],
   ),
+  LawCase(
+    id: 'online-shopping-return-2025',
+    title: '網購七日鑑賞期退換貨爭議案',
+    subtitle: '消費者保護法第 19 條、通訊交易、解除契約',
+    summary: '買家於網路平台購買商品，收受後六日內主張消保法第 19 條七日鑑賞期要求退貨退款。賣家以「商品已拆封、非屬瑕疵品」為由拒絕退款。法院判決解除契約合法，賣家應返還價金。',
+    oneSentenceTakeaway: '通訊交易之消費者原則上享有七日無條件退貨權，賣家不得以拆封為由剝奪其權利。',
+    country: '台灣',
+    location: '台北市',
+    happenedAt: DateTime(2025, 4, 10),
+    updatedAt: DateTime(2026, 5, 5),
+    status: '民事小額判決',
+    category: '民事 / 消費糾紛',
+    tags: ['網購', '七日鑑賞期', '退貨', '消費爭議'],
+    era: '近年熱議',
+    discussionPoints: ['合理例外情事之認定', '拆封是否影響退貨權', '解約之回復原狀'],
+    learningPoints: ['網購商品收受後七日內可主張無條件退貨，但應注意保存包裝，避免惡意毀損。'],
+    relatedStatutes: ['消費者保護法第 19 條'],
+    legalIssues: [
+      LawCaseLegalIssue(
+        title: '通訊交易解除權',
+        explanation: '消費者得於收受商品後七日內，以退回商品或書面通知方式解除契約，無須說明理由及負擔任何費用。',
+        riskLevel: 'low',
+      ),
+    ],
+    sourceLinks: [
+      LawCaseSourceLink(
+        title: '臺灣臺北地方法院民事判決',
+        url: 'https://example.lawapp.local/mock/consumer-return',
+        sourceType: 'mock',
+        publisher: 'LawApp mock data',
+        accessedAt: DateTime(2026, 5, 5),
+      ),
+    ],
+  ),
 ];
