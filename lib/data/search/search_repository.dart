@@ -83,12 +83,17 @@ class SearchRepository {
   Future<List<SearchResultItem>> searchJournal(String query) async {
     final results = await _journalRepository.searchJournal(query);
     return results.take(8).map((item) {
+      final isLifeNote = item.typeLabel == '生活避坑' ||
+          item.typeLabel == '防詐筆記' ||
+          item.typeLabel == '社會討論' ||
+          item.tags.contains('生活避坑') ||
+          item.tags.contains('防詐筆記');
       return SearchResultItem(
         id: 'journal-${item.id}',
         title: item.title,
         subtitle: item.typeLabel,
         snippet: item.summary,
-        type: SearchResultType.caseItem,
+        type: isLifeNote ? SearchResultType.document : SearchResultType.caseItem,
         destination: 'journal:${item.id}',
         score: item.score.toDouble(),
         source: item.source,

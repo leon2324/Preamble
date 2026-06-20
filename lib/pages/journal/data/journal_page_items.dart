@@ -208,6 +208,18 @@ const discussionTrendItems = [
     fullTopicIndex: 3,
     tint: Color(0xFF7A5D9A),
   ),
+  DiscussionTrendItem(
+    rank: 5,
+    title: '租屋押金扣抵糾紛',
+    score: 68.2,
+    delta: '24h +15%',
+    whyHot: '畢業季與租屋潮來臨，房東點交扣押金、折舊計算與房屋還原義務成熱議焦點。',
+    relatedCases: ['民法租賃契約', '租屋點交糾紛', '押金返還調解'],
+    heatCurve: [10, 18, 30, 48, 59, 68],
+    heatLabels: ['週一', '週二', '週三', '週四', '週五', '今天'],
+    fullTopicIndex: 4,
+    tint: Color(0xFF355668),
+  ),
 ];
 
 const caseAngleItems = [
@@ -303,6 +315,24 @@ const archiveUpdateItems = [
     tint: Color(0xFFC08C44),
     caseId: '161',
     initialTab: '事件背景',
+  ),
+  ArchiveUpdateItem(
+    type: '生活避坑',
+    title: '租屋退租押金返還指南',
+    summary: '整理民法租賃規定、折舊計算、點交拍照存證技巧與糾紛調解申請流程。',
+    timeLabel: '3 小時前',
+    tint: Color(0xFF2F6D99),
+    caseId: 'rent-dispute-guidelines',
+    initialTab: '點交注意事項',
+  ),
+  ArchiveUpdateItem(
+    type: '防詐筆記',
+    title: '網拍三方詐騙手法與預防',
+    summary: '剖析假買家假賣家雙向詐騙手法，提醒匯款與收貨時的查證關鍵。',
+    timeLabel: '6 小時前',
+    tint: Color(0xFF9F6A26),
+    caseId: 'three-party-fraud-notes',
+    initialTab: '詐騙手法剖析',
   ),
 ];
 
