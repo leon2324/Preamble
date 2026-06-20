@@ -67,6 +67,7 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
   bool get canSeeFullCaseDossiers => isSubscriber;
   Set<String> get savedCaseIds => Set.unmodifiable(_savedCaseIds);
   FollowingSummary get followingSummary => _followingSummary;
+  Map<String, String> get caseNoteDrafts => Map.unmodifiable(_caseNoteDrafts);
 
   bool isCaseSaved(String caseId) => _savedCaseIds.contains(caseId);
   bool isCaseFollowed(String caseId) =>
@@ -245,6 +246,15 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
     _accessTier = LawAppAccessTier.guest;
     _currentUser = LawAppUser.guest();
     _authToken = null;
+    await _persist();
+    notifyListeners();
+  }
+
+  Future<void> updateUserProfile({String? displayName, String? avatarUrl}) async {
+    _currentUser = _currentUser.copyWith(
+      displayName: displayName ?? _currentUser.displayName,
+      avatarUrl: avatarUrl ?? _currentUser.avatarUrl,
+    );
     await _persist();
     notifyListeners();
   }
