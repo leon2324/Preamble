@@ -1070,6 +1070,7 @@ class _InspirationCarousel extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Row(
                       children: [
@@ -1502,6 +1503,7 @@ class _ResultSection extends StatelessWidget {
       );
     } else {
       itemsContent = Column(
+        mainAxisSize: MainAxisSize.min,
         children: items.map((item) {
           return Padding(
             padding: EdgeInsets.only(bottom: 10.h),
@@ -1521,6 +1523,7 @@ class _ResultSection extends StatelessWidget {
       padding: EdgeInsets.only(bottom: 16.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           _SectionHeader(title: title),
           SizedBox(height: 8.h),
