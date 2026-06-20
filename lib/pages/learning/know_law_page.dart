@@ -2823,7 +2823,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                             const SnackBar(
                               content: Text('已成功將譯文摘錄至手帳筆記！📌'),
                               backgroundColor: HomeV2Palette.trustGreen,
-                              duration: const Duration(milliseconds: 1500),
+                              duration: Duration(milliseconds: 1500),
                             ),
                           );
                         },
@@ -3048,7 +3048,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                             const SnackBar(
                               content: Text('已成功將折舊結果摘錄至手帳筆記！📌'),
                               backgroundColor: HomeV2Palette.trustGreen,
-                              duration: const Duration(milliseconds: 1500),
+                              duration: Duration(milliseconds: 1500),
                             ),
                           );
                         },
@@ -3380,7 +3380,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                             const SnackBar(
                               content: Text('已成功將草稿摘錄至手帳筆記！📌'),
                               backgroundColor: HomeV2Palette.trustGreen,
-                              duration: const Duration(milliseconds: 1500),
+                              duration: Duration(milliseconds: 1500),
                             ),
                           );
                         },
@@ -3579,7 +3579,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                             const SnackBar(
                               content: Text('已成功將加班費結果摘錄至手帳筆記！📌'),
                               backgroundColor: HomeV2Palette.trustGreen,
-                              duration: const Duration(milliseconds: 1500),
+                              duration: Duration(milliseconds: 1500),
                             ),
                           );
                         },
@@ -3775,7 +3775,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                             const SnackBar(
                               content: Text('已成功將草稿摘錄至手帳筆記！📌'),
                               backgroundColor: HomeV2Palette.trustGreen,
-                              duration: const Duration(milliseconds: 1500),
+                              duration: Duration(milliseconds: 1500),
                             ),
                           );
                         },
@@ -4128,7 +4128,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                             const SnackBar(
                               content: Text('已成功將分配結果摘錄至手帳筆記！📌'),
                               backgroundColor: HomeV2Palette.trustGreen,
-                              duration: const Duration(milliseconds: 1500),
+                              duration: Duration(milliseconds: 1500),
                             ),
                           );
                         },
@@ -4576,7 +4576,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                       const SnackBar(
                         content: Text('已將解析成功摘錄至手帳筆記！📌'),
                         backgroundColor: HomeV2Palette.trustGreen,
-                        duration: const Duration(milliseconds: 1500),
+                        duration: Duration(milliseconds: 1500),
                       ),
                     );
                   },
