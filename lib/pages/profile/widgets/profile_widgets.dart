@@ -1640,52 +1640,58 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
     final borderSide = BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
     final textMuted = isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
 
+    // 台灣繁體中文教學註解：限制最大高度只佔螢幕高度的 70%
+    final maxHeight = MediaQuery.sizeOf(context).height * 0.70;
+
     return Container(
+      height: maxHeight,
       decoration: BoxDecoration(
         color: surfaceColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
       padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 24.h),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: Container(
-                width: 40.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF2B3441) : AppColors.border,
-                  borderRadius: BorderRadius.circular(2.r),
-                ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              width: 40.w,
+              height: 4.h,
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF2B3441) : AppColors.border,
+                borderRadius: BorderRadius.circular(2.r),
               ),
             ),
-            SizedBox(height: 16.h),
-            Text(
-              '自訂導覽與介面',
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w900,
-                color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
-              ),
-              textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 16.h),
+          Text(
+            '自訂導覽與介面',
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w900,
+              color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
             ),
-            SizedBox(height: 16.h),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 16.h),
 
-            // 1. 拖曳排序
-            Text('自訂分頁排序（長按並上下拖曳）', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: textMuted)),
-            SizedBox(height: 8.h),
-            Container(
+          // 1. 拖曳排序
+          Text('自訂分頁排序（長按並上下拖曳）', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: textMuted)),
+          SizedBox(height: 8.h),
+          
+          // 台灣繁體中文教學註解：
+          // 使用 Expanded 包裹拖曳排序容器，在 70% 總高範圍內自適應高度，
+          // 並移除 NeverScrollableScrollPhysics 讓拖曳清單內部可以自由滾動。
+          Expanded(
+            child: Container(
               decoration: BoxDecoration(
                 color: isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
                 borderRadius: BorderRadius.circular(16.r),
                 border: Border.all(color: borderSide.color),
               ),
               child: ReorderableListView(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: false,
                 children: [
                   for (int i = 0; i < _tempOrder.length; i++)
                     ListTile(
@@ -1709,88 +1715,89 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
                 },
               ),
             ),
-            SizedBox(height: 20.h),
+          ),
+          SizedBox(height: 20.h),
 
-            // 2. 顯示文字標籤
-            Container(
-              decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(color: borderSide.color),
-              ),
-              child: SwitchListTile(
-                title: const Text('顯示分頁文字標籤', style: TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: const Text('關閉後將只顯示導覽圖示，高度更加緊湊'),
-                value: _tempShowLabels,
-                activeColor: AppColors.accent,
-                onChanged: (val) {
-                  setState(() {
-                    _tempShowLabels = val;
-                  });
-                },
-              ),
+          // 2. 顯示文字標籤
+          Container(
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
+              borderRadius: BorderRadius.circular(12.r),
+              border: Border.all(color: borderSide.color),
             ),
-            SizedBox(height: 20.h),
-
-            // 3. 主題 Accent Color 點選
-            Text('App 品牌配色', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: textMuted)),
-            SizedBox(height: 10.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildColorCircle(0, const Color(0xFFD6A85F), '金沙黃'),
-                _buildColorCircle(1, const Color(0xFFC62828), '酒櫻紅'),
-                _buildColorCircle(2, const Color(0xFF1565C0), '律政藍'),
-                _buildColorCircle(3, const Color(0xFF2E7D32), '法規綠'),
-              ],
+            child: SwitchListTile(
+              title: const Text('顯示分頁文字標籤', style: TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: const Text('關閉後將只顯示導覽圖示，高度更加緊湊'),
+              value: _tempShowLabels,
+              activeColor: AppColors.accent,
+              onChanged: (val) {
+                setState(() {
+                  _tempShowLabels = val;
+                });
+              },
             ),
-            SizedBox(height: 28.h),
+          ),
+          SizedBox(height: 20.h),
 
-            // 操作按鈕
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: OutlinedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 12.h),
-                      side: borderSide,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
-                    ),
-                    child: Text('取消', style: TextStyle(fontSize: 14.sp, color: textMuted)),
+          // 3. 主題 Accent Color 點選
+          Text('App 品牌配色', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: textMuted)),
+          SizedBox(height: 10.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildColorCircle(0, const Color(0xFFD6A85F), '金沙黃'),
+              _buildColorCircle(1, const Color(0xFFC62828), '酒櫻紅'),
+              _buildColorCircle(2, const Color(0xFF1565C0), '律政藍'),
+              _buildColorCircle(3, const Color(0xFF2E7D32), '法規綠'),
+            ],
+          ),
+          SizedBox(height: 20.h),
+
+          // 操作按鈕
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: OutlinedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 12.h),
+                    side: borderSide,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
                   ),
+                  child: Text('取消', style: TextStyle(fontSize: 14.sp, color: textMuted)),
                 ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: FilledButton(
-                    onPressed: () {
-                      widget.appState.updateInterfaceSettings(
-                        navbarOrder: _tempOrder,
-                        showNavbarLabels: _tempShowLabels,
-                        accentColorIndex: _tempAccentIndex,
-                      );
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('介面自訂偏好已儲存！'),
-                          backgroundColor: Color(0xFF2E7D32),
-                        ),
-                      );
-                    },
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      padding: EdgeInsets.symmetric(vertical: 12.h),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
-                    ),
-                    child: Text('儲存變更', style: TextStyle(fontSize: 14.sp, color: Colors.white, fontWeight: FontWeight.bold)),
+              ),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: FilledButton(
+                  onPressed: () {
+                    widget.appState.updateInterfaceSettings(
+                      navbarOrder: _tempOrder,
+                      showNavbarLabels: _tempShowLabels,
+                      accentColorIndex: _tempAccentIndex,
+                    );
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('介面自訂偏好已儲存！'),
+                        backgroundColor: Color(0xFF2E7D32),
+                      ),
+                    );
+                  },
+                  style: FilledButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    padding: EdgeInsets.symmetric(vertical: 12.h),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
                   ),
+                  child: Text('儲存變更', style: TextStyle(fontSize: 14.sp, color: Colors.white, fontWeight: FontWeight.bold)),
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
+  }
   }
 
   Widget _buildColorCircle(int index, Color color, String name) {
