@@ -29,8 +29,6 @@ import 'dart:async';
 import 'dart:ui' show ImageFilter;
 
 part 'law_assistant/law_assistant_palette.dart';
-part 'law_assistant/legacy/law_assistant_search_page.dart';
-part 'law_assistant/legacy/law_assistant_prototype_widgets.dart';
 part 'law_assistant/law_assistant_chat_page.dart';
 
 /// 學習頁重構：單一 ListView 滾動大框架，結合方格紙手寫筆記本美學，全面採用 SVG 圖示

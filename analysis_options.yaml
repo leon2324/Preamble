@@ -5,6 +5,11 @@
 analyzer:
   exclude:
     - scratch/**
+    # 台灣繁體中文教學註解：
+    # 這兩個檔案已從 KnowLawPage 正式 library 隔離；保留檔案供日後參考，
+    # 但不再讓 analyzer 把孤立的 `part of` prototype 檔視為正式 App 入口。
+    - lib/pages/learning/law_assistant/legacy/law_assistant_search_page.dart
+    - lib/pages/learning/law_assistant/legacy/law_assistant_prototype_widgets.dart
   errors:
     unused_element: ignore
     unused_field: ignore
