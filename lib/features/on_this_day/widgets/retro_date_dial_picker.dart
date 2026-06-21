@@ -27,7 +27,8 @@ class _RetroDateDialPickerState extends State<RetroDateDialPicker> {
     super.initState();
     _selectedMonth = widget.initialDate.month;
     _selectedDay = widget.initialDate.day;
-    _monthController = FixedExtentScrollController(initialItem: _selectedMonth - 1);
+    _monthController =
+        FixedExtentScrollController(initialItem: _selectedMonth - 1);
     _dayController = FixedExtentScrollController(initialItem: _selectedDay - 1);
   }
 
@@ -109,7 +110,8 @@ class _RetroDateDialPickerState extends State<RetroDateDialPicker> {
                 decoration: BoxDecoration(
                   color: const Color(0xFFFFFDF5),
                   borderRadius: BorderRadius.circular(16.r),
-                  border: Border.all(color: const Color(0xFFD9BC84).withValues(alpha: 0.6)),
+                  border: Border.all(
+                      color: const Color(0xFFD9BC84).withValues(alpha: 0.6)),
                 ),
                 child: Stack(
                   alignment: Alignment.center,
@@ -123,8 +125,10 @@ class _RetroDateDialPickerState extends State<RetroDateDialPicker> {
                         decoration: BoxDecoration(
                           color: const Color(0xFFFFECE0).withValues(alpha: 0.3),
                           border: const Border(
-                            top: BorderSide(color: OnThisDayColors.accentGold, width: 1.2),
-                            bottom: BorderSide(color: OnThisDayColors.accentGold, width: 1.2),
+                            top: BorderSide(
+                                color: OnThisDayColors.accentGold, width: 1.2),
+                            bottom: BorderSide(
+                                color: OnThisDayColors.accentGold, width: 1.2),
                           ),
                         ),
                       ),
@@ -157,12 +161,18 @@ class _RetroDateDialPickerState extends State<RetroDateDialPicker> {
                                     '$month 月',
                                     style: TextStyle(
                                       fontFamily: 'Songti TC',
-                                      fontFamilyFallback: const ['BiauKai', 'serif'],
+                                      fontFamilyFallback: const [
+                                        'BiauKai',
+                                        'serif'
+                                      ],
                                       fontSize: 18.sp,
-                                      fontWeight: isSelected ? FontWeight.w900 : FontWeight.w500,
+                                      fontWeight: isSelected
+                                          ? FontWeight.w900
+                                          : FontWeight.w500,
                                       color: isSelected
                                           ? OnThisDayColors.primaryGreen
-                                          : OnThisDayColors.textSecondary.withValues(alpha: 0.6),
+                                          : OnThisDayColors.textSecondary
+                                              .withValues(alpha: 0.6),
                                     ),
                                   ),
                                 );
@@ -202,12 +212,18 @@ class _RetroDateDialPickerState extends State<RetroDateDialPicker> {
                                     '$day 日',
                                     style: TextStyle(
                                       fontFamily: 'Songti TC',
-                                      fontFamilyFallback: const ['BiauKai', 'serif'],
+                                      fontFamilyFallback: const [
+                                        'BiauKai',
+                                        'serif'
+                                      ],
                                       fontSize: 18.sp,
-                                      fontWeight: isSelected ? FontWeight.w900 : FontWeight.w500,
+                                      fontWeight: isSelected
+                                          ? FontWeight.w900
+                                          : FontWeight.w500,
                                       color: isSelected
                                           ? OnThisDayColors.primaryGreen
-                                          : OnThisDayColors.textSecondary.withValues(alpha: 0.6),
+                                          : OnThisDayColors.textSecondary
+                                              .withValues(alpha: 0.6),
                                     ),
                                   ),
                                 );

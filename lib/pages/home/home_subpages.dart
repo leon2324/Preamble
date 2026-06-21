@@ -232,7 +232,7 @@ class CommonLegalIssuesPage extends StatelessWidget {
 
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (__) => LawAssistantSearchPage(
+        builder: (__) => LawAssistantChatPage(
           initialPrompt: '我想了解${item.label}常見法律問題，可以先看哪些方向？',
         ),
       ),
@@ -577,7 +577,7 @@ class LifeLegalTipDetailPage extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (__) => LawAssistantSearchPage(
+                    builder: (__) => LawAssistantChatPage(
                       initialPrompt: '我想了解「${item.title}」這個生活法律問題，可以怎麼處理？',
                     ),
                   ),

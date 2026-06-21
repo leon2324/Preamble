@@ -59,8 +59,8 @@ class CaseNetizenChatRoomPage extends StatefulWidget {
     required this.book,
     Map<String, List<int>>? caseVotes,
     Map<String, List<Map<String, dynamic>>>? netizenComments,
-  }) : caseVotes = caseVotes ?? _defaultCaseVotes,
-       netizenComments = netizenComments ?? _defaultNetizenComments;
+  })  : caseVotes = caseVotes ?? _defaultCaseVotes,
+        netizenComments = netizenComments ?? _defaultNetizenComments;
 
   final CaseBook book;
   final Map<String, List<int>> caseVotes;
@@ -74,7 +74,8 @@ class CaseNetizenChatRoomPage extends StatefulWidget {
     '161': [12, 228],
     '124': [88, 42],
   };
-  static final Map<String, List<Map<String, dynamic>>> _defaultNetizenComments = {};
+  static final Map<String, List<Map<String, dynamic>>> _defaultNetizenComments =
+      {};
 
   @override
   State<CaseNetizenChatRoomPage> createState() =>
@@ -182,7 +183,8 @@ class _CaseNetizenChatRoomPageState extends State<CaseNetizenChatRoomPage> {
               _buildAppBar(context),
               Expanded(
                 child: ListView(
-                  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
                   controller: _scrollController,
                   padding: EdgeInsets.fromLTRB(14.w, 12.h, 14.w, 18.h),
                   children: [

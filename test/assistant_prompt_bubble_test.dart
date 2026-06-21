@@ -56,7 +56,7 @@ void main() {
     await tester.tap(find.byType(AssistantPromptBubble));
     await tester.pumpAndSettle();
 
-    // Should navigate to LawAssistantSearchPage
-    expect(find.byType(LawAssistantSearchPage), findsOneWidget);
+    // Should navigate to LawAssistantChatPage
+    expect(find.byType(LawAssistantChatPage), findsOneWidget);
   });
 }

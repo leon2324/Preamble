@@ -106,7 +106,7 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
   }) {
     final isSelected = _selectedAiStyle == value;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Expanded(
       child: GestureDetector(
         onTap: () {
@@ -133,7 +133,9 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
             children: [
               Icon(
                 icon,
-                color: isSelected ? AppColors.accent : (isDark ? Colors.white70 : AppColors.textSecondary),
+                color: isSelected
+                    ? AppColors.accent
+                    : (isDark ? Colors.white70 : AppColors.textSecondary),
                 size: 20.sp,
               ),
               SizedBox(height: 6.h),
@@ -142,7 +144,9 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
                 style: TextStyle(
                   fontSize: 11.sp,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  color: isSelected ? AppColors.accent : (isDark ? Colors.white70 : AppColors.textPrimary),
+                  color: isSelected
+                      ? AppColors.accent
+                      : (isDark ? Colors.white70 : AppColors.textPrimary),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -157,7 +161,8 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final surfaceColor = isDark ? const Color(0xFF171C22) : Colors.white;
-    final borderStyle = BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
+    final borderStyle =
+        BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
     final titleTextStyle = TextStyle(
       fontSize: 16.sp,
       fontWeight: FontWeight.w900,
@@ -169,7 +174,8 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
         color: surfaceColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
-      padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, MediaQuery.viewInsetsOf(context).bottom + 24.h),
+      padding: EdgeInsets.fromLTRB(
+          20.w, 12.h, 20.w, MediaQuery.viewInsetsOf(context).bottom + 24.h),
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -190,9 +196,15 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
             SizedBox(height: 16.h),
             Text('編輯個人檔案', style: titleTextStyle, textAlign: TextAlign.center),
             SizedBox(height: 20.h),
-            
+
             // 暱稱輸入欄位 (Nickname field)
-            Text('我的暱稱', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary)),
+            Text('我的暱稱',
+                style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.bold,
+                    color: isDark
+                        ? const Color(0xFFA3ABB6)
+                        : AppColors.textSecondary)),
             SizedBox(height: 6.h),
             TextField(
               controller: _nameController,
@@ -200,9 +212,11 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
               decoration: InputDecoration(
                 counterText: '',
                 hintText: '請輸入暱稱',
-                contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
                 filled: true,
-                fillColor: isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
+                fillColor:
+                    isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.r),
                   borderSide: borderStyle,
@@ -212,12 +226,21 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
                   borderSide: BorderSide(color: AppColors.accent, width: 1.5),
                 ),
               ),
-              style: TextStyle(fontSize: 14.sp, color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary),
+              style: TextStyle(
+                  fontSize: 14.sp,
+                  color:
+                      isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary),
             ),
             SizedBox(height: 20.h),
-  
+
             // 頭像選擇網格 (Avatar selection)
-            Text('選擇頭像圖示', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary)),
+            Text('選擇頭像圖示',
+                style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.bold,
+                    color: isDark
+                        ? const Color(0xFFA3ABB6)
+                        : AppColors.textSecondary)),
             SizedBox(height: 10.h),
             GridView.builder(
               shrinkWrap: true,
@@ -245,7 +268,12 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
                           ? Border.all(color: AppColors.accent, width: 3.w)
                           : Border.all(color: Colors.transparent),
                       boxShadow: isSelected
-                          ? [BoxShadow(color: AppColors.accent.withOpacity(0.3), blurRadius: 8, spreadRadius: 1)]
+                          ? [
+                              BoxShadow(
+                                  color: AppColors.accent.withOpacity(0.3),
+                                  blurRadius: 8,
+                                  spreadRadius: 1)
+                            ]
                           : null,
                     ),
                     child: Center(
@@ -260,14 +288,15 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
               },
             ),
             SizedBox(height: 20.h),
-  
+
             // 台灣繁體中文教學註解：身分設定下拉選單
             Text(
               '專業身分',
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.bold,
-                color: isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary,
+                color:
+                    isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary,
               ),
             ),
             SizedBox(height: 6.h),
@@ -275,9 +304,11 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
               value: _selectedProfession,
               dropdownColor: surfaceColor,
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
                 filled: true,
-                fillColor: isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
+                fillColor:
+                    isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.r),
                   borderSide: borderStyle,
@@ -293,7 +324,10 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
                 DropdownMenuItem(value: 'legal_staff', child: Text('法務人員')),
                 DropdownMenuItem(value: 'law_student', child: Text('法學生')),
               ],
-              style: TextStyle(fontSize: 14.sp, color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary),
+              style: TextStyle(
+                  fontSize: 14.sp,
+                  color:
+                      isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary),
               onChanged: (val) {
                 if (val != null) {
                   setState(() {
@@ -303,14 +337,15 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
               },
             ),
             SizedBox(height: 20.h),
-  
+
             // 台灣繁體中文教學註解：AI 對答風格自訂卡片
             Text(
               '小法助對話風格',
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.bold,
-                color: isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary,
+                color:
+                    isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary,
               ),
             ),
             SizedBox(height: 8.h),
@@ -339,7 +374,7 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
               ],
             ),
             SizedBox(height: 24.h),
-  
+
             // 底部操作按鈕（取消與儲存） (Action buttons)
             Row(
               children: [
@@ -349,9 +384,15 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
                     style: OutlinedButton.styleFrom(
                       padding: EdgeInsets.symmetric(vertical: 12.h),
                       side: borderStyle,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14.r)),
                     ),
-                    child: Text('取消', style: TextStyle(fontSize: 14.sp, color: isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary)),
+                    child: Text('取消',
+                        style: TextStyle(
+                            fontSize: 14.sp,
+                            color: isDark
+                                ? const Color(0xFFA3ABB6)
+                                : AppColors.textSecondary)),
                   ),
                 ),
                 SizedBox(width: 12.w),
@@ -372,9 +413,14 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
                     style: FilledButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       padding: EdgeInsets.symmetric(vertical: 12.h),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14.r)),
                     ),
-                    child: Text('儲存', style: TextStyle(fontSize: 14.sp, color: Colors.white, fontWeight: FontWeight.bold)),
+                    child: Text('儲存',
+                        style: TextStyle(
+                            fontSize: 14.sp,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold)),
                   ),
                 ),
               ],

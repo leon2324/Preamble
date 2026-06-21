@@ -48,8 +48,11 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
     final cases = CaseTimeMachineRepository.instance.cases;
     for (final book in cases) {
       if (book.id == mainCase.id ||
-          book.titleZh.contains(mainCase.title) || mainCase.title.contains(book.titleZh) ||
-          (book.shortTitleZh.isNotEmpty && (book.shortTitleZh.contains(mainCase.title) || mainCase.title.contains(book.shortTitleZh)))) {
+          book.titleZh.contains(mainCase.title) ||
+          mainCase.title.contains(book.titleZh) ||
+          (book.shortTitleZh.isNotEmpty &&
+              (book.shortTitleZh.contains(mainCase.title) ||
+                  mainCase.title.contains(book.shortTitleZh)))) {
         return book;
       }
     }
@@ -102,7 +105,8 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
               child: Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded, color: OnThisDayColors.primaryGreen),
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                        color: OnThisDayColors.primaryGreen),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   Expanded(
@@ -113,7 +117,8 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
                           _case.title,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: OnThisDayTextStyles.titleSerif(context).copyWith(
+                          style:
+                              OnThisDayTextStyles.titleSerif(context).copyWith(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w900,
                           ),
@@ -123,13 +128,15 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
                           '${_case.year} 年 · ${_case.category}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: OnThisDayTextStyles.caption(context).copyWith(fontSize: 10.sp),
+                          style: OnThisDayTextStyles.caption(context)
+                              .copyWith(fontSize: 10.sp),
                         ),
                       ],
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.bookmark_border_rounded, color: OnThisDayColors.accentGold),
+                    icon: const Icon(Icons.bookmark_border_rounded,
+                        color: OnThisDayColors.accentGold),
                     onPressed: () {},
                   ),
                 ],
@@ -289,7 +296,8 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
           children: List.generate(_tabs.length, (index) {
             final isSelected = index == _activeTab;
             return Padding(
-              padding: EdgeInsets.only(right: index == _tabs.length - 1 ? 0 : 8.w),
+              padding:
+                  EdgeInsets.only(right: index == _tabs.length - 1 ? 0 : 8.w),
               child: GestureDetector(
                 onTap: () {
                   setState(() {
@@ -297,21 +305,29 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
                   });
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: isSelected ? OnThisDayColors.primaryGreen : OnThisDayColors.bgCream.withValues(alpha: 0.25),
+                    color: isSelected
+                        ? OnThisDayColors.primaryGreen
+                        : OnThisDayColors.bgCream.withValues(alpha: 0.25),
                     borderRadius: BorderRadius.circular(18.r),
                     border: Border.all(
-                      color: isSelected ? OnThisDayColors.primaryGreen : OnThisDayColors.borderLight,
+                      color: isSelected
+                          ? OnThisDayColors.primaryGreen
+                          : OnThisDayColors.borderLight,
                     ),
                   ),
                   child: Text(
                     _tabs[index],
                     style: TextStyle(
                       fontSize: 12.sp,
-                      fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
-                      color: isSelected ? OnThisDayColors.bgPaperLight : OnThisDayColors.textSecondary,
+                      fontWeight:
+                          isSelected ? FontWeight.w900 : FontWeight.w700,
+                      color: isSelected
+                          ? OnThisDayColors.bgPaperLight
+                          : OnThisDayColors.textSecondary,
                     ),
                   ),
                 ),
@@ -386,14 +402,19 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('事件簡介', style: OnThisDayTextStyles.cardTitle(context).copyWith(fontSize: 14.sp)),
+        Text('事件簡介',
+            style: OnThisDayTextStyles.cardTitle(context)
+                .copyWith(fontSize: 14.sp)),
         SizedBox(height: 8.h),
         _buildContentCard(
           accentColor: OnThisDayColors.primaryGreen,
-          child: Text(_case.background, style: OnThisDayTextStyles.body(context)),
+          child:
+              Text(_case.background, style: OnThisDayTextStyles.body(context)),
         ),
         SizedBox(height: 20.h),
-        Text('要旨速覽', style: OnThisDayTextStyles.cardTitle(context).copyWith(fontSize: 14.sp)),
+        Text('要旨速覽',
+            style: OnThisDayTextStyles.cardTitle(context)
+                .copyWith(fontSize: 14.sp)),
         SizedBox(height: 8.h),
         _buildContentCard(
           accentColor: OnThisDayColors.accentGold,
@@ -451,7 +472,9 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('事件發展脈絡', style: OnThisDayTextStyles.cardTitle(context).copyWith(fontSize: 14.sp)),
+        Text('事件發展脈絡',
+            style: OnThisDayTextStyles.cardTitle(context)
+                .copyWith(fontSize: 14.sp)),
         SizedBox(height: 12.h),
         ListView.builder(
           shrinkWrap: true,
@@ -506,7 +529,8 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
                         children: [
                           Text(
                             node.title,
-                            style: OnThisDayTextStyles.cardTitle(context).copyWith(fontSize: 13.sp),
+                            style: OnThisDayTextStyles.cardTitle(context)
+                                .copyWith(fontSize: 13.sp),
                           ),
                           SizedBox(height: 4.h),
                           Text(
@@ -534,7 +558,9 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('現場與歷史見證', style: OnThisDayTextStyles.cardTitle(context).copyWith(fontSize: 14.sp)),
+        Text('現場與歷史見證',
+            style: OnThisDayTextStyles.cardTitle(context)
+                .copyWith(fontSize: 14.sp)),
         SizedBox(height: 12.h),
         Wrap(
           spacing: 12.w,
@@ -542,7 +568,8 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
           children: [
             for (final photo in _case.photos)
               SizedBox(
-                width: 163.w, // Half-width container for two columns on typical 375.w design size
+                width: 163
+                    .w, // Half-width container for two columns on typical 375.w design size
                 child: Container(
                   decoration: BoxDecoration(
                     color: OnThisDayColors.bgPaperLight,
@@ -561,7 +588,8 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(12)),
                         ),
                         child: Center(
                           child: Opacity(
@@ -602,11 +630,14 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('時代背景脈絡', style: OnThisDayTextStyles.cardTitle(context).copyWith(fontSize: 14.sp)),
+        Text('時代背景脈絡',
+            style: OnThisDayTextStyles.cardTitle(context)
+                .copyWith(fontSize: 14.sp)),
         SizedBox(height: 8.h),
         _buildContentCard(
           accentColor: OnThisDayColors.secondaryGreen,
-          child: Text(_case.backgroundDetails, style: OnThisDayTextStyles.body(context)),
+          child: Text(_case.backgroundDetails,
+              style: OnThisDayTextStyles.body(context)),
         ),
       ],
     );
@@ -617,14 +648,19 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('社會影響效應', style: OnThisDayTextStyles.cardTitle(context).copyWith(fontSize: 14.sp)),
+        Text('社會影響效應',
+            style: OnThisDayTextStyles.cardTitle(context)
+                .copyWith(fontSize: 14.sp)),
         SizedBox(height: 8.h),
         _buildContentCard(
           accentColor: const Color(0xFFD35400),
-          child: Text(_case.socialImpact, style: OnThisDayTextStyles.body(context)),
+          child: Text(_case.socialImpact,
+              style: OnThisDayTextStyles.body(context)),
         ),
         SizedBox(height: 20.h),
-        Text('相關延伸案件', style: OnThisDayTextStyles.cardTitle(context).copyWith(fontSize: 14.sp)),
+        Text('相關延伸案件',
+            style: OnThisDayTextStyles.cardTitle(context)
+                .copyWith(fontSize: 14.sp)),
         SizedBox(height: 8.h),
         Wrap(
           spacing: 8.w,
@@ -634,7 +670,8 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
               GestureDetector(
                 onTap: () => _openRelatedCase(title),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                   decoration: BoxDecoration(
                     color: OnThisDayColors.paperBeige.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(16.r),
@@ -652,7 +689,8 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
                         ),
                       ),
                       SizedBox(width: 4.w),
-                      Icon(Icons.arrow_forward_ios_rounded, size: 8.sp, color: OnThisDayColors.primaryGreen),
+                      Icon(Icons.arrow_forward_ios_rounded,
+                          size: 8.sp, color: OnThisDayColors.primaryGreen),
                     ],
                   ),
                 ),
@@ -660,7 +698,9 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
           ],
         ),
         SizedBox(height: 20.h),
-        Text('延伸閱讀與資料庫', style: OnThisDayTextStyles.cardTitle(context).copyWith(fontSize: 14.sp)),
+        Text('延伸閱讀與資料庫',
+            style: OnThisDayTextStyles.cardTitle(context)
+                .copyWith(fontSize: 14.sp)),
         SizedBox(height: 8.h),
         Column(
           children: [
@@ -673,10 +713,13 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
                   border: Border.all(color: OnThisDayColors.borderLight),
                 ),
                 child: ListTile(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
                   leading: CircleAvatar(
-                    backgroundColor: OnThisDayColors.accentGold.withValues(alpha: 0.1),
-                    child: const Icon(Icons.link_rounded, color: OnThisDayColors.accentGold),
+                    backgroundColor:
+                        OnThisDayColors.accentGold.withValues(alpha: 0.1),
+                    child: const Icon(Icons.link_rounded,
+                        color: OnThisDayColors.accentGold),
                   ),
                   title: Text(
                     reading.title,
@@ -709,7 +752,9 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('資料來源與修訂', style: OnThisDayTextStyles.cardTitle(context).copyWith(fontSize: 14.sp)),
+        Text('資料來源與修訂',
+            style: OnThisDayTextStyles.cardTitle(context)
+                .copyWith(fontSize: 14.sp)),
         SizedBox(height: 8.h),
         _buildContentCard(
           accentColor: OnThisDayColors.textMuted,
@@ -721,7 +766,8 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
                   padding: EdgeInsets.symmetric(vertical: 4.h),
                   child: Row(
                     children: [
-                      const Icon(Icons.import_contacts_rounded, color: OnThisDayColors.accentGold, size: 16),
+                      const Icon(Icons.import_contacts_rounded,
+                          color: OnThisDayColors.accentGold, size: 16),
                       SizedBox(width: 8.w),
                       Expanded(
                         child: Text(
@@ -738,7 +784,8 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
                       SizedBox(width: 8.w),
                       Text(
                         source.updatedAt,
-                        style: OnThisDayTextStyles.caption(context).copyWith(fontSize: 10.sp),
+                        style: OnThisDayTextStyles.caption(context)
+                            .copyWith(fontSize: 10.sp),
                       ),
                     ],
                   ),
@@ -748,7 +795,8 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
               SizedBox(height: 8.h),
               Text(
                 '免責聲明：\n本單元內容皆取材自官方文獻檔案與學術歷史記錄進行客觀編寫，旨在提供正當法治歷史與人權教育參考。不代表任何現存主觀政治立場。',
-                style: OnThisDayTextStyles.caption(context).copyWith(height: 1.4, fontSize: 9.5.sp),
+                style: OnThisDayTextStyles.caption(context)
+                    .copyWith(height: 1.4, fontSize: 9.5.sp),
               ),
             ],
           ),
@@ -765,7 +813,8 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
       padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 20.h),
       decoration: BoxDecoration(
         color: OnThisDayColors.paperBeige,
-        border: const Border(top: BorderSide(color: OnThisDayColors.borderLight)),
+        border:
+            const Border(top: BorderSide(color: OnThisDayColors.borderLight)),
       ),
       child: SizedBox(
         width: double.infinity,
@@ -801,7 +850,8 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
                 ),
               ),
               SizedBox(width: 6.w),
-              Icon(Icons.arrow_forward_rounded, size: 14.sp, color: OnThisDayColors.bgPaperLight),
+              Icon(Icons.arrow_forward_rounded,
+                  size: 14.sp, color: OnThisDayColors.bgPaperLight),
             ],
           ),
         ),

@@ -26,13 +26,13 @@ abstract final class CaseTimeMachineColors {
   static const bgWhite = Colors.white;
 
   // Morandi Accent Colors for Light Theme Cards
-  static const morandiGreen = Color(0xFF8FA89B);    // 莫蘭迪粉綠 (基本資料、法律爭點、延伸書架)
-  static const morandiBlue = Color(0xFF8F9DA8);     // 莫蘭迪霧藍 (時間軸、相關法條)
+  static const morandiGreen = Color(0xFF8FA89B); // 莫蘭迪粉綠 (基本資料、法律爭點、延伸書架)
+  static const morandiBlue = Color(0xFF8F9DA8); // 莫蘭迪霧藍 (時間軸、相關法條)
   static const morandiLavender = Color(0xFF9F8FA8); // 莫蘭迪藕紫 (關鍵人物、大法官意見書)
-  static const morandiTaupe = Color(0xFFAB9D95);    // 莫蘭迪暖灰 (案件背景、學者評析、更新時間)
-  static const morandiRose = Color(0xFFAB8E8F);     // 莫蘭迪玫瑰粉 (事件經過、法庭攻防)
-  static const morandiSlate = Color(0xFF8FA8A7);    // 莫蘭迪石板灰 (審理歷程、媒體報導)
-  static const morandiGold = Color(0xFFB09E81);     // 莫蘭迪土黃 (法院認定重點)
+  static const morandiTaupe = Color(0xFFAB9D95); // 莫蘭迪暖灰 (案件背景、學者評析、更新時間)
+  static const morandiRose = Color(0xFFAB8E8F); // 莫蘭迪玫瑰粉 (事件經過、法庭攻防)
+  static const morandiSlate = Color(0xFF8FA8A7); // 莫蘭迪石板灰 (審理歷程、媒體報導)
+  static const morandiGold = Color(0xFFB09E81); // 莫蘭迪土黃 (法院認定重點)
 }
 
 abstract final class CaseTimeMachineTextStyles {

@@ -91,7 +91,8 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
   Future<void> _loadHeroCases() async {
     try {
       // 動態載入前 6 筆真實案件（以對接 Supabase 10,000 筆真實資料）
-      final books = await CaseTimeMachineRepository.instance.getCasesPaginated(6, 0);
+      final books =
+          await CaseTimeMachineRepository.instance.getCasesPaginated(6, 0);
       if (mounted) {
         setState(() {
           final initId = widget.initialCaseId;
@@ -101,7 +102,8 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
               final item = books.removeAt(existIdx);
               books.insert(0, item);
             } else {
-              final initBook = CaseTimeMachineRepository.instance.getCaseById(initId);
+              final initBook =
+                  CaseTimeMachineRepository.instance.getCaseById(initId);
               books.insert(0, initBook);
             }
           }
@@ -266,11 +268,18 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
                           SizedBox(width: 8.w),
                           Expanded(
                             child: _HotSearchMarquee(
-                              queries: const ['318 太陽花', '釋字 799 號', '幼兒園案', '集會自由', '車禍過失'],
+                              queries: const [
+                                '318 太陽花',
+                                '釋字 799 號',
+                                '幼兒園案',
+                                '集會自由',
+                                '車禍過失'
+                              ],
                               onTap: (q) {
                                 Navigator.of(context).push(
                                   CupertinoPageRoute<void>(
-                                    builder: (__) => CaseTimeMachineSearchPage(initialQuery: q),
+                                    builder: (__) => CaseTimeMachineSearchPage(
+                                        initialQuery: q),
                                   ),
                                 );
                               },
@@ -305,8 +314,10 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
                               SizedBox(height: 12.h),
                               _ThreeDStackedCarousel(
                                 books: _heroBooks,
-                                onBookTap: (book) => _openCaseDetail(context, book),
-                                onChatTap: (book) => _openChatRoom(context, book),
+                                onBookTap: (book) =>
+                                    _openCaseDetail(context, book),
+                                onChatTap: (book) =>
+                                    _openChatRoom(context, book),
                               ),
                             ],
                           ),
@@ -340,7 +351,6 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
     );
   }
 
-
   // 檢索館藏目錄導覽卡
   Widget _buildDirectoryCards(BuildContext context) {
     return Column(
@@ -371,7 +381,8 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
                   color: const Color(0xFFF7F5F0),
                   borderRadius: BorderRadius.circular(12.r),
                   border: Border.all(
-                    color: CaseTimeMachineColors.accentGold.withValues(alpha: 0.3),
+                    color:
+                        CaseTimeMachineColors.accentGold.withValues(alpha: 0.3),
                     width: 0.8,
                   ),
                 ),
@@ -454,7 +465,8 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
     if (_heroBooks.isEmpty) return const SizedBox.shrink();
 
     // 取 4 筆不同的案件作為館長今日推薦（過濾掉 318 學運，讓其他大案露臉）
-    final curatedBooks = _heroBooks.where((b) => b.id != '318').take(4).toList();
+    final curatedBooks =
+        _heroBooks.where((b) => b.id != '318').take(4).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -679,7 +691,8 @@ class _CuratedBookCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 4.w, vertical: 1.5.h),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(3.r),
@@ -798,16 +811,24 @@ class _ThreeDStackedCarouselState extends State<_ThreeDStackedCarousel> {
 
   String _getUnsplashImageUrl(String category, String id) {
     const images = {
-      '車禍賠償': 'https://images.unsplash.com/photo-1518364538800-6bcb3f25da49?q=80&w=400&auto=format&fit=crop',
-      '借款返還': 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=400&auto=format&fit=crop',
-      '租屋糾紛': 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=400&auto=format&fit=crop',
-      '給付價金': 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=400&auto=format&fit=crop',
-      '不當解雇': 'https://images.unsplash.com/photo-1521791136368-1a869372658b?q=80&w=400&auto=format&fit=crop',
-      '離婚親權': 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=400&auto=format&fit=crop',
-      '竊盜': 'https://images.unsplash.com/photo-1508962914676-134849a727f0?q=80&w=400&auto=format&fit=crop',
-      '傷害': 'https://images.unsplash.com/photo-1505664194779-8beaceb93744?q=80&w=400&auto=format&fit=crop',
+      '車禍賠償':
+          'https://images.unsplash.com/photo-1518364538800-6bcb3f25da49?q=80&w=400&auto=format&fit=crop',
+      '借款返還':
+          'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=400&auto=format&fit=crop',
+      '租屋糾紛':
+          'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=400&auto=format&fit=crop',
+      '給付價金':
+          'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=400&auto=format&fit=crop',
+      '不當解雇':
+          'https://images.unsplash.com/photo-1521791136368-1a869372658b?q=80&w=400&auto=format&fit=crop',
+      '離婚親權':
+          'https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=400&auto=format&fit=crop',
+      '竊盜':
+          'https://images.unsplash.com/photo-1508962914676-134849a727f0?q=80&w=400&auto=format&fit=crop',
+      '傷害':
+          'https://images.unsplash.com/photo-1505664194779-8beaceb93744?q=80&w=400&auto=format&fit=crop',
     };
-    
+
     if (id == '318') {
       return 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=400&auto=format&fit=crop';
     }
@@ -815,7 +836,8 @@ class _ThreeDStackedCarouselState extends State<_ThreeDStackedCarousel> {
       return 'https://images.unsplash.com/photo-1450133064473-71024230f91b?q=80&w=400&auto=format&fit=crop';
     }
 
-    return images[category] ?? 'https://images.unsplash.com/photo-1447069387593-a5de0862481e?q=80&w=400&auto=format&fit=crop';
+    return images[category] ??
+        'https://images.unsplash.com/photo-1447069387593-a5de0862481e?q=80&w=400&auto=format&fit=crop';
   }
 
   @override
@@ -831,7 +853,7 @@ class _ThreeDStackedCarouselState extends State<_ThreeDStackedCarousel> {
         itemCount: widget.books.length,
         itemBuilder: (context, index) {
           final book = widget.books[index];
-          
+
           final difference = (index - _currentPage);
           final scale = (1 - (difference.abs() * 0.08)).clamp(0.88, 1.0);
           final opacity = (1 - (difference.abs() * 0.35)).clamp(0.6, 1.0);
@@ -850,7 +872,10 @@ class _ThreeDStackedCarouselState extends State<_ThreeDStackedCarousel> {
 
   Widget _buildCarouselCard(CaseBook book, double cardWidth) {
     final discussionCount = (book.id.hashCode % 80 + 10).abs();
-    final hasActiveVote = book.id == '318' || book.id == '799' || book.id == '103' || book.id == '101';
+    final hasActiveVote = book.id == '318' ||
+        book.id == '799' ||
+        book.id == '103' ||
+        book.id == '101';
     final accentColor = _getCategoryColor(book.category);
     final bgImageUrl = _getUnsplashImageUrl(book.category, book.id);
 
@@ -929,7 +954,8 @@ class _ThreeDStackedCarouselState extends State<_ThreeDStackedCarousel> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 2.h),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 7.w, vertical: 2.h),
                               decoration: BoxDecoration(
                                 color: accentColor.withValues(alpha: 0.15),
                                 borderRadius: BorderRadius.circular(4.r),
@@ -980,7 +1006,8 @@ class _ThreeDStackedCarouselState extends State<_ThreeDStackedCarousel> {
                             GestureDetector(
                               onTap: () => widget.onChatTap(book),
                               child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 8.w, vertical: 4.h),
                                 decoration: BoxDecoration(
                                   color: accentColor.withValues(alpha: 0.08),
                                   borderRadius: BorderRadius.circular(6.r),
@@ -1013,12 +1040,16 @@ class _ThreeDStackedCarouselState extends State<_ThreeDStackedCarousel> {
                                   GestureDetector(
                                     onTap: () => widget.onChatTap(book),
                                     child: Container(
-                                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 8.w, vertical: 5.h),
                                       decoration: BoxDecoration(
                                         color: const Color(0xFFFAF6EE),
-                                        borderRadius: BorderRadius.circular(6.r),
+                                        borderRadius:
+                                            BorderRadius.circular(6.r),
                                         border: Border.all(
-                                          color: CaseTimeMachineColors.accentGold.withValues(alpha: 0.35),
+                                          color: CaseTimeMachineColors
+                                              .accentGold
+                                              .withValues(alpha: 0.35),
                                           width: 0.8,
                                         ),
                                       ),
@@ -1027,7 +1058,8 @@ class _ThreeDStackedCarouselState extends State<_ThreeDStackedCarousel> {
                                         style: TextStyle(
                                           fontSize: 9.5.sp,
                                           fontWeight: FontWeight.bold,
-                                          color: CaseTimeMachineColors.accentGold,
+                                          color:
+                                              CaseTimeMachineColors.accentGold,
                                         ),
                                       ),
                                     ),
@@ -1036,12 +1068,15 @@ class _ThreeDStackedCarouselState extends State<_ThreeDStackedCarousel> {
                                 ],
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: CaseTimeMachineColors.primaryGreen,
+                                    backgroundColor:
+                                        CaseTimeMachineColors.primaryGreen,
                                     foregroundColor: Colors.white,
                                     elevation: 0,
-                                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10.w, vertical: 5.h),
                                     minimumSize: Size.zero,
-                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(6.r),
                                     ),
@@ -1094,8 +1129,15 @@ class _LandmarkSpotlights extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final landmarks = books.where((b) => b.id == '318' || b.id == '799' || b.id == '103' || b.id == '101' || b.id == 'hung-2013').toList();
-    
+    final landmarks = books
+        .where((b) =>
+            b.id == '318' ||
+            b.id == '799' ||
+            b.id == '103' ||
+            b.id == '101' ||
+            b.id == 'hung-2013')
+        .toList();
+
     if (landmarks.isEmpty) return const SizedBox.shrink();
 
     return Column(
@@ -1135,9 +1177,11 @@ class _LandmarkSpotlights extends StatelessWidget {
                       Row(
                         children: [
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 6.w, vertical: 2.h),
                             decoration: BoxDecoration(
-                              color: CaseTimeMachineColors.accentGold.withValues(alpha: 0.1),
+                              color: CaseTimeMachineColors.accentGold
+                                  .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(4.r),
                             ),
                             child: Text(
@@ -1186,22 +1230,27 @@ class _LandmarkSpotlights extends StatelessWidget {
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
-                          children: book.tags.map((t) => Container(
-                            margin: EdgeInsets.only(right: 6.w),
-                            padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-                            decoration: BoxDecoration(
-                              color: CaseTimeMachineColors.primaryGreen.withValues(alpha: 0.05),
-                              borderRadius: BorderRadius.circular(4.r),
-                            ),
-                            child: Text(
-                              '#$t',
-                              style: TextStyle(
-                                fontSize: 8.5.sp,
-                                color: CaseTimeMachineColors.primaryGreen,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          )).toList(),
+                          children: book.tags
+                              .map((t) => Container(
+                                    margin: EdgeInsets.only(right: 6.w),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 6.w, vertical: 2.h),
+                                    decoration: BoxDecoration(
+                                      color: CaseTimeMachineColors.primaryGreen
+                                          .withValues(alpha: 0.05),
+                                      borderRadius: BorderRadius.circular(4.r),
+                                    ),
+                                    child: Text(
+                                      '#$t',
+                                      style: TextStyle(
+                                        fontSize: 8.5.sp,
+                                        color:
+                                            CaseTimeMachineColors.primaryGreen,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ))
+                              .toList(),
                         ),
                       ),
                     ],
@@ -1213,7 +1262,8 @@ class _LandmarkSpotlights extends StatelessWidget {
                   child: Container(
                     padding: EdgeInsets.all(10.w),
                     decoration: BoxDecoration(
-                      color: CaseTimeMachineColors.primaryGreen.withValues(alpha: 0.1),
+                      color: CaseTimeMachineColors.primaryGreen
+                          .withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(

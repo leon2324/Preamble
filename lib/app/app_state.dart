@@ -139,7 +139,8 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
         preferences.getString(_caseNoteDraftsKey),
       );
       _fontSizeScale = preferences.getDouble(_fontSizeScaleKey) ?? 1.0;
-      _notifyFrequency = preferences.getString(_notifyFrequencyKey) ?? 'instant';
+      _notifyFrequency =
+          preferences.getString(_notifyFrequencyKey) ?? 'instant';
       _notifyChannel = preferences.getString(_notifyChannelKey) ?? 'push';
       final orderList = preferences.getStringList(_navbarOrderKey);
       if (orderList != null) {
@@ -149,7 +150,8 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
       }
       _showNavbarLabels = preferences.getBool(_showNavbarLabelsKey) ?? true;
       _accentColorIndex = preferences.getInt(_accentColorIndexKey) ?? 0;
-      AppColors.accentColorIndex = _accentColorIndex; // 台灣繁體中文教學註解：載入時同步給 AppColors 設定動態主題色
+      AppColors.accentColorIndex =
+          _accentColorIndex; // 台灣繁體中文教學註解：載入時同步給 AppColors 設定動態主題色
       await documentRepository.fetchDrafts();
     } on MissingPluginException {
       // 台灣繁體中文教學註解：

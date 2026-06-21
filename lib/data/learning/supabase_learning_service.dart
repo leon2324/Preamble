@@ -9,7 +9,8 @@ import 'package:lawapp/data/mock_data/learning/learning_mock_data.dart';
 /// 負責對接 Supabase 雲端資料庫抓取精選與日常法律情境專題的服務類別
 class SupabaseLearningService {
   SupabaseLearningService._privateConstructor();
-  static final SupabaseLearningService instance = SupabaseLearningService._privateConstructor();
+  static final SupabaseLearningService instance =
+      SupabaseLearningService._privateConstructor();
 
   bool get isConfigured {
     if (Platform.environment.containsKey('FLUTTER_TEST')) {
@@ -32,7 +33,8 @@ class SupabaseLearningService {
     int offset = 0,
   }) async {
     if (!isConfigured) {
-      return _getLocalFallbackArticles(category: category, query: query, limit: limit, offset: offset);
+      return _getLocalFallbackArticles(
+          category: category, query: query, limit: limit, offset: offset);
     }
 
     try {
@@ -54,28 +56,36 @@ class SupabaseLearningService {
             'or=(title.ilike.${Uri.encodeComponent(escapedQuery)},summary.ilike.${Uri.encodeComponent(escapedQuery)})');
       }
 
-      final url = Uri.parse('$supabaseUrl/rest/v1/learning_articles?${queryParams.join('&')}');
+      final url = Uri.parse(
+          '$supabaseUrl/rest/v1/learning_articles?${queryParams.join('&')}');
       final response = await http.get(url, headers: _headers);
 
       if (response.statusCode == 200) {
         final List<dynamic> list = jsonDecode(response.body) as List<dynamic>;
-        return list.map((item) => _mapJsonToArticle(item as Map<String, dynamic>)).toList();
+        return list
+            .map((item) => _mapJsonToArticle(item as Map<String, dynamic>))
+            .toList();
       } else {
-        debugPrint('Supabase fetch learning error: ${response.statusCode} ${response.body}');
-        return _getLocalFallbackArticles(category: category, query: query, limit: limit, offset: offset);
+        debugPrint(
+            'Supabase fetch learning error: ${response.statusCode} ${response.body}');
+        return _getLocalFallbackArticles(
+            category: category, query: query, limit: limit, offset: offset);
       }
     } catch (e) {
       debugPrint('Supabase fetch learning failed: $e');
-      return _getLocalFallbackArticles(category: category, query: query, limit: limit, offset: offset);
+      return _getLocalFallbackArticles(
+          category: category, query: query, limit: limit, offset: offset);
     }
   }
 
   LearningMockArticle _mapJsonToArticle(Map<String, dynamic> json) {
     final List<dynamic> sectionsJson = json['sections'] ?? [];
-    final sections = sectionsJson.map((sec) => LearningMockSection(
-      title: sec['title'] ?? '',
-      body: sec['body'] ?? '',
-    )).toList();
+    final sections = sectionsJson
+        .map((sec) => LearningMockSection(
+              title: sec['title'] ?? '',
+              body: sec['body'] ?? '',
+            ))
+        .toList();
 
     final List<dynamic> keyPointsJson = json['key_points'] ?? [];
     final keyPoints = keyPointsJson.map((kp) => kp.toString()).toList();
@@ -102,7 +112,8 @@ class SupabaseLearningService {
   }
 
   /// 依據日期隨機獲取 5 組專題 (共 25 筆單元)
-  Future<List<LearningTopicData>> fetchDailyFeaturedTopics(DateTime date) async {
+  Future<List<LearningTopicData>> fetchDailyFeaturedTopics(
+      DateTime date) async {
     if (!isConfigured) {
       return _getLocalFallbackFeaturedTopics();
     }
@@ -128,7 +139,9 @@ class SupabaseLearningService {
       final response = await http.get(url, headers: _headers);
       if (response.statusCode == 200) {
         final List<dynamic> list = jsonDecode(response.body) as List<dynamic>;
-        final allArticles = list.map((item) => _mapJsonToArticle(item as Map<String, dynamic>)).toList();
+        final allArticles = list
+            .map((item) => _mapJsonToArticle(item as Map<String, dynamic>))
+            .toList();
 
         // 3. 依 topic_id 將文章分群成 5 個專題
         final Map<int, List<LearningMockArticle>> grouped = {};
@@ -145,7 +158,7 @@ class SupabaseLearningService {
           final articles = grouped[topicId] ?? [];
           if (articles.length == 5) {
             final category = articles.first.category ?? '法律情境';
-            
+
             // 建立 5 個單元
             final List<LearningTopicUnit> units = [];
             for (final article in articles) {
@@ -203,7 +216,8 @@ class SupabaseLearningService {
           return topics;
         }
       }
-      debugPrint('Supabase fetch daily topics error: ${response.statusCode} ${response.body}');
+      debugPrint(
+          'Supabase fetch daily topics error: ${response.statusCode} ${response.body}');
       return _getLocalFallbackFeaturedTopics();
     } catch (e) {
       debugPrint('Supabase fetch daily topics failed: $e');
@@ -237,11 +251,14 @@ class SupabaseLearningService {
     if (!isConfigured) return null;
 
     try {
-      final url = Uri.parse('$supabaseUrl/rest/v1/learning_articles?topic_id=eq.$topicId&order=step_number.asc');
+      final url = Uri.parse(
+          '$supabaseUrl/rest/v1/learning_articles?topic_id=eq.$topicId&order=step_number.asc');
       final response = await http.get(url, headers: _headers);
       if (response.statusCode == 200) {
         final List<dynamic> list = jsonDecode(response.body) as List<dynamic>;
-        final articles = list.map((item) => _mapJsonToArticle(item as Map<String, dynamic>)).toList();
+        final articles = list
+            .map((item) => _mapJsonToArticle(item as Map<String, dynamic>))
+            .toList();
         if (articles.length == 5) {
           final List<LearningTopicUnit> units = [];
           for (final article in articles) {
@@ -303,7 +320,8 @@ class SupabaseLearningService {
   Future<LearningMockArticle?> fetchArticleByTitle(String title) async {
     if (!isConfigured) return null;
     try {
-      final url = Uri.parse('$supabaseUrl/rest/v1/learning_articles?title=eq.${Uri.encodeComponent(title)}&limit=1');
+      final url = Uri.parse(
+          '$supabaseUrl/rest/v1/learning_articles?title=eq.${Uri.encodeComponent(title)}&limit=1');
       final response = await http.get(url, headers: _headers);
       if (response.statusCode == 200) {
         final List<dynamic> list = jsonDecode(response.body) as List<dynamic>;
@@ -341,21 +359,40 @@ class SupabaseLearningService {
 
     if (query != null && query.trim().isNotEmpty) {
       final q = query.trim().toLowerCase();
-      filtered = filtered.where((a) =>
-          a.title.toLowerCase().contains(q) || a.summary.toLowerCase().contains(q)).toList();
+      filtered = filtered
+          .where((a) =>
+              a.title.toLowerCase().contains(q) ||
+              a.summary.toLowerCase().contains(q))
+          .toList();
     }
 
     if (offset >= filtered.length) return [];
-    final end = (offset + limit) < filtered.length ? (offset + limit) : filtered.length;
+    final end =
+        (offset + limit) < filtered.length ? (offset + limit) : filtered.length;
     return filtered.sublist(offset, end);
   }
 
   String _guessCategory(String title) {
-    if (title.contains('租屋') || title.contains('押金') || title.contains('房東') || title.contains('房客')) return '租屋糾紛';
-    if (title.contains('職場') || title.contains('加班') || title.contains('工時') || title.contains('離職')) return '職場權益';
-    if (title.contains('網購') || title.contains('退貨') || title.contains('消保') || title.contains('消費')) return '網購消費';
-    if (title.contains('肖像') || title.contains('發文') || title.contains('個資') || title.contains('隱私')) return '個資隱私';
-    if (title.contains('車禍') || title.contains('事故') || title.contains('碰撞') || title.contains('交通')) return '車禍事故';
+    if (title.contains('租屋') ||
+        title.contains('押金') ||
+        title.contains('房東') ||
+        title.contains('房客')) return '租屋糾紛';
+    if (title.contains('職場') ||
+        title.contains('加班') ||
+        title.contains('工時') ||
+        title.contains('離職')) return '職場權益';
+    if (title.contains('網購') ||
+        title.contains('退貨') ||
+        title.contains('消保') ||
+        title.contains('消費')) return '網購消費';
+    if (title.contains('肖像') ||
+        title.contains('發文') ||
+        title.contains('個資') ||
+        title.contains('隱私')) return '個資隱私';
+    if (title.contains('車禍') ||
+        title.contains('事故') ||
+        title.contains('碰撞') ||
+        title.contains('交通')) return '車禍事故';
     return '法律常識';
   }
 }

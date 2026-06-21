@@ -68,7 +68,8 @@ class _ArchiveUpdateRow extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          final book = CaseTimeMachineRepository.instance.getCaseById(item.caseId);
+          final book =
+              CaseTimeMachineRepository.instance.getCaseById(item.caseId);
           Navigator.of(context).push(
             CupertinoPageRoute<void>(
               builder: (_) => CaseDossierDetailPage(

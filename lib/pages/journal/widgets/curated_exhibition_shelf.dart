@@ -90,7 +90,8 @@ class _ExhibitionFolderCard extends StatelessWidget {
           onTap: () {
             if (item.caseIds.isEmpty) return;
             final firstCaseId = item.caseIds.first;
-            final book = CaseTimeMachineRepository.instance.getCaseById(firstCaseId);
+            final book =
+                CaseTimeMachineRepository.instance.getCaseById(firstCaseId);
             Navigator.of(context).push(
               CupertinoPageRoute<void>(
                 builder: (_) => CaseDossierDetailPage(
@@ -155,7 +156,8 @@ class _ExhibitionFolderCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 3.h),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 7.w, vertical: 3.h),
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.16),
                               borderRadius: BorderRadius.circular(8.r),
@@ -317,13 +319,15 @@ class _MiniBook extends StatelessWidget {
   Widget build(BuildContext context) {
     String displayLabel = '';
     final book = CaseTimeMachineRepository.instance.getCaseById(bookId);
-    
+
     if (book.displayCode.isNotEmpty) {
-      displayLabel = book.displayCode.replaceAll('CTM-', '').replaceAll('JY-', '');
+      displayLabel =
+          book.displayCode.replaceAll('CTM-', '').replaceAll('JY-', '');
     } else if (book.shortTitleZh.isNotEmpty) {
       displayLabel = book.shortTitleZh;
     } else {
-      displayLabel = book.titleZh.substring(0, book.titleZh.length > 3 ? 3 : book.titleZh.length);
+      displayLabel = book.titleZh
+          .substring(0, book.titleZh.length > 3 ? 3 : book.titleZh.length);
     }
 
     return Container(

@@ -10,14 +10,14 @@ import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.
 
 // 台灣繁體中文教學註解：分類→色系+emoji 對照表
 const _categoryAccents = <String, ({Color color, Color bgTint, String emoji})>{
-  '集會遊行':   (color: Color(0xFF4A7C8C), bgTint: Color(0xFFEAF4F7), emoji: '🪧'),
-  '強制治療':   (color: Color(0xFF6D649A), bgTint: Color(0xFFF0EEF9), emoji: '🏥'),
-  '死刑制度':   (color: Color(0xFF8C4A5A), bgTint: Color(0xFFF8EEF0), emoji: '⚖️'),
-  '婚姻平權':   (color: Color(0xFF357A53), bgTint: Color(0xFFEAF6EF), emoji: '🌈'),
-  '新聞自由':   (color: Color(0xFF9E7B2D), bgTint: Color(0xFFFFF2CF), emoji: '📰'),
-  '修憲程序':   (color: Color(0xFF4A7C8C), bgTint: Color(0xFFEAF4F7), emoji: '📜'),
-  '軍事司法':   (color: Color(0xFF5A6B4F), bgTint: Color(0xFFEFF4EA), emoji: '🎖️'),
-  '詐欺犯罪':   (color: Color(0xFF8C642B), bgTint: Color(0xFFFFF2CF), emoji: '🚨'),
+  '集會遊行': (color: Color(0xFF4A7C8C), bgTint: Color(0xFFEAF4F7), emoji: '🪧'),
+  '強制治療': (color: Color(0xFF6D649A), bgTint: Color(0xFFF0EEF9), emoji: '🏥'),
+  '死刑制度': (color: Color(0xFF8C4A5A), bgTint: Color(0xFFF8EEF0), emoji: '⚖️'),
+  '婚姻平權': (color: Color(0xFF357A53), bgTint: Color(0xFFEAF6EF), emoji: '🌈'),
+  '新聞自由': (color: Color(0xFF9E7B2D), bgTint: Color(0xFFFFF2CF), emoji: '📰'),
+  '修憲程序': (color: Color(0xFF4A7C8C), bgTint: Color(0xFFEAF4F7), emoji: '📜'),
+  '軍事司法': (color: Color(0xFF5A6B4F), bgTint: Color(0xFFEFF4EA), emoji: '🎖️'),
+  '詐欺犯罪': (color: Color(0xFF8C642B), bgTint: Color(0xFFFFF2CF), emoji: '🚨'),
 };
 
 ({Color color, Color bgTint, String emoji}) _getAccent(CaseBook book) {
@@ -143,7 +143,8 @@ class CaseLibraryHeroCard extends StatelessWidget {
                     Text(accent.emoji, style: TextStyle(fontSize: 14.sp)),
                     SizedBox(width: 5.w),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                       decoration: BoxDecoration(
                         color: accent.color.withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(99),
@@ -172,7 +173,8 @@ class CaseLibraryHeroCard extends StatelessWidget {
                     ),
                     const Spacer(),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 3.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 7.w, vertical: 3.h),
                       decoration: BoxDecoration(
                         color: accent.bgTint,
                         borderRadius: BorderRadius.circular(6.r),
@@ -197,7 +199,12 @@ class CaseLibraryHeroCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontFamily: 'Songti TC',
-                    fontFamilyFallback: const ['Songti SC', 'STSong', 'BiauKai', 'PingFang TC'],
+                    fontFamilyFallback: const [
+                      'Songti SC',
+                      'STSong',
+                      'BiauKai',
+                      'PingFang TC'
+                    ],
                     fontSize: 19.sp,
                     fontWeight: FontWeight.w900,
                     color: const Color(0xFF173C37),
@@ -226,7 +233,8 @@ class CaseLibraryHeroCard extends StatelessWidget {
                   children: [
                     _buildBadge(
                       icon: Icons.chat_bubble_outline_rounded,
-                      label: discussionCount > 0 ? '$discussionCount 則討論' : '加入討論',
+                      label:
+                          discussionCount > 0 ? '$discussionCount 則討論' : '加入討論',
                       color: accent.color,
                       bg: accent.bgTint,
                     ),
@@ -242,7 +250,8 @@ class CaseLibraryHeroCard extends StatelessWidget {
                 ),
                 SizedBox(height: 14.h),
 
-                Divider(color: accent.color.withValues(alpha: 0.12), height: 1.h),
+                Divider(
+                    color: accent.color.withValues(alpha: 0.12), height: 1.h),
                 SizedBox(height: 12.h),
 
                 // 台灣繁體中文教學註解：雙 CTA 按鈕
@@ -261,7 +270,8 @@ class CaseLibraryHeroCard extends StatelessWidget {
                         onPressed: onReadDossierTap,
                         child: Text(
                           '研讀卷宗',
-                          style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 12.sp, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -290,7 +300,8 @@ class CaseLibraryHeroCard extends StatelessWidget {
                               ),
                             ),
                             SizedBox(width: 4.w),
-                            const Icon(Icons.chat_bubble_outline_rounded, size: 13),
+                            const Icon(Icons.chat_bubble_outline_rounded,
+                                size: 13),
                           ],
                         ),
                       ),

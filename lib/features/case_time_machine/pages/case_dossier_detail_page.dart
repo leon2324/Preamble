@@ -242,30 +242,32 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
   List<String> get _availableTabs {
     final book = _detailedBook ?? widget.book;
     final tabs = <String>[];
-    
+
     // Core Fixed Tabs (always display to form a consistent wiki structure)
     tabs.add('事件背景');
     tabs.add('事件與訴訟脈絡');
     tabs.add('法律爭點');
     tabs.add('相關法條');
     tabs.add('完整判決書');
-    
+
     // Optional Dynamic Tabs (only show if data is present in database)
     if (book.people.isNotEmpty) tabs.add('關係人角色');
-    if (book.courtReasoning.isNotEmpty || book.courtArguments.isNotEmpty || book.investigationAndTrial.isNotEmpty) {
+    if (book.courtReasoning.isNotEmpty ||
+        book.courtArguments.isNotEmpty ||
+        book.investigationAndTrial.isNotEmpty) {
       tabs.add('裁判心證');
     }
     if (book.socialImpact.isNotEmpty) tabs.add('社會影響');
     if (_getLiteratures(book.id).isNotEmpty) tabs.add('學術文獻');
     if (book.mediaReferences.isNotEmpty) tabs.add('延伸媒體');
     if (book.relatedCases.isNotEmpty) tabs.add('相關案件');
-    
+
     final hasDiscussions = book.id == '318' ||
         book.id == '161' ||
         book.id == '124' ||
         (_netizenComments[book.id]?.isNotEmpty == true);
     if (hasDiscussions) tabs.add('鄉民討論');
-    
+
     return tabs;
   }
 
@@ -779,44 +781,57 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                     if (result.contains('無罪')) {
                                       badgeBgColor = const Color(0xFFEAF5F0);
                                       badgeTextColor = const Color(0xFF2E6B4E);
-                                      badgeBorderColor = const Color(0xFFC7E6D7);
+                                      badgeBorderColor =
+                                          const Color(0xFFC7E6D7);
                                       badgeTitle = '無罪宣告';
-                                    } else if (result.contains('違憲') || result.contains('合憲')) {
+                                    } else if (result.contains('違憲') ||
+                                        result.contains('合憲')) {
                                       badgeBgColor = const Color(0xFFFFF7E6);
                                       badgeTextColor = const Color(0xFFB37D14);
-                                      badgeBorderColor = const Color(0xFFFFE7B3);
+                                      badgeBorderColor =
+                                          const Color(0xFFFFE7B3);
                                       badgeTitle = '憲法裁決';
-                                    } else if (result.contains('徒刑') || result.contains('有罪') || result.contains('罰')) {
+                                    } else if (result.contains('徒刑') ||
+                                        result.contains('有罪') ||
+                                        result.contains('罰')) {
                                       badgeBgColor = const Color(0xFFFFF1F0);
                                       badgeTextColor = const Color(0xFFAD352B);
-                                      badgeBorderColor = const Color(0xFFFFA39E);
+                                      badgeBorderColor =
+                                          const Color(0xFFFFA39E);
                                       badgeTitle = '刑事處置';
                                     } else {
                                       badgeBgColor = const Color(0xFFF0F4F8);
                                       badgeTextColor = const Color(0xFF3C5A80);
-                                      badgeBorderColor = const Color(0xFFD0E1FD);
+                                      badgeBorderColor =
+                                          const Color(0xFFD0E1FD);
                                       badgeTitle = '最終裁決';
                                     }
                                     return Container(
                                       width: double.infinity,
                                       margin: EdgeInsets.only(bottom: 14.h),
-                                      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 14.w, vertical: 10.h),
                                       decoration: BoxDecoration(
                                         color: badgeBgColor,
-                                        borderRadius: BorderRadius.circular(10.r),
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
                                         border: Border.all(
                                           color: badgeBorderColor,
                                           width: 1.2,
                                         ),
                                       ),
                                       child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Container(
-                                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8.w, vertical: 2.h),
                                             decoration: BoxDecoration(
-                                              color: badgeTextColor.withValues(alpha: 0.12),
-                                              borderRadius: BorderRadius.circular(4.r),
+                                              color: badgeTextColor.withValues(
+                                                  alpha: 0.12),
+                                              borderRadius:
+                                                  BorderRadius.circular(4.r),
                                             ),
                                             child: Text(
                                               badgeTitle,
@@ -1102,7 +1117,8 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                   ];
                 },
                 body: CustomScrollView(
-                  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
                   physics: const BouncingScrollPhysics(
                     parent: AlwaysScrollableScrollPhysics(),
                   ),
@@ -1124,9 +1140,10 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                 ),
                               );
                               Navigator.of(context).push(
-                                CupertinoPageRoute<void>(
-                                  builder: (_) => LawAssistantSearchPage(
-                                    initialPrompt: '對「${book.titleZh}」的判決有疑問，請 AI 小法助協助解答。',
+                                MaterialPageRoute<void>(
+                                  builder: (_) => LawAssistantChatPage(
+                                    initialPrompt:
+                                        '對「${book.titleZh}」的判決有疑問，請 AI 小法助協助解答。',
                                   ),
                                 ),
                               );
@@ -1136,7 +1153,10 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                   horizontal: 16.w, vertical: 14.h),
                               decoration: BoxDecoration(
                                 gradient: const LinearGradient(
-                                  colors: [Color(0xFFFAF8F5), Color(0xFFE6EFEA)],
+                                  colors: [
+                                    Color(0xFFFAF8F5),
+                                    Color(0xFFE6EFEA)
+                                  ],
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                 ),
@@ -1158,7 +1178,8 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                   Container(
                                     padding: EdgeInsets.all(8.w),
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withValues(alpha: 0.7),
+                                      color:
+                                          Colors.white.withValues(alpha: 0.7),
                                       shape: BoxShape.circle,
                                     ),
                                     child: CtmSvgIcon(
@@ -1170,14 +1191,16 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                   SizedBox(width: 12.w),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           '對本案判決有疑問？點擊詢問 AI 小法助',
                                           style: TextStyle(
                                             fontSize: 13.sp,
                                             fontWeight: FontWeight.bold,
-                                            color: CaseTimeMachineColors.primaryGreen,
+                                            color: CaseTimeMachineColors
+                                                .primaryGreen,
                                           ),
                                         ),
                                         SizedBox(height: 3.h),
@@ -1185,7 +1208,8 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                           '為您快速分析裁判意旨與涉及的法律爭點',
                                           style: TextStyle(
                                             fontSize: 10.5.sp,
-                                            color: CaseTimeMachineColors.textSecondary,
+                                            color: CaseTimeMachineColors
+                                                .textSecondary,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
@@ -2073,9 +2097,8 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
       ..sort((a, b) => a.date.compareTo(b.date));
 
     // 3. Handle expand/collapse logic
-    final displayNodes = _isTimelineExpanded
-        ? sortedNodes
-        : sortedNodes.take(3).toList();
+    final displayNodes =
+        _isTimelineExpanded ? sortedNodes : sortedNodes.take(3).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -2206,7 +2229,8 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                             SizedBox(height: 4.h),
                             Text(
                               node.description,
-                              style: LightTextStyles.bodySmall(context).copyWith(
+                              style:
+                                  LightTextStyles.bodySmall(context).copyWith(
                                 fontSize: 11.5.sp,
                                 height: 1.45,
                                 color: CaseTimeMachineColors.textSecondary,
@@ -2325,7 +2349,8 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                             ),
                             SizedBox(height: 8.h),
                             GestureDetector(
-                              onTap: () => _showHoldingBottomSheet(context, step),
+                              onTap: () =>
+                                  _showHoldingBottomSheet(context, step),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -2905,7 +2930,11 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                       '${law.lawName} ${law.articleNumber}',
                       style: TextStyle(
                         fontFamily: 'Songti TC',
-                        fontFamilyFallback: const ['BiauKai', 'Songti SC', 'STSong'],
+                        fontFamilyFallback: const [
+                          'BiauKai',
+                          'Songti SC',
+                          'STSong'
+                        ],
                         fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
                         color: CaseTimeMachineColors.primaryGreen,
@@ -2914,9 +2943,11 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                   ),
                   SizedBox(width: 8.w),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                     decoration: BoxDecoration(
-                      color: CaseTimeMachineColors.accentGold.withValues(alpha: 0.12),
+                      color: CaseTimeMachineColors.accentGold
+                          .withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(4.r),
                     ),
                     child: Text(
@@ -2983,7 +3014,8 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                     ),
                     elevation: 0,
                   ),
-                  child: const Text('我知道了', style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: const Text('我知道了',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   onPressed: () => Navigator.of(context).pop(),
                 ),
               ),
@@ -3275,8 +3307,8 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
             label: '問法助',
             onTap: () {
               Navigator.of(context).push(
-                CupertinoPageRoute<void>(
-                  builder: (_) => LawAssistantSearchPage(
+                MaterialPageRoute<void>(
+                  builder: (_) => LawAssistantChatPage(
                     initialPrompt: '我想了解關於「${book.titleZh}」的法律爭點與實務見解。',
                   ),
                 ),
@@ -3807,8 +3839,6 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
     ];
   }
 
-
-
   List<_LiteratureItem> _getLiteratures(String caseId) {
     if (caseId == '318') {
       return const [
@@ -3940,7 +3970,8 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
     );
   }
 
-  Widget _buildRichTextWithGlossary(BuildContext context, String text, TextStyle baseStyle) {
+  Widget _buildRichTextWithGlossary(
+      BuildContext context, String text, TextStyle baseStyle) {
     final glossaries = _getGlossaries(book.id);
     if (glossaries.isEmpty) {
       return Text(text, style: baseStyle);
@@ -3969,7 +4000,8 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
       }
 
       final matchedTerm = match.group(0)!;
-      final glossaryItem = sortedGlossaries.firstWhere((g) => g.term == matchedTerm);
+      final glossaryItem =
+          sortedGlossaries.firstWhere((g) => g.term == matchedTerm);
 
       spans.add(TextSpan(
         text: matchedTerm,
@@ -4103,7 +4135,8 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                       borderRadius: BorderRadius.circular(10.r),
                     ),
                   ),
-                  child: const Text('我知道了', style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: const Text('我知道了',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   onPressed: () => Navigator.of(context).pop(),
                 ),
               ),
@@ -4142,9 +4175,12 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                 children: [
                   CircleAvatar(
                     radius: 20.r,
-                    backgroundColor: CaseTimeMachineColors.primaryGreen.withValues(alpha: 0.1),
+                    backgroundColor: CaseTimeMachineColors.primaryGreen
+                        .withValues(alpha: 0.1),
                     child: Text(
-                      person.role.isNotEmpty ? person.role.substring(0, 1) : '人',
+                      person.role.isNotEmpty
+                          ? person.role.substring(0, 1)
+                          : '人',
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
@@ -4253,11 +4289,14 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                     Row(
                       children: [
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.w, vertical: 3.h),
                           decoration: BoxDecoration(
-                            color: (arg.partyName.contains('被告') || arg.partyName.contains('辯護'))
+                            color: (arg.partyName.contains('被告') ||
+                                    arg.partyName.contains('辯護'))
                                 ? const Color(0xFFC62828).withValues(alpha: 0.1)
-                                : CaseTimeMachineColors.primaryGreen.withValues(alpha: 0.1),
+                                : CaseTimeMachineColors.primaryGreen
+                                    .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(4.r),
                           ),
                           child: Text(
@@ -4265,7 +4304,8 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                             style: TextStyle(
                               fontSize: 10.5.sp,
                               fontWeight: FontWeight.bold,
-                              color: (arg.partyName.contains('被告') || arg.partyName.contains('辯護'))
+                              color: (arg.partyName.contains('被告') ||
+                                      arg.partyName.contains('辯護'))
                                   ? const Color(0xFFC62828)
                                   : CaseTimeMachineColors.primaryGreen,
                             ),
@@ -4316,20 +4356,22 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
         '【裁判日期】$formattedDate\n'
         '【裁判案由】${book.category}（${book.titleZh}）';
 
-    final mainVerdictText = book.judgmentResult.isNotEmpty ? book.judgmentResult : "上訴駁回。";
+    final mainVerdictText =
+        book.judgmentResult.isNotEmpty ? book.judgmentResult : "上訴駁回。";
 
-    final proceduralText = book.investigationAndTrial.isNotEmpty 
-        ? book.investigationAndTrial 
+    final proceduralText = book.investigationAndTrial.isNotEmpty
+        ? book.investigationAndTrial
         : '本案經檢察官提起公訴，歷經言詞辯論，本院依法審判之程序完備。';
 
-    final reasoningText = book.courtReasoning.isNotEmpty 
-        ? book.courtReasoning 
+    final reasoningText = book.courtReasoning.isNotEmpty
+        ? book.courtReasoning
         : (book.fullStory.isNotEmpty ? book.fullStory : book.background);
 
     final List<String> lawLines = [];
     if (book.relatedLaws.isNotEmpty) {
       for (final law in book.relatedLaws) {
-        lawLines.add('依${law.lawName}${law.articleNumber}（${law.plainSummary}）之規定，本案據此裁判。');
+        lawLines.add(
+            '依${law.lawName}${law.articleNumber}（${law.plainSummary}）之規定，本案據此裁判。');
       }
     } else {
       lawLines.add('依相關法律之規定，本案據此裁判。');
@@ -4384,7 +4426,8 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                     '      法官  陳民法\n'
                     '\n以上正本證明與原本無異。');
 
-                Clipboard.setData(ClipboardData(text: fullTextBuffer.toString()));
+                Clipboard.setData(
+                    ClipboardData(text: fullTextBuffer.toString()));
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('已複製判決書全文至剪貼簿')),
                 );
@@ -4392,7 +4435,8 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
                 decoration: BoxDecoration(
-                  color: CaseTimeMachineColors.primaryGreen.withValues(alpha: 0.1),
+                  color:
+                      CaseTimeMachineColors.primaryGreen.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(6.r),
                 ),
                 child: Row(

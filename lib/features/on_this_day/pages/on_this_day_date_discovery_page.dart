@@ -12,10 +12,12 @@ class OnThisDayDateDiscoveryPage extends StatefulWidget {
   final String initialTab;
 
   @override
-  State<OnThisDayDateDiscoveryPage> createState() => _OnThisDayDateDiscoveryPageState();
+  State<OnThisDayDateDiscoveryPage> createState() =>
+      _OnThisDayDateDiscoveryPageState();
 }
 
-class _OnThisDayDateDiscoveryPageState extends State<OnThisDayDateDiscoveryPage> {
+class _OnThisDayDateDiscoveryPageState
+    extends State<OnThisDayDateDiscoveryPage> {
   late int _selectedMonth;
   late int _selectedDay;
   List<OnThisDayCase> _discoveredCases = [];
@@ -37,7 +39,8 @@ class _OnThisDayDateDiscoveryPageState extends State<OnThisDayDateDiscoveryPage>
 
   void _goToPreviousDay() {
     setState(() {
-      final prevDate = DateTime(2026, _selectedMonth, _selectedDay).subtract(const Duration(days: 1));
+      final prevDate = DateTime(2026, _selectedMonth, _selectedDay)
+          .subtract(const Duration(days: 1));
       _selectedMonth = prevDate.month;
       _selectedDay = prevDate.day;
       _loadDiscoveredCases();
@@ -46,7 +49,8 @@ class _OnThisDayDateDiscoveryPageState extends State<OnThisDayDateDiscoveryPage>
 
   void _goToNextDay() {
     setState(() {
-      final nextDate = DateTime(2026, _selectedMonth, _selectedDay).add(const Duration(days: 1));
+      final nextDate = DateTime(2026, _selectedMonth, _selectedDay)
+          .add(const Duration(days: 1));
       _selectedMonth = nextDate.month;
       _selectedDay = nextDate.day;
       _loadDiscoveredCases();
@@ -68,7 +72,8 @@ class _OnThisDayDateDiscoveryPageState extends State<OnThisDayDateDiscoveryPage>
               onSurface: OnThisDayColors.textPrimary,
             ),
             textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(foregroundColor: OnThisDayColors.primaryGreen),
+              style: TextButton.styleFrom(
+                  foregroundColor: OnThisDayColors.primaryGreen),
             ),
           ),
           child: child!,
@@ -92,16 +97,19 @@ class _OnThisDayDateDiscoveryPageState extends State<OnThisDayDateDiscoveryPage>
         backgroundColor: OnThisDayColors.paperBeige,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: OnThisDayColors.primaryGreen),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded,
+              color: OnThisDayColors.primaryGreen),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
           '日期探索',
-          style: OnThisDayTextStyles.pageTitle(context).copyWith(fontSize: 20.sp),
+          style:
+              OnThisDayTextStyles.pageTitle(context).copyWith(fontSize: 20.sp),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.bookmark_border_rounded, color: OnThisDayColors.primaryGreen),
+            icon: const Icon(Icons.bookmark_border_rounded,
+                color: OnThisDayColors.primaryGreen),
             onPressed: () {},
           ),
         ],
@@ -121,7 +129,8 @@ class _OnThisDayDateDiscoveryPageState extends State<OnThisDayDateDiscoveryPage>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_rounded, color: OnThisDayColors.primaryGreen),
+                  icon: const Icon(Icons.arrow_back_ios_rounded,
+                      color: OnThisDayColors.primaryGreen),
                   onPressed: _goToPreviousDay,
                 ),
                 GestureDetector(
@@ -145,7 +154,8 @@ class _OnThisDayDateDiscoveryPageState extends State<OnThisDayDateDiscoveryPage>
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.arrow_forward_ios_rounded, color: OnThisDayColors.primaryGreen),
+                  icon: const Icon(Icons.arrow_forward_ios_rounded,
+                      color: OnThisDayColors.primaryGreen),
                   onPressed: _goToNextDay,
                 ),
               ],
@@ -211,9 +221,11 @@ class _OnThisDayDateDiscoveryPageState extends State<OnThisDayDateDiscoveryPage>
                 Row(
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                       decoration: BoxDecoration(
-                        color: OnThisDayColors.accentGold.withValues(alpha: 0.15),
+                        color:
+                            OnThisDayColors.accentGold.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(4.r),
                       ),
                       child: Text(
@@ -311,7 +323,8 @@ class _OnThisDayDateDiscoveryPageState extends State<OnThisDayDateDiscoveryPage>
               SizedBox(height: 8.h),
               Text(
                 '推薦您查看其他重大歷史案件：',
-                style: OnThisDayTextStyles.caption(context).copyWith(fontSize: 11.sp),
+                style: OnThisDayTextStyles.caption(context)
+                    .copyWith(fontSize: 11.sp),
               ),
             ],
           ),

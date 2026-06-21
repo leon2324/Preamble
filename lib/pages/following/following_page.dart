@@ -8,7 +8,7 @@ import 'package:lawapp/data/following/following_models.dart';
 import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
 import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart';
 import 'package:lawapp/pages/learning/statute_database_page.dart';
-import 'package:lawapp/pages/tools/legal_tools_page.dart';
+import 'package:lawapp/pages/tools/legacy/legal_tools_page.dart';
 
 enum _FollowPage {
   home,
@@ -89,6 +89,7 @@ class _FollowingPageState extends State<FollowingPage> {
         return _FollowPage.home;
     }
   }
+
   int _collectionTabIndex = 0;
   int _noteTabIndex = 0;
   int _questionTabIndex = 0;

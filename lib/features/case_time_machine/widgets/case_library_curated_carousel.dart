@@ -63,9 +63,11 @@ class CaseLibraryCuratedCarousel extends StatelessWidget {
             itemCount: recommendedBooks.length,
             itemBuilder: (context, idx) {
               final book = recommendedBooks[idx];
-              final accentColor = cardAccentColors[idx % cardAccentColors.length];
+              final accentColor =
+                  cardAccentColors[idx % cardAccentColors.length];
               final textColor = cardTextColors[idx % cardTextColors.length];
-              final primaryTag = book.tags.isNotEmpty ? book.tags.first : book.category;
+              final primaryTag =
+                  book.tags.isNotEmpty ? book.tags.first : book.category;
 
               return GestureDetector(
                 onTap: () => onSelectCase(book),
@@ -95,7 +97,8 @@ class CaseLibraryCuratedCarousel extends StatelessWidget {
                       Row(
                         children: [
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.5.h),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 6.w, vertical: 2.5.h),
                             decoration: BoxDecoration(
                               color: accentColor,
                               borderRadius: BorderRadius.circular(6.r),
@@ -131,7 +134,12 @@ class CaseLibraryCuratedCarousel extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontFamily: 'Songti TC',
-                            fontFamilyFallback: const ['Songti SC', 'STSong', 'BiauKai', 'PingFang TC'],
+                            fontFamilyFallback: const [
+                              'Songti SC',
+                              'STSong',
+                              'BiauKai',
+                              'PingFang TC'
+                            ],
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w800,
                             color: const Color(0xFF173C37),
@@ -144,7 +152,8 @@ class CaseLibraryCuratedCarousel extends StatelessWidget {
                       Align(
                         alignment: Alignment.centerRight,
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.w, vertical: 4.h),
                           decoration: BoxDecoration(
                             color: const Color(0xFFFFF2CF),
                             borderRadius: BorderRadius.circular(8.r),

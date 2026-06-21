@@ -1,4 +1,4 @@
-part of '../know_law_page.dart';
+part of '../../know_law_page.dart';
 
 /// 小法助 Prototype 入口與頁內流程狀態機。
 ///

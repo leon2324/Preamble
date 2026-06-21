@@ -85,7 +85,11 @@ class _CaseTimelineDetailPageState extends State<CaseTimelineDetailPage> {
       return {
         'reactions': [
           {'user': '法學愛好者', 'text': '最高法院能引入公民不服從的概念，是台灣法治的進步！', 'tag': '合理'},
-          {'user': '守法老百姓', 'text': '這樣以後抗議有罪都能說自己是不服從，基層警消以後怎麼執法？', 'tag': '不合理'}
+          {
+            'user': '守法老百姓',
+            'text': '這樣以後抗議有罪都能說自己是不服從，基層警消以後怎麼執法？',
+            'tag': '不合理'
+          }
         ],
         'lawTip': '最高法院的這份判決，實質建立了公民不服從的七大要件，作為阻卻違法事由。'
       };
@@ -168,7 +172,8 @@ class _CaseTimelineDetailPageState extends State<CaseTimelineDetailPage> {
                 children: [
                   Text(
                     widget.book.titleZh,
-                    style: CaseTimeMachineTextStyles.cardTitle(context).copyWith(
+                    style:
+                        CaseTimeMachineTextStyles.cardTitle(context).copyWith(
                       fontSize: 13.sp,
                     ),
                   ),
@@ -281,7 +286,8 @@ class _CaseTimelineDetailPageState extends State<CaseTimelineDetailPage> {
                                       ),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black.withValues(alpha: 0.05),
+                                          color: Colors.black
+                                              .withValues(alpha: 0.05),
                                           blurRadius: 4,
                                         )
                                       ],
@@ -290,7 +296,8 @@ class _CaseTimelineDetailPageState extends State<CaseTimelineDetailPage> {
                                       child: CtmSvgIcon(
                                         CtmSvgIcons.clock,
                                         size: 14,
-                                        color: CaseTimeMachineColors.primaryGreen,
+                                        color:
+                                            CaseTimeMachineColors.primaryGreen,
                                       ),
                                     ),
                                   ),
@@ -309,32 +316,42 @@ class _CaseTimelineDetailPageState extends State<CaseTimelineDetailPage> {
                                         });
                                       },
                                       child: AnimatedContainer(
-                                        duration: const Duration(milliseconds: 350),
+                                        duration:
+                                            const Duration(milliseconds: 350),
                                         curve: Curves.easeInOut,
                                         padding: EdgeInsets.all(14.w),
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius: BorderRadius.circular(14.r),
+                                          borderRadius:
+                                              BorderRadius.circular(14.r),
                                           border: Border.all(
                                             color: isExpanded
-                                                ? CaseTimeMachineColors.accentGold
-                                                : CaseTimeMachineColors.borderLight,
+                                                ? CaseTimeMachineColors
+                                                    .accentGold
+                                                : CaseTimeMachineColors
+                                                    .borderLight,
                                           ),
-                                          boxShadow: [CaseTimeMachineShadows.softShadow],
+                                          boxShadow: [
+                                            CaseTimeMachineShadows.softShadow
+                                          ],
                                         ),
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             // 日期與事件分類標籤
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Text(
                                                   item.dateLabel,
                                                   style: TextStyle(
                                                     fontSize: 11.sp,
                                                     fontWeight: FontWeight.bold,
-                                                    color: CaseTimeMachineColors.accentGold,
+                                                    color: CaseTimeMachineColors
+                                                        .accentGold,
                                                   ),
                                                 ),
                                                 _buildCategoryTag(category),
@@ -345,9 +362,12 @@ class _CaseTimelineDetailPageState extends State<CaseTimelineDetailPage> {
                                             // 標題
                                             Text(
                                               item.title,
-                                              style: CaseTimeMachineTextStyles.cardTitle(context).copyWith(
+                                              style: CaseTimeMachineTextStyles
+                                                      .cardTitle(context)
+                                                  .copyWith(
                                                 fontSize: 13.sp,
-                                                color: CaseTimeMachineColors.primaryGreen,
+                                                color: CaseTimeMachineColors
+                                                    .primaryGreen,
                                               ),
                                             ),
                                             SizedBox(height: 6.h),
@@ -355,7 +375,9 @@ class _CaseTimelineDetailPageState extends State<CaseTimelineDetailPage> {
                                             // 內容
                                             Text(
                                               item.description,
-                                              style: CaseTimeMachineTextStyles.bodySmall(context).copyWith(
+                                              style: CaseTimeMachineTextStyles
+                                                      .bodySmall(context)
+                                                  .copyWith(
                                                 fontSize: 11.5.sp,
                                                 height: 1.4,
                                               ),
@@ -365,25 +387,36 @@ class _CaseTimelineDetailPageState extends State<CaseTimelineDetailPage> {
                                             Align(
                                               alignment: Alignment.centerRight,
                                               child: Padding(
-                                                padding: EdgeInsets.only(top: 4.h),
+                                                padding:
+                                                    EdgeInsets.only(top: 4.h),
                                                 child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
                                                     Text(
-                                                      isExpanded ? '收合' : '點擊展開脈絡',
+                                                      isExpanded
+                                                          ? '收合'
+                                                          : '點擊展開脈絡',
                                                       style: TextStyle(
                                                         fontSize: 9.sp,
-                                                        color: CaseTimeMachineColors.textMuted,
-                                                        fontWeight: FontWeight.bold,
+                                                        color:
+                                                            CaseTimeMachineColors
+                                                                .textMuted,
+                                                        fontWeight:
+                                                            FontWeight.bold,
                                                       ),
                                                     ),
                                                     SizedBox(width: 2.w),
                                                     Icon(
                                                       isExpanded
-                                                          ? Icons.keyboard_arrow_up
-                                                          : Icons.keyboard_arrow_down,
+                                                          ? Icons
+                                                              .keyboard_arrow_up
+                                                          : Icons
+                                                              .keyboard_arrow_down,
                                                       size: 12.sp,
-                                                      color: CaseTimeMachineColors.textMuted,
+                                                      color:
+                                                          CaseTimeMachineColors
+                                                              .textMuted,
                                                     ),
                                                   ],
                                                 ),
@@ -503,7 +536,8 @@ class _CaseTimelineDetailPageState extends State<CaseTimelineDetailPage> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 5.w, vertical: 2.h),
                         decoration: BoxDecoration(
                           color: react['tag'] == '合理'
                               ? const Color(0xFFE8F5E9)

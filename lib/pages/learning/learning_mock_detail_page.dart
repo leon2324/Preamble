@@ -6,7 +6,7 @@ import 'package:lawapp/data/learning/learning_game_state.dart';
 import 'package:lawapp/components/home/v2/home_v2_palette.dart';
 import 'package:lawapp/pages/learning/widgets/notebook_aesthetics.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
-import 'package:lawapp/pages/learning/know_law_page.dart'; // To access LawAssistantSearchPage
+import 'package:lawapp/pages/learning/know_law_page.dart'; // To access LawAssistantChatPage
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
@@ -49,19 +49,56 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
   late final Map<String, dynamic>? _quizData;
 
   String _guessCategory(String title) {
-    if (title.contains('租屋') || title.contains('押金') || title.contains('房東') || title.contains('房客') || title.contains('約定') || title.contains('點交') || title.contains('提前解約')) return '租屋糾紛';
-    if (title.contains('職場') || title.contains('加班') || title.contains('工時') || title.contains('離職') || title.contains('勞資') || title.contains('病假') || title.contains('勞基') || title.contains('資遣') || title.contains('解雇') || title.contains('勞動')) return '職場權益';
-    if (title.contains('網購') || title.contains('退貨') || title.contains('消保') || title.contains('消費') || title.contains('鑑賞期') || title.contains('標錯價') || title.contains('電商')) return '網購消費';
-    if (title.contains('肖像') || title.contains('發文') || title.contains('個資') || title.contains('隱私') || title.contains('監視器') || title.contains('垃圾簡訊') || title.contains('去識別化')) return '個資隱私';
-    if (title.contains('車禍') || title.contains('事故') || title.contains('碰撞') || title.contains('交通') || title.contains('路權') || title.contains('肇責') || title.contains('折舊') || title.contains('慰撫金')) return '車禍事故';
+    if (title.contains('租屋') ||
+        title.contains('押金') ||
+        title.contains('房東') ||
+        title.contains('房客') ||
+        title.contains('約定') ||
+        title.contains('點交') ||
+        title.contains('提前解約')) return '租屋糾紛';
+    if (title.contains('職場') ||
+        title.contains('加班') ||
+        title.contains('工時') ||
+        title.contains('離職') ||
+        title.contains('勞資') ||
+        title.contains('病假') ||
+        title.contains('勞基') ||
+        title.contains('資遣') ||
+        title.contains('解雇') ||
+        title.contains('勞動')) return '職場權益';
+    if (title.contains('網購') ||
+        title.contains('退貨') ||
+        title.contains('消保') ||
+        title.contains('消費') ||
+        title.contains('鑑賞期') ||
+        title.contains('標錯價') ||
+        title.contains('電商')) return '網購消費';
+    if (title.contains('肖像') ||
+        title.contains('發文') ||
+        title.contains('個資') ||
+        title.contains('隱私') ||
+        title.contains('監視器') ||
+        title.contains('垃圾簡訊') ||
+        title.contains('去識別化')) return '個資隱私';
+    if (title.contains('車禍') ||
+        title.contains('事故') ||
+        title.contains('碰撞') ||
+        title.contains('交通') ||
+        title.contains('路權') ||
+        title.contains('肇責') ||
+        title.contains('折舊') ||
+        title.contains('慰撫金')) return '車禍事故';
     return '法律常識';
   }
 
   @override
   void initState() {
     super.initState();
-    final cat = widget.category ?? widget.article.category ?? _guessCategory(widget.article.title);
-    _quizData = widget.article.quizData ?? _getQuizForStep(cat, widget.unitStepLabel);
+    final cat = widget.category ??
+        widget.article.category ??
+        _guessCategory(widget.article.title);
+    _quizData =
+        widget.article.quizData ?? _getQuizForStep(cat, widget.unitStepLabel);
     LearningGameState.instance.markCategoryViewed(cat);
   }
 
@@ -83,7 +120,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
           };
         case 'STEP 2':
           return {
-            'question': '大雄租約寫明「提前解約賠一個月租金」。大雄租了半年後退租，並提早一個月告知，房東太太要求沒收全額兩個月押金。請問合理嗎？',
+            'question':
+                '大雄租約寫明「提前解約賠一個月租金」。大雄租了半年後退租，並提早一個月告知，房東太太要求沒收全額兩個月押金。請問合理嗎？',
             'options': [
               'A. 不合理，既然合約已約定賠一個月，且法律規定違約金最高上限也是一個月，房東要求兩個月是違法的。',
               'B. 合理，因為提早告知仍會對房東造成出租空窗期的損失，所以可以多扣一個月。',
@@ -94,18 +132,21 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
           };
         case 'STEP 3':
           return {
-            'question': '房客搬走後，房東發現牆壁上有前房客貼海報留下的隱約膠帶痕跡，要求房客必須負擔「整間屋子全新油漆」的費用。請問合理嗎？',
+            'question':
+                '房客搬走後，房東發現牆壁上有前房客貼海報留下的隱約膠帶痕跡，要求房客必須負擔「整間屋子全新油漆」的費用。請問合理嗎？',
             'options': [
               'A. 合理，租客必須保證退租時房屋跟全新的一模一樣。',
               'B. 不合理，賠償應以「恢復原狀」為原則，正常使用痕跡已折舊，且不應無限上綱要求整間油漆的費用。',
               'C. 合理，房東找工人的所有開銷都可以直接從押金扣除。'
             ],
             'correctIndex': 1,
-            'explanation': '房屋租賃折舊是常態，且貼海報之輕微痕跡通常屬於合理使用範圍，房東要求整間粉刷費用並不符合法理上賠償折舊與恢復原狀之比例原則。',
+            'explanation':
+                '房屋租賃折舊是常態，且貼海報之輕微痕跡通常屬於合理使用範圍，房東要求整間粉刷費用並不符合法理上賠償折舊與恢復原狀之比例原則。',
           };
         case 'STEP 4':
           return {
-            'question': '合約上若手寫了一句「租客自願拋棄任何提前解約的法律通知期權利，且一旦解約，違約金由房東自由決定」。這句話有效嗎？',
+            'question':
+                '合約上若手寫了一句「租客自願拋棄任何提前解約的法律通知期權利，且一旦解約，違約金由房東自由決定」。這句話有效嗎？',
             'options': [
               'A. 完全有效，法律尊重當事人契約自由，有簽名就必須遵守。',
               'B. 部分或全部無效，因違反消費者保護法與內政部定型化契約之強制禁止規定，顯失公平之條款無效。',
@@ -116,14 +157,16 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
           };
         case 'STEP 5':
           return {
-            'question': '租期屆滿後，房東藉口水電費帳單尚未結清、牆壁有灰塵為由，拒絕點交並扣留全部兩個月押金三個月，請問房客該如何保障權益？',
+            'question':
+                '租期屆滿後，房東藉口水電費帳單尚未結清、牆壁有灰塵為由，拒絕點交並扣留全部兩個月押金三個月，請問房客該如何保障權益？',
             'options': [
               'A. 只能被動等待帳單寄來，無權催告房東點交。',
               'B. 可發存證信函催告房東限期點交返還押金，並可扣除預估水電費後要求返還餘額。',
               'C. 直接撬開房門搬走所有家具以折抵押金。'
             ],
             'correctIndex': 1,
-            'explanation': '押金於租期屆滿且返還房屋時，房東扣除積欠租金、費用後即應返還，不得以未結清微小水電費為由無理扣留全部押金。',
+            'explanation':
+                '押金於租期屆滿且返還房屋時，房東扣除積欠租金、費用後即應返還，不得以未結清微小水電費為由無理扣留全部押金。',
           };
       }
     }
@@ -139,7 +182,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
               'C. 直接開走，不用等警察，事後再用電話聯絡即可。'
             ],
             'correctIndex': 1,
-            'explanation': '依道路交通管理處罰條例第62條，無人受傷之事故，若不移置妨礙交通之車輛，可處以罰鍰。前提是必須先拍照或標記定位。',
+            'explanation':
+                '依道路交通管理處罰條例第62條，無人受傷之事故，若不移置妨礙交通之車輛，可處以罰鍰。前提是必須先拍照或標記定位。',
           };
         case 'STEP 2':
           return {
@@ -154,14 +198,16 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
           };
         case 'STEP 3':
           return {
-            'question': '車禍導致車輛受損維修，更換全新零件費用 10 萬元，工資 3 萬元。若該車已使用 5 年，民事折舊會如何計算？',
+            'question':
+                '車禍導致車輛受損維修，更換全新零件費用 10 萬元，工資 3 萬元。若該車已使用 5 年，民事折舊會如何計算？',
             'options': [
               'A. 零件與工資全部都要折舊扣減。',
               'B. 工資與烤漆不折舊（賠 3 萬）；零件 10 萬元折舊後，通常僅需賠償殘值（如 1 萬元），合計賠償約 4 萬元。',
               'C. 必須以 13 萬元全額賠償，不能折舊。'
             ],
             'correctIndex': 1,
-            'explanation': '依實務見解，工資與烤漆為無形勞務，無折舊問題；而更換之零件為新品，應依耐用年數計算折舊，超過耐用年數則以殘值（通常為1/10）計算。',
+            'explanation':
+                '依實務見解，工資與烤漆為無形勞務，無折舊問題；而更換之零件為新品，應依耐用年數計算折舊，超過耐用年數則以殘值（通常為1/10）計算。',
           };
         case 'STEP 4':
           return {
@@ -172,18 +218,21 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
               'C. 固定按診斷證明書上寫的休養天數，一天一萬元計算。'
             ],
             'correctIndex': 1,
-            'explanation': '精神慰撫金（非財產上損害賠償）無固定計算公式，法院會綜合考量雙方社經地位、資力、受傷程度與責任歸屬來定出合理金額。',
+            'explanation':
+                '精神慰撫金（非財產上損害賠償）無固定計算公式，法院會綜合考量雙方社經地位、資力、受傷程度與責任歸屬來定出合理金額。',
           };
         case 'STEP 5':
           return {
-            'question': '己方車輛在紅燈停等時，遭後方車輛追撞，己方全無過失。對方保險公司卻表示「零件已折舊所以只賠兩成」，該如何應對？',
+            'question':
+                '己方車輛在紅燈停等時，遭後方車輛追撞，己方全無過失。對方保險公司卻表示「零件已折舊所以只賠兩成」，該如何應對？',
             'options': [
               'A. 只能自認倒楣接受兩成理賠。',
               'B. 堅持工資與烤漆不能折舊，且可要求提供同等品質之中古零件（不折舊）或主張以修復原狀為主要訴求。',
               'C. 直接起訴對方保險公司刑事詐欺罪。'
             ],
             'correctIndex': 1,
-            'explanation': '雖然零件有折舊，但民法規定損害賠償以回復原狀為原則，且工資、工時及烤漆絕對不能折舊，可據此與保險公司爭取合理理賠。',
+            'explanation':
+                '雖然零件有折舊，但民法規定損害賠償以回復原狀為原則，且工資、工時及烤漆絕對不能折舊，可據此與保險公司爭取合理理賠。',
           };
       }
     }
@@ -210,7 +259,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
               'C. 不構成，除非主管發訊息時有打出「我要發加班費」這幾個字。'
             ],
             'correctIndex': 1,
-            'explanation': '勞基法以實質提供勞務作為工時認定基準，雇主於工作時間外以通訊軟體指派工作，勞工可記錄起迄時間並要求加班費。',
+            'explanation':
+                '勞基法以實質提供勞務作為工時認定基準，雇主於工作時間外以通訊軟體指派工作，勞工可記錄起迄時間並要求加班費。',
           };
         case 'STEP 3':
           return {
@@ -232,7 +282,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
               'C. 只要在年終獎金發放後，雇主即可隨時開除且不需任何程序。'
             ],
             'correctIndex': 1,
-            'explanation': '雇主依勞基法第11條資遣員工時，必須依法發給資遣費、符合法定預告期間，並依就業服務法進行通報及發給非自願離職證明。',
+            'explanation':
+                '雇主依勞基法第11條資遣員工時，必須依法發給資遣費、符合法定預告期間，並依就業服務法進行通報及發給非自願離職證明。',
           };
         case 'STEP 5':
           return {
@@ -243,7 +294,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
               'C. 到公司門口抗議以引起輿論關注。'
             ],
             'correctIndex': 1,
-            'explanation': '各地方政府勞工主管機關設有免費的「勞資爭議調解」機制，能快速協商並做成具有法律效力的調解成立書，是極為實用的救濟途徑。',
+            'explanation':
+                '各地方政府勞工主管機關設有免費的「勞資爭議調解」機制，能快速協商並做成具有法律效力的調解成立書，是極為實用的救濟途徑。',
           };
       }
     }
@@ -252,14 +304,16 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
       switch (step) {
         case 'STEP 1':
           return {
-            'question': '在網路購物買了一件衣服，收到後發現不喜歡，在第 5 天申請退貨。賣家以「商品無瑕疵、出貨前已告知不能退」為由拒絕，合理嗎？',
+            'question':
+                '在網路購物買了一件衣服，收到後發現不喜歡，在第 5 天申請退貨。賣家以「商品無瑕疵、出貨前已告知不能退」為由拒絕，合理嗎？',
             'options': [
               'A. 合理，買賣講求誠信，買家不能反悔。',
               'B. 不合理，消保法第19條規定，通訊交易消費者享有 7 天無條件解除契約退貨權，無須說明理由，賣家不得拒絕。',
               'C. 合理，必須有重大破損才能申請退款。'
             ],
             'correctIndex': 1,
-            'explanation': '消保法第19條定義網路購物（通訊交易）消費者 7 天鑑賞期，可無條件退貨，商家在網頁上自訂的「不退換」條款無效。',
+            'explanation':
+                '消保法第19條定義網路購物（通訊交易）消費者 7 天鑑賞期，可無條件退貨，商家在網頁上自訂的「不退換」條款無效。',
           };
         case 'STEP 2':
           return {
@@ -274,14 +328,16 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
           };
         case 'STEP 3':
           return {
-            'question': '某知名電商將原價 3 萬元的筆電標錯價為 3000 元，買家立刻下單並刷卡付款成功，系統也自動發送訂單確認信。事後電商表示不予出貨，合理嗎？',
+            'question':
+                '某知名電商將原價 3 萬元的筆電標錯價為 3000 元，買家立刻下單並刷卡付款成功，系統也自動發送訂單確認信。事後電商表示不予出貨，合理嗎？',
             'options': [
               'A. 合理，標錯價屬於重大錯誤，買賣契約不成立。',
               'B. 不合理，網路交易定型化契約規定，一旦付款成功且契約成立，賣家即負有依約出貨之義務。',
               'C. 合理，只要電商願意補償 500 元折價券就可以取消訂單。'
             ],
             'correctIndex': 1,
-            'explanation': '經濟部網路零售定型化契約規範，消費者下單且契約成立（刷卡成功、系統發送確認等）後，企業應履行契約，標錯價不能作為片面解約的藉口。',
+            'explanation':
+                '經濟部網路零售定型化契約規範，消費者下單且契約成立（刷卡成功、系統發送確認等）後，企業應履行契約，標錯價不能作為片面解約的藉口。',
           };
         case 'STEP 4':
           return {
@@ -292,7 +348,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
               'C. 所有在國外代購的電子產品。'
             ],
             'correctIndex': 1,
-            'explanation': '消保法授權訂定之「通訊交易解除權合理例外情事適用準則」，排除了生鮮食品、客製化給付、報紙雜誌、已拆封個人衛生用品等的鑑賞期適用。',
+            'explanation':
+                '消保法授權訂定之「通訊交易解除權合理例外情事適用準則」，排除了生鮮食品、客製化給付、報紙雜誌、已拆封個人衛生用品等的鑑賞期適用。',
           };
         case 'STEP 5':
           return {
@@ -303,7 +360,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
               'C. 向公平交易委員會仲裁。'
             ],
             'correctIndex': 0,
-            'explanation': '消費者可透過「1950」專線或各縣市政府消保官提起一至二次消費爭議申訴，若仍未解決，可申請消費爭議調解委員會調解。',
+            'explanation':
+                '消費者可透過「1950」專線或各縣市政府消保官提起一至二次消費爭議申訴，若仍未解決，可申請消費爭議調解委員會調解。',
           };
       }
     }
@@ -319,7 +377,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
               'C. 公司的統一編號、登記地址與負責人姓名。'
             ],
             'correctIndex': 1,
-            'explanation': '個資法保護的是「自然人」的個人資料，且必須是能直接或間接識別該個人的資料。完全去識別化或法人的工商資料不適用個資法。',
+            'explanation':
+                '個資法保護的是「自然人」的個人資料，且必須是能直接或間接識別該個人的資料。完全去識別化或法人的工商資料不適用個資法。',
           };
         case 'STEP 2':
           return {
@@ -330,7 +389,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
               'C. 不違法，除非顧客親自到店填寫紙本拒絕聲明書。'
             ],
             'correctIndex': 1,
-            'explanation': '個資法第20條第2項規定，當事人表示拒絕接受行銷時，委託或利用個資之業者應即停止行銷，違反者屬於違法利用個資。',
+            'explanation':
+                '個資法第20條第2項規定，當事人表示拒絕接受行銷時，委託或利用個資之業者應即停止行銷，違反者屬於違法利用個資。',
           };
         case 'STEP 3':
           return {
@@ -341,7 +401,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
               'C. 僅會被臉書下架貼文，無實質法律責任。'
             ],
             'correctIndex': 1,
-            'explanation': '未經同意且非出於公益等法定事由，將他人身分隱私資料公開散布，侵害隱私權，觸犯個資法刑事罪，並須負民事侵權賠償責任。',
+            'explanation':
+                '未經同意且非出於公益等法定事由，將他人身分隱私資料公開散布，侵害隱私權，觸犯個資法刑事罪，並須負民事侵權賠償責任。',
           };
         case 'STEP 4':
           return {
@@ -352,7 +413,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
               'C. 合法，只要鄰居承諾監視畫面不會洩漏給第三人看即可。'
             ],
             'correctIndex': 0,
-            'explanation': '即使是公共樓梯間，亦不得裝設鏡頭正對他人住家大門或內部隱私空間，否則即構成妨害他人非公開活動，侵害隱私權並觸犯刑法。',
+            'explanation':
+                '即使是公共樓梯間，亦不得裝設鏡頭正對他人住家大門或內部隱私空間，否則即構成妨害他人非公開活動，侵害隱私權並觸犯刑法。',
           };
         case 'STEP 5':
           return {
@@ -363,7 +425,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
               'C. 只有付費用戶才有權要求刪除個資。'
             ],
             'correctIndex': 1,
-            'explanation': '個資法第3條規定，當事人對於其個人資料享有請求停止收集、處理、利用以及請求刪除之權利，此為法定權利，平台不得以服務契約排除。',
+            'explanation':
+                '個資法第3條規定，當事人對於其個人資料享有請求停止收集、處理、利用以及請求刪除之權利，此為法定權利，平台不得以服務契約排除。',
           };
       }
     }
@@ -380,9 +443,12 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
       // 答對了！記錄進度並給 XP
       if (widget.unitStepLabel != null) {
         final gameState = LearningGameState.instance;
-        final cat = widget.category ?? widget.article.category ?? _guessCategory(widget.article.title);
+        final cat = widget.category ??
+            widget.article.category ??
+            _guessCategory(widget.article.title);
         final uniqueStepId = "${cat}_${widget.unitStepLabel}";
-        final isFirstTimeComplete = !gameState.completedSteps.contains(uniqueStepId);
+        final isFirstTimeComplete =
+            !gameState.completedSteps.contains(uniqueStepId);
 
         gameState.completeStep(uniqueStepId);
 
@@ -406,7 +472,9 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
     }
 
     // 紀錄答題歷史
-    final cat = widget.category ?? widget.article.category ?? _guessCategory(widget.article.title);
+    final cat = widget.category ??
+        widget.article.category ??
+        _guessCategory(widget.article.title);
     LearningGameState.instance.recordQuizHistory(
       question: quiz['question'],
       options: List<String>.from(quiz['options']),
@@ -426,7 +494,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
   void _showNotebookBottomSheet(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final gameState = LearningGameState.instance;
-    final noteController = TextEditingController(text: gameState.getArticleNote(widget.article.title));
+    final noteController = TextEditingController(
+        text: gameState.getArticleNote(widget.article.title));
 
     showModalBottomSheet(
       context: context,
@@ -444,7 +513,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
             return Container(
               height: MediaQuery.of(context).size.height * 0.75,
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF161C23) : const Color(0xFFFBF8F5),
+                color:
+                    isDark ? const Color(0xFF161C23) : const Color(0xFFFBF8F5),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(24.r),
                   topRight: Radius.circular(24.r),
@@ -496,7 +566,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                           ],
                         ),
                         IconButton(
-                          icon: Icon(Icons.close, size: 20.sp, color: Colors.grey),
+                          icon: Icon(Icons.close,
+                              size: 20.sp, color: Colors.grey),
                           onPressed: () => Navigator.pop(context),
                         ),
                       ],
@@ -505,7 +576,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                   Divider(height: 1.h, color: Colors.grey.shade300),
                   Expanded(
                     child: ListView(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20.w, vertical: 16.h),
                       children: [
                         // 1. 自訂筆記區
                         Text(
@@ -519,10 +591,14 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                         SizedBox(height: 8.h),
                         Container(
                           decoration: BoxDecoration(
-                            color: isDark ? const Color(0xFF232A33) : const Color(0xFFFFFDF9),
+                            color: isDark
+                                ? const Color(0xFF232A33)
+                                : const Color(0xFFFFFDF9),
                             borderRadius: BorderRadius.circular(16.r),
                             border: Border.all(
-                              color: isDark ? Colors.transparent : const Color(0xFFE9DFD2),
+                              color: isDark
+                                  ? Colors.transparent
+                                  : const Color(0xFFE9DFD2),
                               width: 1.2.w,
                             ),
                             boxShadow: [
@@ -540,7 +616,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                             },
                             maxLines: 4,
                             onChanged: (val) {
-                              gameState.setArticleNote(widget.article.title, val);
+                              gameState.setArticleNote(
+                                  widget.article.title, val);
                             },
                             style: TextStyle(
                               fontSize: 13.5.sp,
@@ -585,15 +662,20 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                         SizedBox(height: 8.h),
                         if (articleHighlights.isEmpty)
                           Container(
-                            padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 16.w),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 24.h, horizontal: 16.w),
                             decoration: BoxDecoration(
-                              color: isDark ? Colors.grey.shade900 : Colors.grey.shade50,
+                              color: isDark
+                                  ? Colors.grey.shade900
+                                  : Colors.grey.shade50,
                               borderRadius: BorderRadius.circular(12.r),
-                              border: Border.all(color: Colors.grey.shade300, width: 0.8.w),
+                              border: Border.all(
+                                  color: Colors.grey.shade300, width: 0.8.w),
                             ),
                             child: Column(
                               children: [
-                                Icon(Icons.edit_note, size: 32.sp, color: Colors.grey.shade400),
+                                Icon(Icons.edit_note,
+                                    size: 32.sp, color: Colors.grey.shade400),
                                 SizedBox(height: 8.h),
                                 Text(
                                   '目前尚無劃記重點\n您可以選取正文中的文字，並點擊「劃記重點 ✍️」將其存入這裡。',
@@ -609,15 +691,19 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                           )
                         else
                           ...List.generate(articleHighlights.length, (index) {
-                            final highlightText = articleHighlights[index]['highlight'] as String;
+                            final highlightText =
+                                articleHighlights[index]['highlight'] as String;
                             // 找出當前重點在 gameState.savedHighlights 中的真實全域 index
-                            final globalIndex = gameState.savedHighlights.indexOf(articleHighlights[index]);
+                            final globalIndex = gameState.savedHighlights
+                                .indexOf(articleHighlights[index]);
                             return Container(
                               margin: EdgeInsets.only(bottom: 8.h),
-                              padding: EdgeInsets.fromLTRB(12.w, 10.h, 6.w, 10.h),
+                              padding:
+                                  EdgeInsets.fromLTRB(12.w, 10.h, 6.w, 10.h),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFFFFCEE),
-                                border: Border.all(color: const Color(0xFFFBE4A2), width: 1.w),
+                                border: Border.all(
+                                    color: const Color(0xFFFBE4A2), width: 1.w),
                                 borderRadius: BorderRadius.circular(10.r),
                               ),
                               child: Row(
@@ -633,7 +719,9 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                                     ),
                                   ),
                                   IconButton(
-                                    icon: Icon(Icons.delete_outline, size: 18.sp, color: Colors.red.shade400),
+                                    icon: Icon(Icons.delete_outline,
+                                        size: 18.sp,
+                                        color: Colors.red.shade400),
                                     onPressed: () {
                                       if (globalIndex != -1) {
                                         gameState.removeHighlight(globalIndex);
@@ -657,15 +745,21 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                         ),
                         SizedBox(height: 8.h),
                         ...widget.article.keyPoints.map((point) {
-                          final isPointHighlighted = articleHighlights.any((item) => item['highlight'] == point);
+                          final isPointHighlighted = articleHighlights
+                              .any((item) => item['highlight'] == point);
                           return Container(
                             margin: EdgeInsets.only(bottom: 8.h),
-                            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 12.w, vertical: 8.h),
                             decoration: BoxDecoration(
-                              color: isDark ? const Color(0xFF232A33) : Colors.white,
+                              color: isDark
+                                  ? const Color(0xFF232A33)
+                                  : Colors.white,
                               borderRadius: BorderRadius.circular(10.r),
                               border: Border.all(
-                                color: isPointHighlighted ? const Color(0xFFFBE4A2) : Colors.grey.shade300,
+                                color: isPointHighlighted
+                                    ? const Color(0xFFFBE4A2)
+                                    : Colors.grey.shade300,
                                 width: 1.w,
                               ),
                             ),
@@ -685,28 +779,38 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                                   onPressed: () {
                                     if (isPointHighlighted) {
                                       // 移除劃記
-                                      final matchIndex = gameState.savedHighlights.indexWhere(
-                                        (item) => item['highlight'] == point && item['articleTitle'] == widget.article.title
-                                      );
+                                      final matchIndex = gameState
+                                          .savedHighlights
+                                          .indexWhere((item) =>
+                                              item['highlight'] == point &&
+                                              item['articleTitle'] ==
+                                                  widget.article.title);
                                       if (matchIndex != -1) {
                                         gameState.removeHighlight(matchIndex);
                                       }
                                     } else {
                                       // 新增劃記
-                                      gameState.addHighlight(point, widget.article.title);
+                                      gameState.addHighlight(
+                                          point, widget.article.title);
                                     }
                                   },
                                   icon: Icon(
-                                    isPointHighlighted ? Icons.check_circle : Icons.add_circle_outline,
+                                    isPointHighlighted
+                                        ? Icons.check_circle
+                                        : Icons.add_circle_outline,
                                     size: 16.sp,
-                                    color: isPointHighlighted ? const Color(0xFFE8B85F) : HomeV2Palette.trustGreen,
+                                    color: isPointHighlighted
+                                        ? const Color(0xFFE8B85F)
+                                        : HomeV2Palette.trustGreen,
                                   ),
                                   label: Text(
                                     isPointHighlighted ? '已收錄' : '劃記',
                                     style: TextStyle(
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.bold,
-                                      color: isPointHighlighted ? const Color(0xFFE8B85F) : HomeV2Palette.trustGreen,
+                                      color: isPointHighlighted
+                                          ? const Color(0xFFE8B85F)
+                                          : HomeV2Palette.trustGreen,
                                     ),
                                   ),
                                 ),
@@ -730,8 +834,11 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final gameState = LearningGameState.instance;
-    final cat = widget.category ?? widget.article.category ?? _guessCategory(widget.article.title);
-    final isStepCompleted = widget.unitStepLabel != null && gameState.completedSteps.contains("${cat}_${widget.unitStepLabel}");
+    final cat = widget.category ??
+        widget.article.category ??
+        _guessCategory(widget.article.title);
+    final isStepCompleted = widget.unitStepLabel != null &&
+        gameState.completedSteps.contains("${cat}_${widget.unitStepLabel}");
     final quiz = _quizData;
 
     return Scaffold(
@@ -747,7 +854,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
         actions: [
           // 📌 摘錄至筆記本按鈕
           IconButton(
-            icon: Icon(Icons.bookmark_add_outlined, size: 22.sp, color: Colors.grey),
+            icon: Icon(Icons.bookmark_add_outlined,
+                size: 22.sp, color: Colors.grey),
             tooltip: '摘錄大綱至手帳',
             onPressed: () {
               gameState.addHighlight(
@@ -766,7 +874,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
           ListenableBuilder(
             listenable: gameState,
             builder: (context, _) {
-              final isBookmarked = gameState.isArticleSaved(widget.article.title);
+              final isBookmarked =
+                  gameState.isArticleSaved(widget.article.title);
               return IconButton(
                 icon: CtmSvgIcon(
                   isBookmarked ? _svgStarFilledIcon : _svgStarOutlineIcon,
@@ -806,16 +915,19 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
           return NotebookBackground(
             child: ListView(
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 80.h), // 底部留白以防阻擋懸浮按鈕
+              padding:
+                  EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 80.h), // 底部留白以防阻擋懸浮按鈕
               children: [
                 // 1. 主卡片
                 NotebookCard(
-                  backgroundColor: isDark ? const Color(0xFF161C23) : Colors.white,
+                  backgroundColor:
+                      isDark ? const Color(0xFF161C23) : Colors.white,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 12.w, vertical: 6.h),
                         decoration: BoxDecoration(
                           color: HomeV2Palette.mint,
                           borderRadius: BorderRadius.circular(999.r),
@@ -832,22 +944,26 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                       SizedBox(height: 16.h),
                       Text(
                         widget.article.title,
-                        style: getNotebookTextStyle(context, TextStyle(
-                          fontSize: 20.sp,
-                          height: 1.25,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.textPrimary,
-                        )),
+                        style: getNotebookTextStyle(
+                            context,
+                            TextStyle(
+                              fontSize: 20.sp,
+                              height: 1.25,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.textPrimary,
+                            )),
                       ),
                       SizedBox(height: 12.h),
                       HighlightedSelectableText(
                         text: widget.article.summary,
                         highlights: currentHighlights,
-                        style: getNotebookTextStyle(context, TextStyle(
-                          fontSize: 14.sp,
-                          height: 1.55,
-                          color: AppColors.textSecondary,
-                        )),
+                        style: getNotebookTextStyle(
+                            context,
+                            TextStyle(
+                              fontSize: 14.sp,
+                              height: 1.55,
+                              color: AppColors.textSecondary,
+                            )),
                         articleTitle: widget.article.title,
                       ),
                       SizedBox(height: 18.h),
@@ -855,19 +971,28 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                         width: double.infinity,
                         padding: EdgeInsets.all(16.w),
                         decoration: BoxDecoration(
-                          color: isDark ? const Color(0xFF232A33) : const Color(0xFFF7F2EA),
+                          color: isDark
+                              ? const Color(0xFF232A33)
+                              : const Color(0xFFF7F2EA),
                           borderRadius: BorderRadius.circular(20.r),
-                          border: Border.all(color: isDark ? Colors.transparent : const Color(0xFFE9DFD2)),
+                          border: Border.all(
+                              color: isDark
+                                  ? Colors.transparent
+                                  : const Color(0xFFE9DFD2)),
                         ),
                         child: HighlightedSelectableText(
                           text: widget.article.heroNote,
                           highlights: currentHighlights,
-                          style: getNotebookTextStyle(context, TextStyle(
-                            fontSize: 13.5.sp,
-                            height: 1.55,
-                            fontWeight: FontWeight.w700,
-                            color: isDark ? Colors.orange.shade100 : const Color(0xFF6B5439),
-                          )),
+                          style: getNotebookTextStyle(
+                              context,
+                              TextStyle(
+                                fontSize: 13.5.sp,
+                                height: 1.55,
+                                fontWeight: FontWeight.w700,
+                                color: isDark
+                                    ? Colors.orange.shade100
+                                    : const Color(0xFF6B5439),
+                              )),
                           articleTitle: widget.article.title,
                         ),
                       ),
@@ -879,17 +1004,20 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                 // 2. 重點思考框
                 Text(
                   '💡 三個核心法律思考點',
-                  style: getNotebookTextStyle(context, TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.textPrimary,
-                  )),
+                  style: getNotebookTextStyle(
+                      context,
+                      TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.textPrimary,
+                      )),
                 ),
                 SizedBox(height: 12.h),
                 ...widget.article.keyPoints.map((point) {
                   final isPointSaved = gameState.isQuoteSaved(point);
                   return NotebookCard(
-                    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
                     margin: EdgeInsets.only(bottom: 10.h),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -920,10 +1048,13 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                           icon: CtmSvgIcon(
                             CtmSvgIcons.star,
                             size: 18.sp,
-                            color: isPointSaved ? const Color(0xFFE8B85F) : Colors.grey.shade300,
+                            color: isPointSaved
+                                ? const Color(0xFFE8B85F)
+                                : Colors.grey.shade300,
                           ),
                           onPressed: () {
-                            gameState.toggleQuoteSave(point, widget.article.title);
+                            gameState.toggleQuoteSave(
+                                point, widget.article.title);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
@@ -993,26 +1124,38 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                         if (isStepCompleted) ...[
                           Row(
                             children: [
-                              CtmSvgIcon(CtmSvgIcons.star, color: HomeV2Palette.trustGreen, size: 24.sp),
+                              CtmSvgIcon(CtmSvgIcons.star,
+                                  color: HomeV2Palette.trustGreen, size: 24.sp),
                               SizedBox(width: 8.w),
-                              const Text('本單元測驗已通關！', style: TextStyle(fontWeight: FontWeight.bold, color: HomeV2Palette.trustGreen)),
+                              const Text('本單元測驗已通關！',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: HomeV2Palette.trustGreen)),
                             ],
                           ),
                           SizedBox(height: 8.h),
                         ],
                         Text(
                           quiz['question'],
-                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                          style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary),
                         ),
                         SizedBox(height: 14.h),
                         ...List.generate(quiz['options'].length, (index) {
                           final isSelected = _selectedQuizIndex == index;
-                          final isCorrect = _isQuizAnswered && index == quiz['correctIndex'];
-                          final isWrong = _isQuizAnswered && isSelected && index != quiz['correctIndex'];
+                          final isCorrect =
+                              _isQuizAnswered && index == quiz['correctIndex'];
+                          final isWrong = _isQuizAnswered &&
+                              isSelected &&
+                              index != quiz['correctIndex'];
 
                           Color optionBg = Colors.white;
                           Color optionBorder = const Color(0xFFECE6DB);
-                          if (isCorrect || (isStepCompleted && index == quiz['correctIndex'])) {
+                          if (isCorrect ||
+                              (isStepCompleted &&
+                                  index == quiz['correctIndex'])) {
                             optionBg = const Color(0xFFEAF6E2);
                             optionBorder = const Color(0xFF9EC979);
                           } else if (isWrong) {
@@ -1024,19 +1167,25 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                           }
 
                           Widget optionIcon;
-                          if (isCorrect || (isStepCompleted && index == quiz['correctIndex'])) {
-                            optionIcon = CtmSvgIcon(CtmSvgIcons.star, color: Colors.green, size: 18.sp);
+                          if (isCorrect ||
+                              (isStepCompleted &&
+                                  index == quiz['correctIndex'])) {
+                            optionIcon = CtmSvgIcon(CtmSvgIcons.star,
+                                color: Colors.green, size: 18.sp);
                           } else if (isWrong) {
-                            optionIcon = CtmSvgIcon(CtmSvgIcons.xCircle, color: Colors.red, size: 18.sp);
+                            optionIcon = CtmSvgIcon(CtmSvgIcons.xCircle,
+                                color: Colors.red, size: 18.sp);
                           } else if (isSelected) {
-                            optionIcon = CtmSvgIcon(CtmSvgIcons.star, color: const Color(0xFFE8B95F), size: 18.sp);
+                            optionIcon = CtmSvgIcon(CtmSvgIcons.star,
+                                color: const Color(0xFFE8B95F), size: 18.sp);
                           } else {
                             optionIcon = Container(
                               width: 18.w,
                               height: 18.w,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                border: Border.all(color: Colors.grey, width: 1.5.w),
+                                border: Border.all(
+                                    color: Colors.grey, width: 1.5.w),
                               ),
                             );
                           }
@@ -1044,17 +1193,20 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                           return Padding(
                             padding: EdgeInsets.only(bottom: 8.h),
                             child: InkWell(
-                              onTap: (_isQuizAnswered || isStepCompleted) ? null : () {
-                                setState(() {
-                                  _selectedQuizIndex = index;
-                                });
-                              },
+                              onTap: (_isQuizAnswered || isStepCompleted)
+                                  ? null
+                                  : () {
+                                      setState(() {
+                                        _selectedQuizIndex = index;
+                                      });
+                                    },
                               borderRadius: BorderRadius.circular(10.r),
                               child: Container(
                                 padding: EdgeInsets.all(12.w),
                                 decoration: BoxDecoration(
                                   color: optionBg,
-                                  border: Border.all(color: optionBorder, width: 1.2.w),
+                                  border: Border.all(
+                                      color: optionBorder, width: 1.2.w),
                                   borderRadius: BorderRadius.circular(10.r),
                                 ),
                                 child: Row(
@@ -1064,7 +1216,9 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                                     Expanded(
                                       child: Text(
                                         quiz['options'][index],
-                                        style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.bold),
+                                        style: TextStyle(
+                                            fontSize: 12.5.sp,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ),
                                   ],
@@ -1078,8 +1232,11 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                           SizedBox(
                             width: double.infinity,
                             child: FilledButton(
-                              onPressed: _selectedQuizIndex == null ? null : _submitQuizAnswer,
-                              style: FilledButton.styleFrom(backgroundColor: HomeV2Palette.trustGreen),
+                              onPressed: _selectedQuizIndex == null
+                                  ? null
+                                  : _submitQuizAnswer,
+                              style: FilledButton.styleFrom(
+                                  backgroundColor: HomeV2Palette.trustGreen),
                               child: const Text('送出答案'),
                             ),
                           )
@@ -1093,7 +1250,9 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                                 height: 44.w,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  border: Border.all(color: HomeV2Palette.trustGreen, width: 1.5.w),
+                                  border: Border.all(
+                                      color: HomeV2Palette.trustGreen,
+                                      width: 1.5.w),
                                 ),
                                 child: ClipOval(
                                   child: Image.asset(
@@ -1107,9 +1266,13 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                                 child: Container(
                                   padding: EdgeInsets.all(12.w),
                                   decoration: BoxDecoration(
-                                    color: isDark ? const Color(0xFF1E2622) : const Color(0xFFF2FAF6),
+                                    color: isDark
+                                        ? const Color(0xFF1E2622)
+                                        : const Color(0xFFF2FAF6),
                                     border: Border.all(
-                                      color: isDark ? const Color(0xFF2E3C36) : const Color(0xFFD2E6DE),
+                                      color: isDark
+                                          ? const Color(0xFF2E3C36)
+                                          : const Color(0xFFD2E6DE),
                                       width: 1.2.w,
                                     ),
                                     borderRadius: BorderRadius.only(
@@ -1120,21 +1283,30 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                                     ),
                                   ),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        (_isQuizAnswered && _selectedQuizIndex == quiz['correctIndex']) || isStepCompleted
+                                        (_isQuizAnswered &&
+                                                    _selectedQuizIndex ==
+                                                        quiz['correctIndex']) ||
+                                                isStepCompleted
                                             ? '🎉 答對了！恭喜！'
                                             : '❌ 答錯了，再接再厲！',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 13.sp,
-                                          color: isDark ? const Color(0xFF99C3B3) : const Color(0xFF1B4D3E),
+                                          color: isDark
+                                              ? const Color(0xFF99C3B3)
+                                              : const Color(0xFF1B4D3E),
                                         ),
                                       ),
                                       SizedBox(height: 4.h),
                                       Text(
-                                        (_isQuizAnswered && _selectedQuizIndex == quiz['correctIndex']) || isStepCompleted
+                                        (_isQuizAnswered &&
+                                                    _selectedQuizIndex ==
+                                                        quiz['correctIndex']) ||
+                                                isStepCompleted
                                             ? '您表現得非常好，真不愧是「${gameState.levelTitle} ${gameState.mascotExpression}」！獲得 20 XP！'
                                             : '沒關係，小法助已經把這道錯題記錄在您的「錯題本」了。先看看白話判決解析，再重新溫習吧！',
                                         style: TextStyle(
@@ -1154,10 +1326,14 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                           Container(
                             padding: EdgeInsets.all(12.w),
                             decoration: BoxDecoration(
-                              color: isDark ? const Color(0xFF232A33) : const Color(0xFFF7F2EA),
+                              color: isDark
+                                  ? const Color(0xFF232A33)
+                                  : const Color(0xFFF7F2EA),
                               borderRadius: BorderRadius.circular(12.r),
                               border: Border.all(
-                                color: isDark ? Colors.transparent : const Color(0xFFE9DFD2),
+                                color: isDark
+                                    ? Colors.transparent
+                                    : const Color(0xFFE9DFD2),
                                 width: 1.w,
                               ),
                             ),
@@ -1217,15 +1393,22 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                         if (isStepCompleted) ...[
                           Row(
                             children: [
-                              CtmSvgIcon(CtmSvgIcons.star, color: HomeV2Palette.trustGreen, size: 24.sp),
+                              CtmSvgIcon(CtmSvgIcons.star,
+                                  color: HomeV2Palette.trustGreen, size: 24.sp),
                               SizedBox(width: 8.w),
-                              const Text('本單元已學習完成！', style: TextStyle(fontWeight: FontWeight.bold, color: HomeV2Palette.trustGreen)),
+                              const Text('本單元已學習完成！',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: HomeV2Palette.trustGreen)),
                             ],
                           ),
                         ] else ...[
                           Text(
                             '恭喜您讀完本單元的內容！請點擊下方按鈕以確立學完狀態並累積經驗值。',
-                            style: TextStyle(fontSize: 13.5.sp, color: AppColors.textSecondary, height: 1.45),
+                            style: TextStyle(
+                                fontSize: 13.5.sp,
+                                color: AppColors.textSecondary,
+                                height: 1.45),
                           ),
                           SizedBox(height: 14.h),
                           SizedBox(
@@ -1234,14 +1417,21 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                               onPressed: () {
                                 if (widget.unitStepLabel != null) {
                                   final gameState = LearningGameState.instance;
-                                  final cat = widget.category ?? widget.article.category ?? _guessCategory(widget.article.title);
-                                  final uniqueStepId = "${cat}_${widget.unitStepLabel}";
-                                  final isFirstTimeComplete = !gameState.completedSteps.contains(uniqueStepId);
+                                  final cat = widget.category ??
+                                      widget.article.category ??
+                                      _guessCategory(widget.article.title);
+                                  final uniqueStepId =
+                                      "${cat}_${widget.unitStepLabel}";
+                                  final isFirstTimeComplete = !gameState
+                                      .completedSteps
+                                      .contains(uniqueStepId);
 
                                   gameState.completeStep(uniqueStepId);
 
-                                  if (widget.unitStepLabel == 'STEP 5' && isFirstTimeComplete) {
-                                    Future.delayed(const Duration(milliseconds: 600), () {
+                                  if (widget.unitStepLabel == 'STEP 5' &&
+                                      isFirstTimeComplete) {
+                                    Future.delayed(
+                                        const Duration(milliseconds: 600), () {
                                       _showCompletionDialog();
                                     });
                                   }
@@ -1250,7 +1440,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                                 }
                                 setState(() {});
                               },
-                              style: FilledButton.styleFrom(backgroundColor: HomeV2Palette.trustGreen),
+                              style: FilledButton.styleFrom(
+                                  backgroundColor: HomeV2Palette.trustGreen),
                               child: const Text('標記為已學完'),
                             ),
                           ),
@@ -1271,7 +1462,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
           FloatingActionButton(
             heroTag: 'learning_notebook_fab',
             onPressed: () => _showNotebookBottomSheet(context),
-            backgroundColor: isDark ? const Color(0xFF1E2622) : const Color(0xFFF7F2EA),
+            backgroundColor:
+                isDark ? const Color(0xFF1E2622) : const Color(0xFFF7F2EA),
             shape: CircleBorder(
               side: BorderSide(
                 color: HomeV2Palette.trustGreen,
@@ -1297,8 +1489,9 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) => LawAssistantSearchPage(
-                        initialPrompt: '我正在學《${widget.article.title}》，想問問小法助關於這個主題的細節：',
+                      builder: (_) => LawAssistantChatPage(
+                        initialPrompt:
+                            '我正在學《${widget.article.title}》，想問問小法助關於這個主題的細節：',
                       ),
                     ),
                   );
@@ -1329,7 +1522,9 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
     HapticFeedback.mediumImpact();
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final cat = widget.category ?? widget.article.category ?? _guessCategory(widget.article.title);
+    final cat = widget.category ??
+        widget.article.category ??
+        _guessCategory(widget.article.title);
 
     String badgeName = '租屋達人';
     switch (cat) {
@@ -1397,15 +1592,19 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                     ),
                     SizedBox(height: 20.h),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 16.w, vertical: 12.h),
                       decoration: BoxDecoration(
                         color: HomeV2Palette.trustGreen.withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(16.r),
-                        border: Border.all(color: HomeV2Palette.trustGreen.withValues(alpha: 0.15)),
+                        border: Border.all(
+                            color: HomeV2Palette.trustGreen
+                                .withValues(alpha: 0.15)),
                       ),
                       child: Column(
                         children: [
-                          Icon(Icons.stars, color: const Color(0xFFE8B95F), size: 48.sp),
+                          Icon(Icons.stars,
+                              color: const Color(0xFFE8B95F), size: 48.sp),
                           SizedBox(height: 6.h),
                           Text(
                             '解鎖榮譽徽章',
@@ -1443,7 +1642,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                           child: OutlinedButton(
                             style: OutlinedButton.styleFrom(
                               padding: EdgeInsets.symmetric(vertical: 12.h),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.r)),
                             ),
                             onPressed: () {
                               Navigator.pop(context);
@@ -1458,7 +1658,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                               backgroundColor: HomeV2Palette.trustGreen,
                               foregroundColor: Colors.white,
                               padding: EdgeInsets.symmetric(vertical: 12.h),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.r)),
                             ),
                             onPressed: () {
                               Navigator.pop(context); // 關閉對話框
@@ -1492,7 +1693,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                       color: Color(0xFFE8B95F),
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(Icons.celebration, color: Colors.white, size: 28.sp),
+                    child: Icon(Icons.celebration,
+                        color: Colors.white, size: 28.sp),
                   ),
                 ),
               ),
@@ -1578,9 +1780,10 @@ class HighlightedSelectableText extends StatelessWidget {
         style: TextStyle(
           backgroundColor: Colors.yellow.withOpacity(0.45),
         ),
-        recognizer: LongPressGestureRecognizer()..onLongPress = () {
-          _showShareCardDialog(context, highlightStr, articleTitle);
-        },
+        recognizer: LongPressGestureRecognizer()
+          ..onLongPress = () {
+            _showShareCardDialog(context, highlightStr, articleTitle);
+          },
       ));
       currentIndex = range.end;
     }
@@ -1597,17 +1800,22 @@ class HighlightedSelectableText extends StatelessWidget {
     );
   }
 
-  Widget _buildContextMenu(BuildContext context, EditableTextState editableTextState) {
-    final List<ContextMenuButtonItem> buttonItems = editableTextState.contextMenuButtonItems;
+  Widget _buildContextMenu(
+      BuildContext context, EditableTextState editableTextState) {
+    final List<ContextMenuButtonItem> buttonItems =
+        editableTextState.contextMenuButtonItems;
     final selection = editableTextState.textEditingValue.selection;
-    if (!selection.isCollapsed && selection.start >= 0 && selection.end <= text.length) {
+    if (!selection.isCollapsed &&
+        selection.start >= 0 &&
+        selection.end <= text.length) {
       final selectedText = text.substring(selection.start, selection.end);
       if (selectedText.trim().isNotEmpty) {
         buttonItems.add(
           ContextMenuButtonItem(
             label: '劃記重點 ✍️',
             onPressed: () {
-              LearningGameState.instance.addHighlight(selectedText, articleTitle);
+              LearningGameState.instance
+                  .addHighlight(selectedText, articleTitle);
               editableTextState.hideToolbar();
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
@@ -1634,7 +1842,8 @@ class _TextRange {
   _TextRange(this.start, this.end);
 }
 
-void _showShareCardDialog(BuildContext context, String highlightText, String articleTitle) {
+void _showShareCardDialog(
+    BuildContext context, String highlightText, String articleTitle) {
   final isDark = Theme.of(context).brightness == Brightness.dark;
 
   showDialog(
@@ -1651,10 +1860,13 @@ void _showShareCardDialog(BuildContext context, String highlightText, String art
               width: double.infinity,
               padding: EdgeInsets.all(24.w),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF1E2622) : const Color(0xFFFFFBF3),
+                color:
+                    isDark ? const Color(0xFF1E2622) : const Color(0xFFFFFBF3),
                 borderRadius: BorderRadius.circular(24.r),
                 border: Border.all(
-                  color: isDark ? const Color(0xFF2E3C36) : const Color(0xFFE9DFD2),
+                  color: isDark
+                      ? const Color(0xFF2E3C36)
+                      : const Color(0xFFE9DFD2),
                   width: 1.5.w,
                 ),
                 boxShadow: [
@@ -1742,7 +1954,8 @@ void _showShareCardDialog(BuildContext context, String highlightText, String art
               children: [
                 ElevatedButton.icon(
                   onPressed: () {
-                    Clipboard.setData(ClipboardData(text: '$highlightText\n\n—— 摘自《$articleTitle》• 小法助'));
+                    Clipboard.setData(ClipboardData(
+                        text: '$highlightText\n\n—— 摘自《$articleTitle》• 小法助'));
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -1757,9 +1970,11 @@ void _showShareCardDialog(BuildContext context, String highlightText, String art
                     foregroundColor: HomeV2Palette.trustGreen,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(99.r),
-                      side: BorderSide(color: HomeV2Palette.trustGreen, width: 1.2.w),
+                      side: BorderSide(
+                          color: HomeV2Palette.trustGreen, width: 1.2.w),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                   ),
                   icon: Icon(Icons.copy_rounded, size: 16.sp),
                   label: const Text('複製文字'),
@@ -1786,7 +2001,8 @@ void _showShareCardDialog(BuildContext context, String highlightText, String art
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(99.r),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                   ),
                   icon: Icon(Icons.share_rounded, size: 16.sp),
                   label: const Text('分享圖卡'),
@@ -1884,7 +2100,8 @@ class _ConfettiWidget extends StatefulWidget {
   State<_ConfettiWidget> createState() => _ConfettiWidgetState();
 }
 
-class _ConfettiWidgetState extends State<_ConfettiWidget> with SingleTickerProviderStateMixin {
+class _ConfettiWidgetState extends State<_ConfettiWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   final List<_ConfettiParticle> _particles = [];
   final math.Random _random = math.Random();

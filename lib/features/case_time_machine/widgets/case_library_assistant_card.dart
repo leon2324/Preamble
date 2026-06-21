@@ -57,7 +57,8 @@ class CaseLibraryAssistantCard extends StatelessWidget {
                   Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 2.h),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 7.w, vertical: 2.h),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(99),

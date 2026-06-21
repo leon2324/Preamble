@@ -229,7 +229,8 @@ class _HomeDiscussionSectionState extends State<HomeDiscussionSection> {
                                   _expandedIndex = index;
                                 }
                               });
-                              WidgetsBinding.instance.addPostFrameCallback((__) {
+                              WidgetsBinding.instance
+                                  .addPostFrameCallback((__) {
                                 _scrollTimelineToIndex(0);
                               });
                             },

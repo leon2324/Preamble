@@ -61,7 +61,8 @@ class CaseLibraryInteractiveGrid extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).push(
                   CupertinoPageRoute<void>(
-                    builder: (__) => CaseOpinionSpectrumPage(book: selectedCase),
+                    builder: (__) =>
+                        CaseOpinionSpectrumPage(book: selectedCase),
                   ),
                 );
               },
@@ -180,7 +181,8 @@ class _FeatureTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     final double iconSize = isLandscape ? 15.sp : 21.sp;
     final double titleSize = isLandscape ? 10.5.sp : 12.5.sp;
     final double subtitleSize = isLandscape ? 8.5.sp : 9.8.sp;

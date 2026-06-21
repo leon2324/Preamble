@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
@@ -8,6 +9,11 @@ import 'package:lawapp/app/app_state.dart';
 import 'package:lawapp/data/search/search_models.dart';
 import 'package:lawapp/data/search/search_repository.dart';
 import 'package:lawapp/pages/learning/know_law_page.dart';
+import 'package:lawapp/data/cases/case_models.dart';
+import 'package:lawapp/data/cases/case_repository.dart';
+import 'package:lawapp/data/statutes/statute_item.dart';
+import 'package:lawapp/data/statutes/statute_repository.dart';
+import 'package:lawapp/pages/journal/data/journal_page_items.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // 台灣繁體中文教學註解：
@@ -102,7 +108,11 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
               ? '依刑法第339條，本罪構成要件需具備施用詐術、被害人陷於錯誤、處分財產、財產損害及因果關係。契約不履行若欠缺主觀不法所有意圖，則屬民事不法而非刑事詐欺。'
               : '刑事詐欺取財罪（刑法第339條）之成立，客觀要件須行為人施用詐術（欺罔手段），使相對人陷於錯誤，並因而為財產處分，致相對人或第三人受有財產上之損害，且各要件間具有相當因果關係；主觀要件則須具備詐欺故意及「意圖為自己或第三人不法之所有」。若係單純契約不履行，而無法證明行為人於締約之初即有詐欺故意及不法所有意圖，即屬民事債務不履行範疇，應循民事程序救濟。';
         }
-      } else if (query.contains('瑕疵') || query.contains('退貨') || query.contains('消費')) {
+      } else if (query.contains('瑕疵') ||
+          query.contains('退貨') ||
+          query.contains('消費') ||
+          query.contains('鑑賞期') ||
+          query.contains('7天')) {
         if (_aiTone == '白話') {
           summaryBase = _aiLength == '精簡'
               ? '買到瑕疵商品，如果是網購可在7天內無條件退貨退款。若是一般實體店面，則需符合民法瑕疵擔保，要求退款或換貨，但要儘快通知賣家喔！'
@@ -198,6 +208,8 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.paddingOf(context).top;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     final showTopBar = _page == _SearchPage.assistant ||
         _page == _SearchPage.statuteDetail ||
         _page == _SearchPage.caseDetail ||
@@ -209,50 +221,123 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
         _page == _SearchPage.lifeNotes ||
         _page == _SearchPage.official;
 
+    // Calculate header height to offset the scrollable body padding
+    double headerHeight = topPadding;
+    if (showTopBar) {
+      headerHeight += 64.h;
+    } else if (showSearchField) {
+      headerHeight += 76.h;
+    }
+
     return Scaffold(
       backgroundColor: _SearchColors.background,
-      body: ListView(
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        padding: EdgeInsets.fromLTRB(16.w, topPadding + 14.h, 16.w, 112.h),
+      body: Stack(
         children: [
-          if (showTopBar) ...[
-            _TopBar(
-              title: _titleFor(_page),
-              showBack: true,
-              onBack: _handleBack,
-              trailing: _page == _SearchPage.assistant
-                  ? Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _RoundIcon(
-                          icon: Icons.ios_share_rounded,
-                          onTap: _shareAssistantSummary,
-                        ),
-                        SizedBox(width: 8.w),
-                        _RoundIcon(
-                          icon: _isSaved(
-                            LawAppScope.of(context),
-                            _selected,
-                          )
-                              ? Icons.bookmark_rounded
-                              : Icons.bookmark_border_rounded,
-                          onTap: () => _toggleSaved(_selected),
-                        ),
-                      ],
-                    )
-                  : null,
-            ),
-            SizedBox(height: 14.h),
-          ],
-          if (showSearchField) _buildSearchHeader(),
-          if (showSearchField) SizedBox(height: 16.h),
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 180),
-            child: KeyedSubtree(
-              key: ValueKey('${_page.name}-${_tab.name}-${_selected.title}'),
-              child: _contentFor(_page),
+          // 1. Ambient Background Gradient
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: isDark
+                      ? [
+                          const Color(0xFF0F1216),
+                          const Color(0xFF141922),
+                          const Color(0xFF1C1310),
+                        ]
+                      : [
+                          const Color(0xFFFAF7F2),
+                          const Color(0xFFF3EFE9),
+                          const Color(0xFFE8F2EC),
+                        ],
+                ),
+              ),
             ),
           ),
+
+          // 2. Scrollable Body Content
+          Positioned.fill(
+            child: ListView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              padding:
+                  EdgeInsets.fromLTRB(16.w, headerHeight + 12.h, 16.w, 112.h),
+              children: [
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 180),
+                  child: KeyedSubtree(
+                    key: ValueKey(
+                        '${_page.name}-${_tab.name}-${_selected.title}'),
+                    child: _contentFor(_page),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // 3. Fixed Glassmorphic Header
+          if (showTopBar || showSearchField)
+            Positioned(
+              left: 0,
+              top: 0,
+              right: 0,
+              height: headerHeight,
+              child: ClipRect(
+                child: BackdropFilter(
+                  filter: ui.ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+                  child: Container(
+                    padding:
+                        EdgeInsets.fromLTRB(16.w, topPadding + 4.h, 16.w, 8.h),
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? const Color(0xFF0F1216).withValues(alpha: 0.8)
+                          : const Color(0xFFFAF7F2).withValues(alpha: 0.85),
+                      border: Border(
+                        bottom: BorderSide(
+                          color: isDark
+                              ? const Color(0xFF2C3545).withValues(alpha: 0.4)
+                              : const Color(0xFFE2D7C9).withValues(alpha: 0.5),
+                          width: 0.8.w,
+                        ),
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        if (showTopBar)
+                          _TopBar(
+                            title: _titleFor(_page),
+                            showBack: true,
+                            onBack: _handleBack,
+                            trailing: _page == _SearchPage.assistant
+                                ? Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      _RoundIcon(
+                                        icon: Icons.ios_share_rounded,
+                                        onTap: _shareAssistantSummary,
+                                      ),
+                                      SizedBox(width: 8.w),
+                                      _RoundIcon(
+                                        icon: _isSaved(
+                                          LawAppScope.of(context),
+                                          _selected,
+                                        )
+                                            ? Icons.bookmark_rounded
+                                            : Icons.bookmark_border_rounded,
+                                        onTap: () => _toggleSaved(_selected),
+                                      ),
+                                    ],
+                                  )
+                                : null,
+                          ),
+                        if (showSearchField) _buildSearchHeader(),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -290,15 +375,15 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
       case _SearchPage.statutes:
         return '法規結果';
       case _SearchPage.statuteDetail:
-        return _selected.title;
+        return '法規詳情';
       case _SearchPage.cases:
         return '案件搜尋結果';
       case _SearchPage.caseDetail:
-        return _selected.title;
+        return '判決詳情';
       case _SearchPage.lifeNotes:
         return '生活避坑筆記';
       case _SearchPage.lifeDetail:
-        return _selected.title;
+        return '避坑指南';
       case _SearchPage.official:
         return '官方資料結果';
       case _SearchPage.filters:
@@ -328,7 +413,8 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
         );
       case _SearchPage.results:
         if (_isSearching) {
-          return const _SearchStateCard(message: '正在彙整全站搜尋結果...', showMascot: false);
+          return const _SearchStateCard(
+              message: '正在彙整全站搜尋結果...', showMascot: false);
         }
         if (_searchError != null) {
           return _SearchStateCard(message: _searchError!);
@@ -366,7 +452,8 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
         );
       case _SearchPage.statutes:
         if (_isSearching) {
-          return const _SearchStateCard(message: '正在搜尋法規資料...', showMascot: false);
+          return const _SearchStateCard(
+              message: '正在搜尋法規資料...', showMascot: false);
         }
         return _ResultList(
           tabLabels: const ['全部', '最近更新', '我關注的'],
@@ -385,12 +472,15 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
           isFollowed: _isFollowed(LawAppScope.of(context), _selected),
           isSaved: _isSaved(LawAppScope.of(context), _selected),
           onFollow: () => _toggleFollow(_selected),
-          onSaved: () => _toggleSaved(_selected),
+          onSaved: () => _showArchiveBottomSheet(context, _selected),
           onAssistant: () => _openAssistant(_selected.query),
+          onNavigateResult: _openResult,
+          onAskScenario: _openAssistant,
         );
       case _SearchPage.cases:
         if (_isSearching) {
-          return const _SearchStateCard(message: '正在搜尋案件資料...', showMascot: false);
+          return const _SearchStateCard(
+              message: '正在搜尋案件資料...', showMascot: false);
         }
         return _ResultList(
           tabLabels: const ['全部', '小法助', '法規', '案件', '生活避坑', '官方資料'],
@@ -409,12 +499,14 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
           isFollowed: _isFollowed(LawAppScope.of(context), _selected),
           isSaved: _isSaved(LawAppScope.of(context), _selected),
           onFollow: () => _toggleFollow(_selected),
-          onSaved: () => _toggleSaved(_selected),
+          onSaved: () => _showArchiveBottomSheet(context, _selected),
           onOpenFullText: () => _openCaseJudgment(_selected),
+          onAskScenario: _openAssistant,
         );
       case _SearchPage.lifeNotes:
         if (_isSearching) {
-          return const _SearchStateCard(message: '正在搜尋生活筆記...', showMascot: false);
+          return const _SearchStateCard(
+              message: '正在搜尋生活筆記...', showMascot: false);
         }
         return _LifeNoteList(
           items: lifeResults,
@@ -425,11 +517,13 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
         return _LifeNoteDetail(
           item: _selected,
           isSaved: _isSaved(LawAppScope.of(context), _selected),
-          onSaved: () => _toggleSaved(_selected),
+          onSaved: () => _showArchiveBottomSheet(context, _selected),
+          onAskScenario: _openAssistant,
         );
       case _SearchPage.official:
         if (_isSearching) {
-          return const _SearchStateCard(message: '正在搜尋官方資料...', showMascot: false);
+          return const _SearchStateCard(
+              message: '正在搜尋官方資料...', showMascot: false);
         }
         return _OfficialList(
           items: officialResults,
@@ -571,6 +665,190 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
     _showSnack(next ? '已加入我的 LawApp 收藏。' : '已從我的 LawApp 收藏移除。');
   }
 
+  void _showArchiveBottomSheet(BuildContext context, _SearchResult item) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final folders = ['📁 租屋押金爭議', '📁 網購退貨權益', '📁 防詐騙金流紀錄', '📁 一般法律備忘'];
+    int selectedIndex = 0;
+    final noteController = TextEditingController();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setSheetState) {
+          return Container(
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF1E2430) : const Color(0xFFFAF7F2),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+              border: Border.all(
+                color: isDark
+                    ? const Color(0xFF2C3545).withValues(alpha: 0.8)
+                    : _SearchColors.border.withValues(alpha: 0.5),
+                width: 1.w,
+              ),
+            ),
+            padding: EdgeInsets.fromLTRB(18.w, 16.h, 18.w,
+                MediaQuery.of(context).viewInsets.bottom + 24.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 36.w,
+                    height: 4.h,
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? const Color(0xFF2C3545)
+                          : const Color(0xFFE2D7C9),
+                      borderRadius: BorderRadius.circular(2.r),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('儲存至案件夾', style: _SearchText.section(context)),
+                    IconButton(
+                      icon: const Icon(Icons.close_rounded),
+                      color: isDark ? Colors.white70 : _SearchColors.mutedText,
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12.h),
+                Text('選擇歸檔目錄', style: _SearchText.captionStrong(context)),
+                SizedBox(height: 8.h),
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxHeight: 180.h),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: folders.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == folders.length) {
+                        return ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: Icon(Icons.add_circle_outline_rounded,
+                              color: isDark
+                                  ? const Color(0xFF33A88D)
+                                  : _SearchColors.primary),
+                          title: Text('新增自訂案件夾...',
+                              style: _SearchText.body(context).copyWith(
+                                  color: isDark
+                                      ? const Color(0xFF33A88D)
+                                      : _SearchColors.primary)),
+                          onTap: () {
+                            setSheetState(() {
+                              folders.add('📁 自訂案件夾 ${folders.length - 3}');
+                              selectedIndex = folders.length - 1;
+                            });
+                          },
+                        );
+                      }
+                      final isSelected = selectedIndex == index;
+                      return ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Icon(
+                          isSelected
+                              ? Icons.radio_button_checked_rounded
+                              : Icons.radio_button_off_rounded,
+                          color: isSelected
+                              ? (isDark
+                                  ? const Color(0xFF33A88D)
+                                  : _SearchColors.primary)
+                              : (isDark ? Colors.white30 : Colors.black26),
+                        ),
+                        title: Text(folders[index],
+                            style: _SearchText.bodyStrong(context)),
+                        onTap: () => setSheetState(() => selectedIndex = index),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                Text('備忘註記 (選填)', style: _SearchText.captionStrong(context)),
+                SizedBox(height: 8.h),
+                TextField(
+                  controller: noteController,
+                  style: _SearchText.bodyStrong(context),
+                  decoration: InputDecoration(
+                    hintText: '輸入與本案相關的備註事項...',
+                    hintStyle: _SearchText.body(context),
+                    filled: true,
+                    fillColor: isDark
+                        ? const Color(0xFF141922)
+                        : const Color(0xFFF2ECE4),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.h),
+                _PrimaryButton(
+                  label: '確認歸檔',
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _toggleSaved(item);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                        content: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 16.w, vertical: 12.h),
+                          decoration: BoxDecoration(
+                            color: isDark
+                                ? const Color(0xFF1A3831)
+                                : const Color(0xFFEAF7F2),
+                            borderRadius: BorderRadius.circular(16.r),
+                            border: Border.all(
+                              color: isDark
+                                  ? const Color(0xFF33A88D)
+                                      .withValues(alpha: 0.6)
+                                  : _SearchColors.primary
+                                      .withValues(alpha: 0.3),
+                              width: 1.w,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(Icons.check_circle_rounded,
+                                  color: isDark
+                                      ? const Color(0xFF33A88D)
+                                      : _SearchColors.primary),
+                              SizedBox(width: 10.w),
+                              Expanded(
+                                child: Text(
+                                  '🎉 成功歸檔至「${folders[selectedIndex].substring(2)}」！',
+                                  style:
+                                      _SearchText.bodyStrong(context).copyWith(
+                                    color: isDark
+                                        ? const Color(0xFF33A88D)
+                                        : _SearchColors.primary,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
+        });
+      },
+    );
+  }
+
   Future<void> _shareAssistantSummary() async {
     final keyword = _query.trim().isEmpty ? _selected.query : _query.trim();
     final text = [
@@ -599,7 +877,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-            child: LawAssistantSearchPage(initialPrompt: keyword),
+            child: LawAssistantChatPage(initialPrompt: keyword),
           ),
         );
       },
@@ -881,11 +1159,14 @@ class _SpeechBubblePainter extends CustomPainter {
     // Body of the bubble, starting after the arrow on the left
     path.moveTo(arrowWidth + radius, 0);
     path.lineTo(size.width - radius, 0);
-    path.arcToPoint(Offset(size.width, radius), radius: Radius.circular(radius));
+    path.arcToPoint(Offset(size.width, radius),
+        radius: Radius.circular(radius));
     path.lineTo(size.width, size.height - radius);
-    path.arcToPoint(Offset(size.width - radius, size.height), radius: Radius.circular(radius));
+    path.arcToPoint(Offset(size.width - radius, size.height),
+        radius: Radius.circular(radius));
     path.lineTo(arrowWidth + radius, size.height);
-    path.arcToPoint(Offset(arrowWidth, size.height - radius), radius: Radius.circular(radius));
+    path.arcToPoint(Offset(arrowWidth, size.height - radius),
+        radius: Radius.circular(radius));
 
     // Draw the left-pointing arrow centered vertically
     final double arrowCenterY = size.height / 2;
@@ -894,7 +1175,8 @@ class _SpeechBubblePainter extends CustomPainter {
     path.lineTo(arrowWidth, arrowCenterY - arrowHeight / 2);
 
     path.lineTo(arrowWidth, radius);
-    path.arcToPoint(Offset(arrowWidth + radius, 0), radius: Radius.circular(radius));
+    path.arcToPoint(Offset(arrowWidth + radius, 0),
+        radius: Radius.circular(radius));
     path.close();
 
     canvas.drawPath(path, paint);
@@ -943,7 +1225,8 @@ class _AssistantQuotaCapsule extends StatelessWidget {
         decoration: BoxDecoration(
           color: _SearchColors.primary.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(999.r),
-          border: Border.all(color: _SearchColors.primary.withValues(alpha: 0.18)),
+          border:
+              Border.all(color: _SearchColors.primary.withValues(alpha: 0.18)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -979,7 +1262,8 @@ class _AssistantQuotaCapsule extends StatelessWidget {
 }
 
 class _HorizontalRecentFootprints extends StatelessWidget {
-  const _HorizontalRecentFootprints({required this.recent, required this.onQuery});
+  const _HorizontalRecentFootprints(
+      {required this.recent, required this.onQuery});
   final List<String> recent;
   final ValueChanged<String> onQuery;
 
@@ -995,7 +1279,8 @@ class _HorizontalRecentFootprints extends StatelessWidget {
           return Container(
             margin: EdgeInsets.only(right: 8.w),
             child: ActionChip(
-              avatar: Icon(Icons.history_rounded, size: 12.sp, color: _SearchColors.mutedText),
+              avatar: Icon(Icons.history_rounded,
+                  size: 12.sp, color: _SearchColors.mutedText),
               label: Text(query),
               onPressed: () => onQuery(query),
               backgroundColor: Colors.white,
@@ -1003,8 +1288,10 @@ class _HorizontalRecentFootprints extends StatelessWidget {
               visualDensity: const VisualDensity(horizontal: -3, vertical: -3),
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999.r)),
-              labelStyle: _SearchText.caption().copyWith(color: _SearchColors.text),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(999.r)),
+              labelStyle:
+                  _SearchText.caption().copyWith(color: _SearchColors.text),
             ),
           );
         }).toList(),
@@ -1014,7 +1301,8 @@ class _HorizontalRecentFootprints extends StatelessWidget {
 }
 
 class _InspirationItem {
-  const _InspirationItem(this.query, this.subtitle, this.gradient, this.textColor, this.icon);
+  const _InspirationItem(
+      this.query, this.subtitle, this.gradient, this.textColor, this.icon);
   final String query;
   final String subtitle;
   final List<Color> gradient;
@@ -1169,7 +1457,9 @@ class _SearchHome extends StatelessWidget {
                 height: 80.w,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: _SearchColors.primary.withValues(alpha: 0.15), width: 1.8.w),
+                  border: Border.all(
+                      color: _SearchColors.primary.withValues(alpha: 0.15),
+                      width: 1.8.w),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.04),
@@ -1208,7 +1498,8 @@ class _SearchHome extends StatelessWidget {
         // 3. 提問額度小膠囊
         Center(
           child: _AssistantQuotaCapsule(
-            quotaText: '今日 AI 提問剩餘：${appState.remainingAiQuota} / ${appState.accessTier.defaultDailyAiQuota} 次',
+            quotaText:
+                '今日 AI 提問剩餘：${appState.remainingAiQuota} / ${appState.accessTier.defaultDailyAiQuota} 次',
             onTap: () {
               ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
@@ -1253,12 +1544,14 @@ class _SearchHome extends StatelessWidget {
                   onTap: action.onTap,
                   background: Colors.white,
                   borderColor: _SearchColors.border.withValues(alpha: 0.6),
-                  padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
                   width: null,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(action.icon, color: _SearchColors.primary, size: 14.sp),
+                      Icon(action.icon,
+                          color: _SearchColors.primary, size: 14.sp),
                       SizedBox(width: 6.w),
                       Text(
                         action.label,
@@ -1509,7 +1802,7 @@ class _ResultSection extends StatelessWidget {
     if (items.isEmpty) return const SizedBox.shrink();
 
     Widget itemsContent;
-    if (isCarousel) {
+    if (isCarousel && items.length > 1) {
       itemsContent = SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
@@ -1580,7 +1873,9 @@ class _SearchStateCard extends StatelessWidget {
               height: 80.w,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: _SearchColors.border.withValues(alpha: 0.5), width: 1.8.w),
+                border: Border.all(
+                    color: _SearchColors.border.withValues(alpha: 0.5),
+                    width: 1.8.w),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.04),
@@ -1731,6 +2026,8 @@ class _StatuteDetail extends StatelessWidget {
     required this.onFollow,
     required this.onSaved,
     required this.onAssistant,
+    required this.onNavigateResult,
+    required this.onAskScenario,
   });
 
   final _SearchResult item;
@@ -1739,68 +2036,122 @@ class _StatuteDetail extends StatelessWidget {
   final VoidCallback onFollow;
   final VoidCallback onSaved;
   final VoidCallback onAssistant;
+  final ValueChanged<_SearchResult> onNavigateResult;
+  final ValueChanged<String> onAskScenario;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(item.title, style: _SearchText.heroSmall()),
-        SizedBox(height: 4.h),
-        Text('侵權成立之基礎', style: _SearchText.caption()),
-        SizedBox(height: 14.h),
-        const _TabStrip(labels: ['條文內容', '相關解釋']),
-        SizedBox(height: 16.h),
-        _ProtoCard(
-          child: Text('侵權行為成立時，行為人可能需要負損害賠償責任。實際仍要看故意過失、權利侵害、損害與因果關係。',
-              style: _SearchText.bodyStrong()),
-        ),
-        SizedBox(height: 14.h),
-        Text('相關法條', style: _SearchText.section()),
-        SizedBox(height: 10.h),
-        Wrap(
-          spacing: 8.w,
-          runSpacing: 8.h,
-          children: const [
-            _SmallTag(label: '民法 第444條'),
-            _SmallTag(label: '民法 第445條'),
-          ],
-        ),
-        SizedBox(height: 16.h),
-        _ProtoCard(
-          background: _SearchColors.mint,
-          onTap: onAssistant,
-          child: Row(
+    return FutureBuilder<List<StatuteItem>>(
+        future: StatuteRepository().fetchAllStatutes(),
+        builder: (context, snapshot) {
+          final statuteList = snapshot.data ?? [];
+          StatuteItem? statute;
+          for (final s in statuteList) {
+            final key = 'statute-${s.codeName}-${s.articleNumber}';
+            if (item.id == key ||
+                item.title.contains(s.codeName) &&
+                    item.title.contains(s.articleNumber)) {
+              statute = s;
+              break;
+            }
+          }
+
+          final displayTitle = statute != null
+              ? '${statute.codeName} ${statute.articleNumber}'
+              : item.title;
+          final displayText = statute?.articleText ?? item.summary;
+          final displaySummary = statute?.plainLanguageSummary ?? '本條文之白話解析。';
+          final displayCategory = statute?.category ?? '法律';
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.search_rounded,
-                  color: _SearchColors.primary, size: 18.sp),
-              SizedBox(width: 8.w),
-              Expanded(
-                  child: Text('小法助問：${item.title}可以怎麼用？',
-                      style: _SearchText.captionStrong())),
+              Text(displayTitle, style: _SearchText.heroSmall(context)),
+              SizedBox(height: 4.h),
+              Text('$displayCategory・施行中', style: _SearchText.caption(context)),
+              SizedBox(height: 14.h),
+              _TabStrip(labels: const ['條文內容', '白話解析']),
+              SizedBox(height: 16.h),
+              Text('條文本文', style: _SearchText.section(context)),
+              SizedBox(height: 8.h),
+              _ProtoCard(
+                child:
+                    Text(displayText, style: _SearchText.bodyStrong(context)),
+              ),
+              SizedBox(height: 14.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('白話解讀', style: _SearchText.section(context)),
+                  _VoiceReader(text: displaySummary),
+                ],
+              ),
+              SizedBox(height: 8.h),
+              _ProtoCard(
+                background: _SearchColors.softPaper,
+                child: Text(displaySummary, style: _SearchText.body(context)),
+              ),
+              if (statute != null && statute.tags.isNotEmpty) ...[
+                SizedBox(height: 14.h),
+                Text('關聯標籤', style: _SearchText.section(context)),
+                SizedBox(height: 10.h),
+                Wrap(
+                  spacing: 8.w,
+                  runSpacing: 8.h,
+                  children:
+                      statute.tags.map((tag) => _SmallTag(label: tag)).toList(),
+                ),
+              ],
+              SizedBox(height: 16.h),
+              _RelatedStatuteChips(
+                statuteTitle: displayTitle,
+                onNavigate: onNavigateResult,
+              ),
+              SizedBox(height: 16.h),
+              _ScenarioFollowUps(
+                title: displayTitle,
+                onAsk: onAskScenario,
+              ),
+              SizedBox(height: 16.h),
+              _ProtoCard(
+                background: _SearchColors.mint,
+                onTap: onAssistant,
+                child: Row(
+                  children: [
+                    Icon(Icons.search_rounded,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF33A88D)
+                            : _SearchColors.primary,
+                        size: 18.sp),
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Text('小法助問：${item.title}可以怎麼用？',
+                          style: _SearchText.captionStrong(context)),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 12.h),
+              Row(
+                children: [
+                  Expanded(
+                    child: _SecondaryButton(
+                      label: isFollowed ? '已追蹤法條' : '加入追蹤',
+                      onPressed: onFollow,
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: _SecondaryButton(
+                      label: isSaved ? '已收藏法條' : '收藏法條',
+                      onPressed: onSaved,
+                    ),
+                  ),
+                ],
+              ),
             ],
-          ),
-        ),
-        SizedBox(height: 12.h),
-        Row(
-          children: [
-            Expanded(
-              child: _SecondaryButton(
-                label: isFollowed ? '已追蹤法條' : '加入追蹤',
-                onPressed: onFollow,
-              ),
-            ),
-            SizedBox(width: 10.w),
-            Expanded(
-              child: _SecondaryButton(
-                label: isSaved ? '已收藏法條' : '收藏法條',
-                onPressed: onSaved,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
+          );
+        });
   }
 }
 
@@ -1812,6 +2163,7 @@ class _CaseDetail extends StatelessWidget {
     required this.onFollow,
     required this.onSaved,
     required this.onOpenFullText,
+    required this.onAskScenario,
   });
 
   final _SearchResult item;
@@ -1820,55 +2172,108 @@ class _CaseDetail extends StatelessWidget {
   final VoidCallback onFollow;
   final VoidCallback onSaved;
   final VoidCallback onOpenFullText;
+  final ValueChanged<String> onAskScenario;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(item.title, style: _SearchText.heroSmall()),
-        SizedBox(height: 10.h),
-        const _TabStrip(labels: ['案件資訊', '相關資料']),
-        SizedBox(height: 14.h),
-        _ProtoCard(
-          child: Column(
+    final caseId = item.id.replaceFirst('case-', '');
+
+    return FutureBuilder<LawCase?>(
+        future: CaseRepository().getCaseDetail(caseId),
+        builder: (context, snapshot) {
+          final lawCase = snapshot.data;
+
+          final displaySummary = lawCase?.summary ?? item.summary;
+          final displaySubtitle = lawCase?.subtitle ?? item.source;
+          final displayTitle = lawCase?.title ?? item.title;
+          final happenedAt = lawCase?.happenedAt;
+          final dateStr = happenedAt != null
+              ? '${happenedAt.year}.${happenedAt.month.toString().padLeft(2, '0')}.${happenedAt.day.toString().padLeft(2, '0')}'
+              : '近期';
+          final caseNo =
+              lawCase != null ? '（114）年民事小額第 321 號' : '109 年台上字第 123 號';
+          final caseResult = lawCase?.status ?? '上訴駁回';
+          final caseCategory = lawCase?.category ?? '刑事';
+
+          final takeaway = lawCase?.oneSentenceTakeaway;
+          return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('判決要旨', style: _SearchText.section()),
+              Text(displayTitle, style: _SearchText.heroSmall(context)),
               SizedBox(height: 10.h),
-              Text(item.summary, style: _SearchText.bodyStrong()),
-              SizedBox(height: 12.h),
-              Text('案件資訊', style: _SearchText.section()),
-              SizedBox(height: 8.h),
-              const _Bullet(text: '裁判字號：109 年台上字第 123 號'),
-              const _Bullet(text: '裁判日期：110.08.18'),
-              const _Bullet(text: '案件類別：刑事'),
-              const _Bullet(text: '結果：上訴駁回'),
+              _TabStrip(labels: const ['案件資訊', '相關資料']),
+              SizedBox(height: 14.h),
+              _ProtoCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('判決要旨', style: _SearchText.section(context)),
+                        _VoiceReader(text: displaySummary),
+                      ],
+                    ),
+                    SizedBox(height: 10.h),
+                    Text(displaySummary,
+                        style: _SearchText.bodyStrong(context)),
+                    if (takeaway != null) ...[
+                      SizedBox(height: 12.h),
+                      Text('核心要旨', style: _SearchText.section(context)),
+                      SizedBox(height: 6.h),
+                      Text(takeaway,
+                          style: _SearchText.body(context).copyWith(
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? const Color(0xFF33A88D)
+                                  : _SearchColors.primary)),
+                    ],
+                    SizedBox(height: 12.h),
+                    _CaseTimelineVisualizer(
+                        caseId: caseId, title: displayTitle),
+                    if (lawCase != null && lawCase.tags.isNotEmpty) ...[
+                      SizedBox(height: 12.h),
+                      Text('關鍵字', style: _SearchText.section(context)),
+                      SizedBox(height: 8.h),
+                      Wrap(
+                        spacing: 6.w,
+                        runSpacing: 6.h,
+                        children: lawCase.tags
+                            .map((tag) => _SmallTag(label: tag))
+                            .toList(),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              SizedBox(height: 16.h),
+              _ScenarioFollowUps(
+                title: displayTitle,
+                onAsk: onAskScenario,
+              ),
+              SizedBox(height: 14.h),
+              _SecondaryButton(label: '查看判決全文', onPressed: onOpenFullText),
+              SizedBox(height: 10.h),
+              Row(
+                children: [
+                  Expanded(
+                    child: _SecondaryButton(
+                      label: isFollowed ? '已追蹤案件' : '加入追蹤',
+                      onPressed: onFollow,
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: _SecondaryButton(
+                      label: isSaved ? '已收藏案件' : '收藏案件',
+                      onPressed: onSaved,
+                    ),
+                  ),
+                ],
+              ),
             ],
-          ),
-        ),
-        SizedBox(height: 14.h),
-        _SecondaryButton(label: '查看判決全文', onPressed: onOpenFullText),
-        SizedBox(height: 10.h),
-        Row(
-          children: [
-            Expanded(
-              child: _SecondaryButton(
-                label: isFollowed ? '已追蹤案件' : '加入追蹤',
-                onPressed: onFollow,
-              ),
-            ),
-            SizedBox(width: 10.w),
-            Expanded(
-              child: _SecondaryButton(
-                label: isSaved ? '已收藏案件' : '收藏案件',
-                onPressed: onSaved,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
+          );
+        });
   }
 }
 
@@ -1908,14 +2313,58 @@ class _LifeNoteDetail extends StatelessWidget {
     required this.item,
     required this.isSaved,
     required this.onSaved,
+    required this.onAskScenario,
   });
 
   final _SearchResult item;
   final bool isSaved;
   final VoidCallback onSaved;
+  final ValueChanged<String> onAskScenario;
 
   @override
   Widget build(BuildContext context) {
+    ArchiveUpdateItem? note;
+    for (final update in archiveUpdateItems) {
+      if (update.title == item.title || item.title.contains(update.title)) {
+        note = update;
+        break;
+      }
+    }
+
+    final displayTitle = note?.title ?? item.title;
+    final displaySummary = note?.summary ?? item.summary;
+    final displayTime = note?.timeLabel ?? '近期';
+
+    final List<String> checks = [];
+    if (displayTitle.contains('租屋') || displaySummary.contains('租屋')) {
+      checks.addAll([
+        '點交拍照存證：退租點交時對每面牆與設備詳細拍照或錄影存證。',
+        '確認折舊計算：民法折舊有一定公式，房東不得以自然折舊為由要求全額賠新。',
+        '調解或申訴：若遭無理扣減押金，可向鄉鎮市區公所聲請調解或發函催告。',
+      ]);
+    } else if (displayTitle.contains('詐騙') || displaySummary.contains('詐騙')) {
+      checks.addAll([
+        '保留完整對話：截圖社群或網拍通訊軟體上的買賣溝通與合約紀錄。',
+        '保存金流單據：將匯款單、網路轉帳成功明細等金流截圖列印或備份存檔。',
+        '撥打 165 專線：第一時間透過警政署 165 反詐騙專線進行求證或完成報案。',
+      ]);
+    } else if (displayTitle.contains('退貨') ||
+        displayTitle.contains('鑑賞期') ||
+        displaySummary.contains('退貨') ||
+        displaySummary.contains('鑑賞期')) {
+      checks.addAll([
+        '通知解除契約：七日內透過訊息或書面明確向賣家發出無條件退貨通知。',
+        '保持商品原樣：妥善留存包裝、本體及贈品，切勿任意毀損或使用。',
+        '向消保處申訴：賣家若刁難，可至行政院消保處進行線上消費申訴。',
+      ]);
+    } else {
+      checks.addAll([
+        '保留證據：完整留存與本案相關之契約、對話紀錄、交易單據及照片。',
+        '事實釐清：以條列或心智圖形式將爭議事實、時序列表備忘，以利後續說明。',
+        '調解管道：善用各地區調解委員會或消保中心提起低成本糾紛協商。',
+      ]);
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1927,10 +2376,10 @@ class _LifeNoteDetail extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(item.title, style: _SearchText.section()),
+                    Text(displayTitle, style: _SearchText.section(context)),
                     SizedBox(height: 8.h),
-                    Text('10 分鐘閱讀・5 分鐘摘要・112.02.10 更新',
-                        style: _SearchText.caption()),
+                    Text('10 分鐘閱讀・5 分鐘摘要・$displayTime 更新',
+                        style: _SearchText.caption(context)),
                   ],
                 ),
               ),
@@ -1940,12 +2389,23 @@ class _LifeNoteDetail extends StatelessWidget {
           ),
         ),
         SizedBox(height: 14.h),
-        Text('多數解說', style: _SearchText.section()),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('生活避坑錦囊', style: _SearchText.section(context)),
+            _VoiceReader(text: checks.join(' ')),
+          ],
+        ),
         SizedBox(height: 10.h),
-        const _CheckLine(text: '保留證據：保存對話、訂單、匯款紀錄'),
-        const _CheckLine(text: '事實背景：要求說明扣款明細'),
-        const _CheckLine(text: '內平台申訴：提出申訴或調解'),
-        const _CheckLine(text: '向主管機關申訴：如消保官或勞工局'),
+        for (final check in checks) ...[
+          _CheckLine(text: check),
+          SizedBox(height: 6.h),
+        ],
+        SizedBox(height: 16.h),
+        _ScenarioFollowUps(
+          title: displayTitle,
+          onAsk: onAskScenario,
+        ),
         SizedBox(height: 14.h),
         _PrimaryButton(label: isSaved ? '已收藏此筆記' : '收藏此筆記', onPressed: onSaved),
       ],
@@ -2220,10 +2680,12 @@ class _SearchVoiceBottomSheet extends StatefulWidget {
   const _SearchVoiceBottomSheet();
 
   @override
-  State<_SearchVoiceBottomSheet> createState() => _SearchVoiceBottomSheetState();
+  State<_SearchVoiceBottomSheet> createState() =>
+      _SearchVoiceBottomSheetState();
 }
 
-class _SearchVoiceBottomSheetState extends State<_SearchVoiceBottomSheet> with SingleTickerProviderStateMixin {
+class _SearchVoiceBottomSheetState extends State<_SearchVoiceBottomSheet>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _waveController;
   String _statusText = '正在聆聽中...';
   String _recognizedText = '';
@@ -2313,7 +2775,8 @@ class _SearchVoiceBottomSheetState extends State<_SearchVoiceBottomSheet> with S
             decoration: BoxDecoration(
               color: _SearchColors.background,
               borderRadius: BorderRadius.circular(18.r),
-              border: Border.all(color: _SearchColors.border.withValues(alpha: 0.5)),
+              border: Border.all(
+                  color: _SearchColors.border.withValues(alpha: 0.5)),
             ),
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
             child: _recognizedText.isEmpty
@@ -2323,14 +2786,17 @@ class _SearchVoiceBottomSheetState extends State<_SearchVoiceBottomSheet> with S
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(5, (index) {
-                          final value = (_waveController.value + (index * 0.2)) % 1.0;
-                          final height = 15.h + (45.h * (0.5 - (0.5 - value).abs()));
+                          final value =
+                              (_waveController.value + (index * 0.2)) % 1.0;
+                          final height =
+                              15.h + (45.h * (0.5 - (0.5 - value).abs()));
                           return Container(
                             width: 6.w,
                             height: height,
                             margin: EdgeInsets.symmetric(horizontal: 4.w),
                             decoration: BoxDecoration(
-                              color: _SearchColors.primary.withValues(alpha: 0.2 + (0.8 * value)),
+                              color: _SearchColors.primary
+                                  .withValues(alpha: 0.2 + (0.8 * value)),
                               borderRadius: BorderRadius.circular(999.r),
                             ),
                           );
@@ -2358,7 +2824,8 @@ class _SearchVoiceBottomSheetState extends State<_SearchVoiceBottomSheet> with S
               ),
               child: Text(
                 '取消',
-                style: _SearchText.captionStrong().copyWith(color: _SearchColors.mutedText),
+                style: _SearchText.captionStrong()
+                    .copyWith(color: _SearchColors.mutedText),
               ),
             ),
           ),
@@ -2429,6 +2896,12 @@ class _TabStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final activeColor =
+        isDark ? const Color(0xFF33A88D) : _SearchColors.primary;
+    final inactiveColor =
+        isDark ? const Color(0xFFA4B2AB) : _SearchColors.mutedText;
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -2440,15 +2913,12 @@ class _TabStrip extends StatelessWidget {
               decoration: BoxDecoration(
                 border: Border(
                     bottom: BorderSide(
-                        color:
-                            i == 0 ? _SearchColors.primary : Colors.transparent,
+                        color: i == 0 ? activeColor : Colors.transparent,
                         width: 1.5)),
               ),
               child: Text(labels[i],
-                  style: _SearchText.captionStrong().copyWith(
-                      color: i == 0
-                          ? _SearchColors.primary
-                          : _SearchColors.mutedText)),
+                  style: _SearchText.captionStrong(context)
+                      .copyWith(color: i == 0 ? activeColor : inactiveColor)),
             ),
         ],
       ),
@@ -2460,10 +2930,13 @@ class _AssistantThinkingIndicator extends StatefulWidget {
   const _AssistantThinkingIndicator();
 
   @override
-  State<_AssistantThinkingIndicator> createState() => _AssistantThinkingIndicatorState();
+  State<_AssistantThinkingIndicator> createState() =>
+      _AssistantThinkingIndicatorState();
 }
 
-class _AssistantThinkingIndicatorState extends State<_AssistantThinkingIndicator> with SingleTickerProviderStateMixin {
+class _AssistantThinkingIndicatorState
+    extends State<_AssistantThinkingIndicator>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
   @override
@@ -2637,7 +3110,8 @@ class _BreathingMascot extends StatefulWidget {
   State<_BreathingMascot> createState() => _BreathingMascotState();
 }
 
-class _BreathingMascotState extends State<_BreathingMascot> with SingleTickerProviderStateMixin {
+class _BreathingMascotState extends State<_BreathingMascot>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _scaleAnimation;
 
@@ -2668,7 +3142,9 @@ class _BreathingMascotState extends State<_BreathingMascot> with SingleTickerPro
         height: widget.height,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: _SearchColors.primary.withValues(alpha: 0.15), width: 1.5.w),
+          border: Border.all(
+              color: _SearchColors.primary.withValues(alpha: 0.15),
+              width: 1.5.w),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.04),
@@ -2726,7 +3202,8 @@ class _AssistantReportHeader extends StatelessWidget {
               ),
               child: SvgPicture.asset(
                 'assets/images/search/search_clipboard.svg',
-                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                colorFilter:
+                    const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                 width: 13.w,
                 height: 13.w,
               ),
@@ -2815,7 +3292,8 @@ class _AssistantOverviewCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _BreathingMascot(
-                    imagePath: 'assets/images/assistant/law_assistant_empty.png',
+                    imagePath:
+                        'assets/images/assistant/law_assistant_empty.png',
                     width: 70.w,
                     height: 75.h,
                   ),
@@ -2842,7 +3320,9 @@ class _AssistantOverviewCard extends StatelessWidget {
                     height: 50.w,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: _SearchColors.primary.withValues(alpha: 0.15), width: 1.5.w),
+                      border: Border.all(
+                          color: _SearchColors.primary.withValues(alpha: 0.15),
+                          width: 1.5.w),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.04),
@@ -2877,7 +3357,9 @@ class _AssistantOverviewCard extends StatelessWidget {
               runSpacing: 8.h,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                Text('回答風格：', style: _SearchText.caption().copyWith(fontWeight: FontWeight.bold)),
+                Text('回答風格：',
+                    style: _SearchText.caption()
+                        .copyWith(fontWeight: FontWeight.bold)),
                 _StyleChip(
                   label: '白話',
                   selected: tone == '白話',
@@ -2889,7 +3371,9 @@ class _AssistantOverviewCard extends StatelessWidget {
                   onTap: () => onToneChanged('專業'),
                 ),
                 SizedBox(width: 6.w),
-                Text('大綱長度：', style: _SearchText.caption().copyWith(fontWeight: FontWeight.bold)),
+                Text('大綱長度：',
+                    style: _SearchText.caption()
+                        .copyWith(fontWeight: FontWeight.bold)),
                 _StyleChip(
                   label: '精簡',
                   selected: length == '精簡',
@@ -2910,12 +3394,14 @@ class _AssistantOverviewCard extends StatelessWidget {
                     style: OutlinedButton.styleFrom(
                       foregroundColor: _SearchColors.primary,
                       side: const BorderSide(color: _SearchColors.border),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.r)),
                       padding: EdgeInsets.symmetric(vertical: 8.h),
                     ),
                     icon: SvgPicture.asset(
                       'assets/images/journal/book_icon.svg',
-                      colorFilter: const ColorFilter.mode(_SearchColors.primary, BlendMode.srcIn),
+                      colorFilter: const ColorFilter.mode(
+                          _SearchColors.primary, BlendMode.srcIn),
                       width: 14.w,
                       height: 14.w,
                     ),
@@ -2929,16 +3415,20 @@ class _AssistantOverviewCard extends StatelessWidget {
                     style: FilledButton.styleFrom(
                       backgroundColor: _SearchColors.primary,
                       foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.r)),
                       padding: EdgeInsets.symmetric(vertical: 8.h),
                     ),
                     icon: SvgPicture.asset(
                       'assets/images/journal/scale_icon.svg',
-                      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                      colorFilter:
+                          const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                       width: 14.w,
                       height: 14.w,
                     ),
-                    label: Text('💬 繼續聊聊', style: _SearchText.captionStrong().copyWith(color: Colors.white)),
+                    label: Text('💬 繼續聊聊',
+                        style: _SearchText.captionStrong()
+                            .copyWith(color: Colors.white)),
                     onPressed: onContinueChat,
                   ),
                 ),
@@ -2966,7 +3456,11 @@ class _AssistantCitationsRow extends StatelessWidget {
         {'id': '[2]', 'title': '最高法院 109 年台上字第 123 號判決', 'tag': '判例'},
         {'id': '[3]', 'title': '警政署 165 全民防騙網', 'tag': '官方'},
       ]);
-    } else if (query.contains('瑕疵') || query.contains('退貨') || query.contains('消費')) {
+    } else if (query.contains('瑕疵') ||
+        query.contains('退貨') ||
+        query.contains('消費') ||
+        query.contains('鑑賞期') ||
+        query.contains('7天')) {
       citations.addAll([
         {'id': '[1]', 'title': '消保法第 19 條 (鑑賞期退貨)', 'tag': '法規'},
         {'id': '[2]', 'title': '民法第 354 條 (物之瑕疵擔保)', 'tag': '法規'},
@@ -2986,7 +3480,8 @@ class _AssistantCitationsRow extends StatelessWidget {
           children: [
             SvgPicture.asset(
               'assets/images/journal/book_icon.svg',
-              colorFilter: const ColorFilter.mode(_SearchColors.primary, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(
+                  _SearchColors.primary, BlendMode.srcIn),
               width: 12.w,
               height: 12.w,
             ),
@@ -3024,16 +3519,19 @@ class _AssistantCitationsRow extends StatelessWidget {
                       ..showSnackBar(
                         SnackBar(
                           behavior: SnackBarBehavior.floating,
-                          content: Text('已為您定位引用來源：${citation['title']} (${citation['tag']})'),
+                          content: Text(
+                              '已為您定位引用來源：${citation['title']} (${citation['tag']})'),
                         ),
                       );
                   },
                   backgroundColor: Colors.white.withValues(alpha: 0.6),
                   side: const BorderSide(color: _SearchColors.border),
-                  visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                  visualDensity:
+                      const VisualDensity(horizontal: -4, vertical: -4),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.r)),
                   labelStyle: _SearchText.caption().copyWith(
                     color: _SearchColors.text,
                     fontSize: 9.5.sp,
@@ -3067,7 +3565,8 @@ class _StyleChip extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
         decoration: BoxDecoration(
           color: selected ? _SearchColors.primary : Colors.white,
-          border: Border.all(color: selected ? _SearchColors.primary : _SearchColors.border),
+          border: Border.all(
+              color: selected ? _SearchColors.primary : _SearchColors.border),
           borderRadius: BorderRadius.circular(20.r),
         ),
         child: Text(
@@ -3149,7 +3648,8 @@ class _InteractiveCard extends StatefulWidget {
   State<_InteractiveCard> createState() => _InteractiveCardState();
 }
 
-class _InteractiveCardState extends State<_InteractiveCard> with SingleTickerProviderStateMixin {
+class _InteractiveCardState extends State<_InteractiveCard>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _scaleController;
   late final Animation<double> _scaleAnimation;
 
@@ -3192,7 +3692,8 @@ class _InteractiveCardState extends State<_InteractiveCard> with SingleTickerPro
 
   @override
   Widget build(BuildContext context) {
-    final borderCol = (widget.borderColor ?? _SearchColors.border).withValues(alpha: 0.35);
+    final borderCol =
+        (widget.borderColor ?? _SearchColors.border).withValues(alpha: 0.35);
 
     final card = Container(
       width: widget.width,
@@ -3322,7 +3823,8 @@ class _ResultTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                     decoration: BoxDecoration(
                       color: iconColor.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(6.r),
@@ -3366,7 +3868,9 @@ class _ResultTile extends StatelessWidget {
               Row(
                 children: [
                   Icon(
-                    item.type == _ResultType.official ? Icons.verified_outlined : Icons.link_rounded,
+                    item.type == _ResultType.official
+                        ? Icons.verified_outlined
+                        : Icons.link_rounded,
                     size: 11.sp,
                     color: _SearchColors.mutedText.withValues(alpha: 0.7),
                   ),
@@ -3396,7 +3900,9 @@ class _ResultTile extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.all(4.w),
                 child: Icon(
-                  isSaved ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
+                  isSaved
+                      ? Icons.bookmark_rounded
+                      : Icons.bookmark_border_rounded,
                   color: _SearchColors.primary,
                   size: 21.sp,
                 ),
@@ -3517,20 +4023,69 @@ class _FilterRow extends StatelessWidget {
 }
 
 class _MiniFilter extends StatelessWidget {
-  const _MiniFilter({required this.label});
+  const _MiniFilter({required this.label, this.onTap, this.isPrimary = false});
 
   final String label;
+  final VoidCallback? onTap;
+  final bool isPrimary;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 7.h),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: _SearchColors.border),
-        borderRadius: BorderRadius.circular(12.r),
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bg = isPrimary
+        ? _SearchColors.primary.withValues(alpha: 0.1)
+        : (isDark
+            ? const Color(0xFF1E2530)
+            : Colors.white.withValues(alpha: 0.85));
+    final border = isPrimary
+        ? _SearchColors.primary.withValues(alpha: 0.4)
+        : (isDark ? const Color(0xFF2C3545) : const Color(0xFFE2E8F0));
+    final textColor = isPrimary
+        ? _SearchColors.primary
+        : (isDark ? const Color(0xFFE2E8F0) : _SearchColors.text);
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+        decoration: BoxDecoration(
+          color: bg,
+          border: Border.all(color: border, width: 0.8.w),
+          borderRadius: BorderRadius.circular(18.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            )
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (label == '篩選') ...[
+              Icon(Icons.tune_rounded, size: 12.sp, color: textColor),
+              SizedBox(width: 4.w),
+            ],
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11.sp,
+                fontWeight: FontWeight.w600,
+                color: textColor,
+              ),
+            ),
+            if (label != '篩選') ...[
+              SizedBox(width: 4.w),
+              Icon(
+                Icons.keyboard_arrow_down_rounded,
+                size: 13.sp,
+                color: textColor.withValues(alpha: 0.7),
+              ),
+            ],
+          ],
+        ),
       ),
-      child: Text(label, style: _SearchText.captionStrong()),
     );
   }
 }
@@ -3608,13 +4163,21 @@ class _TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       children: [
         if (showBack) ...[
           _RoundIcon(icon: Icons.arrow_back_ios_new_rounded, onTap: onBack),
           SizedBox(width: 10.w),
         ],
-        Expanded(child: Text(title, style: _SearchText.navTitle())),
+        Expanded(
+          child: Text(
+            title,
+            style: _SearchText.navTitle(context),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
         if (trailing != null) trailing!,
       ],
     );
@@ -3629,15 +4192,30 @@ class _RoundIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(999.r),
       child: Container(
         width: 38.w,
         height: 38.w,
-        decoration:
-            const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-        child: Icon(icon, color: _SearchColors.text, size: 20.sp),
+        decoration: BoxDecoration(
+          color: isDark
+              ? const Color(0xFF2C3545).withValues(alpha: 0.8)
+              : Colors.white,
+          shape: BoxShape.circle,
+          boxShadow: isDark
+              ? null
+              : [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 4.r,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+        ),
+        child: Icon(icon,
+            color: isDark ? Colors.white : _SearchColors.text, size: 20.sp),
       ),
     );
   }
@@ -3671,6 +4249,18 @@ class _ProtoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // Adapt backgrounds for dark mode
+    Color cardBg = background;
+    if (cardBg == Colors.white) {
+      cardBg = isDark ? const Color(0xFF1E2430) : Colors.white;
+    } else if (cardBg == _SearchColors.softPaper) {
+      cardBg = isDark ? const Color(0xFF282F3E) : _SearchColors.softPaper;
+    } else if (cardBg == _SearchColors.mint) {
+      cardBg = isDark ? const Color(0xFF1A3831) : _SearchColors.mint;
+    }
+
     const radius = 14.0;
     final card = Container(
       width: double.infinity,
@@ -3678,7 +4268,7 @@ class _ProtoCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(radius.r),
         boxShadow: [
           BoxShadow(
-            color: _getAdaptiveShadowColor(background),
+            color: _getAdaptiveShadowColor(cardBg),
             blurRadius: 14.r,
             offset: const Offset(0, 6),
           )
@@ -3692,10 +4282,12 @@ class _ProtoCard extends StatelessWidget {
             width: double.infinity,
             padding: padding ?? EdgeInsets.all(13.w),
             decoration: BoxDecoration(
-              color: background.withValues(alpha: 0.88),
+              color: cardBg.withValues(alpha: isDark ? 0.92 : 0.88),
               borderRadius: BorderRadius.circular(radius.r),
               border: Border.all(
-                color: _SearchColors.border.withValues(alpha: 0.35),
+                color: isDark
+                    ? const Color(0xFF2C3545).withValues(alpha: 0.5)
+                    : _SearchColors.border.withValues(alpha: 0.35),
                 width: 0.8.w,
               ),
             ),
@@ -3742,13 +4334,19 @@ class _SmallTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 7.h),
       decoration: BoxDecoration(
-        color: _SearchColors.mint,
+        color: isDark ? const Color(0xFF1A3831) : _SearchColors.mint,
         borderRadius: BorderRadius.circular(12.r),
       ),
-      child: Text(label, style: _SearchText.captionStrong()),
+      child: Text(
+        label,
+        style: _SearchText.captionStrong(context).copyWith(
+          color: isDark ? const Color(0xFF33A88D) : _SearchColors.text,
+        ),
+      ),
     );
   }
 }
@@ -3760,14 +4358,16 @@ class _CheckLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: EdgeInsets.only(bottom: 7.h),
       child: Row(
         children: [
           Icon(Icons.check_circle_rounded,
-              color: _SearchColors.primary, size: 16.sp),
+              color: isDark ? const Color(0xFF33A88D) : _SearchColors.primary,
+              size: 16.sp),
           SizedBox(width: 8.w),
-          Expanded(child: Text(text, style: _SearchText.bodyStrong())),
+          Expanded(child: Text(text, style: _SearchText.bodyStrong(context))),
         ],
       ),
     );
@@ -3812,12 +4412,532 @@ class _Bullet extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('• ', style: _SearchText.bodyStrong()),
-          Expanded(child: Text(text, style: _SearchText.bodyStrong())),
+          Text('• ', style: _SearchText.bodyStrong(context)),
+          Expanded(child: Text(text, style: _SearchText.bodyStrong(context))),
         ],
       ),
     );
   }
+}
+
+// ==========================================
+// NEW PREMIUM INTERACTIVE WIDGETS
+// ==========================================
+
+class _ScenarioFollowUps extends StatelessWidget {
+  const _ScenarioFollowUps({required this.title, required this.onAsk});
+  final String title;
+  final ValueChanged<String> onAsk;
+
+  @override
+  Widget build(BuildContext context) {
+    final List<String> questions = [];
+    if (title.contains('消保') || title.contains('19') || title.contains('鑑賞期')) {
+      questions.addAll([
+        '個人二手賣家也適用嗎？',
+        '如果是客製化商品還能退嗎？',
+        '商品拆封後還能主張鑑賞期退貨嗎？',
+      ]);
+    } else if (title.contains('詐') || title.contains('339')) {
+      questions.addAll([
+        '遊戲點數詐騙怎麼要回錢？',
+        '被騙走的身分證件怎麼預防被盜用？',
+        '借錢不還算不算詐欺罪？',
+      ]);
+    } else if (title.contains('租') ||
+        title.contains('房') ||
+        title.contains('421')) {
+      questions.addAll([
+        '退租時房東無理扣押金怎麼辦？',
+        '房屋漏水房東不修我可以少繳房租嗎？',
+        '租約沒到期提早搬走會扣多少違約金？',
+      ]);
+    } else {
+      questions.addAll([
+        '這個條款在訴訟上怎麼舉證？',
+        '如果遇到糾紛該去哪裡聲請調解？',
+        '有免費的法律諮詢管道嗎？',
+      ]);
+    }
+
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor =
+        isDark ? const Color(0xFF33A88D) : _SearchColors.primary;
+    final chipBg = isDark ? const Color(0xFF1A3831) : _SearchColors.mint;
+    final textColor = isDark ? const Color(0xFF33A88D) : _SearchColors.text;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.assistant_rounded, color: primaryColor, size: 16.sp),
+            SizedBox(width: 6.w),
+            Text('小法助推薦情境追問', style: _SearchText.captionStrong(context)),
+          ],
+        ),
+        SizedBox(height: 8.h),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: questions.map((q) {
+              return Padding(
+                padding: EdgeInsets.only(right: 8.w),
+                child: InkWell(
+                  onTap: () => onAsk(q),
+                  borderRadius: BorderRadius.circular(999.r),
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.h),
+                    decoration: BoxDecoration(
+                      color: chipBg.withValues(alpha: 0.8),
+                      borderRadius: BorderRadius.circular(999.r),
+                      border: Border.all(
+                        color: primaryColor.withValues(alpha: 0.25),
+                        width: 0.6.w,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Text(q,
+                            style: _SearchText.captionStrong(context)
+                                .copyWith(color: textColor, fontSize: 10.5.sp)),
+                        SizedBox(width: 4.w),
+                        Icon(Icons.arrow_forward_rounded,
+                            color: primaryColor, size: 10.sp),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _WaveformPlayer extends StatefulWidget {
+  const _WaveformPlayer({required this.isPlaying});
+  final bool isPlaying;
+
+  @override
+  State<_WaveformPlayer> createState() => _WaveformPlayerState();
+}
+
+class _WaveformPlayerState extends State<_WaveformPlayer>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  final List<double> _baseHeights = [0.2, 0.5, 0.8, 0.4, 0.7, 0.3, 0.6, 0.2];
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
+    if (widget.isPlaying) {
+      _controller.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant _WaveformPlayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isPlaying != oldWidget.isPlaying) {
+      if (widget.isPlaying) {
+        _controller.repeat(reverse: true);
+      } else {
+        _controller.stop();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final barColor = isDark ? const Color(0xFF33A88D) : _SearchColors.primary;
+
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(_baseHeights.length, (index) {
+            double value = _baseHeights[index];
+            if (widget.isPlaying) {
+              final phase = (index / _baseHeights.length) * 2 * math.pi;
+              value = (value +
+                      0.3 *
+                          (0.5 +
+                              0.5 *
+                                  (math.sin(_controller.value * 2 * math.pi +
+                                      phase))))
+                  .clamp(0.1, 1.0);
+            }
+            return Container(
+              margin: EdgeInsets.symmetric(horizontal: 1.5.w),
+              width: 3.w,
+              height: (16.h * value).clamp(3.h, 16.h),
+              decoration: BoxDecoration(
+                color: barColor.withValues(alpha: widget.isPlaying ? 1.0 : 0.4),
+                borderRadius: BorderRadius.circular(1.5.r),
+              ),
+            );
+          }),
+        );
+      },
+    );
+  }
+}
+
+class _VoiceReader extends StatefulWidget {
+  const _VoiceReader({required this.text});
+  final String text;
+
+  @override
+  State<_VoiceReader> createState() => _VoiceReaderState();
+}
+
+class _VoiceReaderState extends State<_VoiceReader> {
+  bool _isPlaying = false;
+  int _secondsElapsed = 0;
+  final int _totalSeconds = 25;
+  Timer? _timer;
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_secondsElapsed < _totalSeconds) {
+          _secondsElapsed++;
+        } else {
+          _isPlaying = false;
+          _secondsElapsed = 0;
+          _timer?.cancel();
+        }
+      });
+    });
+  }
+
+  void _togglePlay() {
+    setState(() {
+      _isPlaying = !_isPlaying;
+      if (_isPlaying) {
+        _startTimer();
+      } else {
+        _timer?.cancel();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor =
+        isDark ? const Color(0xFF33A88D) : _SearchColors.primary;
+
+    final String elapsedStr =
+        '00:${_secondsElapsed.toString().padLeft(2, '0')}';
+    final String totalStr = '00:$_totalSeconds';
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF141922) : const Color(0xFFFAF7F2),
+        borderRadius: BorderRadius.circular(10.r),
+        border: Border.all(
+          color: isDark
+              ? const Color(0xFF2C3545).withValues(alpha: 0.5)
+              : _SearchColors.border.withValues(alpha: 0.3),
+          width: 0.6.w,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          InkWell(
+            onTap: _togglePlay,
+            borderRadius: BorderRadius.circular(999.r),
+            child: Container(
+              width: 24.w,
+              height: 24.w,
+              decoration: BoxDecoration(
+                color: primaryColor.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                _isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                color: primaryColor,
+                size: 14.sp,
+              ),
+            ),
+          ),
+          SizedBox(width: 8.w),
+          Text('$elapsedStr / $totalStr', style: _SearchText.caption(context)),
+          SizedBox(width: 8.w),
+          _WaveformPlayer(isPlaying: _isPlaying),
+        ],
+      ),
+    );
+  }
+}
+
+class _CaseTimelineVisualizer extends StatelessWidget {
+  const _CaseTimelineVisualizer({required this.caseId, required this.title});
+  final String caseId;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor =
+        isDark ? const Color(0xFF33A88D) : _SearchColors.primary;
+    final dotColor = isDark ? const Color(0xFF33A88D) : _SearchColors.primary;
+    final lineColor = isDark ? const Color(0xFF2C3545) : _SearchColors.border;
+
+    final List<_TimelineEvent> events = [];
+    if (caseId.contains('2') || title.contains('租') || title.contains('押金')) {
+      events.addAll([
+        _TimelineEvent('2025.03.15', '簽訂契約', '起租並給付押金二個月。'),
+        _TimelineEvent('2026.03.14', '約滿點交', '租約到期房屋點交，房東主張自然折舊扣押金。'),
+        _TimelineEvent('2026.04.10', '調解不成立', '向公所聲請調解，房東執意扣除清潔與油漆費，協商破局。'),
+        _TimelineEvent('2026.06.15', '法院宣判', '小額判決認定自然折舊應由房東負擔，判決房東全額返還押金。'),
+      ]);
+    } else if (caseId.contains('1') || title.contains('詐')) {
+      events.addAll([
+        _TimelineEvent('2025.02.10', '三方詐騙成立', '買家匯款至被害賣家，詐騙人拿走商品。'),
+        _TimelineEvent('2025.02.12', '警示帳戶凍結', '金流遭警示鎖定，賣家名下所有帳戶無法提款。'),
+        _TimelineEvent('2025.08.12', '檢察官不起訴', '查明三方詐騙始末，賣家無詐欺故意，不起訴處分確定。'),
+        _TimelineEvent('2026.02.18', '免賠定讞', '民事庭判決賣家無侵權責任，無須賠償被害買家，返還定讞。'),
+      ]);
+    } else {
+      events.addAll([
+        _TimelineEvent('2025.10.15', '商品到貨', '網路下單通訊交易收到商品，開箱點收。'),
+        _TimelineEvent('2025.10.18', '主張解除契約', '7 日內書面通知退貨，賣家以「已拆封」為由拒退。'),
+        _TimelineEvent('2025.11.05', '消保官申訴', '向行政院消保處進行線上申訴，消保官發函要求賣家說明。'),
+        _TimelineEvent('2026.01.12', '調解成立', '召開調解會議，賣家同意收回商品並全額退款。'),
+      ]);
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.timeline_rounded, color: primaryColor, size: 16.sp),
+            SizedBox(width: 6.w),
+            Text('裁判時序時間軸 (Timeline)',
+                style: _SearchText.captionStrong(context)),
+          ],
+        ),
+        SizedBox(height: 12.h),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: events.length,
+          itemBuilder: (context, index) {
+            final e = events[index];
+            final isLast = index == events.length - 1;
+            return IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Column(
+                    children: [
+                      Container(
+                        width: 8.w,
+                        height: 8.w,
+                        decoration: BoxDecoration(
+                          color: dotColor,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      if (!isLast)
+                        Expanded(
+                          child: Container(
+                            width: 1.5.w,
+                            color: lineColor,
+                          ),
+                        ),
+                    ],
+                  ),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 12.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(e.date,
+                                  style: _SearchText.captionStrong(context)
+                                      .copyWith(
+                                          color: primaryColor,
+                                          fontSize: 10.sp)),
+                              SizedBox(width: 8.w),
+                              Text(e.title,
+                                  style: _SearchText.bodyStrong(context)),
+                            ],
+                          ),
+                          SizedBox(height: 3.h),
+                          Text(e.desc, style: _SearchText.body(context)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _TimelineEvent {
+  const _TimelineEvent(this.date, this.title, this.desc);
+  final String date;
+  final String title;
+  final String desc;
+}
+
+class _RelatedStatuteChips extends StatelessWidget {
+  const _RelatedStatuteChips(
+      {required this.statuteTitle, required this.onNavigate});
+  final String statuteTitle;
+  final ValueChanged<_SearchResult> onNavigate;
+
+  @override
+  Widget build(BuildContext context) {
+    final List<_RelatedStatuteInfo> list = [];
+    if (statuteTitle.contains('消費者保護法') &&
+        statuteTitle.contains('19') &&
+        !statuteTitle.contains('19之2')) {
+      list.addAll([
+        _RelatedStatuteInfo(
+            '民法第 259 條', '契約解除時雙方回復原狀義務之細節規範。', 'statute-民法-259'),
+        _RelatedStatuteInfo(
+            '消保法第 19 條之 2', '通訊交易退款程序與期限之施行細則。', 'statute-消費者保護法-19之2'),
+      ]);
+    } else if (statuteTitle.contains('19之2')) {
+      list.addAll([
+        _RelatedStatuteInfo(
+            '消保法第 19 條', '通訊交易 7 天無條件解除契約之本權利。', 'statute-消費者保護法-19'),
+        _RelatedStatuteInfo(
+            '民法第 259 條', '契約解除時雙方回復原狀義務之細節規範。', 'statute-民法-259'),
+      ]);
+    } else if (statuteTitle.contains('民法') && statuteTitle.contains('259')) {
+      list.addAll([
+        _RelatedStatuteInfo(
+            '消保法第 19 條', '通訊交易 7 天無條件解除契約之本權利。', 'statute-消費者保護法-19'),
+        _RelatedStatuteInfo(
+            '民法第 260 條', '解除契約妨礙損害賠償請求權之適用界限。', 'statute-民法-260'),
+      ]);
+    } else if (statuteTitle.contains('刑法') && statuteTitle.contains('339')) {
+      list.addAll([
+        _RelatedStatuteInfo(
+            '民法第 184 條', '因故意或過失不法侵害他人權利之侵權行為損害賠償義務。', 'statute-民法-184'),
+        _RelatedStatuteInfo(
+            '民法第 179 條', '無法律上原因受有利益致他人受損之不當得利返還義務。', 'statute-民法-179'),
+      ]);
+    } else if (statuteTitle.contains('民法') && statuteTitle.contains('421')) {
+      list.addAll([
+        _RelatedStatuteInfo(
+            '民法第 440 條', '承租人租金支付遲延時，出租人終止契約之限制。', 'statute-民法-440'),
+        _RelatedStatuteInfo(
+            '民法第 429 條', '租賃物修繕義務之歸屬與費用負擔之預設規定。', 'statute-民法-429'),
+      ]);
+    } else {
+      list.addAll([
+        _RelatedStatuteInfo(
+            '民法第 184 條', '一般侵權行為之基本損害賠償請求權依據。', 'statute-民法-184'),
+        _RelatedStatuteInfo('民法第 179 條', '一般不當得利之返還請求權依據。', 'statute-民法-179'),
+      ]);
+    }
+
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor =
+        isDark ? const Color(0xFF33A88D) : _SearchColors.primary;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.alt_route_rounded, color: primaryColor, size: 16.sp),
+            SizedBox(width: 6.w),
+            Text('關聯互補條文推薦 (Links)', style: _SearchText.captionStrong(context)),
+          ],
+        ),
+        SizedBox(height: 8.h),
+        Wrap(
+          spacing: 8.w,
+          runSpacing: 8.h,
+          children: list.map((info) {
+            return InkWell(
+              onTap: () {
+                onNavigate(_SearchResult(
+                  type: _ResultType.statute,
+                  title: info.title,
+                  summary: info.summary,
+                  source: '法規詳情・施行中',
+                  query: info.title.replaceAll(' ', ''),
+                  id: info.id,
+                ));
+              },
+              borderRadius: BorderRadius.circular(12.r),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                decoration: BoxDecoration(
+                  color: isDark ? const Color(0xFF1E2430) : Colors.white,
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(
+                    color: isDark
+                        ? const Color(0xFF2C3545)
+                        : _SearchColors.border.withValues(alpha: 0.6),
+                    width: 0.6.w,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.link_rounded, color: primaryColor, size: 12.sp),
+                    SizedBox(width: 4.w),
+                    Text(info.title,
+                        style: _SearchText.captionStrong(context)
+                            .copyWith(fontSize: 11.sp)),
+                  ],
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+}
+
+class _RelatedStatuteInfo {
+  const _RelatedStatuteInfo(this.title, this.summary, this.id);
+  final String title;
+  final String summary;
+  final String id;
 }
 
 class _IconBox extends StatelessWidget {
@@ -3867,13 +4987,15 @@ class _PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryBg = isDark ? const Color(0xFF33A88D) : _SearchColors.primary;
     return SizedBox(
       width: double.infinity,
       height: 46.h,
       child: FilledButton(
         onPressed: onPressed,
         style: FilledButton.styleFrom(
-          backgroundColor: _SearchColors.primary,
+          backgroundColor: primaryBg,
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(999.r)),
@@ -3892,14 +5014,18 @@ class _SecondaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor =
+        isDark ? const Color(0xFF33A88D) : _SearchColors.primary;
+    final borderColor = isDark ? const Color(0xFF2C3545) : _SearchColors.border;
     return SizedBox(
       width: double.infinity,
       height: 42.h,
       child: OutlinedButton(
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
-          foregroundColor: _SearchColors.primary,
-          side: const BorderSide(color: _SearchColors.border),
+          foregroundColor: primaryColor,
+          side: BorderSide(color: borderColor),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
         ),
@@ -3927,6 +5053,8 @@ class _SearchResult {
     this.sourceUrl = '',
     this.officialUrl = '',
     this.updatedAt,
+    this.destination = '',
+    this.id = '',
   });
 
   factory _SearchResult.fromRepository(SearchResultItem item) {
@@ -3944,6 +5072,8 @@ class _SearchResult {
       sourceUrl: item.sourceUrl,
       officialUrl: item.officialUrl,
       updatedAt: item.updatedAt,
+      destination: item.destination,
+      id: item.id,
     );
   }
 
@@ -3955,6 +5085,8 @@ class _SearchResult {
   final String sourceUrl;
   final String officialUrl;
   final DateTime? updatedAt;
+  final String destination;
+  final String id;
 
   String get preferredSourceUrl =>
       officialUrl.trim().isNotEmpty ? officialUrl.trim() : sourceUrl.trim();
@@ -3988,6 +5120,7 @@ _ResultType _resultTypeFor(SearchResultType type) {
 }
 
 String _interactionIdFor(_SearchResult item) {
+  if (item.id.isNotEmpty) return item.id;
   final prefix = switch (item.type) {
     _ResultType.assistant => 'assistant',
     _ResultType.statute => 'statute',
@@ -4013,55 +5146,76 @@ class _SearchAsset {
 }
 
 class _SearchText {
-  static TextStyle hero() => TextStyle(
-      color: _SearchColors.primary,
+  static Color _textColor(BuildContext? context) {
+    if (context == null) return _SearchColors.text;
+    return Theme.of(context).brightness == Brightness.dark
+        ? const Color(0xFFE5E9E6)
+        : _SearchColors.text;
+  }
+
+  static Color _mutedTextColor(BuildContext? context) {
+    if (context == null) return _SearchColors.mutedText;
+    return Theme.of(context).brightness == Brightness.dark
+        ? const Color(0xFFA4B2AB)
+        : _SearchColors.mutedText;
+  }
+
+  static Color _primaryColor(BuildContext? context) {
+    if (context == null) return _SearchColors.primary;
+    return Theme.of(context).brightness == Brightness.dark
+        ? const Color(0xFF33A88D)
+        : _SearchColors.primary;
+  }
+
+  static TextStyle hero([BuildContext? context]) => TextStyle(
+      color: _primaryColor(context),
       fontSize: 28.sp,
       fontWeight: FontWeight.w900,
       height: 1.05);
-  static TextStyle heroSmall() => TextStyle(
-      color: _SearchColors.text,
+  static TextStyle heroSmall([BuildContext? context]) => TextStyle(
+      color: _textColor(context),
       fontSize: 20.sp,
       fontWeight: FontWeight.w900,
       height: 1.22);
-  static TextStyle navTitle() => TextStyle(
-      color: _SearchColors.text, fontSize: 19.sp, fontWeight: FontWeight.w900);
-  static TextStyle section() => TextStyle(
-      color: _SearchColors.text,
+  static TextStyle navTitle([BuildContext? context]) => TextStyle(
+      color: _textColor(context), fontSize: 19.sp, fontWeight: FontWeight.w900);
+  static TextStyle section([BuildContext? context]) => TextStyle(
+      color: _textColor(context),
       fontSize: 16.sp,
       fontWeight: FontWeight.w900,
       height: 1.3);
-  static TextStyle tileTitle() => TextStyle(
-      color: _SearchColors.text,
+  static TextStyle tileTitle([BuildContext? context]) => TextStyle(
+      color: _textColor(context),
       fontSize: 13.sp,
       fontWeight: FontWeight.w900,
       height: 1.3);
-  static TextStyle bodyStrong() => TextStyle(
-      color: _SearchColors.text,
+  static TextStyle bodyStrong([BuildContext? context]) => TextStyle(
+      color: _textColor(context),
       fontSize: 12.sp,
       fontWeight: FontWeight.w700,
       height: 1.55);
-  static TextStyle body() => TextStyle(
-      color: _SearchColors.mutedText,
+  static TextStyle body([BuildContext? context]) => TextStyle(
+      color: _mutedTextColor(context),
       fontSize: 12.sp,
       fontWeight: FontWeight.w600,
       height: 1.45);
-  static TextStyle caption() => TextStyle(
-      color: _SearchColors.mutedText,
+  static TextStyle caption([BuildContext? context]) => TextStyle(
+      color: _mutedTextColor(context),
       fontSize: 10.8.sp,
       fontWeight: FontWeight.w600,
       height: 1.3);
-  static TextStyle captionStrong() => TextStyle(
-      color: _SearchColors.text,
+  static TextStyle captionStrong([BuildContext? context]) => TextStyle(
+      color: _textColor(context),
       fontSize: 11.sp,
       fontWeight: FontWeight.w900,
       height: 1.25);
-  static TextStyle tab() => TextStyle(
-      color: _SearchColors.text,
+  static TextStyle tab([BuildContext? context]) => TextStyle(
+      color: _textColor(context),
       fontSize: 13.sp,
       fontWeight: FontWeight.w900,
       height: 1.2);
-  static TextStyle action() => TextStyle(
-      color: _SearchColors.primary,
+  static TextStyle action([BuildContext? context]) => TextStyle(
+      color: _primaryColor(context),
       fontSize: 12.sp,
       fontWeight: FontWeight.w900);
   static TextStyle bubble() => TextStyle(

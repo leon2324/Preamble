@@ -26,7 +26,7 @@ class _CaseTimeMachineSearchPageState extends State<CaseTimeMachineSearchPage> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
   String _selectedCategory = '全部';
-  
+
   List<CaseBook> _searchResults = [];
   bool _isSearching = false;
   Timer? _debounce;
@@ -37,18 +37,19 @@ class _CaseTimeMachineSearchPageState extends State<CaseTimeMachineSearchPage> {
         _isSearching = true;
       });
     }
-    
+
     try {
       final category = _selectedCategory == '全部' ? null : _selectedCategory;
       final query = _searchQuery.trim().isEmpty ? null : _searchQuery;
-      
-      final results = await CaseTimeMachineRepository.instance.getCasesPaginated(
+
+      final results =
+          await CaseTimeMachineRepository.instance.getCasesPaginated(
         50, // 搜尋最多載入 50 筆
-        0,  // offset
+        0, // offset
         category: category,
         query: query,
       );
-      
+
       if (mounted) {
         setState(() {
           _searchResults = results;
@@ -343,16 +344,17 @@ class _CaseTimeMachineSearchPageState extends State<CaseTimeMachineSearchPage> {
                       )
                     : results.isEmpty
                         ? _buildEmptyState()
-                    : ListView.separated(
-                        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                        padding: EdgeInsets.fromLTRB(18.w, 0, 18.w, 24.h),
-                        itemCount: results.length,
-                        separatorBuilder: (_, __) => SizedBox(height: 12.h),
-                        itemBuilder: (context, index) {
-                          final book = results[index];
-                          return _buildSearchCaseCard(context, book);
-                        },
-                      ),
+                        : ListView.separated(
+                            keyboardDismissBehavior:
+                                ScrollViewKeyboardDismissBehavior.onDrag,
+                            padding: EdgeInsets.fromLTRB(18.w, 0, 18.w, 24.h),
+                            itemCount: results.length,
+                            separatorBuilder: (_, __) => SizedBox(height: 12.h),
+                            itemBuilder: (context, index) {
+                              final book = results[index];
+                              return _buildSearchCaseCard(context, book);
+                            },
+                          ),
               ),
             ],
           ),

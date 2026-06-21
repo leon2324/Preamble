@@ -5,7 +5,8 @@ import 'package:lawapp/features/case_time_machine/models/case_time_machine_model
 
 class CaseDossierSqliteDb {
   CaseDossierSqliteDb._privateConstructor();
-  static final CaseDossierSqliteDb instance = CaseDossierSqliteDb._privateConstructor();
+  static final CaseDossierSqliteDb instance =
+      CaseDossierSqliteDb._privateConstructor();
 
   static Database? _database;
 
@@ -87,8 +88,22 @@ class CaseDossierSqliteDb {
   Future<void> clearLegacyCases() async {
     final db = await database;
     final legacyIds = [
-      '318', '799', '499', '520', 'hung-2013', 'ding-2015',
-      '101', '102', '103', '104', '105', '106', '124', '161', '228', 'cheng-2021'
+      '318',
+      '799',
+      '499',
+      '520',
+      'hung-2013',
+      'ding-2015',
+      '101',
+      '102',
+      '103',
+      '104',
+      '105',
+      '106',
+      '124',
+      '161',
+      '228',
+      'cheng-2021'
     ];
     final batch = db.batch();
     for (final id in legacyIds) {
@@ -125,76 +140,101 @@ class CaseDossierSqliteDb {
       'procedureStage': book.basicInfo.procedureStage,
       'courtLevel': book.basicInfo.courtLevel,
       'updatedAt': book.basicInfo.updatedAt,
-      'timeline': jsonEncode(book.timeline.map((item) => {
-        'dateLabel': item.dateLabel,
-        'title': item.title,
-        'description': item.description,
-      }).toList()),
-      'people': jsonEncode(book.people.map((p) => {
-        'role': p.role,
-        'description': p.description,
-      }).toList()),
-      'legalIssues': jsonEncode(book.legalIssues.map((issue) => {
-        'title': issue.title,
-        'plainExplanation': issue.plainExplanation,
-        'relationToCase': issue.relationToCase,
-        'relatedLawIds': issue.relatedLawIds,
-      }).toList()),
-      'relatedLaws': jsonEncode(book.relatedLaws.map((law) => {
-        'lawName': law.lawName,
-        'articleNumber': law.articleNumber,
-        'plainSummary': law.plainSummary,
-        'relationToCase': law.relationToCase,
-      }).toList()),
-      'relatedCases': jsonEncode(book.relatedCases.map((rc) => {
-        'caseId': rc.caseId,
-        'title': rc.title,
-        'yearLabel': rc.yearLabel,
-        'reason': rc.reason,
-      }).toList()),
-      'sources': jsonEncode(book.sources.map((s) => {
-        'title': s.title,
-        'sourceType': s.sourceType,
-        'updatedAt': s.updatedAt,
-        'url': s.url,
-      }).toList()),
-      'concurringDissentingOpinions': jsonEncode(book.concurringDissentingOpinions.map((o) => {
-        'justiceName': o.justiceName,
-        'opinionType': o.opinionType,
-        'summary': o.summary,
-      }).toList()),
-      'courtArguments': jsonEncode(book.courtArguments.map((a) => {
-        'partyName': a.partyName,
-        'mainPoint': a.mainPoint,
-      }).toList()),
-      'expertOpinions': jsonEncode(book.expertOpinions.map((o) => {
-        'expertName': o.expertName,
-        'title': o.title,
-        'summary': o.summary,
-      }).toList()),
-      'mediaReferences': jsonEncode(book.mediaReferences.map((m) => {
-        'title': m.title,
-        'platform': m.platform,
-        'url': m.url,
-        'mediaType': m.mediaType,
-      }).toList()),
-      'images': jsonEncode(book.images.map((img) => {
-        'url': img.url,
-        'source': img.source,
-      }).toList()),
+      'timeline': jsonEncode(book.timeline
+          .map((item) => {
+                'dateLabel': item.dateLabel,
+                'title': item.title,
+                'description': item.description,
+              })
+          .toList()),
+      'people': jsonEncode(book.people
+          .map((p) => {
+                'role': p.role,
+                'description': p.description,
+              })
+          .toList()),
+      'legalIssues': jsonEncode(book.legalIssues
+          .map((issue) => {
+                'title': issue.title,
+                'plainExplanation': issue.plainExplanation,
+                'relationToCase': issue.relationToCase,
+                'relatedLawIds': issue.relatedLawIds,
+              })
+          .toList()),
+      'relatedLaws': jsonEncode(book.relatedLaws
+          .map((law) => {
+                'lawName': law.lawName,
+                'articleNumber': law.articleNumber,
+                'plainSummary': law.plainSummary,
+                'relationToCase': law.relationToCase,
+              })
+          .toList()),
+      'relatedCases': jsonEncode(book.relatedCases
+          .map((rc) => {
+                'caseId': rc.caseId,
+                'title': rc.title,
+                'yearLabel': rc.yearLabel,
+                'reason': rc.reason,
+              })
+          .toList()),
+      'sources': jsonEncode(book.sources
+          .map((s) => {
+                'title': s.title,
+                'sourceType': s.sourceType,
+                'updatedAt': s.updatedAt,
+                'url': s.url,
+              })
+          .toList()),
+      'concurringDissentingOpinions':
+          jsonEncode(book.concurringDissentingOpinions
+              .map((o) => {
+                    'justiceName': o.justiceName,
+                    'opinionType': o.opinionType,
+                    'summary': o.summary,
+                  })
+              .toList()),
+      'courtArguments': jsonEncode(book.courtArguments
+          .map((a) => {
+                'partyName': a.partyName,
+                'mainPoint': a.mainPoint,
+              })
+          .toList()),
+      'expertOpinions': jsonEncode(book.expertOpinions
+          .map((o) => {
+                'expertName': o.expertName,
+                'title': o.title,
+                'summary': o.summary,
+              })
+          .toList()),
+      'mediaReferences': jsonEncode(book.mediaReferences
+          .map((m) => {
+                'title': m.title,
+                'platform': m.platform,
+                'url': m.url,
+                'mediaType': m.mediaType,
+              })
+          .toList()),
+      'images': jsonEncode(book.images
+          .map((img) => {
+                'url': img.url,
+                'source': img.source,
+              })
+          .toList()),
     };
   }
 
   CaseBook _mapToCaseBook(Map<String, dynamic> map) {
-    final tagsList = List<String>.from(jsonDecode(map['tags'] as String? ?? '[]'));
-    
-    final timelineList = (jsonDecode(map['timeline'] as String? ?? '[]') as List)
-        .map((item) => CaseTimelineItem(
-              dateLabel: item['dateLabel'] as String? ?? '',
-              title: item['title'] as String? ?? '',
-              description: item['description'] as String? ?? '',
-            ))
-        .toList();
+    final tagsList =
+        List<String>.from(jsonDecode(map['tags'] as String? ?? '[]'));
+
+    final timelineList =
+        (jsonDecode(map['timeline'] as String? ?? '[]') as List)
+            .map((item) => CaseTimelineItem(
+                  dateLabel: item['dateLabel'] as String? ?? '',
+                  title: item['title'] as String? ?? '',
+                  description: item['description'] as String? ?? '',
+                ))
+            .toList();
 
     final peopleList = (jsonDecode(map['people'] as String? ?? '[]') as List)
         .map((item) => CasePersonRole(
@@ -203,32 +243,36 @@ class CaseDossierSqliteDb {
             ))
         .toList();
 
-    final legalIssuesList = (jsonDecode(map['legalIssues'] as String? ?? '[]') as List)
-        .map((item) => LegalIssue(
-              title: item['title'] as String? ?? '',
-              plainExplanation: item['plainExplanation'] as String? ?? '',
-              relationToCase: item['relationToCase'] as String? ?? '',
-              relatedLawIds: List<String>.from(item['relatedLawIds'] as List? ?? []),
-            ))
-        .toList();
+    final legalIssuesList =
+        (jsonDecode(map['legalIssues'] as String? ?? '[]') as List)
+            .map((item) => LegalIssue(
+                  title: item['title'] as String? ?? '',
+                  plainExplanation: item['plainExplanation'] as String? ?? '',
+                  relationToCase: item['relationToCase'] as String? ?? '',
+                  relatedLawIds:
+                      List<String>.from(item['relatedLawIds'] as List? ?? []),
+                ))
+            .toList();
 
-    final relatedLawsList = (jsonDecode(map['relatedLaws'] as String? ?? '[]') as List)
-        .map((item) => RelatedLaw(
-              lawName: item['lawName'] as String? ?? '',
-              articleNumber: item['articleNumber'] as String? ?? '',
-              plainSummary: item['plainSummary'] as String? ?? '',
-              relationToCase: item['relationToCase'] as String? ?? '',
-            ))
-        .toList();
+    final relatedLawsList =
+        (jsonDecode(map['relatedLaws'] as String? ?? '[]') as List)
+            .map((item) => RelatedLaw(
+                  lawName: item['lawName'] as String? ?? '',
+                  articleNumber: item['articleNumber'] as String? ?? '',
+                  plainSummary: item['plainSummary'] as String? ?? '',
+                  relationToCase: item['relationToCase'] as String? ?? '',
+                ))
+            .toList();
 
-    final relatedCasesList = (jsonDecode(map['relatedCases'] as String? ?? '[]') as List)
-        .map((item) => RelatedCase(
-              caseId: item['caseId'] as String? ?? '',
-              title: item['title'] as String? ?? '',
-              yearLabel: item['yearLabel'] as String? ?? '',
-              reason: item['reason'] as String? ?? '',
-            ))
-        .toList();
+    final relatedCasesList =
+        (jsonDecode(map['relatedCases'] as String? ?? '[]') as List)
+            .map((item) => RelatedCase(
+                  caseId: item['caseId'] as String? ?? '',
+                  title: item['title'] as String? ?? '',
+                  yearLabel: item['yearLabel'] as String? ?? '',
+                  reason: item['reason'] as String? ?? '',
+                ))
+            .toList();
 
     final sourcesList = (jsonDecode(map['sources'] as String? ?? '[]') as List)
         .map((item) => CaseSource(
@@ -239,37 +283,42 @@ class CaseDossierSqliteDb {
             ))
         .toList();
 
-    final concurringDissentingOpinionsList = (jsonDecode(map['concurringDissentingOpinions'] as String? ?? '[]') as List)
-        .map((item) => CaseOpinion(
-              justiceName: item['justiceName'] as String? ?? '',
-              opinionType: item['opinionType'] as String? ?? '',
-              summary: item['summary'] as String? ?? '',
-            ))
-        .toList();
+    final concurringDissentingOpinionsList =
+        (jsonDecode(map['concurringDissentingOpinions'] as String? ?? '[]')
+                as List)
+            .map((item) => CaseOpinion(
+                  justiceName: item['justiceName'] as String? ?? '',
+                  opinionType: item['opinionType'] as String? ?? '',
+                  summary: item['summary'] as String? ?? '',
+                ))
+            .toList();
 
-    final courtArgumentsList = (jsonDecode(map['courtArguments'] as String? ?? '[]') as List)
-        .map((item) => CourtArgument(
-              partyName: item['partyName'] as String? ?? '',
-              mainPoint: item['mainPoint'] as String? ?? '',
-            ))
-        .toList();
+    final courtArgumentsList =
+        (jsonDecode(map['courtArguments'] as String? ?? '[]') as List)
+            .map((item) => CourtArgument(
+                  partyName: item['partyName'] as String? ?? '',
+                  mainPoint: item['mainPoint'] as String? ?? '',
+                ))
+            .toList();
 
-    final expertOpinionsList = (jsonDecode(map['expertOpinions'] as String? ?? '[]') as List)
-        .map((item) => ExpertOpinion(
-              expertName: item['expertName'] as String? ?? '',
-              title: item['title'] as String? ?? '',
-              summary: item['summary'] as String? ?? '',
-            ))
-        .toList();
+    final expertOpinionsList =
+        (jsonDecode(map['expertOpinions'] as String? ?? '[]') as List)
+            .map((item) => ExpertOpinion(
+                  expertName: item['expertName'] as String? ?? '',
+                  title: item['title'] as String? ?? '',
+                  summary: item['summary'] as String? ?? '',
+                ))
+            .toList();
 
-    final mediaReferencesList = (jsonDecode(map['mediaReferences'] as String? ?? '[]') as List)
-        .map((item) => MediaReference(
-              title: item['title'] as String? ?? '',
-              platform: item['platform'] as String? ?? '',
-              url: item['url'] as String? ?? '',
-              mediaType: item['mediaType'] as String? ?? '',
-            ))
-        .toList();
+    final mediaReferencesList =
+        (jsonDecode(map['mediaReferences'] as String? ?? '[]') as List)
+            .map((item) => MediaReference(
+                  title: item['title'] as String? ?? '',
+                  platform: item['platform'] as String? ?? '',
+                  url: item['url'] as String? ?? '',
+                  mediaType: item['mediaType'] as String? ?? '',
+                ))
+            .toList();
 
     final imagesList = (jsonDecode(map['images'] as String? ?? '[]') as List)
         .map((item) => CaseImage(
@@ -381,7 +430,8 @@ class CaseDossierSqliteDb {
     final likeQuery = '%$query%';
     final List<Map<String, dynamic>> maps = await db.query(
       'cases',
-      where: 'titleZh LIKE ? OR category LIKE ? OR shortDescription LIKE ? OR background LIKE ?',
+      where:
+          'titleZh LIKE ? OR category LIKE ? OR shortDescription LIKE ? OR background LIKE ?',
       whereArgs: [likeQuery, likeQuery, likeQuery, likeQuery],
     );
     return maps.map((map) => _mapToCaseBook(map)).toList();

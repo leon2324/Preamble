@@ -9,7 +9,7 @@ import 'package:lawapp/pages/learning/know_law_page.dart';
 /// 台灣繁體中文教學註解：
 /// 本元件展示在記事頁頂部，左側為小法助頭像，右側為對話氣泡，
 /// 氣泡內會定期輪播熱門時事法律提問。點擊後可將當前問題自動帶入
-/// 「小法助提問頁」 (LawAssistantSearchPage) 進行深度整理。
+/// 「小法助提問頁」 (LawAssistantChatPage) 進行深度整理。
 class AssistantPromptBubble extends StatefulWidget {
   const AssistantPromptBubble({
     super.key,
@@ -72,7 +72,7 @@ class _AssistantPromptBubbleState extends State<AssistantPromptBubble> {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) => LawAssistantSearchPage(initialPrompt: currentPrompt),
+            builder: (_) => LawAssistantChatPage(initialPrompt: currentPrompt),
           ),
         );
       },

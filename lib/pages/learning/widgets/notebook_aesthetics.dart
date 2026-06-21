@@ -37,11 +37,12 @@ class NotebookBackground extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final gameState = LearningGameState.instance;
     final paperStyle = gameState.notebookPaperStyle;
-    
+
     // 深色模式下的格線顏色
     final actualLineColor = isDark ? const Color(0xFF1E262F) : lineColor;
     final actualMarginColor = isDark ? const Color(0xFF3A2327) : marginColor;
-    final actualBgColor = isDark ? const Color(0xFF0F1216) : const Color(0xFFFCFBF9);
+    final actualBgColor =
+        isDark ? const Color(0xFF0F1216) : const Color(0xFFFCFBF9);
 
     return Container(
       color: actualBgColor,
@@ -119,9 +120,11 @@ class _GridPainter extends CustomPainter {
         ..strokeWidth = 1.2.w;
 
       // 垂直分割線
-      canvas.drawLine(Offset(cueDivider, 0), Offset(cueDivider, summaryDivider), dividerPaint);
+      canvas.drawLine(Offset(cueDivider, 0), Offset(cueDivider, summaryDivider),
+          dividerPaint);
       // 水平分割線
-      canvas.drawLine(Offset(0, summaryDivider), Offset(size.width, summaryDivider), dividerPaint);
+      canvas.drawLine(Offset(0, summaryDivider),
+          Offset(size.width, summaryDivider), dividerPaint);
     }
 
     // 畫左側紅色筆記本邊緣線 (僅在非康乃爾樣式下畫，避免干擾康乃爾版面)
@@ -129,9 +132,10 @@ class _GridPainter extends CustomPainter {
       final marginPaint = Paint()
         ..color = isDark ? const Color(0xFF1E262F) : lineColor.withOpacity(0.8)
         ..strokeWidth = 1.w;
-      
+
       final double leftMargin = 8.w;
-      canvas.drawLine(Offset(leftMargin, 0), Offset(leftMargin, size.height), marginPaint);
+      canvas.drawLine(
+          Offset(leftMargin, 0), Offset(leftMargin, size.height), marginPaint);
     }
   }
 
@@ -194,7 +198,8 @@ class NotebookCard extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12.r),
         child: Padding(
-          padding: padding ?? EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+          padding:
+              padding ?? EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
           child: child,
         ),
       ),
@@ -226,14 +231,16 @@ class _PaperClipPainter extends CustomPainter {
     path.moveTo(size.width * 0.5, size.height * 0.85);
     path.lineTo(size.width * 0.5, size.height * 0.25);
     path.arcTo(
-      Rect.fromLTWH(size.width * 0.1, size.height * 0.05, size.width * 0.8, size.height * 0.4),
+      Rect.fromLTWH(size.width * 0.1, size.height * 0.05, size.width * 0.8,
+          size.height * 0.4),
       3.14,
       3.14,
       false,
     );
     path.lineTo(size.width * 0.9, size.height * 0.65);
     path.arcTo(
-      Rect.fromLTWH(size.width * 0.3, size.height * 0.45, size.width * 0.6, size.height * 0.4),
+      Rect.fromLTWH(size.width * 0.3, size.height * 0.45, size.width * 0.6,
+          size.height * 0.4),
       0,
       3.14,
       false,
@@ -288,15 +295,24 @@ class _BinderRingPainter extends CustomPainter {
     final holePaint = Paint()
       ..color = isDark ? const Color(0xFF0F1216) : const Color(0xFFD2C7B8)
       ..style = PaintingStyle.fill;
-    
-    canvas.drawCircle(Offset(size.width * 0.7, size.height * 0.5), 3.w, holePaint);
+
+    canvas.drawCircle(
+        Offset(size.width * 0.7, size.height * 0.5), 3.w, holePaint);
 
     // 繪製金屬線圈
     final ringPaint = Paint()
       ..shader = LinearGradient(
         colors: isDark
-            ? [const Color(0xFF4A5560), const Color(0xFF9EAEB8), const Color(0xFF4A5560)]
-            : [const Color(0xFF7F8C8D), const Color(0xFFBDC3C7), const Color(0xFF7F8C8D)],
+            ? [
+                const Color(0xFF4A5560),
+                const Color(0xFF9EAEB8),
+                const Color(0xFF4A5560)
+              ]
+            : [
+                const Color(0xFF7F8C8D),
+                const Color(0xFFBDC3C7),
+                const Color(0xFF7F8C8D)
+              ],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height))

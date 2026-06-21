@@ -19,7 +19,8 @@ class CaseOpinionSpectrumPage extends StatefulWidget {
   final CaseBook book;
 
   @override
-  State<CaseOpinionSpectrumPage> createState() => _CaseOpinionSpectrumPageState();
+  State<CaseOpinionSpectrumPage> createState() =>
+      _CaseOpinionSpectrumPageState();
 }
 
 class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
@@ -57,21 +58,24 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
           'value': 15.0,
           'label': '法治安定派',
           'shortTitle': '法安定性優先',
-          'fullText': '佔領國會、入侵行政機關本質上已逾越集會遊行紅線，造成重大秩序混亂。若不予追究，將嚴重損害法律尊嚴，誘發日後更多法治失序。',
+          'fullText':
+              '佔領國會、入侵行政機關本質上已逾越集會遊行紅線，造成重大秩序混亂。若不予追究，將嚴重損害法律尊嚴，誘發日後更多法治失序。',
           'color': const Color(0xFFC62828),
         },
         {
           'value': 50.0,
           'label': '理性法規派',
           'shortTitle': '手段利益衡平',
-          'fullText': '佔領立法院表達政治訴求或可理解，但後續衝撞行政院等劇烈手段，已超出合理集會保障。司法應區分不同主嫌手段，做衡平裁判而非全盤豁免。',
+          'fullText':
+              '佔領立法院表達政治訴求或可理解，但後續衝撞行政院等劇烈手段，已超出合理集會保障。司法應區分不同主嫌手段，做衡平裁判而非全盤豁免。',
           'color': const Color(0xFFEF6C00),
         },
         {
           'value': 85.0,
           'label': '抵抗權保護派',
           'shortTitle': '公民不服從防線',
-          'fullText': '兩岸服貿審查出現國會程序重大瑕疵，人民在窮盡救濟管道後，佔領議場是阻卻違法的最後手段。司法理當肯定「公民不服從」對民主秩序的防禦功能。',
+          'fullText':
+              '兩岸服貿審查出現國會程序重大瑕疵，人民在窮盡救濟管道後，佔領議場是阻卻違法的最後手段。司法理當肯定「公民不服從」對民主秩序的防禦功能。',
           'color': const Color(0xFF2E7D32),
         },
       ];
@@ -180,7 +184,8 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                 children: [
                   Text(
                     '案名：${widget.book.shortTitleZh.isNotEmpty ? widget.book.shortTitleZh : widget.book.titleZh}',
-                    style: CaseTimeMachineTextStyles.cardTitle(context).copyWith(
+                    style:
+                        CaseTimeMachineTextStyles.cardTitle(context).copyWith(
                       fontSize: 12.sp,
                     ),
                   ),
@@ -206,13 +211,15 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16.r),
                       boxShadow: [CaseTimeMachineShadows.softShadow],
-                      border: Border.all(color: CaseTimeMachineColors.borderLight),
+                      border:
+                          Border.all(color: CaseTimeMachineColors.borderLight),
                     ),
                     child: Column(
                       children: [
                         Text(
                           '⚖️ 拖曳金色滑鈕表達你的位置：',
-                          style: CaseTimeMachineTextStyles.cardTitle(context).copyWith(
+                          style: CaseTimeMachineTextStyles.cardTitle(context)
+                              .copyWith(
                             fontSize: 13.sp,
                           ),
                         ),
@@ -269,17 +276,23 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                             Positioned.fill(
                               child: LayoutBuilder(
                                 builder: (context, constraints) {
-                                  final double trackWidth = constraints.maxWidth - 20.w;
+                                  final double trackWidth =
+                                      constraints.maxWidth - 20.w;
                                   return Stack(
                                     children: [
                                       for (final node in nodes)
                                         Positioned(
-                                          left: 10.w + ((node['value'] as double) / 100 * trackWidth) - 18.w,
+                                          left: 10.w +
+                                              ((node['value'] as double) /
+                                                  100 *
+                                                  trackWidth) -
+                                              18.w,
                                           bottom: 0,
                                           child: GestureDetector(
                                             onTap: () {
                                               setState(() {
-                                                _currentValue = node['value'] as double;
+                                                _currentValue =
+                                                    node['value'] as double;
                                               });
                                             },
                                             child: Column(
@@ -292,7 +305,8 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                                                     color: Colors.white,
                                                     shape: BoxShape.circle,
                                                     border: Border.all(
-                                                      color: node['color'] as Color,
+                                                      color: node['color']
+                                                          as Color,
                                                       width: 2.5,
                                                     ),
                                                   ),
@@ -303,7 +317,8 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                                                   style: TextStyle(
                                                     fontSize: 8.5.sp,
                                                     fontWeight: FontWeight.bold,
-                                                    color: node['color'] as Color,
+                                                    color:
+                                                        node['color'] as Color,
                                                   ),
                                                 ),
                                               ],
@@ -325,9 +340,11 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                             activeTrackColor: Colors.transparent,
                             inactiveTrackColor: Colors.transparent,
                             thumbColor: CaseTimeMachineColors.accentGold,
-                            overlayColor: CaseTimeMachineColors.accentGold.withValues(alpha: 0.15),
+                            overlayColor: CaseTimeMachineColors.accentGold
+                                .withValues(alpha: 0.15),
                             trackHeight: 0,
-                            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
+                            thumbShape: const RoundSliderThumbShape(
+                                enabledThumbRadius: 10),
                           ),
                           child: Slider(
                             value: _currentValue,
@@ -345,16 +362,18 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text('秩序與安定性',
-                                style: CaseTimeMachineTextStyles.caption(context)
-                                    .copyWith(fontWeight: FontWeight.bold)),
+                                style:
+                                    CaseTimeMachineTextStyles.caption(context)
+                                        .copyWith(fontWeight: FontWeight.bold)),
                             Text('您的選擇：${_currentValue.toInt()}%',
                                 style: TextStyle(
                                     fontSize: 11.sp,
                                     fontWeight: FontWeight.bold,
                                     color: CaseTimeMachineColors.primaryGreen)),
                             Text('權益與抵抗權',
-                                style: CaseTimeMachineTextStyles.caption(context)
-                                    .copyWith(fontWeight: FontWeight.bold)),
+                                style:
+                                    CaseTimeMachineTextStyles.caption(context)
+                                        .copyWith(fontWeight: FontWeight.bold)),
                           ],
                         ),
                       ],
@@ -367,10 +386,12 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                     duration: const Duration(milliseconds: 300),
                     padding: EdgeInsets.all(16.w),
                     decoration: BoxDecoration(
-                      color: (closestNode['color'] as Color).withValues(alpha: 0.04),
+                      color: (closestNode['color'] as Color)
+                          .withValues(alpha: 0.04),
                       borderRadius: BorderRadius.circular(16.r),
                       border: Border.all(
-                        color: (closestNode['color'] as Color).withValues(alpha: 0.28),
+                        color: (closestNode['color'] as Color)
+                            .withValues(alpha: 0.28),
                         width: 1.5,
                       ),
                     ),
@@ -380,7 +401,8 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                         Row(
                           children: [
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8.w, vertical: 4.h),
                               decoration: BoxDecoration(
                                 color: closestNode['color'] as Color,
                                 borderRadius: BorderRadius.circular(6.r),
@@ -397,7 +419,8 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                             SizedBox(width: 8.w),
                             Text(
                               '偏向此區間的法理邏輯：',
-                              style: CaseTimeMachineTextStyles.caption(context).copyWith(
+                              style: CaseTimeMachineTextStyles.caption(context)
+                                  .copyWith(
                                 color: CaseTimeMachineColors.textPrimary,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -407,7 +430,8 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                         SizedBox(height: 10.h),
                         Text(
                           closestNode['fullText'] as String,
-                          style: CaseTimeMachineTextStyles.body(context).copyWith(
+                          style:
+                              CaseTimeMachineTextStyles.body(context).copyWith(
                             fontSize: 12.sp,
                             color: CaseTimeMachineColors.textPrimary,
                             height: 1.5,

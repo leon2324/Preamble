@@ -29,13 +29,20 @@ import 'dart:async';
 import 'dart:ui' show ImageFilter;
 
 part 'law_assistant/law_assistant_palette.dart';
-part 'law_assistant/law_assistant_search_page.dart';
-part 'law_assistant/law_assistant_prototype_widgets.dart';
+part 'law_assistant/legacy/law_assistant_search_page.dart';
+part 'law_assistant/legacy/law_assistant_prototype_widgets.dart';
 part 'law_assistant/law_assistant_chat_page.dart';
 
 /// 學習頁重構：單一 ListView 滾動大框架，結合方格紙手寫筆記本美學，全面採用 SVG 圖示
 class KnowLawPage extends StatefulWidget {
-  const KnowLawPage({super.key});
+  const KnowLawPage({
+    super.key,
+    this.initialTabIndex,
+    this.initialToolTab,
+  });
+
+  final int? initialTabIndex;
+  final String? initialToolTab;
 
   @override
   KnowLawPageState createState() => KnowLawPageState();
@@ -53,12 +60,34 @@ class KnowLawPageState extends State<KnowLawPage> {
   @override
   void initState() {
     super.initState();
+    if (widget.initialTabIndex != null) {
+      _selectedTabIndex = widget.initialTabIndex!;
+    }
+    if (widget.initialToolTab != null) {
+      _activeToolTab = widget.initialToolTab!;
+    }
     _initDailyTopics();
+  }
+
+  @override
+  void didUpdateWidget(covariant KnowLawPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialTabIndex != null) {
+      setState(() {
+        _selectedTabIndex = widget.initialTabIndex!;
+      });
+    }
+    if (widget.initialToolTab != null) {
+      setState(() {
+        _activeToolTab = widget.initialToolTab!;
+      });
+    }
   }
 
   Future<void> _initDailyTopics() async {
     try {
-      final topics = await SupabaseLearningService.instance.fetchDailyFeaturedTopics(DateTime.now());
+      final topics = await SupabaseLearningService.instance
+          .fetchDailyFeaturedTopics(DateTime.now());
       if (mounted) {
         setState(() {
           _dailyTopics = topics;
@@ -81,25 +110,45 @@ class KnowLawPageState extends State<KnowLawPage> {
     if (title.contains('租屋糾紛') || title.contains('租屋')) {
       return '租屋糾紛';
     }
-    if (title.contains('車禍事故') || title.contains('車禍') || title.contains('交通事故')) {
+    if (title.contains('車禍事故') ||
+        title.contains('車禍') ||
+        title.contains('交通事故')) {
       return '車禍事故';
     }
-    if (title.contains('職場權益') || title.contains('加班') || title.contains('勞基法') || title.contains('離職')) {
+    if (title.contains('職場權益') ||
+        title.contains('加班') ||
+        title.contains('勞基法') ||
+        title.contains('離職')) {
       return '職場權益';
     }
-    if (title.contains('網購消費') || title.contains('網購') || title.contains('消保法') || title.contains('退貨')) {
+    if (title.contains('網購消費') ||
+        title.contains('網購') ||
+        title.contains('消保法') ||
+        title.contains('退貨')) {
       return '網購消費';
     }
-    if (title.contains('個資隱私') || title.contains('個資') || title.contains('隱私') || title.contains('洩露')) {
+    if (title.contains('個資隱私') ||
+        title.contains('個資') ||
+        title.contains('隱私') ||
+        title.contains('洩露')) {
       return '個資隱私';
     }
-    if (title.contains('鄰里生活') || title.contains('漏水') || title.contains('天花板') || title.contains('鄰居')) {
+    if (title.contains('鄰里生活') ||
+        title.contains('漏水') ||
+        title.contains('天花板') ||
+        title.contains('鄰居')) {
       return '鄰里生活';
     }
-    if (title.contains('婚姻家庭') || title.contains('離婚') || title.contains('財產制') || title.contains('夫妻')) {
+    if (title.contains('婚姻家庭') ||
+        title.contains('離婚') ||
+        title.contains('財產制') ||
+        title.contains('夫妻')) {
       return '婚姻家庭';
     }
-    if (title.contains('防詐騙') || title.contains('詐騙') || title.contains('警示') || title.contains('人頭帳戶')) {
+    if (title.contains('防詐騙') ||
+        title.contains('詐騙') ||
+        title.contains('警示') ||
+        title.contains('人頭帳戶')) {
       return '防詐騙常識';
     }
     return '法律常識';
@@ -213,7 +262,7 @@ class KnowLawPageState extends State<KnowLawPage> {
 
   List<_LearningTopicOption> get _currentFeaturedTopicOptions {
     final List<_LearningTopicOption> options = [];
-    
+
     // 1. 優先放入客製化訂製專題
     for (final topic in _customTopics) {
       final isMain = topic.title == _activeTopic;
@@ -260,9 +309,10 @@ class KnowLawPageState extends State<KnowLawPage> {
   LearningTopicData _generateCustomTopicData(String prompt) {
     final category = _extractCategory(prompt);
     final keyText = prompt.trim().isNotEmpty ? prompt.trim() : '自訂法律疑難';
-    
+
     // 限制顯示長度，避免選單晶片文字過長
-    final shortKey = keyText.length > 8 ? '${keyText.substring(0, 8)}...' : keyText;
+    final shortKey =
+        keyText.length > 8 ? '${keyText.substring(0, 8)}...' : keyText;
     final topicTitle = '「$shortKey」專屬法律課堂';
 
     final step1Article = LearningMockArticle(
@@ -279,11 +329,13 @@ class KnowLawPageState extends State<KnowLawPage> {
       sections: [
         LearningMockSection(
           title: '觀念起點',
-          body: '在日常生活中，遇到「$keyText」的糾紛非常多。許多人一開始容易陷入情緒，但法律上最先看的是『雙方的法律關係』與『誰有請求權基礎』。',
+          body:
+              '在日常生活中，遇到「$keyText」的糾紛非常多。許多人一開始容易陷入情緒，但法律上最先看的是『雙方的法律關係』與『誰有請求權基礎』。',
         ),
         LearningMockSection(
           title: '初步解析',
-          body: '針對您關注的「$keyText」情境，我們需要先釐清這屬於民法契約糾紛（例如買賣、租賃契約）、還是侵權行為求償，或是特定的特別法保障範疇。',
+          body:
+              '針對您關注的「$keyText」情境，我們需要先釐清這屬於民法契約糾紛（例如買賣、租賃契約）、還是侵權行為求償，或是特定的特別法保障範疇。',
         ),
       ],
       category: category,
@@ -315,11 +367,13 @@ class KnowLawPageState extends State<KnowLawPage> {
       sections: [
         LearningMockSection(
           title: '案例情境',
-          body: '阿榮碰上了「$keyText」的情況。對方態度強硬，宣稱阿榮必須全額負責賠償。阿榮對此感到困惑，不知道法律上的權責界線到底在哪裡。',
+          body:
+              '阿榮碰上了「$keyText」的情況。對方態度強硬，宣稱阿榮必須全額負責賠償。阿榮對此感到困惑，不知道法律上的權責界線到底在哪裡。',
         ),
         LearningMockSection(
           title: '權責剖析',
-          body: '在類似「$keyText」的情境中，民法通常講求『損害賠償範圍』與『過失相抵原則』。更換零件通常必須計算折舊率，自然損耗與老化由所有人負擔，非故意損壞也應妥善舉證。',
+          body:
+              '在類似「$keyText」的情境中，民法通常講求『損害賠償範圍』與『過失相抵原則』。更換零件通常必須計算折舊率，自然損耗與老化由所有人負擔，非故意損壞也應妥善舉證。',
         ),
       ],
       category: category,
@@ -351,11 +405,13 @@ class KnowLawPageState extends State<KnowLawPage> {
       sections: [
         LearningMockSection(
           title: '直覺陷阱',
-          body: '許多人獲悉「$keyText」時，直覺會認為『既然是他不對，那我就可以把他的東西扣下來當質押，或者把我們的 LINE 聊天紀錄公開發上網』。然而這往往觸犯了个資法或刑法。',
+          body:
+              '許多人獲悉「$keyText」時，直覺會認為『既然是他不對，那我就可以把他的東西扣下來當質押，或者把我們的 LINE 聊天紀錄公開發上網』。然而這往往觸犯了个資法或刑法。',
         ),
         LearningMockSection(
           title: '法律紅線',
-          body: '未經同意公開轉傳內含對方可識別資訊（姓名、電話等）的截圖，可能會違反個人資料保護法。強行扣留對方私人物品亦涉妨害自由或強制罪。合法討公道應循民事調解或訴訟。',
+          body:
+              '未經同意公開轉傳內含對方可識別資訊（姓名、電話等）的截圖，可能會違反個人資料保護法。強行扣留對方私人物品亦涉妨害自由或強制罪。合法討公道應循民事調解或訴訟。',
         ),
       ],
       category: category,
@@ -387,11 +443,13 @@ class KnowLawPageState extends State<KnowLawPage> {
       sections: [
         LearningMockSection(
           title: '證據搜集',
-          body: '要贏得「$keyText」的爭議，證據是唯一的武器。請務必保留：1. 雙方通訊紀錄。 2. 發票、收據、維修估價單。 3. 現場拍照或錄影存證。',
+          body:
+              '要贏得「$keyText」的爭議，證據是唯一的武器。請務必保留：1. 雙方通訊紀錄。 2. 發票、收據、維修估價單。 3. 現場拍照或錄影存證。',
         ),
         LearningMockSection(
           title: '存證信函寫法',
-          body: '若對方避不處理，應寄發存證信函。內容載明本件「$keyText」的經過、我方明確訴求（如限期履行合約）、以及限期於 7 日內解決、逾期將循法律途徑之聲明，以此作為正式催告鐵證。',
+          body:
+              '若對方避不處理，應寄發存證信函。內容載明本件「$keyText」的經過、我方明確訴求（如限期履行合約）、以及限期於 7 日內解決、逾期將循法律途徑之聲明，以此作為正式催告鐵證。',
         ),
       ],
       category: category,
@@ -427,7 +485,8 @@ class KnowLawPageState extends State<KnowLawPage> {
         ),
         LearningMockSection(
           title: '自保解答',
-          body: '應向當地的鄉鎮市區公所免費聲請民事調解。調解一旦成立，經法院核定後與民事三審確定判決有同等效力，對方不配合即可直接強制執行，既省時又省力。',
+          body:
+              '應向當地的鄉鎮市區公所免費聲請民事調解。調解一旦成立，經法院核定後與民事三審確定判決有同等效力，對方不配合即可直接強制執行，既省時又省力。',
         ),
       ],
       category: category,
@@ -473,11 +532,36 @@ class KnowLawPageState extends State<KnowLawPage> {
         ],
       ),
       units: [
-        LearningTopicUnit(stepLabel: 'STEP 1', title: step1Article.title, goal: step1Article.summary, readTime: step1Article.readTime, article: step1Article),
-        LearningTopicUnit(stepLabel: 'STEP 2', title: step2Article.title, goal: step2Article.summary, readTime: step2Article.readTime, article: step2Article),
-        LearningTopicUnit(stepLabel: 'STEP 3', title: step3Article.title, goal: step3Article.summary, readTime: step3Article.readTime, article: step3Article),
-        LearningTopicUnit(stepLabel: 'STEP 4', title: step4Article.title, goal: step4Article.summary, readTime: step4Article.readTime, article: step4Article),
-        LearningTopicUnit(stepLabel: 'STEP 5', title: step5Article.title, goal: step5Article.summary, readTime: step5Article.readTime, article: step5Article),
+        LearningTopicUnit(
+            stepLabel: 'STEP 1',
+            title: step1Article.title,
+            goal: step1Article.summary,
+            readTime: step1Article.readTime,
+            article: step1Article),
+        LearningTopicUnit(
+            stepLabel: 'STEP 2',
+            title: step2Article.title,
+            goal: step2Article.summary,
+            readTime: step2Article.readTime,
+            article: step2Article),
+        LearningTopicUnit(
+            stepLabel: 'STEP 3',
+            title: step3Article.title,
+            goal: step3Article.summary,
+            readTime: step3Article.readTime,
+            article: step3Article),
+        LearningTopicUnit(
+            stepLabel: 'STEP 4',
+            title: step4Article.title,
+            goal: step4Article.summary,
+            readTime: step4Article.readTime,
+            article: step4Article),
+        LearningTopicUnit(
+            stepLabel: 'STEP 5',
+            title: step5Article.title,
+            goal: step5Article.summary,
+            readTime: step5Article.readTime,
+            article: step5Article),
       ],
       relatedTopics: const [],
       supportItems: const [],
@@ -579,7 +663,7 @@ class KnowLawPageState extends State<KnowLawPage> {
       final topicData = _dailyTopics.isNotEmpty
           ? _dailyTopics[idx]
           : featuredLearningTopics[name]!;
-      
+
       bool hasUncompleted = false;
       for (final unit in topicData.units) {
         if (!gameState.completedSteps.contains("${name}_${unit.stepLabel}")) {
@@ -587,7 +671,7 @@ class KnowLawPageState extends State<KnowLawPage> {
           break;
         }
       }
-      
+
       if (hasUncompleted) {
         nextTopicName = name;
         break;
@@ -639,6 +723,7 @@ class KnowLawPageState extends State<KnowLawPage> {
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -655,8 +740,10 @@ class KnowLawPageState extends State<KnowLawPage> {
               child: SafeArea(
                 child: ListView(
                   padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 80.h),
-                  physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                  physics: const AlwaysScrollableScrollPhysics(
+                      parent: BouncingScrollPhysics()),
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
                   children: [
                     // 1. 頂部自訂 Header列
                     _buildHeaderRow(isDark, gameState),
@@ -722,7 +809,8 @@ class KnowLawPageState extends State<KnowLawPage> {
         GestureDetector(
           onTap: () {
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const NotebookCoverEditorPage()),
+              MaterialPageRoute(
+                  builder: (_) => const NotebookCoverEditorPage()),
             );
           },
           child: Tooltip(
@@ -732,7 +820,8 @@ class KnowLawPageState extends State<KnowLawPage> {
               height: 42.h,
               margin: EdgeInsets.only(right: 12.w),
               decoration: BoxDecoration(
-                color: Color(int.parse(gameState.coverColorHex.replaceFirst('#', '0xFF'))),
+                color: Color(int.parse(
+                    gameState.coverColorHex.replaceFirst('#', '0xFF'))),
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(5.r),
                   bottomRight: Radius.circular(5.r),
@@ -804,15 +893,24 @@ class KnowLawPageState extends State<KnowLawPage> {
 
   String _getStickerEmoji(String id) {
     switch (id) {
-      case 'sprout': return '🌱';
-      case 'gavel': return '🔨';
-      case 'shield': return '🛡️';
-      case 'trophy': return '🏆';
-      case 'star': return '⭐';
-      case 'heart': return '❤️';
-      case 'scale': return '⚖️';
-      case 'car': return '🚗';
-      default: return '🌿';
+      case 'sprout':
+        return '🌱';
+      case 'gavel':
+        return '🔨';
+      case 'shield':
+        return '🛡️';
+      case 'trophy':
+        return '🏆';
+      case 'star':
+        return '⭐';
+      case 'heart':
+        return '❤️';
+      case 'scale':
+        return '⚖️';
+      case 'car':
+        return '🚗';
+      default:
+        return '🌿';
     }
   }
 
@@ -985,9 +1083,13 @@ class KnowLawPageState extends State<KnowLawPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('公民法律小擂台', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w900)),
+                    Text('公民法律小擂台',
+                        style: TextStyle(
+                            fontSize: 13.sp, fontWeight: FontWeight.w900)),
                     SizedBox(height: 4.h),
-                    Text('挑戰每日一題法律隨堂考！', style: TextStyle(fontSize: 10.5.sp, color: AppColors.textSecondary)),
+                    Text('挑戰每日一題法律隨堂考！',
+                        style: TextStyle(
+                            fontSize: 10.5.sp, color: AppColors.textSecondary)),
                   ],
                 ),
               ),
@@ -996,7 +1098,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: HomeV2Palette.trustGreen,
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.r)),
                   padding: EdgeInsets.symmetric(horizontal: 14.w),
                 ),
                 child: const Text('開始挑戰'),
@@ -1012,30 +1115,42 @@ class KnowLawPageState extends State<KnowLawPage> {
           scrollDirection: Axis.horizontal,
           physics: const NeverScrollableScrollPhysics(),
           child: Row(
-            children: List.generate(4, (index) => Padding(
-              padding: EdgeInsets.only(right: 8.w),
-              child: _PulsingSkeleton(width: 80.w, height: 32.h, borderRadius: BorderRadius.circular(999.r)),
-            )),
+            children: List.generate(
+                4,
+                (index) => Padding(
+                      padding: EdgeInsets.only(right: 8.w),
+                      child: _PulsingSkeleton(
+                          width: 80.w,
+                          height: 32.h,
+                          borderRadius: BorderRadius.circular(999.r)),
+                    )),
           ),
         ),
         SizedBox(height: 12.h),
         // Pulsing skeleton for Main Course Card
-        _PulsingSkeleton(width: double.infinity, height: 260.h, borderRadius: BorderRadius.circular(16.r)),
+        _PulsingSkeleton(
+            width: double.infinity,
+            height: 260.h,
+            borderRadius: BorderRadius.circular(16.r)),
       ];
     }
 
     final currentTopic = _currentTopicData;
     final rentUnits = currentTopic.units;
     final completedRentCount = rentUnits
-        .where((unit) => gameState.completedSteps.contains("${_activeTopic}_${unit.stepLabel}"))
+        .where((unit) => gameState.completedSteps
+            .contains("${_activeTopic}_${unit.stepLabel}"))
         .length;
-    final rentProgress = rentUnits.isEmpty ? 0.0 : completedRentCount / rentUnits.length;
+    final rentProgress =
+        rentUnits.isEmpty ? 0.0 : completedRentCount / rentUnits.length;
 
     // 取得下方的獨立精選專題與對話專題資料，並動態生成一對一專屬文章
-    final illuStory = fullIllustrationStories[_illuStoryIndex % fullIllustrationStories.length];
+    final illuStory = fullIllustrationStories[
+        _illuStoryIndex % fullIllustrationStories.length];
     final illuTargetArticle = generateArticleForIllustration(illuStory);
 
-    final dialogStory = fullDialogStories[_dialogStoryIndex % fullDialogStories.length];
+    final dialogStory =
+        fullDialogStories[_dialogStoryIndex % fullDialogStories.length];
     final dialogTargetArticle = generateArticleForDialog(dialogStory);
 
     return [
@@ -1241,7 +1356,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                         style: TextStyle(
                           fontSize: 10.sp,
                           fontWeight: FontWeight.bold,
-                          color: HomeV2Palette.trustGreen.withValues(alpha: 0.78),
+                          color:
+                              HomeV2Palette.trustGreen.withValues(alpha: 0.78),
                         ),
                       ),
                       SizedBox(width: 2.w),
@@ -1360,7 +1476,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(999.r),
                     ),
-                    onPressed: () => _openLearningTopicCatalog(initialCategory: cat),
+                    onPressed: () =>
+                        _openLearningTopicCatalog(initialCategory: cat),
                   ),
                 );
               }).toList(),
@@ -1490,7 +1607,6 @@ class KnowLawPageState extends State<KnowLawPage> {
     );
   }
 
-
   Widget _buildHeroImage({
     required String? imageUrl,
     required String localAsset,
@@ -1537,7 +1653,8 @@ class KnowLawPageState extends State<KnowLawPage> {
   }) {
     final cardColor = isDark ? const Color(0xFF161C23) : Colors.white;
     final nextUnit = rentUnits.firstWhere(
-      (unit) => !gameState.completedSteps.contains("${_activeTopic}_${unit.stepLabel}"),
+      (unit) => !gameState.completedSteps
+          .contains("${_activeTopic}_${unit.stepLabel}"),
       orElse: () => rentUnits.last,
     );
     final isComplete = completedRentCount == rentUnits.length;
@@ -1656,7 +1773,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                       SizedBox(width: 8.w),
                       _buildCourseBadge('${rentUnits.length} 個單元', isDark),
                       const Spacer(),
-                      _buildCourseBadge(_getTopicBadgeText(_activeTopic), isDark),
+                      _buildCourseBadge(
+                          _getTopicBadgeText(_activeTopic), isDark),
                     ],
                   ),
                 ),
@@ -1732,7 +1850,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                                     children: [
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               '🎉 前往成就室',
@@ -1748,7 +1867,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                                               style: TextStyle(
                                                 fontSize: 9.5.sp,
                                                 fontWeight: FontWeight.w600,
-                                                color: Colors.white.withValues(alpha: 0.82),
+                                                color: Colors.white
+                                                    .withValues(alpha: 0.82),
                                               ),
                                             ),
                                           ],
@@ -1774,7 +1894,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 10.w, vertical: 10.h),
                                   decoration: BoxDecoration(
-                                    color: isDark ? const Color(0xFF1E293B) : Colors.white,
+                                    color: isDark
+                                        ? const Color(0xFF1E293B)
+                                        : Colors.white,
                                     borderRadius: BorderRadius.circular(10.r),
                                     border: Border.all(
                                       color: HomeV2Palette.trustGreen,
@@ -1786,7 +1908,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                                     children: [
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               '切換新專題',
@@ -1802,7 +1925,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                                               style: TextStyle(
                                                 fontSize: 9.5.sp,
                                                 fontWeight: FontWeight.w600,
-                                                color: HomeV2Palette.trustGreen.withValues(alpha: 0.82),
+                                                color: HomeV2Palette.trustGreen
+                                                    .withValues(alpha: 0.82),
                                               ),
                                             ),
                                           ],
@@ -1834,7 +1958,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         ctaLabel,
@@ -1918,8 +2043,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                 SizedBox(height: 12.h),
                 ...rentUnits.asMap().entries.map((entry) {
                   final unit = entry.value;
-                  final isDone =
-                      gameState.completedSteps.contains("${_activeTopic}_${unit.stepLabel}");
+                  final isDone = gameState.completedSteps
+                      .contains("${_activeTopic}_${unit.stepLabel}");
                   final isNext =
                       unit.stepLabel == nextUnit.stepLabel && !isComplete;
                   return _buildCoursePathStepRow(
@@ -1991,8 +2116,6 @@ class KnowLawPageState extends State<KnowLawPage> {
       ),
     );
   }
-
-
 
   Widget _buildCoursePathStepRow(
     LearningTopicUnit unit, {
@@ -2115,7 +2238,8 @@ class KnowLawPageState extends State<KnowLawPage> {
     String? avatarInitial,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final initial = avatarInitial ?? (sender.isNotEmpty ? sender.substring(0, 1) : '');
+    final initial =
+        avatarInitial ?? (sender.isNotEmpty ? sender.substring(0, 1) : '');
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -2125,8 +2249,7 @@ class KnowLawPageState extends State<KnowLawPage> {
           CircleAvatar(
             radius: 14.r,
             backgroundColor: Colors.grey.shade300,
-            child:
-                Text(initial, style: TextStyle(fontSize: 11.sp)),
+            child: Text(initial, style: TextStyle(fontSize: 11.sp)),
           ),
           SizedBox(width: 8.w),
         ],
@@ -2203,15 +2326,19 @@ class KnowLawPageState extends State<KnowLawPage> {
   final TextEditingController _rentAddressController = TextEditingController();
   final TextEditingController _brokenItemController = TextEditingController();
   final TextEditingController _noticeDaysController = TextEditingController();
-  final TextEditingController _leaseExpiryDateController = TextEditingController();
-  final TextEditingController _depositAmountController = TextEditingController();
+  final TextEditingController _leaseExpiryDateController =
+      TextEditingController();
+  final TextEditingController _depositAmountController =
+      TextEditingController();
   String _rentNoticeResult = '';
   int _rentNoticeType = 0; // 0: 設備修繕, 1: 押金返還
 
   // 加班費計算器狀態
   final TextEditingController _salaryController = TextEditingController();
-  final TextEditingController _weekdayOvertimeController = TextEditingController();
-  final TextEditingController _holidayOvertimeController = TextEditingController();
+  final TextEditingController _weekdayOvertimeController =
+      TextEditingController();
+  final TextEditingController _holidayOvertimeController =
+      TextEditingController();
   String _overtimeResult = '';
 
   // 網購退貨起草狀態
@@ -2221,7 +2348,8 @@ class KnowLawPageState extends State<KnowLawPage> {
   String _consumerNoticeResult = '';
 
   // 夫妻財產分配計算器狀態
-  final TextEditingController _husbandPropertyController = TextEditingController();
+  final TextEditingController _husbandPropertyController =
+      TextEditingController();
   final TextEditingController _husbandDebtController = TextEditingController();
   final TextEditingController _wifePropertyController = TextEditingController();
   final TextEditingController _wifeDebtController = TextEditingController();
@@ -2276,7 +2404,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                 border: Border.all(
                   color: value
                       ? HomeV2Palette.trustGreen
-                      : (isDark ? const Color(0xFF4C5B6B) : const Color(0xFFC4B89F)),
+                      : (isDark
+                          ? const Color(0xFF4C5B6B)
+                          : const Color(0xFFC4B89F)),
                   width: 1.6.w,
                 ),
                 color: value
@@ -2300,11 +2430,10 @@ class KnowLawPageState extends State<KnowLawPage> {
                 style: TextStyle(
                   fontSize: 12.sp,
                   decoration: value ? TextDecoration.lineThrough : null,
-                  decorationColor: isDark ? Colors.grey : const Color(0xFFC4B89F),
+                  decorationColor:
+                      isDark ? Colors.grey : const Color(0xFFC4B89F),
                   decorationThickness: 1.6,
-                  color: value
-                      ? AppColors.textMuted
-                      : AppColors.textPrimary,
+                  color: value ? AppColors.textMuted : AppColors.textPrimary,
                   fontWeight: value ? FontWeight.normal : FontWeight.w600,
                 ),
               ),
@@ -2322,7 +2451,8 @@ class KnowLawPageState extends State<KnowLawPage> {
     int maxLines = 1,
   }) {
     final bgColor = isDark ? const Color(0xFF2E2719) : const Color(0xFFFFFAD6);
-    final borderCol = isDark ? const Color(0xFF7A6539) : const Color(0xFFEAD8A8);
+    final borderCol =
+        isDark ? const Color(0xFF7A6539) : const Color(0xFFEAD8A8);
     return Container(
       decoration: BoxDecoration(
         color: bgColor,
@@ -2349,7 +2479,9 @@ class KnowLawPageState extends State<KnowLawPage> {
           hintText: hintText,
           hintStyle: TextStyle(
             fontSize: 12.sp,
-            color: isDark ? Colors.amber.shade100.withValues(alpha: 0.4) : const Color(0xFFC0AE83),
+            color: isDark
+                ? Colors.amber.shade100.withValues(alpha: 0.4)
+                : const Color(0xFFC0AE83),
           ),
           border: InputBorder.none,
           isDense: true,
@@ -2398,7 +2530,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                 hintText: hintText,
                 hintStyle: TextStyle(
                   fontSize: 11.5.sp,
-                  color: isDark ? Colors.grey.shade600 : const Color(0xFFC1B8AA),
+                  color:
+                      isDark ? Colors.grey.shade600 : const Color(0xFFC1B8AA),
                 ),
                 border: InputBorder.none,
                 isDense: true,
@@ -2570,8 +2703,10 @@ class KnowLawPageState extends State<KnowLawPage> {
 
     final double totalClaim = residual + L;
 
-    final vehicleTypeStr = _carDepreciationIsMotorcycle ? '🛵 機車 (耐用 3 年)' : '🚗 汽車 (耐用 5 年)';
-    final methodStr = _carDepreciationIsDecliningBalance ? '定律遞減法 (定律折舊)' : '平均法 (定額折舊)';
+    final vehicleTypeStr =
+        _carDepreciationIsMotorcycle ? '🛵 機車 (耐用 3 年)' : '🚗 汽車 (耐用 5 年)';
+    final methodStr =
+        _carDepreciationIsDecliningBalance ? '定律遞減法 (定律折舊)' : '平均法 (定額折舊)';
 
     setState(() {
       _depreciationResult = '【試算結果】\n'
@@ -2606,7 +2741,8 @@ class KnowLawPageState extends State<KnowLawPage> {
     if (weekdayHours <= 2) {
       weekdayPay = weekdayHours * hourlyRate * (4.0 / 3.0);
     } else {
-      weekdayPay = (2 * hourlyRate * (4.0 / 3.0)) + ((weekdayHours - 2) * hourlyRate * (5.0 / 3.0));
+      weekdayPay = (2 * hourlyRate * (4.0 / 3.0)) +
+          ((weekdayHours - 2) * hourlyRate * (5.0 / 3.0));
     }
 
     // 休息日加班費計算
@@ -2615,9 +2751,12 @@ class KnowLawPageState extends State<KnowLawPage> {
       if (holidayHours <= 2) {
         holidayPay = holidayHours * hourlyRate * 1.34;
       } else if (holidayHours <= 8) {
-        holidayPay = (2 * hourlyRate * 1.34) + ((holidayHours - 2) * hourlyRate * 1.67);
+        holidayPay =
+            (2 * hourlyRate * 1.34) + ((holidayHours - 2) * hourlyRate * 1.67);
       } else {
-        holidayPay = (2 * hourlyRate * 1.34) + (6 * hourlyRate * 1.67) + ((holidayHours - 8) * hourlyRate * 2.67);
+        holidayPay = (2 * hourlyRate * 1.34) +
+            (6 * hourlyRate * 1.67) +
+            ((holidayHours - 8) * hourlyRate * 2.67);
       }
     }
 
@@ -2680,17 +2819,22 @@ class KnowLawPageState extends State<KnowLawPage> {
   Widget _buildTranslatorTool(bool isDark) {
     return NotebookCard(
       hasPaperClip: true,
-      backgroundColor: isDark ? const Color(0xFF28241B) : const Color(0xFFFFFDF8),
+      backgroundColor:
+          isDark ? const Color(0xFF28241B) : const Color(0xFFFFFDF8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.gavel, color: const Color(0xFF94610D), size: 20.sp),
+              CtmSvgIcon(CtmSvgIcons.gavel,
+                  color: const Color(0xFF94610D), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
                 '法律術語白話翻譯機',
-                style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                style: TextStyle(
+                    fontSize: 14.5.sp,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimary),
               ),
             ],
           ),
@@ -2717,16 +2861,25 @@ class KnowLawPageState extends State<KnowLawPage> {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF2C353F) : const Color(0xFFEAE5DB),
+                    color: isDark
+                        ? const Color(0xFF2C353F)
+                        : const Color(0xFFEAE5DB),
                     borderRadius: BorderRadius.circular(16.r),
                     border: Border.all(
-                      color: isDark ? const Color(0xFF3B4856) : const Color(0xFFD7CDBC),
+                      color: isDark
+                          ? const Color(0xFF3B4856)
+                          : const Color(0xFFD7CDBC),
                       width: 1.w,
                     ),
                   ),
                   child: Text(
                     term,
-                    style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.bold, color: isDark ? Colors.grey.shade300 : const Color(0xFF5A4E3A)),
+                    style: TextStyle(
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.bold,
+                        color: isDark
+                            ? Colors.grey.shade300
+                            : const Color(0xFF5A4E3A)),
                   ),
                 ),
               );
@@ -2769,9 +2922,11 @@ class KnowLawPageState extends State<KnowLawPage> {
               width: double.infinity,
               padding: EdgeInsets.all(10.w),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF332B1E) : const Color(0xFFFFFAEC),
+                color:
+                    isDark ? const Color(0xFF332B1E) : const Color(0xFFFFFAEC),
                 borderRadius: BorderRadius.circular(10.r),
-                border: Border.all(color: const Color(0xFFE4C179), width: 1.2.w),
+                border:
+                    Border.all(color: const Color(0xFFE4C179), width: 1.2.w),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -2781,7 +2936,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                     style: TextStyle(
                       fontSize: 12.5.sp,
                       height: 1.45,
-                      color: isDark ? Colors.orange.shade100 : const Color(0xFF5D4017),
+                      color: isDark
+                          ? Colors.orange.shade100
+                          : const Color(0xFF5D4017),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -2790,15 +2947,19 @@ class KnowLawPageState extends State<KnowLawPage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton.icon(
-                        icon: Icon(Icons.copy, size: 12.sp, color: Colors.white),
-                        label: Text('複製文字', style: TextStyle(fontSize: 10.5.sp)),
+                        icon:
+                            Icon(Icons.copy, size: 12.sp, color: Colors.white),
+                        label:
+                            Text('複製文字', style: TextStyle(fontSize: 10.5.sp)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF94610D),
                           foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.w, vertical: 4.h),
                         ),
                         onPressed: () {
-                          Clipboard.setData(ClipboardData(text: _translationOutput));
+                          Clipboard.setData(
+                              ClipboardData(text: _translationOutput));
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('已複製譯文至剪貼簿！')),
                           );
@@ -2806,12 +2967,15 @@ class KnowLawPageState extends State<KnowLawPage> {
                       ),
                       SizedBox(width: 8.w),
                       ElevatedButton.icon(
-                        icon: Icon(Icons.bookmark_add_outlined, size: 12.sp, color: Colors.white),
-                        label: Text('📌 摘錄筆記', style: TextStyle(fontSize: 10.5.sp)),
+                        icon: Icon(Icons.bookmark_add_outlined,
+                            size: 12.sp, color: Colors.white),
+                        label: Text('📌 摘錄筆記',
+                            style: TextStyle(fontSize: 10.5.sp)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF8D7F70),
                           foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.w, vertical: 4.h),
                         ),
                         onPressed: () {
                           final text = _translatorController.text.trim();
@@ -2842,24 +3006,30 @@ class KnowLawPageState extends State<KnowLawPage> {
   Widget _buildCarDepreciationTool(bool isDark) {
     return NotebookCard(
       hasBinderRings: true,
-      backgroundColor: isDark ? const Color(0xFF1B232E) : const Color(0xFFF0F5FA),
+      backgroundColor:
+          isDark ? const Color(0xFF1B232E) : const Color(0xFFF0F5FA),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.scale, color: const Color(0xFF3F7FBF), size: 20.sp),
+              CtmSvgIcon(CtmSvgIcons.scale,
+                  color: const Color(0xFF3F7FBF), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
                 '車禍零件折舊與工資計算機',
-                style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                style: TextStyle(
+                    fontSize: 14.5.sp,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimary),
               ),
             ],
           ),
           SizedBox(height: 10.h),
           Text(
             '說明：車禍更換全新零件需扣除折舊，但「工資與鈑金」免計折舊。本工具依法規提供雙重車種與折舊公式試算，並自動保留法定最低殘值。',
-            style: TextStyle(fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
+            style: TextStyle(
+                fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
           ),
           SizedBox(height: 12.h),
           Wrap(
@@ -2879,7 +3049,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                 value: false,
                 selectedValue: _carDepreciationIsMotorcycle,
                 label: '🚗 汽車 (耐用5年)',
-                onChanged: (val) => setState(() => _carDepreciationIsMotorcycle = val),
+                onChanged: (val) =>
+                    setState(() => _carDepreciationIsMotorcycle = val),
                 isDark: isDark,
                 activeColor: const Color(0xFF3F7FBF),
               ),
@@ -2887,7 +3058,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                 value: true,
                 selectedValue: _carDepreciationIsMotorcycle,
                 label: '🛵 機車 (耐用3年)',
-                onChanged: (val) => setState(() => _carDepreciationIsMotorcycle = val),
+                onChanged: (val) =>
+                    setState(() => _carDepreciationIsMotorcycle = val),
                 isDark: isDark,
                 activeColor: const Color(0xFF3F7FBF),
               ),
@@ -2911,7 +3083,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                 value: true,
                 selectedValue: _carDepreciationIsDecliningBalance,
                 label: '定律遞減法 (定律)',
-                onChanged: (val) => setState(() => _carDepreciationIsDecliningBalance = val),
+                onChanged: (val) =>
+                    setState(() => _carDepreciationIsDecliningBalance = val),
                 isDark: isDark,
                 activeColor: const Color(0xFF3F7FBF),
               ),
@@ -2919,7 +3092,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                 value: false,
                 selectedValue: _carDepreciationIsDecliningBalance,
                 label: '平均法 (定額)',
-                onChanged: (val) => setState(() => _carDepreciationIsDecliningBalance = val),
+                onChanged: (val) =>
+                    setState(() => _carDepreciationIsDecliningBalance = val),
                 isDark: isDark,
                 activeColor: const Color(0xFF3F7FBF),
               ),
@@ -2995,9 +3169,11 @@ class KnowLawPageState extends State<KnowLawPage> {
               width: double.infinity,
               padding: EdgeInsets.all(10.w),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF232B36) : const Color(0xFFEAF1F9),
+                color:
+                    isDark ? const Color(0xFF232B36) : const Color(0xFFEAF1F9),
                 borderRadius: BorderRadius.circular(10.r),
-                border: Border.all(color: const Color(0xFF8CAECC), width: 1.2.w),
+                border:
+                    Border.all(color: const Color(0xFF8CAECC), width: 1.2.w),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -3007,7 +3183,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                     style: TextStyle(
                       fontSize: 11.5.sp,
                       height: 1.45,
-                      color: isDark ? Colors.blue.shade100 : const Color(0xFF1F4C75),
+                      color: isDark
+                          ? Colors.blue.shade100
+                          : const Color(0xFF1F4C75),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -3016,15 +3194,19 @@ class KnowLawPageState extends State<KnowLawPage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton.icon(
-                        icon: Icon(Icons.copy, size: 12.sp, color: Colors.white),
-                        label: Text('複製文字', style: TextStyle(fontSize: 10.5.sp)),
+                        icon:
+                            Icon(Icons.copy, size: 12.sp, color: Colors.white),
+                        label:
+                            Text('複製文字', style: TextStyle(fontSize: 10.5.sp)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF3F7FBF),
                           foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.w, vertical: 4.h),
                         ),
                         onPressed: () {
-                          Clipboard.setData(ClipboardData(text: _depreciationResult));
+                          Clipboard.setData(
+                              ClipboardData(text: _depreciationResult));
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('已複製折舊計算結果至剪貼簿！')),
                           );
@@ -3032,12 +3214,15 @@ class KnowLawPageState extends State<KnowLawPage> {
                       ),
                       SizedBox(width: 8.w),
                       ElevatedButton.icon(
-                        icon: Icon(Icons.bookmark_add_outlined, size: 12.sp, color: Colors.white),
-                        label: Text('📌 摘錄筆記', style: TextStyle(fontSize: 10.5.sp)),
+                        icon: Icon(Icons.bookmark_add_outlined,
+                            size: 12.sp, color: Colors.white),
+                        label: Text('📌 摘錄筆記',
+                            style: TextStyle(fontSize: 10.5.sp)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF8D7F70),
                           foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.w, vertical: 4.h),
                         ),
                         onPressed: () {
                           LearningGameState.instance.addHighlight(
@@ -3055,12 +3240,15 @@ class KnowLawPageState extends State<KnowLawPage> {
                       ),
                       SizedBox(width: 8.w),
                       ElevatedButton.icon(
-                        icon: Icon(Icons.picture_as_pdf_rounded, size: 12.sp, color: Colors.white),
-                        label: Text('預覽與導出', style: TextStyle(fontSize: 10.5.sp)),
+                        icon: Icon(Icons.picture_as_pdf_rounded,
+                            size: 12.sp, color: Colors.white),
+                        label:
+                            Text('預覽與導出', style: TextStyle(fontSize: 10.5.sp)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: HomeV2Palette.trustGreen,
                           foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.w, vertical: 4.h),
                         ),
                         onPressed: () {
                           Navigator.push(
@@ -3087,7 +3275,8 @@ class KnowLawPageState extends State<KnowLawPage> {
               color: isDark ? const Color(0xFF26211C) : const Color(0xFFFFF9E6),
               borderRadius: BorderRadius.circular(8.r),
               border: Border.all(
-                color: isDark ? const Color(0xFF4C3D26) : const Color(0xFFFBE4A0),
+                color:
+                    isDark ? const Color(0xFF4C3D26) : const Color(0xFFFBE4A0),
                 width: 1.w,
               ),
             ),
@@ -3097,7 +3286,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                 Icon(
                   Icons.info_outline,
                   size: 14.sp,
-                  color: isDark ? const Color(0xFFD49C40) : const Color(0xFFB37410),
+                  color: isDark
+                      ? const Color(0xFFD49C40)
+                      : const Color(0xFFB37410),
                 ),
                 SizedBox(width: 6.w),
                 Expanded(
@@ -3106,7 +3297,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                     style: TextStyle(
                       fontSize: 10.sp,
                       height: 1.4,
-                      color: isDark ? const Color(0xFFD49C40) : const Color(0xFF8E5A0B),
+                      color: isDark
+                          ? const Color(0xFFD49C40)
+                          : const Color(0xFF8E5A0B),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -3122,24 +3315,30 @@ class KnowLawPageState extends State<KnowLawPage> {
   Widget _buildRentNoticeTool(bool isDark) {
     return NotebookCard(
       hasPaperClip: true,
-      backgroundColor: isDark ? const Color(0xFF1E281F) : const Color(0xFFF1FAF2),
+      backgroundColor:
+          isDark ? const Color(0xFF1E281F) : const Color(0xFFF1FAF2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.bookOpen, color: const Color(0xFF2E7D32), size: 20.sp),
+              CtmSvgIcon(CtmSvgIcons.bookOpen,
+                  color: const Color(0xFF2E7D32), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
                 '租屋存證信函起草器',
-                style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                style: TextStyle(
+                    fontSize: 14.5.sp,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimary),
               ),
             ],
           ),
           SizedBox(height: 10.h),
           Text(
             '說明：當遇到租屋糾紛時，寄發存證信函能留下正式的法律意思表示與催告事實證明。本工具支持設備修繕催告與到期退押金催告兩種模式。',
-            style: TextStyle(fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
+            style: TextStyle(
+                fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
           ),
           SizedBox(height: 12.h),
           Wrap(
@@ -3254,7 +3453,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                 onPressed: () {
                   final landlord = _landlordNameController.text.trim();
                   final addr = _rentAddressController.text.trim();
-                  final days = _noticeDaysController.text.trim().isEmpty ? '7' : _noticeDaysController.text.trim();
+                  final days = _noticeDaysController.text.trim().isEmpty
+                      ? '7'
+                      : _noticeDaysController.text.trim();
 
                   if (landlord.isEmpty || addr.isEmpty) return;
 
@@ -3263,8 +3464,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                     if (item.isEmpty) return;
 
                     setState(() {
-                      _rentNoticeResult = 
-                          '郵局存證信函草稿 (設備修繕催告)\n'
+                      _rentNoticeResult = '郵局存證信函草稿 (設備修繕催告)\n'
                           '---------------------------\n'
                           '寄件人（承租人）：（請填寫您的姓名）\n'
                           '收件人（出租人）：$landlord\n'
@@ -3283,8 +3483,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                     if (expiryDate.isEmpty || deposit.isEmpty) return;
 
                     setState(() {
-                      _rentNoticeResult = 
-                          '郵局存證信函草稿 (期滿退還押金催告)\n'
+                      _rentNoticeResult = '郵局存證信函草稿 (期滿退還押金催告)\n'
                           '---------------------------\n'
                           '寄件人（承租人）：（請填寫您的姓名）\n'
                           '收件人（出租人）：$landlord\n'
@@ -3327,9 +3526,11 @@ class KnowLawPageState extends State<KnowLawPage> {
               width: double.infinity,
               padding: EdgeInsets.all(10.w),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF1B2E1D) : const Color(0xFFFAFDFB),
+                color:
+                    isDark ? const Color(0xFF1B2E1D) : const Color(0xFFFAFDFB),
                 borderRadius: BorderRadius.circular(10.r),
-                border: Border.all(color: const Color(0xFF8CBE91), width: 1.2.w),
+                border:
+                    Border.all(color: const Color(0xFF8CBE91), width: 1.2.w),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -3339,7 +3540,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                     style: TextStyle(
                       fontSize: 11.sp,
                       height: 1.5,
-                      color: isDark ? Colors.green.shade100 : const Color(0xFF1E4E21),
+                      color: isDark
+                          ? Colors.green.shade100
+                          : const Color(0xFF1E4E21),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -3348,15 +3551,19 @@ class KnowLawPageState extends State<KnowLawPage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton.icon(
-                        icon: Icon(Icons.copy, size: 12.sp, color: Colors.white),
-                        label: Text('複製文字', style: TextStyle(fontSize: 10.5.sp)),
+                        icon:
+                            Icon(Icons.copy, size: 12.sp, color: Colors.white),
+                        label:
+                            Text('複製文字', style: TextStyle(fontSize: 10.5.sp)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF2E7D32),
                           foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.w, vertical: 4.h),
                         ),
                         onPressed: () {
-                          Clipboard.setData(ClipboardData(text: _rentNoticeResult));
+                          Clipboard.setData(
+                              ClipboardData(text: _rentNoticeResult));
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('已複製催告信函草稿至剪貼簿！')),
                           );
@@ -3364,12 +3571,15 @@ class KnowLawPageState extends State<KnowLawPage> {
                       ),
                       SizedBox(width: 8.w),
                       ElevatedButton.icon(
-                        icon: Icon(Icons.bookmark_add_outlined, size: 12.sp, color: Colors.white),
-                        label: Text('📌 摘錄筆記', style: TextStyle(fontSize: 10.5.sp)),
+                        icon: Icon(Icons.bookmark_add_outlined,
+                            size: 12.sp, color: Colors.white),
+                        label: Text('📌 摘錄筆記',
+                            style: TextStyle(fontSize: 10.5.sp)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF8D7F70),
                           foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.w, vertical: 4.h),
                         ),
                         onPressed: () {
                           LearningGameState.instance.addHighlight(
@@ -3387,19 +3597,24 @@ class KnowLawPageState extends State<KnowLawPage> {
                       ),
                       SizedBox(width: 8.w),
                       ElevatedButton.icon(
-                        icon: Icon(Icons.picture_as_pdf_rounded, size: 12.sp, color: Colors.white),
-                        label: Text('預覽與導出', style: TextStyle(fontSize: 10.5.sp)),
+                        icon: Icon(Icons.picture_as_pdf_rounded,
+                            size: 12.sp, color: Colors.white),
+                        label:
+                            Text('預覽與導出', style: TextStyle(fontSize: 10.5.sp)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: HomeV2Palette.trustGreen,
                           foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.w, vertical: 4.h),
                         ),
                         onPressed: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (_) => LegalDocumentExportPage(
-                                title: _rentNoticeType == 0 ? '設備修繕催告存證信函' : '期滿退押金催告存證信函',
+                                title: _rentNoticeType == 0
+                                    ? '設備修繕催告存證信函'
+                                    : '期滿退押金催告存證信函',
                                 content: _rentNoticeResult,
                               ),
                             ),
@@ -3419,7 +3634,8 @@ class KnowLawPageState extends State<KnowLawPage> {
               color: isDark ? const Color(0xFF1E2620) : const Color(0xFFF1FAF2),
               borderRadius: BorderRadius.circular(8.r),
               border: Border.all(
-                color: isDark ? const Color(0xFF2B472E) : const Color(0xFF8CBE91),
+                color:
+                    isDark ? const Color(0xFF2B472E) : const Color(0xFF8CBE91),
                 width: 1.w,
               ),
             ),
@@ -3429,7 +3645,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                 Icon(
                   Icons.info_outline,
                   size: 14.sp,
-                  color: isDark ? Colors.green.shade400 : const Color(0xFF2E7D32),
+                  color:
+                      isDark ? Colors.green.shade400 : const Color(0xFF2E7D32),
                 ),
                 SizedBox(width: 6.w),
                 Expanded(
@@ -3438,7 +3655,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                     style: TextStyle(
                       fontSize: 10.sp,
                       height: 1.4,
-                      color: isDark ? Colors.green.shade200 : const Color(0xFF1E4E21),
+                      color: isDark
+                          ? Colors.green.shade200
+                          : const Color(0xFF1E4E21),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -3454,24 +3673,30 @@ class KnowLawPageState extends State<KnowLawPage> {
   Widget _buildOvertimeTool(bool isDark) {
     return NotebookCard(
       hasBinderRings: true,
-      backgroundColor: isDark ? const Color(0xFF2B211A) : const Color(0xFFFAF5F0),
+      backgroundColor:
+          isDark ? const Color(0xFF2B211A) : const Color(0xFFFAF5F0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.clock, color: const Color(0xFFD87D32), size: 20.sp),
+              CtmSvgIcon(CtmSvgIcons.clock,
+                  color: const Color(0xFFD87D32), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
                 '加班費與特休折算計算機',
-                style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                style: TextStyle(
+                    fontSize: 14.5.sp,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimary),
               ),
             ],
           ),
           SizedBox(height: 10.h),
           Text(
             '說明：依勞基法平日加班 2 小時內乘 1.34 倍，後 2 小時乘 1.67 倍；休息日加班前 2 小時 1.34，後 6 小時 1.67，超過 8 小時 2.67。',
-            style: TextStyle(fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
+            style: TextStyle(
+                fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
           ),
           SizedBox(height: 10.h),
           _buildNotebookInput(
@@ -3526,9 +3751,11 @@ class KnowLawPageState extends State<KnowLawPage> {
               width: double.infinity,
               padding: EdgeInsets.all(10.w),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF352B24) : const Color(0xFFFAF4EE),
+                color:
+                    isDark ? const Color(0xFF352B24) : const Color(0xFFFAF4EE),
                 borderRadius: BorderRadius.circular(10.r),
-                border: Border.all(color: const Color(0xFFECC2A8), width: 1.2.w),
+                border:
+                    Border.all(color: const Color(0xFFECC2A8), width: 1.2.w),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -3538,7 +3765,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                     style: TextStyle(
                       fontSize: 12.sp,
                       height: 1.45,
-                      color: isDark ? Colors.orange.shade100 : const Color(0xFF7A4A28),
+                      color: isDark
+                          ? Colors.orange.shade100
+                          : const Color(0xFF7A4A28),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -3547,15 +3776,19 @@ class KnowLawPageState extends State<KnowLawPage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton.icon(
-                        icon: Icon(Icons.copy, size: 12.sp, color: Colors.white),
-                        label: Text('複製文字', style: TextStyle(fontSize: 10.5.sp)),
+                        icon:
+                            Icon(Icons.copy, size: 12.sp, color: Colors.white),
+                        label:
+                            Text('複製文字', style: TextStyle(fontSize: 10.5.sp)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFD87D32),
                           foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.w, vertical: 4.h),
                         ),
                         onPressed: () {
-                          Clipboard.setData(ClipboardData(text: _overtimeResult));
+                          Clipboard.setData(
+                              ClipboardData(text: _overtimeResult));
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('已複製加班費試算結果至剪貼簿！')),
                           );
@@ -3563,12 +3796,15 @@ class KnowLawPageState extends State<KnowLawPage> {
                       ),
                       SizedBox(width: 8.w),
                       ElevatedButton.icon(
-                        icon: Icon(Icons.bookmark_add_outlined, size: 12.sp, color: Colors.white),
-                        label: Text('📌 摘錄筆記', style: TextStyle(fontSize: 10.5.sp)),
+                        icon: Icon(Icons.bookmark_add_outlined,
+                            size: 12.sp, color: Colors.white),
+                        label: Text('📌 摘錄筆記',
+                            style: TextStyle(fontSize: 10.5.sp)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF8D7F70),
                           foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.w, vertical: 4.h),
                         ),
                         onPressed: () {
                           LearningGameState.instance.addHighlight(
@@ -3597,7 +3833,8 @@ class KnowLawPageState extends State<KnowLawPage> {
               color: isDark ? const Color(0xFF2B211A) : const Color(0xFFFFF7F0),
               borderRadius: BorderRadius.circular(8.r),
               border: Border.all(
-                color: isDark ? const Color(0xFF5A4433) : const Color(0xFFECC2A8),
+                color:
+                    isDark ? const Color(0xFF5A4433) : const Color(0xFFECC2A8),
                 width: 1.w,
               ),
             ),
@@ -3607,7 +3844,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                 Icon(
                   Icons.info_outline,
                   size: 14.sp,
-                  color: isDark ? const Color(0xFFD87D32) : const Color(0xFFB35A10),
+                  color: isDark
+                      ? const Color(0xFFD87D32)
+                      : const Color(0xFFB35A10),
                 ),
                 SizedBox(width: 6.w),
                 Expanded(
@@ -3616,7 +3855,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                     style: TextStyle(
                       fontSize: 10.sp,
                       height: 1.4,
-                      color: isDark ? const Color(0xFFE3A06E) : const Color(0xFF8E4A10),
+                      color: isDark
+                          ? const Color(0xFFE3A06E)
+                          : const Color(0xFF8E4A10),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -3632,24 +3873,30 @@ class KnowLawPageState extends State<KnowLawPage> {
   Widget _buildConsumerNoticeTool(bool isDark) {
     return NotebookCard(
       hasPaperClip: true,
-      backgroundColor: isDark ? const Color(0xFF2C1C24) : const Color(0xFFFAF1F4),
+      backgroundColor:
+          isDark ? const Color(0xFF2C1C24) : const Color(0xFFFAF1F4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.filePen, color: const Color(0xFFC2185B), size: 20.sp),
+              CtmSvgIcon(CtmSvgIcons.filePen,
+                  color: const Color(0xFFC2185B), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
                 '網購退貨存證信函起草器',
-                style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                style: TextStyle(
+                    fontSize: 14.5.sp,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimary),
               ),
             ],
           ),
           SizedBox(height: 10.h),
           Text(
             '說明：通訊交易消費者，得於收受商品後七日內無條件退回商品或解除契約，無須說明理由及負擔任何費用。本工具起草退換貨存證催告信以主張權益。',
-            style: TextStyle(fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
+            style: TextStyle(
+                fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
           ),
           SizedBox(height: 10.h),
           _buildNotebookInput(
@@ -3683,8 +3930,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                   if (seller.isEmpty || product.isEmpty || date.isEmpty) return;
 
                   setState(() {
-                    _consumerNoticeResult = 
-                        '郵局存證信函草稿\n'
+                    _consumerNoticeResult = '郵局存證信函草稿\n'
                         '---------------------------\n'
                         '寄件人（買受人）：（請填寫您的姓名）\n'
                         '收件人（出賣人）：$seller\n\n'
@@ -3722,9 +3968,11 @@ class KnowLawPageState extends State<KnowLawPage> {
               width: double.infinity,
               padding: EdgeInsets.all(10.w),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF2E1C23) : const Color(0xFFFAF2F4),
+                color:
+                    isDark ? const Color(0xFF2E1C23) : const Color(0xFFFAF2F4),
                 borderRadius: BorderRadius.circular(10.r),
-                border: Border.all(color: const Color(0xFFCE8CAE), width: 1.2.w),
+                border:
+                    Border.all(color: const Color(0xFFCE8CAE), width: 1.2.w),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -3734,7 +3982,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                     style: TextStyle(
                       fontSize: 11.sp,
                       height: 1.5,
-                      color: isDark ? Colors.pink.shade100 : const Color(0xFF6E2849),
+                      color: isDark
+                          ? Colors.pink.shade100
+                          : const Color(0xFF6E2849),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -3743,15 +3993,19 @@ class KnowLawPageState extends State<KnowLawPage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton.icon(
-                        icon: Icon(Icons.copy, size: 12.sp, color: Colors.white),
-                        label: Text('複製文字', style: TextStyle(fontSize: 10.5.sp)),
+                        icon:
+                            Icon(Icons.copy, size: 12.sp, color: Colors.white),
+                        label:
+                            Text('複製文字', style: TextStyle(fontSize: 10.5.sp)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFC2185B),
                           foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.w, vertical: 4.h),
                         ),
                         onPressed: () {
-                          Clipboard.setData(ClipboardData(text: _consumerNoticeResult));
+                          Clipboard.setData(
+                              ClipboardData(text: _consumerNoticeResult));
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('已複製退貨催告信函草稿至剪貼簿！')),
                           );
@@ -3759,12 +4013,15 @@ class KnowLawPageState extends State<KnowLawPage> {
                       ),
                       SizedBox(width: 8.w),
                       ElevatedButton.icon(
-                        icon: Icon(Icons.bookmark_add_outlined, size: 12.sp, color: Colors.white),
-                        label: Text('📌 摘錄筆記', style: TextStyle(fontSize: 10.5.sp)),
+                        icon: Icon(Icons.bookmark_add_outlined,
+                            size: 12.sp, color: Colors.white),
+                        label: Text('📌 摘錄筆記',
+                            style: TextStyle(fontSize: 10.5.sp)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF8D7F70),
                           foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.w, vertical: 4.h),
                         ),
                         onPressed: () {
                           LearningGameState.instance.addHighlight(
@@ -3782,12 +4039,15 @@ class KnowLawPageState extends State<KnowLawPage> {
                       ),
                       SizedBox(width: 8.w),
                       ElevatedButton.icon(
-                        icon: Icon(Icons.picture_as_pdf_rounded, size: 12.sp, color: Colors.white),
-                        label: Text('預覽與導出', style: TextStyle(fontSize: 10.5.sp)),
+                        icon: Icon(Icons.picture_as_pdf_rounded,
+                            size: 12.sp, color: Colors.white),
+                        label:
+                            Text('預覽與導出', style: TextStyle(fontSize: 10.5.sp)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: HomeV2Palette.trustGreen,
                           foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.w, vertical: 4.h),
                         ),
                         onPressed: () {
                           Navigator.push(
@@ -3814,7 +4074,8 @@ class KnowLawPageState extends State<KnowLawPage> {
               color: isDark ? const Color(0xFF2E1C24) : const Color(0xFFFAF1F4),
               borderRadius: BorderRadius.circular(8.r),
               border: Border.all(
-                color: isDark ? const Color(0xFF5E2E3E) : const Color(0xFFCE8CAE),
+                color:
+                    isDark ? const Color(0xFF5E2E3E) : const Color(0xFFCE8CAE),
                 width: 1.w,
               ),
             ),
@@ -3824,7 +4085,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                 Icon(
                   Icons.info_outline,
                   size: 14.sp,
-                  color: isDark ? const Color(0xFFC2185B) : const Color(0xFF9E0D43),
+                  color: isDark
+                      ? const Color(0xFFC2185B)
+                      : const Color(0xFF9E0D43),
                 ),
                 SizedBox(width: 6.w),
                 Expanded(
@@ -3833,7 +4096,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                     style: TextStyle(
                       fontSize: 10.sp,
                       height: 1.4,
-                      color: isDark ? const Color(0xFFEAA0C2) : const Color(0xFF8E1045),
+                      color: isDark
+                          ? const Color(0xFFEAA0C2)
+                          : const Color(0xFF8E1045),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -3849,24 +4114,30 @@ class KnowLawPageState extends State<KnowLawPage> {
   Widget _buildPrivacySopTool(bool isDark, LearningGameState gameState) {
     return NotebookCard(
       hasBinderRings: true,
-      backgroundColor: isDark ? const Color(0xFF211D2B) : const Color(0xFFFAF7FD),
+      backgroundColor:
+          isDark ? const Color(0xFF211D2B) : const Color(0xFFFAF7FD),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.sparkles, color: const Color(0xFF512DA8), size: 20.sp),
+              CtmSvgIcon(CtmSvgIcons.sparkles,
+                  color: const Color(0xFF512DA8), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
                 '個資外洩防範自救清單',
-                style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                style: TextStyle(
+                    fontSize: 14.5.sp,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimary),
               ),
             ],
           ),
           SizedBox(height: 10.h),
           Text(
             '說明：當發生帳密外洩或可疑扣款時，請照下方步驟迅速自保。勾選項目可同步記錄，完成後可將證據清單儲存備忘。',
-            style: TextStyle(fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
+            style: TextStyle(
+                fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
           ),
           SizedBox(height: 10.h),
           ..._privacySops.map((sop) {
@@ -3913,24 +4184,30 @@ class KnowLawPageState extends State<KnowLawPage> {
   Widget _buildNeighborLeakTool(bool isDark, LearningGameState gameState) {
     return NotebookCard(
       hasPaperClip: true,
-      backgroundColor: isDark ? const Color(0xFF1D282B) : const Color(0xFFF0FAF9),
+      backgroundColor:
+          isDark ? const Color(0xFF1D282B) : const Color(0xFFF0FAF9),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.timeline, color: const Color(0xFF00796B), size: 20.sp),
+              CtmSvgIcon(CtmSvgIcons.timeline,
+                  color: const Color(0xFF00796B), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
                 '鄰里漏水與噪音證據包',
-                style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                style: TextStyle(
+                    fontSize: 14.5.sp,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimary),
               ),
             ],
           ),
           SizedBox(height: 10.h),
           Text(
             '說明：天花板漏水與噪音是常見鄰里爭端。請落實以下要點以便未來在調解或民事起訴中能拿出「法官採信的關鍵證據」。',
-            style: TextStyle(fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
+            style: TextStyle(
+                fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
           ),
           SizedBox(height: 10.h),
           ..._neighborSops.map((sop) {
@@ -3977,24 +4254,30 @@ class KnowLawPageState extends State<KnowLawPage> {
   Widget _buildMarriagePropertyTool(bool isDark) {
     return NotebookCard(
       hasBinderRings: true,
-      backgroundColor: isDark ? const Color(0xFF281E2C) : const Color(0xFFFAF0FB),
+      backgroundColor:
+          isDark ? const Color(0xFF281E2C) : const Color(0xFFFAF0FB),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.bookOpen, color: const Color(0xFF8E24AA), size: 20.sp),
+              CtmSvgIcon(CtmSvgIcons.bookOpen,
+                  color: const Color(0xFF8E24AA), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
                 '夫妻財產分配試算器',
-                style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                style: TextStyle(
+                    fontSize: 14.5.sp,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimary),
               ),
             ],
           ),
           SizedBox(height: 10.h),
           Text(
             '說明：法定財產制下，當婚姻關係消滅時，夫或妻現存之婚後財產扣除婚姻關係存續中所負債務後，如有剩餘，雙方應平均分配其差額（即「賸餘財產分配請求權」）。',
-            style: TextStyle(fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
+            style: TextStyle(
+                fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
           ),
           SizedBox(height: 10.h),
           Row(
@@ -4075,9 +4358,11 @@ class KnowLawPageState extends State<KnowLawPage> {
               width: double.infinity,
               padding: EdgeInsets.all(10.w),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF332039) : const Color(0xFFF9EEFB),
+                color:
+                    isDark ? const Color(0xFF332039) : const Color(0xFFF9EEFB),
                 borderRadius: BorderRadius.circular(10.r),
-                border: Border.all(color: const Color(0xFFD3A2DF), width: 1.2.w),
+                border:
+                    Border.all(color: const Color(0xFFD3A2DF), width: 1.2.w),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -4087,7 +4372,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                     style: TextStyle(
                       fontSize: 12.sp,
                       height: 1.45,
-                      color: isDark ? Colors.purple.shade100 : const Color(0xFF6A1B9A),
+                      color: isDark
+                          ? Colors.purple.shade100
+                          : const Color(0xFF6A1B9A),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -4096,15 +4383,19 @@ class KnowLawPageState extends State<KnowLawPage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton.icon(
-                        icon: Icon(Icons.copy, size: 12.sp, color: Colors.white),
-                        label: Text('複製文字', style: TextStyle(fontSize: 10.5.sp)),
+                        icon:
+                            Icon(Icons.copy, size: 12.sp, color: Colors.white),
+                        label:
+                            Text('複製文字', style: TextStyle(fontSize: 10.5.sp)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF8E24AA),
                           foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.w, vertical: 4.h),
                         ),
                         onPressed: () {
-                          Clipboard.setData(ClipboardData(text: _marriagePropertyResult));
+                          Clipboard.setData(
+                              ClipboardData(text: _marriagePropertyResult));
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('已複製夫妻財產分配計算結果至剪貼簿！')),
                           );
@@ -4112,12 +4403,15 @@ class KnowLawPageState extends State<KnowLawPage> {
                       ),
                       SizedBox(width: 8.w),
                       ElevatedButton.icon(
-                        icon: Icon(Icons.bookmark_add_outlined, size: 12.sp, color: Colors.white),
-                        label: Text('📌 摘錄筆記', style: TextStyle(fontSize: 10.5.sp)),
+                        icon: Icon(Icons.bookmark_add_outlined,
+                            size: 12.sp, color: Colors.white),
+                        label: Text('📌 摘錄筆記',
+                            style: TextStyle(fontSize: 10.5.sp)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF8D7F70),
                           foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.w, vertical: 4.h),
                         ),
                         onPressed: () {
                           LearningGameState.instance.addHighlight(
@@ -4147,24 +4441,30 @@ class KnowLawPageState extends State<KnowLawPage> {
   Widget _buildAntiFraudTool(bool isDark, LearningGameState gameState) {
     return NotebookCard(
       hasPaperClip: true,
-      backgroundColor: isDark ? const Color(0xFF2D1E1E) : const Color(0xFFFDF0F0),
+      backgroundColor:
+          isDark ? const Color(0xFF2D1E1E) : const Color(0xFFFDF0F0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.bookmark, color: const Color(0xFFD32F2F), size: 20.sp),
+              CtmSvgIcon(CtmSvgIcons.bookmark,
+                  color: const Color(0xFFD32F2F), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
                 '詐騙通報與帳戶警示自救清單',
-                style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                style: TextStyle(
+                    fontSize: 14.5.sp,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimary),
               ),
             ],
           ),
           SizedBox(height: 10.h),
           Text(
             '說明：如果遭受詐騙並已匯款，黃金 30 分鐘內可對詐騙帳戶執行緊急「圈存扣押」，延緩資金流出。請按以下 SOP 行動。',
-            style: TextStyle(fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
+            style: TextStyle(
+                fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
           ),
           SizedBox(height: 10.h),
           ..._antiFraudSops.map((sop) {
@@ -4239,12 +4539,17 @@ class KnowLawPageState extends State<KnowLawPage> {
             },
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 150),
-              margin: EdgeInsets.only(right: 6.w, top: isSelected ? 0.h : 4.h, bottom: isSelected ? 4.h : 0.h),
+              margin: EdgeInsets.only(
+                  right: 6.w,
+                  top: isSelected ? 0.h : 4.h,
+                  bottom: isSelected ? 4.h : 0.h),
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 7.h),
               decoration: BoxDecoration(
                 color: isSelected
                     ? tabColor
-                    : (isDark ? const Color(0xFF252C34) : const Color(0xFFECE6DB)),
+                    : (isDark
+                        ? const Color(0xFF252C34)
+                        : const Color(0xFFECE6DB)),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(8.r),
                   topRight: Radius.circular(8.r),
@@ -4252,7 +4557,11 @@ class KnowLawPageState extends State<KnowLawPage> {
                   bottomRight: Radius.circular(isSelected ? 0 : 8.r),
                 ),
                 border: Border.all(
-                  color: isSelected ? tabColor : (isDark ? const Color(0xFF343F4C) : const Color(0xFFD7CDBC)),
+                  color: isSelected
+                      ? tabColor
+                      : (isDark
+                          ? const Color(0xFF343F4C)
+                          : const Color(0xFFD7CDBC)),
                   width: 1.w,
                 ),
               ),
@@ -4261,7 +4570,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                 style: TextStyle(
                   fontSize: 11.5.sp,
                   fontWeight: FontWeight.w900,
-                  color: isSelected ? Colors.white : fontCol.withValues(alpha: 0.8),
+                  color: isSelected
+                      ? Colors.white
+                      : fontCol.withValues(alpha: 0.8),
                 ),
               ),
             ),
@@ -4315,11 +4626,15 @@ class KnowLawPageState extends State<KnowLawPage> {
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.search, color: const Color(0xFF3F7FBF), size: 20.sp),
+              CtmSvgIcon(CtmSvgIcons.search,
+                  color: const Color(0xFF3F7FBF), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
                 '常用法規快速查詢',
-                style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                style: TextStyle(
+                    fontSize: 14.5.sp,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimary),
               ),
             ],
           ),
@@ -4374,7 +4689,8 @@ class KnowLawPageState extends State<KnowLawPage> {
     if (hasCompletedToday) {
       return NotebookCard(
         hasPaperClip: true,
-        backgroundColor: isDark ? const Color(0xFF1B2E21) : const Color(0xFFF1FAF2),
+        backgroundColor:
+            isDark ? const Color(0xFF1B2E21) : const Color(0xFFF1FAF2),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -4382,19 +4698,26 @@ class KnowLawPageState extends State<KnowLawPage> {
               children: [
                 Text(
                   '🔥 今日簽到已完成',
-                  style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w900, color: Colors.green),
+                  style: TextStyle(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.green),
                 ),
                 const Spacer(),
                 Text(
                   '學習連擊：🔥 ${gameState.studyStreak} 天',
-                  style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.bold, color: Colors.orange.shade800),
+                  style: TextStyle(
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.orange.shade800),
                 ),
               ],
             ),
             SizedBox(height: 8.h),
             Text(
               '小法助提醒您：每天答對一題，法律觀念更清晰！\n明天別忘了再來簽到挑戰新題目喔！🌱',
-              style: TextStyle(fontSize: 11.sp, height: 1.45, color: AppColors.textMuted),
+              style: TextStyle(
+                  fontSize: 11.sp, height: 1.45, color: AppColors.textMuted),
             ),
           ],
         ),
@@ -4403,29 +4726,40 @@ class KnowLawPageState extends State<KnowLawPage> {
 
     return NotebookCard(
       hasPaperClip: true,
-      backgroundColor: isDark ? const Color(0xFF2C241E) : const Color(0xFFFAF6F0),
+      backgroundColor:
+          isDark ? const Color(0xFF2C241E) : const Color(0xFFFAF6F0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.star, color: const Color(0xFFE8B95F), size: 18.sp),
+              CtmSvgIcon(CtmSvgIcons.star,
+                  color: const Color(0xFFE8B95F), size: 18.sp),
               SizedBox(width: 8.w),
               Text(
                 '📅 每日隨堂簽到挑戰',
-                style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary),
+                style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimary),
               ),
               const Spacer(),
               Text(
                 '目前連擊：🔥 ${gameState.studyStreak} 天',
-                style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.bold, color: AppColors.textSecondary),
+                style: TextStyle(
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textSecondary),
               ),
             ],
           ),
           SizedBox(height: 8.h),
           Text(
             q.question,
-            style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+            style: TextStyle(
+                fontSize: 12.5.sp,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary),
           ),
           SizedBox(height: 10.h),
           // 選項
@@ -4443,11 +4777,15 @@ class KnowLawPageState extends State<KnowLawPage> {
                 margin: EdgeInsets.only(bottom: 6.h),
                 padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                 decoration: BoxDecoration(
-                  color: isSelected 
-                      ? (isDark ? const Color(0xFF3B3324) : const Color(0xFFFFF9EC))
+                  color: isSelected
+                      ? (isDark
+                          ? const Color(0xFF3B3324)
+                          : const Color(0xFFFFF9EC))
                       : (isDark ? const Color(0xFF1E242B) : Colors.white),
                   border: Border.all(
-                    color: isSelected ? const Color(0xFFE8B95F) : (isDark ? Colors.white10 : const Color(0xFFECE5D9)),
+                    color: isSelected
+                        ? const Color(0xFFE8B95F)
+                        : (isDark ? Colors.white10 : const Color(0xFFECE5D9)),
                     width: 1.w,
                   ),
                   borderRadius: BorderRadius.circular(8.r),
@@ -4455,7 +4793,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                 child: Row(
                   children: [
                     Icon(
-                      isSelected ? Icons.radio_button_checked_rounded : Icons.radio_button_off_rounded,
+                      isSelected
+                          ? Icons.radio_button_checked_rounded
+                          : Icons.radio_button_off_rounded,
                       size: 14.sp,
                       color: isSelected ? const Color(0xFFE8B95F) : Colors.grey,
                     ),
@@ -4482,7 +4822,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                 onPressed: _selectedDailyAnswer == null
                     ? null
                     : () {
-                        final isCorrect = _selectedDailyAnswer == q.correctIndex;
+                        final isCorrect =
+                            _selectedDailyAnswer == q.correctIndex;
                         gameState.completeDailyQuiz(isCorrect);
                         if (!isCorrect) {
                           // 加入錯題本
@@ -4494,7 +4835,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                             q.options,
                           );
                         }
-                        _showDailyQuizResultDialog(isCorrect, q.explanation, gameState);
+                        _showDailyQuizResultDialog(
+                            isCorrect, q.explanation, gameState);
                         setState(() {
                           _selectedDailyAnswer = null; // 重置
                         });
@@ -4502,10 +4844,14 @@ class KnowLawPageState extends State<KnowLawPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFE8B95F),
                   foregroundColor: const Color(0xFF6B4B14),
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.r)),
                 ),
-                child: Text('提交答案並簽到', style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.bold)),
+                child: Text('提交答案並簽到',
+                    style: TextStyle(
+                        fontSize: 11.sp, fontWeight: FontWeight.bold)),
               ),
             ],
           ),
@@ -4514,13 +4860,15 @@ class KnowLawPageState extends State<KnowLawPage> {
     );
   }
 
-  void _showDailyQuizResultDialog(bool isCorrect, String explanation, LearningGameState gameState) {
+  void _showDailyQuizResultDialog(
+      bool isCorrect, String explanation, LearningGameState gameState) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
           title: Text(
             isCorrect ? '🎉 答對了！完成簽到' : '👏 答錯了，但簽到成功！',
             style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
@@ -4530,8 +4878,8 @@ class KnowLawPageState extends State<KnowLawPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                isCorrect 
-                    ? '恭喜您答對了今日挑戰！獲得簽到經驗值 +30 XP！\n目前學習連擊：🔥 ${gameState.studyStreak} 天！' 
+                isCorrect
+                    ? '恭喜您答對了今日挑戰！獲得簽到經驗值 +30 XP！\n目前學習連擊：🔥 ${gameState.studyStreak} 天！'
                     : '真可惜選錯了，本題已自動幫您加入「📕 錯題本」。仍獲得基本簽到經驗值 +20 XP！\n目前學習連擊：🔥 ${gameState.studyStreak} 天！',
                 style: TextStyle(fontSize: 12.5.sp, height: 1.45),
                 textAlign: TextAlign.center,
@@ -4548,12 +4896,18 @@ class KnowLawPageState extends State<KnowLawPage> {
                   children: [
                     Text(
                       '⚖️ 小法助白話解析：',
-                      style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: const Color(0xFF94610D)),
+                      style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF94610D)),
                     ),
                     SizedBox(height: 4.h),
                     Text(
                       explanation,
-                      style: TextStyle(fontSize: 11.5.sp, height: 1.4, color: AppColors.textSecondary),
+                      style: TextStyle(
+                          fontSize: 11.5.sp,
+                          height: 1.4,
+                          color: AppColors.textSecondary),
                     ),
                   ],
                 ),
@@ -4583,7 +4937,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                   style: OutlinedButton.styleFrom(
                     foregroundColor: HomeV2Palette.trustGreen,
                     side: const BorderSide(color: HomeV2Palette.trustGreen),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r)),
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                   ),
                 ),
@@ -4593,7 +4948,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                   style: FilledButton.styleFrom(
                     backgroundColor: HomeV2Palette.trustGreen,
                     padding: EdgeInsets.symmetric(horizontal: 24.w),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r)),
                   ),
                   child: const Text('繼續學習'),
                 ),
@@ -4609,7 +4965,8 @@ class KnowLawPageState extends State<KnowLawPage> {
   // 📝 手帳筆記分頁建構與互動邏輯
   // ==========================================
 
-  List<Widget> _buildJournalNotesItems(bool isDark, LearningGameState gameState) {
+  List<Widget> _buildJournalNotesItems(
+      bool isDark, LearningGameState gameState) {
     return [
       // 1. 筆記本美學與字體設定
       _buildAestheticsConfigCard(isDark, gameState),
@@ -4630,9 +4987,20 @@ class KnowLawPageState extends State<KnowLawPage> {
 
   // 1) 筆記本美學設定卡片
   Widget _buildAestheticsConfigCard(bool isDark, LearningGameState gameState) {
-    final titleStyle = getNotebookTextStyle(context, TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary));
-    final bodyStyle = getNotebookTextStyle(context, TextStyle(fontSize: 12.sp, color: AppColors.textSecondary));
-    final labelStyle = getNotebookTextStyle(context, TextStyle(fontSize: 11.sp, fontWeight: FontWeight.bold, color: AppColors.textPrimary));
+    final titleStyle = getNotebookTextStyle(
+        context,
+        TextStyle(
+            fontSize: 14.5.sp,
+            fontWeight: FontWeight.w900,
+            color: AppColors.textPrimary));
+    final bodyStyle = getNotebookTextStyle(
+        context, TextStyle(fontSize: 12.sp, color: AppColors.textSecondary));
+    final labelStyle = getNotebookTextStyle(
+        context,
+        TextStyle(
+            fontSize: 11.sp,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textPrimary));
 
     return NotebookCard(
       hasBookmark: true,
@@ -4643,7 +5011,8 @@ class KnowLawPageState extends State<KnowLawPage> {
         children: [
           Row(
             children: [
-              Icon(Icons.palette_outlined, size: 20.sp, color: const Color(0xFFCE8CAE)),
+              Icon(Icons.palette_outlined,
+                  size: 20.sp, color: const Color(0xFFCE8CAE)),
               SizedBox(width: 8.w),
               Text('筆記本美學設定', style: titleStyle),
             ],
@@ -4652,7 +5021,8 @@ class KnowLawPageState extends State<KnowLawPage> {
           // 手寫字體開關
           Row(
             children: [
-              Icon(Icons.font_download_outlined, size: 16.sp, color: AppColors.textSecondary),
+              Icon(Icons.font_download_outlined,
+                  size: 16.sp, color: AppColors.textSecondary),
               SizedBox(width: 8.w),
               Text('啟用手寫風格字體 (馬山正楷)', style: bodyStyle),
               const Spacer(),
@@ -4672,10 +5042,14 @@ class KnowLawPageState extends State<KnowLawPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildPaperStyleChip('經典方格', 'grid', gameState.notebookPaperStyle == 'grid', isDark, gameState),
-              _buildPaperStyleChip('復古橫線', 'lined', gameState.notebookPaperStyle == 'lined', isDark, gameState),
-              _buildPaperStyleChip('極簡點陣', 'dotted', gameState.notebookPaperStyle == 'dotted', isDark, gameState),
-              _buildPaperStyleChip('康乃爾紙', 'cornell', gameState.notebookPaperStyle == 'cornell', isDark, gameState),
+              _buildPaperStyleChip('經典方格', 'grid',
+                  gameState.notebookPaperStyle == 'grid', isDark, gameState),
+              _buildPaperStyleChip('復古橫線', 'lined',
+                  gameState.notebookPaperStyle == 'lined', isDark, gameState),
+              _buildPaperStyleChip('極簡點陣', 'dotted',
+                  gameState.notebookPaperStyle == 'dotted', isDark, gameState),
+              _buildPaperStyleChip('康乃爾紙', 'cornell',
+                  gameState.notebookPaperStyle == 'cornell', isDark, gameState),
             ],
           ),
         ],
@@ -4683,12 +5057,15 @@ class KnowLawPageState extends State<KnowLawPage> {
     );
   }
 
-  Widget _buildPaperStyleChip(String label, String value, bool isSelected, bool isDark, LearningGameState gameState) {
-    final chipLabelStyle = getNotebookTextStyle(context, TextStyle(
-      fontSize: 11.sp,
-      fontWeight: FontWeight.bold,
-      color: isSelected ? Colors.white : AppColors.textSecondary,
-    ));
+  Widget _buildPaperStyleChip(String label, String value, bool isSelected,
+      bool isDark, LearningGameState gameState) {
+    final chipLabelStyle = getNotebookTextStyle(
+        context,
+        TextStyle(
+          fontSize: 11.sp,
+          fontWeight: FontWeight.bold,
+          color: isSelected ? Colors.white : AppColors.textSecondary,
+        ));
 
     return GestureDetector(
       onTap: () => gameState.setNotebookPaperStyle(value),
@@ -4700,7 +5077,9 @@ class KnowLawPageState extends State<KnowLawPage> {
               : (isDark ? const Color(0xFF26323E) : const Color(0xFFF0ECE4)),
           borderRadius: BorderRadius.circular(8.r),
           border: Border.all(
-            color: isSelected ? Colors.transparent : (isDark ? const Color(0xFF344A5F) : const Color(0xFFD6CFC4)),
+            color: isSelected
+                ? Colors.transparent
+                : (isDark ? const Color(0xFF344A5F) : const Color(0xFFD6CFC4)),
             width: 1.w,
           ),
         ),
@@ -4711,8 +5090,18 @@ class KnowLawPageState extends State<KnowLawPage> {
 
   // 2) 我的手帳貼紙簿卡片
   Widget _buildStickersAlbumCard(bool isDark, LearningGameState gameState) {
-    final titleStyle = getNotebookTextStyle(context, TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary));
-    final countStyle = getNotebookTextStyle(context, TextStyle(fontSize: 11.sp, fontWeight: FontWeight.bold, color: AppColors.textSecondary));
+    final titleStyle = getNotebookTextStyle(
+        context,
+        TextStyle(
+            fontSize: 14.5.sp,
+            fontWeight: FontWeight.w900,
+            color: AppColors.textPrimary));
+    final countStyle = getNotebookTextStyle(
+        context,
+        TextStyle(
+            fontSize: 11.sp,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textSecondary));
 
     final Map<String, Map<String, dynamic>> stickersDb = {
       'sprout': {'emoji': '🌱', 'name': '法學新芽', 'desc': 'Level 1 解鎖'},
@@ -4727,17 +5116,20 @@ class KnowLawPageState extends State<KnowLawPage> {
 
     return NotebookCard(
       hasPaperClip: true,
-      backgroundColor: isDark ? const Color(0xFF28251E) : const Color(0xFFFAF6F0),
+      backgroundColor:
+          isDark ? const Color(0xFF28251E) : const Color(0xFFFAF6F0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(Icons.style_outlined, size: 20.sp, color: const Color(0xFFE8B95F)),
+              Icon(Icons.style_outlined,
+                  size: 20.sp, color: const Color(0xFFE8B95F)),
               SizedBox(width: 8.w),
               Text('我的手帳貼紙簿', style: titleStyle),
               const Spacer(),
-              Text('已解鎖 ${gameState.unlockedStickers.length} / 8', style: countStyle),
+              Text('已解鎖 ${gameState.unlockedStickers.length} / 8',
+                  style: countStyle),
             ],
           ),
           SizedBox(height: 12.h),
@@ -4756,11 +5148,15 @@ class KnowLawPageState extends State<KnowLawPage> {
               final id = stickersDb.keys.elementAt(idx);
               final item = stickersDb[id]!;
               final isUnlocked = gameState.unlockedStickers.contains(id);
-              final stickerNameStyle = getNotebookTextStyle(context, TextStyle(
-                fontSize: 9.sp,
-                color: isUnlocked ? AppColors.textPrimary : AppColors.textMuted,
-                fontWeight: FontWeight.bold,
-              ));
+              final stickerNameStyle = getNotebookTextStyle(
+                  context,
+                  TextStyle(
+                    fontSize: 9.sp,
+                    color: isUnlocked
+                        ? AppColors.textPrimary
+                        : AppColors.textMuted,
+                    fontWeight: FontWeight.bold,
+                  ));
 
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -4769,23 +5165,29 @@ class KnowLawPageState extends State<KnowLawPage> {
                     width: 38.w,
                     height: 38.w,
                     decoration: BoxDecoration(
-                      color: isUnlocked 
-                          ? (isDark ? const Color(0xFF38332A) : Colors.white) 
-                          : (isDark ? const Color(0xFF1E2125) : const Color(0xFFEFECE6)),
+                      color: isUnlocked
+                          ? (isDark ? const Color(0xFF38332A) : Colors.white)
+                          : (isDark
+                              ? const Color(0xFF1E2125)
+                              : const Color(0xFFEFECE6)),
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: isUnlocked 
-                            ? const Color(0xFFE8B95F) 
-                            : (isDark ? const Color(0xFF2A2E33) : const Color(0xFFDCD6CD)),
+                        color: isUnlocked
+                            ? const Color(0xFFE8B95F)
+                            : (isDark
+                                ? const Color(0xFF2A2E33)
+                                : const Color(0xFFDCD6CD)),
                         width: 1.2.w,
                       ),
-                      boxShadow: isUnlocked ? [
-                        BoxShadow(
-                          color: const Color(0xFFE8B95F).withOpacity(0.2),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                        )
-                      ] : null,
+                      boxShadow: isUnlocked
+                          ? [
+                              BoxShadow(
+                                color: const Color(0xFFE8B95F).withOpacity(0.2),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              )
+                            ]
+                          : null,
                     ),
                     child: Center(
                       child: Text(
@@ -4795,7 +5197,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                     ),
                   ),
                   SizedBox(height: 4.h),
-                  Text(item['name'] as String, style: stickerNameStyle, textAlign: TextAlign.center),
+                  Text(item['name'] as String,
+                      style: stickerNameStyle, textAlign: TextAlign.center),
                 ],
               );
             },
@@ -4807,22 +5210,48 @@ class KnowLawPageState extends State<KnowLawPage> {
 
   // 3) 我的法律摘錄本卡片列表
   Widget _buildHighlightsSection(bool isDark, LearningGameState gameState) {
-    final titleStyle = getNotebookTextStyle(context, TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary));
-    final emptyTitleStyle = getNotebookTextStyle(context, TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.bold, color: AppColors.textPrimary));
-    final emptyBodyStyle = getNotebookTextStyle(context, TextStyle(fontSize: 11.5.sp, height: 1.45, color: AppColors.textSecondary));
-    final itemTextStyle = getNotebookTextStyle(context, TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary));
-    final sourceStyle = getNotebookTextStyle(context, TextStyle(fontSize: 10.sp, color: AppColors.textSecondary));
-    final noteStyle = getNotebookTextStyle(context, TextStyle(fontSize: 11.sp, color: const Color(0xFF8A6C53), fontWeight: FontWeight.bold));
+    final titleStyle = getNotebookTextStyle(
+        context,
+        TextStyle(
+            fontSize: 14.5.sp,
+            fontWeight: FontWeight.w900,
+            color: AppColors.textPrimary));
+    final emptyTitleStyle = getNotebookTextStyle(
+        context,
+        TextStyle(
+            fontSize: 12.5.sp,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textPrimary));
+    final emptyBodyStyle = getNotebookTextStyle(
+        context,
+        TextStyle(
+            fontSize: 11.5.sp, height: 1.45, color: AppColors.textSecondary));
+    final itemTextStyle = getNotebookTextStyle(
+        context,
+        TextStyle(
+            fontSize: 12.5.sp,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary));
+    final sourceStyle = getNotebookTextStyle(
+        context, TextStyle(fontSize: 10.sp, color: AppColors.textSecondary));
+    final noteStyle = getNotebookTextStyle(
+        context,
+        TextStyle(
+            fontSize: 11.sp,
+            color: const Color(0xFF8A6C53),
+            fontWeight: FontWeight.bold));
 
     if (gameState.savedHighlights.isEmpty) {
       return NotebookCard(
         hasPaperClip: true,
-        backgroundColor: isDark ? const Color(0xFF1E2125) : const Color(0xFFFAF9F6),
+        backgroundColor:
+            isDark ? const Color(0xFF1E2125) : const Color(0xFFFAF9F6),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 8.h),
           child: Column(
             children: [
-              Icon(Icons.bookmark_outline_rounded, size: 24.sp, color: AppColors.textMuted),
+              Icon(Icons.bookmark_outline_rounded,
+                  size: 24.sp, color: AppColors.textMuted),
               SizedBox(height: 8.h),
               Text('您的摘錄本目前是空的 📕', style: emptyTitleStyle),
               SizedBox(height: 6.h),
@@ -4844,9 +5273,11 @@ class KnowLawPageState extends State<KnowLawPage> {
           padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 6.h),
           child: Row(
             children: [
-              Icon(Icons.bookmark_added_outlined, size: 18.sp, color: HomeV2Palette.trustGreen),
+              Icon(Icons.bookmark_added_outlined,
+                  size: 18.sp, color: HomeV2Palette.trustGreen),
               SizedBox(width: 8.w),
-              Text('我的法律摘錄本 (${gameState.savedHighlights.length})', style: titleStyle),
+              Text('我的法律摘錄本 (${gameState.savedHighlights.length})',
+                  style: titleStyle),
             ],
           ),
         ),
@@ -4861,16 +5292,30 @@ class KnowLawPageState extends State<KnowLawPage> {
 
           // 取得螢光筆的背景色
           Color bgHighlightColor = Colors.white;
-          if (highlightColor == 'yellow') bgHighlightColor = isDark ? const Color(0xFF38341A) : const Color(0xFFFFFAD6);
-          if (highlightColor == 'green') bgHighlightColor = isDark ? const Color(0xFF1F2F20) : const Color(0xFFEDF8E9);
-          if (highlightColor == 'pink') bgHighlightColor = isDark ? const Color(0xFF341F28) : const Color(0xFFFDEEF4);
-          if (highlightColor == 'none') bgHighlightColor = isDark ? const Color(0xFF1C222A) : Colors.white;
+          if (highlightColor == 'yellow')
+            bgHighlightColor =
+                isDark ? const Color(0xFF38341A) : const Color(0xFFFFFAD6);
+          if (highlightColor == 'green')
+            bgHighlightColor =
+                isDark ? const Color(0xFF1F2F20) : const Color(0xFFEDF8E9);
+          if (highlightColor == 'pink')
+            bgHighlightColor =
+                isDark ? const Color(0xFF341F28) : const Color(0xFFFDEEF4);
+          if (highlightColor == 'none')
+            bgHighlightColor = isDark ? const Color(0xFF1C222A) : Colors.white;
 
           final Map<String, String> emojiDb = {
-            'sprout': '🌱', 'gavel': '🔨', 'shield': '🛡️', 'trophy': '🏆',
-            'star': '⭐', 'heart': '❤️', 'scale': '⚖️', 'car': '🚗'
+            'sprout': '🌱',
+            'gavel': '🔨',
+            'shield': '🛡️',
+            'trophy': '🏆',
+            'star': '⭐',
+            'heart': '❤️',
+            'scale': '⚖️',
+            'car': '🚗'
           };
-          final String stampEmoji = stampStickerId != null ? (emojiDb[stampStickerId] ?? '') : '';
+          final String stampEmoji =
+              stampStickerId != null ? (emojiDb[stampStickerId] ?? '') : '';
 
           return GestureDetector(
             onTap: () => _showHighlightDetailDialog(context, index, gameState),
@@ -4892,14 +5337,18 @@ class KnowLawPageState extends State<KnowLawPage> {
                       if (note.isNotEmpty) ...[
                         SizedBox(height: 6.h),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.w, vertical: 4.h),
                           decoration: BoxDecoration(
-                            color: isDark ? const Color(0xFF261D15) : const Color(0xFFF5EFE6),
+                            color: isDark
+                                ? const Color(0xFF261D15)
+                                : const Color(0xFFF5EFE6),
                             borderRadius: BorderRadius.circular(6.r),
                           ),
                           child: Row(
                             children: [
-                              Icon(Icons.notes, size: 12.sp, color: const Color(0xFF8A6C53)),
+                              Icon(Icons.notes,
+                                  size: 12.sp, color: const Color(0xFF8A6C53)),
                               SizedBox(width: 6.w),
                               Expanded(
                                 child: Text(
@@ -4941,10 +5390,28 @@ class KnowLawPageState extends State<KnowLawPage> {
 
   // 4) 三段論邏輯思維筆記區
   Widget _buildCornellSection(bool isDark, LearningGameState gameState) {
-    final titleStyle = getNotebookTextStyle(context, TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary));
-    final emptyTitleStyle = getNotebookTextStyle(context, TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.bold, color: AppColors.textPrimary));
-    final emptyBodyStyle = getNotebookTextStyle(context, TextStyle(fontSize: 11.5.sp, height: 1.45, color: AppColors.textSecondary));
-    final buttonTextStyle = getNotebookTextStyle(context, TextStyle(fontSize: 11.5.sp, fontWeight: FontWeight.bold, color: Colors.white));
+    final titleStyle = getNotebookTextStyle(
+        context,
+        TextStyle(
+            fontSize: 14.5.sp,
+            fontWeight: FontWeight.w900,
+            color: AppColors.textPrimary));
+    final emptyTitleStyle = getNotebookTextStyle(
+        context,
+        TextStyle(
+            fontSize: 12.5.sp,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textPrimary));
+    final emptyBodyStyle = getNotebookTextStyle(
+        context,
+        TextStyle(
+            fontSize: 11.5.sp, height: 1.45, color: AppColors.textSecondary));
+    final buttonTextStyle = getNotebookTextStyle(
+        context,
+        TextStyle(
+            fontSize: 11.5.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.white));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -4953,20 +5420,24 @@ class KnowLawPageState extends State<KnowLawPage> {
           padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
           child: Row(
             children: [
-              Icon(Icons.menu_book_outlined, size: 18.sp, color: const Color(0xFFCE8CAE)),
+              Icon(Icons.menu_book_outlined,
+                  size: 18.sp, color: const Color(0xFFCE8CAE)),
               SizedBox(width: 8.w),
               Text('三段論邏輯思維筆記', style: titleStyle),
               const Spacer(),
               ElevatedButton.icon(
                 icon: Icon(Icons.add_rounded, size: 14.sp, color: Colors.white),
                 label: Text('新增筆記', style: buttonTextStyle),
-                onPressed: () => _showAddCornellNoteBottomSheet(context, gameState),
+                onPressed: () =>
+                    _showAddCornellNoteBottomSheet(context, gameState),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: HomeV2Palette.trustGreen,
                   foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
                   minimumSize: Size(60.w, 28.h),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.r)),
                 ),
               ),
             ],
@@ -4977,12 +5448,14 @@ class KnowLawPageState extends State<KnowLawPage> {
           NotebookCard(
             hasBookmark: true,
             bookmarkColor: const Color(0xFF6FA8DC),
-            backgroundColor: isDark ? const Color(0xFF1E2125) : const Color(0xFFF4F6F8),
+            backgroundColor:
+                isDark ? const Color(0xFF1E2125) : const Color(0xFFF4F6F8),
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 8.h),
               child: Column(
                 children: [
-                  Icon(Icons.psychology_outlined, size: 24.sp, color: AppColors.textMuted),
+                  Icon(Icons.psychology_outlined,
+                      size: 24.sp, color: AppColors.textMuted),
                   SizedBox(height: 8.h),
                   Text('尚無三段論邏輯筆記 ⚖️', style: emptyTitleStyle),
                   SizedBox(height: 6.h),
@@ -4996,29 +5469,63 @@ class KnowLawPageState extends State<KnowLawPage> {
             ),
           )
         else
-          ...gameState.cornellNotes.map((note) => _buildCornellCard(isDark, note, gameState)),
+          ...gameState.cornellNotes
+              .map((note) => _buildCornellCard(isDark, note, gameState)),
       ],
     );
   }
 
   // 康乃爾版面風格的三段論筆記卡片
-  Widget _buildCornellCard(bool isDark, Map<String, dynamic> note, LearningGameState gameState) {
-    final titleStyle = getNotebookTextStyle(context, TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary));
-    final headerStyle = getNotebookTextStyle(context, TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w900, color: const Color(0xFF7A6B53)));
-    final contentStyle = getNotebookTextStyle(context, TextStyle(fontSize: 11.5.sp, color: AppColors.textPrimary, height: 1.35));
-    final summaryTitleStyle = getNotebookTextStyle(context, TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w900, color: const Color(0xFF2E7D32)));
-    final summaryContentStyle = getNotebookTextStyle(context, TextStyle(fontSize: 11.5.sp, fontWeight: FontWeight.bold, color: const Color(0xFF2E7D32), height: 1.35));
-    
+  Widget _buildCornellCard(
+      bool isDark, Map<String, dynamic> note, LearningGameState gameState) {
+    final titleStyle = getNotebookTextStyle(
+        context,
+        TextStyle(
+            fontSize: 13.sp,
+            fontWeight: FontWeight.w900,
+            color: AppColors.textPrimary));
+    final headerStyle = getNotebookTextStyle(
+        context,
+        TextStyle(
+            fontSize: 10.sp,
+            fontWeight: FontWeight.w900,
+            color: const Color(0xFF7A6B53)));
+    final contentStyle = getNotebookTextStyle(
+        context,
+        TextStyle(
+            fontSize: 11.5.sp, color: AppColors.textPrimary, height: 1.35));
+    final summaryTitleStyle = getNotebookTextStyle(
+        context,
+        TextStyle(
+            fontSize: 10.sp,
+            fontWeight: FontWeight.w900,
+            color: const Color(0xFF2E7D32)));
+    final summaryContentStyle = getNotebookTextStyle(
+        context,
+        TextStyle(
+            fontSize: 11.5.sp,
+            fontWeight: FontWeight.bold,
+            color: const Color(0xFF2E7D32),
+            height: 1.35));
+
     final stampStickerId = note['stickerId'] as String?;
     final Map<String, String> emojiDb = {
-      'sprout': '🌱', 'gavel': '🔨', 'shield': '🛡️', 'trophy': '🏆',
-      'star': '⭐', 'heart': '❤️', 'scale': '⚖️', 'car': '🚗'
+      'sprout': '🌱',
+      'gavel': '🔨',
+      'shield': '🛡️',
+      'trophy': '🏆',
+      'star': '⭐',
+      'heart': '❤️',
+      'scale': '⚖️',
+      'car': '🚗'
     };
-    final String stampEmoji = stampStickerId != null ? (emojiDb[stampStickerId] ?? '') : '';
+    final String stampEmoji =
+        stampStickerId != null ? (emojiDb[stampStickerId] ?? '') : '';
 
     return NotebookCard(
       padding: EdgeInsets.zero, // 自己內置邊界與康乃爾分隔線
-      backgroundColor: isDark ? const Color(0xFF1C222A) : const Color(0xFFFFFCF5),
+      backgroundColor:
+          isDark ? const Color(0xFF1C222A) : const Color(0xFFFFFCF5),
       child: Stack(
         children: [
           Column(
@@ -5029,7 +5536,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                 padding: EdgeInsets.fromLTRB(12.w, 10.h, 8.w, 8.h),
                 child: Row(
                   children: [
-                    Icon(Icons.edit_note_outlined, size: 15.sp, color: const Color(0xFF7A6B53)),
+                    Icon(Icons.edit_note_outlined,
+                        size: 15.sp, color: const Color(0xFF7A6B53)),
                     SizedBox(width: 6.w),
                     Expanded(
                       child: Text(
@@ -5041,15 +5549,18 @@ class KnowLawPageState extends State<KnowLawPage> {
                     ),
                     Text(
                       note['date'] as String,
-                      style: TextStyle(fontSize: 9.sp, color: AppColors.textSecondary),
+                      style: TextStyle(
+                          fontSize: 9.sp, color: AppColors.textSecondary),
                     ),
                     SizedBox(width: 4.w),
                     IconButton(
-                      icon: Icon(Icons.delete_outline_rounded, size: 14.sp, color: Colors.red.shade400),
+                      icon: Icon(Icons.delete_outline_rounded,
+                          size: 14.sp, color: Colors.red.shade400),
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                       onPressed: () {
-                        _showDeleteConfirmDialog(context, note['id'] as String, gameState);
+                        _showDeleteConfirmDialog(
+                            context, note['id'] as String, gameState);
                       },
                     ),
                   ],
@@ -5067,7 +5578,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                       width: 90.w,
                       padding: EdgeInsets.all(8.w),
                       decoration: BoxDecoration(
-                        color: isDark ? const Color(0xFF222933) : const Color(0xFFF9F6F0),
+                        color: isDark
+                            ? const Color(0xFF222933)
+                            : const Color(0xFFF9F6F0),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -5079,7 +5592,11 @@ class KnowLawPageState extends State<KnowLawPage> {
                       ),
                     ),
                     // 垂直紅線分割
-                    Container(width: 1.2.w, color: isDark ? const Color(0xFF4A282D) : const Color(0xFFF0ACB4)),
+                    Container(
+                        width: 1.2.w,
+                        color: isDark
+                            ? const Color(0xFF4A282D)
+                            : const Color(0xFFF0ACB4)),
                     // 右側筆記欄 Notes Column
                     Expanded(
                       child: Container(
@@ -5087,9 +5604,15 @@ class KnowLawPageState extends State<KnowLawPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(note['premise'] as String, style: contentStyle, maxLines: 3, overflow: TextOverflow.ellipsis),
+                            Text(note['premise'] as String,
+                                style: contentStyle,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis),
                             SizedBox(height: 10.h),
-                            Text(note['fact'] as String, style: contentStyle, maxLines: 3, overflow: TextOverflow.ellipsis),
+                            Text(note['fact'] as String,
+                                style: contentStyle,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis),
                           ],
                         ),
                       ),
@@ -5097,23 +5620,32 @@ class KnowLawPageState extends State<KnowLawPage> {
                   ],
                 ),
               ),
-              
+
               // 水平分割紅線
-              Container(height: 1.2.h, color: isDark ? const Color(0xFF4A282D) : const Color(0xFFF0ACB4)),
+              Container(
+                  height: 1.2.h,
+                  color: isDark
+                      ? const Color(0xFF4A282D)
+                      : const Color(0xFFF0ACB4)),
 
               // 3. 底部總結區 Summary Column
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.all(8.w),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF1E2820) : const Color(0xFFF1FAF2),
+                  color: isDark
+                      ? const Color(0xFF1E2820)
+                      : const Color(0xFFF1FAF2),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('結論主張與自救救濟', style: summaryTitleStyle),
                     SizedBox(height: 3.h),
-                    Text(note['conclusion'] as String, style: summaryContentStyle, maxLines: 2, overflow: TextOverflow.ellipsis),
+                    Text(note['conclusion'] as String,
+                        style: summaryContentStyle,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis),
                   ],
                 ),
               ),
@@ -5140,10 +5672,12 @@ class KnowLawPageState extends State<KnowLawPage> {
             right: 32.w,
             top: 6.h,
             child: IconButton(
-              icon: Icon(Icons.stars_outlined, size: 14.sp, color: const Color(0xFF7A6B53)),
+              icon: Icon(Icons.stars_outlined,
+                  size: 14.sp, color: const Color(0xFF7A6B53)),
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
-              onPressed: () => _showCornellStickerPicker(context, note['id'] as String, gameState),
+              onPressed: () => _showCornellStickerPicker(
+                  context, note['id'] as String, gameState),
               tooltip: '印章蓋戳裝飾',
             ),
           ),
@@ -5152,7 +5686,8 @@ class KnowLawPageState extends State<KnowLawPage> {
     );
   }
 
-  void _showDeleteConfirmDialog(BuildContext context, String noteId, LearningGameState gameState) {
+  void _showDeleteConfirmDialog(
+      BuildContext context, String noteId, LearningGameState gameState) {
     showDialog(
       context: context,
       builder: (dialogContext) {
@@ -5177,10 +5712,12 @@ class KnowLawPageState extends State<KnowLawPage> {
     );
   }
 
-  void _showHighlightDetailDialog(BuildContext context, int index, LearningGameState gameState) {
+  void _showHighlightDetailDialog(
+      BuildContext context, int index, LearningGameState gameState) {
     final item = gameState.savedHighlights[index];
     final text = item['highlight'] as String;
-    final noteController = TextEditingController(text: item['note'] as String? ?? '');
+    final noteController =
+        TextEditingController(text: item['note'] as String? ?? '');
     String selectedColor = item['highlightColor'] as String? ?? 'yellow';
     String? selectedStickerId = item['stickerId'] as String?;
 
@@ -5188,34 +5725,67 @@ class KnowLawPageState extends State<KnowLawPage> {
       context: context,
       builder: (dialogContext) {
         final isDark = Theme.of(dialogContext).brightness == Brightness.dark;
-        final dialogBg = isDark ? const Color(0xFF1E242B) : const Color(0xFFFFFDFA);
+        final dialogBg =
+            isDark ? const Color(0xFF1E242B) : const Color(0xFFFFFDFA);
 
-        final titleStyle = getNotebookTextStyle(dialogContext, TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold, color: AppColors.textPrimary));
-        final bodyStyle = getNotebookTextStyle(dialogContext, TextStyle(fontSize: 12.sp, height: 1.45, color: AppColors.textSecondary));
-        final labelStyle = getNotebookTextStyle(dialogContext, TextStyle(fontSize: 11.5.sp, fontWeight: FontWeight.bold, color: AppColors.textPrimary));
-        final buttonTextStyle = getNotebookTextStyle(dialogContext, TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold));
+        final titleStyle = getNotebookTextStyle(
+            dialogContext,
+            TextStyle(
+                fontSize: 15.sp,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary));
+        final bodyStyle = getNotebookTextStyle(
+            dialogContext,
+            TextStyle(
+                fontSize: 12.sp, height: 1.45, color: AppColors.textSecondary));
+        final labelStyle = getNotebookTextStyle(
+            dialogContext,
+            TextStyle(
+                fontSize: 11.5.sp,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary));
+        final buttonTextStyle = getNotebookTextStyle(dialogContext,
+            TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold));
 
         return StatefulBuilder(
           builder: (statefulContext, setDialogState) {
             final Map<String, String> emojiDb = {
-              'sprout': '🌱', 'gavel': '🔨', 'shield': '🛡️', 'trophy': '🏆',
-              'star': '⭐', 'heart': '❤️', 'scale': '⚖️', 'car': '🚗'
+              'sprout': '🌱',
+              'gavel': '🔨',
+              'shield': '🛡️',
+              'trophy': '🏆',
+              'star': '⭐',
+              'heart': '❤️',
+              'scale': '⚖️',
+              'car': '🚗'
             };
-            final String stampEmoji = selectedStickerId != null ? (emojiDb[selectedStickerId] ?? '') : '';
+            final String stampEmoji = selectedStickerId != null
+                ? (emojiDb[selectedStickerId] ?? '')
+                : '';
 
             // 取得螢光筆的背景色樣式
             Color previewBgColor = Colors.white;
-            if (selectedColor == 'yellow') previewBgColor = isDark ? const Color(0xFF38341A) : const Color(0xFFFFFAD6);
-            if (selectedColor == 'green') previewBgColor = isDark ? const Color(0xFF1F2F20) : const Color(0xFFEDF8E9);
-            if (selectedColor == 'pink') previewBgColor = isDark ? const Color(0xFF341F28) : const Color(0xFFFDEEF4);
-            if (selectedColor == 'none') previewBgColor = isDark ? const Color(0xFF282D35) : const Color(0xFFF9F6F0);
+            if (selectedColor == 'yellow')
+              previewBgColor =
+                  isDark ? const Color(0xFF38341A) : const Color(0xFFFFFAD6);
+            if (selectedColor == 'green')
+              previewBgColor =
+                  isDark ? const Color(0xFF1F2F20) : const Color(0xFFEDF8E9);
+            if (selectedColor == 'pink')
+              previewBgColor =
+                  isDark ? const Color(0xFF341F28) : const Color(0xFFFDEEF4);
+            if (selectedColor == 'none')
+              previewBgColor =
+                  isDark ? const Color(0xFF282D35) : const Color(0xFFF9F6F0);
 
             return AlertDialog(
               backgroundColor: dialogBg,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.r)),
               title: Row(
                 children: [
-                  Icon(Icons.edit_note_rounded, size: 18.sp, color: HomeV2Palette.trustGreen),
+                  Icon(Icons.edit_note_rounded,
+                      size: 18.sp, color: HomeV2Palette.trustGreen),
                   SizedBox(width: 8.w),
                   Text('編輯摘錄筆記', style: titleStyle),
                 ],
@@ -5233,14 +5803,17 @@ class KnowLawPageState extends State<KnowLawPage> {
                         color: previewBgColor,
                         borderRadius: BorderRadius.circular(10.r),
                         border: Border.all(
-                          color: isDark ? const Color(0xFF2C3238) : const Color(0xFFECE6DB),
+                          color: isDark
+                              ? const Color(0xFF2C3238)
+                              : const Color(0xFFECE6DB),
                           width: 1.w,
                         ),
                       ),
                       child: Stack(
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(right: stampEmoji.isNotEmpty ? 24.w : 0),
+                            padding: EdgeInsets.only(
+                                right: stampEmoji.isNotEmpty ? 24.w : 0),
                             child: Text(text, style: bodyStyle),
                           ),
                           if (stampEmoji.isNotEmpty)
@@ -5249,7 +5822,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                               top: 0,
                               child: Opacity(
                                 opacity: 0.7,
-                                child: Text(stampEmoji, style: TextStyle(fontSize: 26.sp)),
+                                child: Text(stampEmoji,
+                                    style: TextStyle(fontSize: 26.sp)),
                               ),
                             ),
                         ],
@@ -5262,16 +5836,26 @@ class KnowLawPageState extends State<KnowLawPage> {
                     SizedBox(height: 6.h),
                     Row(
                       children: [
-                        _buildHighlightColorDot('yellow', const Color(0xFFFFF2B2), selectedColor, () {
+                        _buildHighlightColorDot(
+                            'yellow', const Color(0xFFFFF2B2), selectedColor,
+                            () {
                           setDialogState(() => selectedColor = 'yellow');
                         }),
-                        _buildHighlightColorDot('green', const Color(0xFFC8E6C9), selectedColor, () {
+                        _buildHighlightColorDot(
+                            'green', const Color(0xFFC8E6C9), selectedColor,
+                            () {
                           setDialogState(() => selectedColor = 'green');
                         }),
-                        _buildHighlightColorDot('pink', const Color(0xFFF8BBD0), selectedColor, () {
+                        _buildHighlightColorDot(
+                            'pink', const Color(0xFFF8BBD0), selectedColor, () {
                           setDialogState(() => selectedColor = 'pink');
                         }),
-                        _buildHighlightColorDot('none', isDark ? const Color(0xFF37474F) : const Color(0xFFCFD8DC), selectedColor, () {
+                        _buildHighlightColorDot(
+                            'none',
+                            isDark
+                                ? const Color(0xFF37474F)
+                                : const Color(0xFFCFD8DC),
+                            selectedColor, () {
                           setDialogState(() => selectedColor = 'none');
                         }, isNone: true),
                       ],
@@ -5282,7 +5866,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                     Text('手帳蓋戳印記：', style: labelStyle),
                     SizedBox(height: 6.h),
                     if (gameState.unlockedStickers.isEmpty)
-                      Text('（尚無解鎖貼紙，通關專題以解鎖貼紙印章！）', style: TextStyle(fontSize: 10.sp, color: AppColors.textMuted))
+                      Text('（尚無解鎖貼紙，通關專題以解鎖貼紙印章！）',
+                          style: TextStyle(
+                              fontSize: 10.sp, color: AppColors.textMuted))
                     else
                       Wrap(
                         spacing: 8.w,
@@ -5290,33 +5876,51 @@ class KnowLawPageState extends State<KnowLawPage> {
                         children: [
                           // 無印戳選項
                           GestureDetector(
-                            onTap: () => setDialogState(() => selectedStickerId = null),
+                            onTap: () =>
+                                setDialogState(() => selectedStickerId = null),
                             child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 6.w, vertical: 4.h),
                               decoration: BoxDecoration(
-                                color: selectedStickerId == null ? HomeV2Palette.trustGreen : Colors.transparent,
-                                border: Border.all(color: Colors.grey.shade400, width: 0.8.w),
+                                color: selectedStickerId == null
+                                    ? HomeV2Palette.trustGreen
+                                    : Colors.transparent,
+                                border: Border.all(
+                                    color: Colors.grey.shade400, width: 0.8.w),
                                 borderRadius: BorderRadius.circular(6.r),
                               ),
-                              child: Text('無', style: TextStyle(fontSize: 10.sp, color: selectedStickerId == null ? Colors.white : AppColors.textSecondary)),
+                              child: Text('無',
+                                  style: TextStyle(
+                                      fontSize: 10.sp,
+                                      color: selectedStickerId == null
+                                          ? Colors.white
+                                          : AppColors.textSecondary)),
                             ),
                           ),
                           ...gameState.unlockedStickers.map((stickerId) {
                             final emoji = emojiDb[stickerId] ?? '🌿';
                             final isSelected = selectedStickerId == stickerId;
                             return GestureDetector(
-                              onTap: () => setDialogState(() => selectedStickerId = stickerId),
+                              onTap: () => setDialogState(
+                                  () => selectedStickerId = stickerId),
                               child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 6.w, vertical: 4.h),
                                 decoration: BoxDecoration(
-                                  color: isSelected ? HomeV2Palette.trustGreen.withOpacity(0.2) : Colors.transparent,
+                                  color: isSelected
+                                      ? HomeV2Palette.trustGreen
+                                          .withOpacity(0.2)
+                                      : Colors.transparent,
                                   border: Border.all(
-                                    color: isSelected ? HomeV2Palette.trustGreen : Colors.grey.shade400,
+                                    color: isSelected
+                                        ? HomeV2Palette.trustGreen
+                                        : Colors.grey.shade400,
                                     width: 1.w,
                                   ),
                                   borderRadius: BorderRadius.circular(6.r),
                                 ),
-                                child: Text(emoji, style: TextStyle(fontSize: 14.sp)),
+                                child: Text(emoji,
+                                    style: TextStyle(fontSize: 14.sp)),
                               ),
                             );
                           }),
@@ -5334,14 +5938,23 @@ class KnowLawPageState extends State<KnowLawPage> {
                       },
                       minLines: 2,
                       maxLines: 4,
-                      style: getNotebookTextStyle(dialogContext, TextStyle(fontSize: 12.5.sp, color: AppColors.textPrimary)),
+                      style: getNotebookTextStyle(
+                          dialogContext,
+                          TextStyle(
+                              fontSize: 12.5.sp, color: AppColors.textPrimary)),
                       decoration: InputDecoration(
                         hintText: '輸入與該條文或概念相關的筆記備忘...',
-                        hintStyle: TextStyle(fontSize: 11.5.sp, color: AppColors.textMuted),
+                        hintStyle: TextStyle(
+                            fontSize: 11.5.sp, color: AppColors.textMuted),
                         filled: true,
-                        fillColor: isDark ? const Color(0xFF282F37) : const Color(0xFFF9F6F1),
+                        fillColor: isDark
+                            ? const Color(0xFF282F37)
+                            : const Color(0xFFF9F6F1),
                         border: OutlineInputBorder(
-                          borderSide: BorderSide(color: isDark ? const Color(0xFF34404C) : const Color(0xFFECE6DB)),
+                          borderSide: BorderSide(
+                              color: isDark
+                                  ? const Color(0xFF34404C)
+                                  : const Color(0xFFECE6DB)),
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         contentPadding: EdgeInsets.all(10.w),
@@ -5359,28 +5972,37 @@ class KnowLawPageState extends State<KnowLawPage> {
                         gameState.removeHighlight(index);
                         Navigator.pop(dialogContext);
                       },
-                      child: Text('刪除摘錄', style: buttonTextStyle.copyWith(color: Colors.red)),
+                      child: Text('刪除摘錄',
+                          style: buttonTextStyle.copyWith(color: Colors.red)),
                     ),
                     Row(
                       children: [
                         TextButton(
                           onPressed: () => Navigator.pop(dialogContext),
-                          child: Text('取消', style: buttonTextStyle.copyWith(color: AppColors.textSecondary)),
+                          child: Text('取消',
+                              style: buttonTextStyle.copyWith(
+                                  color: AppColors.textSecondary)),
                         ),
                         SizedBox(width: 4.w),
                         FilledButton(
                           style: FilledButton.styleFrom(
                             backgroundColor: HomeV2Palette.trustGreen,
                             padding: EdgeInsets.symmetric(horizontal: 16.w),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.r)),
                           ),
                           onPressed: () {
-                            gameState.updateHighlightColor(index, selectedColor);
-                            gameState.updateHighlightNote(index, noteController.text);
-                            gameState.updateHighlightSticker(index, selectedStickerId);
+                            gameState.updateHighlightColor(
+                                index, selectedColor);
+                            gameState.updateHighlightNote(
+                                index, noteController.text);
+                            gameState.updateHighlightSticker(
+                                index, selectedStickerId);
                             Navigator.pop(dialogContext);
                           },
-                          child: Text('保存', style: buttonTextStyle.copyWith(color: Colors.white)),
+                          child: Text('保存',
+                              style: buttonTextStyle.copyWith(
+                                  color: Colors.white)),
                         ),
                       ],
                     ),
@@ -5394,7 +6016,9 @@ class KnowLawPageState extends State<KnowLawPage> {
     );
   }
 
-  Widget _buildHighlightColorDot(String name, Color color, String selectedName, VoidCallback onTap, {bool isNone = false}) {
+  Widget _buildHighlightColorDot(
+      String name, Color color, String selectedName, VoidCallback onTap,
+      {bool isNone = false}) {
     final isSelected = selectedName == name;
     return GestureDetector(
       onTap: onTap,
@@ -5409,22 +6033,30 @@ class KnowLawPageState extends State<KnowLawPage> {
             color: isSelected ? Colors.black : Colors.grey.shade400,
             width: isSelected ? 2.w : 0.8.w,
           ),
-          boxShadow: isSelected ? [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.15),
-              blurRadius: 3,
-              offset: const Offset(0, 1.5),
-            )
-          ] : null,
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.15),
+                    blurRadius: 3,
+                    offset: const Offset(0, 1.5),
+                  )
+                ]
+              : null,
         ),
-        child: isNone 
-            ? Center(child: Icon(Icons.close, size: 14.sp, color: Colors.grey.shade700))
-            : (isSelected ? Center(child: Icon(Icons.check, size: 14.sp, color: Colors.black)) : null),
+        child: isNone
+            ? Center(
+                child:
+                    Icon(Icons.close, size: 14.sp, color: Colors.grey.shade700))
+            : (isSelected
+                ? Center(
+                    child: Icon(Icons.check, size: 14.sp, color: Colors.black))
+                : null),
       ),
     );
   }
 
-  void _showAddCornellNoteBottomSheet(BuildContext context, LearningGameState gameState) {
+  void _showAddCornellNoteBottomSheet(
+      BuildContext context, LearningGameState gameState) {
     final titleController = TextEditingController();
     final premiseController = TextEditingController();
     final factController = TextEditingController();
@@ -5438,17 +6070,32 @@ class KnowLawPageState extends State<KnowLawPage> {
         final isDark = Theme.of(sheetContext).brightness == Brightness.dark;
         final bg = isDark ? const Color(0xFF161C23) : const Color(0xFFFFFCF5);
 
-        final sheetTitleStyle = getNotebookTextStyle(sheetContext, TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: AppColors.textPrimary));
-        final labelStyle = getNotebookTextStyle(sheetContext, TextStyle(fontSize: 11.5.sp, fontWeight: FontWeight.bold, color: const Color(0xFF7A6B53)));
-        final inputStyle = getNotebookTextStyle(sheetContext, TextStyle(fontSize: 12.5.sp, color: AppColors.textPrimary));
+        final sheetTitleStyle = getNotebookTextStyle(
+            sheetContext,
+            TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary));
+        final labelStyle = getNotebookTextStyle(
+            sheetContext,
+            TextStyle(
+                fontSize: 11.5.sp,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF7A6B53)));
+        final inputStyle = getNotebookTextStyle(sheetContext,
+            TextStyle(fontSize: 12.5.sp, color: AppColors.textPrimary));
 
         return Container(
           decoration: BoxDecoration(
             color: bg,
             borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-            border: Border.all(color: isDark ? const Color(0xFF26323E) : const Color(0xFFECE6DB), width: 1.5.w),
+            border: Border.all(
+                color:
+                    isDark ? const Color(0xFF26323E) : const Color(0xFFECE6DB),
+                width: 1.5.w),
           ),
-          padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 16.h + MediaQuery.of(sheetContext).viewInsets.bottom),
+          padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w,
+              16.h + MediaQuery.of(sheetContext).viewInsets.bottom),
           child: SingleChildScrollView(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: Column(
@@ -5468,7 +6115,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                 SizedBox(height: 12.h),
                 Row(
                   children: [
-                    Icon(Icons.border_color_outlined, size: 18.sp, color: HomeV2Palette.trustGreen),
+                    Icon(Icons.border_color_outlined,
+                        size: 18.sp, color: HomeV2Palette.trustGreen),
                     SizedBox(width: 8.w),
                     Text('撰寫三段論邏輯筆記', style: sheetTitleStyle),
                   ],
@@ -5484,11 +6132,12 @@ class KnowLawPageState extends State<KnowLawPage> {
                   labelStyle: labelStyle,
                   inputStyle: inputStyle,
                 ),
-                
+
                 // 2. 大前提
                 _buildSheetInput(
                   label: '大前提 (適用法律法規)',
-                  hint: '例如：民法第 430 條規定，租賃物有修繕之必要，房客催告房東修理而房東不修理時，房客可終止契約或自行修繕扣抵租金。',
+                  hint:
+                      '例如：民法第 430 條規定，租賃物有修繕之必要，房客催告房東修理而房東不修理時，房客可終止契約或自行修繕扣抵租金。',
                   controller: premiseController,
                   isDark: isDark,
                   minLines: 2,
@@ -5499,7 +6148,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                 // 3. 小前提
                 _buildSheetInput(
                   label: '小前提 (具體事實事實)',
-                  hint: '例如：承租套房冷氣於 2026/06/01 漏水無法運轉，於 6/2 與 6/5 用 LINE 催告房東要求修復，房東敷衍且至今均未派工處理。',
+                  hint:
+                      '例如：承租套房冷氣於 2026/06/01 漏水無法運轉，於 6/2 與 6/5 用 LINE 催告房東要求修復，房東敷衍且至今均未派工處理。',
                   controller: factController,
                   isDark: isDark,
                   minLines: 2,
@@ -5510,7 +6160,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                 // 4. 結論
                 _buildSheetInput(
                   label: '結論 (自救主張與救濟管道)',
-                  hint: '例如：房客可發存證信函催告，逾期未修則自行找工維修（預估 5000 元），並在下個月租金直接扣除該維修費，或向消保會申訴調解。',
+                  hint:
+                      '例如：房客可發存證信函催告，逾期未修則自行找工維修（預估 5000 元），並在下個月租金直接扣除該維修費，或向消保會申訴調解。',
                   controller: conclusionController,
                   isDark: isDark,
                   minLines: 2,
@@ -5534,14 +6185,18 @@ class KnowLawPageState extends State<KnowLawPage> {
                         style: FilledButton.styleFrom(
                           backgroundColor: HomeV2Palette.trustGreen,
                           padding: EdgeInsets.symmetric(vertical: 12.h),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.r)),
                         ),
                         onPressed: () {
                           final t = titleController.text.trim();
                           final p = premiseController.text.trim();
                           final f = factController.text.trim();
                           final c = conclusionController.text.trim();
-                          if (t.isEmpty || p.isEmpty || f.isEmpty || c.isEmpty) {
+                          if (t.isEmpty ||
+                              p.isEmpty ||
+                              f.isEmpty ||
+                              c.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text('⚠️ 每個欄位都是必填的喔，才能構成完整的三段論邏輯！'),
@@ -5559,7 +6214,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                             ),
                           );
                         },
-                        child: const Text('儲存筆記', style: TextStyle(color: Colors.white)),
+                        child: const Text('儲存筆記',
+                            style: TextStyle(color: Colors.white)),
                       ),
                     ),
                   ],
@@ -5600,9 +6256,13 @@ class KnowLawPageState extends State<KnowLawPage> {
               hintText: hint,
               hintStyle: TextStyle(fontSize: 11.sp, color: AppColors.textMuted),
               filled: true,
-              fillColor: isDark ? const Color(0xFF282F37) : const Color(0xFFF9F6F1),
+              fillColor:
+                  isDark ? const Color(0xFF282F37) : const Color(0xFFF9F6F1),
               border: OutlineInputBorder(
-                borderSide: BorderSide(color: isDark ? const Color(0xFF34404C) : const Color(0xFFECE6DB)),
+                borderSide: BorderSide(
+                    color: isDark
+                        ? const Color(0xFF34404C)
+                        : const Color(0xFFECE6DB)),
                 borderRadius: BorderRadius.circular(8.r),
               ),
               contentPadding: EdgeInsets.all(10.w),
@@ -5613,27 +6273,42 @@ class KnowLawPageState extends State<KnowLawPage> {
     );
   }
 
-  void _showCornellStickerPicker(BuildContext context, String noteId, LearningGameState gameState) {
+  void _showCornellStickerPicker(
+      BuildContext context, String noteId, LearningGameState gameState) {
     showDialog(
       context: context,
       builder: (dialogContext) {
         final isDark = Theme.of(dialogContext).brightness == Brightness.dark;
-        final dialogBg = isDark ? const Color(0xFF1E242B) : const Color(0xFFFFFDFA);
+        final dialogBg =
+            isDark ? const Color(0xFF1E242B) : const Color(0xFFFFFDFA);
 
-        final titleStyle = getNotebookTextStyle(dialogContext, TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold, color: AppColors.textPrimary));
+        final titleStyle = getNotebookTextStyle(
+            dialogContext,
+            TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary));
         final list = gameState.unlockedStickers.toList();
 
         final Map<String, String> emojiDb = {
-          'sprout': '🌱', 'gavel': '🔨', 'shield': '🛡️', 'trophy': '🏆',
-          'star': '⭐', 'heart': '❤️', 'scale': '⚖️', 'car': '🚗'
+          'sprout': '🌱',
+          'gavel': '🔨',
+          'shield': '🛡️',
+          'trophy': '🏆',
+          'star': '⭐',
+          'heart': '❤️',
+          'scale': '⚖️',
+          'car': '🚗'
         };
 
         return AlertDialog(
           backgroundColor: dialogBg,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
           title: Text('印章蓋戳裝飾', style: titleStyle),
           content: list.isEmpty
-              ? Text('（尚無解鎖貼紙，通關專題以解鎖貼紙印章！）', style: TextStyle(fontSize: 11.sp, color: AppColors.textMuted))
+              ? Text('（尚無解鎖貼紙，通關專題以解鎖貼紙印章！）',
+                  style: TextStyle(fontSize: 11.sp, color: AppColors.textMuted))
               : Wrap(
                   spacing: 12.w,
                   runSpacing: 10.h,
@@ -5645,12 +6320,17 @@ class KnowLawPageState extends State<KnowLawPage> {
                         Navigator.pop(dialogContext);
                       },
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 10.w, vertical: 8.h),
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade400, width: 0.8.w),
+                          border: Border.all(
+                              color: Colors.grey.shade400, width: 0.8.w),
                           borderRadius: BorderRadius.circular(6.r),
                         ),
-                        child: Text('無印章', style: TextStyle(fontSize: 11.sp, color: AppColors.textSecondary)),
+                        child: Text('無印章',
+                            style: TextStyle(
+                                fontSize: 11.sp,
+                                color: AppColors.textSecondary)),
                       ),
                     ),
                     ...list.map((stickerId) {
@@ -5661,9 +6341,11 @@ class KnowLawPageState extends State<KnowLawPage> {
                           Navigator.pop(dialogContext);
                         },
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.w, vertical: 8.h),
                           decoration: BoxDecoration(
-                            border: Border.all(color: HomeV2Palette.trustGreen, width: 1.w),
+                            border: Border.all(
+                                color: HomeV2Palette.trustGreen, width: 1.w),
                             borderRadius: BorderRadius.circular(6.r),
                           ),
                           child: Text(emoji, style: TextStyle(fontSize: 18.sp)),
@@ -5685,8 +6367,6 @@ class _LearningTopicOption {
   final String badge;
   final bool isAvailable;
 }
-
-
 
 // 🤖 智慧小法助輪播提問氣泡元件 (整合等級表情與自訂印花)
 class _AssistantPromptBubble extends StatefulWidget {
@@ -5774,7 +6454,7 @@ class _AssistantPromptBubbleState extends State<_AssistantPromptBubble> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) =>
-                      LawAssistantSearchPage(initialPrompt: currentPrompt),
+                      LawAssistantChatPage(initialPrompt: currentPrompt),
                 ),
               );
             },
@@ -5916,6 +6596,7 @@ class _LawBuddyAvatar extends StatelessWidget {
     );
   }
 }
+
 class _LearningTopicCatalogBottomSheet extends StatefulWidget {
   const _LearningTopicCatalogBottomSheet({
     required this.initialCategory,
@@ -5928,10 +6609,12 @@ class _LearningTopicCatalogBottomSheet extends StatefulWidget {
   final Function(LearningMockArticle) onArticleTap;
 
   @override
-  State<_LearningTopicCatalogBottomSheet> createState() => _LearningTopicCatalogBottomSheetState();
+  State<_LearningTopicCatalogBottomSheet> createState() =>
+      _LearningTopicCatalogBottomSheetState();
 }
 
-class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogBottomSheet> {
+class _LearningTopicCatalogBottomSheetState
+    extends State<_LearningTopicCatalogBottomSheet> {
   late String _selectedCategory;
   String _searchQuery = '';
   late Future<List<LearningMockArticle>> _future;
@@ -5973,7 +6656,9 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
       builder: (sheetContext, scrollController) {
         return Container(
           decoration: BoxDecoration(
-            color: widget.isDark ? const Color(0xFF161C23) : const Color(0xFFFFFCF4),
+            color: widget.isDark
+                ? const Color(0xFF161C23)
+                : const Color(0xFFFFFCF4),
             borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
           ),
           child: Column(
@@ -5984,13 +6669,14 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
                   width: 42.w,
                   height: 4.h,
                   decoration: BoxDecoration(
-                    color: widget.isDark ? const Color(0xFF354454) : const Color(0xFFD8D0C2),
+                    color: widget.isDark
+                        ? const Color(0xFF354454)
+                        : const Color(0xFFD8D0C2),
                     borderRadius: BorderRadius.circular(99.r),
                   ),
                 ),
               ),
               SizedBox(height: 16.h),
-              
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: Row(
@@ -6007,7 +6693,6 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
                 ),
               ),
               SizedBox(height: 12.h),
-
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: TextField(
@@ -6032,18 +6717,20 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
                       ),
                     ),
                     filled: true,
-                    fillColor: widget.isDark ? const Color(0xFF232B35) : const Color(0xFFF5EFE2),
+                    fillColor: widget.isDark
+                        ? const Color(0xFF232B35)
+                        : const Color(0xFFF5EFE2),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14.r),
                       borderSide: BorderSide.none,
                     ),
                     contentPadding: EdgeInsets.symmetric(vertical: 8.h),
                   ),
-                  style: TextStyle(fontSize: 13.sp, color: AppColors.textPrimary),
+                  style:
+                      TextStyle(fontSize: 13.sp, color: AppColors.textPrimary),
                 ),
               ),
               SizedBox(height: 12.h),
-
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 physics: const BouncingScrollPhysics(),
@@ -6059,7 +6746,9 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
                           style: TextStyle(
                             fontSize: 11.sp,
                             fontWeight: FontWeight.bold,
-                            color: isSelected ? Colors.white : AppColors.textPrimary,
+                            color: isSelected
+                                ? Colors.white
+                                : AppColors.textPrimary,
                           ),
                         ),
                         selected: isSelected,
@@ -6072,7 +6761,9 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
                           }
                         },
                         selectedColor: HomeV2Palette.trustGreen,
-                        backgroundColor: widget.isDark ? const Color(0xFF232B35) : const Color(0xFFF5EFE2),
+                        backgroundColor: widget.isDark
+                            ? const Color(0xFF232B35)
+                            : const Color(0xFFF5EFE2),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(999.r),
                         ),
@@ -6082,15 +6773,15 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
                 ),
               ),
               SizedBox(height: 10.h),
-
               Expanded(
                 child: FutureBuilder<List<LearningMockArticle>>(
                   future: _future,
                   builder: (context, snapshot) {
                     final List<LearningMockArticle> list = snapshot.data ?? [];
-                    
+
                     return CustomScrollView(
-                      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                      keyboardDismissBehavior:
+                          ScrollViewKeyboardDismissBehavior.onDrag,
                       controller: scrollController,
                       physics: const AlwaysScrollableScrollPhysics(),
                       slivers: [
@@ -6099,7 +6790,8 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
                             hasScrollBody: false,
                             child: Center(
                               child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(HomeV2Palette.trustGreen),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    HomeV2Palette.trustGreen),
                               ),
                             ),
                           )
@@ -6135,7 +6827,8 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
                           SliverPadding(
                             padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 20.h),
                             sliver: SliverGrid(
-                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                                 mainAxisSpacing: 10.h,
                                 crossAxisSpacing: 10.w,
@@ -6145,11 +6838,11 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
                                 (context, index) {
                                   final article = list[index];
                                   final cat = article.category ?? '法律常識';
-                                  
+
                                   Color cardBg;
                                   Color textColor;
                                   Color accentColor;
-                                  
+
                                   if (widget.isDark) {
                                     cardBg = const Color(0xFF1E252E);
                                     textColor = Colors.white;
@@ -6204,45 +6897,63 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
                                       padding: EdgeInsets.all(12.w),
                                       decoration: BoxDecoration(
                                         color: cardBg,
-                                        borderRadius: BorderRadius.circular(16.r),
+                                        borderRadius:
+                                            BorderRadius.circular(16.r),
                                         border: Border.all(
-                                          color: widget.isDark ? const Color(0xFF2C3845) : accentColor.withValues(alpha: 0.15),
+                                          color: widget.isDark
+                                              ? const Color(0xFF2C3845)
+                                              : accentColor.withValues(
+                                                  alpha: 0.15),
                                           width: 1.w,
                                         ),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: Colors.black.withValues(alpha: 0.03),
+                                            color: Colors.black
+                                                .withValues(alpha: 0.03),
                                             blurRadius: 4,
                                             offset: const Offset(0, 2),
                                           ),
                                         ],
                                       ),
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Row(
                                             children: [
                                               Container(
-                                                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 6.w,
+                                                    vertical: 2.h),
                                                 decoration: BoxDecoration(
-                                                  color: widget.isDark ? const Color(0xFF354454) : Colors.white.withValues(alpha: 0.72),
-                                                  borderRadius: BorderRadius.circular(6.r),
+                                                  color: widget.isDark
+                                                      ? const Color(0xFF354454)
+                                                      : Colors.white.withValues(
+                                                          alpha: 0.72),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          6.r),
                                                 ),
                                                 child: Text(
                                                   cat,
                                                   style: TextStyle(
                                                     fontSize: 9.sp,
                                                     fontWeight: FontWeight.bold,
-                                                    color: widget.isDark ? Colors.white70 : accentColor,
+                                                    color: widget.isDark
+                                                        ? Colors.white70
+                                                        : accentColor,
                                                   ),
                                                 ),
                                               ),
                                               const Spacer(),
-                                              if (LearningGameState.instance.savedArticles.contains(article.title))
+                                              if (LearningGameState
+                                                  .instance.savedArticles
+                                                  .contains(article.title))
                                                 CtmSvgIcon(
                                                   CtmSvgIcons.bookmark,
                                                   size: 11.sp,
-                                                  color: const Color(0xFFE8B95F),
+                                                  color:
+                                                      const Color(0xFFE8B95F),
                                                 ),
                                             ],
                                           ),
@@ -6263,7 +6974,9 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
                                             article.summary,
                                             style: TextStyle(
                                               fontSize: 10.sp,
-                                              color: widget.isDark ? Colors.white60 : AppColors.textSecondary,
+                                              color: widget.isDark
+                                                  ? Colors.white60
+                                                  : AppColors.textSecondary,
                                               height: 1.3,
                                             ),
                                             maxLines: 2,
@@ -6275,23 +6988,37 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
                                               CtmSvgIcon(
                                                 CtmSvgIcons.clock,
                                                 size: 11.sp,
-                                                color: widget.isDark ? Colors.white38 : Colors.grey,
+                                                color: widget.isDark
+                                                    ? Colors.white38
+                                                    : Colors.grey,
                                               ),
                                               SizedBox(width: 4.w),
                                               Text(
                                                 article.readTime,
                                                 style: TextStyle(
                                                   fontSize: 9.5.sp,
-                                                  color: widget.isDark ? Colors.white38 : Colors.grey,
+                                                  color: widget.isDark
+                                                      ? Colors.white38
+                                                      : Colors.grey,
                                                 ),
                                               ),
                                               const Spacer(),
                                               Text(
-                                                '★' * ((article.title.length % 3) + 1) + '☆' * (3 - ((article.title.length % 3) + 1)),
+                                                '★' *
+                                                        ((article.title.length %
+                                                                3) +
+                                                            1) +
+                                                    '☆' *
+                                                        (3 -
+                                                            ((article.title
+                                                                        .length %
+                                                                    3) +
+                                                                1)),
                                                 style: TextStyle(
                                                   fontSize: 10.sp,
                                                   fontWeight: FontWeight.bold,
-                                                  color: const Color(0xFFE8B95F),
+                                                  color:
+                                                      const Color(0xFFE8B95F),
                                                 ),
                                               ),
                                             ],
@@ -6320,7 +7047,8 @@ class _LearningTopicCatalogBottomSheetState extends State<_LearningTopicCatalogB
 
 // 🤖 每日專題非同步載入骨架屏 (Pulsing Skeleton Card)
 class _PulsingSkeleton extends StatefulWidget {
-  const _PulsingSkeleton({required this.width, required this.height, this.borderRadius});
+  const _PulsingSkeleton(
+      {required this.width, required this.height, this.borderRadius});
   final double width;
   final double height;
   final BorderRadiusGeometry? borderRadius;
@@ -6329,7 +7057,8 @@ class _PulsingSkeleton extends StatefulWidget {
   State<_PulsingSkeleton> createState() => _PulsingSkeletonState();
 }
 
-class _PulsingSkeletonState extends State<_PulsingSkeleton> with SingleTickerProviderStateMixin {
+class _PulsingSkeletonState extends State<_PulsingSkeleton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -6376,17 +7105,22 @@ class _TappableCustomClassroomCard extends StatefulWidget {
   });
 
   @override
-  State<_TappableCustomClassroomCard> createState() => _TappableCustomClassroomCardState();
+  State<_TappableCustomClassroomCard> createState() =>
+      _TappableCustomClassroomCardState();
 }
 
-class _TappableCustomClassroomCardState extends State<_TappableCustomClassroomCard> {
+class _TappableCustomClassroomCardState
+    extends State<_TappableCustomClassroomCard> {
   double _scale = 1.0;
 
   @override
   Widget build(BuildContext context) {
-    final cardBg = widget.isDark ? const Color(0xFF2E2D24) : const Color(0xFFFFFDE7);
-    final circleBg = widget.isDark ? const Color(0xFF4A4930) : const Color(0xFFFFF59D);
-    final iconColor = widget.isDark ? const Color(0xFFFFD54F) : const Color(0xFFF57F17);
+    final cardBg =
+        widget.isDark ? const Color(0xFF2E2D24) : const Color(0xFFFFFDE7);
+    final circleBg =
+        widget.isDark ? const Color(0xFF4A4930) : const Color(0xFFFFF59D);
+    final iconColor =
+        widget.isDark ? const Color(0xFFFFD54F) : const Color(0xFFF57F17);
 
     return GestureDetector(
       onTapDown: (_) => setState(() => _scale = 0.97),
@@ -6652,11 +7386,15 @@ class _CustomClassroomDialogState extends State<_CustomClassroomDialog> {
               color: AppColors.textSecondary.withValues(alpha: 0.7),
             ),
             filled: true,
-            fillColor: widget.isDark ? const Color(0xFF1E252D) : const Color(0xFFFAF6EE),
+            fillColor: widget.isDark
+                ? const Color(0xFF1E252D)
+                : const Color(0xFFFAF6EE),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
               borderSide: BorderSide(
-                color: widget.isDark ? const Color(0xFF354454) : const Color(0xFFD8D0C2),
+                color: widget.isDark
+                    ? const Color(0xFF354454)
+                    : const Color(0xFFD8D0C2),
                 width: 1.w,
               ),
             ),
@@ -6700,7 +7438,9 @@ class _CustomClassroomDialogState extends State<_CustomClassroomDialog> {
                   border: Border.all(
                     color: _controller.text == tag
                         ? HomeV2Palette.trustGreen
-                        : (widget.isDark ? const Color(0xFF354454) : const Color(0xFFD8D0C2)),
+                        : (widget.isDark
+                            ? const Color(0xFF354454)
+                            : const Color(0xFFD8D0C2)),
                     width: _controller.text == tag ? 1.5.w : 1.w,
                   ),
                 ),
@@ -6755,10 +7495,13 @@ class _CustomClassroomDialogState extends State<_CustomClassroomDialog> {
       child: Container(
         constraints: BoxConstraints(maxWidth: 450.w),
         decoration: BoxDecoration(
-          color: widget.isDark ? const Color(0xFF161C23) : const Color(0xFFFFFCF4),
+          color:
+              widget.isDark ? const Color(0xFF161C23) : const Color(0xFFFFFCF4),
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
-            color: widget.isDark ? const Color(0xFF26323E) : const Color(0xFFECE6DB),
+            color: widget.isDark
+                ? const Color(0xFF26323E)
+                : const Color(0xFFECE6DB),
             width: 1.5.w,
           ),
           boxShadow: [

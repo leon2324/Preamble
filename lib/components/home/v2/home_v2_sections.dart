@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
 import 'package:lawapp/components/home/home_content.dart';
+import 'package:lawapp/components/home/home_news_section.dart';
+import 'package:lawapp/components/home/legacy/home_discussion_section_legacy.dart'
+    as legacy_home;
 import 'package:lawapp/components/home/v2/home_v2_palette.dart';
 import 'package:lawapp/components/home/v2/home_v2_primitives.dart';
 import 'package:lawapp/data/mock_data/home/home_v2_mock_data.dart';
@@ -1174,6 +1177,612 @@ class _TopicCard extends StatelessWidget {
                 ],
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class HomeV2TopicBentoGrid extends StatelessWidget {
+  const HomeV2TopicBentoGrid({
+    super.key,
+    this.onTopicTap,
+  });
+
+  final ValueChanged<HomeV2TopicItem>? onTopicTap;
+
+  @override
+  Widget build(BuildContext context) {
+    if (homeV2TopicItems.length < 3) return const SizedBox.shrink();
+
+    final itemBig = homeV2TopicItems[0];
+    final itemSmall1 = homeV2TopicItems[1];
+    final itemSmall2 = homeV2TopicItems[2];
+
+    return SizedBox(
+      height: 160.h,
+      child: Row(
+        children: [
+          // 左側大卡片
+          Expanded(
+            flex: 3,
+            child: _BigBentoTopicCard(
+              item: itemBig,
+              onTap: onTopicTap == null ? null : () => onTopicTap!(itemBig),
+            ),
+          ),
+          SizedBox(width: 12.w),
+          // 右側兩張小卡片
+          Expanded(
+            flex: 2,
+            child: Column(
+              children: [
+                Expanded(
+                  child: _SmallBentoTopicCard(
+                    item: itemSmall1,
+                    onTap: onTopicTap == null
+                        ? null
+                        : () => onTopicTap!(itemSmall1),
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                Expanded(
+                  child: _SmallBentoTopicCard(
+                    item: itemSmall2,
+                    onTap: onTopicTap == null
+                        ? null
+                        : () => onTopicTap!(itemSmall2),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BigBentoTopicCard extends StatelessWidget {
+  const _BigBentoTopicCard({
+    required this.item,
+    this.onTap,
+  });
+
+  final HomeV2TopicItem item;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final radius = BorderRadius.circular(22.r);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: radius,
+        child: Ink(
+          padding: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            color: item.color,
+            borderRadius: radius,
+            border: Border.all(
+              color: isDark ? const Color(0xFF2A3340) : const Color(0xFFE9DFD2),
+              width: 1.2.w,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: isDark ? 0.05 : 0.015),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.all(8.w),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: isDark ? 0.08 : 0.6),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  item.icon,
+                  color: HomeV2Palette.trustGreen,
+                  size: 24.sp,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                item.title,
+                style: TextStyle(
+                  color: HomeV2Palette.ink,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w900,
+                  height: 1.2,
+                ),
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                item.subtitle,
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SmallBentoTopicCard extends StatelessWidget {
+  const _SmallBentoTopicCard({
+    required this.item,
+    this.onTap,
+  });
+
+  final HomeV2TopicItem item;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final radius = BorderRadius.circular(18.r);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: radius,
+        child: Ink(
+          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+          decoration: BoxDecoration(
+            color: item.color,
+            borderRadius: radius,
+            border: Border.all(
+              color: isDark ? const Color(0xFF2A3340) : const Color(0xFFE9DFD2),
+              width: 1.2.w,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: isDark ? 0.05 : 0.015),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      item.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: HomeV2Palette.ink,
+                        fontSize: 13.5.sp,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      item.subtitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 10.5.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 8.w),
+              Icon(
+                item.icon,
+                color: HomeV2Palette.trustGreen.withValues(alpha: 0.8),
+                size: 20.sp,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class HomeV2NewsletterFocusCard extends StatefulWidget {
+  const HomeV2NewsletterFocusCard({
+    super.key,
+    required this.item,
+    this.onTap,
+  });
+
+  final HomeNewsletterItem item;
+  final VoidCallback? onTap;
+
+  @override
+  State<HomeV2NewsletterFocusCard> createState() =>
+      _HomeV2NewsletterFocusCardState();
+}
+
+class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
+  var _isLiked = false;
+  var _isBookmarked = false;
+  var _shareCountDelta = 0;
+  var _commentCountDelta = 0;
+
+  HomeNewsletterItem get item => widget.item;
+
+  int _metricBase(String value) {
+    final digits = RegExp(r'\d+').firstMatch(value)?.group(0);
+    return int.tryParse(digits ?? '') ?? 0;
+  }
+
+  String _metricText(String value, int delta) {
+    final next = _metricBase(value) + delta;
+    return '$next+';
+  }
+
+  void _toggleLike() {
+    setState(() {
+      _isLiked = !_isLiked;
+    });
+  }
+
+  void _share() {
+    setState(() {
+      _shareCountDelta += 1;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('已複製分享連結示意。')),
+    );
+  }
+
+  void _comment() {
+    setState(() {
+      _commentCountDelta += 1;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('留言功能已預留，先幫你記一筆互動。')),
+    );
+  }
+
+  void _toggleBookmark() {
+    setState(() {
+      _isBookmarked = !_isBookmarked;
+    });
+  }
+
+  IconData _iconForItem(HomeNewsletterItem item) {
+    if (item.category.contains('狗') || item.category.contains('寵物')) {
+      return Icons.pets_rounded;
+    }
+    if (item.category.contains('租')) return Icons.home_work_outlined;
+    if (item.category.contains('拍照') || item.category.contains('隱私')) {
+      return Icons.photo_camera_outlined;
+    }
+    if (item.category.contains('網購')) return Icons.shopping_bag_outlined;
+    if (item.category.contains('交通')) return Icons.directions_car_outlined;
+    return Icons.lightbulb_outline_rounded;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final radius = BorderRadius.circular(24.r);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final icon = _iconForItem(item);
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: widget.onTap,
+        borderRadius: radius,
+        child: Ink(
+          width: double.infinity,
+          padding: EdgeInsets.fromLTRB(16.w, 18.h, 16.w, 14.h),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: isDark
+                  ? [const Color(0xFF231F17), const Color(0xFF1B1B18)]
+                  : [const Color(0xFFFFF7EE), const Color(0xFFF9EAD3)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: radius,
+            border: Border.all(
+              color: isDark
+                  ? const Color(0xFF382F22).withValues(alpha: 0.5)
+                  : Colors.white.withValues(alpha: 0.72),
+              width: 1.2.w,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: isDark
+                    ? Colors.black.withValues(alpha: 0.15)
+                    : const Color(0x128B6A3C),
+                blurRadius: 18,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: const Color(0xFF2B4499),
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w900,
+                            height: 1.2,
+                          ),
+                        ),
+                        SizedBox(height: 8.h),
+                        Text(
+                          item.summary,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 11.5.sp,
+                            height: 1.45,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  Container(
+                    width: 72.w,
+                    height: 72.w,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: isDark
+                            ? [const Color(0xFF2C2F36), const Color(0xFF1C1E22)]
+                            : [
+                                const Color(0xFFE9DFD2),
+                                const Color(0xFFD7C8A6)
+                              ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(18.r),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black
+                              .withValues(alpha: isDark ? 0.15 : 0.04),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      icon,
+                      color: Colors.white,
+                      size: 28.sp,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 12.h),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? const Color(0xFF1B2B18)
+                      : const Color(0xFFE7F0DE),
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Text(
+                  item.tip,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: isDark
+                        ? const Color(0xFF9ECE90)
+                        : const Color(0xFF3F8B2A),
+                    fontSize: 10.5.sp,
+                    fontWeight: FontWeight.w700,
+                    height: 1.35,
+                  ),
+                ),
+              ),
+              SizedBox(height: 12.h),
+              Row(
+                children: [
+                  _NewsletterMetric(
+                    icon: _isLiked
+                        ? Icons.favorite_rounded
+                        : Icons.favorite_border_rounded,
+                    color: const Color(0xFFD85A53),
+                    label: _metricText(item.likes, _isLiked ? 1 : 0),
+                    onTap: _toggleLike,
+                  ),
+                  _NewsletterMetric(
+                    icon: Icons.share_outlined,
+                    color: const Color(0xFF9B874A),
+                    label: _metricText(item.shares, _shareCountDelta),
+                    onTap: _share,
+                  ),
+                  _NewsletterMetric(
+                    icon: Icons.comment_rounded,
+                    color: const Color(0xFF4F8F36),
+                    label: _metricText(item.comments, _commentCountDelta),
+                    onTap: _comment,
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    onPressed: _toggleBookmark,
+                    icon: Icon(
+                      _isBookmarked
+                          ? Icons.bookmark_rounded
+                          : Icons.bookmark_border_rounded,
+                      color: _isBookmarked
+                          ? const Color(0xFFDCA834)
+                          : AppColors.textSecondary,
+                      size: 18.sp,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class HomeV2SocialNewsSection extends StatefulWidget {
+  const HomeV2SocialNewsSection({
+    super.key,
+    required this.newsItems,
+    required this.discussionFeed,
+    this.onMoreNewsTap,
+    this.onMoreDiscussionTap,
+  });
+
+  final List<HomeNewsItem> newsItems;
+  final HomeDiscussionFeed discussionFeed;
+  final VoidCallback? onMoreNewsTap;
+  final VoidCallback? onMoreDiscussionTap;
+
+  @override
+  State<HomeV2SocialNewsSection> createState() =>
+      _HomeV2SocialNewsSectionState();
+}
+
+class _HomeV2SocialNewsSectionState extends State<HomeV2SocialNewsSection> {
+  int _activeTab = 0; // 0: 時事新聞, 1: 社群熱議
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 頂部分頁切換 Header
+        Row(
+          children: [
+            // Pill Tabs
+            Container(
+              decoration: BoxDecoration(
+                color:
+                    isDark ? const Color(0xFF161C23) : const Color(0xFFEFECE6),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              padding: EdgeInsets.all(3.w),
+              child: Row(
+                children: [
+                  _buildTabButton(0, '時事新聞', isDark),
+                  SizedBox(width: 4.w),
+                  _buildTabButton(1, '社群熱議', isDark),
+                ],
+              ),
+            ),
+            const Spacer(),
+            // 「看全部」按鈕，對應當前 Tab 的行為
+            GestureDetector(
+              onTap: _activeTab == 0
+                  ? widget.onMoreNewsTap
+                  : widget.onMoreDiscussionTap,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 8.h),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '看全部',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w700,
+                        color: HomeV2Palette.trustGreen,
+                      ),
+                    ),
+                    SizedBox(width: 2.w),
+                    Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 10.sp,
+                      color: HomeV2Palette.trustGreen,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 12.h),
+        // 切換的內容
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          child: _activeTab == 0
+              ? HomeNewsSection(
+                  key: const ValueKey('tab_news'),
+                  items: widget.newsItems,
+                  showHeader: false,
+                )
+              : legacy_home.HomeDiscussionSection(
+                  key: const ValueKey('tab_discussion'),
+                  feed: widget.discussionFeed,
+                  showHeader: false,
+                  onMoreTap: widget.onMoreDiscussionTap ?? () {},
+                ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTabButton(int index, String label, bool isDark) {
+    final isSelected = _activeTab == index;
+    return GestureDetector(
+      onTap: () => setState(() => _activeTab = index),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? (isDark ? const Color(0xFF232B35) : Colors.white)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(9.r),
+          border: isSelected
+              ? Border.all(
+                  color: isDark
+                      ? const Color(0xFF2D3845)
+                      : const Color(0xFFECE6DB),
+                  width: 1.w,
+                )
+              : null,
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 11.5.sp,
+            fontWeight: FontWeight.bold,
+            color:
+                isSelected ? HomeV2Palette.trustGreen : AppColors.textSecondary,
           ),
         ),
       ),

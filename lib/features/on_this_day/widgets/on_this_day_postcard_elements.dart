@@ -207,8 +207,10 @@ class ProgrammaticPostmarkPainter extends CustomPainter {
       final yOffset = i * 8.0 + 8.0;
       final path = Path()
         ..moveTo(0, yOffset)
-        ..quadraticBezierTo(size.width * 0.25, yOffset - 5, size.width * 0.5, yOffset)
-        ..quadraticBezierTo(size.width * 0.75, yOffset + 5, size.width, yOffset);
+        ..quadraticBezierTo(
+            size.width * 0.25, yOffset - 5, size.width * 0.5, yOffset)
+        ..quadraticBezierTo(
+            size.width * 0.75, yOffset + 5, size.width, yOffset);
       canvas.drawPath(path, paint);
     }
 
@@ -299,14 +301,14 @@ class ProgrammaticPostmarkPainter extends CustomPainter {
       for (int i = 0; i < text.length; i++) {
         final tp = textPainters[i];
         final charAngle = currentAngle + (tp.width / 2) / radius;
-        
+
         canvas.save();
         canvas.translate(center.dx, center.dy);
         canvas.rotate(charAngle);
         canvas.translate(0, -radius);
         tp.paint(canvas, Offset(-tp.width / 2, -tp.height / 2));
         canvas.restore();
-        
+
         currentAngle += tp.width / radius;
       }
     } else {
@@ -314,7 +316,7 @@ class ProgrammaticPostmarkPainter extends CustomPainter {
       for (int i = 0; i < text.length; i++) {
         final tp = textPainters[i];
         final charAngle = currentAngle - (tp.width / 2) / radius;
-        
+
         canvas.save();
         canvas.translate(center.dx, center.dy);
         canvas.rotate(charAngle);
@@ -322,7 +324,7 @@ class ProgrammaticPostmarkPainter extends CustomPainter {
         canvas.rotate(3.14159);
         tp.paint(canvas, Offset(-tp.width / 2, -tp.height / 2));
         canvas.restore();
-        
+
         currentAngle -= tp.width / radius;
       }
     }

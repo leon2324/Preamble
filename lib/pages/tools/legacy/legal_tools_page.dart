@@ -165,7 +165,9 @@ const _defaultEvidenceItems = <_EvidenceItem>[
 ];
 
 class LegalToolsPage extends StatefulWidget {
-  const LegalToolsPage({super.key});
+  const LegalToolsPage({super.key, this.initialScenarioKey});
+
+  final String? initialScenarioKey;
 
   @override
   State<LegalToolsPage> createState() => _LegalToolsPageState();
@@ -201,6 +203,27 @@ class _LegalToolsPageState extends State<LegalToolsPage> {
   @override
   void initState() {
     super.initState();
+    if (widget.initialScenarioKey != null) {
+      if (widget.initialScenarioKey == 'depositDemand') {
+        _scenario = _DocumentScenario.depositDemand;
+        _page = _ToolPage.scenario;
+      } else if (widget.initialScenarioKey == 'overtimeNegotiation') {
+        _scenario = _DocumentScenario.overtimeNegotiation;
+        _page = _ToolPage.scenario;
+      } else if (widget.initialScenarioKey == 'carAccidentMemo') {
+        _scenario = _DocumentScenario.carAccidentMemo;
+        _page = _ToolPage.scenario;
+      } else if (widget.initialScenarioKey == 'consumerComplaint') {
+        _scenario = _DocumentScenario.consumerComplaint;
+        _page = _ToolPage.scenario;
+      } else if (widget.initialScenarioKey == 'laborDisputeMessage') {
+        _scenario = _DocumentScenario.laborDisputeMessage;
+        _page = _ToolPage.scenario;
+      }
+      _issueController.text = _scenario.sampleIssue;
+      _requestController.text = _scenario.sampleRequest;
+      _evidenceController.text = _scenario.sampleEvidence;
+    }
     _draft = _buildDraft(isSample: true);
   }
 

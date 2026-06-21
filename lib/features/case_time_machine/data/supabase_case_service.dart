@@ -7,7 +7,8 @@ import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_da
 
 class SupabaseCaseService {
   SupabaseCaseService._privateConstructor();
-  static final SupabaseCaseService instance = SupabaseCaseService._privateConstructor();
+  static final SupabaseCaseService instance =
+      SupabaseCaseService._privateConstructor();
 
   bool get isConfigured {
     // 偵測是否在單元測試環境中，若是，則降級返回 false 避免發送真實網路請求
@@ -64,7 +65,8 @@ class SupabaseCaseService {
         });
 
       if (offset >= sorted.length) return [];
-      final end = (offset + limit) < sorted.length ? (offset + limit) : sorted.length;
+      final end =
+          (offset + limit) < sorted.length ? (offset + limit) : sorted.length;
       return sorted.sublist(offset, end);
     }
 
@@ -89,12 +91,15 @@ class SupabaseCaseService {
             'or=(id.eq.${Uri.encodeComponent(trimmed)},titleZh.ilike.${Uri.encodeComponent(escapedQuery)},shortDescription.ilike.${Uri.encodeComponent(escapedQuery)},memoryLine.ilike.${Uri.encodeComponent(escapedQuery)})');
       }
 
-      final url = Uri.parse('$supabaseUrl/rest/v1/cases?${queryParams.join('&')}');
+      final url =
+          Uri.parse('$supabaseUrl/rest/v1/cases?${queryParams.join('&')}');
       final response = await http.get(url, headers: _headers);
 
       if (response.statusCode == 200) {
         final List<dynamic> list = jsonDecode(response.body) as List<dynamic>;
-        final cases = list.map((item) => _mapJsonToCaseBook(item as Map<String, dynamic>)).toList();
+        final cases = list
+            .map((item) => _mapJsonToCaseBook(item as Map<String, dynamic>))
+            .toList();
         if (query != null && query.trim().isNotEmpty) {
           final q = query.trim().toLowerCase();
           cases.sort((a, b) {
@@ -105,7 +110,8 @@ class SupabaseCaseService {
         }
         return cases;
       } else {
-        throw Exception('Supabase fetch error: ${response.statusCode} ${response.body}');
+        throw Exception(
+            'Supabase fetch error: ${response.statusCode} ${response.body}');
       }
     } catch (e) {
       print('Supabase fetch failed, error propagated: $e');
@@ -127,7 +133,8 @@ class SupabaseCaseService {
     }
 
     try {
-      final url = Uri.parse('$supabaseUrl/rest/v1/cases?id=eq.${Uri.encodeComponent(id)}&select=*');
+      final url = Uri.parse(
+          '$supabaseUrl/rest/v1/cases?id=eq.${Uri.encodeComponent(id)}&select=*');
       final response = await http.get(url, headers: _headers);
 
       if (response.statusCode == 200) {
@@ -153,7 +160,8 @@ class SupabaseCaseService {
     if (map['tags'] != null) {
       if (map['tags'] is String) {
         try {
-          tagsList = List<String>.from(jsonDecode(map['tags'] as String) as List);
+          tagsList =
+              List<String>.from(jsonDecode(map['tags'] as String) as List);
         } catch (__) {}
       } else if (map['tags'] is List) {
         tagsList = List<String>.from(map['tags'] as List);
@@ -203,7 +211,8 @@ class SupabaseCaseService {
                   title: item['title'] as String? ?? '',
                   plainExplanation: item['plainExplanation'] as String? ?? '',
                   relationToCase: item['relationToCase'] as String? ?? '',
-                  relatedLawIds: List<String>.from(item['relatedLawIds'] as List? ?? []),
+                  relatedLawIds:
+                      List<String>.from(item['relatedLawIds'] as List? ?? []),
                 ))
             .toList();
       }
@@ -346,7 +355,9 @@ class SupabaseCaseService {
       shortTitleZh: map['shortTitleZh'] as String? ?? '',
       shortTitleEn: map['shortTitleEn'] as String? ?? '',
       displayCode: map['displayCode'] as String? ?? '',
-      year: map['year'] is int ? map['year'] as int : int.tryParse(map['year']?.toString() ?? '0') ?? 0,
+      year: map['year'] is int
+          ? map['year'] as int
+          : int.tryParse(map['year']?.toString() ?? '0') ?? 0,
       location: map['location'] as String? ?? '',
       status: map['status'] as String? ?? '',
       category: map['category'] as String? ?? '',

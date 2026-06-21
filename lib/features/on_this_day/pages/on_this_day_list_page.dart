@@ -30,7 +30,9 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
         _filteredCases = onThisDayCases;
       } else {
         _filteredCases = onThisDayCases
-            .where((c) => c.category == _selectedCategory || c.tags.contains(_selectedCategory))
+            .where((c) =>
+                c.category == _selectedCategory ||
+                c.tags.contains(_selectedCategory))
             .toList();
       }
     });
@@ -44,16 +46,19 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
         backgroundColor: OnThisDayColors.paperBeige,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: OnThisDayColors.primaryGreen),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded,
+              color: OnThisDayColors.primaryGreen),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
           '歷史案件',
-          style: OnThisDayTextStyles.pageTitle(context).copyWith(fontSize: 20.sp),
+          style:
+              OnThisDayTextStyles.pageTitle(context).copyWith(fontSize: 20.sp),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.bookmark_border_rounded, color: OnThisDayColors.primaryGreen),
+            icon: const Icon(Icons.bookmark_border_rounded,
+                color: OnThisDayColors.primaryGreen),
             onPressed: () {},
           ),
         ],
@@ -80,7 +85,8 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
                     });
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: isSelected
@@ -88,7 +94,9 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
                           : OnThisDayColors.bgCream.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(20.r),
                       border: Border.all(
-                        color: isSelected ? OnThisDayColors.primaryGreen : OnThisDayColors.borderLight,
+                        color: isSelected
+                            ? OnThisDayColors.primaryGreen
+                            : OnThisDayColors.borderLight,
                       ),
                     ),
                     child: Text(
@@ -96,7 +104,9 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w900,
-                        color: isSelected ? OnThisDayColors.bgPaperLight : OnThisDayColors.textSecondary,
+                        color: isSelected
+                            ? OnThisDayColors.bgPaperLight
+                            : OnThisDayColors.textSecondary,
                       ),
                     ),
                   ),
@@ -175,7 +185,8 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
                     Center(
                       child: Opacity(
                         opacity: 0.15,
-                        child: Icon(Icons.history_edu_rounded, color: Colors.white, size: 28.sp),
+                        child: Icon(Icons.history_edu_rounded,
+                            color: Colors.white, size: 28.sp),
                       ),
                     ),
                   ],
@@ -201,7 +212,8 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.bookmark_border_rounded, color: OnThisDayColors.accentGold),
+                        icon: const Icon(Icons.bookmark_border_rounded,
+                            color: OnThisDayColors.accentGold),
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                         iconSize: 18.sp,
@@ -212,7 +224,8 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
                   SizedBox(height: 2.h),
                   Text(
                     c.title,
-                    style: OnThisDayTextStyles.cardTitle(context).copyWith(fontSize: 14.sp),
+                    style: OnThisDayTextStyles.cardTitle(context)
+                        .copyWith(fontSize: 14.sp),
                   ),
                   SizedBox(height: 4.h),
                   Text(

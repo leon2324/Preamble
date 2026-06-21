@@ -16,10 +16,12 @@ class LegalDocumentExportPage extends StatefulWidget {
   final String content;
 
   @override
-  State<LegalDocumentExportPage> createState() => _LegalDocumentExportPageState();
+  State<LegalDocumentExportPage> createState() =>
+      _LegalDocumentExportPageState();
 }
 
-class _LegalDocumentExportPageState extends State<LegalDocumentExportPage> with SingleTickerProviderStateMixin {
+class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
+    with SingleTickerProviderStateMixin {
   bool _isExporting = false;
   double _exportProgress = 0.0;
   String _exportStepText = '';
@@ -59,7 +61,7 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage> with 
 
   Future<void> _startExportAnimation() async {
     if (_isExporting) return;
-    
+
     setState(() {
       _isExporting = true;
       _exportProgress = 0.0;
@@ -118,7 +120,8 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage> with 
       barrierDismissible: false,
       builder: (dialogContext) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
           title: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -146,7 +149,10 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage> with 
           ),
           content: Text(
             '正式法律催告書狀（PDF格式）與高解析度圖片已成功渲染，並儲存至您裝置的：\n\n📁 /Download/LawApp/書狀_${DateTime.now().millisecondsSinceEpoch}.pdf\n\n您可以隨時前往列印或直接寄送！',
-            style: TextStyle(fontSize: 12.5.sp, height: 1.45, color: AppColors.textSecondary),
+            style: TextStyle(
+                fontSize: 12.5.sp,
+                height: 1.45,
+                color: AppColors.textSecondary),
             textAlign: TextAlign.center,
           ),
           actions: [
@@ -159,7 +165,8 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage> with 
                 style: FilledButton.styleFrom(
                   backgroundColor: HomeV2Palette.trustGreen,
                   padding: EdgeInsets.symmetric(horizontal: 32.w),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.r)),
                 ),
                 child: const Text('確定'),
               ),
@@ -195,15 +202,20 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage> with 
                       width: double.infinity,
                       constraints: BoxConstraints(minHeight: 520.h),
                       decoration: BoxDecoration(
-                        color: isDark ? const Color(0xFF231E1E) : const Color(0xFFFFFDF9), // 米白色紙張質感
+                        color: isDark
+                            ? const Color(0xFF231E1E)
+                            : const Color(0xFFFFFDF9), // 米白色紙張質感
                         borderRadius: BorderRadius.circular(12.r),
                         border: Border.all(
-                          color: isDark ? const Color(0xFF4C3030) : const Color(0xFFE2C2C2), // 紅色雙線邊框視覺
+                          color: isDark
+                              ? const Color(0xFF4C3030)
+                              : const Color(0xFFE2C2C2), // 紅色雙線邊框視覺
                           width: 2.w,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.06),
+                            color: Colors.black
+                                .withValues(alpha: isDark ? 0.25 : 0.06),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           )
@@ -234,19 +246,26 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage> with 
                               // 頂部抬頭
                               Center(
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 16.w, vertical: 4.h),
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                      color: isDark ? const Color(0xFF6C3E3E) : const Color(0xFFC97F7F),
+                                      color: isDark
+                                          ? const Color(0xFF6C3E3E)
+                                          : const Color(0xFFC97F7F),
                                       width: 1.5.w,
                                     ),
                                   ),
                                   child: Text(
-                                    widget.title.contains('存證信函') ? '郵局存證信函 (草案)' : '正式法律公文委託書',
+                                    widget.title.contains('存證信函')
+                                        ? '郵局存證信函 (草案)'
+                                        : '正式法律公文委託書',
                                     style: TextStyle(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.bold,
-                                      color: isDark ? const Color(0xFFE2C2C2) : const Color(0xFF9E4A4A),
+                                      color: isDark
+                                          ? const Color(0xFFE2C2C2)
+                                          : const Color(0xFF9E4A4A),
                                       letterSpacing: 2,
                                     ),
                                   ),
@@ -260,7 +279,9 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage> with 
                                 style: TextStyle(
                                   fontSize: 13.sp,
                                   height: 1.6,
-                                  color: isDark ? const Color(0xFFE5D5D5) : const Color(0xFF2C2424),
+                                  color: isDark
+                                      ? const Color(0xFFE5D5D5)
+                                      : const Color(0xFF2C2424),
                                   fontFamily: 'SourceHanSerifTW', // 法律明體字重書卷感
                                 ),
                               ),
@@ -272,13 +293,16 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage> with 
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Text(
                                         '官方認證核發專用章：',
                                         style: TextStyle(
                                           fontSize: 9.5.sp,
-                                          color: isDark ? Colors.grey : const Color(0xFF8C7F7F),
+                                          color: isDark
+                                              ? Colors.grey
+                                              : const Color(0xFF8C7F7F),
                                         ),
                                       ),
                                       SizedBox(height: 6.h),
@@ -290,7 +314,9 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage> with 
                                           height: 52.w,
                                           decoration: BoxDecoration(
                                             border: Border.all(
-                                              color: isDark ? const Color(0xFFFF4D4D) : const Color(0xFFE60000),
+                                              color: isDark
+                                                  ? const Color(0xFFFF4D4D)
+                                                  : const Color(0xFFE60000),
                                               width: 2.2.w,
                                             ),
                                             shape: BoxShape.circle,
@@ -301,7 +327,9 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage> with 
                                               style: TextStyle(
                                                 fontSize: 12.sp,
                                                 fontWeight: FontWeight.bold,
-                                                color: isDark ? const Color(0xFFFF4D4D) : const Color(0xFFE60000),
+                                                color: isDark
+                                                    ? const Color(0xFFFF4D4D)
+                                                    : const Color(0xFFE60000),
                                                 fontFamily: 'Kai',
                                                 height: 1.25,
                                               ),
@@ -328,10 +356,14 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage> with 
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF161C23) : const Color(0xFFF7F7F7),
+                  color: isDark
+                      ? const Color(0xFF161C23)
+                      : const Color(0xFFF7F7F7),
                   border: Border(
                     top: BorderSide(
-                      color: isDark ? const Color(0xFF2D3845) : const Color(0xFFE5E5E5),
+                      color: isDark
+                          ? const Color(0xFF2D3845)
+                          : const Color(0xFFE5E5E5),
                       width: 1.w,
                     ),
                   ),
@@ -344,11 +376,16 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage> with 
                         icon: const Icon(Icons.copy_rounded, size: 16),
                         label: const Text('僅複製本文'),
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: isDark ? Colors.grey.shade300 : AppColors.textPrimary,
+                          foregroundColor: isDark
+                              ? Colors.grey.shade300
+                              : AppColors.textPrimary,
                           side: BorderSide(
-                            color: isDark ? const Color(0xFF354454) : const Color(0xFFCCCCCC),
+                            color: isDark
+                                ? const Color(0xFF354454)
+                                : const Color(0xFFCCCCCC),
                           ),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.r)),
                           padding: EdgeInsets.symmetric(vertical: 12.h),
                         ),
                         onPressed: _copyToClipboard,
@@ -367,7 +404,8 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage> with 
                         style: FilledButton.styleFrom(
                           backgroundColor: HomeV2Palette.trustGreen,
                           foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.r)),
                           padding: EdgeInsets.symmetric(vertical: 12.h),
                         ),
                         onPressed: _startExportAnimation,
@@ -391,7 +429,10 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage> with 
                     color: isDark ? const Color(0xFF202A35) : Colors.white,
                     borderRadius: BorderRadius.circular(16.r),
                     boxShadow: const [
-                      BoxShadow(color: Colors.black45, blurRadius: 15, spreadRadius: 2)
+                      BoxShadow(
+                          color: Colors.black45,
+                          blurRadius: 15,
+                          spreadRadius: 2)
                     ],
                   ),
                   child: Column(
@@ -412,7 +453,9 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage> with 
                         child: LinearProgressIndicator(
                           value: _exportProgress,
                           color: HomeV2Palette.trustGreen,
-                          backgroundColor: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+                          backgroundColor: isDark
+                              ? Colors.grey.shade800
+                              : Colors.grey.shade200,
                           minHeight: 6.h,
                         ),
                       ),

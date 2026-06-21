@@ -66,7 +66,8 @@ class _CaseWitnessCrossPageState extends State<CaseWitnessCrossPage> {
     _chatMessages.clear();
     _chatMessages.add({
       'isMe': false,
-      'text': '我是本案的【${_selectedRole.role}】代表。你現在是詰問人，請點選下方的快捷金句或對我提問，我將根據真實庭審筆錄與我方立場向你解答。',
+      'text':
+          '我是本案的【${_selectedRole.role}】代表。你現在是詰問人，請點選下方的快捷金句或對我提問，我將根據真實庭審筆錄與我方立場向你解答。',
       'sender': _selectedRole.role,
     });
   }
@@ -100,25 +101,33 @@ class _CaseWitnessCrossPageState extends State<CaseWitnessCrossPage> {
 
       if (roleTitle.contains('被告') || roleTitle.contains('領袖')) {
         if (text.contains('衝撞')) {
-          reply = '我們當時並非以破壞為目的。在《兩岸服貿協議》面臨黑箱程序審查、民主憲政受重大威脅且毫無其他救濟管道時，我們強行進入是為保全更重大的憲政民主秩序。此行為屬於「公民不服從」的合憲防禦範疇。';
+          reply =
+              '我們當時並非以破壞為目的。在《兩岸服貿協議》面臨黑箱程序審查、民主憲政受重大威脅且毫無其他救濟管道時，我們強行進入是為保全更重大的憲政民主秩序。此行為屬於「公民不服從」的合憲防禦範疇。';
         } else if (text.contains('意圖')) {
-          reply = '我們的意圖十分單純，就是要求「退回服貿、捍衛民主」。我們的手段是非暴力的和平集會，旨在喚起全民對程序正義的重視，絕無煽惑他人犯罪之惡意。';
+          reply =
+              '我們的意圖十分單純，就是要求「退回服貿、捍衛民主」。我們的手段是非暴力的和平集會，旨在喚起全民對程序正義的重視，絕無煽惑他人犯罪之惡意。';
         } else {
-          reply = '「公民不服從」絕非免死金牌，它有極嚴格的超法規阻卻違法要件：必須是非暴力、出於公益、面臨民主制度的重大侵害，且是最後手段。我們在法庭上也是基於這些憲法精神為自己辯護，並最終獲得法院肯認。';
+          reply =
+              '「公民不服從」絕非免死金牌，它有極嚴格的超法規阻卻違法要件：必須是非暴力、出於公益、面臨民主制度的重大侵害，且是最後手段。我們在法庭上也是基於這些憲法精神為自己辯護，並最終獲得法院肯認。';
         }
       } else if (roleTitle.contains('檢') || roleTitle.contains('訴')) {
         if (text.contains('起訴')) {
-          reply = '公訴機關是依據被告等人強行闖入立法院、毀損公物、妨害執行公務的客觀事實起訴。法律面前人人平等，無論動機多麼高尚，違法犯罪行為仍應受司法檢驗，這也是維護法治秩序的必要手段。';
+          reply =
+              '公訴機關是依據被告等人強行闖入立法院、毀損公物、妨害執行公務的客觀事實起訴。法律面前人人平等，無論動機多麼高尚，違法犯罪行為仍應受司法檢驗，這也是維護法治秩序的必要手段。';
         } else if (text.contains('寒蟬')) {
-          reply = '我們理解社會對人權保障的期待，但檢方的職責是落實法律實施。起訴是為了劃分和平表達與違法暴力破壞的界線，保護多數人安全與公共財產，並非打壓集會言論自由。';
+          reply =
+              '我們理解社會對人權保障的期待，但檢方的職責是落實法律實施。起訴是為了劃分和平表達與違法暴力破壞的界線，保護多數人安全與公共財產，並非打壓集會言論自由。';
         } else {
-          reply = '言論自由與集會遊行是憲法基本權利，但並非毫無限制。當抗爭手段涉及實體暴力、侵入政府機關首要禁區，且癱瘓國家機關正常運作時，即已逾越了和平示威的界線，應受刑法追溯。';
+          reply =
+              '言論自由與集會遊行是憲法基本權利，但並非毫無限制。當抗爭手段涉及實體暴力、侵入政府機關首要禁區，且癱瘓國家機關正常運作時，即已逾越了和平示威的界線，應受刑法追溯。';
         }
       } else if (roleTitle.contains('被害人')) {
-        reply = '那一刻對我們而言是非常驚恐且受傷的。我們希望社會在探討宏大法理的同時，也能看見受害個體在身體與心靈上承受的實質傷害，這才是司法正義不可忽視的另一面。';
+        reply =
+            '那一刻對我們而言是非常驚恐且受傷的。我們希望社會在探討宏大法理的同時，也能看見受害個體在身體與心靈上承受的實質傷害，這才是司法正義不可忽視的另一面。';
       } else {
         // 預設回答
-        reply = '這起案件在台灣法治史上有著舉足輕重的地位，不僅劃定了公民抗爭的界線，也促使司法機關在法條適用上，注入了更多憲法思維與平等權人權保障。';
+        reply =
+            '這起案件在台灣法治史上有著舉足輕重的地位，不僅劃定了公民抗爭的界線，也促使司法機關在法條適用上，注入了更多憲法思維與平等權人權保障。';
       }
 
       setState(() {
@@ -217,8 +226,10 @@ class _CaseWitnessCrossPageState extends State<CaseWitnessCrossPage> {
                       children: [
                         for (final role in widget.book.people.isEmpty
                             ? [
-                                const CasePersonRole(role: '被告/運動領袖', description: '林飛帆等被告。'),
-                                const CasePersonRole(role: '公訴檢察官', description: '代表國家起訴。')
+                                const CasePersonRole(
+                                    role: '被告/運動領袖', description: '林飛帆等被告。'),
+                                const CasePersonRole(
+                                    role: '公訴檢察官', description: '代表國家起訴。')
                               ]
                             : widget.book.people)
                           GestureDetector(
@@ -244,9 +255,10 @@ class _CaseWitnessCrossPageState extends State<CaseWitnessCrossPage> {
                                 children: [
                                   CircleAvatar(
                                     radius: 10.r,
-                                    backgroundColor: _selectedRole.role == role.role
-                                        ? CaseTimeMachineColors.primaryGreen
-                                        : const Color(0xFFC8A261),
+                                    backgroundColor:
+                                        _selectedRole.role == role.role
+                                            ? CaseTimeMachineColors.primaryGreen
+                                            : const Color(0xFFC8A261),
                                     child: Icon(
                                       Icons.person,
                                       size: 10.sp,
@@ -286,8 +298,9 @@ class _CaseWitnessCrossPageState extends State<CaseWitnessCrossPage> {
                   return Padding(
                     padding: EdgeInsets.only(bottom: 12.h),
                     child: Row(
-                      mainAxisAlignment:
-                          isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+                      mainAxisAlignment: isMe
+                          ? MainAxisAlignment.end
+                          : MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (!isMe) ...[
@@ -311,18 +324,15 @@ class _CaseWitnessCrossPageState extends State<CaseWitnessCrossPage> {
                               vertical: 10.h,
                             ),
                             decoration: BoxDecoration(
-                              color: isMe
-                                  ? const Color(0xFFD0E0D6)
-                                  : Colors.white,
+                              color:
+                                  isMe ? const Color(0xFFD0E0D6) : Colors.white,
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(14.r),
                                 topRight: Radius.circular(14.r),
-                                bottomLeft: isMe
-                                    ? Radius.circular(14.r)
-                                    : Radius.zero,
-                                bottomRight: isMe
-                                    ? Radius.zero
-                                    : Radius.circular(14.r),
+                                bottomLeft:
+                                    isMe ? Radius.circular(14.r) : Radius.zero,
+                                bottomRight:
+                                    isMe ? Radius.zero : Radius.circular(14.r),
                               ),
                               border: Border.all(
                                 color: isMe

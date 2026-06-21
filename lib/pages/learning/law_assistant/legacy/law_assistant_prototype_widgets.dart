@@ -1,4 +1,4 @@
-part of '../know_law_page.dart';
+part of '../../know_law_page.dart';
 
 /// 小法助 Prototype 共用 UI 元件與示範資料。
 ///

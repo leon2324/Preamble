@@ -51,7 +51,9 @@ class _DiscussionDetailPageState extends State<DiscussionDetailPage> {
           IconButton(
             icon: Icon(
               _isFollowing ? CupertinoIcons.bell_fill : CupertinoIcons.bell,
-              color: _isFollowing ? const Color(0xFFFF7A1A) : widget.palette.primaryText,
+              color: _isFollowing
+                  ? const Color(0xFFFF7A1A)
+                  : widget.palette.primaryText,
             ),
             onPressed: () {
               setState(() {
@@ -79,7 +81,8 @@ class _DiscussionDetailPageState extends State<DiscussionDetailPage> {
                 children: [
                   Hero(
                     tag: 'discussion-rank-${widget.item.rank}',
-                    child: _CompactRankBadge(rank: widget.item.rank, tint: widget.item.tint),
+                    child: _CompactRankBadge(
+                        rank: widget.item.rank, tint: widget.item.tint),
                   ),
                   SizedBox(width: 12.w),
                   Expanded(
@@ -102,27 +105,31 @@ class _DiscussionDetailPageState extends State<DiscussionDetailPage> {
                 ],
               ),
               SizedBox(height: 12.h),
-              
+
               // Tags list
               Wrap(
                 spacing: 6.w,
                 runSpacing: 6.h,
-                children: topic.tags.map((tag) => Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-                  decoration: BoxDecoration(
-                    color: widget.item.tint.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(20.r),
-                    border: Border.all(color: widget.item.tint.withValues(alpha: 0.2)),
-                  ),
-                  child: Text(
-                    tag,
-                    style: TextStyle(
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.bold,
-                      color: widget.item.tint,
-                    ),
-                  ),
-                )).toList(),
+                children: topic.tags
+                    .map((tag) => Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.w, vertical: 5.h),
+                          decoration: BoxDecoration(
+                            color: widget.item.tint.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(20.r),
+                            border: Border.all(
+                                color: widget.item.tint.withValues(alpha: 0.2)),
+                          ),
+                          child: Text(
+                            tag,
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.bold,
+                              color: widget.item.tint,
+                            ),
+                          ),
+                        ))
+                    .toList(),
               ),
               SizedBox(height: 16.h),
 
@@ -144,9 +151,12 @@ class _DiscussionDetailPageState extends State<DiscussionDetailPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildStatItem('本週排名', '#${topic.rank}', Icons.assessment_rounded),
-                    _buildStatItem('熱度分數', '${topic.heatScore}', Icons.local_fire_department_rounded),
-                    _buildStatItem('今日升幅', '+${topic.dayChangePercent}%', Icons.trending_up_rounded),
+                    _buildStatItem(
+                        '本週排名', '#${topic.rank}', Icons.assessment_rounded),
+                    _buildStatItem('熱度分數', '${topic.heatScore}',
+                        Icons.local_fire_department_rounded),
+                    _buildStatItem('今日升幅', '+${topic.dayChangePercent}%',
+                        Icons.trending_up_rounded),
                   ],
                 ),
               ),
@@ -243,7 +253,8 @@ class _DiscussionDetailPageState extends State<DiscussionDetailPage> {
               SizedBox(height: 20.h),
 
               // Related Cases Horizontal Carousel
-              _buildSectionTitle('關聯歷史卷宗 (進入案件圖書館)', Icons.library_books_outlined),
+              _buildSectionTitle(
+                  '關聯歷史卷宗 (進入案件圖書館)', Icons.library_books_outlined),
               SizedBox(height: 10.h),
               RelatedCasesCarousel(
                 topicIndex: widget.item.fullTopicIndex,
@@ -299,7 +310,8 @@ class _DiscussionDetailPageState extends State<DiscussionDetailPage> {
     );
   }
 
-  Widget _buildCommentCard(HomeDiscussionComment comment, JournalPalette palette) {
+  Widget _buildCommentCard(
+      HomeDiscussionComment comment, JournalPalette palette) {
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
@@ -316,7 +328,9 @@ class _DiscussionDetailPageState extends State<DiscussionDetailPage> {
                 radius: 16.r,
                 backgroundColor: widget.item.tint.withValues(alpha: 0.1),
                 child: Text(
-                  comment.userHandle.isNotEmpty ? comment.userHandle.substring(1, 2).toUpperCase() : 'U',
+                  comment.userHandle.isNotEmpty
+                      ? comment.userHandle.substring(1, 2).toUpperCase()
+                      : 'U',
                   style: TextStyle(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.bold,
@@ -382,9 +396,12 @@ class _CompactRankBadge extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: isTopRank ? const Color(0xFFF3E0AD) : tint.withValues(alpha: 0.12),
+        color:
+            isTopRank ? const Color(0xFFF3E0AD) : tint.withValues(alpha: 0.12),
         border: Border.all(
-          color: isTopRank ? const Color(0xFFD6A85F).withValues(alpha: 0.62) : tint.withValues(alpha: 0.24),
+          color: isTopRank
+              ? const Color(0xFFD6A85F).withValues(alpha: 0.62)
+              : tint.withValues(alpha: 0.24),
         ),
       ),
       child: Text(
@@ -446,7 +463,7 @@ class _InteractiveTrendChartState extends State<InteractiveTrendChart> {
                 ),
               ),
               Text(
-                _hoveredIndex != null 
+                _hoveredIndex != null
                     ? '已選: ${points[_hoveredIndex!].dateLabel}'
                     : '本週聲量',
                 style: TextStyle(
@@ -471,7 +488,9 @@ class _InteractiveTrendChartState extends State<InteractiveTrendChart> {
                 return 0.0;
               }).toList();
 
-              final maxVal = volumes.reduce((a, b) => a > b ? a : b).clamp(1.0, double.infinity);
+              final maxVal = volumes
+                  .reduce((a, b) => a > b ? a : b)
+                  .clamp(1.0, double.infinity);
               final minVal = volumes.reduce((a, b) => a < b ? a : b);
               final range = maxVal - minVal;
 
@@ -485,7 +504,8 @@ class _InteractiveTrendChartState extends State<InteractiveTrendChart> {
               }
 
               void updateHoverIndex(double localX) {
-                final idx = (localX / stepX).round().clamp(0, points.length - 1);
+                final idx =
+                    (localX / stepX).round().clamp(0, points.length - 1);
                 if (_hoveredIndex != idx) {
                   setState(() {
                     _hoveredIndex = idx;
@@ -497,10 +517,13 @@ class _InteractiveTrendChartState extends State<InteractiveTrendChart> {
                 clipBehavior: Clip.none,
                 children: [
                   GestureDetector(
-                    onPanDown: (details) => updateHoverIndex(details.localPosition.dx),
-                    onPanUpdate: (details) => updateHoverIndex(details.localPosition.dx),
+                    onPanDown: (details) =>
+                        updateHoverIndex(details.localPosition.dx),
+                    onPanUpdate: (details) =>
+                        updateHoverIndex(details.localPosition.dx),
                     onPanEnd: (_) => setState(() => _hoveredIndex = null),
-                    onTapDown: (details) => updateHoverIndex(details.localPosition.dx),
+                    onTapDown: (details) =>
+                        updateHoverIndex(details.localPosition.dx),
                     onTapUp: (_) => setState(() => _hoveredIndex = null),
                     onTapCancel: () => setState(() => _hoveredIndex = null),
                     child: SizedBox(
@@ -516,72 +539,78 @@ class _InteractiveTrendChartState extends State<InteractiveTrendChart> {
                       ),
                     ),
                   ),
-                  if (_hoveredIndex != null && _hoveredIndex! < drawingPoints.length) () {
-                    final selectedPt = drawingPoints[_hoveredIndex!];
-                    final ptData = points[_hoveredIndex!];
-                    
-                    final isLeft = selectedPt.dx < chartWidth / 2;
-                    final tooltipWidth = 120.w;
-                    final tooltipX = isLeft 
-                        ? (selectedPt.dx + 10.w).clamp(0.0, chartWidth - tooltipWidth)
-                        : (selectedPt.dx - tooltipWidth - 10.w).clamp(0.0, chartWidth);
-                    
-                    final tooltipY = (selectedPt.dy - 50.h).clamp(0.0, chartHeight - 60.h);
+                  if (_hoveredIndex != null &&
+                      _hoveredIndex! < drawingPoints.length)
+                    () {
+                      final selectedPt = drawingPoints[_hoveredIndex!];
+                      final ptData = points[_hoveredIndex!];
 
-                    return Positioned(
-                      left: tooltipX,
-                      top: tooltipY,
-                      child: Container(
-                        width: tooltipWidth,
-                        padding: EdgeInsets.all(8.w),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.85),
-                          borderRadius: BorderRadius.circular(8.r),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black26,
-                              blurRadius: 6,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              ptData.dateLabel,
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 9.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 2.h),
-                            Text(
-                              ptData.volumeLabel,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 11.sp,
-                                fontWeight: FontWeight.w900,
-                              ),
-                            ),
-                            if (ptData.annotation != null && ptData.annotation!.isNotEmpty) ...[
-                              SizedBox(height: 2.h),
-                              Text(
-                                ptData.annotation!,
-                                style: TextStyle(
-                                  color: lineColor,
-                                  fontSize: 8.sp,
-                                  fontWeight: FontWeight.w700,
-                                ),
+                      final isLeft = selectedPt.dx < chartWidth / 2;
+                      final tooltipWidth = 120.w;
+                      final tooltipX = isLeft
+                          ? (selectedPt.dx + 10.w)
+                              .clamp(0.0, chartWidth - tooltipWidth)
+                          : (selectedPt.dx - tooltipWidth - 10.w)
+                              .clamp(0.0, chartWidth);
+
+                      final tooltipY =
+                          (selectedPt.dy - 50.h).clamp(0.0, chartHeight - 60.h);
+
+                      return Positioned(
+                        left: tooltipX,
+                        top: tooltipY,
+                        child: Container(
+                          width: tooltipWidth,
+                          padding: EdgeInsets.all(8.w),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.85),
+                            borderRadius: BorderRadius.circular(8.r),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 6,
+                                offset: Offset(0, 3),
                               ),
                             ],
-                          ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                ptData.dateLabel,
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 9.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 2.h),
+                              Text(
+                                ptData.volumeLabel,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                              if (ptData.annotation != null &&
+                                  ptData.annotation!.isNotEmpty) ...[
+                                SizedBox(height: 2.h),
+                                Text(
+                                  ptData.annotation!,
+                                  style: TextStyle(
+                                    color: lineColor,
+                                    fontSize: 8.sp,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  }(),
+                      );
+                    }(),
                 ],
               );
             },
@@ -631,7 +660,8 @@ class _InteractiveHeatChartPainter extends CustomPainter {
       return 0.0;
     }).toList();
 
-    final maxVal = volumes.reduce((a, b) => a > b ? a : b).clamp(1.0, double.infinity);
+    final maxVal =
+        volumes.reduce((a, b) => a > b ? a : b).clamp(1.0, double.infinity);
     final minVal = volumes.reduce((a, b) => a < b ? a : b);
     final range = maxVal - minVal;
 
@@ -681,7 +711,8 @@ class _InteractiveHeatChartPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round;
 
-    final curvePath = Path()..moveTo(drawingPoints.first.dx, drawingPoints.first.dy);
+    final curvePath = Path()
+      ..moveTo(drawingPoints.first.dx, drawingPoints.first.dy);
     for (var i = 1; i < drawingPoints.length; i++) {
       final prev = drawingPoints[i - 1];
       final curr = drawingPoints[i];
@@ -694,13 +725,13 @@ class _InteractiveHeatChartPainter extends CustomPainter {
     // Draw interaction details
     if (hoveredIndex != null && hoveredIndex! < drawingPoints.length) {
       final selectedPt = drawingPoints[hoveredIndex!];
-      
+
       // Draw vertical guide line
       final guidePaint = Paint()
         ..color = lineColor.withValues(alpha: 0.4)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.0;
-      
+
       double startY = selectedPt.dy;
       while (startY < size.height) {
         canvas.drawLine(
@@ -712,7 +743,8 @@ class _InteractiveHeatChartPainter extends CustomPainter {
       }
 
       // Highlighted selected node
-      canvas.drawCircle(selectedPt, 8.0, Paint()..color = lineColor.withValues(alpha: 0.2));
+      canvas.drawCircle(
+          selectedPt, 8.0, Paint()..color = lineColor.withValues(alpha: 0.2));
       canvas.drawCircle(selectedPt, 4.0, Paint()..color = lineColor);
     }
 
@@ -757,10 +789,12 @@ class InteractiveTimelineSection extends StatefulWidget {
   final Color tint;
 
   @override
-  State<InteractiveTimelineSection> createState() => _InteractiveTimelineSectionState();
+  State<InteractiveTimelineSection> createState() =>
+      _InteractiveTimelineSectionState();
 }
 
-class _InteractiveTimelineSectionState extends State<InteractiveTimelineSection> {
+class _InteractiveTimelineSectionState
+    extends State<InteractiveTimelineSection> {
   final Set<int> _expandedIndices = {0};
 
   @override
@@ -795,7 +829,9 @@ class _InteractiveTimelineSectionState extends State<InteractiveTimelineSection>
                       decoration: BoxDecoration(
                         color: isExpanded
                             ? widget.tint
-                            : (isPositive ? const Color(0xFF146B50) : const Color(0xFFC62828)),
+                            : (isPositive
+                                ? const Color(0xFF146B50)
+                                : const Color(0xFFC62828)),
                         shape: BoxShape.circle,
                         border: Border.all(
                           color: isExpanded ? Colors.white : Colors.transparent,
@@ -831,7 +867,9 @@ class _InteractiveTimelineSectionState extends State<InteractiveTimelineSection>
                       color: widget.palette.surface,
                       borderRadius: BorderRadius.circular(12.r),
                       border: Border.all(
-                        color: isExpanded ? widget.tint.withValues(alpha: 0.5) : widget.palette.border,
+                        color: isExpanded
+                            ? widget.tint.withValues(alpha: 0.5)
+                            : widget.palette.border,
                         width: isExpanded ? 1.5.w : 1.0.w,
                       ),
                       boxShadow: isExpanded
@@ -868,11 +906,14 @@ class _InteractiveTimelineSectionState extends State<InteractiveTimelineSection>
                                   style: TextStyle(
                                     fontSize: 11.5.sp,
                                     fontWeight: FontWeight.bold,
-                                    color: isExpanded ? widget.tint : widget.palette.secondaryText,
+                                    color: isExpanded
+                                        ? widget.tint
+                                        : widget.palette.secondaryText,
                                   ),
                                 ),
                                 Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 6.w, vertical: 2.h),
                                   decoration: BoxDecoration(
                                     color: isPositive
                                         ? const Color(0xFFEAF7F2)
@@ -897,7 +938,8 @@ class _InteractiveTimelineSectionState extends State<InteractiveTimelineSection>
                               crossFadeState: isExpanded
                                   ? CrossFadeState.showSecond
                                   : CrossFadeState.showFirst,
-                              firstChild: const SizedBox(width: double.infinity),
+                              firstChild:
+                                  const SizedBox(width: double.infinity),
                               secondChild: Padding(
                                 padding: EdgeInsets.only(top: 8.h),
                                 child: Text(
@@ -916,7 +958,8 @@ class _InteractiveTimelineSectionState extends State<InteractiveTimelineSection>
                                 '點擊展開詳情...',
                                 style: TextStyle(
                                   fontSize: 10.sp,
-                                  color: widget.palette.secondaryText.withValues(alpha: 0.7),
+                                  color: widget.palette.secondaryText
+                                      .withValues(alpha: 0.7),
                                   fontStyle: FontStyle.italic,
                                 ),
                               ),
@@ -952,7 +995,8 @@ class InteractivePollQuizCard extends StatefulWidget {
   final Color tint;
 
   @override
-  State<InteractivePollQuizCard> createState() => _InteractivePollQuizCardState();
+  State<InteractivePollQuizCard> createState() =>
+      _InteractivePollQuizCardState();
 }
 
 class _InteractivePollQuizCardState extends State<InteractivePollQuizCard> {
@@ -973,7 +1017,8 @@ class _InteractivePollQuizCardState extends State<InteractivePollQuizCard> {
   Widget build(BuildContext context) {
     final poll = widget.topic.poll;
     if (poll != null) {
-      final totalVotes = poll.options.fold<int>(0, (sum, opt) => sum + opt.votes);
+      final totalVotes =
+          poll.options.fold<int>(0, (sum, opt) => sum + opt.votes);
       return Container(
         padding: EdgeInsets.all(14.w),
         decoration: BoxDecoration(
@@ -997,8 +1042,10 @@ class _InteractivePollQuizCardState extends State<InteractivePollQuizCard> {
               final opt = poll.options[index];
               final isSelected = _selectedPollOption == index;
               final adjustedVotes = isSelected ? opt.votes + 1 : opt.votes;
-              final adjustedTotal = _selectedPollOption != null ? totalVotes + 1 : totalVotes;
-              final percent = adjustedTotal > 0 ? (adjustedVotes / adjustedTotal) : 0.0;
+              final adjustedTotal =
+                  _selectedPollOption != null ? totalVotes + 1 : totalVotes;
+              final percent =
+                  adjustedTotal > 0 ? (adjustedVotes / adjustedTotal) : 0.0;
 
               return Padding(
                 padding: EdgeInsets.only(bottom: 8.h),
@@ -1012,7 +1059,9 @@ class _InteractivePollQuizCardState extends State<InteractivePollQuizCard> {
                   child: Container(
                     padding: EdgeInsets.all(12.w),
                     decoration: BoxDecoration(
-                      color: isSelected ? widget.tint.withValues(alpha: 0.1) : widget.palette.background,
+                      color: isSelected
+                          ? widget.tint.withValues(alpha: 0.1)
+                          : widget.palette.background,
                       borderRadius: BorderRadius.circular(10.r),
                       border: Border.all(
                         color: isSelected ? widget.tint : widget.palette.border,
@@ -1029,8 +1078,12 @@ class _InteractivePollQuizCardState extends State<InteractivePollQuizCard> {
                               opt.label,
                               style: TextStyle(
                                 fontSize: 13.sp,
-                                fontWeight: isSelected ? FontWeight.w900 : FontWeight.bold,
-                                color: isSelected ? widget.tint : widget.palette.primaryText,
+                                fontWeight: isSelected
+                                    ? FontWeight.w900
+                                    : FontWeight.bold,
+                                color: isSelected
+                                    ? widget.tint
+                                    : widget.palette.primaryText,
                               ),
                             ),
                             Text(
@@ -1038,7 +1091,9 @@ class _InteractivePollQuizCardState extends State<InteractivePollQuizCard> {
                               style: TextStyle(
                                 fontSize: 11.sp,
                                 fontWeight: FontWeight.bold,
-                                color: isSelected ? widget.tint : widget.palette.secondaryText,
+                                color: isSelected
+                                    ? widget.tint
+                                    : widget.palette.secondaryText,
                               ),
                             ),
                           ],
@@ -1055,7 +1110,9 @@ class _InteractivePollQuizCardState extends State<InteractivePollQuizCard> {
                                 value: value,
                                 backgroundColor: widget.palette.border,
                                 valueColor: AlwaysStoppedAnimation<Color>(
-                                  isSelected ? widget.tint : const Color(0xFFFF7A1A),
+                                  isSelected
+                                      ? widget.tint
+                                      : const Color(0xFFFF7A1A),
                                 ),
                                 minHeight: 6.h,
                               ),
@@ -1084,7 +1141,8 @@ class _InteractivePollQuizCardState extends State<InteractivePollQuizCard> {
           children: [
             Row(
               children: [
-                Icon(Icons.lightbulb_outline_rounded, color: Colors.amber[700], size: 20.sp),
+                Icon(Icons.lightbulb_outline_rounded,
+                    color: Colors.amber[700], size: 20.sp),
                 SizedBox(width: 6.w),
                 Text(
                   '法律知識小學堂',
@@ -1113,23 +1171,29 @@ class _InteractivePollQuizCardState extends State<InteractivePollQuizCard> {
 
               Color getBgColor() {
                 if (!isSelected) return widget.palette.background;
-                return opt.isCorrect ? const Color(0xFFEAF7F2) : const Color(0xFFFFF0F0);
+                return opt.isCorrect
+                    ? const Color(0xFFEAF7F2)
+                    : const Color(0xFFFFF0F0);
               }
 
               Color getBorderColor() {
                 if (!isSelected) return widget.palette.border;
-                return opt.isCorrect ? const Color(0xFF146B50) : const Color(0xFFC62828);
+                return opt.isCorrect
+                    ? const Color(0xFF146B50)
+                    : const Color(0xFFC62828);
               }
 
               return Padding(
                 padding: EdgeInsets.only(bottom: 8.h),
                 child: InkWell(
-                  onTap: _showExplanation ? null : () {
-                    setState(() {
-                      _selectedQuizOption = index;
-                      _showExplanation = true;
-                    });
-                  },
+                  onTap: _showExplanation
+                      ? null
+                      : () {
+                          setState(() {
+                            _selectedQuizOption = index;
+                            _showExplanation = true;
+                          });
+                        },
                   borderRadius: BorderRadius.circular(10.r),
                   child: Container(
                     padding: EdgeInsets.all(12.w),
@@ -1148,9 +1212,13 @@ class _InteractivePollQuizCardState extends State<InteractivePollQuizCard> {
                             opt.title,
                             style: TextStyle(
                               fontSize: 12.sp,
-                              fontWeight: isSelected ? FontWeight.w900 : FontWeight.bold,
-                              color: isSelected 
-                                  ? (opt.isCorrect ? const Color(0xFF146B50) : const Color(0xFFC62828))
+                              fontWeight: isSelected
+                                  ? FontWeight.w900
+                                  : FontWeight.bold,
+                              color: isSelected
+                                  ? (opt.isCorrect
+                                      ? const Color(0xFF146B50)
+                                      : const Color(0xFFC62828))
                                   : widget.palette.primaryText,
                             ),
                           ),
@@ -1158,8 +1226,12 @@ class _InteractivePollQuizCardState extends State<InteractivePollQuizCard> {
                         if (isSelected) ...[
                           SizedBox(width: 8.w),
                           Icon(
-                            opt.isCorrect ? Icons.check_circle_rounded : Icons.cancel_rounded,
-                            color: opt.isCorrect ? const Color(0xFF146B50) : const Color(0xFFC62828),
+                            opt.isCorrect
+                                ? Icons.check_circle_rounded
+                                : Icons.cancel_rounded,
+                            color: opt.isCorrect
+                                ? const Color(0xFF146B50)
+                                : const Color(0xFFC62828),
                             size: 18.sp,
                           ),
                         ],
@@ -1171,8 +1243,8 @@ class _InteractivePollQuizCardState extends State<InteractivePollQuizCard> {
             }),
             AnimatedCrossFade(
               duration: const Duration(milliseconds: 300),
-              crossFadeState: _showExplanation 
-                  ? CrossFadeState.showSecond 
+              crossFadeState: _showExplanation
+                  ? CrossFadeState.showSecond
                   : CrossFadeState.showFirst,
               firstChild: const SizedBox(width: double.infinity),
               secondChild: Padding(
@@ -1216,24 +1288,26 @@ class _InteractivePollQuizCardState extends State<InteractivePollQuizCard> {
                         ),
                         SizedBox(height: 6.h),
                         ..._quiz.termExplainMap.entries.map((entry) => Padding(
-                          padding: EdgeInsets.only(bottom: 6.h),
-                          child: RichText(
-                            text: TextSpan(
-                              style: TextStyle(
-                                fontSize: 11.sp,
-                                height: 1.4,
-                                color: widget.palette.primaryText,
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: '【${entry.key}】',
-                                  style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFFF7A1A)),
+                              padding: EdgeInsets.only(bottom: 6.h),
+                              child: RichText(
+                                text: TextSpan(
+                                  style: TextStyle(
+                                    fontSize: 11.sp,
+                                    height: 1.4,
+                                    color: widget.palette.primaryText,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: '【${entry.key}】',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xFFFF7A1A)),
+                                    ),
+                                    TextSpan(text: entry.value),
+                                  ],
                                 ),
-                                TextSpan(text: entry.value),
-                              ],
-                            ),
-                          ),
-                        )),
+                              ),
+                            )),
                       ],
                     ],
                   ),
@@ -1264,11 +1338,17 @@ class RelatedCasesCarousel extends StatelessWidget {
     final allCases = caseTimeMachineCases;
     switch (topicIndex) {
       case 0:
-        return allCases.where((c) => ['103', '799', '318'].contains(c.id)).toList();
+        return allCases
+            .where((c) => ['103', '799', '318'].contains(c.id))
+            .toList();
       case 1:
-        return allCases.where((c) => ['ding-2015', '104'].contains(c.id)).toList();
+        return allCases
+            .where((c) => ['ding-2015', '104'].contains(c.id))
+            .toList();
       case 2:
-        return allCases.where((c) => ['106', 'hung-2013'].contains(c.id)).toList();
+        return allCases
+            .where((c) => ['106', 'hung-2013'].contains(c.id))
+            .toList();
       case 3:
         return allCases.where((c) => ['161', '102'].contains(c.id)).toList();
       default:
@@ -1320,9 +1400,11 @@ class RelatedCasesCarousel extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.w, vertical: 4.h),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF1E7B66).withValues(alpha: 0.1),
+                            color:
+                                const Color(0xFF1E7B66).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8.r),
                           ),
                           child: Text(

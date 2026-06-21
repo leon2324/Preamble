@@ -113,7 +113,8 @@ class CaseBook {
   final List<CaseImage> images;
 
   // Getter to filter image sources for display
-  List<CaseSource> get displayImages => sources.where((s) => s.sourceType == 'image').toList();
+  List<CaseSource> get displayImages =>
+      sources.where((s) => s.sourceType == 'image').toList();
 
   CaseBook copyWith({
     String? id,
@@ -172,7 +173,8 @@ class CaseBook {
       timeline: timeline ?? this.timeline,
       people: people ?? this.people,
       legalIssues: legalIssues ?? this.legalIssues,
-      investigationAndTrial: investigationAndTrial ?? this.investigationAndTrial,
+      investigationAndTrial:
+          investigationAndTrial ?? this.investigationAndTrial,
       courtReasoning: courtReasoning ?? this.courtReasoning,
       judgmentResult: judgmentResult ?? this.judgmentResult,
       relatedLaws: relatedLaws ?? this.relatedLaws,
@@ -181,7 +183,8 @@ class CaseBook {
       sources: sources ?? this.sources,
       isFavorite: isFavorite ?? this.isFavorite,
       isFollowing: isFollowing ?? this.isFollowing,
-      concurringDissentingOpinions: concurringDissentingOpinions ?? this.concurringDissentingOpinions,
+      concurringDissentingOpinions:
+          concurringDissentingOpinions ?? this.concurringDissentingOpinions,
       courtArguments: courtArguments ?? this.courtArguments,
       expertOpinions: expertOpinions ?? this.expertOpinions,
       mediaReferences: mediaReferences ?? this.mediaReferences,

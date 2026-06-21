@@ -204,8 +204,7 @@ class _NewsCard extends StatelessWidget {
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color:
-                                        Colors.white.withValues(alpha: 0.55),
+                                    color: Colors.white.withValues(alpha: 0.55),
                                     blurRadius: 2.r,
                                     offset: Offset(0, -1.h),
                                   ),

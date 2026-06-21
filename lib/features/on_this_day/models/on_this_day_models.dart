@@ -42,7 +42,8 @@ class OnThisDayCase {
   final List<OnThisDaySource> sources;
 
   String get monthDayLabel => '$month / $day';
-  String get fullDateLabel => '$year.${month.toString().padLeft(2, '0')}.${day.toString().padLeft(2, '0')}';
+  String get fullDateLabel =>
+      '$year.${month.toString().padLeft(2, '0')}.${day.toString().padLeft(2, '0')}';
 }
 
 class OnThisDayTimelineNode {
@@ -100,4 +101,3 @@ class OnThisDayLegalQuote {
   final String author;
   final String reflectiveQuestion;
 }
-

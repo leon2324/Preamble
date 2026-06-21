@@ -9,12 +9,13 @@ class NotebookCoverEditorPage extends StatefulWidget {
   const NotebookCoverEditorPage({super.key});
 
   @override
-  State<NotebookCoverEditorPage> createState() => _NotebookCoverEditorPageState();
+  State<NotebookCoverEditorPage> createState() =>
+      _NotebookCoverEditorPageState();
 }
 
 class _NotebookCoverEditorPageState extends State<NotebookCoverEditorPage> {
   late final LearningGameState _gameState;
-  
+
   // 莫蘭迪封面底色選項
   final List<Map<String, dynamic>> _coverColors = [
     {'name': '燕麥奶油', 'hex': '#EFECE6', 'color': const Color(0xFFEFECE6)},
@@ -54,7 +55,8 @@ class _NotebookCoverEditorPageState extends State<NotebookCoverEditorPage> {
 
   // 取得轉換後的顏色物件
   Color _getCoverColor(String hex) {
-    final match = _coverColors.firstWhere((c) => c['hex'] == hex, orElse: () => _coverColors.first);
+    final match = _coverColors.firstWhere((c) => c['hex'] == hex,
+        orElse: () => _coverColors.first);
     return match['color'] as Color;
   }
 
@@ -130,7 +132,8 @@ class _NotebookCoverEditorPageState extends State<NotebookCoverEditorPage> {
             padding: EdgeInsets.symmetric(vertical: 8.h),
             child: Text(
               '提示：選取貼紙後，可在封面上拖曳調整位置，或使用下方滑桿縮放。',
-              style: TextStyle(fontSize: 10.5.sp, color: AppColors.textSecondary),
+              style:
+                  TextStyle(fontSize: 10.5.sp, color: AppColors.textSecondary),
             ),
           ),
 
@@ -157,14 +160,17 @@ class _NotebookCoverEditorPageState extends State<NotebookCoverEditorPage> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.12),
+                          color: Colors.black
+                              .withValues(alpha: isDark ? 0.4 : 0.12),
                           blurRadius: 16,
                           spreadRadius: 2,
                           offset: const Offset(4, 6),
                         )
                       ],
                       border: Border.all(
-                        color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.06),
+                        color: isDark
+                            ? Colors.white.withValues(alpha: 0.1)
+                            : Colors.black.withValues(alpha: 0.06),
                         width: 1.w,
                       ),
                     ),
@@ -201,7 +207,8 @@ class _NotebookCoverEditorPageState extends State<NotebookCoverEditorPage> {
                               top: 0,
                               bottom: 0,
                               width: 1.5.w,
-                              child: Container(color: Colors.black.withValues(alpha: 0.08)),
+                              child: Container(
+                                  color: Colors.black.withValues(alpha: 0.08)),
                             ),
 
                             // 書名標籤貼紙 (手寫本特色)
@@ -210,14 +217,17 @@ class _NotebookCoverEditorPageState extends State<NotebookCoverEditorPage> {
                               left: 32.w,
                               right: 32.w,
                               child: Container(
-                                padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 12.w),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 10.h, horizontal: 12.w),
                                 decoration: BoxDecoration(
                                   color: Colors.white.withValues(alpha: 0.85),
                                   borderRadius: BorderRadius.circular(4.r),
-                                  border: Border.all(color: Colors.brown.shade200, width: 1.w),
+                                  border: Border.all(
+                                      color: Colors.brown.shade200, width: 1.w),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withValues(alpha: 0.05),
+                                      color:
+                                          Colors.black.withValues(alpha: 0.05),
                                       blurRadius: 4,
                                       offset: const Offset(0, 2),
                                     )
@@ -251,18 +261,22 @@ class _NotebookCoverEditorPageState extends State<NotebookCoverEditorPage> {
                             ),
 
                             // 渲染已貼上的貼紙列表
-                            ...List.generate(_tempPlacedStickers.length, (index) {
+                            ...List.generate(_tempPlacedStickers.length,
+                                (index) {
                               final item = _tempPlacedStickers[index];
                               final String stickerId = item['id'];
                               final double rx = item['dx']; // 相對 X
                               final double ry = item['dy']; // 相對 Y
                               final double scale = item['scale'];
-                              final emoji = _stickersDb[stickerId]?['emoji'] ?? '🌿';
+                              final emoji =
+                                  _stickersDb[stickerId]?['emoji'] ?? '🌿';
 
                               // 計算絕對像素位置
                               final stickerSize = 48.w * scale;
-                              final posX = (rx * coverWidth) - (stickerSize / 2);
-                              final posY = (ry * coverHeight) - (stickerSize / 2);
+                              final posX =
+                                  (rx * coverWidth) - (stickerSize / 2);
+                              final posY =
+                                  (ry * coverHeight) - (stickerSize / 2);
 
                               final isActive = _activeStickerIndex == index;
 
@@ -279,8 +293,10 @@ class _NotebookCoverEditorPageState extends State<NotebookCoverEditorPage> {
                                     setState(() {
                                       _activeStickerIndex = index;
                                       // 增量更新相對座標
-                                      double newDx = rx + (details.delta.dx / coverWidth);
-                                      double newDy = ry + (details.delta.dy / coverHeight);
+                                      double newDx =
+                                          rx + (details.delta.dx / coverWidth);
+                                      double newDy =
+                                          ry + (details.delta.dy / coverHeight);
                                       // 限制在封面範圍內 (留些邊緣)
                                       item['dx'] = newDx.clamp(0.08, 0.92);
                                       item['dy'] = newDy.clamp(0.08, 0.92);
@@ -296,17 +312,20 @@ class _NotebookCoverEditorPageState extends State<NotebookCoverEditorPage> {
                                         decoration: isActive
                                             ? BoxDecoration(
                                                 border: Border.all(
-                                                  color: HomeV2Palette.trustGreen,
+                                                  color:
+                                                      HomeV2Palette.trustGreen,
                                                   width: 1.5.w,
                                                   style: BorderStyle.solid,
                                                 ),
-                                                borderRadius: BorderRadius.circular(6.r),
+                                                borderRadius:
+                                                    BorderRadius.circular(6.r),
                                               )
                                             : null,
                                         alignment: Alignment.center,
                                         child: Text(
                                           emoji,
-                                          style: TextStyle(fontSize: 32.sp * scale),
+                                          style: TextStyle(
+                                              fontSize: 32.sp * scale),
                                         ),
                                       ),
 
@@ -318,7 +337,8 @@ class _NotebookCoverEditorPageState extends State<NotebookCoverEditorPage> {
                                           child: GestureDetector(
                                             onTap: () {
                                               setState(() {
-                                                _tempPlacedStickers.removeAt(index);
+                                                _tempPlacedStickers
+                                                    .removeAt(index);
                                                 _activeStickerIndex = null;
                                               });
                                               HapticFeedback.lightImpact();
@@ -358,7 +378,9 @@ class _NotebookCoverEditorPageState extends State<NotebookCoverEditorPage> {
               color: isDark ? const Color(0xFF161C23) : const Color(0xFFF7F5F0),
               border: Border(
                 top: BorderSide(
-                  color: isDark ? const Color(0xFF2D3845) : const Color(0xFFE5DCCF),
+                  color: isDark
+                      ? const Color(0xFF2D3845)
+                      : const Color(0xFFE5DCCF),
                   width: 1.2.w,
                 ),
               ),
@@ -373,24 +395,30 @@ class _NotebookCoverEditorPageState extends State<NotebookCoverEditorPage> {
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: Row(
                       children: [
-                        Icon(Icons.zoom_in_rounded, size: 16.sp, color: AppColors.textSecondary),
+                        Icon(Icons.zoom_in_rounded,
+                            size: 16.sp, color: AppColors.textSecondary),
                         SizedBox(width: 8.w),
                         Expanded(
                           child: Slider(
-                            value: _tempPlacedStickers[_activeStickerIndex!]['scale'] as double,
+                            value: _tempPlacedStickers[_activeStickerIndex!]
+                                ['scale'] as double,
                             min: 0.6,
                             max: 2.0,
                             activeColor: HomeV2Palette.trustGreen,
                             onChanged: (val) {
                               setState(() {
-                                _tempPlacedStickers[_activeStickerIndex!]['scale'] = val;
+                                _tempPlacedStickers[_activeStickerIndex!]
+                                    ['scale'] = val;
                               });
                             },
                           ),
                         ),
                         Text(
                           '${((_tempPlacedStickers[_activeStickerIndex!]['scale'] as double) * 100).toInt()}%',
-                          style: TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.bold, color: AppColors.textSecondary),
+                          style: TextStyle(
+                              fontSize: 10.5.sp,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textSecondary),
                         )
                       ],
                     ),
@@ -406,7 +434,10 @@ class _NotebookCoverEditorPageState extends State<NotebookCoverEditorPage> {
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
                       child: Text(
                         '封面底色：',
-                        style: TextStyle(fontSize: 11.5.sp, fontWeight: FontWeight.bold, color: AppColors.textSecondary),
+                        style: TextStyle(
+                            fontSize: 11.5.sp,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textSecondary),
                       ),
                     ),
                     SizedBox(height: 6.h),
@@ -435,7 +466,9 @@ class _NotebookCoverEditorPageState extends State<NotebookCoverEditorPage> {
                                 color: c['color'] as Color,
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color: isSelected ? HomeV2Palette.trustGreen : Colors.transparent,
+                                  color: isSelected
+                                      ? HomeV2Palette.trustGreen
+                                      : Colors.transparent,
                                   width: 2.5.w,
                                 ),
                                 boxShadow: [
@@ -466,12 +499,18 @@ class _NotebookCoverEditorPageState extends State<NotebookCoverEditorPage> {
                         children: [
                           Text(
                             '已解鎖的貼紙庫：',
-                            style: TextStyle(fontSize: 11.5.sp, fontWeight: FontWeight.bold, color: AppColors.textSecondary),
+                            style: TextStyle(
+                                fontSize: 11.5.sp,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.textSecondary),
                           ),
                           const Spacer(),
                           Text(
                             '已解鎖 ${_gameState.unlockedStickers.length} / ${_stickersDb.length}',
-                            style: TextStyle(fontSize: 10.sp, color: HomeV2Palette.trustGreen, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 10.sp,
+                                color: HomeV2Palette.trustGreen,
+                                fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -484,7 +523,8 @@ class _NotebookCoverEditorPageState extends State<NotebookCoverEditorPage> {
                         padding: EdgeInsets.symmetric(horizontal: 12.w),
                         children: _stickersDb.keys.map((id) {
                           final sticker = _stickersDb[id]!;
-                          final isUnlocked = _gameState.unlockedStickers.contains(id);
+                          final isUnlocked =
+                              _gameState.unlockedStickers.contains(id);
 
                           return GestureDetector(
                             onTap: () => _addStickerToCover(id),
@@ -492,10 +532,14 @@ class _NotebookCoverEditorPageState extends State<NotebookCoverEditorPage> {
                               margin: EdgeInsets.symmetric(horizontal: 6.w),
                               width: 50.w,
                               decoration: BoxDecoration(
-                                color: isDark ? const Color(0xFF232C35) : Colors.white,
+                                color: isDark
+                                    ? const Color(0xFF232C35)
+                                    : Colors.white,
                                 borderRadius: BorderRadius.circular(10.r),
                                 border: Border.all(
-                                  color: isDark ? const Color(0xFF2D3845) : const Color(0xFFECE5D9),
+                                  color: isDark
+                                      ? const Color(0xFF2D3845)
+                                      : const Color(0xFFECE5D9),
                                   width: 1.w,
                                 ),
                               ),
@@ -511,8 +555,10 @@ class _NotebookCoverEditorPageState extends State<NotebookCoverEditorPage> {
                                   if (!isUnlocked)
                                     Container(
                                       decoration: BoxDecoration(
-                                        color: Colors.black.withValues(alpha: 0.45),
-                                        borderRadius: BorderRadius.circular(10.r),
+                                        color: Colors.black
+                                            .withValues(alpha: 0.45),
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
                                       ),
                                       alignment: Alignment.center,
                                       child: const Icon(

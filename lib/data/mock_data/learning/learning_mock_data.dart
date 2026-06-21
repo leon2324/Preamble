@@ -464,8 +464,6 @@ const learningNewsletterDetailByTitle = {
   '租屋提前解約，押金一定拿不回來嗎？': _topicIntroArticle,
 };
 
-
-
 // ==========================================
 // 擴充專題 1：車禍事故
 // ==========================================
@@ -571,7 +569,8 @@ const _carUnit4Article = LearningMockArticle(
   sections: [
     LearningMockSection(
       title: '求償項目清單',
-      body: '1. 醫療費用（收據）\n2. 交通費（計程車收據）\n3. 看護費（家人照顧亦可請求）\n4. 工作損失（薪資扣繳憑單）\n5. 慰撫金。',
+      body:
+          '1. 醫療費用（收據）\n2. 交通費（計程車收據）\n3. 看護費（家人照顧亦可請求）\n4. 工作損失（薪資扣繳憑單）\n5. 慰撫金。',
     ),
   ],
 );
@@ -589,7 +588,8 @@ const _carUnit5Article = LearningMockArticle(
   sections: [
     LearningMockSection(
       title: '案例情境',
-      body: '小明駕駛車齡 6 年車輛被撞，修車廠估價零件 10 萬元，工資 5 萬元，烤漆 2 萬元。對方稱車子老了零件跟工資都要打 1 折，只賠 1.7 萬。這樣合理嗎？',
+      body:
+          '小明駕駛車齡 6 年車輛被撞，修車廠估價零件 10 萬元，工資 5 萬元，烤漆 2 萬元。對方稱車子老了零件跟工資都要打 1 折，只賠 1.7 萬。這樣合理嗎？',
     ),
   ],
   category: '車禍事故',
@@ -670,7 +670,6 @@ const learningTopicCarAccident = LearningTopicData(
     actionLabel: '開始測驗',
   ),
 );
-
 
 // ==========================================
 // 擴充專題 2：職場權益
@@ -763,7 +762,8 @@ const _workUnit5Article = LearningMockArticle(
   sections: [
     LearningMockSection(
       title: '情境案例',
-      body: '小明向公司提出離職，尚有 10 天特休假。主管說「因為是你自己要走，且最近很忙，所以特休一律失效，也不會折算工資。」主管說法合理嗎？',
+      body:
+          '小明向公司提出離職，尚有 10 天特休假。主管說「因為是你自己要走，且最近很忙，所以特休一律失效，也不會折算工資。」主管說法合理嗎？',
     ),
   ],
   category: '職場權益',
@@ -775,7 +775,8 @@ const _workUnit5Article = LearningMockArticle(
       'C. 符合，只要合約中有寫明「離職未休特休歸零」即可。'
     ],
     'correctIndex': 1,
-    'explanation': '勞基法第 38 條第 4 項規定為強制條款，契約終止時未休完之特休，雇主一律應折算工資給付，任何「自願放棄特休合約條款」均屬無效。'
+    'explanation':
+        '勞基法第 38 條第 4 項規定為強制條款，契約終止時未休完之特休，雇主一律應折算工資給付，任何「自願放棄特休合約條款」均屬無效。'
   },
 );
 
@@ -844,7 +845,6 @@ const learningTopicWorkplace = LearningTopicData(
     actionLabel: '開始測驗',
   ),
 );
-
 
 // ==========================================
 // 擴充專題 3：網購消費
@@ -937,7 +937,8 @@ const _consumerUnit5Article = LearningMockArticle(
   sections: [
     LearningMockSection(
       title: '情境案例',
-      body: '小明在網路購買一件衣服，收到後不滿意欲申請退貨。賣家稱「此款為出清特價品，不適用 7 天鑑賞期，且網頁已寫明退貨運費需自理。」賣家說法合理嗎？',
+      body:
+          '小明在網路購買一件衣服，收到後不滿意欲申請退貨。賣家稱「此款為出清特價品，不適用 7 天鑑賞期，且網頁已寫明退貨運費需自理。」賣家說法合理嗎？',
     ),
   ],
   category: '網購消費',
@@ -949,7 +950,8 @@ const _consumerUnit5Article = LearningMockArticle(
       'C. 符合，只有原價商品才享有賣家負擔運費退貨的權利。'
     ],
     'correctIndex': 1,
-    'explanation': '衣服不屬於生鮮、客製化等 7 大類例外排除商品，因此適用 7 天鑑賞期。且退貨運費依法應由賣家負擔，商家的免責宣告因違反消保法強制規定而無效。'
+    'explanation':
+        '衣服不屬於生鮮、客製化等 7 大類例外排除商品，因此適用 7 天鑑賞期。且退貨運費依法應由賣家負擔，商家的免責宣告因違反消保法強制規定而無效。'
   },
 );
 
@@ -1018,7 +1020,6 @@ const learningTopicConsumer = LearningTopicData(
     actionLabel: '開始測驗',
   ),
 );
-
 
 // ==========================================
 // 擴充專題 4：個資隱私
@@ -1111,7 +1112,8 @@ const _privacyUnit5Article = LearningMockArticle(
   sections: [
     LearningMockSection(
       title: '情境案例',
-      body: '阿榮與前妻發生爭執，阿榮將前妻罵他的 LINE 對話（內含前妻姓名與電話），未遮蔽個資便直接發到公開的 Facebook 社團，意圖招人議論。阿榮做法合理嗎？',
+      body:
+          '阿榮與前妻發生爭執，阿榮將前妻罵他的 LINE 對話（內含前妻姓名與電話），未遮蔽個資便直接發到公開的 Facebook 社團，意圖招人議論。阿榮做法合理嗎？',
     ),
   ],
   category: '個資隱私',
@@ -1123,7 +1125,8 @@ const _privacyUnit5Article = LearningMockArticle(
       'C. 符合，對話記錄雙方共有，任一方皆有決定公開的權利。'
     ],
     'correctIndex': 1,
-    'explanation': '澄清名譽雖屬正當動機，但公開轉傳未去識別化的個資（如包含姓名、電話）已逾越個資合理使用範圍，構成個資侵權，受害者可起訴求償。'
+    'explanation':
+        '澄清名譽雖屬正當動機，但公開轉傳未去識別化的個資（如包含姓名、電話）已逾越個資合理使用範圍，構成個資侵權，受害者可起訴求償。'
   },
 );
 

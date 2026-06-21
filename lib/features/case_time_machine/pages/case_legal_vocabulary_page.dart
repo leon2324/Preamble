@@ -16,7 +16,8 @@ class CaseLegalVocabularyPage extends StatefulWidget {
   const CaseLegalVocabularyPage({super.key});
 
   @override
-  State<CaseLegalVocabularyPage> createState() => _CaseLegalVocabularyPageState();
+  State<CaseLegalVocabularyPage> createState() =>
+      _CaseLegalVocabularyPageState();
 }
 
 class _CaseLegalVocabularyPageState extends State<CaseLegalVocabularyPage> {
@@ -31,7 +32,8 @@ class _CaseLegalVocabularyPageState extends State<CaseLegalVocabularyPage> {
       'category': '憲法/權益',
       'icon': CtmSvgIcons.scale,
       'color': const Color(0xFF1B5E4F),
-      'plainExplanation': '當政府或程序出現重大不正義時，人民在「窮盡其他救濟管道」後，以和平、非暴力且「願意接受處分」的方式，公開表達抵抗的最後防線權利。',
+      'plainExplanation':
+          '當政府或程序出現重大不正義時，人民在「窮盡其他救濟管道」後，以和平、非暴力且「願意接受處分」的方式，公開表達抵抗的最後防線權利。',
       'lifeExample': '班長選舉程序有嚴重黑箱作票，同學們抗議無效，集體在走廊靜坐要求重選，事後也願意被班導以「集體遲到」名義記點懲處。',
       'caseId': '318',
       'caseName': '太陽花學運佔領立法院事件',
@@ -41,7 +43,8 @@ class _CaseLegalVocabularyPageState extends State<CaseLegalVocabularyPage> {
       'category': '憲法/行政',
       'icon': CtmSvgIcons.sparkles,
       'color': const Color(0xFFB08C4A),
-      'plainExplanation': '國家限制人民權利時，採取的「手段」與要達成的「目的」必須合理且相稱，也就是不可以「用大砲打小鳥」，手段要符合適當、必要與衡平性。',
+      'plainExplanation':
+          '國家限制人民權利時，採取的「手段」與要達成的「目的」必須合理且相稱，也就是不可以「用大砲打小鳥」，手段要符合適當、必要與衡平性。',
       'lifeExample': '小明上課沒帶鉛筆（小過失），老師卻罰他整學期不准進入教室（過度限制手段），這就嚴重違反了比例原則。',
       'caseId': '318', // 太陽花警力驅離爭點
       'caseName': '太陽花學運佔領立法院事件',
@@ -51,8 +54,10 @@ class _CaseLegalVocabularyPageState extends State<CaseLegalVocabularyPage> {
       'category': '刑法/程序',
       'icon': CtmSvgIcons.gavel,
       'color': const Color(0xFFC62828),
-      'plainExplanation': '在法官正式宣判有罪確定之前，法律上必須先假設被告是清白無罪的。控方（檢察官）必須提出毫無合理懷疑的證據，否則就應判決無罪。',
-      'lifeExample': '客廳桌上的蛋糕被吃掉了，在還沒找到發票、指紋或嘴角的奶油前，即使小弟嫌疑最大，爸媽也不能在沒證據的情形下直接認定是他偷吃的。',
+      'plainExplanation':
+          '在法官正式宣判有罪確定之前，法律上必須先假設被告是清白無罪的。控方（檢察官）必須提出毫無合理懷疑的證據，否則就應判決無罪。',
+      'lifeExample':
+          '客廳桌上的蛋糕被吃掉了，在還沒找到發票、指紋或嘴角的奶油前，即使小弟嫌疑最大，爸媽也不能在沒證據的情形下直接認定是他偷吃的。',
       'caseId': '161',
       'caseName': '蘇建和案（經典冤獄追訴）',
     },
@@ -61,7 +66,8 @@ class _CaseLegalVocabularyPageState extends State<CaseLegalVocabularyPage> {
       'category': '憲法/程序',
       'icon': CtmSvgIcons.award,
       'color': const Color(0xFF6A1B9A),
-      'plainExplanation': '政府對人民做成不利處分（如罰款、限制自由）之前，必須遵循法定公開公平的程序，例如通知當事人、給予辯護權利、召開聽證會等，否則程序違憲。',
+      'plainExplanation':
+          '政府對人民做成不利處分（如罰款、限制自由）之前，必須遵循法定公開公平的程序，例如通知當事人、給予辯護權利、召開聽證會等，否則程序違憲。',
       'lifeExample': '學校要記大過前，不可以默默在系統建檔，必須先開會通知你和家長，並讓你到場為自己申辯，這就是正當程序。',
       'caseId': '799',
       'caseName': '釋字 799 號強制治療案',
@@ -71,8 +77,10 @@ class _CaseLegalVocabularyPageState extends State<CaseLegalVocabularyPage> {
       'category': '憲法/行政',
       'icon': CtmSvgIcons.clock,
       'color': const Color(0xFF455A64),
-      'plainExplanation': '國家如果公布了某項法規或承諾（信賴基礎），且人民因為相信這個承諾而做了相應規劃（信賴表現），日後國家改口或修改法律時，必須保護人民不受損害。',
-      'lifeExample': '政府宣布購買節能家電可補助一萬元，小明信賴此政策而買了冰箱。之後政府說經費不夠取消補助，小明此時可主張信賴保護，要求政府給付補助。',
+      'plainExplanation':
+          '國家如果公布了某項法規或承諾（信賴基礎），且人民因為相信這個承諾而做了相應規劃（信賴表現），日後國家改口或修改法律時，必須保護人民不受損害。',
+      'lifeExample':
+          '政府宣布購買節能家電可補助一萬元，小明信賴此政策而買了冰箱。之後政府說經費不夠取消補助，小明此時可主張信賴保護，要求政府給付補助。',
       'caseId': '520',
       'caseName': '釋字 520 號核四停建解釋案',
     },
@@ -82,8 +90,7 @@ class _CaseLegalVocabularyPageState extends State<CaseLegalVocabularyPage> {
   Widget build(BuildContext context) {
     // 依關鍵字與分類進行過濾
     final filteredVocab = _vocabData.where((item) {
-      final matchesSearch =
-          (item['term'] as String).contains(_searchQuery) ||
+      final matchesSearch = (item['term'] as String).contains(_searchQuery) ||
           (item['plainExplanation'] as String).contains(_searchQuery);
       final matchesCategory = _selectedCategory == '全部' ||
           (item['category'] as String).contains(_selectedCategory);
@@ -228,7 +235,8 @@ class _CaseLegalVocabularyPageState extends State<CaseLegalVocabularyPage> {
                       ),
                     )
                   : GridView.builder(
-                      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                      keyboardDismissBehavior:
+                          ScrollViewKeyboardDismissBehavior.onDrag,
                       padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 32.h),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 1, // 單欄大卡片，以容納豐富的白話解釋
@@ -368,7 +376,8 @@ class _VocabularyFlipCardState extends State<_VocabularyFlipCard>
                   SizedBox(width: 8.w),
                   Text(
                     item['term'] as String,
-                    style: CaseTimeMachineTextStyles.cardTitle(context).copyWith(
+                    style:
+                        CaseTimeMachineTextStyles.cardTitle(context).copyWith(
                       fontSize: 14.5.sp,
                       color: CaseTimeMachineColors.primaryGreen,
                     ),
@@ -433,7 +442,8 @@ class _VocabularyFlipCardState extends State<_VocabularyFlipCard>
       decoration: BoxDecoration(
         color: const Color(0xFFFBF8F2),
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: CaseTimeMachineColors.accentGold.withValues(alpha: 0.5)),
+        border: Border.all(
+            color: CaseTimeMachineColors.accentGold.withValues(alpha: 0.5)),
         boxShadow: [CaseTimeMachineShadows.softShadow],
       ),
       child: Column(
@@ -486,14 +496,16 @@ class _VocabularyFlipCardState extends State<_VocabularyFlipCard>
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: CaseTimeMachineColors.primaryGreen,
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
                   minimumSize: Size.zero,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6.r),
                   ),
                 ),
-                onPressed: () => _navigateToCase(context, item['caseId'] as String),
+                onPressed: () =>
+                    _navigateToCase(context, item['caseId'] as String),
                 child: Text(
                   '讀案 ➔',
                   style: TextStyle(

@@ -80,11 +80,13 @@ class _CaseOpinionBoardPageState extends State<CaseOpinionBoardPage> {
   // 顯示男生小法助吉祥物溫柔引導的 AI 潤飾視窗，避免情緒出氣筒，轉化為有溫度的理性見解。
   void _showAiGroomingDialog(String rawText) {
     // 根據原情緒字眼進行 Mock 潤飾
-    String polishedText = '本案的裁判標準與社會期待似乎存在一定落差，期許未來司法體系在重大法理裁決上能提供更多親民說明，深化司法公信力。';
+    String polishedText =
+        '本案的裁判標準與社會期待似乎存在一定落差，期許未來司法體系在重大法理裁決上能提供更多親民說明，深化司法公信力。';
     if (rawText.contains('油') || rawText.contains('頂新')) {
       polishedText = '對於民生食安案件，期待司法審判能在法條適用上落實源頭原料安全審查，建立企業在法律與誠信上的雙重防火牆。';
     } else if (rawText.contains('死刑')) {
-      polishedText = '死刑制度之存廢涉及生命權、平等原則與重大社會秩序防衛之拉鋸，期盼司法程序能在程序嚴密性與被害人權益保障間，尋求更理性的對話空間。';
+      polishedText =
+          '死刑制度之存廢涉及生命權、平等原則與重大社會秩序防衛之拉鋸，期盼司法程序能在程序嚴密性與被害人權益保障間，尋求更理性的對話空間。';
     }
 
     showDialog<void>(
@@ -352,7 +354,8 @@ class _CaseOpinionBoardPageState extends State<CaseOpinionBoardPage> {
             // 便利貼牆面 (錯落排列的 ListView)
             Expanded(
               child: ListView.builder(
-                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
                 padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 16.h),
                 itemCount: _opinions.length,
                 itemBuilder: (context, index) {
@@ -360,7 +363,10 @@ class _CaseOpinionBoardPageState extends State<CaseOpinionBoardPage> {
                   return Transform.rotate(
                     angle: opinion['rotation'] * 3.14159 / 180,
                     child: Container(
-                      margin: EdgeInsets.only(bottom: 12.h, left: (index % 2 == 0 ? 8 : 24).w, right: (index % 2 == 0 ? 24 : 8).w),
+                      margin: EdgeInsets.only(
+                          bottom: 12.h,
+                          left: (index % 2 == 0 ? 8 : 24).w,
+                          right: (index % 2 == 0 ? 24 : 8).w),
                       padding: EdgeInsets.all(14.w),
                       decoration: BoxDecoration(
                         color: opinion['color'] as Color,
@@ -373,7 +379,8 @@ class _CaseOpinionBoardPageState extends State<CaseOpinionBoardPage> {
                           ),
                         ],
                         border: Border.all(
-                          color: (opinion['textColor'] as Color).withValues(alpha: 0.15),
+                          color: (opinion['textColor'] as Color)
+                              .withValues(alpha: 0.15),
                           width: 1.2,
                         ),
                       ),
@@ -394,9 +401,11 @@ class _CaseOpinionBoardPageState extends State<CaseOpinionBoardPage> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               GestureDetector(
-                                onTap: () => _toggleResonance(opinion['id'] as String),
+                                onTap: () =>
+                                    _toggleResonance(opinion['id'] as String),
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 8.w, vertical: 4.h),
                                   decoration: BoxDecoration(
                                     color: Colors.white.withValues(alpha: 0.6),
                                     borderRadius: BorderRadius.circular(999),

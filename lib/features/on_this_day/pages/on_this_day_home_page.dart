@@ -60,7 +60,8 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
   }
 
   void _loadCasesForSelectedDate() {
-    final dayCases = onThisDayCasesForDate(_selectedDate.month, _selectedDate.day);
+    final dayCases =
+        onThisDayCasesForDate(_selectedDate.month, _selectedDate.day);
     setState(() {
       if (dayCases.isNotEmpty) {
         _mainCase = dayCases.first;
@@ -69,7 +70,8 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
       } else {
         _mainCase = null;
         _otherCases = [];
-        final index = (_selectedDate.month * 31 + _selectedDate.day) % onThisDayLegalQuotes.length;
+        final index = (_selectedDate.month * 31 + _selectedDate.day) %
+            onThisDayLegalQuotes.length;
         _selectedQuote = onThisDayLegalQuotes[index];
       }
     });
@@ -77,12 +79,17 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
 
   void _timeTravel() {
     final random = math.Random();
-    final availableCases = onThisDayCases.where((c) => !(c.month == _selectedDate.month && c.day == _selectedDate.day)).toList();
-    final casesToUse = availableCases.isNotEmpty ? availableCases : onThisDayCases;
+    final availableCases = onThisDayCases
+        .where((c) =>
+            !(c.month == _selectedDate.month && c.day == _selectedDate.day))
+        .toList();
+    final casesToUse =
+        availableCases.isNotEmpty ? availableCases : onThisDayCases;
     if (casesToUse.isEmpty) return;
 
     final randomCase = casesToUse[random.nextInt(casesToUse.length)];
-    final targetDate = DateTime(_anchorDate.year, randomCase.month, randomCase.day);
+    final targetDate =
+        DateTime(_anchorDate.year, randomCase.month, randomCase.day);
 
     setState(() {
       _selectedDate = targetDate;
@@ -113,8 +120,11 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
     final cases = CaseTimeMachineRepository.instance.cases;
     for (final book in cases) {
       if (book.id == mainCase.id ||
-          book.titleZh.contains(mainCase.title) || mainCase.title.contains(book.titleZh) ||
-          (book.shortTitleZh.isNotEmpty && (book.shortTitleZh.contains(mainCase.title) || mainCase.title.contains(book.shortTitleZh)))) {
+          book.titleZh.contains(mainCase.title) ||
+          mainCase.title.contains(book.titleZh) ||
+          (book.shortTitleZh.isNotEmpty &&
+              (book.shortTitleZh.contains(mainCase.title) ||
+                  mainCase.title.contains(book.shortTitleZh)))) {
         return book;
       }
     }
@@ -131,7 +141,8 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
           onDateSelected: (newDate) {
             setState(() {
               _selectedDate = newDate;
-              final page = _initialPage + newDate.difference(_anchorDate).inDays;
+              final page =
+                  _initialPage + newDate.difference(_anchorDate).inDays;
               _currentPage = page;
               if (_pageController.hasClients) {
                 _pageController.jumpToPage(page);
@@ -152,7 +163,8 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
         backgroundColor: OnThisDayColors.paperBeige,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: OnThisDayColors.primaryGreen),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded,
+              color: OnThisDayColors.primaryGreen),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -172,7 +184,8 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
                   children: [
                     Text(
                       '那年今日',
-                      style: OnThisDayTextStyles.pageTitle(context).copyWith(fontSize: 28.sp),
+                      style: OnThisDayTextStyles.pageTitle(context)
+                          .copyWith(fontSize: 28.sp),
                     ),
                     SizedBox(height: 4.h),
                     Text(
@@ -205,10 +218,12 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
                           child: CustomPaint(
                             size: Size(100.w, 54.h),
                             painter: ProgrammaticPostmarkPainter(
-                              dateText: _mainCase != null 
-                                  ? '${_mainCase!.year}.${_mainCase!.month.toString().padLeft(2, '0')}.${_mainCase!.day.toString().padLeft(2, '0')}' 
+                              dateText: _mainCase != null
+                                  ? '${_mainCase!.year}.${_mainCase!.month.toString().padLeft(2, '0')}.${_mainCase!.day.toString().padLeft(2, '0')}'
                                   : '${_selectedDate.year}.${_selectedDate.month.toString().padLeft(2, '0')}.${_selectedDate.day.toString().padLeft(2, '0')}',
-                              locationText: _mainCase != null ? _mainCase!.location : '歷史歲月',
+                              locationText: _mainCase != null
+                                  ? _mainCase!.location
+                                  : '歷史歲月',
                               color: const Color(0xFF8C7B6B),
                             ),
                           ),
@@ -238,7 +253,8 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
 
   Widget _buildFeaturedCaseCard() {
     final textScale = MediaQuery.textScalerOf(context).scale(1.0);
-    final pageHeight = (textScale > 1.6 ? 410 : (textScale > 1.25 ? 350 : 255)).h;
+    final pageHeight =
+        (textScale > 1.6 ? 410 : (textScale > 1.25 ? 350 : 255)).h;
 
     return SizedBox(
       height: pageHeight,
@@ -247,7 +263,8 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
         onPageChanged: (page) {
           setState(() {
             _currentPage = page;
-            _selectedDate = _anchorDate.add(Duration(days: page - _initialPage));
+            _selectedDate =
+                _anchorDate.add(Duration(days: page - _initialPage));
             _loadCasesForSelectedDate();
           });
         },
@@ -255,7 +272,7 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
           final date = _anchorDate.add(Duration(days: index - _initialPage));
           final dayCases = onThisDayCasesForDate(date.month, date.day);
           final mainCase = dayCases.isNotEmpty ? dayCases.first : null;
-          
+
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 4.w),
             child: _buildFeaturedCaseCardForDate(date, mainCase),
@@ -309,7 +326,8 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
               SizedBox(width: 16.w),
               // Right Column: Summary text and button
               Expanded(
-                child: _buildFeaturedCardTextContent(date, mainCase, matchedBook),
+                child:
+                    _buildFeaturedCardTextContent(date, mainCase, matchedBook),
               ),
             ],
           );
@@ -341,7 +359,8 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
                 decoration: BoxDecoration(
                   color: const Color(0xFFFFF9EE),
                   borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(color: const Color(0xFFD5C3A3).withValues(alpha: 0.5)),
+                  border: Border.all(
+                      color: const Color(0xFFD5C3A3).withValues(alpha: 0.5)),
                 ),
                 child: Text(
                   '「${mainCase.quote}」',
@@ -375,7 +394,8 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.arrow_back_rounded, size: 10.sp, color: OnThisDayColors.secondaryGreen),
+            Icon(Icons.arrow_back_rounded,
+                size: 10.sp, color: OnThisDayColors.secondaryGreen),
             SizedBox(width: 4.w),
             Text(
               '倒回前一天',
@@ -391,7 +411,8 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
     );
   }
 
-  Widget _buildFeaturedCardTextContent(DateTime date, OnThisDayCase? mainCase, CaseBook? matchedBook) {
+  Widget _buildFeaturedCardTextContent(
+      DateTime date, OnThisDayCase? mainCase, CaseBook? matchedBook) {
     final hasDossier = matchedBook != null;
 
     if (mainCase != null) {
@@ -469,7 +490,8 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
         children: [
           Row(
             children: [
-              Icon(Icons.format_quote_rounded, color: OnThisDayColors.accentGold, size: 16.sp),
+              Icon(Icons.format_quote_rounded,
+                  color: OnThisDayColors.accentGold, size: 16.sp),
               SizedBox(width: 4.w),
               Text(
                 '思辨格言',
@@ -562,8 +584,8 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
 
   Widget _buildTodayHistorySection() {
     // Other cases happening on this day
-    final listCases = _otherCases.isNotEmpty 
-        ? _otherCases 
+    final listCases = _otherCases.isNotEmpty
+        ? _otherCases
         : onThisDayCases.where((c) => c.id != _mainCase?.id).take(3).toList();
 
     return Column(
@@ -574,7 +596,8 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
           children: [
             Text(
               '今天的歷史案件',
-              style: OnThisDayTextStyles.cardTitle(context).copyWith(fontSize: 15.sp),
+              style: OnThisDayTextStyles.cardTitle(context)
+                  .copyWith(fontSize: 15.sp),
             ),
             GestureDetector(
               onTap: () {
@@ -594,7 +617,8 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
                       color: OnThisDayColors.accentGold,
                     ),
                   ),
-                  Icon(Icons.chevron_right_rounded, size: 14.sp, color: OnThisDayColors.accentGold),
+                  Icon(Icons.chevron_right_rounded,
+                      size: 14.sp, color: OnThisDayColors.accentGold),
                 ],
               ),
             ),
@@ -668,16 +692,20 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
       children: [
         Text(
           '依日期探索',
-          style: OnThisDayTextStyles.cardTitle(context).copyWith(fontSize: 15.sp),
+          style:
+              OnThisDayTextStyles.cardTitle(context).copyWith(fontSize: 15.sp),
         ),
         SizedBox(height: 12.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildExplorePill('今天', isSelected: _selectedDate.month == 4 && _selectedDate.day == 7, onTap: () {
+            _buildExplorePill('今天',
+                isSelected: _selectedDate.month == 4 && _selectedDate.day == 7,
+                onTap: () {
               setState(() {
                 _selectedDate = DateTime(2026, 4, 7);
-                final page = _initialPage + _selectedDate.difference(_anchorDate).inDays;
+                final page =
+                    _initialPage + _selectedDate.difference(_anchorDate).inDays;
                 _currentPage = page;
                 if (_pageController.hasClients) {
                   _pageController.jumpToPage(page);
@@ -710,16 +738,21 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
     );
   }
 
-  Widget _buildExplorePill(String label, {bool isSelected = false, VoidCallback? onTap}) {
+  Widget _buildExplorePill(String label,
+      {bool isSelected = false, VoidCallback? onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         decoration: BoxDecoration(
-          color: isSelected ? OnThisDayColors.primaryGreen : OnThisDayColors.bgPaperLight,
+          color: isSelected
+              ? OnThisDayColors.primaryGreen
+              : OnThisDayColors.bgPaperLight,
           borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
-            color: isSelected ? OnThisDayColors.primaryGreen : OnThisDayColors.borderLight,
+            color: isSelected
+                ? OnThisDayColors.primaryGreen
+                : OnThisDayColors.borderLight,
           ),
         ),
         child: Text(
@@ -727,7 +760,9 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
           style: TextStyle(
             fontSize: 11.5.sp,
             fontWeight: FontWeight.w900,
-            color: isSelected ? OnThisDayColors.bgPaperLight : OnThisDayColors.textSecondary,
+            color: isSelected
+                ? OnThisDayColors.bgPaperLight
+                : OnThisDayColors.textSecondary,
           ),
         ),
       ),

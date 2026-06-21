@@ -46,25 +46,29 @@ class _CaseSocialGraphPageState extends State<CaseSocialGraphPage> {
           'id': 'law',
           'title': '司法變革：阻卻違法',
           'type': 'effect',
-          'description': '最高法院判決定讞，肯認「公民不服從」在民主社會中的憲法地位。只要符合「超法規阻卻違法」要件，即可阻卻刑事違法性。這開創了台灣抗爭運動司法審判的新紀元。',
+          'description':
+              '最高法院判決定讞，肯認「公民不服從」在民主社會中的憲法地位。只要符合「超法規阻卻違法」要件，即可阻卻刑事違法性。這開創了台灣抗爭運動司法審判的新紀元。',
         },
         {
           'id': 'legislative',
           'title': '立法影響：兩岸條例',
           'type': 'effect',
-          'description': '學運直接中斷了服貿審查，並迫使國會起草《兩岸協議監督條例》，將兩岸締結協議的行政權力納入立法院的實質監督程序中，改變了兩岸談判的權力架構。',
+          'description':
+              '學運直接中斷了服貿審查，並迫使國會起草《兩岸協議監督條例》，將兩岸締結協議的行政權力納入立法院的實質監督程序中，改變了兩岸談判的權力架構。',
         },
         {
           'id': 'politics',
           'title': '政治格局：青年參政',
           'type': 'effect',
-          'description': '學運促成了台灣「第三勢力」政黨（如時代力量等）的興起，大批青年從街頭抗爭轉向代議政壇，顯著拉低了地方民代與國會議員的平均參政年齡。',
+          'description':
+              '學運促成了台灣「第三勢力」政黨（如時代力量等）的興起，大批青年從街頭抗爭轉向代議政壇，顯著拉低了地方民代與國會議員的平均參政年齡。',
         },
         {
           'id': 'society',
           'title': '社會動員：程序正義',
           'type': 'effect',
-          'description': '極大深化了台灣公民社會對「程序正義」的普遍共識。讓公眾意識到，行政機關在推動重大政策時，若缺乏公開透明的程序，將面臨巨大的合法性危機。',
+          'description':
+              '極大深化了台灣公民社會對「程序正義」的普遍共識。讓公眾意識到，行政機關在推動重大政策時，若缺乏公開透明的程序，將面臨巨大的合法性危機。',
         },
       ];
     } else if (widget.book.id == 'hung-2013') {
@@ -80,19 +84,22 @@ class _CaseSocialGraphPageState extends State<CaseSocialGraphPage> {
           'id': 'law',
           'title': '軍審法改革：普通審判',
           'type': 'effect',
-          'description': '立法院在社會巨大壓力下火速修訂《軍事審判法》，規定非戰爭時期軍人犯罪案件，全面移送普通法院與地檢署偵審，徹底廢除戰時以外的軍事檢察署與軍事法院。',
+          'description':
+              '立法院在社會巨大壓力下火速修訂《軍事審判法》，規定非戰爭時期軍人犯罪案件，全面移送普通法院與地檢署偵審，徹底廢除戰時以外的軍事檢察署與軍事法院。',
         },
         {
           'id': 'rights',
           'title': '軍中人權：禁閉制變革',
           'type': 'effect',
-          'description': '國防部全面廢除舊制的陸軍「禁閉室 / 悔過室」，大幅修改國軍懲罰與管教辦法，限制軍官對士兵體能操練的最高上限，落實軍中基本人權與醫療安全保障。',
+          'description':
+              '國防部全面廢除舊制的陸軍「禁閉室 / 悔過室」，大幅修改國軍懲罰與管教辦法，限制軍官對士兵體能操練的最高上限，落實軍中基本人權與醫療安全保障。',
         },
         {
           'id': 'society',
           'title': '公民運動：白衫軍席捲',
           'type': 'effect',
-          'description': '二十萬人自發身穿白衣齊聚凱達格蘭大道，開創了沒有傳統政黨動員、完全由公民透過網路發起、高度自律且理性的新型社會運動模式。',
+          'description':
+              '二十萬人自發身穿白衣齊聚凱達格蘭大道，開創了沒有傳統政黨動員、完全由公民透過網路發起、高度自律且理性的新型社會運動模式。',
         },
       ];
     } else {
@@ -184,7 +191,8 @@ class _CaseSocialGraphPageState extends State<CaseSocialGraphPage> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16.r),
-                    border: Border.all(color: CaseTimeMachineColors.borderLight),
+                    border:
+                        Border.all(color: CaseTimeMachineColors.borderLight),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.03),
@@ -205,10 +213,12 @@ class _CaseSocialGraphPageState extends State<CaseSocialGraphPage> {
                       ),
                       // 渲染核心節點 (置中)
                       GestureDetector(
-                        onTap: () => setState(() => _selectedNodeId = coreNode['id'] as String),
+                        onTap: () => setState(
+                            () => _selectedNodeId = coreNode['id'] as String),
                         child: Container(
                           width: 140.w,
-                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 12.w, vertical: 12.h),
                           decoration: BoxDecoration(
                             color: _selectedNodeId == coreNode['id']
                                 ? CaseTimeMachineColors.primaryGreen
@@ -241,7 +251,11 @@ class _CaseSocialGraphPageState extends State<CaseSocialGraphPage> {
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                   fontFamily: 'Songti TC',
-                                  fontFamilyFallback: const ['Songti SC', 'STSong', 'PingFang TC'],
+                                  fontFamilyFallback: const [
+                                    'Songti SC',
+                                    'STSong',
+                                    'PingFang TC'
+                                  ],
                                 ),
                               ),
                             ],
@@ -341,7 +355,8 @@ class _CaseSocialGraphPageState extends State<CaseSocialGraphPage> {
 
       widgets.add(
         Positioned(
-          left: (radiusX * (1 + 0.9 * (angle).clamp(-1.0, 1.0) /* 略微偏移防重疊 */)).clamp(0, double.infinity),
+          left: (radiusX * (1 + 0.9 * (angle).clamp(-1.0, 1.0) /* 略微偏移防重疊 */))
+              .clamp(0, double.infinity),
           // 由於手動排版較為安全，我們使用更精準的 Positioned 計算
           // 中心點大約在 (x=160.w, y=180.h)，根據 radius 環繞
           child: _buildPositionedEffectTile(effect, angle),
@@ -491,18 +506,23 @@ class _GraphLinkPainter extends CustomPainter {
       // 左上
       canvas.drawLine(Offset(centerX, centerY), Offset(55.w, 80.h), paint);
       // 右上
-      canvas.drawLine(Offset(centerX, centerY), Offset(size.width - 55.w, 80.h), paint);
+      canvas.drawLine(
+          Offset(centerX, centerY), Offset(size.width - 55.w, 80.h), paint);
       // 左下
-      canvas.drawLine(Offset(centerX, centerY), Offset(55.w, size.height - 80.h), paint);
+      canvas.drawLine(
+          Offset(centerX, centerY), Offset(55.w, size.height - 80.h), paint);
       // 右下
-      canvas.drawLine(Offset(centerX, centerY), Offset(size.width - 55.w, size.height - 80.h), paint);
+      canvas.drawLine(Offset(centerX, centerY),
+          Offset(size.width - 55.w, size.height - 80.h), paint);
     } else {
       // 頂部中
       canvas.drawLine(Offset(centerX, centerY), Offset(centerX, 60.h), paint);
       // 左下
-      canvas.drawLine(Offset(centerX, centerY), Offset(65.w, size.height - 80.h), paint);
+      canvas.drawLine(
+          Offset(centerX, centerY), Offset(65.w, size.height - 80.h), paint);
       // 右下
-      canvas.drawLine(Offset(centerX, centerY), Offset(size.width - 65.w, size.height - 80.h), paint);
+      canvas.drawLine(Offset(centerX, centerY),
+          Offset(size.width - 65.w, size.height - 80.h), paint);
     }
   }
 

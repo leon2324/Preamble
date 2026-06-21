@@ -60,41 +60,41 @@ class CaseBookSpineCard extends StatelessWidget {
                   // 書脊只放「短碼＋符號」，完整中文／英文案名交給下方資訊卡。
                   // 這樣能忠實保留 Prototype 的書架感，也不會在英文案名變長時截斷。
                   child: FittedBox(
-                     fit: BoxFit.scaleDown,
-                     child: SizedBox(
-                       width: (compact ? 44 : 38).r,
-                       child: Column(
-                         mainAxisSize: MainAxisSize.min,
-                         children: [
-                           FittedBox(
-                             fit: BoxFit.scaleDown,
-                             child: Text(
-                               book.displayCode,
-                               maxLines: 1,
-                               style:
-                                   CaseTimeMachineTextStyles.cardTitle(context)
-                                       .copyWith(letterSpacing: .3),
-                             ),
-                           ),
-                           SizedBox(height: CaseTimeMachineSpacing.spaceXS.r),
-                           _SpineSeal(category: book.category),
-                           SizedBox(height: CaseTimeMachineSpacing.spaceXS.r),
-                           FittedBox(
-                             fit: BoxFit.scaleDown,
-                             child: Text(
-                               _categoryCode(book.category),
-                               maxLines: 1,
-                               style: CaseTimeMachineTextStyles.caption(context)
-                                   .copyWith(
-                                 color: CaseTimeMachineColors.libraryMistBlue,
-                                 height: 1.1,
-                                 letterSpacing: .8,
-                               ),
-                             ),
-                           ),
-                         ],
-                       ),
-                     ),
+                    fit: BoxFit.scaleDown,
+                    child: SizedBox(
+                      width: (compact ? 44 : 38).r,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              book.displayCode,
+                              maxLines: 1,
+                              style:
+                                  CaseTimeMachineTextStyles.cardTitle(context)
+                                      .copyWith(letterSpacing: .3),
+                            ),
+                          ),
+                          SizedBox(height: CaseTimeMachineSpacing.spaceXS.r),
+                          _SpineSeal(category: book.category),
+                          SizedBox(height: CaseTimeMachineSpacing.spaceXS.r),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              _categoryCode(book.category),
+                              maxLines: 1,
+                              style: CaseTimeMachineTextStyles.caption(context)
+                                  .copyWith(
+                                color: CaseTimeMachineColors.libraryMistBlue,
+                                height: 1.1,
+                                letterSpacing: .8,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
                 _BookmarkMark(filled: book.isFavorite),

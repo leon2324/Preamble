@@ -93,7 +93,8 @@ class SearchRepository {
         title: item.title,
         subtitle: item.typeLabel,
         snippet: item.summary,
-        type: isLifeNote ? SearchResultType.document : SearchResultType.caseItem,
+        type:
+            isLifeNote ? SearchResultType.document : SearchResultType.caseItem,
         destination: 'journal:${item.id}',
         score: item.score.toDouble(),
         source: item.source,

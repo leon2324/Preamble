@@ -44,6 +44,8 @@ class MylawApp extends StatefulWidget {
 class _MylawAppState extends State<MylawApp> {
   late final LawAppState _appState;
   int selectedIndex = 0;
+  int? _knowLawInitialTabIndex;
+  String? _knowLawInitialToolTab;
 
   static const List<_BottomNavItemData> _navItems = [
     _BottomNavItemData(
@@ -62,7 +64,7 @@ class _MylawAppState extends State<MylawApp> {
       selectedIcon: Icons.support_agent_rounded,
     ),
     _BottomNavItemData(
-      label: '記事',
+      label: '紀事',
       icon: Icons.inventory_2_outlined,
       selectedIcon: Icons.inventory_2_rounded,
     ),
@@ -106,7 +108,7 @@ class _MylawAppState extends State<MylawApp> {
         selectedIcon: Icons.support_agent_rounded,
       ),
       const _BottomNavItemData(
-        label: '記事',
+        label: '紀事',
         icon: Icons.inventory_2_outlined,
         selectedIcon: Icons.inventory_2_rounded,
       ),
@@ -119,18 +121,23 @@ class _MylawAppState extends State<MylawApp> {
 
     final originalPages = [
       HomePage(
-        onNavigateToTab: (targetOriginalIndex) {
+        onNavigateToTab: (targetOriginalIndex, {subTabIndex, toolTab}) {
           // 台灣繁體中文教學註解：
           // 當首頁按鈕點選跳頁時，在自訂順序列表（navbarOrder）中尋找原本的目標頁排在第幾個，並更新 selectedIndex。
           final realIndex = order.indexOf(targetOriginalIndex);
           if (realIndex != -1) {
             setState(() {
+              _knowLawInitialTabIndex = subTabIndex;
+              _knowLawInitialToolTab = toolTab;
               selectedIndex = realIndex;
             });
           }
         },
       ),
-      const KnowLawPage(),
+      KnowLawPage(
+        initialTabIndex: _knowLawInitialTabIndex,
+        initialToolTab: _knowLawInitialToolTab,
+      ),
       const GlobalSearchPage(),
       const JournalPage(),
       const ProfilePage(),
@@ -186,6 +193,8 @@ class _MylawAppState extends State<MylawApp> {
                             showLabels: _appState.showNavbarLabels,
                             onTap: (index) {
                               setState(() {
+                                _knowLawInitialTabIndex = null;
+                                _knowLawInitialToolTab = null;
                                 selectedIndex = index;
                               });
                             },
@@ -277,7 +286,7 @@ class _IslandBottomNav extends StatelessWidget {
     final selectedColor =
         isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary;
     final unselectedColor = selectedColor.withValues(alpha: 0.42);
-    
+
     // 台灣繁體中文教學註解：
     // 若關閉分頁文字，則導覽高度從 70 調減至 56，帶來極致扁平的島嶼導覽風格。
     final extraHeight = context.adaptiveBuffer(12);
@@ -353,7 +362,9 @@ class _IslandBottomNav extends StatelessWidget {
                                       ),
                                     )
                                   : Icon(
-                                      isSelected ? item.selectedIcon : item.icon,
+                                      isSelected
+                                          ? item.selectedIcon
+                                          : item.icon,
                                       size: 25,
                                       color: isSelected
                                           ? selectedColor

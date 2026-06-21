@@ -15,28 +15,27 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final appState = LawAppScope.of(context);
     final canPop = Navigator.of(context).canPop();
-    final topPadding = context.hasLargeTopInset ? context.topSafeInset + 10.h : 22.h;
+    final topPadding =
+        context.hasLargeTopInset ? context.topSafeInset + 10.h : 22.h;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
-    final backgroundColor = isDark ? const Color(0xFF0F1216) : AppColors.background;
+
+    final backgroundColor =
+        isDark ? const Color(0xFF0F1216) : AppColors.background;
     final cardColor = isDark ? const Color(0xFF171C22) : Colors.white;
     final borderColor = isDark ? const Color(0xFF2B3441) : AppColors.border;
     final textColor = isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary;
-    final textMutedColor = isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
+    final textMutedColor =
+        isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
 
     return Scaffold(
       backgroundColor: backgroundColor,
       body: ListView(
         physics: const BouncingScrollPhysics(),
         padding: EdgeInsets.fromLTRB(
-          16.w, 
-          topPadding, 
-          16.w, 
-          context.pageContentBottomPadding + 32.h
-        ),
+            16.w, topPadding, 16.w, context.pageContentBottomPadding + 32.h),
         children: [
           if (canPop) _BackButton(onBack: () => Navigator.of(context).pop()),
-          
+
           // Header: 自訂個人頭像與狀態（大頭像居中排列，偏上方視覺）
           Container(
             padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 24.h),
@@ -46,8 +45,8 @@ class ProfilePage extends StatelessWidget {
               border: Border.all(color: borderColor),
               boxShadow: const [
                 BoxShadow(
-                  color: Color(0x0A000000), 
-                  blurRadius: 18, 
+                  color: Color(0x0A000000),
+                  blurRadius: 18,
                   offset: Offset(0, 8),
                 )
               ],
@@ -88,10 +87,12 @@ class ProfilePage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 14.h),
-                
+
                 // 居中使用者名稱
                 Text(
-                  appState.isGuest ? '訪客個人中心' : appState.currentUser.displayName,
+                  appState.isGuest
+                      ? '訪客個人中心'
+                      : appState.currentUser.displayName,
                   style: TextStyle(
                     fontSize: 20.sp,
                     fontWeight: FontWeight.w900,
@@ -100,7 +101,7 @@ class ProfilePage extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 4.h),
-                
+
                 // 信箱或提示字
                 Text(
                   appState.isGuest ? '點擊頭像編輯資料' : appState.currentUser.email,
@@ -113,21 +114,23 @@ class ProfilePage extends StatelessWidget {
                 if (!appState.isGuest) ...[
                   SizedBox(height: 8.h),
                   // 台灣繁體中文教學註解：依據使用者的專業身分顯示金色/金屬感標籤 Badge
-                  _buildProfessionBadge(context, appState.currentUser.profession),
+                  _buildProfessionBadge(
+                      context, appState.currentUser.profession),
                 ],
                 SizedBox(height: 12.h),
 
                 // 方案與額度膠囊 Badge
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 5.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 14.w, vertical: 5.h),
                   decoration: BoxDecoration(
-                    color: appState.isSubscriber 
+                    color: appState.isSubscriber
                         ? AppColors.accent.withOpacity(0.12)
                         : AppColors.primary.withOpacity(0.06),
                     borderRadius: BorderRadius.circular(100.r),
                     border: Border.all(
-                      color: appState.isSubscriber 
-                          ? AppColors.accent 
+                      color: appState.isSubscriber
+                          ? AppColors.accent
                           : AppColors.primary.withOpacity(0.15),
                       width: 1.w,
                     ),
@@ -136,7 +139,9 @@ class ProfilePage extends StatelessWidget {
                     '${appState.accessTier.label}方案 ｜ 今日 AI 額度：${appState.remainingAiQuota}',
                     style: TextStyle(
                       fontSize: 11.sp,
-                      color: appState.isSubscriber ? AppColors.accent : AppColors.primary,
+                      color: appState.isSubscriber
+                          ? AppColors.accent
+                          : AppColors.primary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -144,7 +149,7 @@ class ProfilePage extends StatelessWidget {
               ],
             ),
           ),
-          
+
           SizedBox(height: 14.h),
 
           // Pro Upgrade Banner (只有在非 Pro 會員時顯示)
@@ -160,7 +165,7 @@ class ProfilePage extends StatelessWidget {
           SizedBox(height: 10.h),
           // 台灣繁體中文教學註解：新增學習歷程與等級橫幅，顯示讀者法律智識等級
           LearningProgressBanner(appState: appState),
-          
+
           SizedBox(height: 20.h),
 
           // 設定與個人化 (Grouped List Style)
@@ -300,7 +305,8 @@ class ProfilePage extends StatelessWidget {
                           onPressed: appState.signInDemo,
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(color: borderColor),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.r)),
                           ),
                           child: const Text('登入 Demo 會員'),
                         ),
@@ -311,7 +317,8 @@ class ProfilePage extends StatelessWidget {
                           onPressed: appState.activateSubscriberDemo,
                           style: FilledButton.styleFrom(
                             backgroundColor: AppColors.primary,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.r)),
                           ),
                           child: const Text('啟用 Pro Demo'),
                         ),
@@ -323,19 +330,22 @@ class ProfilePage extends StatelessWidget {
                           style: OutlinedButton.styleFrom(
                             foregroundColor: Colors.redAccent,
                             side: const BorderSide(color: Colors.redAccent),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.r)),
                           ),
                           child: const Text('登出並回到訪客'),
                         ),
                       ),
-                      if (appState.accessTier != LawAppAccessTier.subscriber) ...[
+                      if (appState.accessTier !=
+                          LawAppAccessTier.subscriber) ...[
                         SizedBox(width: 8.w),
                         Expanded(
                           child: FilledButton(
                             onPressed: appState.activateSubscriberDemo,
                             style: FilledButton.styleFrom(
                               backgroundColor: AppColors.primary,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.r)),
                             ),
                             child: const Text('啟用 Pro Demo'),
                           ),
@@ -382,7 +392,8 @@ class ProfilePage extends StatelessWidget {
             decoration: BoxDecoration(
               color: isDark ? const Color(0xFF171C22) : Colors.white,
               borderRadius: BorderRadius.circular(24.r),
-              border: Border.all(color: isDark ? const Color(0xFF2B3441) : AppColors.border),
+              border: Border.all(
+                  color: isDark ? const Color(0xFF2B3441) : AppColors.border),
             ),
             padding: EdgeInsets.all(20.w),
             child: Column(
@@ -395,7 +406,9 @@ class ProfilePage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w900,
-                    color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
+                    color: isDark
+                        ? const Color(0xFFF2F4F7)
+                        : AppColors.textPrimary,
                   ),
                 ),
                 SizedBox(height: 12.h),
@@ -407,7 +420,8 @@ class ProfilePage extends StatelessWidget {
                     onPressed: () => Navigator.pop(context),
                     style: FilledButton.styleFrom(
                       backgroundColor: AppColors.primary,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r)),
                     ),
                     child: const Text('關閉'),
                   ),
@@ -426,8 +440,10 @@ class ProfilePage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       builder: (context) {
         final isDark = Theme.of(context).brightness == Brightness.dark;
-        final textColor = isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary;
-        final borderStyle = BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
+        final textColor =
+            isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary;
+        final borderStyle = BorderSide(
+            color: isDark ? const Color(0xFF2B3441) : AppColors.border);
 
         return Padding(
           padding: EdgeInsets.all(16.w),
@@ -435,7 +451,8 @@ class ProfilePage extends StatelessWidget {
             decoration: BoxDecoration(
               color: isDark ? const Color(0xFF171C22) : Colors.white,
               borderRadius: BorderRadius.circular(24.r),
-              border: Border.all(color: isDark ? const Color(0xFF2B3441) : AppColors.border),
+              border: Border.all(
+                  color: isDark ? const Color(0xFF2B3441) : AppColors.border),
             ),
             padding: EdgeInsets.all(20.w),
             child: Column(
@@ -457,7 +474,8 @@ class ProfilePage extends StatelessWidget {
                   child: ListView.separated(
                     shrinkWrap: true,
                     itemCount: legalSourceEntries.length,
-                    separatorBuilder: (_, __) => Divider(height: 10.h, color: Colors.transparent),
+                    separatorBuilder: (_, __) =>
+                        Divider(height: 10.h, color: Colors.transparent),
                     itemBuilder: (context, index) {
                       final source = legalSourceEntries[index];
                       Color getStatusColor(LegalSourceStatus status) {
@@ -476,19 +494,28 @@ class ProfilePage extends StatelessWidget {
                       return Container(
                         padding: EdgeInsets.all(10.w),
                         decoration: BoxDecoration(
-                          color: isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
+                          color: isDark
+                              ? const Color(0xFF0F1216)
+                              : const Color(0xFFFAF7F2),
                           borderRadius: BorderRadius.circular(10.r),
-                          border: Border.all(color: isDark ? const Color(0xFF2B3441) : AppColors.border),
+                          border: Border.all(
+                              color: isDark
+                                  ? const Color(0xFF2B3441)
+                                  : AppColors.border),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               source.title,
-                              style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.bold, color: textColor),
+                              style: TextStyle(
+                                  fontSize: 13.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor),
                             ),
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8.w, vertical: 2.h),
                               decoration: BoxDecoration(
                                 color: statusColor.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(6.r),
@@ -515,7 +542,8 @@ class ProfilePage extends StatelessWidget {
                     onPressed: () => Navigator.pop(context),
                     style: FilledButton.styleFrom(
                       backgroundColor: AppColors.primary,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r)),
                     ),
                     child: const Text('關閉'),
                   ),
@@ -549,8 +577,10 @@ class ProfilePage extends StatelessWidget {
               color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
             ),
           ),
-          content: Text('這將會清除您本機的圖片與離線法規暫存，需要重新連網下載。是否確定清除？', style: textStyle),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+          content:
+              Text('這將會清除您本機的圖片與離線法規暫存，需要重新連網下載。是否確定清除？', style: textStyle),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -566,7 +596,9 @@ class ProfilePage extends StatelessWidget {
                   ),
                 );
               },
-              child: const Text('確認清除', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)),
+              child: const Text('確認清除',
+                  style: TextStyle(
+                      color: Colors.redAccent, fontWeight: FontWeight.bold)),
             ),
           ],
         );
@@ -640,17 +672,23 @@ class ProfilePage extends StatelessWidget {
 
         return AlertDialog(
           backgroundColor: surfaceColor,
-          title: const Text('閱讀字型大小', style: TextStyle(fontWeight: FontWeight.bold)),
+          title: const Text('閱讀字型大小',
+              style: TextStyle(fontWeight: FontWeight.bold)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildFontSizeOption(context, appState, label: '小 (0.85)', scale: 0.85, current: currentScale),
-              _buildFontSizeOption(context, appState, label: '適中 (1.00)', scale: 1.0, current: currentScale),
-              _buildFontSizeOption(context, appState, label: '大 (1.15)', scale: 1.15, current: currentScale),
-              _buildFontSizeOption(context, appState, label: '特大 (1.30)', scale: 1.30, current: currentScale),
+              _buildFontSizeOption(context, appState,
+                  label: '小 (0.85)', scale: 0.85, current: currentScale),
+              _buildFontSizeOption(context, appState,
+                  label: '適中 (1.00)', scale: 1.0, current: currentScale),
+              _buildFontSizeOption(context, appState,
+                  label: '大 (1.15)', scale: 1.15, current: currentScale),
+              _buildFontSizeOption(context, appState,
+                  label: '特大 (1.30)', scale: 1.30, current: currentScale),
             ],
           ),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -679,7 +717,9 @@ class ProfilePage extends StatelessWidget {
           appState.updateSettings(fontSizeScale: val);
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('閱讀字型大小已更新！'), backgroundColor: Color(0xFF2E7D32)),
+            const SnackBar(
+                content: Text('閱讀字型大小已更新！'),
+                backgroundColor: Color(0xFF2E7D32)),
           );
         }
       },
@@ -687,7 +727,8 @@ class ProfilePage extends StatelessWidget {
   }
 
   // 台灣繁體中文教學註解：開啟通知精細設定 Bottom Sheet。
-  void _showNotificationSettingsSheet(BuildContext context, LawAppState appState) {
+  void _showNotificationSettingsSheet(
+      BuildContext context, LawAppState appState) {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,

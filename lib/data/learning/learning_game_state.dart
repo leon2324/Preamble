@@ -194,8 +194,10 @@ class LearningGameState extends ChangeNotifier {
       // 載入學習連擊與簽到狀態
       _studyStreak = prefs.getInt('learning_study_streak') ?? 0;
       _lastStudyDate = prefs.getString('learning_last_study_date') ?? '';
-      _lastDailyQuizDate = prefs.getString('learning_last_daily_quiz_date') ?? '';
-      _dailyQuizCorrectCount = prefs.getInt('learning_daily_quiz_correct_count') ?? 0;
+      _lastDailyQuizDate =
+          prefs.getString('learning_last_daily_quiz_date') ?? '';
+      _dailyQuizCorrectCount =
+          prefs.getInt('learning_daily_quiz_correct_count') ?? 0;
 
       // 載入自訂貼紙封面狀態
       _coverColorHex = prefs.getString('learning_cover_color_hex') ?? '#EFECE6';
@@ -207,7 +209,8 @@ class LearningGameState extends ChangeNotifier {
       }
       final placedRaw = prefs.getString('learning_placed_stickers');
       if (placedRaw != null) {
-        _placedStickers = List<Map<String, dynamic>>.from(jsonDecode(placedRaw));
+        _placedStickers =
+            List<Map<String, dynamic>>.from(jsonDecode(placedRaw));
       } else {
         _placedStickers = [];
       }
@@ -227,7 +230,8 @@ class LearningGameState extends ChangeNotifier {
       // 載入螢光筆劃記重點
       final highlightsRaw = prefs.getString('learning_saved_highlights');
       if (highlightsRaw != null) {
-        _savedHighlights = List<Map<String, dynamic>>.from(jsonDecode(highlightsRaw));
+        _savedHighlights =
+            List<Map<String, dynamic>>.from(jsonDecode(highlightsRaw));
       }
 
       // 載入看過的議題/分類
@@ -247,8 +251,10 @@ class LearningGameState extends ChangeNotifier {
       }
 
       // 載入筆記本外觀與三段論設定
-      _useHandwrittenFont = prefs.getBool('learning_use_handwritten_font') ?? false;
-      _notebookPaperStyle = prefs.getString('learning_notebook_paper_style') ?? 'grid';
+      _useHandwrittenFont =
+          prefs.getBool('learning_use_handwritten_font') ?? false;
+      _notebookPaperStyle =
+          prefs.getString('learning_notebook_paper_style') ?? 'grid';
       final cornellRaw = prefs.getString('learning_cornell_notes');
       if (cornellRaw != null) {
         _cornellNotes = List<Map<String, dynamic>>.from(jsonDecode(cornellRaw));
@@ -277,29 +283,38 @@ class LearningGameState extends ChangeNotifier {
           'learning_incorrect_questions', jsonEncode(_incorrectQuestions));
       await prefs.setString(
           'learning_saved_evidences', jsonEncode(_savedEvidenceLists));
-      await prefs.setString(
-          'learning_quiz_history', jsonEncode(_quizHistory));
+      await prefs.setString('learning_quiz_history', jsonEncode(_quizHistory));
 
       // 儲存連擊與封面狀態
       await prefs.setInt('learning_study_streak', _studyStreak);
       await prefs.setString('learning_last_study_date', _lastStudyDate);
-      await prefs.setString('learning_last_daily_quiz_date', _lastDailyQuizDate);
-      await prefs.setInt('learning_daily_quiz_correct_count', _dailyQuizCorrectCount);
+      await prefs.setString(
+          'learning_last_daily_quiz_date', _lastDailyQuizDate);
+      await prefs.setInt(
+          'learning_daily_quiz_correct_count', _dailyQuizCorrectCount);
       await prefs.setString('learning_cover_color_hex', _coverColorHex);
-      await prefs.setStringList('learning_unlocked_stickers', _unlockedStickers.toList());
-      await prefs.setString('learning_placed_stickers', jsonEncode(_placedStickers));
+      await prefs.setStringList(
+          'learning_unlocked_stickers', _unlockedStickers.toList());
+      await prefs.setString(
+          'learning_placed_stickers', jsonEncode(_placedStickers));
 
       // 儲存筆記與收藏
-      await prefs.setStringList('learning_saved_articles', _savedArticles.toList());
+      await prefs.setStringList(
+          'learning_saved_articles', _savedArticles.toList());
       await prefs.setString('learning_saved_quotes', jsonEncode(_savedQuotes));
-      await prefs.setString('learning_saved_highlights', jsonEncode(_savedHighlights));
-      await prefs.setStringList('learning_viewed_categories', _viewedCategories.toList());
-      await prefs.setString('learning_article_notes', jsonEncode(_articleNotes));
+      await prefs.setString(
+          'learning_saved_highlights', jsonEncode(_savedHighlights));
+      await prefs.setStringList(
+          'learning_viewed_categories', _viewedCategories.toList());
+      await prefs.setString(
+          'learning_article_notes', jsonEncode(_articleNotes));
 
       // 儲存外觀與三段論
       await prefs.setBool('learning_use_handwritten_font', _useHandwrittenFont);
-      await prefs.setString('learning_notebook_paper_style', _notebookPaperStyle);
-      await prefs.setString('learning_cornell_notes', jsonEncode(_cornellNotes));
+      await prefs.setString(
+          'learning_notebook_paper_style', _notebookPaperStyle);
+      await prefs.setString(
+          'learning_cornell_notes', jsonEncode(_cornellNotes));
     } catch (e) {
       debugPrint('Error saving learning game state: $e');
     }
@@ -377,7 +392,8 @@ class LearningGameState extends ChangeNotifier {
   // 新增錯題
   // 新增錯題
   void addIncorrectQuestion(String question, String wrongAnswer,
-      String correctAnswer, String explanation, [List<String>? options]) {
+      String correctAnswer, String explanation,
+      [List<String>? options]) {
     // 避免重複加入同一個問題
     _incorrectQuestions.removeWhere((item) => item['question'] == question);
     _incorrectQuestions.add({
@@ -405,7 +421,7 @@ class LearningGameState extends ChangeNotifier {
         final lastDate = DateTime.parse(_lastStudyDate);
         final today = DateTime.parse(todayStr);
         final diff = today.difference(lastDate).inDays;
-        
+
         if (diff == 1) {
           _studyStreak++;
         } else if (diff > 1) {
@@ -449,7 +465,8 @@ class LearningGameState extends ChangeNotifier {
   }
 
   // 保存筆記本封面自訂狀態
-  void saveNotebookCover(String colorHex, List<Map<String, dynamic>> placedStickers) {
+  void saveNotebookCover(
+      String colorHex, List<Map<String, dynamic>> placedStickers) {
     _coverColorHex = colorHex;
     _placedStickers = placedStickers;
     _saveState();
@@ -559,7 +576,8 @@ class LearningGameState extends ChangeNotifier {
   void addHighlight(String text, String articleTitle) {
     if (text.trim().isEmpty) return;
     // 避免重複劃記一模一樣的句子
-    final exists = _savedHighlights.any((item) => item['highlight'] == text && item['articleTitle'] == articleTitle);
+    final exists = _savedHighlights.any((item) =>
+        item['highlight'] == text && item['articleTitle'] == articleTitle);
     if (!exists) {
       _savedHighlights.add({
         'highlight': text,
@@ -611,7 +629,8 @@ class LearningGameState extends ChangeNotifier {
     }
   }
 
-  void addCornellNote(String title, String premise, String fact, String conclusion) {
+  void addCornellNote(
+      String title, String premise, String fact, String conclusion) {
     _cornellNotes.insert(0, {
       'id': DateTime.now().millisecondsSinceEpoch.toString(),
       'title': title,

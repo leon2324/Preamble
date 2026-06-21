@@ -34,13 +34,13 @@ class AvatarWidget extends StatelessWidget {
             ? (isDark ? const Color(0xFF2B3441) : AppColors.chipSurface)
             : avatar!.backgroundColor,
         shape: BoxShape.circle,
-        border: Border.all(color: isDark ? const Color(0xFF2B3441) : AppColors.border, width: 1.w),
+        border: Border.all(
+            color: isDark ? const Color(0xFF2B3441) : AppColors.border,
+            width: 1.w),
       ),
       child: Center(
         child: Icon(
-          isGuest
-              ? Icons.person_rounded
-              : avatar!.icon,
+          isGuest ? Icons.person_rounded : avatar!.icon,
           color: isGuest
               ? (isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary)
               : avatar!.color,
@@ -108,7 +108,8 @@ class DashboardGrid extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardColor = isDark ? const Color(0xFF171C22) : Colors.white;
     final borderColor = isDark ? const Color(0xFF2B3441) : AppColors.border;
-    final textMuted = isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
+    final textMuted =
+        isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
 
     // 台灣繁體中文教學註解：計算使用者追蹤的總項目數量（加總案件、法條與主題的追蹤數）
     final following = appState.followingSummary;
@@ -211,7 +212,9 @@ class DashboardGrid extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w900,
-                          color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
+                          color: isDark
+                              ? const Color(0xFFF2F4F7)
+                              : AppColors.textPrimary,
                         ),
                       ),
                       SizedBox(height: 2.h),
@@ -257,7 +260,8 @@ class DashboardGrid extends StatelessWidget {
                     color: AppColors.accent.withValues(alpha: 0.08),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.smart_toy_rounded, color: AppColors.accent, size: 22.sp),
+                  child: Icon(Icons.smart_toy_rounded,
+                      color: AppColors.accent, size: 22.sp),
                 ),
                 SizedBox(width: 12.w),
                 Expanded(
@@ -269,7 +273,9 @@ class DashboardGrid extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w900,
-                          color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
+                          color: isDark
+                              ? const Color(0xFFF2F4F7)
+                              : AppColors.textPrimary,
                         ),
                       ),
                       SizedBox(height: 2.h),
@@ -285,7 +291,8 @@ class DashboardGrid extends StatelessWidget {
                 ),
                 Icon(
                   Icons.arrow_forward_ios_rounded,
-                  color: isDark ? const Color(0xFF556070) : AppColors.placeholder,
+                  color:
+                      isDark ? const Color(0xFF556070) : AppColors.placeholder,
                   size: 14.sp,
                 ),
               ],
@@ -308,20 +315,24 @@ class DashboardGrid extends StatelessWidget {
             decoration: BoxDecoration(
               color: isDark ? const Color(0xFF171C22) : Colors.white,
               borderRadius: BorderRadius.circular(24.r),
-              border: Border.all(color: isDark ? const Color(0xFF2B3441) : AppColors.border),
+              border: Border.all(
+                  color: isDark ? const Color(0xFF2B3441) : AppColors.border),
             ),
             padding: EdgeInsets.all(20.w),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.folder_open_rounded, color: AppColors.accent, size: 40.sp),
+                Icon(Icons.folder_open_rounded,
+                    color: AppColors.accent, size: 40.sp),
                 SizedBox(height: 12.h),
                 Text(
                   title,
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w900,
-                    color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
+                    color: isDark
+                        ? const Color(0xFFF2F4F7)
+                        : AppColors.textPrimary,
                   ),
                 ),
                 SizedBox(height: 8.h),
@@ -329,7 +340,9 @@ class DashboardGrid extends StatelessWidget {
                   message,
                   style: TextStyle(
                     fontSize: 13.sp,
-                    color: isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary,
+                    color: isDark
+                        ? const Color(0xFFA3ABB6)
+                        : AppColors.textSecondary,
                     height: 1.45,
                   ),
                   textAlign: TextAlign.center,
@@ -341,7 +354,8 @@ class DashboardGrid extends StatelessWidget {
                     onPressed: () => Navigator.pop(context),
                     style: FilledButton.styleFrom(
                       backgroundColor: AppColors.primary,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r)),
                     ),
                     child: const Text('我知道了'),
                   ),
@@ -427,7 +441,8 @@ class ProUpgradeBanner extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.workspace_premium_rounded, color: AppColors.accent, size: 20.sp),
+                          Icon(Icons.workspace_premium_rounded,
+                              color: AppColors.accent, size: 20.sp),
                           SizedBox(width: 6.w),
                           Text(
                             '解鎖 LawApp Pro',
@@ -458,8 +473,10 @@ class ProUpgradeBanner extends StatelessWidget {
                     backgroundColor: AppColors.accent,
                     foregroundColor: const Color(0xFF1E2F50),
                     elevation: 0,
-                    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r)),
                   ),
                   child: Text(
                     '暸解更多',
@@ -562,7 +579,8 @@ class SettingsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textMuted = isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
+    final textMuted =
+        isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
 
     return InkWell(
       onTap: onTap,
@@ -589,7 +607,9 @@ class SettingsTile extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w700,
-                      color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
+                      color: isDark
+                          ? const Color(0xFFF2F4F7)
+                          : AppColors.textPrimary,
                     ),
                   ),
                   if (subtitle != null) ...[
@@ -653,14 +673,16 @@ class _FeedbackSheetState extends State<FeedbackSheet> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final surfaceColor = isDark ? const Color(0xFF171C22) : Colors.white;
-    final borderSide = BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
+    final borderSide =
+        BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
 
     return Container(
       decoration: BoxDecoration(
         color: surfaceColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
-      padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, MediaQuery.viewInsetsOf(context).bottom + 24.h),
+      padding: EdgeInsets.fromLTRB(
+          20.w, 12.h, 20.w, MediaQuery.viewInsetsOf(context).bottom + 24.h),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -690,7 +712,13 @@ class _FeedbackSheetState extends State<FeedbackSheet> {
           SizedBox(height: 20.h),
 
           // 反饋類型選擇按鈕組 (Category Selector)
-          Text('反饋類型', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary)),
+          Text('反饋類型',
+              style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.bold,
+                  color: isDark
+                      ? const Color(0xFFA3ABB6)
+                      : AppColors.textSecondary)),
           SizedBox(height: 6.h),
           Row(
             children: ['功能建議', '內容錯誤', '程式錯誤', '其他'].map((cat) {
@@ -706,20 +734,29 @@ class _FeedbackSheetState extends State<FeedbackSheet> {
                       decoration: BoxDecoration(
                         color: isSelected
                             ? AppColors.primary
-                            : (isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2)),
+                            : (isDark
+                                ? const Color(0xFF0F1216)
+                                : const Color(0xFFFAF7F2)),
                         borderRadius: BorderRadius.circular(8.r),
                         border: Border.all(
-                          color: isSelected ? AppColors.primary : (isDark ? const Color(0xFF2B3441) : AppColors.border),
+                          color: isSelected
+                              ? AppColors.primary
+                              : (isDark
+                                  ? const Color(0xFF2B3441)
+                                  : AppColors.border),
                         ),
                       ),
                       child: Text(
                         cat,
                         style: TextStyle(
                           fontSize: 11.5.sp,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.normal,
                           color: isSelected
                               ? Colors.white
-                              : (isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary),
+                              : (isDark
+                                  ? const Color(0xFFF2F4F7)
+                                  : AppColors.textPrimary),
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -732,15 +769,23 @@ class _FeedbackSheetState extends State<FeedbackSheet> {
           SizedBox(height: 16.h),
 
           // 聯絡信箱輸入欄位 (Email Field)
-          Text('您的聯絡信箱 (選填)', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary)),
+          Text('您的聯絡信箱 (選填)',
+              style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.bold,
+                  color: isDark
+                      ? const Color(0xFFA3ABB6)
+                      : AppColors.textSecondary)),
           SizedBox(height: 6.h),
           TextField(
             controller: _emailController,
             decoration: InputDecoration(
               hintText: '請輸入信箱以利回覆',
-              contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
               filled: true,
-              fillColor: isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
+              fillColor:
+                  isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
                 borderSide: borderSide,
@@ -750,12 +795,21 @@ class _FeedbackSheetState extends State<FeedbackSheet> {
                 borderSide: BorderSide(color: AppColors.accent, width: 1.5),
               ),
             ),
-            style: TextStyle(fontSize: 13.5.sp, color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary),
+            style: TextStyle(
+                fontSize: 13.5.sp,
+                color:
+                    isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary),
           ),
           SizedBox(height: 16.h),
 
           // 反饋內容描述輸入欄位 (Content Field)
-          Text('描述與建議', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary)),
+          Text('描述與建議',
+              style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.bold,
+                  color: isDark
+                      ? const Color(0xFFA3ABB6)
+                      : AppColors.textSecondary)),
           SizedBox(height: 6.h),
           TextField(
             controller: _feedbackController,
@@ -764,7 +818,8 @@ class _FeedbackSheetState extends State<FeedbackSheet> {
               hintText: '請詳細描述您遇到的問題或給予的指教...',
               contentPadding: EdgeInsets.all(14.w),
               filled: true,
-              fillColor: isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
+              fillColor:
+                  isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
                 borderSide: borderSide,
@@ -774,7 +829,10 @@ class _FeedbackSheetState extends State<FeedbackSheet> {
                 borderSide: BorderSide(color: AppColors.accent, width: 1.5),
               ),
             ),
-            style: TextStyle(fontSize: 13.5.sp, color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary),
+            style: TextStyle(
+                fontSize: 13.5.sp,
+                color:
+                    isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary),
           ),
           SizedBox(height: 20.h),
 
@@ -787,9 +845,15 @@ class _FeedbackSheetState extends State<FeedbackSheet> {
                   style: OutlinedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 12.h),
                     side: borderSide,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14.r)),
                   ),
-                  child: Text('取消', style: TextStyle(fontSize: 14.sp, color: isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary)),
+                  child: Text('取消',
+                      style: TextStyle(
+                          fontSize: 14.sp,
+                          color: isDark
+                              ? const Color(0xFFA3ABB6)
+                              : AppColors.textSecondary)),
                 ),
               ),
               SizedBox(width: 12.w),
@@ -799,15 +863,21 @@ class _FeedbackSheetState extends State<FeedbackSheet> {
                   style: FilledButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     padding: EdgeInsets.symmetric(vertical: 12.h),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14.r)),
                   ),
                   child: _isSending
                       ? SizedBox(
                           width: 18.w,
                           height: 18.w,
-                          child: const CircularProgressIndicator(strokeWidth: 2.5, color: Colors.white),
+                          child: const CircularProgressIndicator(
+                              strokeWidth: 2.5, color: Colors.white),
                         )
-                      : Text('提交', style: TextStyle(fontSize: 14.sp, color: Colors.white, fontWeight: FontWeight.bold)),
+                      : Text('提交',
+                          style: TextStyle(
+                              fontSize: 14.sp,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold)),
                 ),
               ),
             ],
@@ -821,7 +891,8 @@ class _FeedbackSheetState extends State<FeedbackSheet> {
     final content = _feedbackController.text.trim();
     if (content.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('請填寫回饋內容！'), backgroundColor: Colors.redAccent),
+        const SnackBar(
+            content: Text('請填寫回饋內容！'), backgroundColor: Colors.redAccent),
       );
       return;
     }
@@ -858,10 +929,11 @@ class LearningProgressBanner extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardColor = isDark ? const Color(0xFF171C22) : Colors.white;
     final borderColor = isDark ? const Color(0xFF2B3441) : AppColors.border;
-    final textMuted = isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
+    final textMuted =
+        isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
 
     final savedStatuteCount = appState.followingSummary.savedStatuteIds.length;
-    
+
     // 根據追蹤法條數計算等級
     String levelName = '法學小白 🐣';
     if (savedStatuteCount >= 1 && savedStatuteCount <= 2) {
@@ -895,7 +967,8 @@ class LearningProgressBanner extends StatelessWidget {
                 color: const Color(0xFFD6A85F).withOpacity(0.08),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.workspace_premium_rounded, color: const Color(0xFFD6A85F), size: 22.sp),
+              child: Icon(Icons.workspace_premium_rounded,
+                  color: const Color(0xFFD6A85F), size: 22.sp),
             ),
             SizedBox(width: 12.w),
             Expanded(
@@ -907,7 +980,9 @@ class LearningProgressBanner extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w900,
-                      color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
+                      color: isDark
+                          ? const Color(0xFFF2F4F7)
+                          : AppColors.textPrimary,
                     ),
                   ),
                   SizedBox(height: 2.h),
@@ -942,7 +1017,8 @@ class AchievementRoomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final surfaceColor = isDark ? const Color(0xFF171C22) : Colors.white;
-    final textMuted = isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
+    final textMuted =
+        isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
 
     final savedStatuteCount = appState.followingSummary.savedStatuteIds.length;
     final savedCaseCount = appState.savedCaseIds.length;
@@ -1032,7 +1108,8 @@ class AchievementRoomSheet extends StatelessWidget {
                 onPressed: () => Navigator.pop(context),
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r)),
                   padding: EdgeInsets.symmetric(vertical: 12.h),
                 ),
                 child: const Text('關閉'),
@@ -1053,9 +1130,12 @@ class AchievementRoomSheet extends StatelessWidget {
     required Color badgeColor,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textMuted = isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
-    final cardColor = isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2);
-    final borderSide = BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
+    final textMuted =
+        isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
+    final cardColor =
+        isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2);
+    final borderSide =
+        BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
 
     return Container(
       padding: EdgeInsets.all(12.w),
@@ -1072,7 +1152,9 @@ class AchievementRoomSheet extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(8.w),
             decoration: BoxDecoration(
-              color: isUnlocked ? badgeColor.withOpacity(0.12) : Colors.grey.withOpacity(0.1),
+              color: isUnlocked
+                  ? badgeColor.withOpacity(0.12)
+                  : Colors.grey.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -1094,13 +1176,16 @@ class AchievementRoomSheet extends StatelessWidget {
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
                         color: isUnlocked
-                            ? (isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary)
+                            ? (isDark
+                                ? const Color(0xFFF2F4F7)
+                                : AppColors.textPrimary)
                             : Colors.grey,
                       ),
                     ),
                     if (isUnlocked) ...[
                       SizedBox(width: 6.w),
-                      Icon(Icons.check_circle_rounded, color: badgeColor, size: 14.sp),
+                      Icon(Icons.check_circle_rounded,
+                          color: badgeColor, size: 14.sp),
                     ],
                   ],
                 ),
@@ -1135,7 +1220,8 @@ class NotificationSettingsSheet extends StatefulWidget {
   final LawAppState appState;
 
   @override
-  State<NotificationSettingsSheet> createState() => _NotificationSettingsSheetState();
+  State<NotificationSettingsSheet> createState() =>
+      _NotificationSettingsSheetState();
 }
 
 class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
@@ -1153,8 +1239,10 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final surfaceColor = isDark ? const Color(0xFF171C22) : Colors.white;
-    final borderSide = BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
-    final textMuted = isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
+    final borderSide =
+        BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
+    final textMuted =
+        isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
 
     return Container(
       decoration: BoxDecoration(
@@ -1190,7 +1278,11 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
           SizedBox(height: 20.h),
 
           // 頻率選擇
-          Text('通知頻率', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: textMuted)),
+          Text('通知頻率',
+              style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.bold,
+                  color: textMuted)),
           SizedBox(height: 8.h),
           Row(
             children: [
@@ -1219,7 +1311,11 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
           SizedBox(height: 20.h),
 
           // 管道選擇
-          Text('通知管道', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: textMuted)),
+          Text('通知管道',
+              style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.bold,
+                  color: textMuted)),
           SizedBox(height: 8.h),
           Row(
             children: [
@@ -1255,9 +1351,11 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
                   style: OutlinedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 12.h),
                     side: borderSide,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14.r)),
                   ),
-                  child: Text('取消', style: TextStyle(fontSize: 14.sp, color: textMuted)),
+                  child: Text('取消',
+                      style: TextStyle(fontSize: 14.sp, color: textMuted)),
                 ),
               ),
               SizedBox(width: 12.w),
@@ -1279,9 +1377,14 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
                   style: FilledButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     padding: EdgeInsets.symmetric(vertical: 12.h),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14.r)),
                   ),
-                  child: Text('儲存', style: TextStyle(fontSize: 14.sp, color: Colors.white, fontWeight: FontWeight.bold)),
+                  child: Text('儲存',
+                      style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold)),
                 ),
               ),
             ],
@@ -1297,9 +1400,10 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
     required String label,
     required IconData icon,
   }) {
-    final isSelected = type == 'frequency' ? _frequency == value : _channel == value;
+    final isSelected =
+        type == 'frequency' ? _frequency == value : _channel == value;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Expanded(
       child: GestureDetector(
         onTap: () {
@@ -1330,7 +1434,9 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
             children: [
               Icon(
                 icon,
-                color: isSelected ? AppColors.accent : (isDark ? Colors.white70 : AppColors.textSecondary),
+                color: isSelected
+                    ? AppColors.accent
+                    : (isDark ? Colors.white70 : AppColors.textSecondary),
                 size: 20.sp,
               ),
               SizedBox(height: 6.h),
@@ -1339,7 +1445,9 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
                 style: TextStyle(
                   fontSize: 11.sp,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  color: isSelected ? AppColors.accent : (isDark ? Colors.white70 : AppColors.textPrimary),
+                  color: isSelected
+                      ? AppColors.accent
+                      : (isDark ? Colors.white70 : AppColors.textPrimary),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -1368,8 +1476,10 @@ class _AccountSecuritySheetState extends State<AccountSecuritySheet> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final surfaceColor = isDark ? const Color(0xFF171C22) : Colors.white;
-    final borderSide = BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
-    final textMuted = isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
+    final borderSide =
+        BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
+    final textMuted =
+        isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
 
     return Container(
       decoration: BoxDecoration(
@@ -1406,7 +1516,11 @@ class _AccountSecuritySheetState extends State<AccountSecuritySheet> {
             SizedBox(height: 20.h),
 
             // 帳號綁定模擬
-            Text('第三方帳號綁定', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: textMuted)),
+            Text('第三方帳號綁定',
+                style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.bold,
+                    color: textMuted)),
             SizedBox(height: 8.h),
             _buildLinkTile(
               label: 'Google 帳號',
@@ -1430,14 +1544,21 @@ class _AccountSecuritySheetState extends State<AccountSecuritySheet> {
             SizedBox(height: 20.h),
 
             // 重設密碼
-            Text('密碼安全', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: textMuted)),
+            Text('密碼安全',
+                style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.bold,
+                    color: textMuted)),
             SizedBox(height: 8.h),
             ListTile(
-              leading: Icon(Icons.lock_reset_rounded, color: AppColors.primary, size: 22.sp),
-              title: const Text('重設登入密碼', style: TextStyle(fontWeight: FontWeight.bold)),
+              leading: Icon(Icons.lock_reset_rounded,
+                  color: AppColors.primary, size: 22.sp),
+              title: const Text('重設登入密碼',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
               subtitle: const Text('更換您用於登入 LawApp 的獨立密碼'),
               trailing: Icon(Icons.arrow_forward_ios_rounded, size: 14.sp),
-              tileColor: isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
+              tileColor:
+                  isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.r),
                 side: borderSide,
@@ -1447,14 +1568,23 @@ class _AccountSecuritySheetState extends State<AccountSecuritySheet> {
             SizedBox(height: 24.h),
 
             // 刪除帳號（危險區域）
-            Text('危險區域', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: Colors.redAccent)),
+            Text('危險區域',
+                style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.redAccent)),
             SizedBox(height: 8.h),
             ListTile(
-              leading: Icon(Icons.delete_forever_rounded, color: Colors.redAccent, size: 22.sp),
-              title: const Text('永久刪除帳號', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.redAccent)),
+              leading: Icon(Icons.delete_forever_rounded,
+                  color: Colors.redAccent, size: 22.sp),
+              title: const Text('永久刪除帳號',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.redAccent)),
               subtitle: const Text('刪除後所有收藏、追蹤與筆記紀錄皆無法復原'),
-              trailing: Icon(Icons.arrow_forward_ios_rounded, color: Colors.redAccent, size: 14.sp),
-              tileColor: isDark ? const Color(0x11FF5252) : const Color(0xFFFFF1F1),
+              trailing: Icon(Icons.arrow_forward_ios_rounded,
+                  color: Colors.redAccent, size: 14.sp),
+              tileColor:
+                  isDark ? const Color(0x11FF5252) : const Color(0xFFFFF1F1),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.r),
                 side: const BorderSide(color: Colors.redAccent, width: 0.8),
@@ -1469,7 +1599,8 @@ class _AccountSecuritySheetState extends State<AccountSecuritySheet> {
                 onPressed: () => Navigator.pop(context),
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r)),
                   padding: EdgeInsets.symmetric(vertical: 12.h),
                 ),
                 child: const Text('關閉'),
@@ -1488,7 +1619,8 @@ class _AccountSecuritySheetState extends State<AccountSecuritySheet> {
     required ValueChanged<bool> onChanged,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final borderSide = BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
+    final borderSide =
+        BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
 
     return Container(
       decoration: BoxDecoration(
@@ -1497,7 +1629,8 @@ class _AccountSecuritySheetState extends State<AccountSecuritySheet> {
         border: Border.all(color: borderSide.color),
       ),
       child: ListTile(
-        leading: Icon(icon, color: isLinked ? AppColors.accent : Colors.grey, size: 26.sp),
+        leading: Icon(icon,
+            color: isLinked ? AppColors.accent : Colors.grey, size: 26.sp),
         title: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Text(isLinked ? '已連結' : '未連結'),
         trailing: Switch(
@@ -1524,7 +1657,8 @@ class _AccountSecuritySheetState extends State<AccountSecuritySheet> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('重設密碼', style: TextStyle(fontWeight: FontWeight.bold)),
+          title:
+              const Text('重設密碼', style: TextStyle(fontWeight: FontWeight.bold)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1544,12 +1678,76 @@ class _AccountSecuritySheetState extends State<AccountSecuritySheet> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-         // 台灣繁體中文教學註解：
+              child: const Text('取消'),
+            ),
+            TextButton(
+              onPressed: () {
+                final pw = controller.text.trim();
+                if (pw.length < 6) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('密碼長度需至少 6 字元！'),
+                        backgroundColor: Colors.redAccent),
+                  );
+                  return;
+                }
+                Navigator.pop(context);
+                _showSnackBar('密碼變更成功！');
+              },
+              child: const Text('確定變更',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showDeleteAccountDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('⚠️ 高危警示：刪除帳號',
+              style: TextStyle(
+                  color: Colors.redAccent, fontWeight: FontWeight.bold)),
+          content: const Text(
+              '您確定要永久刪除此帳號嗎？刪除後，您將被登出，並且所有的儲存、追蹤及筆記資料將被徹底清除，此操作無法復原。'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('取消'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // 關閉對話框
+                Navigator.pop(context); // 關閉 Bottom Sheet
+                widget.appState.signOut(); // 執行登出（回復訪客狀態）
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('帳號已刪除，已為您回復訪客身分！'),
+                    backgroundColor: Colors.redAccent,
+                  ),
+                );
+              },
+              child: const Text('確定刪除',
+                  style: TextStyle(
+                      color: Colors.redAccent, fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+// 台灣繁體中文教學註解：
 // 介面自訂設定底頁，支援 iOS 風格橫向島嶼導覽列拖曳排序、非同步微幅晃動動效，
 // 以及導覽文字標籤開關與 Accent 主題色彩點選。
 
 class _JiggleWidget extends StatefulWidget {
-  const _JiggleWidget({required this.child, required this.index, this.enabled = true});
+  const _JiggleWidget(
+      {required this.child, required this.index, this.enabled = true});
 
   final Widget child;
   final int index;
@@ -1559,7 +1757,8 @@ class _JiggleWidget extends StatefulWidget {
   State<_JiggleWidget> createState() => _JiggleWidgetState();
 }
 
-class _JiggleWidgetState extends State<_JiggleWidget> with SingleTickerProviderStateMixin {
+class _JiggleWidgetState extends State<_JiggleWidget>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _rotationAnim;
   late final Animation<double> _translationAnim;
@@ -1652,7 +1851,7 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
     0: '首頁',
     1: '學習',
     2: '小法助',
-    3: '記事',
+    3: '紀事',
     4: '我的',
   };
 
@@ -1668,7 +1867,7 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     // 使用當前的 Accent 主題色，增加自訂時的色彩回饋感
     final iconColor = AppColors.accent;
-    
+
     if (index == 2) {
       return Container(
         width: 24.w,
@@ -1710,8 +1909,10 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final surfaceColor = isDark ? const Color(0xFF171C22) : Colors.white;
-    final borderSide = BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
-    final textMuted = isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
+    final borderSide =
+        BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
+    final textMuted =
+        isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
 
     return Container(
       decoration: BoxDecoration(
@@ -1743,23 +1944,30 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w900,
-                  color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
+                  color:
+                      isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
                 ),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 20.h),
 
               // 1. 拖曳排序
-              Text('自訂分頁順序（長按並左右拖曳進行排序）', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: textMuted)),
+              Text('自訂分頁順序（長按並左右拖曳進行排序）',
+                  style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.bold,
+                      color: textMuted)),
               SizedBox(height: 12.h),
-              
+
               // 台灣繁體中文教學註解：
               // 水平「懸浮島嶼」拖曳排序列，高度固定為 84.h，大圓角與精緻陰影
               Container(
                 height: 84.h,
                 padding: EdgeInsets.symmetric(horizontal: 12.w),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF1A2028) : const Color(0xFFF2F4F7),
+                  color: isDark
+                      ? const Color(0xFF1A2028)
+                      : const Color(0xFFF2F4F7),
                   borderRadius: BorderRadius.circular(28.r),
                   boxShadow: [
                     BoxShadow(
@@ -1781,7 +1989,8 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
                           index: i,
                           enabled: true,
                           child: Container(
-                            width: (MediaQuery.sizeOf(context).width - 64.w) / 5.2,
+                            width:
+                                (MediaQuery.sizeOf(context).width - 64.w) / 5.2,
                             alignment: Alignment.center,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -1793,7 +2002,9 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
                                   style: TextStyle(
                                     fontSize: 10.sp,
                                     fontWeight: FontWeight.bold,
-                                    color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
+                                    color: isDark
+                                        ? const Color(0xFFF2F4F7)
+                                        : AppColors.textPrimary,
                                   ),
                                 ),
                               ],
@@ -1818,12 +2029,15 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
               // 2. 顯示文字標籤
               Container(
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
+                  color: isDark
+                      ? const Color(0xFF0F1216)
+                      : const Color(0xFFFAF7F2),
                   borderRadius: BorderRadius.circular(12.r),
                   border: Border.all(color: borderSide.color),
                 ),
                 child: SwitchListTile(
-                  title: const Text('顯示分頁文字標籤', style: TextStyle(fontWeight: FontWeight.bold)),
+                  title: const Text('顯示分頁文字標籤',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: const Text('關閉後將只顯示導覽圖示，高度更加緊湊'),
                   value: _tempShowLabels,
                   activeColor: AppColors.accent,
@@ -1837,7 +2051,11 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
               SizedBox(height: 24.h),
 
               // 3. 主題 Accent Color 點選
-              Text('App 品牌配色', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: textMuted)),
+              Text('App 品牌配色',
+                  style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.bold,
+                      color: textMuted)),
               SizedBox(height: 12.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1859,9 +2077,11 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
                       style: OutlinedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 12.h),
                         side: borderSide,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14.r)),
                       ),
-                      child: Text('取消', style: TextStyle(fontSize: 14.sp, color: textMuted)),
+                      child: Text('取消',
+                          style: TextStyle(fontSize: 14.sp, color: textMuted)),
                     ),
                   ),
                   SizedBox(width: 12.w),
@@ -1884,9 +2104,14 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
                       style: FilledButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         padding: EdgeInsets.symmetric(vertical: 12.h),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14.r)),
                       ),
-                      child: Text('儲存變更', style: TextStyle(fontSize: 14.sp, color: Colors.white, fontWeight: FontWeight.bold)),
+                      child: Text('儲存變更',
+                          style: TextStyle(
+                              fontSize: 14.sp,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ],

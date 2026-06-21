@@ -5,7 +5,8 @@ import 'package:lawapp/features/case_time_machine/data/supabase_case_service.dar
 
 class CaseTimeMachineRepository {
   CaseTimeMachineRepository._privateConstructor();
-  static final CaseTimeMachineRepository instance = CaseTimeMachineRepository._privateConstructor();
+  static final CaseTimeMachineRepository instance =
+      CaseTimeMachineRepository._privateConstructor();
 
   final List<CaseBook> _casesCache = [];
   bool _initialized = false;
@@ -41,7 +42,7 @@ class CaseTimeMachineRepository {
     if (foundIndex != -1) {
       return _casesCache[foundIndex];
     }
-    
+
     // 找不到時，不應隨便回傳第一個 Legacy 元素。
     // 建立一個 Placeholder CaseBook，使 UI 在跳轉詳情頁時能正確透過該 ID 向 Supabase 獲取真實資料。
     return CaseBook(
@@ -155,11 +156,11 @@ class CaseTimeMachineRepository {
       // 若在不支援 SQLite 的測試環境中，降級由記憶體快取進行過濾與分頁切片
       print('SQLite query failed, falling back to cache: $e');
       Iterable<CaseBook> filtered = _casesCache;
-      
+
       if (category != null && category != '全部') {
         filtered = filtered.where((c) => c.category == category);
       }
-      
+
       if (query != null && query.trim().isNotEmpty) {
         final lowerQuery = query.toLowerCase();
         filtered = filtered.where((c) =>
@@ -168,7 +169,7 @@ class CaseTimeMachineRepository {
             c.shortDescription.toLowerCase().contains(lowerQuery) ||
             c.background.toLowerCase().contains(lowerQuery));
       }
-      
+
       final sorted = filtered.toList()
         ..sort((a, b) {
           final yearCompare = b.year.compareTo(a.year);
@@ -177,7 +178,8 @@ class CaseTimeMachineRepository {
         });
 
       if (offset >= sorted.length) return [];
-      final end = (offset + limit) < sorted.length ? (offset + limit) : sorted.length;
+      final end =
+          (offset + limit) < sorted.length ? (offset + limit) : sorted.length;
       return sorted.sublist(offset, end);
     }
   }
@@ -192,7 +194,9 @@ class CaseTimeMachineRepository {
       final local = await CaseDossierSqliteDb.instance.getCaseById(id);
       // 必須確認該快取包含完整的詳情資料（如 background 或 fullStory 不為空），
       // 否則可能只是列表查詢時存入的輕量中繼資料（metadata）。
-      if (local != null && local.fullStory.isNotEmpty && local.timeline.isNotEmpty) {
+      if (local != null &&
+          local.fullStory.isNotEmpty &&
+          local.timeline.isNotEmpty) {
         return local;
       }
     } catch (e) {

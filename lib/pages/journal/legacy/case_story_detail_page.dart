@@ -98,7 +98,7 @@ class _CaseStoryDetailPageState extends State<CaseStoryDetailPage> {
   void _openCaseAssistant(CaseStoryItem item) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (__) => LawAssistantSearchPage(
+        builder: (__) => LawAssistantChatPage(
           initialPrompt: _caseAssistantPrompt(item),
         ),
       ),
@@ -1277,7 +1277,7 @@ class _CasePalette {
       );
     }
 
-    return const _CasePalette(
+    return _CasePalette(
       background: AppColors.background,
       surface: Colors.white,
       subtleSurface: Color(0xFFF8F1E2),

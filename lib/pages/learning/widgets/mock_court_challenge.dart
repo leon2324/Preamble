@@ -29,36 +29,42 @@ class _MockCourtChallengePageState extends State<MockCourtChallengePage> {
         'C. 自行跟小華私下寫和解書。'
       ],
       'correctIndex': 1,
-      'explanation': '車禍且對方有醉酒、暴力傾向時，安全第一。保持現場、拍照並報警是最佳保障，切勿在不安全或無公正第三方在場時私下和解或任意移動車輛（除非無人傷亡且已標繪定位）。',
+      'explanation':
+          '車禍且對方有醉酒、暴力傾向時，安全第一。保持現場、拍照並報警是最佳保障，切勿在不安全或無公正第三方在場時私下和解或任意移動車輛（除非無人傷亡且已標繪定位）。',
     },
     {
       'title': '案例二：突然的退租要求',
-      'fact': '大華租屋合約寫明「租期一年，提前解約需賠償一個月租金」。大華因工作變動，在租滿六個月時要求提前退租，並在一週前通知房東。房東要求沒收全部兩個月押金。依據現行法規，房東這樣合法嗎？',
+      'fact':
+          '大華租屋合約寫明「租期一年，提前解約需賠償一個月租金」。大華因工作變動，在租滿六個月時要求提前退租，並在一週前通知房東。房東要求沒收全部兩個月押金。依據現行法規，房東這樣合法嗎？',
       'options': [
         'A. 合法，房東高興扣多少就扣多少。',
         'B. 不合法，但因為大華有提前通知，所以完全不用賠違約金。',
         'C. 不合法，房東最多只能扣除一個月租金作為違約金，其餘一個月押金必須退還。'
       ],
       'correctIndex': 2,
-      'explanation': '契約中已約定提前解約賠償一個月租金，且依住宅租賃契約應約定事項，違約金最高不得超過一個月。因此沒收全部兩個月押金是不合法的，溢收部分需退還。',
+      'explanation':
+          '契約中已約定提前解約賠償一個月租金，且依住宅租賃契約應約定事項，違約金最高不得超過一個月。因此沒收全部兩個月押金是不合法的，溢收部分需退還。',
     },
     {
       'title': '案例三：網購拆封能退嗎？',
-      'fact': '阿花在網路上買了一件衣服，收到後拆封試穿發現尺寸不合，想要退貨。賣家卻說「消保法規定拆封後不適用七天鑑賞期，一律不退換」。賣家說法站得住腳嗎？',
+      'fact':
+          '阿花在網路上買了一件衣服，收到後拆封試穿發現尺寸不合，想要退貨。賣家卻說「消保法規定拆封後不適用七天鑑賞期，一律不退換」。賣家說法站得住腳嗎？',
       'options': [
         'A. 站得住腳，只要拆封就不能退。',
         'B. 站不住腳，衣服並非消保法規定的合理例外排除商品（如易腐敗、個人衛生用品等），試穿亦屬合理檢視範疇，仍享有七天鑑賞期。',
         'C. 站得住腳，網購本來就不能退換。'
       ],
       'correctIndex': 1,
-      'explanation': '一般成衣不屬於七天鑑賞期之合理例外排除商品，且試穿為合理檢視商品之必要行為。商家不得以「拆封不可退」之自訂條款排除消保法規定。',
+      'explanation':
+          '一般成衣不屬於七天鑑賞期之合理例外排除商品，且試穿為合理檢視商品之必要行為。商家不得以「拆封不可退」之自訂條款排除消保法規定。',
     }
   ];
 
   void _submitAnswer() {
     if (_selectedAnswerIndex == null || _isAnswered) return;
 
-    final isCorrect = _selectedAnswerIndex == _questions[_currentStep]['correctIndex'];
+    final isCorrect =
+        _selectedAnswerIndex == _questions[_currentStep]['correctIndex'];
     if (isCorrect) {
       _correctCount++;
     } else {
@@ -103,7 +109,8 @@ class _MockCourtChallengePageState extends State<MockCourtChallengePage> {
       barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
           title: Text(
             allCorrect ? '🏆 擂台通關！完美判斷' : '👏 挑戰結束！繼續加油',
             textAlign: TextAlign.center,
@@ -112,8 +119,8 @@ class _MockCourtChallengePageState extends State<MockCourtChallengePage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                allCorrect 
-                    ? '恭喜你！3 題法官模擬案件判斷全部正確！\n解鎖了「擂台霸主」榮譽勳章，並獲得經驗值 +50 XP！' 
+                allCorrect
+                    ? '恭喜你！3 題法官模擬案件判斷全部正確！\n解鎖了「擂台霸主」榮譽勳章，並獲得經驗值 +50 XP！'
                     : '你答對了 $_correctCount / ${_questions.length} 題！\n答錯的題目已自動記錄到你的「📕 錯題本」中，隨時可以在成就室重新溫習挑戰！',
                 textAlign: TextAlign.center,
                 style: TextStyle(height: 1.45, fontSize: 13.5.sp),
@@ -121,7 +128,9 @@ class _MockCourtChallengePageState extends State<MockCourtChallengePage> {
               SizedBox(height: 16.h),
               Text(
                 allCorrect ? '🎓 Mascot Expression 升級啦！' : '📚 熟能生巧！',
-                style: TextStyle(fontWeight: FontWeight.bold, color: HomeV2Palette.trustGreen),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: HomeV2Palette.trustGreen),
               )
             ],
           ),
@@ -167,7 +176,8 @@ class _MockCourtChallengePageState extends State<MockCourtChallengePage> {
                   Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 8.w, vertical: 3.h),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFFFAEC),
                           borderRadius: BorderRadius.circular(6.r),
@@ -175,36 +185,49 @@ class _MockCourtChallengePageState extends State<MockCourtChallengePage> {
                         ),
                         child: Text(
                           '模擬審判',
-                          style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.bold, color: const Color(0xFF94610D)),
+                          style: TextStyle(
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF94610D)),
                         ),
                       ),
                       const Spacer(),
                       Text(
                         '進度：${_currentStep + 1} / ${_questions.length}',
-                        style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: AppColors.textSecondary),
+                        style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textSecondary),
                       ),
                     ],
                   ),
                   SizedBox(height: 12.h),
                   Text(
                     q['title'],
-                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                    style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary),
                   ),
                   SizedBox(height: 8.h),
                   Text(
                     q['fact'],
-                    style: TextStyle(fontSize: 13.5.sp, height: 1.5, color: AppColors.textSecondary),
+                    style: TextStyle(
+                        fontSize: 13.5.sp,
+                        height: 1.5,
+                        color: AppColors.textSecondary),
                   ),
                 ],
               ),
             ),
             SizedBox(height: 8.h),
-            
+
             // 選項
             ...List.generate(q['options'].length, (index) {
               final isSelected = _selectedAnswerIndex == index;
               final isCorrectOpt = _isAnswered && index == q['correctIndex'];
-              final isWrongOpt = _isAnswered && isSelected && index != q['correctIndex'];
+              final isWrongOpt =
+                  _isAnswered && isSelected && index != q['correctIndex'];
 
               Color cardBg = Colors.white;
               Color borderCol = const Color(0xFFECE6DB);
@@ -221,24 +244,31 @@ class _MockCourtChallengePageState extends State<MockCourtChallengePage> {
 
               Widget iconWidget;
               if (isCorrectOpt) {
-                iconWidget = CtmSvgIcon(CtmSvgIcons.star, size: 18.sp, color: Colors.green);
+                iconWidget = CtmSvgIcon(CtmSvgIcons.star,
+                    size: 18.sp, color: Colors.green);
               } else if (isWrongOpt) {
-                iconWidget = CtmSvgIcon(CtmSvgIcons.xCircle, size: 18.sp, color: Colors.red);
+                iconWidget = CtmSvgIcon(CtmSvgIcons.xCircle,
+                    size: 18.sp, color: Colors.red);
               } else if (isSelected) {
-                iconWidget = CtmSvgIcon(CtmSvgIcons.star, size: 18.sp, color: const Color(0xFFE8B95F));
+                iconWidget = CtmSvgIcon(CtmSvgIcons.star,
+                    size: 18.sp, color: const Color(0xFFE8B95F));
               } else {
-                iconWidget = CtmSvgIcon(CtmSvgIcons.timeline, size: 18.sp, color: Colors.grey);
+                iconWidget = CtmSvgIcon(CtmSvgIcons.timeline,
+                    size: 18.sp, color: Colors.grey);
               }
 
               return GestureDetector(
-                onTap: _isAnswered ? null : () {
-                  setState(() {
-                    _selectedAnswerIndex = index;
-                  });
-                },
+                onTap: _isAnswered
+                    ? null
+                    : () {
+                        setState(() {
+                          _selectedAnswerIndex = index;
+                        });
+                      },
                 child: NotebookCard(
                   backgroundColor: cardBg,
-                  padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
                   margin: EdgeInsets.only(bottom: 10.h),
                   child: Row(
                     children: [
@@ -259,9 +289,9 @@ class _MockCourtChallengePageState extends State<MockCourtChallengePage> {
                 ),
               );
             }),
-            
+
             SizedBox(height: 16.h),
-            
+
             // 解析說明
             if (_isAnswered)
               NotebookCard(
@@ -271,19 +301,25 @@ class _MockCourtChallengePageState extends State<MockCourtChallengePage> {
                   children: [
                     Text(
                       '⚖️ 小法助白話判決書',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.5.sp, color: const Color(0xFF94610D)),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13.5.sp,
+                          color: const Color(0xFF94610D)),
                     ),
                     SizedBox(height: 6.h),
                     Text(
                       q['explanation'],
-                      style: TextStyle(fontSize: 12.5.sp, height: 1.45, color: AppColors.textSecondary),
+                      style: TextStyle(
+                          fontSize: 12.5.sp,
+                          height: 1.45,
+                          color: AppColors.textSecondary),
                     ),
                   ],
                 ),
               ),
 
             SizedBox(height: 16.h),
-            
+
             // 按鈕
             if (!_isAnswered)
               FilledButton(
@@ -291,9 +327,12 @@ class _MockCourtChallengePageState extends State<MockCourtChallengePage> {
                 style: FilledButton.styleFrom(
                   backgroundColor: HomeV2Palette.trustGreen,
                   padding: EdgeInsets.symmetric(vertical: 14.h),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r)),
                 ),
-                child: Text('敲定法槌 (送出)', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
+                child: Text('敲定法槌 (送出)',
+                    style: TextStyle(
+                        fontSize: 14.sp, fontWeight: FontWeight.bold)),
               )
             else
               FilledButton(
@@ -301,11 +340,13 @@ class _MockCourtChallengePageState extends State<MockCourtChallengePage> {
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.textPrimary,
                   padding: EdgeInsets.symmetric(vertical: 14.h),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r)),
                 ),
                 child: Text(
                   _currentStep == _questions.length - 1 ? '觀看判斷結果' : '前進下一案',
-                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+                  style:
+                      TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
                 ),
               ),
           ],

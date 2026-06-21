@@ -481,7 +481,7 @@ class _StatuteDetailPageState extends State<StatuteDetailPage> {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (__) => LawAssistantSearchPage(
+                        builder: (__) => LawAssistantChatPage(
                           initialPrompt:
                               '我想了解「${item.displayTitle}」在生活案例中怎麼使用？',
                         ),

@@ -646,22 +646,28 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
                   Wrap(
                     spacing: 6.w,
                     runSpacing: 6.h,
-                    children: topic.tags.map((tag) => Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-                      decoration: BoxDecoration(
-                        color: CaseTimeMachineColors.primaryGreen.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(20.r),
-                        border: Border.all(color: CaseTimeMachineColors.primaryGreen.withValues(alpha: 0.2)),
-                      ),
-                      child: Text(
-                        tag,
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          fontWeight: FontWeight.bold,
-                          color: CaseTimeMachineColors.primaryGreen,
-                        ),
-                      ),
-                    )).toList(),
+                    children: topic.tags
+                        .map((tag) => Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10.w, vertical: 5.h),
+                              decoration: BoxDecoration(
+                                color: CaseTimeMachineColors.primaryGreen
+                                    .withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(20.r),
+                                border: Border.all(
+                                    color: CaseTimeMachineColors.primaryGreen
+                                        .withValues(alpha: 0.2)),
+                              ),
+                              child: Text(
+                                tag,
+                                style: TextStyle(
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: CaseTimeMachineColors.primaryGreen,
+                                ),
+                              ),
+                            ))
+                        .toList(),
                   ),
                   SizedBox(height: 16.h),
                   // Heat Summary Card
@@ -675,9 +681,12 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _buildStatItem('本週排名', '#${topic.rank}', Icons.assessment_rounded),
-                        _buildStatItem('熱度分數', '${topic.heatScore}', Icons.local_fire_department_rounded),
-                        _buildStatItem('今日升幅', '+${topic.dayChangePercent}%', Icons.trending_up_rounded),
+                        _buildStatItem(
+                            '本週排名', '#${topic.rank}', Icons.assessment_rounded),
+                        _buildStatItem('熱度分數', '${topic.heatScore}',
+                            Icons.local_fire_department_rounded),
+                        _buildStatItem('今日升幅', '+${topic.dayChangePercent}%',
+                            Icons.trending_up_rounded),
                       ],
                     ),
                   ),
@@ -720,7 +729,8 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
                     SizedBox(height: 20.h),
                   ],
                   // Latest Comment
-                  _buildSectionTitle('最新社群觀點', Icons.chat_bubble_outline_rounded),
+                  _buildSectionTitle(
+                      '最新社群觀點', Icons.chat_bubble_outline_rounded),
                   SizedBox(height: 8.h),
                   _buildCommentCard(topic.latestComment, palette),
                   SizedBox(height: 24.h),
@@ -735,20 +745,27 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
                             });
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(_isFollowing ? '已追蹤此議題！' : '已取消追蹤'),
+                                content:
+                                    Text(_isFollowing ? '已追蹤此議題！' : '已取消追蹤'),
                                 duration: const Duration(seconds: 1),
                               ),
                             );
                           },
                           icon: Icon(
-                            _isFollowing ? Icons.notifications_active_rounded : Icons.notifications_none_rounded,
+                            _isFollowing
+                                ? Icons.notifications_active_rounded
+                                : Icons.notifications_none_rounded,
                             size: 18.sp,
                           ),
                           label: Text(_isFollowing ? '追蹤中' : '追蹤議題'),
                           style: OutlinedButton.styleFrom(
-                            foregroundColor: _isFollowing ? CaseTimeMachineColors.primaryGreen : palette.primaryText,
+                            foregroundColor: _isFollowing
+                                ? CaseTimeMachineColors.primaryGreen
+                                : palette.primaryText,
                             side: BorderSide(
-                              color: _isFollowing ? CaseTimeMachineColors.primaryGreen : palette.border,
+                              color: _isFollowing
+                                  ? CaseTimeMachineColors.primaryGreen
+                                  : palette.border,
                               width: 1.5,
                             ),
                             padding: EdgeInsets.symmetric(vertical: 12.h),
@@ -765,7 +782,8 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
                             Navigator.of(context).pop();
                             Navigator.of(context).push(
                               CupertinoPageRoute<void>(
-                                builder: (__) => const CaseTimeMachineEntryPage(),
+                                builder: (__) =>
+                                    const CaseTimeMachineEntryPage(),
                               ),
                             );
                           },
@@ -834,7 +852,8 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
     );
   }
 
-  Widget _buildTimelineList(List<HomeDiscussionTimelineEvent> events, JournalPalette palette) {
+  Widget _buildTimelineList(
+      List<HomeDiscussionTimelineEvent> events, JournalPalette palette) {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -855,7 +874,9 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
                     width: 10.w,
                     height: 10.w,
                     decoration: BoxDecoration(
-                      color: isPositive ? const Color(0xFF146B50) : const Color(0xFFC62828),
+                      color: isPositive
+                          ? const Color(0xFF146B50)
+                          : const Color(0xFFC62828),
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -895,7 +916,8 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 6.w, vertical: 2.h),
                               decoration: BoxDecoration(
                                 color: isPositive
                                     ? const Color(0xFFEAF7F2)
@@ -936,7 +958,8 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
     );
   }
 
-  Widget _buildPollCard(HomeDiscussionPoll poll, int totalVotes, JournalPalette palette) {
+  Widget _buildPollCard(
+      HomeDiscussionPoll poll, int totalVotes, JournalPalette palette) {
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
@@ -973,10 +996,13 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
                 child: Container(
                   padding: EdgeInsets.all(12.w),
                   decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFFEAF7F2) : palette.background,
+                    color: isSelected
+                        ? const Color(0xFFEAF7F2)
+                        : palette.background,
                     borderRadius: BorderRadius.circular(10.r),
                     border: Border.all(
-                      color: isSelected ? const Color(0xFF146B50) : palette.border,
+                      color:
+                          isSelected ? const Color(0xFF146B50) : palette.border,
                       width: isSelected ? 1.5 : 1.0,
                     ),
                   ),
@@ -990,8 +1016,12 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
                             opt.label,
                             style: TextStyle(
                               fontSize: 12.sp,
-                              fontWeight: isSelected ? FontWeight.w900 : FontWeight.bold,
-                              color: isSelected ? const Color(0xFF146B50) : palette.primaryText,
+                              fontWeight: isSelected
+                                  ? FontWeight.w900
+                                  : FontWeight.bold,
+                              color: isSelected
+                                  ? const Color(0xFF146B50)
+                                  : palette.primaryText,
                             ),
                           ),
                           Text(
@@ -999,7 +1029,9 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
                             style: TextStyle(
                               fontSize: 11.sp,
                               fontWeight: FontWeight.bold,
-                              color: isSelected ? const Color(0xFF146B50) : palette.secondaryText,
+                              color: isSelected
+                                  ? const Color(0xFF146B50)
+                                  : palette.secondaryText,
                             ),
                           ),
                         ],
@@ -1011,7 +1043,9 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
                           value: percent,
                           backgroundColor: palette.border,
                           valueColor: AlwaysStoppedAnimation<Color>(
-                            isSelected ? const Color(0xFF146B50) : const Color(0xFFFF7A1A),
+                            isSelected
+                                ? const Color(0xFF146B50)
+                                : const Color(0xFFFF7A1A),
                           ),
                           minHeight: 6.h,
                         ),
@@ -1027,7 +1061,8 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
     );
   }
 
-  Widget _buildCommentCard(HomeDiscussionComment comment, JournalPalette palette) {
+  Widget _buildCommentCard(
+      HomeDiscussionComment comment, JournalPalette palette) {
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
@@ -1042,9 +1077,12 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
             children: [
               CircleAvatar(
                 radius: 16.r,
-                backgroundColor: CaseTimeMachineColors.primaryGreen.withValues(alpha: 0.1),
+                backgroundColor:
+                    CaseTimeMachineColors.primaryGreen.withValues(alpha: 0.1),
                 child: Text(
-                  comment.userHandle.isNotEmpty ? comment.userHandle.substring(1, 2).toUpperCase() : 'U',
+                  comment.userHandle.isNotEmpty
+                      ? comment.userHandle.substring(1, 2).toUpperCase()
+                      : 'U',
                   style: TextStyle(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.bold,
@@ -1188,7 +1226,8 @@ class _DetailHeatChartPainter extends CustomPainter {
       return 0.0;
     }).toList();
 
-    final maxVal = volumes.reduce((a, b) => a > b ? a : b).clamp(1.0, double.infinity);
+    final maxVal =
+        volumes.reduce((a, b) => a > b ? a : b).clamp(1.0, double.infinity);
     final minVal = volumes.reduce((a, b) => a < b ? a : b);
     final range = maxVal - minVal;
 
@@ -1236,7 +1275,8 @@ class _DetailHeatChartPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round;
 
-    final curvePath = Path()..moveTo(drawingPoints.first.dx, drawingPoints.first.dy);
+    final curvePath = Path()
+      ..moveTo(drawingPoints.first.dx, drawingPoints.first.dy);
     for (var i = 1; i < drawingPoints.length; i++) {
       final prev = drawingPoints[i - 1];
       final curr = drawingPoints[i];
@@ -1249,7 +1289,13 @@ class _DetailHeatChartPainter extends CustomPainter {
     for (var i = 0; i < drawingPoints.length; i++) {
       final pt = drawingPoints[i];
       canvas.drawCircle(pt, 5.0, Paint()..color = Colors.white);
-      canvas.drawCircle(pt, 5.0, Paint()..color = lineColor..style = PaintingStyle.stroke..strokeWidth = 2.0);
+      canvas.drawCircle(
+          pt,
+          5.0,
+          Paint()
+            ..color = lineColor
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2.0);
 
       final annotation = points[i].annotation;
       if (annotation != null && annotation.isNotEmpty) {
@@ -1267,7 +1313,8 @@ class _DetailHeatChartPainter extends CustomPainter {
         )..layout();
         textPainter.paint(
           canvas,
-          Offset(pt.dx - textPainter.width / 2, pt.dy - textPainter.height - 4.h),
+          Offset(
+              pt.dx - textPainter.width / 2, pt.dy - textPainter.height - 4.h),
         );
       }
     }
@@ -1275,6 +1322,8 @@ class _DetailHeatChartPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _DetailHeatChartPainter oldDelegate) {
-    return oldDelegate.points != points || oldDelegate.lineColor != lineColor || oldDelegate.palette != palette;
+    return oldDelegate.points != points ||
+        oldDelegate.lineColor != lineColor ||
+        oldDelegate.palette != palette;
   }
 }

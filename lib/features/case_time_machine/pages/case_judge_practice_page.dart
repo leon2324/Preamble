@@ -58,7 +58,8 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
           'description': '佔領國會屬於最後手段，且訴求符合重大公益，具有憲法防禦的正當性。',
           'matchText': '高度一致 (95%)',
           'matchColor': const Color(0xFF2E7D32),
-          'analysis': '最高法院與您的直覺非常相近！判決認定「公民不服從」是超法規阻卻違法事由，在民主制度面臨瑕疵時，人民在適度手段內享有對抗權利。',
+          'analysis':
+              '最高法院與您的直覺非常相近！判決認定「公民不服從」是超法規阻卻違法事由，在民主制度面臨瑕疵時，人民在適度手段內享有對抗權利。',
           'tiltAngle': -0.15, // 偏左
         },
         {
@@ -66,7 +67,8 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
           'description': '動機雖善但手段違法，非法侵入與妨害公務破壞了公共秩序，應依法判刑。',
           'matchText': '立場相左 (35%)',
           'matchColor': const Color(0xFFC62828),
-          'analysis': '法院並非不重視秩序，但在此案中，最高法院更傾向保護憲法保障的言論與集會權限，認為公眾表達自由的法益在特定限度下優先於靜態秩序。',
+          'analysis':
+              '法院並非不重視秩序，但在此案中，最高法院更傾向保護憲法保障的言論與集會權限，認為公眾表達自由的法益在特定限度下優先於靜態秩序。',
           'tiltAngle': 0.15, // 偏右
         },
         {
@@ -74,7 +76,8 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
           'description': '行為確實構成犯罪，但考量情境特殊且無其他救濟管道，應宣告有罪但免除其刑。',
           'matchText': '部分一致 (70%)',
           'matchColor': const Color(0xFFEF6C00),
-          'analysis': '您的想法類似二審前的折衷觀點。然而，最高法院最終選擇更進一步的「公民不服從阻卻違法」論述，徹底認定其無罪，而非僅是有罪免刑。',
+          'analysis':
+              '您的想法類似二審前的折衷觀點。然而，最高法院最終選擇更進一步的「公民不服從阻卻違法」論述，徹底認定其無罪，而非僅是有罪免刑。',
           'tiltAngle': -0.05, // 微偏左
         },
       ];
@@ -93,7 +96,8 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
           'description': '台鐵局發包工程卻未落實監督管理與邊坡防護安全，相關行政管理主管亦構成刑事責任。',
           'matchText': '立場相左 (45%)',
           'matchColor': const Color(0xFFC62828),
-          'analysis': '法院認定台鐵主管多屬於民事與行政疏失，而非事故發生的直接因果業務過失，因此刑事責任主要集中在承包商與直接施工人員，社會普遍對此判決的法益涵蓋範圍有所爭論。',
+          'analysis':
+              '法院認定台鐵主管多屬於民事與行政疏失，而非事故發生的直接因果業務過失，因此刑事責任主要集中在承包商與直接施工人員，社會普遍對此判決的法益涵蓋範圍有所爭論。',
           'tiltAngle': 0.15,
         },
       ];
@@ -107,7 +111,8 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
         'description': '應嚴格遵循法規條文，以客觀事實與法律安定性為重，避免過多主觀寬容。',
         'matchText': '部分一致 (60%)',
         'matchColor': const Color(0xFFEF6C00),
-        'analysis': '法院重視法條文義與事實要件。不過，現代司法通常會在嚴格執法的同時，引入比例原則或當事人處境的利益衡量，做適度的衡平判決。',
+        'analysis':
+            '法院重視法條文義與事實要件。不過，現代司法通常會在嚴格執法的同時，引入比例原則或當事人處境的利益衡量，做適度的衡平判決。',
         'tiltAngle': 0.08,
       },
       {
@@ -178,7 +183,7 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
                 ),
               ),
             ),
-            
+
             // 台灣繁體中文教學註解：
             // 頂部進度指引與案件名稱橫幅。
             Container(
@@ -196,9 +201,11 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
                   Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 6.w, vertical: 3.h),
                         decoration: BoxDecoration(
-                          color: CaseTimeMachineColors.primaryGreen.withValues(alpha: 0.1),
+                          color: CaseTimeMachineColors.primaryGreen
+                              .withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(4.r),
                         ),
                         child: Text(
@@ -216,7 +223,8 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
                           widget.book.titleZh,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: CaseTimeMachineTextStyles.cardTitle(context).copyWith(
+                          style: CaseTimeMachineTextStyles.cardTitle(context)
+                              .copyWith(
                             fontSize: 12.5.sp,
                           ),
                         ),
@@ -249,7 +257,8 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
                   // 標題：你的抉擇
                   Text(
                     hasSelected ? '⚖️ 抉擇對照分析' : '👉 請選擇你的法官立場：',
-                    style: CaseTimeMachineTextStyles.sectionTitle(context).copyWith(
+                    style: CaseTimeMachineTextStyles.sectionTitle(context)
+                        .copyWith(
                       fontSize: 14.sp,
                     ),
                   ),
@@ -422,7 +431,8 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
                     children: [
                       Text(
                         stance['title'] as String,
-                        style: CaseTimeMachineTextStyles.cardTitle(context).copyWith(
+                        style: CaseTimeMachineTextStyles.cardTitle(context)
+                            .copyWith(
                           fontSize: 13.sp,
                           color: CaseTimeMachineColors.primaryGreen,
                         ),
@@ -430,7 +440,8 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
                       SizedBox(height: 4.h),
                       Text(
                         stance['description'] as String,
-                        style: CaseTimeMachineTextStyles.bodySmall(context).copyWith(
+                        style: CaseTimeMachineTextStyles.bodySmall(context)
+                            .copyWith(
                           fontSize: 11.sp,
                           height: 1.4,
                         ),
@@ -455,7 +466,8 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
         AnimatedBuilder(
           animation: _scaleAnimation,
           builder: (context, child) {
-            final double currentTilt = (selectedStance['tiltAngle'] as double) * _scaleAnimation.value;
+            final double currentTilt =
+                (selectedStance['tiltAngle'] as double) * _scaleAnimation.value;
             return Container(
               height: 130.h,
               width: double.infinity,
@@ -484,10 +496,12 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
         Container(
           padding: EdgeInsets.all(14.w),
           decoration: BoxDecoration(
-            color: (selectedStance['matchColor'] as Color).withValues(alpha: 0.08),
+            color:
+                (selectedStance['matchColor'] as Color).withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(12.r),
             border: Border.all(
-              color: (selectedStance['matchColor'] as Color).withValues(alpha: 0.28),
+              color: (selectedStance['matchColor'] as Color)
+                  .withValues(alpha: 0.28),
             ),
           ),
           child: Column(

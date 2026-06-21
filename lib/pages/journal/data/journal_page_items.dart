@@ -337,11 +337,32 @@ const archiveUpdateItems = [
   ArchiveUpdateItem(
     type: '生活避坑',
     title: '網購七日鑑賞期退貨指南',
-    summary: '詳細整理網購七日無條件退貨權利範圍、不適用商品清單與遇到賣家刁難時的申訴步驟。',
+    summary:
+        '詳細整理網購七日無條件退貨權利範圍、不適用商品清單與遇到賣家刁難時的申訴步驟。適合7天鑑賞期、網購7天鑑賞期等常見退換貨消費爭議。',
     timeLabel: '4 小時前',
     tint: Color(0xFF1E7B66),
     caseId: 'online-shopping-return-2025',
     initialTab: '退貨權利範圍',
+  ),
+  ArchiveUpdateItem(
+    type: '生活避坑',
+    title: '二手拍賣與個人賣家退貨爭議',
+    summary:
+        '解析個人出清二手舊物是否適用消保法七日鑑賞期？深入討論企業經營者之認定，並提供買賣雙方合理自保與協商手段。符合7天鑑賞期、網購7天鑑賞期、個人賣家退貨等爭議情境。',
+    timeLabel: '5 小時前',
+    tint: Color(0xFFC69C55),
+    caseId: 'used-goods-return-2026',
+    initialTab: '企業經營者認定',
+  ),
+  ArchiveUpdateItem(
+    type: '生活避坑',
+    title: '網購合理例外與客製化排除指南',
+    summary:
+        '生鮮食品、已拆封之影音軟體、客製化姓名商品均不適用七日鑑賞期無條件退換貨。整理通訊交易合理例外情事，教您如何判斷可排除的商品範圍。符合7天鑑賞期、網購7天鑑賞期排除規定。',
+    timeLabel: '8 小時前',
+    tint: Color(0xFF4A7C9D),
+    caseId: 'rational-exception-return-2026',
+    initialTab: '合理例外情事',
   ),
 ];
 
@@ -530,4 +551,3 @@ const curatedExhibitionItems = [
     themeColor: Color(0xFF9F6A26),
   ),
 ];
-

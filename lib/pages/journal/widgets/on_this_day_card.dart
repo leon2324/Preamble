@@ -40,7 +40,8 @@ class _OnThisDayCardState extends State<OnThisDayCard> {
         await repository.initialize();
       }
       final cases = repository.cases;
-      final dayCases = onThisDayCasesForDate(_currentDate.month, _currentDate.day);
+      final dayCases =
+          onThisDayCasesForDate(_currentDate.month, _currentDate.day);
       if (dayCases.isEmpty) {
         if (mounted) {
           setState(() {
@@ -52,12 +53,16 @@ class _OnThisDayCardState extends State<OnThisDayCard> {
       }
       final mainCase = dayCases.first;
       final title = mainCase.title;
-      final fullDateStr = '${mainCase.year}.${mainCase.month.toString().padLeft(2, '0')}.${mainCase.day.toString().padLeft(2, '0')}';
+      final fullDateStr =
+          '${mainCase.year}.${mainCase.month.toString().padLeft(2, '0')}.${mainCase.day.toString().padLeft(2, '0')}';
       CaseBook? found;
       for (final book in cases) {
         if (book.id == fullDateStr.replaceAll('.', '-') ||
-            book.titleZh.contains(title) || title.contains(book.titleZh) ||
-            (book.shortTitleZh.isNotEmpty && (book.shortTitleZh.contains(title) || title.contains(book.shortTitleZh)))) {
+            book.titleZh.contains(title) ||
+            title.contains(book.titleZh) ||
+            (book.shortTitleZh.isNotEmpty &&
+                (book.shortTitleZh.contains(title) ||
+                    title.contains(book.shortTitleZh)))) {
           found = book;
           break;
         }
@@ -82,7 +87,8 @@ class _OnThisDayCardState extends State<OnThisDayCard> {
     final random = math.Random();
     final randomCase = onThisDayCases[random.nextInt(onThisDayCases.length)];
     setState(() {
-      _currentDate = DateTime(randomCase.year, randomCase.month, randomCase.day);
+      _currentDate =
+          DateTime(randomCase.year, randomCase.month, randomCase.day);
       _checkingDossier = true;
     });
     _checkDossier();
@@ -90,7 +96,8 @@ class _OnThisDayCardState extends State<OnThisDayCard> {
 
   @override
   Widget build(BuildContext context) {
-    final dayCases = onThisDayCasesForDate(_currentDate.month, _currentDate.day);
+    final dayCases =
+        onThisDayCasesForDate(_currentDate.month, _currentDate.day);
     final textScale = MediaQuery.textScalerOf(context).scale(1);
     final bool hasCase = dayCases.isNotEmpty;
 
@@ -100,7 +107,8 @@ class _OnThisDayCardState extends State<OnThisDayCard> {
       item = OnThisDayItem(
         label: '那年今日',
         monthDay: '${mainCase.month} / ${mainCase.day}',
-        fullDate: '${mainCase.year}.${mainCase.month.toString().padLeft(2, '0')}.${mainCase.day.toString().padLeft(2, '0')}',
+        fullDate:
+            '${mainCase.year}.${mainCase.month.toString().padLeft(2, '0')}.${mainCase.day.toString().padLeft(2, '0')}',
         location: mainCase.location,
         title: mainCase.title,
         summary: mainCase.summary,
@@ -108,12 +116,14 @@ class _OnThisDayCardState extends State<OnThisDayCard> {
         buttonLabel: '回到那一天',
       );
     } else {
-      final quoteIndex = (_currentDate.month * 31 + _currentDate.day) % onThisDayLegalQuotes.length;
+      final quoteIndex = (_currentDate.month * 31 + _currentDate.day) %
+          onThisDayLegalQuotes.length;
       final quoteItem = onThisDayLegalQuotes[quoteIndex];
       item = OnThisDayItem(
         label: '那年今日 • 思辨格言',
         monthDay: '${_currentDate.month} / ${_currentDate.day}',
-        fullDate: '${_currentDate.year}.${_currentDate.month.toString().padLeft(2, '0')}.${_currentDate.day.toString().padLeft(2, '0')}',
+        fullDate:
+            '${_currentDate.year}.${_currentDate.month.toString().padLeft(2, '0')}.${_currentDate.day.toString().padLeft(2, '0')}',
         location: '思辨空間',
         title: '思辨格言 • ${quoteItem.author}',
         summary: '思辨問題：${quoteItem.reflectiveQuestion}',
@@ -708,7 +718,8 @@ class _MemoryStoryFlow extends StatelessWidget {
                 if (hasDossier) {
                   Navigator.of(context).push(
                     CupertinoPageRoute<void>(
-                      builder: (__) => CaseDossierDetailPage(book: matchedBook!),
+                      builder: (__) =>
+                          CaseDossierDetailPage(book: matchedBook!),
                     ),
                   );
                 } else {

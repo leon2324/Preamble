@@ -43,7 +43,8 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
           widget.hall.type == CaseLibraryHallType.classic ||
           widget.hall.type == CaseLibraryHallType.status) {
         // 年代、經典、審判狀態館：從倉庫/Supabase 異步拉取較多真實裁判筆數進行過濾展示
-        final books = await CaseTimeMachineRepository.instance.getCasesPaginated(60, 0);
+        final books =
+            await CaseTimeMachineRepository.instance.getCasesPaginated(60, 0);
         if (mounted) {
           setState(() {
             _allCases = books;
@@ -503,7 +504,16 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
 
   // --- 2. SCREEN 4: THEME VIEW (主題館) ---
   Widget _buildThemeView(BuildContext context) {
-    final themeTabs = ['車禍賠償', '借款返還', '租屋糾紛', '給付價金', '不當解雇', '離婚親權', '竊盜', '傷害'];
+    final themeTabs = [
+      '車禍賠償',
+      '借款返還',
+      '租屋糾紛',
+      '給付價金',
+      '不當解雇',
+      '離婚親權',
+      '竊盜',
+      '傷害'
+    ];
 
     // 直接使用動態拉取並快取的真實案件
     List<CaseBook> displayCases = _allCases;
@@ -818,9 +828,8 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
         : CaseTimeMachineRepository.instance.getCaseById('featured');
 
     // Representative list cases (others)
-    final representativeCases = _allCases.isNotEmpty
-        ? _allCases.skip(1).toList()
-        : <CaseBook>[];
+    final representativeCases =
+        _allCases.isNotEmpty ? _allCases.skip(1).toList() : <CaseBook>[];
 
     return ListView(
       padding: EdgeInsets.fromLTRB(18.w, 4.h, 18.w, 24.h),

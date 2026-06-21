@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lawapp/app/app_state.dart';
 import 'package:lawapp/components/home/v2/home_v2_palette.dart';
 import 'package:lawapp/components/home/v2/home_v2_primitives.dart';
 import 'package:lawapp/data/mock_data/home/home_v2_mock_data.dart';
@@ -206,11 +207,18 @@ class HomeV2GreetingCard extends StatelessWidget {
 class _GreetingTextBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final appState = LawAppScope.of(context);
+    final user = appState.currentUser;
+    final nameText = user.isGuest ? '訪客' : user.displayName;
+    final updateCount = user.isGuest
+        ? 3
+        : (appState.followingSummary.followedTopicIds.length + 1);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '早安，Leon',
+          '早安，$nameText',
           style: TextStyle(
             color: HomeV2Palette.ink,
             fontSize: 18.sp,
@@ -220,7 +228,7 @@ class _GreetingTextBlock extends StatelessWidget {
         ),
         SizedBox(height: 4.h),
         Text(
-          '今天有 3 則與你相關的法律更新',
+          '今天有 $updateCount 則與你相關的法律更新',
           style: TextStyle(
             color: AppColors.textSecondary,
             fontSize: 11.sp,

@@ -7,11 +7,11 @@ class OnThisDayColors {
   static const Color bgCream = Color(0xFFF6FEF2);
   static const Color paperBeige = Color(0xFFEBE1D3);
   static const Color bgPaperLight = Color(0xFFFFFDF9);
-  
+
   static const Color textPrimary = Color(0xFF3A3A3A);
   static const Color textSecondary = Color(0xFF5F5548);
   static const Color textMuted = Color(0xFF8C7B6B);
-  
+
   static const Color borderLight = Color(0xFFE4CFA7);
 }
 
