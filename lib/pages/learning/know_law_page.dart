@@ -18,6 +18,7 @@ import 'package:lawapp/theme/app_colors.dart';
 // 導入遊戲化、手寫本美學與自訂 SVG 圖示
 import 'package:lawapp/data/learning/learning_game_state.dart';
 import 'package:lawapp/pages/learning/widgets/notebook_aesthetics.dart';
+import 'package:lawapp/pages/learning/widgets/learning_shared_widgets.dart';
 import 'package:lawapp/pages/learning/widgets/achievement_room.dart';
 import 'package:lawapp/pages/learning/widgets/mock_court_challenge.dart';
 import 'package:lawapp/pages/learning/widgets/legal_document_export_page.dart';
@@ -576,7 +577,7 @@ class KnowLawPageState extends State<KnowLawPage> {
   }
 
   Widget _buildCustomClassroomCard(bool isDark) {
-    return _TappableCustomClassroomCard(
+    return LearningCustomClassroomCard(
       isDark: isDark,
       onTap: _showCustomClassroomDialog,
     );
@@ -1240,42 +1241,6 @@ class KnowLawPageState extends State<KnowLawPage> {
     );
   }
 
-  Widget _buildHeroImage({
-    required String? imageUrl,
-    required String localAsset,
-    required BoxFit fit,
-  }) {
-    if (imageUrl != null && imageUrl.isNotEmpty) {
-      return Image.network(
-        imageUrl,
-        fit: fit,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Stack(
-            fit: StackFit.expand,
-            children: [
-              Image.asset(localAsset, fit: fit),
-              const Center(
-                child: SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white70),
-                  ),
-                ),
-              ),
-            ],
-          );
-        },
-        errorBuilder: (context, error, stackTrace) {
-          return Image.asset(localAsset, fit: fit);
-        },
-      );
-    }
-    return Image.asset(localAsset, fit: fit);
-  }
-
   Widget _buildMainCourseCard({
     required bool isDark,
     required LearningGameState gameState,
@@ -1312,7 +1277,7 @@ class KnowLawPageState extends State<KnowLawPage> {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                _buildHeroImage(
+                buildLearningHeroImage(
                   imageUrl: heroImageUrl,
                   localAsset: heroAsset,
                   fit: BoxFit.cover,
@@ -1339,7 +1304,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                         imageFilter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
                         child: Transform.scale(
                           scale: 1.03,
-                          child: _buildHeroImage(
+                          child: buildLearningHeroImage(
                             imageUrl: heroImageUrl,
                             localAsset: heroAsset,
                             fit: BoxFit.cover,
@@ -1368,7 +1333,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                         imageFilter: ImageFilter.blur(sigmaX: 42, sigmaY: 42),
                         child: Transform.scale(
                           scale: 1.08,
-                          child: _buildHeroImage(
+                          child: buildLearningHeroImage(
                             imageUrl: heroImageUrl,
                             localAsset: heroAsset,
                             fit: BoxFit.cover,
@@ -1402,11 +1367,12 @@ class KnowLawPageState extends State<KnowLawPage> {
                   right: 12.w,
                   child: Row(
                     children: [
-                      _buildCourseBadge('主修課', isDark),
+                      buildLearningCourseBadge('主修課', isDark),
                       SizedBox(width: 8.w),
-                      _buildCourseBadge('${rentUnits.length} 個單元', isDark),
+                      buildLearningCourseBadge(
+                          '${rentUnits.length} 個單元', isDark),
                       const Spacer(),
-                      _buildCourseBadge(
+                      buildLearningCourseBadge(
                           _getTopicBadgeText(_activeTopic), isDark),
                     ],
                   ),
@@ -1723,33 +1689,6 @@ class KnowLawPageState extends State<KnowLawPage> {
     );
   }
 
-  Widget _buildCourseBadge(String label, bool isDark) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-      decoration: BoxDecoration(
-        color: isDark
-            ? const Color(0xFF10161D).withValues(alpha: 0.74)
-            : Colors.white.withValues(alpha: 0.74),
-        borderRadius: BorderRadius.circular(999.r),
-        border: Border.all(
-          color: isDark
-              ? const Color(0xFF2D3845)
-              : Colors.white.withValues(alpha: 0.72),
-        ),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 10.sp,
-          fontWeight: FontWeight.w900,
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.9)
-              : HomeV2Palette.trustGreen,
-        ),
-      ),
-    );
-  }
-
   Widget _buildCoursePathStepRow(
     LearningTopicUnit unit, {
     required bool isDone,
@@ -2017,166 +1956,6 @@ class KnowLawPageState extends State<KnowLawPage> {
 
   // ==================== 自訂手繪手帳風 UI 元件 ====================
 
-  Widget _buildHanddrawnCheckbox({
-    required String label,
-    required bool value,
-    required ValueChanged<bool?> onChanged,
-    required bool isDark,
-  }) {
-    return InkWell(
-      onTap: () => onChanged(!value),
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 6.h),
-        child: Row(
-          children: [
-            Container(
-              width: 18.w,
-              height: 18.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: value
-                      ? HomeV2Palette.trustGreen
-                      : (isDark
-                          ? const Color(0xFF4C5B6B)
-                          : const Color(0xFFC4B89F)),
-                  width: 1.6.w,
-                ),
-                color: value
-                    ? HomeV2Palette.trustGreen.withValues(alpha: 0.12)
-                    : Colors.transparent,
-              ),
-              child: Center(
-                child: value
-                    ? Icon(
-                        Icons.star,
-                        size: 10.sp,
-                        color: HomeV2Palette.trustGreen,
-                      )
-                    : null,
-              ),
-            ),
-            SizedBox(width: 9.w),
-            Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  decoration: value ? TextDecoration.lineThrough : null,
-                  decorationColor:
-                      isDark ? Colors.grey : const Color(0xFFC4B89F),
-                  decorationThickness: 1.6,
-                  color: value ? AppColors.textMuted : AppColors.textPrimary,
-                  fontWeight: value ? FontWeight.normal : FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPostItInput({
-    required TextEditingController controller,
-    required String hintText,
-    required bool isDark,
-    int maxLines = 1,
-  }) {
-    final bgColor = isDark ? const Color(0xFF2E2719) : const Color(0xFFFFFAD6);
-    final borderCol =
-        isDark ? const Color(0xFF7A6539) : const Color(0xFFEAD8A8);
-    return Container(
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(8.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 4,
-            offset: const Offset(1, 2),
-          ),
-        ],
-        border: Border.all(color: borderCol, width: 1.w),
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 2.h),
-      child: TextField(
-        controller: controller,
-        maxLines: maxLines,
-        style: TextStyle(
-          fontSize: 12.5.sp,
-          fontWeight: FontWeight.bold,
-          color: isDark ? Colors.amber.shade100 : const Color(0xFF5D4817),
-        ),
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: TextStyle(
-            fontSize: 12.sp,
-            color: isDark
-                ? Colors.amber.shade100.withValues(alpha: 0.4)
-                : const Color(0xFFC0AE83),
-          ),
-          border: InputBorder.none,
-          isDense: true,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNotebookInput({
-    required TextEditingController controller,
-    required String labelText,
-    required String hintText,
-    required bool isDark,
-    TextInputType keyboardType = TextInputType.text,
-  }) {
-    final lineCol = isDark ? const Color(0xFF2D3845) : const Color(0xFFE5CEB1);
-    final textCol = isDark ? Colors.blue.shade100 : const Color(0xFF374E6F);
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 6.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (labelText.isNotEmpty)
-            Text(
-              labelText,
-              style: TextStyle(
-                fontSize: 11.sp,
-                fontWeight: FontWeight.w900,
-                color: isDark ? Colors.grey : const Color(0xFF7A6B53),
-              ),
-            ),
-          Container(
-            decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: lineCol, width: 1.4.w)),
-            ),
-            padding: EdgeInsets.symmetric(vertical: 2.h),
-            child: TextField(
-              controller: controller,
-              keyboardType: keyboardType,
-              style: TextStyle(
-                fontSize: 13.sp,
-                color: textCol,
-                fontWeight: FontWeight.bold,
-              ),
-              decoration: InputDecoration(
-                hintText: hintText,
-                hintStyle: TextStyle(
-                  fontSize: 11.5.sp,
-                  color:
-                      isDark ? Colors.grey.shade600 : const Color(0xFFC1B8AA),
-                ),
-                border: InputBorder.none,
-                isDense: true,
-                contentPadding: EdgeInsets.symmetric(vertical: 4.h),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildStationeryToggle<T>({
     required T value,
     required T selectedValue,
@@ -2214,70 +1993,6 @@ class KnowLawPageState extends State<KnowLawPage> {
             color: isSelected
                 ? (isDark ? Colors.white : activeColor)
                 : (isDark ? Colors.grey : const Color(0xFF7A6B53)),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSealButton({
-    required String label,
-    required VoidCallback onPressed,
-    required Color color,
-  }) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 100),
-        padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24.r),
-          border: Border.all(color: color, width: 2.2.w),
-          color: color.withValues(alpha: 0.08),
-          boxShadow: [
-            BoxShadow(
-              color: color.withValues(alpha: 0.15),
-              blurRadius: 4,
-              offset: const Offset(1, 2),
-            ),
-          ],
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 12.5.sp,
-            fontWeight: FontWeight.w900,
-            color: color,
-            letterSpacing: 1.5,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildWashiTapeButton({
-    required String label,
-    required VoidCallback onPressed,
-    required Color color,
-  }) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.18),
-          borderRadius: BorderRadius.circular(2.r),
-          border: Border.all(
-            color: color.withValues(alpha: 0.35),
-            width: 1.w,
-          ),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 11.sp,
-            fontWeight: FontWeight.w900,
-            color: color,
           ),
         ),
       ),
@@ -2472,7 +2187,7 @@ class KnowLawPageState extends State<KnowLawPage> {
             ],
           ),
           SizedBox(height: 10.h),
-          _buildPostItInput(
+          buildLearningPostItInput(
             controller: _translatorController,
             hintText: '輸入判決書難懂字眼（例如：應予駁回、酌減、矧以...）',
             isDark: isDark,
@@ -2521,7 +2236,7 @@ class KnowLawPageState extends State<KnowLawPage> {
           SizedBox(height: 12.h),
           Row(
             children: [
-              _buildSealButton(
+              buildLearningSealButton(
                 label: '翻譯',
                 onPressed: () {
                   final text = _translatorController.text.trim();
@@ -2536,7 +2251,7 @@ class KnowLawPageState extends State<KnowLawPage> {
               ),
               if (_translationOutput.isNotEmpty) ...[
                 SizedBox(width: 12.w),
-                _buildWashiTapeButton(
+                buildLearningWashiTapeButton(
                   label: '清除便籤',
                   onPressed: () {
                     setState(() {
@@ -2733,14 +2448,14 @@ class KnowLawPageState extends State<KnowLawPage> {
             ],
           ),
           SizedBox(height: 8.h),
-          _buildNotebookInput(
+          buildLearningNotebookInput(
             controller: _partsCostController,
             labelText: '更換零件費 (元)',
             hintText: '例如：12000',
             isDark: isDark,
             keyboardType: TextInputType.number,
           ),
-          _buildNotebookInput(
+          buildLearningNotebookInput(
             controller: _laborCostController,
             labelText: '鈑金與工資費 (元，免折舊)',
             hintText: '例如：8000',
@@ -2750,7 +2465,7 @@ class KnowLawPageState extends State<KnowLawPage> {
           Row(
             children: [
               Expanded(
-                child: _buildNotebookInput(
+                child: buildLearningNotebookInput(
                   controller: _carAgeYearsController,
                   labelText: '車輛已使用年數 (年)',
                   hintText: '例如：3',
@@ -2760,7 +2475,7 @@ class KnowLawPageState extends State<KnowLawPage> {
               ),
               SizedBox(width: 16.w),
               Expanded(
-                child: _buildNotebookInput(
+                child: buildLearningNotebookInput(
                   controller: _carAgeMonthsController,
                   labelText: '使用剩餘月數 (月)',
                   hintText: '例如：4',
@@ -2773,14 +2488,14 @@ class KnowLawPageState extends State<KnowLawPage> {
           SizedBox(height: 14.h),
           Row(
             children: [
-              _buildSealButton(
+              buildLearningSealButton(
                 label: '試算理賠額',
                 onPressed: _calculateCarDepreciation,
                 color: const Color(0xFF3F7FBF),
               ),
               if (_depreciationResult.isNotEmpty) ...[
                 SizedBox(width: 12.w),
-                _buildWashiTapeButton(
+                buildLearningWashiTapeButton(
                   label: '清除',
                   onPressed: () {
                     setState(() {
@@ -3012,13 +2727,13 @@ class KnowLawPageState extends State<KnowLawPage> {
             ],
           ),
           SizedBox(height: 8.h),
-          _buildNotebookInput(
+          buildLearningNotebookInput(
             controller: _landlordNameController,
             labelText: '房東姓名',
             hintText: '例如：王太太',
             isDark: isDark,
           ),
-          _buildNotebookInput(
+          buildLearningNotebookInput(
             controller: _rentAddressController,
             labelText: '承租房屋地址',
             hintText: '例如：台北市大安區忠孝東路三段XX號',
@@ -3028,7 +2743,7 @@ class KnowLawPageState extends State<KnowLawPage> {
             Row(
               children: [
                 Expanded(
-                  child: _buildNotebookInput(
+                  child: buildLearningNotebookInput(
                     controller: _brokenItemController,
                     labelText: '損壞故障設備',
                     hintText: '例如：客廳冷氣漏水',
@@ -3037,7 +2752,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                 ),
                 SizedBox(width: 16.w),
                 Expanded(
-                  child: _buildNotebookInput(
+                  child: buildLearningNotebookInput(
                     controller: _noticeDaysController,
                     labelText: '限期完成天數 (天)',
                     hintText: '例如：7',
@@ -3051,7 +2766,7 @@ class KnowLawPageState extends State<KnowLawPage> {
             Row(
               children: [
                 Expanded(
-                  child: _buildNotebookInput(
+                  child: buildLearningNotebookInput(
                     controller: _leaseExpiryDateController,
                     labelText: '租約到期日 (年月日)',
                     hintText: '例如：2026年6月1日',
@@ -3060,7 +2775,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                 ),
                 SizedBox(width: 16.w),
                 Expanded(
-                  child: _buildNotebookInput(
+                  child: buildLearningNotebookInput(
                     controller: _depositAmountController,
                     labelText: '押金總金額 (元)',
                     hintText: '例如：30000',
@@ -3070,7 +2785,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                 ),
               ],
             ),
-            _buildNotebookInput(
+            buildLearningNotebookInput(
               controller: _noticeDaysController,
               labelText: '限期退還天數 (天)',
               hintText: '例如：7',
@@ -3081,7 +2796,7 @@ class KnowLawPageState extends State<KnowLawPage> {
           SizedBox(height: 14.h),
           Row(
             children: [
-              _buildSealButton(
+              buildLearningSealButton(
                 label: '起草催告書',
                 onPressed: () {
                   final landlord = _landlordNameController.text.trim();
@@ -3135,7 +2850,7 @@ class KnowLawPageState extends State<KnowLawPage> {
               ),
               if (_rentNoticeResult.isNotEmpty) ...[
                 SizedBox(width: 12.w),
-                _buildWashiTapeButton(
+                buildLearningWashiTapeButton(
                   label: '清除',
                   onPressed: () {
                     setState(() {
@@ -3332,21 +3047,21 @@ class KnowLawPageState extends State<KnowLawPage> {
                 fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
           ),
           SizedBox(height: 10.h),
-          _buildNotebookInput(
+          buildLearningNotebookInput(
             controller: _salaryController,
             labelText: '月薪薪資 (元，以底薪計算)',
             hintText: '例如：36000',
             isDark: isDark,
             keyboardType: TextInputType.number,
           ),
-          _buildNotebookInput(
+          buildLearningNotebookInput(
             controller: _weekdayOvertimeController,
             labelText: '本月平日加班時數 (時)',
             hintText: '例如：10',
             isDark: isDark,
             keyboardType: TextInputType.number,
           ),
-          _buildNotebookInput(
+          buildLearningNotebookInput(
             controller: _holidayOvertimeController,
             labelText: '本月休息日加班時數 (時)',
             hintText: '例如：8',
@@ -3356,14 +3071,14 @@ class KnowLawPageState extends State<KnowLawPage> {
           SizedBox(height: 14.h),
           Row(
             children: [
-              _buildSealButton(
+              buildLearningSealButton(
                 label: '計算加班費',
                 onPressed: _calculateOvertime,
                 color: const Color(0xFFD87D32),
               ),
               if (_overtimeResult.isNotEmpty) ...[
                 SizedBox(width: 12.w),
-                _buildWashiTapeButton(
+                buildLearningWashiTapeButton(
                   label: '清除',
                   onPressed: () {
                     setState(() {
@@ -3532,19 +3247,19 @@ class KnowLawPageState extends State<KnowLawPage> {
                 fontSize: 11.sp, height: 1.4, color: AppColors.textSecondary),
           ),
           SizedBox(height: 10.h),
-          _buildNotebookInput(
+          buildLearningNotebookInput(
             controller: _sellerNameController,
             labelText: '賣家/平台名稱',
             hintText: '例如：蝦皮某某小鋪 / 某電商公司',
             isDark: isDark,
           ),
-          _buildNotebookInput(
+          buildLearningNotebookInput(
             controller: _productNameController,
             labelText: '退貨商品名稱',
             hintText: '例如：藍牙無線耳機一件',
             isDark: isDark,
           ),
-          _buildNotebookInput(
+          buildLearningNotebookInput(
             controller: _receiveDateController,
             labelText: '收到商品日期 (年月日)',
             hintText: '例如：2026年6月10日',
@@ -3553,7 +3268,7 @@ class KnowLawPageState extends State<KnowLawPage> {
           SizedBox(height: 14.h),
           Row(
             children: [
-              _buildSealButton(
+              buildLearningSealButton(
                 label: '起草退貨信',
                 onPressed: () {
                   final seller = _sellerNameController.text.trim();
@@ -3580,7 +3295,7 @@ class KnowLawPageState extends State<KnowLawPage> {
               ),
               if (_consumerNoticeResult.isNotEmpty) ...[
                 SizedBox(width: 12.w),
-                _buildWashiTapeButton(
+                buildLearningWashiTapeButton(
                   label: '清除',
                   onPressed: () {
                     setState(() {
@@ -3775,7 +3490,7 @@ class KnowLawPageState extends State<KnowLawPage> {
           SizedBox(height: 10.h),
           ..._privacySops.map((sop) {
             final isChecked = _checkedPrivacyEvidences.contains(sop);
-            return _buildHanddrawnCheckbox(
+            return buildLearningHanddrawnCheckbox(
               label: sop,
               value: isChecked,
               onChanged: (val) {
@@ -3793,7 +3508,7 @@ class KnowLawPageState extends State<KnowLawPage> {
           SizedBox(height: 12.h),
           Row(
             children: [
-              _buildSealButton(
+              buildLearningSealButton(
                 label: '儲存備忘',
                 onPressed: () {
                   gameState.saveEvidenceList(
@@ -3845,7 +3560,7 @@ class KnowLawPageState extends State<KnowLawPage> {
           SizedBox(height: 10.h),
           ..._neighborSops.map((sop) {
             final isChecked = _checkedNeighborEvidences.contains(sop);
-            return _buildHanddrawnCheckbox(
+            return buildLearningHanddrawnCheckbox(
               label: sop,
               value: isChecked,
               onChanged: (val) {
@@ -3863,7 +3578,7 @@ class KnowLawPageState extends State<KnowLawPage> {
           SizedBox(height: 12.h),
           Row(
             children: [
-              _buildSealButton(
+              buildLearningSealButton(
                 label: '儲存備忘',
                 onPressed: () {
                   gameState.saveEvidenceList(
@@ -3916,7 +3631,7 @@ class KnowLawPageState extends State<KnowLawPage> {
           Row(
             children: [
               Expanded(
-                child: _buildNotebookInput(
+                child: buildLearningNotebookInput(
                   controller: _husbandPropertyController,
                   labelText: '夫的婚後財產 (元)',
                   hintText: '例如：500000',
@@ -3926,7 +3641,7 @@ class KnowLawPageState extends State<KnowLawPage> {
               ),
               SizedBox(width: 16.w),
               Expanded(
-                child: _buildNotebookInput(
+                child: buildLearningNotebookInput(
                   controller: _husbandDebtController,
                   labelText: '夫的婚後債務 (元)',
                   hintText: '例如：100000',
@@ -3939,7 +3654,7 @@ class KnowLawPageState extends State<KnowLawPage> {
           Row(
             children: [
               Expanded(
-                child: _buildNotebookInput(
+                child: buildLearningNotebookInput(
                   controller: _wifePropertyController,
                   labelText: '妻的婚後財產 (元)',
                   hintText: '例如：800000',
@@ -3949,7 +3664,7 @@ class KnowLawPageState extends State<KnowLawPage> {
               ),
               SizedBox(width: 16.w),
               Expanded(
-                child: _buildNotebookInput(
+                child: buildLearningNotebookInput(
                   controller: _wifeDebtController,
                   labelText: '妻的婚後債務 (元)',
                   hintText: '例如：50000',
@@ -3962,14 +3677,14 @@ class KnowLawPageState extends State<KnowLawPage> {
           SizedBox(height: 14.h),
           Row(
             children: [
-              _buildSealButton(
+              buildLearningSealButton(
                 label: '試算分配差額',
                 onPressed: _calculateMarriageProperty,
                 color: const Color(0xFF8E24AA),
               ),
               if (_marriagePropertyResult.isNotEmpty) ...[
                 SizedBox(width: 12.w),
-                _buildWashiTapeButton(
+                buildLearningWashiTapeButton(
                   label: '清除',
                   onPressed: () {
                     setState(() {
@@ -4102,7 +3817,7 @@ class KnowLawPageState extends State<KnowLawPage> {
           SizedBox(height: 10.h),
           ..._antiFraudSops.map((sop) {
             final isChecked = _checkedAntiFraudEvidences.contains(sop);
-            return _buildHanddrawnCheckbox(
+            return buildLearningHanddrawnCheckbox(
               label: sop,
               value: isChecked,
               onChanged: (val) {
@@ -4120,7 +3835,7 @@ class KnowLawPageState extends State<KnowLawPage> {
           SizedBox(height: 12.h),
           Row(
             children: [
-              _buildSealButton(
+              buildLearningSealButton(
                 label: '儲存備忘',
                 onPressed: () {
                   gameState.saveEvidenceList(
@@ -5435,21 +5150,21 @@ class KnowLawPageState extends State<KnowLawPage> {
                     SizedBox(height: 6.h),
                     Row(
                       children: [
-                        _buildHighlightColorDot(
+                        buildLearningHighlightColorDot(
                             'yellow', const Color(0xFFFFF2B2), selectedColor,
                             () {
                           setDialogState(() => selectedColor = 'yellow');
                         }),
-                        _buildHighlightColorDot(
+                        buildLearningHighlightColorDot(
                             'green', const Color(0xFFC8E6C9), selectedColor,
                             () {
                           setDialogState(() => selectedColor = 'green');
                         }),
-                        _buildHighlightColorDot(
+                        buildLearningHighlightColorDot(
                             'pink', const Color(0xFFF8BBD0), selectedColor, () {
                           setDialogState(() => selectedColor = 'pink');
                         }),
-                        _buildHighlightColorDot(
+                        buildLearningHighlightColorDot(
                             'none',
                             isDark
                                 ? const Color(0xFF37474F)
@@ -5612,45 +5327,6 @@ class KnowLawPageState extends State<KnowLawPage> {
           },
         );
       },
-    );
-  }
-
-  Widget _buildHighlightColorDot(
-      String name, Color color, String selectedName, VoidCallback onTap,
-      {bool isNone = false}) {
-    final isSelected = selectedName == name;
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: EdgeInsets.only(right: 12.w),
-        width: 26.w,
-        height: 26.w,
-        decoration: BoxDecoration(
-          color: color,
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: isSelected ? Colors.black : Colors.grey.shade400,
-            width: isSelected ? 2.w : 0.8.w,
-          ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.15),
-                    blurRadius: 3,
-                    offset: const Offset(0, 1.5),
-                  )
-                ]
-              : null,
-        ),
-        child: isNone
-            ? Center(
-                child:
-                    Icon(Icons.close, size: 14.sp, color: Colors.grey.shade700))
-            : (isSelected
-                ? Center(
-                    child: Icon(Icons.check, size: 14.sp, color: Colors.black))
-                : null),
-      ),
     );
   }
 
@@ -6640,148 +6316,6 @@ class _LearningTopicCatalogBottomSheetState
           ),
         );
       },
-    );
-  }
-}
-
-// 🤖 每日專題非同步載入骨架屏 (Pulsing Skeleton Card)
-class _PulsingSkeleton extends StatefulWidget {
-  const _PulsingSkeleton(
-      {required this.width, required this.height, this.borderRadius});
-  final double width;
-  final double height;
-  final BorderRadiusGeometry? borderRadius;
-
-  @override
-  State<_PulsingSkeleton> createState() => _PulsingSkeletonState();
-}
-
-class _PulsingSkeletonState extends State<_PulsingSkeleton>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    )..repeat(reverse: true);
-    _animation = Tween<double>(begin: 0.4, end: 0.8).animate(_controller);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return FadeTransition(
-      opacity: _animation,
-      child: Container(
-        width: widget.width,
-        height: widget.height,
-        decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF2C3540) : const Color(0xFFE5E9EC),
-          borderRadius: widget.borderRadius ?? BorderRadius.circular(8.r),
-        ),
-      ),
-    );
-  }
-}
-
-class _TappableCustomClassroomCard extends StatefulWidget {
-  final bool isDark;
-  final VoidCallback onTap;
-
-  const _TappableCustomClassroomCard({
-    required this.isDark,
-    required this.onTap,
-  });
-
-  @override
-  State<_TappableCustomClassroomCard> createState() =>
-      _TappableCustomClassroomCardState();
-}
-
-class _TappableCustomClassroomCardState
-    extends State<_TappableCustomClassroomCard> {
-  double _scale = 1.0;
-
-  @override
-  Widget build(BuildContext context) {
-    final cardBg =
-        widget.isDark ? const Color(0xFF2E2D24) : const Color(0xFFFFFDE7);
-    final circleBg =
-        widget.isDark ? const Color(0xFF4A4930) : const Color(0xFFFFF59D);
-    final iconColor =
-        widget.isDark ? const Color(0xFFFFD54F) : const Color(0xFFF57F17);
-
-    return GestureDetector(
-      onTapDown: (_) => setState(() => _scale = 0.97),
-      onTapUp: (_) => setState(() => _scale = 1.0),
-      onTapCancel: () => setState(() => _scale = 1.0),
-      onTap: widget.onTap,
-      child: AnimatedScale(
-        scale: _scale,
-        duration: const Duration(milliseconds: 100),
-        child: NotebookCard(
-          backgroundColor: cardBg,
-          child: Row(
-            children: [
-              Container(
-                width: 40.w,
-                height: 40.w,
-                decoration: BoxDecoration(
-                  color: circleBg,
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: CtmSvgIcon(
-                    CtmSvgIcons.idea,
-                    size: 20.sp,
-                    color: iconColor,
-                  ),
-                ),
-              ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '訂製專屬法學課堂',
-                      style: TextStyle(
-                        fontSize: 14.5.sp,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      '輸入您的生活狀況，AI 將量身打造 5 個學習單元與測驗！',
-                      style: TextStyle(
-                        fontSize: 10.5.sp,
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(width: 8.w),
-              Icon(
-                Icons.chevron_right,
-                size: 20.sp,
-                color: iconColor.withValues(alpha: 0.8),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

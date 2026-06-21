@@ -63,7 +63,7 @@ extension LearningClassroomTabBuilder on KnowLawPageState {
         ),
         SizedBox(height: 12.h),
         // Pulsing skeleton for switcher title/chips
-        _PulsingSkeleton(width: 80.w, height: 16.h),
+        LearningPulsingSkeleton(width: 80.w, height: 16.h),
         SizedBox(height: 8.h),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -73,7 +73,7 @@ extension LearningClassroomTabBuilder on KnowLawPageState {
                 4,
                 (index) => Padding(
                       padding: EdgeInsets.only(right: 8.w),
-                      child: _PulsingSkeleton(
+                      child: LearningPulsingSkeleton(
                           width: 80.w,
                           height: 32.h,
                           borderRadius: BorderRadius.circular(999.r)),
@@ -82,7 +82,7 @@ extension LearningClassroomTabBuilder on KnowLawPageState {
         ),
         SizedBox(height: 12.h),
         // Pulsing skeleton for Main Course Card
-        _PulsingSkeleton(
+        LearningPulsingSkeleton(
             width: double.infinity,
             height: 260.h,
             borderRadius: BorderRadius.circular(16.r)),
