@@ -25,6 +25,7 @@ import 'package:lawapp/pages/learning/widgets/legal_document_export_page.dart';
 import 'package:lawapp/pages/learning/widgets/notebook_cover_editor_page.dart';
 import 'package:lawapp/pages/learning/widgets/topic_catalog_bottom_sheet.dart';
 import 'package:lawapp/pages/learning/widgets/custom_classroom_dialog.dart';
+import 'package:lawapp/pages/learning/models/learning_topic_option.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
 import 'package:lawapp/data/learning/supabase_learning_service.dart';
 
@@ -257,21 +258,21 @@ class KnowLawPageState extends State<KnowLawPage> {
     }
   }
 
-  static const List<_LearningTopicOption> _featuredTopics = [
-    _LearningTopicOption('租屋糾紛', '主修中', true),
-    _LearningTopicOption('車禍事故', '看全部', false),
-    _LearningTopicOption('職場權益', '看全部', false),
-    _LearningTopicOption('網購消費', '看全部', false),
-    _LearningTopicOption('個資隱私', '看全部', false),
+  static const List<LearningTopicOption> _featuredTopics = [
+    LearningTopicOption('租屋糾紛', '主修中', true),
+    LearningTopicOption('車禍事故', '看全部', false),
+    LearningTopicOption('職場權益', '看全部', false),
+    LearningTopicOption('網購消費', '看全部', false),
+    LearningTopicOption('個資隱私', '看全部', false),
   ];
 
-  List<_LearningTopicOption> get _currentFeaturedTopicOptions {
-    final List<_LearningTopicOption> options = [];
+  List<LearningTopicOption> get _currentFeaturedTopicOptions {
+    final List<LearningTopicOption> options = [];
 
     // 1. 優先放入客製化訂製專題
     for (final topic in _customTopics) {
       final isMain = topic.title == _activeTopic;
-      options.add(_LearningTopicOption(
+      options.add(LearningTopicOption(
         topic.title,
         isMain ? '主修中' : '自訂專題',
         true,
@@ -282,7 +283,7 @@ class KnowLawPageState extends State<KnowLawPage> {
     if (_dailyTopics.isNotEmpty) {
       options.addAll(_dailyTopics.map((topic) {
         final isMain = topic.title == _activeTopic;
-        return _LearningTopicOption(
+        return LearningTopicOption(
           topic.title,
           isMain ? '主修中' : '看全部',
           true,
@@ -1188,7 +1189,7 @@ class KnowLawPageState extends State<KnowLawPage> {
     return _extractCategory(title);
   }
 
-  Widget _buildTopicChip(_LearningTopicOption topic, bool isDark) {
+  Widget _buildTopicChip(LearningTopicOption topic, bool isDark) {
     final isSelected = topic.title == _activeTopic;
     final badgeText = topic.title == _activeTopic
         ? '主修中'
@@ -5635,14 +5636,6 @@ class KnowLawPageState extends State<KnowLawPage> {
       },
     );
   }
-}
-
-class _LearningTopicOption {
-  const _LearningTopicOption(this.title, this.badge, this.isAvailable);
-
-  final String title;
-  final String badge;
-  final bool isAvailable;
 }
 
 // 🤖 智慧小法助輪播提問氣泡元件 (整合等級表情與自訂印花)
