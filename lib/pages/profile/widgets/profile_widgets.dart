@@ -1678,7 +1678,6 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
             Text('自訂分頁排序（長按並上下拖曳）', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: textMuted)),
             SizedBox(height: 8.h),
             Container(
-              height: 240.h,
               decoration: BoxDecoration(
                 color: isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
                 borderRadius: BorderRadius.circular(16.r),
