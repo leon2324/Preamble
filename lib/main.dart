@@ -87,30 +87,57 @@ class _MylawAppState extends State<MylawApp> {
 
   @override
   Widget build(BuildContext context) {
-    // 這裡集中管理主分頁，未來若改成路由系統或深層連結，
-    // 可以先從這個列表與 selectedIndex 的關係下手重構。
-    final pages = [
-      // 台灣繁體中文教學註解：
-      // 新版首頁已正式收編成 pages/home/home_page.dart；
-      // 舊版首頁則搬到 pages/home/legacy 供日後設計回顧。
+    final order = _appState.navbarOrder;
+
+    final originalNavItems = [
+      const _BottomNavItemData(
+        label: '首頁',
+        icon: Icons.home_outlined,
+        selectedIcon: Icons.home_rounded,
+      ),
+      const _BottomNavItemData(
+        label: '學習',
+        icon: Icons.menu_book_outlined,
+        selectedIcon: Icons.menu_book_rounded,
+      ),
+      const _BottomNavItemData(
+        label: '小法助',
+        icon: Icons.support_agent_outlined,
+        selectedIcon: Icons.support_agent_rounded,
+      ),
+      const _BottomNavItemData(
+        label: '記事',
+        icon: Icons.inventory_2_outlined,
+        selectedIcon: Icons.inventory_2_rounded,
+      ),
+      const _BottomNavItemData(
+        label: '我的',
+        icon: Icons.person_outline_rounded,
+        selectedIcon: Icons.person_rounded,
+      ),
+    ];
+
+    final originalPages = [
       HomePage(
-        onNavigateToTab: (index) {
-          setState(() {
-            selectedIndex = index;
-          });
+        onNavigateToTab: (targetOriginalIndex) {
+          // 台灣繁體中文教學註解：
+          // 當首頁按鈕點選跳頁時，在自訂順序列表（navbarOrder）中尋找原本的目標頁排在第幾個，並更新 selectedIndex。
+          final realIndex = order.indexOf(targetOriginalIndex);
+          if (realIndex != -1) {
+            setState(() {
+              selectedIndex = realIndex;
+            });
+          }
         },
       ),
       const KnowLawPage(),
-      // 台灣繁體中文教學註解：
-      // 全站搜尋與 AI 小法助已完美整合為同一頁 (GlobalSearchPage)，
-      // 結合了吉祥物插圖、語音搜尋、額度管理，以及強大的 AI overview 智慧卡片。
       const GlobalSearchPage(),
       const JournalPage(),
-      // 台灣繁體中文教學註解：
-      // 第五格現在改為使用重構後的個人資料與儀表板主頁面 (ProfilePage)；
-      // 當使用者點擊「我的收藏」或「我的追蹤」卡片時，再導航入對應的 FollowingPage 子分頁。
       const ProfilePage(),
     ];
+
+    final displayNavItems = order.map((idx) => originalNavItems[idx]).toList();
+    final displayPages = order.map((idx) => originalPages[idx]).toList();
 
     return LawAppScope(
       state: _appState,
@@ -142,7 +169,7 @@ class _MylawAppState extends State<MylawApp> {
                           bottom: false,
                           child: IndexedStack(
                             index: selectedIndex,
-                            children: pages,
+                            children: displayPages,
                           ),
                         ),
                       ),
@@ -152,9 +179,11 @@ class _MylawAppState extends State<MylawApp> {
                         bottom: 17,
                         child: SafeArea(
                           top: false,
+                          bottom: false,
                           child: _IslandBottomNav(
                             selectedIndex: selectedIndex,
-                            items: _navItems,
+                            items: displayNavItems,
+                            showLabels: _appState.showNavbarLabels,
                             onTap: (index) {
                               setState(() {
                                 selectedIndex = index;
@@ -231,11 +260,13 @@ class _IslandBottomNav extends StatelessWidget {
     required this.selectedIndex,
     required this.items,
     required this.onTap,
+    required this.showLabels,
   });
 
   final int selectedIndex;
   final List<_BottomNavItemData> items;
   final ValueChanged<int> onTap;
+  final bool showLabels;
 
   @override
   Widget build(BuildContext context) {
@@ -246,10 +277,12 @@ class _IslandBottomNav extends StatelessWidget {
     final selectedColor =
         isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary;
     final unselectedColor = selectedColor.withValues(alpha: 0.42);
-    // 文字縮放時一起拉高底部島的高度，避免 icon 與文字互相擠壓。
+    
+    // 台灣繁體中文教學註解：
+    // 若關閉分頁文字，則導覽高度從 70 調減至 56，帶來極致扁平的島嶼導覽風格。
     final extraHeight = context.adaptiveBuffer(12);
-    final navShellHeight = 76 + extraHeight;
-    final navHeight = 70 + extraHeight;
+    final navShellHeight = (showLabels ? 76 : 62) + extraHeight;
+    final navHeight = (showLabels ? 70 : 56) + extraHeight;
     final iconBoxHeight = 30 + (extraHeight * 0.6);
 
     return SizedBox(
@@ -327,15 +360,17 @@ class _IslandBottomNav extends StatelessWidget {
                                           : unselectedColor,
                                     ),
                             ),
-                            const SizedBox(height: 5),
-                            Text(
-                              item.label,
-                              style: TextStyle(
-                                fontSize: 11 + context.adaptiveBuffer(1.5),
-                                fontWeight: FontWeight.w400,
-                                color: selectedColor,
+                            if (showLabels) ...[
+                              const SizedBox(height: 5),
+                              Text(
+                                item.label,
+                                style: TextStyle(
+                                  fontSize: 11 + context.adaptiveBuffer(1.5),
+                                  fontWeight: FontWeight.w400,
+                                  color: selectedColor,
+                                ),
                               ),
-                            ),
+                            ],
                           ],
                         ),
                       ),

@@ -1598,3 +1598,246 @@ class _AccountSecuritySheetState extends State<AccountSecuritySheet> {
     );
   }
 }
+
+// 台灣繁體中文教學註解：
+// 介面自訂設定底頁，支援 Reorderable 拖曳排序、通知文字 Switch 以及 Accent 主題色彩點選。
+
+class InterfaceSettingsSheet extends StatefulWidget {
+  const InterfaceSettingsSheet({super.key, required this.appState});
+
+  final LawAppState appState;
+
+  @override
+  State<InterfaceSettingsSheet> createState() => _InterfaceSettingsSheetState();
+}
+
+class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
+  late List<int> _tempOrder;
+  late bool _tempShowLabels;
+  late int _tempAccentIndex;
+
+  // 台灣繁體中文教學註解：定義主分頁的原本名稱與對應圖示名稱
+  static const Map<int, String> _tabNames = {
+    0: '首頁 🏠',
+    1: '學習 📚',
+    2: '小法助 🤖',
+    3: '記事 📝',
+    4: '我的 👤',
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _tempOrder = List<int>.from(widget.appState.navbarOrder);
+    _tempShowLabels = widget.appState.showNavbarLabels;
+    _tempAccentIndex = widget.appState.accentColorIndex;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final surfaceColor = isDark ? const Color(0xFF171C22) : Colors.white;
+    final borderSide = BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
+    final textMuted = isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: surfaceColor,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+      ),
+      padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 24.h),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                width: 40.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: isDark ? const Color(0xFF2B3441) : AppColors.border,
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              '自訂導覽與介面',
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w900,
+                color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 16.h),
+
+            // 1. 拖曳排序
+            Text('自訂分頁排序（長按並上下拖曳）', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: textMuted)),
+            SizedBox(height: 8.h),
+            Container(
+              height: 240.h,
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
+                borderRadius: BorderRadius.circular(16.r),
+                border: Border.all(color: borderSide.color),
+              ),
+              child: ReorderableListView(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                children: [
+                  for (int i = 0; i < _tempOrder.length; i++)
+                    ListTile(
+                      key: ValueKey(_tempOrder[i]),
+                      leading: Icon(Icons.drag_indicator_rounded, color: textMuted, size: 20.sp),
+                      title: Text(
+                        _tabNames[_tempOrder[i]]!,
+                        style: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.bold),
+                      ),
+                      trailing: Icon(Icons.menu_rounded, color: textMuted.withOpacity(0.5), size: 16.sp),
+                    ),
+                ],
+                onReorder: (oldIndex, newIndex) {
+                  setState(() {
+                    if (oldIndex < newIndex) {
+                      newIndex -= 1;
+                    }
+                    final int item = _tempOrder.removeAt(oldIndex);
+                    _tempOrder.insert(newIndex, item);
+                  });
+                },
+              ),
+            ),
+            SizedBox(height: 20.h),
+
+            // 2. 顯示文字標籤
+            Container(
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(color: borderSide.color),
+              ),
+              child: SwitchListTile(
+                title: const Text('顯示分頁文字標籤', style: TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: const Text('關閉後將只顯示導覽圖示，高度更加緊湊'),
+                value: _tempShowLabels,
+                activeColor: AppColors.accent,
+                onChanged: (val) {
+                  setState(() {
+                    _tempShowLabels = val;
+                  });
+                },
+              ),
+            ),
+            SizedBox(height: 20.h),
+
+            // 3. 主題 Accent Color 點選
+            Text('App 品牌配色', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: textMuted)),
+            SizedBox(height: 10.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildColorCircle(0, const Color(0xFFD6A85F), '金沙黃'),
+                _buildColorCircle(1, const Color(0xFFC62828), '酒櫻紅'),
+                _buildColorCircle(2, const Color(0xFF1565C0), '律政藍'),
+                _buildColorCircle(3, const Color(0xFF2E7D32), '法規綠'),
+              ],
+            ),
+            SizedBox(height: 28.h),
+
+            // 操作按鈕
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: OutlinedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 12.h),
+                      side: borderSide,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+                    ),
+                    child: Text('取消', style: TextStyle(fontSize: 14.sp, color: textMuted)),
+                  ),
+                ),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: FilledButton(
+                    onPressed: () {
+                      widget.appState.updateInterfaceSettings(
+                        navbarOrder: _tempOrder,
+                        showNavbarLabels: _tempShowLabels,
+                        accentColorIndex: _tempAccentIndex,
+                      );
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('介面自訂偏好已儲存！'),
+                          backgroundColor: Color(0xFF2E7D32),
+                        ),
+                      );
+                    },
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      padding: EdgeInsets.symmetric(vertical: 12.h),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+                    ),
+                    child: Text('儲存變更', style: TextStyle(fontSize: 14.sp, color: Colors.white, fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildColorCircle(int index, Color color, String name) {
+    final isSelected = _tempAccentIndex == index;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _tempAccentIndex = index;
+        });
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 36.w,
+            height: 36.w,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+              border: isSelected
+                  ? Border.all(color: Colors.white, width: 3.w)
+                  : Border.all(color: Colors.transparent),
+              boxShadow: [
+                BoxShadow(
+                  color: color.withOpacity(isSelected ? 0.5 : 0.2),
+                  blurRadius: isSelected ? 8 : 4,
+                  spreadRadius: isSelected ? 2 : 0,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: isSelected
+                ? const Icon(Icons.check_rounded, color: Colors.white, size: 18)
+                : null,
+          ),
+          SizedBox(height: 6.h),
+          Text(
+            name,
+            style: TextStyle(
+              fontSize: 11.sp,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              color: isSelected ? AppColors.accent : Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

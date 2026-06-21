@@ -8,6 +8,7 @@ import 'package:lawapp/data/following/following_models.dart';
 import 'package:lawapp/data/law_assistant/law_assistant_api_service.dart';
 import 'package:lawapp/data/user/law_app_access_tier.dart';
 import 'package:lawapp/data/user/law_app_user.dart';
+import 'package:lawapp/theme/app_colors.dart'; // 台灣繁體中文教學註解：匯入色票以利動態設定主題色 index
 import 'package:shared_preferences/shared_preferences.dart';
 
 export 'package:lawapp/data/user/law_app_access_tier.dart';
@@ -29,6 +30,9 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
   static const _fontSizeScaleKey = 'lawAppFontSizeScale';
   static const _notifyFrequencyKey = 'lawAppNotifyFrequency';
   static const _notifyChannelKey = 'lawAppNotifyChannel';
+  static const _navbarOrderKey = 'lawAppNavbarOrder';
+  static const _showNavbarLabelsKey = 'lawAppShowNavbarLabels';
+  static const _accentColorIndexKey = 'lawAppAccentColorIndex';
 
   LawAppState({AuthService? authService})
       : _authService = authService ?? DemoAuthService() {
@@ -49,6 +53,9 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
   double _fontSizeScale = 1.0;
   String _notifyFrequency = 'instant';
   String _notifyChannel = 'push';
+  List<int> _navbarOrder = [0, 1, 2, 3, 4];
+  bool _showNavbarLabels = true;
+  int _accentColorIndex = 0;
 
   LawAppAccessTier get accessTier => _accessTier;
   LawAppUser get currentUser => _currentUser;
@@ -60,6 +67,9 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
   double get fontSizeScale => _fontSizeScale;
   String get notifyFrequency => _notifyFrequency;
   String get notifyChannel => _notifyChannel;
+  List<int> get navbarOrder => _navbarOrder;
+  bool get showNavbarLabels => _showNavbarLabels;
+  int get accentColorIndex => _accentColorIndex;
 
   ThemeMode get themeMode => _isDarkMode ? ThemeMode.dark : ThemeMode.light;
 
@@ -131,6 +141,15 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
       _fontSizeScale = preferences.getDouble(_fontSizeScaleKey) ?? 1.0;
       _notifyFrequency = preferences.getString(_notifyFrequencyKey) ?? 'instant';
       _notifyChannel = preferences.getString(_notifyChannelKey) ?? 'push';
+      final orderList = preferences.getStringList(_navbarOrderKey);
+      if (orderList != null) {
+        _navbarOrder = orderList.map(int.parse).toList();
+      } else {
+        _navbarOrder = [0, 1, 2, 3, 4];
+      }
+      _showNavbarLabels = preferences.getBool(_showNavbarLabelsKey) ?? true;
+      _accentColorIndex = preferences.getInt(_accentColorIndexKey) ?? 0;
+      AppColors.accentColorIndex = _accentColorIndex; // 台灣繁體中文教學註解：載入時同步給 AppColors 設定動態主題色
       await documentRepository.fetchDrafts();
     } on MissingPluginException {
       // 台灣繁體中文教學註解：
@@ -146,6 +165,10 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
       _fontSizeScale = 1.0;
       _notifyFrequency = 'instant';
       _notifyChannel = 'push';
+      _navbarOrder = [0, 1, 2, 3, 4];
+      _showNavbarLabels = true;
+      _accentColorIndex = 0;
+      AppColors.accentColorIndex = 0;
       await documentRepository.fetchDrafts();
     }
 
@@ -295,6 +318,22 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
     notifyListeners();
   }
 
+  Future<void> updateInterfaceSettings({
+    List<int>? navbarOrder,
+    bool? showNavbarLabels,
+    int? accentColorIndex,
+  }) async {
+    // 台灣繁體中文教學註解：更新導覽列順序、文字標籤開關與品牌 Accent 配色索引，並寫入 SharedPreferences 保存。
+    _navbarOrder = navbarOrder ?? _navbarOrder;
+    _showNavbarLabels = showNavbarLabels ?? _showNavbarLabels;
+    if (accentColorIndex != null) {
+      _accentColorIndex = accentColorIndex;
+      AppColors.accentColorIndex = accentColorIndex;
+    }
+    await _persist();
+    notifyListeners();
+  }
+
   Future<void> setDarkMode(bool value) async {
     if (_isDarkMode == value) return;
     _isDarkMode = value;
@@ -319,6 +358,12 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
       await preferences.setDouble(_fontSizeScaleKey, _fontSizeScale);
       await preferences.setString(_notifyFrequencyKey, _notifyFrequency);
       await preferences.setString(_notifyChannelKey, _notifyChannel);
+      await preferences.setStringList(
+        _navbarOrderKey,
+        _navbarOrder.map((e) => e.toString()).toList(),
+      );
+      await preferences.setBool(_showNavbarLabelsKey, _showNavbarLabels);
+      await preferences.setInt(_accentColorIndexKey, _accentColorIndex);
     } on MissingPluginException {
       // 測試環境沒有 SharedPreferences plugin 時略過寫入即可；
       // 記憶體內狀態仍會讓目前畫面即時更新。

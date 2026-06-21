@@ -1286,7 +1286,7 @@ class _StatuteLoadingStateState extends State<_StatuteLoadingState>
                     TextSpan(text: '「${_visibleQuote(quote, typingProgress)}'),
                     TextSpan(
                       text: cursorIsVisible ? '｜' : ' ',
-                      style: const TextStyle(color: AppColors.accent),
+                      style: TextStyle(color: AppColors.accent),
                     ),
                     TextSpan(
                       text: typingProgress >= 1 ? '」' : '',

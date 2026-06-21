@@ -200,6 +200,13 @@ class ProfilePage extends StatelessWidget {
                 onTap: () => _showAccountSecuritySheet(context, appState),
               ),
               SettingsTile(
+                icon: Icons.dashboard_customize_rounded,
+                iconColor: Colors.blue,
+                title: '自訂導覽與介面',
+                subtitle: '調整底部導覽列順序、文字開關及主題配色',
+                onTap: () => _showInterfaceSettingsSheet(context, appState),
+              ),
+              SettingsTile(
                 icon: Icons.delete_sweep_rounded,
                 iconColor: Colors.redAccent,
                 title: '清除快取暫存',
@@ -696,6 +703,16 @@ class ProfilePage extends StatelessWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => AccountSecuritySheet(appState: appState),
+    );
+  }
+
+  // 台灣繁體中文教學註解：開啟介面自訂偏好設定底頁。
+  void _showInterfaceSettingsSheet(BuildContext context, LawAppState appState) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => InterfaceSettingsSheet(appState: appState),
     );
   }
 }

@@ -22,7 +22,21 @@ class AppColors {
 
   static const primary = Color(0xFF243B63);
   static const primarySoft = Color(0xFF31486F);
-  static const accent = Color(0xFFD6A85F);
+  
+  // 台灣繁體中文教學註解：
+  // 動態 Accent 品牌色彩選擇器。
+  // 0: 金色 (預設), 1: 典雅酒紅, 2: 正義深藍, 3: 森林草綠。
+  static int accentColorIndex = 0;
+
+  static const _accents = [
+    Color(0xFFD6A85F), // 金色
+    Color(0xFFC62828), // 典雅酒紅
+    Color(0xFF1565C0), // 正義深藍
+    Color(0xFF2E7D32), // 森林草綠
+  ];
+
+  static Color get accent => _accents[accentColorIndex];
+  
   static const success = Color(0xFF8BF45F);
   static const danger = Color(0xFFFF8D8D);
   static const info = Color(0xFFC96B3B);
