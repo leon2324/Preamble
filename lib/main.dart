@@ -9,7 +9,7 @@ import 'package:lawapp/pages/learning/know_law_page.dart';
 import 'package:lawapp/pages/search/global_search_page.dart';
 import 'package:lawapp/pages/journal/journal_page.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:lawapp/theme/app_theme.dart';
 import 'package:lawapp/features/case_time_machine/data/case_time_machine_repository.dart';
 
 /// 應用程式進入點。
@@ -156,8 +156,8 @@ class _MylawAppState extends State<MylawApp> {
             locale: const Locale('zh', 'TW'),
             debugShowCheckedModeBanner: false,
             title: 'LawApp',
-            theme: _buildLightTheme(),
-            darkTheme: _buildDarkTheme(),
+            theme: AppTheme.light(),
+            darkTheme: AppTheme.dark(),
             themeMode: _appState.themeMode,
             home: Scaffold(
               extendBody: false,
@@ -209,57 +209,6 @@ class _MylawAppState extends State<MylawApp> {
             ),
           );
         },
-      ),
-    );
-  }
-
-  ThemeData _buildLightTheme() {
-    return ThemeData(
-      useMaterial3: true,
-      scaffoldBackgroundColor: AppColors.background,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: AppColors.primary,
-        primary: AppColors.primary,
-        surface: AppColors.background,
-      ),
-      textTheme: Typography.blackMountainView.apply(
-        bodyColor: AppColors.textPrimary,
-        displayColor: AppColors.textPrimary,
-      ),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.background,
-        foregroundColor: AppColors.textPrimary,
-        elevation: 0,
-      ),
-    );
-  }
-
-  ThemeData _buildDarkTheme() {
-    // 台灣繁體中文教學註解：
-    // 深色主題先處理全域背景、文字與 Material 元件基礎色；
-    // 部分既有首頁插畫卡片仍保留品牌色，避免一鍵深色後失去首頁識別。
-    const darkBackground = Color(0xFF0F1216);
-    const darkSurface = Color(0xFF171C22);
-    const darkText = Color(0xFFF2F4F7);
-
-    return ThemeData(
-      useMaterial3: true,
-      brightness: Brightness.dark,
-      scaffoldBackgroundColor: darkBackground,
-      colorScheme: ColorScheme.fromSeed(
-        brightness: Brightness.dark,
-        seedColor: const Color(0xFF9FB0C6),
-        primary: const Color(0xFF9FB0C6),
-        surface: darkSurface,
-      ),
-      textTheme: Typography.whiteMountainView.apply(
-        bodyColor: darkText,
-        displayColor: darkText,
-      ),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: darkBackground,
-        foregroundColor: darkText,
-        elevation: 0,
       ),
     );
   }
