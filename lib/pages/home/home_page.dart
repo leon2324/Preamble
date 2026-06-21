@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/components/home/home_news_section.dart';
-import 'package:lawapp/components/home/legacy/home_discussion_section_legacy.dart'
-    as legacy_home;
 import 'package:lawapp/components/home/v2/home_v2_header.dart';
 import 'package:lawapp/components/home/v2/home_v2_primitives.dart';
 import 'package:lawapp/components/home/v2/home_v2_sections.dart';

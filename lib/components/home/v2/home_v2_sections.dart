@@ -3,8 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
 import 'package:lawapp/components/home/home_content.dart';
 import 'package:lawapp/components/home/home_news_section.dart';
-import 'package:lawapp/components/home/legacy/home_discussion_section_legacy.dart'
-    as legacy_home;
 import 'package:lawapp/components/home/v2/home_v2_palette.dart';
 import 'package:lawapp/components/home/v2/home_v2_primitives.dart';
 import 'package:lawapp/data/mock_data/home/home_v2_mock_data.dart';
@@ -19,7 +17,7 @@ class HomeV2AiAssistantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // 台灣繁體中文教學註解：
     // 首頁這張卡只扮演「導到小法助入口」的角色，實際提問、guest 次數限制
-    // 與後端設定判斷都集中在 LawAssistantSearchPage，避免日後維護兩套流程。
+    // 與後端設定判斷都集中在小法助主流程，避免日後維護兩套流程。
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -1745,11 +1743,10 @@ class _HomeV2SocialNewsSectionState extends State<HomeV2SocialNewsSection> {
                   items: widget.newsItems,
                   showHeader: false,
                 )
-              : legacy_home.HomeDiscussionSection(
+              : _HomeV2DiscussionPreview(
                   key: const ValueKey('tab_discussion'),
                   feed: widget.discussionFeed,
-                  showHeader: false,
-                  onMoreTap: widget.onMoreDiscussionTap ?? () {},
+                  onMoreTap: widget.onMoreDiscussionTap,
                 ),
         ),
       ],
@@ -1783,6 +1780,210 @@ class _HomeV2SocialNewsSectionState extends State<HomeV2SocialNewsSection> {
             fontWeight: FontWeight.bold,
             color:
                 isSelected ? HomeV2Palette.trustGreen : AppColors.textSecondary,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _HomeV2DiscussionPreview extends StatelessWidget {
+  const _HomeV2DiscussionPreview({
+    super.key,
+    required this.feed,
+    this.onMoreTap,
+  });
+
+  final HomeDiscussionFeed feed;
+  final VoidCallback? onMoreTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final topics = feed.topics.take(3).toList(growable: false);
+    if (topics.isEmpty) {
+      return _HomeV2DiscussionEmpty(onMoreTap: onMoreTap);
+    }
+
+    // 台灣繁體中文教學註解：
+    // Step 2 Legacy 隔離後，首頁「社群熱議」只保留輕量 v2 預覽卡，
+    // 完整互動流程交給紀事頁，避免正式首頁重新 import 舊版討論元件。
+    return SizedBox(
+      height: 188.h,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemCount: topics.length,
+        separatorBuilder: (_, __) => SizedBox(width: 10.w),
+        itemBuilder: (context, index) {
+          final topic = topics[index];
+          return _HomeV2DiscussionPreviewCard(
+            topic: topic,
+            onTap: onMoreTap,
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _HomeV2DiscussionPreviewCard extends StatelessWidget {
+  const _HomeV2DiscussionPreviewCard({
+    required this.topic,
+    this.onTap,
+  });
+
+  final HomeDiscussionTopic topic;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final radius = BorderRadius.circular(18.r);
+    return SizedBox(
+      width: 236.w,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: radius,
+          child: Ink(
+            padding: EdgeInsets.all(14.w),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: radius,
+              border: Border.all(color: const Color(0xFFE7E0D3)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                      decoration: BoxDecoration(
+                        color: HomeV2Palette.lawBlue,
+                        borderRadius: BorderRadius.circular(99.r),
+                      ),
+                      child: Text(
+                        '#${topic.rank}',
+                        style: TextStyle(
+                          color: HomeV2Palette.trustGreen,
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+                    Icon(
+                      Icons.local_fire_department_rounded,
+                      color: const Color(0xFFD68B33),
+                      size: 16.sp,
+                    ),
+                    SizedBox(width: 2.w),
+                    Text(
+                      '${topic.heatScore}',
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10.h),
+                Text(
+                  topic.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w900,
+                    height: 1.25,
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Expanded(
+                  child: Text(
+                    topic.overview,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 11.sp,
+                      height: 1.35,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        topic.tags.take(2).map((tag) => '#$tag').join('  '),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: HomeV2Palette.trustGreen,
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_rounded,
+                      color: HomeV2Palette.trustGreen,
+                      size: 17.sp,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _HomeV2DiscussionEmpty extends StatelessWidget {
+  const _HomeV2DiscussionEmpty({this.onMoreTap});
+
+  final VoidCallback? onMoreTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onMoreTap,
+        borderRadius: BorderRadius.circular(18.r),
+        child: Ink(
+          padding: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(18.r),
+            border: Border.all(color: const Color(0xFFE7E0D3)),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                Icons.forum_outlined,
+                color: HomeV2Palette.trustGreen,
+                size: 22.sp,
+              ),
+              SizedBox(width: 10.w),
+              Expanded(
+                child: Text(
+                  '社群熱議整理中，稍後可到紀事頁查看完整議題。',
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

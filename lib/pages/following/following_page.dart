@@ -8,7 +8,6 @@ import 'package:lawapp/data/following/following_models.dart';
 import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
 import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart';
 import 'package:lawapp/pages/learning/statute_database_page.dart';
-import 'package:lawapp/pages/tools/legacy/legal_tools_page.dart';
 
 enum _FollowPage {
   home,
@@ -313,7 +312,7 @@ class _FollowingPageState extends State<FollowingPage> {
           onTabChanged: (index) => setState(() => _draftTabIndex = index),
           drafts: appState.documentRepository.drafts,
           backendStatus: appState.documentRepository.backendStatusLabel,
-          onCreateDraft: _openLegalTools,
+          onCreateDraft: _showDraftComingSoon,
         );
       case _FollowPage.plan:
         return _PlanView(appState: appState);
@@ -396,9 +395,12 @@ class _FollowingPageState extends State<FollowingPage> {
     );
   }
 
-  void _openLegalTools() {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (__) => const LegalToolsPage()),
+  void _showDraftComingSoon() {
+    // 台灣繁體中文教學註解：
+    // 舊版法律工具頁已隔離到 legacy，正式 App 先保留入口回饋，
+    // 等新版文件產生流程定版後，再從這裡接回正式頁面或服務。
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('文件產生工具即將推出。')),
     );
   }
 
