@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/app/app_state.dart';
+import 'package:lawapp/components/navigation/island_bottom_nav.dart';
 import 'package:lawapp/pages/following/following_page.dart';
 import 'package:lawapp/pages/profile/profile_page.dart';
 import 'package:lawapp/pages/home/home_page.dart';
@@ -47,28 +48,28 @@ class _MylawAppState extends State<MylawApp> {
   int? _knowLawInitialTabIndex;
   String? _knowLawInitialToolTab;
 
-  static const List<_BottomNavItemData> _navItems = [
-    _BottomNavItemData(
+  static const List<BottomNavItemData> _navItems = [
+    BottomNavItemData(
       label: '首頁',
       icon: Icons.home_outlined,
       selectedIcon: Icons.home_rounded,
     ),
-    _BottomNavItemData(
+    BottomNavItemData(
       label: '學習',
       icon: Icons.menu_book_outlined,
       selectedIcon: Icons.menu_book_rounded,
     ),
-    _BottomNavItemData(
+    BottomNavItemData(
       label: '小法助',
       icon: Icons.support_agent_outlined,
       selectedIcon: Icons.support_agent_rounded,
     ),
-    _BottomNavItemData(
+    BottomNavItemData(
       label: '紀事',
       icon: Icons.inventory_2_outlined,
       selectedIcon: Icons.inventory_2_rounded,
     ),
-    _BottomNavItemData(
+    BottomNavItemData(
       label: '我的',
       icon: Icons.person_outline_rounded,
       selectedIcon: Icons.person_rounded,
@@ -92,27 +93,27 @@ class _MylawAppState extends State<MylawApp> {
     final order = _appState.navbarOrder;
 
     final originalNavItems = [
-      const _BottomNavItemData(
+      const BottomNavItemData(
         label: '首頁',
         icon: Icons.home_outlined,
         selectedIcon: Icons.home_rounded,
       ),
-      const _BottomNavItemData(
+      const BottomNavItemData(
         label: '學習',
         icon: Icons.menu_book_outlined,
         selectedIcon: Icons.menu_book_rounded,
       ),
-      const _BottomNavItemData(
+      const BottomNavItemData(
         label: '小法助',
         icon: Icons.support_agent_outlined,
         selectedIcon: Icons.support_agent_rounded,
       ),
-      const _BottomNavItemData(
+      const BottomNavItemData(
         label: '紀事',
         icon: Icons.inventory_2_outlined,
         selectedIcon: Icons.inventory_2_rounded,
       ),
-      const _BottomNavItemData(
+      const BottomNavItemData(
         label: '我的',
         icon: Icons.person_outline_rounded,
         selectedIcon: Icons.person_rounded,
@@ -187,7 +188,7 @@ class _MylawAppState extends State<MylawApp> {
                         child: SafeArea(
                           top: false,
                           bottom: false,
-                          child: _IslandBottomNav(
+                          child: IslandBottomNav(
                             selectedIndex: selectedIndex,
                             items: displayNavItems,
                             showLabels: _appState.showNavbarLabels,
@@ -262,149 +263,4 @@ class _MylawAppState extends State<MylawApp> {
       ),
     );
   }
-}
-
-class _IslandBottomNav extends StatelessWidget {
-  const _IslandBottomNav({
-    required this.selectedIndex,
-    required this.items,
-    required this.onTap,
-    required this.showLabels,
-  });
-
-  final int selectedIndex;
-  final List<_BottomNavItemData> items;
-  final ValueChanged<int> onTap;
-  final bool showLabels;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final shellColor = isDark
-        ? const Color(0xFF1A2028)
-        : const Color.fromARGB(255, 239, 239, 239);
-    final selectedColor =
-        isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary;
-    final unselectedColor = selectedColor.withValues(alpha: 0.42);
-
-    // 台灣繁體中文教學註解：
-    // 若關閉分頁文字，則導覽高度從 70 調減至 56，帶來極致扁平的島嶼導覽風格。
-    final extraHeight = context.adaptiveBuffer(12);
-    final navShellHeight = (showLabels ? 76 : 62) + extraHeight;
-    final navHeight = (showLabels ? 70 : 56) + extraHeight;
-    final iconBoxHeight = 30 + (extraHeight * 0.6);
-
-    return SizedBox(
-      height: navShellHeight,
-      child: Center(
-        child: Container(
-          height: navHeight,
-          decoration: BoxDecoration(
-            color: shellColor,
-            borderRadius: BorderRadius.circular(34),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x20000000),
-                blurRadius: 18,
-                spreadRadius: 1,
-                offset: Offset(0, 8),
-              ),
-              BoxShadow(
-                color: Color(0x50000000),
-                blurRadius: 30,
-                spreadRadius: 2,
-                offset: Offset(0, 12),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(34),
-            child: Row(
-              children: List.generate(items.length, (index) {
-                final item = items[index];
-                final isSelected = index == selectedIndex;
-
-                return Expanded(
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () => onTap(index),
-                      splashFactory: NoSplash.splashFactory,
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      focusColor: Colors.transparent,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 6, bottom: 4),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 50,
-                              height: iconBoxHeight,
-                              alignment: Alignment.center,
-                              child: item.label == '小法助'
-                                  ? Opacity(
-                                      opacity: isSelected ? 1.0 : 0.6,
-                                      child: Container(
-                                        width: 25,
-                                        height: 25,
-                                        decoration: const BoxDecoration(
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: ClipOval(
-                                          child: Image.asset(
-                                            'assets/images/assistant/law_assistant_home.png',
-                                            fit: BoxFit.cover,
-                                            alignment: Alignment.topCenter,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : Icon(
-                                      isSelected
-                                          ? item.selectedIcon
-                                          : item.icon,
-                                      size: 25,
-                                      color: isSelected
-                                          ? selectedColor
-                                          : unselectedColor,
-                                    ),
-                            ),
-                            if (showLabels) ...[
-                              const SizedBox(height: 5),
-                              Text(
-                                item.label,
-                                style: TextStyle(
-                                  fontSize: 11 + context.adaptiveBuffer(1.5),
-                                  fontWeight: FontWeight.w400,
-                                  color: selectedColor,
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              }),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _BottomNavItemData {
-  const _BottomNavItemData({
-    required this.label,
-    required this.icon,
-    required this.selectedIcon,
-  });
-
-  final String label;
-  final IconData icon;
-  final IconData selectedIcon;
 }
