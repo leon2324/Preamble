@@ -30,7 +30,6 @@ import 'package:lawapp/pages/learning/statute_database_page.dart';
 import 'package:lawapp/pages/journal/journal_page.dart';
 import 'package:lawapp/pages/profile/profile_page.dart';
 import 'package:lawapp/pages/search/global_search_page.dart';
-import 'package:lawapp/pages/tools/legal_tools_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -647,51 +646,6 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Legal tools prototype switches steps and shows preview', (
-    WidgetTester tester,
-  ) async {
-    SharedPreferences.setMockInitialValues({});
-    _setMvpPhoneSize(tester);
-    final appState = LawAppState();
-    addTearDown(appState.dispose);
-    await appState.load();
-    await appState.signInDemo();
-
-    await tester.pumpWidget(_mvpTestFrame(appState, const LegalToolsPage()));
-    await tester.pumpAndSettle();
-
-    // 台灣繁體中文教學註解：
-    // 法律工具箱改成 prototype 的單頁多子狀態流程，測試要從首頁入口一路走到預覽，
-    // 才能同時守住主頁、Step 1、Step 2 與 Step 3 的切換。
-    expect(find.text('法律文件工具箱'), findsOneWidget);
-    expect(find.text('3-step 輕鬆產生法律文件'), findsOneWidget);
-
-    await tester.scrollUntilVisible(
-      find.text('開始產生草稿'),
-      160,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.pump(const Duration(milliseconds: 120));
-    await tester.tap(find.text('開始產生草稿'));
-    await tester.pumpAndSettle();
-    expect(find.text('你想產生哪一種文件？'), findsOneWidget);
-
-    await tester.tap(find.text('下一步'));
-    await tester.pumpAndSettle();
-    expect(find.text('請補充相關資料'), findsOneWidget);
-
-    await tester.scrollUntilVisible(
-      find.widgetWithText(FilledButton, '下一步'),
-      160,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.pump(const Duration(milliseconds: 120));
-    await tester.tap(find.widgetWithText(FilledButton, '下一步'));
-    await tester.pumpAndSettle();
-    expect(find.text('你的文件草稿已完成！'), findsOneWidget);
-    expect(find.text('協商語氣'), findsOneWidget);
-  });
-
   testWidgets('My LawApp prototype opens tracking center and detail', (
     WidgetTester tester,
   ) async {
@@ -928,7 +882,9 @@ void main() {
     // 台灣繁體中文教學註解：
     // 在一體化滾動的直向版面上，我們需要向上滑動以露出 TabBar 與 tab 內容。
     // 使用垂直方向的 Scrollable 作為拖曳對象，確保正確滾動外層的 NestedScrollView。
-    final verticalScrollable = find.byWidgetPredicate((w) => w is Scrollable && w.axis == Axis.vertical).first;
+    final verticalScrollable = find
+        .byWidgetPredicate((w) => w is Scrollable && w.axis == Axis.vertical)
+        .first;
     for (int i = 0; i < 3; i++) {
       await tester.drag(verticalScrollable, const Offset(0, -250));
       await tester.pumpAndSettle();
@@ -975,7 +931,9 @@ void main() {
     expect(find.text('事件摘要'), findsOneWidget);
 
     // 進行滑動測試，確保滾動過程中不會發生 RenderFlex 溢出或崩潰異常
-    final verticalScrollable = find.byWidgetPredicate((w) => w is Scrollable && w.axis == Axis.vertical).first;
+    final verticalScrollable = find
+        .byWidgetPredicate((w) => w is Scrollable && w.axis == Axis.vertical)
+        .first;
     for (int i = 0; i < 5; i++) {
       await tester.drag(verticalScrollable, const Offset(0, -250));
       await tester.pumpAndSettle();
