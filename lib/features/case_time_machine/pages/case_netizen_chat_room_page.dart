@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
+import 'package:lawapp/features/case_time_machine/pages/widgets/case_netizen_opinion_card.dart';
 import 'package:lawapp/features/case_time_machine/pages/widgets/case_netizen_perspective_spectrum_card.dart';
 import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_scaffold.dart';
@@ -198,7 +199,11 @@ class _CaseNetizenChatRoomPageState extends State<CaseNetizenChatRoomPage> {
                     _buildSortBar(context, comments.length),
                     SizedBox(height: 10.h),
                     for (final entry in highlightedComments.indexed) ...[
-                      _buildOpinionCard(context, entry.$2, entry.$1),
+                      CaseNetizenOpinionCard(
+                        comment: entry.$2,
+                        index: entry.$1,
+                        onLike: () => _toggleLike(entry.$2),
+                      ),
                       SizedBox(height: 9.h),
                     ],
                     if (!_showAllOpinions && visibleComments.length > 3)
@@ -780,145 +785,6 @@ class _CaseNetizenChatRoomPageState extends State<CaseNetizenChatRoomPage> {
     );
   }
 
-  Widget _buildOpinionCard(
-    BuildContext context,
-    Map<String, dynamic> comment,
-    int index,
-  ) {
-    final isMe = comment['isMe'] == true || comment['avatar'] == '我';
-    final stance = comment['stance'] as String? ?? '中立派';
-    final liked = comment['liked'] as bool? ?? false;
-    final hasCitation = _hasCitation(comment);
-    final stanceColors = _stanceColors(stance);
-
-    return Container(
-      padding: EdgeInsets.all(13.w),
-      decoration: BoxDecoration(
-        color: isMe ? const Color(0xFFF8FFF8) : _ChatPastels.surface,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(
-          color: isMe ? const Color(0xFFD7ECDD) : _ChatPastels.border,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.025),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                radius: 15.r,
-                backgroundColor: stanceColors.background,
-                child: Text(
-                  comment['avatar'] as String? ?? '論',
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w900,
-                    color: stanceColors.foreground,
-                  ),
-                ),
-              ),
-              SizedBox(width: 9.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            comment['name'] as String? ?? '思辨參與者',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 11.sp,
-                              fontWeight: FontWeight.w900,
-                              color: _ChatPastels.ink,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 6.w),
-                        _labelPill(
-                          stance,
-                          stanceColors.background,
-                          stanceColors.foreground,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      comment['time'] as String? ?? '剛剛',
-                      style: TextStyle(
-                        fontSize: 9.sp,
-                        fontWeight: FontWeight.w700,
-                        color: _ChatPastels.muted,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              if (hasCitation)
-                _labelPill(
-                  '有引用',
-                  _ChatPastels.lavender,
-                  _ChatPastels.lavenderText,
-                ),
-            ],
-          ),
-          SizedBox(height: 10.h),
-          Text(
-            comment['content'] as String? ?? '',
-            style: TextStyle(
-              fontSize: 12.sp,
-              height: 1.55,
-              fontWeight: FontWeight.w600,
-              color: _ChatPastels.ink,
-            ),
-          ),
-          SizedBox(height: 9.h),
-          Row(
-            children: [
-              _cardAction(
-                iconSvg: liked ? CtmSvgIcons.heartFilled : CtmSvgIcons.heart,
-                label: '${comment['likes'] ?? 0}',
-                color: _ChatPastels.roseText,
-                onTap: () => _toggleLike(comment),
-              ),
-              const Spacer(),
-              if (hasCitation)
-                Text(
-                  comment['source'] as String? ?? '有來源',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 9.sp,
-                    fontWeight: FontWeight.w800,
-                    color: _ChatPastels.lavenderText,
-                  ),
-                ),
-              SizedBox(width: 8.w),
-              Text(
-                '#${index + 1}',
-                style: TextStyle(
-                  fontSize: 9.sp,
-                  fontWeight: FontWeight.w800,
-                  color: _ChatPastels.muted,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildComposer(BuildContext context) {
     if (!_isComposerExpanded) {
       return Container(
@@ -1369,32 +1235,6 @@ class _CaseNetizenChatRoomPageState extends State<CaseNetizenChatRoomPage> {
             color: selected ? Colors.white : colors.foreground,
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _cardAction({
-    required String iconSvg,
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CtmSvgIcon(iconSvg, size: 14.sp, color: color),
-          SizedBox(width: 3.w),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 10.sp,
-              fontWeight: FontWeight.w900,
-              color: color,
-            ),
-          ),
-        ],
       ),
     );
   }
