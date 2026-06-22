@@ -376,23 +376,33 @@ class SupabaseLearningService {
     if (title.contains('租屋') ||
         title.contains('押金') ||
         title.contains('房東') ||
-        title.contains('房客')) return '租屋糾紛';
+        title.contains('房客')) {
+      return '租屋糾紛';
+    }
     if (title.contains('職場') ||
         title.contains('加班') ||
         title.contains('工時') ||
-        title.contains('離職')) return '職場權益';
+        title.contains('離職')) {
+      return '職場權益';
+    }
     if (title.contains('網購') ||
         title.contains('退貨') ||
         title.contains('消保') ||
-        title.contains('消費')) return '網購消費';
+        title.contains('消費')) {
+      return '網購消費';
+    }
     if (title.contains('肖像') ||
         title.contains('發文') ||
         title.contains('個資') ||
-        title.contains('隱私')) return '個資隱私';
+        title.contains('隱私')) {
+      return '個資隱私';
+    }
     if (title.contains('車禍') ||
         title.contains('事故') ||
         title.contains('碰撞') ||
-        title.contains('交通')) return '車禍事故';
+        title.contains('交通')) {
+      return '車禍事故';
+    }
     return '法律常識';
   }
 }

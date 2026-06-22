@@ -4609,17 +4609,21 @@ class KnowLawPageState extends State<KnowLawPage> {
 
           // 取得螢光筆的背景色
           Color bgHighlightColor = Colors.white;
-          if (highlightColor == 'yellow')
+          if (highlightColor == 'yellow') {
             bgHighlightColor =
                 isDark ? const Color(0xFF38341A) : const Color(0xFFFFFAD6);
-          if (highlightColor == 'green')
+          }
+          if (highlightColor == 'green') {
             bgHighlightColor =
                 isDark ? const Color(0xFF1F2F20) : const Color(0xFFEDF8E9);
-          if (highlightColor == 'pink')
+          }
+          if (highlightColor == 'pink') {
             bgHighlightColor =
                 isDark ? const Color(0xFF341F28) : const Color(0xFFFDEEF4);
-          if (highlightColor == 'none')
+          }
+          if (highlightColor == 'none') {
             bgHighlightColor = isDark ? const Color(0xFF1C222A) : Colors.white;
+          }
 
           final Map<String, String> emojiDb = {
             'sprout': '🌱',
@@ -5082,18 +5086,22 @@ class KnowLawPageState extends State<KnowLawPage> {
 
             // 取得螢光筆的背景色樣式
             Color previewBgColor = Colors.white;
-            if (selectedColor == 'yellow')
+            if (selectedColor == 'yellow') {
               previewBgColor =
                   isDark ? const Color(0xFF38341A) : const Color(0xFFFFFAD6);
-            if (selectedColor == 'green')
+            }
+            if (selectedColor == 'green') {
               previewBgColor =
                   isDark ? const Color(0xFF1F2F20) : const Color(0xFFEDF8E9);
-            if (selectedColor == 'pink')
+            }
+            if (selectedColor == 'pink') {
               previewBgColor =
                   isDark ? const Color(0xFF341F28) : const Color(0xFFFDEEF4);
-            if (selectedColor == 'none')
+            }
+            if (selectedColor == 'none') {
               previewBgColor =
                   isDark ? const Color(0xFF282D35) : const Color(0xFFF9F6F0);
+            }
 
             return AlertDialog(
               backgroundColor: dialogBg,

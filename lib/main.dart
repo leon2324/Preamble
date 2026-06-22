@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/app/app_state.dart';
 import 'package:lawapp/components/navigation/island_bottom_nav.dart';
-import 'package:lawapp/pages/following/following_page.dart';
 import 'package:lawapp/pages/profile/profile_page.dart';
 import 'package:lawapp/pages/home/home_page.dart';
 import 'package:lawapp/pages/learning/know_law_page.dart';

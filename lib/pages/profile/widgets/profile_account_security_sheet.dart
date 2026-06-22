@@ -179,7 +179,7 @@ class _AccountSecuritySheetState extends State<AccountSecuritySheet> {
         subtitle: Text(isLinked ? '已連結' : '未連結'),
         trailing: Switch(
           value: isLinked,
-          activeColor: AppColors.accent,
+          activeThumbColor: AppColors.accent,
           onChanged: onChanged,
         ),
       ),

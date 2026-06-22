@@ -302,7 +302,7 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: const Text('關閉後將只顯示導覽圖示，高度更加緊湊'),
                   value: _tempShowLabels,
-                  activeColor: AppColors.accent,
+                  activeThumbColor: AppColors.accent,
                   onChanged: (val) {
                     setState(() {
                       _tempShowLabels = val;

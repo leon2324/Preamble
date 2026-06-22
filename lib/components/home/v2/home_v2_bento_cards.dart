@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/app/app_state.dart';
 import 'package:lawapp/pages/learning/know_law_page.dart';
 import 'package:lawapp/theme/app_colors.dart';
-import 'package:lawapp/components/home/v2/home_v2_palette.dart';
-import 'package:lawapp/components/home/v2/home_v2_primitives.dart';
 import 'package:lawapp/data/mock_data/followed_updates/followed_updates_mock_data.dart';
 import 'package:lawapp/pages/learning/home_mission_quiz_page.dart';
 import 'package:lawapp/pages/followed_updates/followed_updates_page.dart';

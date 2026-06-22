@@ -301,7 +301,7 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
             ),
             SizedBox(height: 6.h),
             DropdownButtonFormField<String>(
-              value: _selectedProfession,
+              initialValue: _selectedProfession,
               dropdownColor: surfaceColor,
               decoration: InputDecoration(
                 contentPadding:

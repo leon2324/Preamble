@@ -55,7 +55,9 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
         title.contains('房客') ||
         title.contains('約定') ||
         title.contains('點交') ||
-        title.contains('提前解約')) return '租屋糾紛';
+        title.contains('提前解約')) {
+      return '租屋糾紛';
+    }
     if (title.contains('職場') ||
         title.contains('加班') ||
         title.contains('工時') ||
@@ -65,21 +67,27 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
         title.contains('勞基') ||
         title.contains('資遣') ||
         title.contains('解雇') ||
-        title.contains('勞動')) return '職場權益';
+        title.contains('勞動')) {
+      return '職場權益';
+    }
     if (title.contains('網購') ||
         title.contains('退貨') ||
         title.contains('消保') ||
         title.contains('消費') ||
         title.contains('鑑賞期') ||
         title.contains('標錯價') ||
-        title.contains('電商')) return '網購消費';
+        title.contains('電商')) {
+      return '網購消費';
+    }
     if (title.contains('肖像') ||
         title.contains('發文') ||
         title.contains('個資') ||
         title.contains('隱私') ||
         title.contains('監視器') ||
         title.contains('垃圾簡訊') ||
-        title.contains('去識別化')) return '個資隱私';
+        title.contains('去識別化')) {
+      return '個資隱私';
+    }
     if (title.contains('車禍') ||
         title.contains('事故') ||
         title.contains('碰撞') ||
@@ -87,7 +95,9 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
         title.contains('路權') ||
         title.contains('肇責') ||
         title.contains('折舊') ||
-        title.contains('慰撫金')) return '車禍事故';
+        title.contains('慰撫金')) {
+      return '車禍事故';
+    }
     return '法律常識';
   }
 

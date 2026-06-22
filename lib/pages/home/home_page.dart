@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/components/home/home_news_section.dart';
 import 'package:lawapp/components/home/v2/home_v2_header.dart';
 import 'package:lawapp/components/home/v2/home_v2_primitives.dart';
 import 'package:lawapp/components/home/v2/home_v2_sections.dart';
 import 'package:lawapp/components/home/v2/home_v2_bento_cards.dart';
 import 'package:lawapp/data/mock_data/home/home_mock_data.dart';
-import 'package:lawapp/data/mock_data/home/home_v2_mock_data.dart';
 import 'package:lawapp/data/moj/moj_feed_item.dart';
 import 'package:lawapp/pages/home/home_subpages.dart';
-import 'package:lawapp/pages/learning/home_mission_quiz_page.dart';
-import 'package:lawapp/pages/learning/know_law_page.dart';
 import 'package:lawapp/pages/learning/statute_database_page.dart';
 import 'package:lawapp/pages/profile/profile_page.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
