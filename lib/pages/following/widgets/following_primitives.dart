@@ -308,19 +308,23 @@ class _CheckLine extends StatelessWidget {
 }
 
 class _BottomAction extends StatelessWidget {
-  const _BottomAction({required this.icon, required this.label});
+  const _BottomAction({required this.icon, required this.label, this.onTap});
 
   final IconData icon;
   final String label;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Icon(icon, color: _FollowColors.text, size: 21.sp),
-        SizedBox(height: 5.h),
-        Text(label, style: _FollowText.captionStrong()),
-      ],
+    return InkWell(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Icon(icon, color: _FollowColors.text, size: 21.sp),
+          SizedBox(height: 5.h),
+          Text(label, style: _FollowText.captionStrong()),
+        ],
+      ),
     );
   }
 }

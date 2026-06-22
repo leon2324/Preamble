@@ -12,9 +12,11 @@ class HomeV2HeroHeader extends StatefulWidget {
   const HomeV2HeroHeader({
     super.key,
     required this.onProfileTap,
+    required this.onNotificationTap,
   });
 
   final VoidCallback onProfileTap;
+  final VoidCallback onNotificationTap;
 
   @override
   State<HomeV2HeroHeader> createState() => _HomeV2HeroHeaderState();
@@ -83,7 +85,10 @@ class _HomeV2HeroHeaderState extends State<HomeV2HeroHeader> {
                 ],
               ),
             ),
-            const _HeaderIcon(icon: Icons.notifications_none_rounded),
+            _HeaderIcon(
+              icon: Icons.notifications_none_rounded,
+              onTap: widget.onNotificationTap,
+            ),
             SizedBox(width: 10.w),
             _HeaderAvatar(onTap: widget.onProfileTap),
           ],
@@ -242,21 +247,30 @@ class _GreetingTextBlock extends StatelessWidget {
 }
 
 class _HeaderIcon extends StatelessWidget {
-  const _HeaderIcon({required this.icon});
+  const _HeaderIcon({required this.icon, required this.onTap});
 
   final IconData icon;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 38.w,
-      height: 38.w,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(19.r),
-        border: Border.all(color: AppColors.border),
+    return Material(
+      color: Colors.transparent,
+      shape: const CircleBorder(),
+      child: InkWell(
+        onTap: onTap,
+        customBorder: const CircleBorder(),
+        child: Ink(
+          width: 38.w,
+          height: 38.w,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(19.r),
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Icon(icon, color: HomeV2Palette.trustGreen, size: 21.sp),
+        ),
       ),
-      child: Icon(icon, color: HomeV2Palette.trustGreen, size: 21.sp),
     );
   }
 }

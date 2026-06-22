@@ -422,7 +422,170 @@ extension _CaseDossierBottomSheets on _CaseDossierDetailPageState {
             ],
           ),
         );
+  }
+
+  void _showNoteBottomSheet(BuildContext context) {
+    final appState = LawAppScope.of(context);
+    final caseId = widget.book.id;
+    final initialNote = appState.caseNoteDraft(caseId) ?? '';
+    final controller = TextEditingController(text: initialNote);
+
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: CaseTimeMachineColors.bgCream,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.15),
+                  blurRadius: 20,
+                  offset: const Offset(0, -5),
+                ),
+              ],
+            ),
+            padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 24.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40.w,
+                    height: 4.h,
+                    decoration: BoxDecoration(
+                      color: CaseTimeMachineColors.borderLight,
+                      borderRadius: BorderRadius.circular(2.r),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.h),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        '案件學習筆記',
+                        style: TextStyle(
+                          fontFamily: 'Songti TC',
+                          fontFamilyFallback: const ['Songti SC', 'STSong', 'PingFang TC'],
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                          color: CaseTimeMachineColors.primaryGreen,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '已自動儲存',
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        color: CaseTimeMachineColors.textMuted,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  '記錄您對「${widget.book.shortTitleZh.isNotEmpty ? widget.book.shortTitleZh : widget.book.titleZh}」的思考、心得或待查爭點：',
+                  style: TextStyle(
+                    fontSize: 11.5.sp,
+                    color: CaseTimeMachineColors.textSecondary,
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                TextField(
+                  controller: controller,
+                  maxLines: 6,
+                  autofocus: true,
+                  onChanged: (text) {
+                    appState.saveCaseNoteDraft(caseId, text);
+                  },
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    color: CaseTimeMachineColors.textPrimary,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: '在此輸入筆記...',
+                    hintStyle: TextStyle(
+                      fontSize: 13.sp,
+                      color: CaseTimeMachineColors.textMuted,
+                    ),
+                    fillColor: Colors.white,
+                    filled: true,
+                    contentPadding: EdgeInsets.all(12.w),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                      borderSide: const BorderSide(
+                        color: CaseTimeMachineColors.borderLight,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                      borderSide: const BorderSide(
+                        color: CaseTimeMachineColors.borderLight,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                      borderSide: const BorderSide(
+                        color: CaseTimeMachineColors.primaryGreen,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(
+                        '關閉',
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.bold,
+                          color: CaseTimeMachineColors.primaryGreen,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: CaseTimeMachineColors.primaryGreen,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                      ),
+                      onPressed: () {
+                        appState.saveCaseNoteDraft(caseId, controller.text);
+                        Navigator.of(context).pop();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('筆記儲存成功！')),
+                        );
+                      },
+                      child: Text(
+                        '儲存筆記',
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
       },
     );
   }
 }
+

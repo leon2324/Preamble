@@ -401,14 +401,30 @@ class _NoteDetailView extends StatelessWidget {
         const _BulletLine(text: '民法第 440 條（租賃不用行）'),
         SizedBox(height: 26.h),
         Row(
-          children: const [
+          children: [
             Expanded(
-                child: _BottomAction(icon: Icons.edit_outlined, label: '編輯')),
+              child: _BottomAction(
+                icon: Icons.edit_outlined,
+                label: '編輯',
+                onTap: () {},
+              ),
+            ),
             Expanded(
-                child: _BottomAction(icon: Icons.share_outlined, label: '分享')),
+              child: _BottomAction(
+                icon: Icons.share_outlined,
+                label: '分享',
+                onTap: () {
+                  ShareSheet.show(context, title: note.title);
+                },
+              ),
+            ),
             Expanded(
-                child: _BottomAction(
-                    icon: Icons.delete_outline_rounded, label: '刪除')),
+              child: _BottomAction(
+                icon: Icons.delete_outline_rounded,
+                label: '刪除',
+                onTap: () {},
+              ),
+            ),
           ],
         ),
       ],

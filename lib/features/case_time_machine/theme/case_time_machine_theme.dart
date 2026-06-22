@@ -106,6 +106,45 @@ abstract final class CaseTimeMachineTextStyles {
       );
 }
 
+class LightTextStyles {
+  static TextStyle displayTitle(BuildContext context) =>
+      CaseTimeMachineTextStyles.displayTitle(context)
+          .copyWith(color: CaseTimeMachineColors.primaryGreen);
+
+  static TextStyle pageTitle(BuildContext context) =>
+      CaseTimeMachineTextStyles.pageTitle(context)
+          .copyWith(color: CaseTimeMachineColors.primaryGreen);
+
+  static TextStyle sectionTitle(BuildContext context) =>
+      CaseTimeMachineTextStyles.sectionTitle(context)
+          .copyWith(color: CaseTimeMachineColors.primaryGreen);
+
+  static TextStyle cardTitle(BuildContext context) =>
+      CaseTimeMachineTextStyles.cardTitle(context)
+          .copyWith(color: CaseTimeMachineColors.textPrimary);
+
+  static TextStyle body(BuildContext context) =>
+      CaseTimeMachineTextStyles.body(context)
+          .copyWith(color: CaseTimeMachineColors.textPrimary);
+
+  static TextStyle bodySmall(BuildContext context) =>
+      CaseTimeMachineTextStyles.bodySmall(context)
+          .copyWith(color: CaseTimeMachineColors.textSecondary);
+
+  static TextStyle caption(BuildContext context) =>
+      CaseTimeMachineTextStyles.caption(context)
+          .copyWith(color: CaseTimeMachineColors.textMuted);
+
+  static TextStyle chipText(BuildContext context) =>
+      CaseTimeMachineTextStyles.chipText(context)
+          .copyWith(color: CaseTimeMachineColors.accentGold);
+
+  static TextStyle buttonText(BuildContext context) =>
+      CaseTimeMachineTextStyles.buttonText(context)
+          .copyWith(color: Colors.white);
+}
+
+
 abstract final class CaseTimeMachineSpacing {
   static const double spaceXS = 4;
   static const double spaceS = 8;

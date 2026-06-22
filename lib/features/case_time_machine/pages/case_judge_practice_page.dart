@@ -171,7 +171,7 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
                         padding: EdgeInsets.symmetric(horizontal: 60.w),
                         child: Text(
                           '如果你是法官',
-                          style: CaseTimeMachineTextStyles.pageTitle(context)
+                          style: LightTextStyles.pageTitle(context)
                               .copyWith(
                             fontSize: 17.sp,
                             fontWeight: FontWeight.w900,
@@ -223,7 +223,7 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
                           widget.book.titleZh,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: CaseTimeMachineTextStyles.cardTitle(context)
+                          style: LightTextStyles.cardTitle(context)
                               .copyWith(
                             fontSize: 12.5.sp,
                           ),
@@ -234,7 +234,7 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
                   SizedBox(height: 5.h),
                   Text(
                     '法感練習：請依據以下背景，在做出判決前選出符合您正義直覺的論點。',
-                    style: CaseTimeMachineTextStyles.caption(context).copyWith(
+                    style: LightTextStyles.caption(context).copyWith(
                       fontSize: 10.sp,
                     ),
                   ),
@@ -257,7 +257,7 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
                   // 標題：你的抉擇
                   Text(
                     hasSelected ? '⚖️ 抉擇對照分析' : '👉 請選擇你的法官立場：',
-                    style: CaseTimeMachineTextStyles.sectionTitle(context)
+                    style: LightTextStyles.sectionTitle(context)
                         .copyWith(
                       fontSize: 14.sp,
                     ),
@@ -304,7 +304,7 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
               SizedBox(width: 8.w),
               Text(
                 '事件背景',
-                style: CaseTimeMachineTextStyles.cardTitle(context).copyWith(
+                style: LightTextStyles.cardTitle(context).copyWith(
                   fontSize: 13.sp,
                 ),
               ),
@@ -313,7 +313,7 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
           SizedBox(height: 8.h),
           Text(
             widget.book.background,
-            style: CaseTimeMachineTextStyles.body(context).copyWith(
+            style: LightTextStyles.body(context).copyWith(
               fontSize: 12.sp,
               height: 1.5,
             ),
@@ -431,7 +431,7 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
                     children: [
                       Text(
                         stance['title'] as String,
-                        style: CaseTimeMachineTextStyles.cardTitle(context)
+                        style: LightTextStyles.cardTitle(context)
                             .copyWith(
                           fontSize: 13.sp,
                           color: CaseTimeMachineColors.primaryGreen,
@@ -440,7 +440,7 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
                       SizedBox(height: 4.h),
                       Text(
                         stance['description'] as String,
-                        style: CaseTimeMachineTextStyles.bodySmall(context)
+                        style: LightTextStyles.bodySmall(context)
                             .copyWith(
                           fontSize: 11.sp,
                           height: 1.4,
@@ -589,7 +589,7 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
               SizedBox(height: 10.h),
               Text(
                 widget.book.courtReasoning,
-                style: CaseTimeMachineTextStyles.body(context).copyWith(
+                style: LightTextStyles.body(context).copyWith(
                   fontSize: 12.sp,
                   height: 1.5,
                 ),

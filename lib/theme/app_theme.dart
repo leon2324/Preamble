@@ -27,6 +27,20 @@ class AppTheme {
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
       ),
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: const Color(0xFF1E352F),
+        contentTextStyle: const TextStyle(
+          color: Color(0xFFFAF6F0),
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side: const BorderSide(color: Color(0xFF32544A), width: 1),
+        ),
+        elevation: 4,
+      ),
     );
   }
 
@@ -56,6 +70,20 @@ class AppTheme {
         backgroundColor: darkBackground,
         foregroundColor: darkText,
         elevation: 0,
+      ),
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: const Color(0xFF1F242A),
+        contentTextStyle: const TextStyle(
+          color: Color(0xFFE2E8F0),
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side: const BorderSide(color: Color(0xFF333D4B), width: 1),
+        ),
+        elevation: 4,
       ),
     );
   }

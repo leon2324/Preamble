@@ -235,6 +235,8 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
               ],
             ),
           ),
+          // 0. Positioning introduction card
+          _buildPositioningBanner(),
           // 1. Premium Calendar & Featured Case Card
           _buildFeaturedCaseCard(),
           SizedBox(height: 24.h),
@@ -246,6 +248,69 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
           // 3. "依日期探索" Section
           _buildExploreByDateSection(),
           SizedBox(height: 32.h),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPositioningBanner() {
+    return Container(
+      margin: EdgeInsets.only(bottom: 16.h),
+      padding: EdgeInsets.all(14.w),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFAF6EE),
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: const Color(0xFFD6C0A0), width: 1.w),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x06000000),
+            blurRadius: 10,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.all(8.w),
+            decoration: const BoxDecoration(
+              color: Color(0xFFEAF5EF),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.mark_as_unread_rounded,
+              color: OnThisDayColors.primaryGreen,
+              size: 20.sp,
+            ),
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '探索法治足跡，拉近法律與生活的距離',
+                  style: TextStyle(
+                    color: OnThisDayColors.primaryGreen,
+                    fontSize: 12.5.sp,
+                    fontWeight: FontWeight.bold,
+                    height: 1.2,
+                  ),
+                ),
+                SizedBox(height: 5.h),
+                Text(
+                  '歷史是一面鏡子，每一樁法治里程碑都默默指引著現代人的生活。那年今日帶您開啟一封封歷史信札，從思辨中找尋現代法律生活的定位。',
+                  style: TextStyle(
+                    color: const Color(0xFF7E6E5A),
+                    fontSize: 10.5.sp,
+                    height: 1.45,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

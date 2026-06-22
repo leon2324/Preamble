@@ -1996,9 +1996,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
             ),
             label: '筆記',
             onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('已開啟案件學習筆記（本機模擬）')),
-              );
+              _showNoteBottomSheet(context);
             },
           ),
           // 3. 追蹤 Pill button (加號/打勾改用自訂 SVG)

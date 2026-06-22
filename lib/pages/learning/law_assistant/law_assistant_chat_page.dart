@@ -343,6 +343,14 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
   }
 }
 
+const String _svgSparkles = '''
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M9.9 4.2 8.7 7.1 5.8 8.3l2.9 1.2 1.2 2.9 1.2-2.9 2.9-1.2-2.9-1.2-1.2-2.9Z"></path>
+  <path d="M17.6 11.4 16.8 13l-1.6.8 1.6.8.8 1.6.8-1.6 1.6-.8-1.6-.8-.8-1.6Z"></path>
+  <path d="M6.5 15.5 5.8 17l-1.5.7 1.5.7.7 1.5.7-1.5 1.5-.7-1.5-.7-.7-1.5Z"></path>
+</svg>
+''';
+
 class _LawAssistantChatBubble extends StatelessWidget {
   const _LawAssistantChatBubble({required this.message});
 
@@ -353,29 +361,137 @@ class _LawAssistantChatBubble extends StatelessWidget {
     final isUser = message.role == LawAssistantMessageRole.user;
     final assistantPalette = _LawAssistantPalette.of(context);
 
-    return Align(
-      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        constraints: BoxConstraints(maxWidth: 292.w),
-        margin: EdgeInsets.only(bottom: 12.h),
-        padding: EdgeInsets.all(14.w),
-        decoration: BoxDecoration(
-          color:
-              isUser ? assistantPalette.accent : assistantPalette.introSurface,
-          borderRadius: BorderRadius.circular(18.r),
-          border:
-              isUser ? null : Border.all(color: assistantPalette.neutralBorder),
+    if (isUser) {
+      return Align(
+        alignment: Alignment.centerRight,
+        child: Container(
+          constraints: BoxConstraints(maxWidth: 270.w),
+          margin: EdgeInsets.only(bottom: 16.h),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          decoration: BoxDecoration(
+            color: assistantPalette.accent,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16.r),
+              topRight: Radius.circular(16.r),
+              bottomLeft: Radius.circular(16.r),
+              bottomRight: Radius.zero,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: assistantPalette.accent.withValues(alpha: 0.15),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Text(
+            message.content,
+            style: TextStyle(
+              fontSize: 13.sp,
+              height: 1.5,
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         ),
-        child: isUser
-            ? Text(
-                message.content,
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  height: 1.45,
-                  color: assistantPalette.inverseText,
+      );
+    }
+
+    // AI Chat Bubble (Assistant)
+    return Padding(
+      padding: EdgeInsets.only(bottom: 18.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Premium AI Sparkle Avatar
+          Container(
+            width: 32.w,
+            height: 32.w,
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFFE6BA79), Color(0xFFC8A261)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFFC8A261).withValues(alpha: 0.22),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
                 ),
-              )
-            : _AssistantAnswerContent(message: message),
+              ],
+            ),
+            child: Center(
+              child: SvgPicture.string(
+                _svgSparkles,
+                width: 15.w,
+                height: 15.w,
+                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              ),
+            ),
+          ),
+          SizedBox(width: 10.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Small Sparkle tag name
+                Row(
+                  children: [
+                    Text(
+                      '小法助',
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.bold,
+                        color: assistantPalette.accent,
+                      ),
+                    ),
+                    SizedBox(width: 4.w),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                      decoration: BoxDecoration(
+                        color: assistantPalette.subtleSurface,
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
+                      child: Text(
+                        'AI 助理',
+                        style: TextStyle(
+                          fontSize: 8.sp,
+                          fontWeight: FontWeight.bold,
+                          color: assistantPalette.secondary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 6.h),
+                Container(
+                  constraints: BoxConstraints(maxWidth: 280.w),
+                  padding: EdgeInsets.all(14.w),
+                  decoration: BoxDecoration(
+                    color: assistantPalette.cardSurface,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.zero,
+                      topRight: Radius.circular(16.r),
+                      bottomLeft: Radius.circular(16.r),
+                      bottomRight: Radius.circular(16.r),
+                    ),
+                    border: Border.all(color: assistantPalette.neutralBorder),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.02),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: _AssistantAnswerContent(message: message),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

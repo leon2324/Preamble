@@ -8,6 +8,7 @@ import 'package:lawapp/data/following/following_models.dart';
 import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
 import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart';
 import 'package:lawapp/pages/learning/statute_database_page.dart';
+import 'package:lawapp/components/shared/share_sheet.dart';
 
 part 'widgets/following_views.dart';
 part 'widgets/following_cards.dart';
@@ -660,18 +661,18 @@ class _FollowText {
 }
 
 class _FollowColors {
-  static const background = Color(0xFFFAF6F0);
-  static const primary = Color(0xFF234D3B);
-  static const secondary = Color(0xFF6C8A7A);
-  static const text = Color(0xFF222D27);
-  static const mutedText = Color(0xFF828078);
-  static const divider = Color(0xFFEDE4D8);
-  static const cardStroke = Color(0xFFE9DFD2);
-  static const borderDark = Color(0xFFCFC4B5);
-  static const softPaper = Color(0xFFF3EAD7);
-  static const softMist = Color(0xFFF8F2E8);
-  static const gold = Color(0xFFD6A04D);
-  static const orange = Color(0xFFFF8A4C);
+  static const background = Color(0xFFFAF7F2);
+  static const primary = Color(0xFF243B63);
+  static const secondary = Color(0xFF667085);
+  static const text = Color(0xFF101828);
+  static const mutedText = Color(0xFF9A9A9A);
+  static const divider = Color(0xFFE5E7EB);
+  static const cardStroke = Color(0xFFE5E7EB);
+  static const borderDark = Color(0xFFB0B8C4);
+  static const softPaper = Color(0xFFF4F6F8);
+  static const softMist = Color(0xFFF9FAFB);
+  static const gold = Color(0xFFD6A85F);
+  static const orange = Color(0xFFE28743);
 }
 
 List<_FollowItem> _mergeFollowItems(

@@ -5,6 +5,9 @@ import 'package:lawapp/theme/app_colors.dart';
 import 'package:lawapp/data/mock_data/followed_updates/followed_updates_mock_data.dart';
 import 'package:lawapp/pages/learning/home_mission_quiz_page.dart';
 import 'package:lawapp/pages/followed_updates/followed_updates_page.dart';
+import 'package:lawapp/app/app_state.dart';
+import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart';
+import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
 
 /// 1. AI 法律即時快問與 Prompt 推薦標籤
 class HomeV2QuickAskSection extends StatefulWidget {
@@ -37,15 +40,18 @@ class _HomeV2QuickAskSectionState extends State<HomeV2QuickAskSection> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final boxBg = isDark ? const Color(0xFF1E242F) : Colors.white;
-    final borderColor = isDark ? const Color(0xFF2C3545) : AppColors.border;
+    final boxBg = isDark ? const Color(0xFF1E242F) : const Color(0xFFF3FAF6);
+    final borderColor = isDark ? const Color(0xFF2C3545) : const Color(0xFFC7DED1);
+    final text = isDark ? const Color(0xFFF2F4F7) : const Color(0xFF1B3F38);
+    final hintColor = isDark ? const Color(0xFF6B7785) : const Color(0xFF6A8680);
+    final chipBg = isDark ? const Color(0xFF161B22) : const Color(0xFFFFFFFF);
+    final chipBorder = isDark ? const Color(0xFF26303D) : const Color(0xFFE2EBE7);
 
-    // 台灣繁體中文教學註解：推薦常用法律問題的 Prompt 標籤
     final recommendations = [
-      '租屋押金房東不退',
-      '車禍理賠和解程序',
-      '加班費沒給怎麼辦',
-      '網路留言挨告公然侮辱',
+      {'text': '租屋押金房東不退', 'color': const Color(0xFF4A7C8C)},
+      {'text': '車禍理賠和解程序', 'color': const Color(0xFF9E7B2D)},
+      {'text': '加班費沒給怎麼辦', 'color': const Color(0xFFCD5C5C)},
+      {'text': '網路留言被控公然侮辱', 'color': const Color(0xFF6D649A)},
     ];
 
     return Column(
@@ -53,74 +59,111 @@ class _HomeV2QuickAskSectionState extends State<HomeV2QuickAskSection> {
       children: [
         Row(
           children: [
-            Icon(
-              Icons.auto_awesome_rounded,
-              color: const Color(0xFFD6A85F),
-              size: 16.sp,
+            Container(
+              padding: EdgeInsets.all(4.w),
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF2E394A) : const Color(0xFFE6F2EC),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.auto_awesome_rounded,
+                color: const Color(0xFF2EA26F),
+                size: 14.sp,
+              ),
             ),
-            SizedBox(width: 6.w),
+            SizedBox(width: 8.w),
             Text(
-              'AI 法律即時快問',
+              '法律即時快問',
               style: TextStyle(
-                fontSize: 13.sp,
+                fontSize: 13.5.sp,
                 fontWeight: FontWeight.w900,
-                color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
+                color: text,
+              ),
+            ),
+            const Spacer(),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+              decoration: BoxDecoration(
+                color: const Color(0xFF2EA26F).withOpacity(0.12),
+                borderRadius: BorderRadius.circular(100.r),
+              ),
+              child: Text(
+                'AI 助手',
+                style: TextStyle(
+                  color: const Color(0xFF2EA26F),
+                  fontSize: 9.sp,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
         ),
-        SizedBox(height: 8.h),
+        SizedBox(height: 10.h),
         Container(
           decoration: BoxDecoration(
             color: boxBg,
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: borderColor),
-            boxShadow: const [
+            borderRadius: BorderRadius.circular(18.r),
+            border: Border.all(color: borderColor, width: 1.2.w),
+            boxShadow: [
               BoxShadow(
-                color: Color(0x06000000),
-                blurRadius: 12,
-                offset: Offset(0, 4),
+                color: const Color(0x06000000),
+                blurRadius: 10.r,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
           child: TextField(
             controller: _controller,
-            style: TextStyle(fontSize: 13.sp),
+            style: TextStyle(fontSize: 13.sp, color: text, fontWeight: FontWeight.w600),
             onSubmitted: _submitPrompt,
+            onTapOutside: (event) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
             decoration: InputDecoration(
-              hintText: '描述你遇到的問題，例如：租約到期房東扣押金...',
+              hintText: '描述你遇到的問題，例如：租賃合約提前解約...',
               hintStyle: TextStyle(
-                color: isDark ? const Color(0xFF6B7785) : AppColors.textMuted,
+                color: hintColor,
                 fontSize: 12.sp,
+                fontWeight: FontWeight.w500,
               ),
               contentPadding:
-                  EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                  EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
               border: InputBorder.none,
               prefixIcon: Icon(
                 Icons.psychology_alt_outlined,
-                color: const Color(0xFFD6A85F),
-                size: 20.sp,
+                color: const Color(0xFF2EA26F),
+                size: 22.sp,
               ),
-              suffixIcon: IconButton(
-                icon: Icon(
-                  Icons.send_rounded,
-                  color: AppColors.primary,
-                  size: 18.sp,
+              suffixIcon: Padding(
+                padding: EdgeInsets.all(6.w),
+                child: CircleAvatar(
+                  backgroundColor: const Color(0xFF2EA26F),
+                  radius: 16.r,
+                  child: IconButton(
+                    padding: EdgeInsets.zero,
+                    icon: Icon(
+                      Icons.arrow_upward_rounded,
+                      color: Colors.white,
+                      size: 16.sp,
+                    ),
+                    onPressed: () => _submitPrompt(_controller.text),
+                  ),
                 ),
-                onPressed: () => _submitPrompt(_controller.text),
               ),
             ),
           ),
         ),
-        SizedBox(height: 8.h),
+        SizedBox(height: 10.h),
         SizedBox(
-          height: 30.h,
+          height: 32.h,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
             itemCount: recommendations.length,
             itemBuilder: (context, index) {
-              final prompt = recommendations[index];
+              final rec = recommendations[index];
+              final prompt = rec['text'] as String;
+              final color = rec['color'] as Color;
               return Padding(
                 padding: EdgeInsets.only(right: 8.w),
                 child: InkWell(
@@ -130,35 +173,32 @@ class _HomeV2QuickAskSectionState extends State<HomeV2QuickAskSection> {
                     padding:
                         EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                     decoration: BoxDecoration(
-                      color: isDark
-                          ? const Color(0xFF161B22)
-                          : const Color(0xFFF5F7FA),
+                      color: chipBg,
                       borderRadius: BorderRadius.circular(99.r),
-                      border: Border.all(
-                        color: isDark
-                            ? const Color(0xFF26303D)
-                            : const Color(0xFFE4E8EC),
-                      ),
+                      border: Border.all(color: chipBorder, width: 1.w),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x03000000),
+                          blurRadius: 4,
+                          offset: Offset(0, 1),
+                        ),
+                      ],
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          Icons.chat_bubble_outline_rounded,
-                          size: 10.sp,
-                          color: isDark
-                              ? const Color(0xFFB5C1D0)
-                              : AppColors.textSecondary,
+                          Icons.assistant_navigation,
+                          size: 11.sp,
+                          color: color,
                         ),
-                        SizedBox(width: 4.w),
+                        SizedBox(width: 5.w),
                         Text(
                           prompt,
                           style: TextStyle(
-                            fontSize: 10.5.sp,
-                            fontWeight: FontWeight.w600,
-                            color: isDark
-                                ? const Color(0xFFE5E9E6)
-                                : AppColors.textSecondary,
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.w700,
+                            color: text.withOpacity(0.85),
                           ),
                         ),
                       ],
@@ -183,6 +223,12 @@ class HomeV2WatchlistCard extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark ? const Color(0xFF171C22) : Colors.white;
     final borderColor = isDark ? const Color(0xFF2B3441) : AppColors.border;
+    final appState = LawAppScope.of(context);
+
+    // 檢查是否有更新
+    final hasUpdates = appState.followingSummary.followedCaseIds.isNotEmpty ||
+        appState.followingSummary.followedStatuteIds.isNotEmpty ||
+        appState.followingSummary.followedTopicIds.isNotEmpty;
 
     return Container(
       padding: EdgeInsets.all(16.w),
@@ -239,7 +285,7 @@ class HomeV2WatchlistCard extends StatelessWidget {
                   );
                 },
                 child: Text(
-                  '查看全部',
+                  '管理關注',
                   style: TextStyle(
                     fontSize: 11.sp,
                     fontWeight: FontWeight.bold,
@@ -250,99 +296,185 @@ class HomeV2WatchlistCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: 12.h),
-          // 台灣繁體中文教學註解：讀取關注的主題更新列表
-          ...trackedTopicItems.take(2).map((item) {
-            final isLaw = item.tag.contains('法');
-            final badgeBg = isLaw
-                ? (isDark ? const Color(0x1F2E7D32) : const Color(0xFFE9F5EE))
-                : (isDark ? const Color(0x1F1565C0) : const Color(0xFFE8F3FF));
-            final badgeColor =
-                isLaw ? const Color(0xFF2E7D32) : const Color(0xFF1565C0);
+          if (hasUpdates) ...[
+            // 台灣繁體中文教學註解：讀取關注的主題更新列表
+            ...trackedTopicItems.take(2).map((item) {
+              final isLaw = item.tag.contains('法');
+              final badgeBg = isLaw
+                  ? (isDark ? const Color(0x1F2E7D32) : const Color(0xFFE9F5EE))
+                  : (isDark ? const Color(0x1F1565C0) : const Color(0xFFE8F3FF));
+              final badgeColor =
+                  isLaw ? const Color(0xFF2E7D32) : const Color(0xFF1565C0);
 
-            return Padding(
-              padding: EdgeInsets.only(bottom: 8.h),
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (__) => const FollowedUpdatesPage()),
-                  );
-                },
-                borderRadius: BorderRadius.circular(12.r),
-                child: Container(
-                  padding: EdgeInsets.all(10.w),
-                  decoration: BoxDecoration(
-                    color: isDark
-                        ? const Color(0xFF0F1216)
-                        : const Color(0xFFFAF7F2),
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(
+              return Padding(
+                padding: EdgeInsets.only(bottom: 8.h),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (__) => const FollowedUpdatesPage()),
+                    );
+                  },
+                  borderRadius: BorderRadius.circular(12.r),
+                  child: Container(
+                    padding: EdgeInsets.all(10.w),
+                    decoration: BoxDecoration(
                       color: isDark
-                          ? const Color(0xFF222B35)
-                          : const Color(0xFFEBEFF3),
+                          ? const Color(0xFF0F1216)
+                          : const Color(0xFFFAF7F2),
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(
+                        color: isDark
+                            ? const Color(0xFF222B35)
+                            : const Color(0xFFEBEFF3),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.w, vertical: 4.h),
+                          decoration: BoxDecoration(
+                            color: badgeBg,
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Text(
+                            item.tag,
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.bold,
+                              color: badgeColor,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item.title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 11.5.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: isDark
+                                      ? const Color(0xFFE5E9E6)
+                                      : AppColors.textPrimary,
+                                ),
+                              ),
+                              SizedBox(height: 2.h),
+                              Text(
+                                item.summary,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 10.sp,
+                                  color: isDark
+                                      ? const Color(0xFFA3ABB6)
+                                      : AppColors.textSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(
+                          Icons.chevron_right_rounded,
+                          color: isDark ? const Color(0xFF6B7785) : Colors.grey,
+                          size: 16.sp,
+                        ),
+                      ],
                     ),
                   ),
-                  child: Row(
+                ),
+              );
+            }),
+          ] else ...[
+            // 無動態時展示「今日推薦案卷」
+            Container(
+              padding: EdgeInsets.all(12.w),
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF1B241E) : const Color(0xFFF2F8F4),
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: isDark ? const Color(0xFF275435) : const Color(0xFFD4E8DA),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 8.w, vertical: 4.h),
+                        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                         decoration: BoxDecoration(
-                          color: badgeBg,
-                          borderRadius: BorderRadius.circular(8.r),
+                          color: isDark ? const Color(0xFF275435) : const Color(0xFFD4E8DA),
+                          borderRadius: BorderRadius.circular(4.r),
                         ),
                         child: Text(
-                          item.tag,
+                          '今日推薦案卷',
                           style: TextStyle(
-                            fontSize: 10.sp,
+                            color: isDark ? const Color(0xFF76BA8B) : const Color(0xFF275435),
+                            fontSize: 9.sp,
                             fontWeight: FontWeight.bold,
-                            color: badgeColor,
                           ),
                         ),
                       ),
-                      SizedBox(width: 10.w),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item.title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 11.5.sp,
-                                fontWeight: FontWeight.bold,
-                                color: isDark
-                                    ? const Color(0xFFE5E9E6)
-                                    : AppColors.textPrimary,
-                              ),
-                            ),
-                            SizedBox(height: 2.h),
-                            Text(
-                              item.summary,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 10.sp,
-                                color: isDark
-                                    ? const Color(0xFFA3ABB6)
-                                    : AppColors.textSecondary,
-                              ),
-                            ),
-                          ],
+                      const Spacer(),
+                      Text(
+                        '釋字第 799 號',
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.bold,
                         ),
-                      ),
-                      Icon(
-                        Icons.chevron_right_rounded,
-                        color: isDark ? const Color(0xFF6B7785) : Colors.grey,
-                        size: 16.sp,
                       ),
                     ],
                   ),
-                ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    '強制治療案：人身自由與社會防衛的拉鋸戰',
+                    style: TextStyle(
+                      color: AppColors.textPrimary,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    '本案審查性侵害犯刑後強制治療之合憲性，探討人身自由與比例原則。',
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 10.5.sp,
+                      height: 1.35,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          // 點擊「立即思辨」進入該案卷
+                          final caseBook = caseTimeMachineCases.first;
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (__) => CaseDossierDetailPage(book: caseBook)),
+                          );
+                        },
+                        style: TextButton.styleFrom(
+                          foregroundColor: isDark ? const Color(0xFF76BA8B) : const Color(0xFF275435),
+                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                          visualDensity: VisualDensity.compact,
+                        ),
+                        child: const Text('立即思辨 →'),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            );
-          }),
+            ),
+          ],
         ],
       ),
     );

@@ -62,6 +62,74 @@ extension LearningClassroomTabBuilder on KnowLawPageState {
           ),
         ),
         SizedBox(height: 12.h),
+
+        // 1.5 法律手帳筆記本加強入口 Banner (高視覺優先級，微發光呼吸效果)
+        BreathingGlowContainer(
+          glowColor: const Color(0xFF4E7D5B),
+          child: NotebookCard(
+            hasBookmark: true,
+            bookmarkColor: const Color(0xFF4E7D5B),
+            backgroundColor: isDark ? const Color(0xFF1B241E) : const Color(0xFFF2F8F4),
+            child: Row(
+              children: [
+                Container(
+                  width: 40.w,
+                  height: 40.w,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF8CAF96),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.edit_note_rounded,
+                      size: 24.sp,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '法治隨手記 & 標籤對照',
+                        style: TextStyle(
+                          fontSize: 14.5.sp,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      Text(
+                        '記錄日常法學心得，隨時對照關聯法條！',
+                        style: TextStyle(
+                          fontSize: 10.5.sp,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() => _selectedTabIndex = 2);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF4E7D5B),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 14.w),
+                  ),
+                  child: const Text('開啟手帳'),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 12.h),
         // Pulsing skeleton for switcher title/chips
         LearningPulsingSkeleton(width: 80.w, height: 16.h),
         SizedBox(height: 8.h),
@@ -175,6 +243,75 @@ extension LearningClassroomTabBuilder on KnowLawPageState {
         ),
       ),
       SizedBox(height: 12.h),
+
+      // 1.5 法律手帳筆記本加強入口 Banner (高視覺優先級，微發光呼吸效果)
+      BreathingGlowContainer(
+        glowColor: const Color(0xFF4E7D5B),
+        child: NotebookCard(
+          hasBookmark: true,
+          bookmarkColor: const Color(0xFF4E7D5B),
+          backgroundColor: isDark ? const Color(0xFF1B241E) : const Color(0xFFF2F8F4),
+          child: Row(
+            children: [
+              Container(
+                width: 40.w,
+                height: 40.w,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF8CAF96),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.edit_note_rounded,
+                    size: 24.sp,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '法治隨手記 & 標籤對照',
+                      style: TextStyle(
+                        fontSize: 14.5.sp,
+                        fontWeight: FontWeight.w900,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      '記錄日常法學心得，隨時對照關聯法條！',
+                      style: TextStyle(
+                        fontSize: 10.5.sp,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() => _selectedTabIndex = 2);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF4E7D5B),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 14.w),
+                ),
+                child: const Text('開啟手帳'),
+              ),
+            ],
+          ),
+        ),
+      ),
+      SizedBox(height: 12.h),
+
       _buildDailyQuizCard(isDark, gameState),
       SizedBox(height: 12.h),
 

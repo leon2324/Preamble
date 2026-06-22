@@ -173,44 +173,68 @@ class _AnswerPill extends StatelessWidget {
     final Color background;
     final Color borderColor;
     final Color textColor;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     if (showResult && isSelected && isCorrect) {
-      background = const Color(0xFFE7F7EB);
-      borderColor = const Color(0xFF8AC89B);
-      textColor = const Color(0xFF2E7D4D);
+      background = isDark ? const Color(0xFF1E2E23) : const Color(0xFFE7F7EB);
+      borderColor = isDark ? const Color(0xFF427A53) : const Color(0xFF8AC89B);
+      textColor = isDark ? const Color(0xFF7CBF91) : const Color(0xFF2E7D4D);
     } else if (showResult && isSelected && !isCorrect) {
-      background = const Color(0xFFFFF0F0);
-      borderColor = const Color(0xFFE4A3A3);
-      textColor = const Color(0xFFB24C4C);
+      background = isDark ? const Color(0xFF381E1E) : const Color(0xFFFFF0F0);
+      borderColor = isDark ? const Color(0xFF7A4242) : const Color(0xFFE4A3A3);
+      textColor = isDark ? const Color(0xFFD88585) : const Color(0xFFB24C4C);
     } else {
-      background = Colors.white;
-      borderColor =
-          isSelected ? const Color(0xFFBDAAF7) : const Color(0xFFD6CDF8);
-      textColor = const Color(0xFF5D4AB5);
+      background = isSelected
+          ? (isDark ? const Color(0xFF3B3324) : const Color(0xFFFFF9EC))
+          : (isDark ? const Color(0xFF1E242B) : Colors.white);
+      borderColor = isSelected
+          ? const Color(0xFFE8B95F)
+          : (isDark ? Colors.white10 : const Color(0xFFECE5D9));
+      textColor = isSelected
+          ? (isDark ? const Color(0xFFE8B95F) : const Color(0xFFB58428))
+          : AppColors.textSecondary;
     }
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(8.r),
         child: Container(
           alignment: Alignment.centerLeft,
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
           decoration: BoxDecoration(
             color: background,
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: borderColor),
+            borderRadius: BorderRadius.circular(8.r),
+            border: Border.all(color: borderColor, width: 1.w),
           ),
-          child: Text(
-            label,
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              color: textColor,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w800,
-              height: 1.4,
-            ),
+          child: Row(
+            children: [
+              Icon(
+                isSelected
+                    ? Icons.radio_button_checked_rounded
+                    : Icons.radio_button_off_rounded,
+                size: 14.sp,
+                color: isSelected
+                    ? (showResult
+                        ? (isCorrect ? const Color(0xFF2E7D4D) : const Color(0xFFB24C4C))
+                        : const Color(0xFFE8B95F))
+                    : Colors.grey,
+              ),
+              SizedBox(width: 8.w),
+              Expanded(
+                child: Text(
+                  label,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    color: textColor,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w800,
+                    height: 1.4,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -242,7 +266,7 @@ class _MissionFeedbackCard extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(12.w, 11.h, 12.w, 11.h),
       decoration: BoxDecoration(
         color: background,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(8.r),
         border: Border.all(color: borderColor),
       ),
       child: Row(

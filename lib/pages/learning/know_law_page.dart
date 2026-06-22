@@ -63,6 +63,14 @@ class KnowLawPageState extends State<KnowLawPage> {
   bool _isLoadingTopics = true;
   int? _selectedDailyAnswer;
 
+  // 隨手記與法條標籤對照狀態
+  final TextEditingController _quickNoteController = TextEditingController();
+  final List<String> _quickNotes = [
+    '車禍過失傷害是告訴乃論，起訴期限只有六個月要特別注意！',
+    '定金返還規定在民法第 249 條，若可歸責於付定金當事人則無法收回。',
+  ];
+  String _selectedStatuteTag = '租賃契約';
+
   @override
   void initState() {
     super.initState();
@@ -73,6 +81,12 @@ class KnowLawPageState extends State<KnowLawPage> {
       _activeToolTab = widget.initialToolTab!;
     }
     _initDailyTopics();
+  }
+
+  @override
+  void dispose() {
+    _quickNoteController.dispose();
+    super.dispose();
   }
 
   @override
@@ -1029,15 +1043,22 @@ class KnowLawPageState extends State<KnowLawPage> {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 10.h),
                 decoration: BoxDecoration(
-                  color: _selectedTabIndex == 2
-                      ? (isDark ? const Color(0xFF232B35) : Colors.white)
-                      : Colors.transparent,
+                  color: _selectedTabIndex == 2 ? null : Colors.transparent,
+                  gradient: _selectedTabIndex == 2
+                      ? LinearGradient(
+                          colors: isDark
+                              ? [const Color(0xFF1E3525), const Color(0xFF14241B)]
+                              : [const Color(0xFFE8F2EA), const Color(0xFFD4E8DA)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        )
+                      : null,
                   borderRadius: BorderRadius.circular(10.r),
                   border: _selectedTabIndex == 2
                       ? Border.all(
                           color: isDark
-                              ? const Color(0xFF2D3845)
-                              : const Color(0xFFECE6DB),
+                              ? const Color(0xFF275435)
+                              : const Color(0xFFB1D5BC),
                           width: 1.2.w,
                         )
                       : null,
@@ -1049,19 +1070,30 @@ class KnowLawPageState extends State<KnowLawPage> {
                       Icons.edit_note_rounded,
                       size: 16.sp,
                       color: _selectedTabIndex == 2
-                          ? HomeV2Palette.trustGreen
+                          ? (isDark ? const Color(0xFF76BA8B) : const Color(0xFF275435))
                           : AppColors.textSecondary,
                     ),
                     SizedBox(width: 2.w),
-                    Text(
-                      '手帳筆記',
-                      style: TextStyle(
-                        fontSize: 11.5.sp,
-                        fontWeight: FontWeight.bold,
-                        color: _selectedTabIndex == 2
-                            ? HomeV2Palette.trustGreen
-                            : AppColors.textSecondary,
-                      ),
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Text(
+                          '手帳筆記',
+                          style: TextStyle(
+                            fontSize: 11.5.sp,
+                            fontWeight: FontWeight.bold,
+                            color: _selectedTabIndex == 2
+                                ? (isDark ? const Color(0xFF76BA8B) : const Color(0xFF275435))
+                                : AppColors.textSecondary,
+                          ),
+                        ),
+                        if (_selectedTabIndex != 2)
+                          Positioned(
+                            top: -2.h,
+                            right: -8.w,
+                            child: const BreathingDot(),
+                          ),
+                      ],
                     ),
                   ],
                 ),

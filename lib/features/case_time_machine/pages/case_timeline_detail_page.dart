@@ -144,7 +144,7 @@ class _CaseTimelineDetailPageState extends State<CaseTimelineDetailPage> {
                         padding: EdgeInsets.symmetric(horizontal: 60.w),
                         child: Text(
                           '案件時間軸',
-                          style: CaseTimeMachineTextStyles.pageTitle(context)
+                          style: LightTextStyles.pageTitle(context)
                               .copyWith(
                             fontSize: 17.sp,
                             fontWeight: FontWeight.w900,
@@ -173,14 +173,14 @@ class _CaseTimelineDetailPageState extends State<CaseTimelineDetailPage> {
                   Text(
                     widget.book.titleZh,
                     style:
-                        CaseTimeMachineTextStyles.cardTitle(context).copyWith(
+                        LightTextStyles.cardTitle(context).copyWith(
                       fontSize: 13.sp,
                     ),
                   ),
                   SizedBox(height: 4.h),
                   Text(
                     '點擊各時間點卡片，可展開當時的法規脈絡與社群聲量對話。',
-                    style: CaseTimeMachineTextStyles.caption(context).copyWith(
+                    style: LightTextStyles.caption(context).copyWith(
                       fontSize: 10.sp,
                     ),
                   ),
@@ -243,7 +243,7 @@ class _CaseTimelineDetailPageState extends State<CaseTimelineDetailPage> {
                   ? Center(
                       child: Text(
                         '此分類下暫無事件節點',
-                        style: CaseTimeMachineTextStyles.caption(context),
+                        style: LightTextStyles.caption(context),
                       ),
                     )
                   : Stack(
@@ -362,7 +362,7 @@ class _CaseTimelineDetailPageState extends State<CaseTimelineDetailPage> {
                                             // 標題
                                             Text(
                                               item.title,
-                                              style: CaseTimeMachineTextStyles
+                                              style: LightTextStyles
                                                       .cardTitle(context)
                                                   .copyWith(
                                                 fontSize: 13.sp,
@@ -375,7 +375,7 @@ class _CaseTimelineDetailPageState extends State<CaseTimelineDetailPage> {
                                             // 內容
                                             Text(
                                               item.description,
-                                              style: CaseTimeMachineTextStyles
+                                              style: LightTextStyles
                                                       .bodySmall(context)
                                                   .copyWith(
                                                 fontSize: 11.5.sp,

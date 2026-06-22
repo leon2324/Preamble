@@ -4,6 +4,7 @@ import 'package:lawapp/components/home/home_content.dart';
 import 'package:lawapp/components/home/home_news_section.dart';
 import 'package:lawapp/components/home/v2/home_v2_palette.dart';
 import 'package:lawapp/theme/app_colors.dart';
+import 'dart:ui' show ImageFilter;
 
 // 首頁 V2 的時事新聞與社群熱議切換區。
 // 只保留首頁預覽 UI 與本地分頁狀態，完整導航由 HomePage callback 控制。
@@ -191,107 +192,122 @@ class _HomeV2DiscussionPreviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final radius = BorderRadius.circular(18.r);
+    final radius = BorderRadius.circular(16.r);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final Color glassColor = isDark 
+        ? const Color(0xFF1E242B).withValues(alpha: 0.75) 
+        : const Color(0xFFFAF7F2).withValues(alpha: 0.75);
+    final Color glassBorder = isDark 
+        ? const Color(0xFF2C3845).withValues(alpha: 0.5) 
+        : const Color(0xFFECE6DB).withValues(alpha: 0.5);
+
     return SizedBox(
       width: 236.w,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: radius,
-          child: Ink(
+      child: ClipRRect(
+        borderRadius: radius,
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
             padding: EdgeInsets.all(14.w),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: glassColor,
               borderRadius: radius,
-              border: Border.all(color: const Color(0xFFE7E0D3)),
+              border: Border.all(color: glassBorder, width: 1.w),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: onTap,
+                borderRadius: radius,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                      decoration: BoxDecoration(
-                        color: HomeV2Palette.lawBlue,
-                        borderRadius: BorderRadius.circular(99.r),
-                      ),
-                      child: Text(
-                        '#${topic.rank}',
-                        style: TextStyle(
-                          color: HomeV2Palette.trustGreen,
-                          fontSize: 11.sp,
-                          fontWeight: FontWeight.w900,
+                    Row(
+                      children: [
+                        Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                          decoration: BoxDecoration(
+                            color: isDark ? const Color(0xFF2B3A2E) : const Color(0xFFE2EDE5),
+                            borderRadius: BorderRadius.circular(99.r),
+                          ),
+                          child: Text(
+                            '#${topic.rank}',
+                            style: TextStyle(
+                              color: isDark ? const Color(0xFF8CAF96) : const Color(0xFF4E7D5B),
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
                         ),
-                      ),
+                        SizedBox(width: 8.w),
+                        Icon(
+                          Icons.local_fire_department_rounded,
+                          color: const Color(0xFFD68B33),
+                          size: 16.sp,
+                        ),
+                        SizedBox(width: 2.w),
+                        Text(
+                          '${topic.heatScore}',
+                          style: TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 8.w),
-                    Icon(
-                      Icons.local_fire_department_rounded,
-                      color: const Color(0xFFD68B33),
-                      size: 16.sp,
-                    ),
-                    SizedBox(width: 2.w),
+                    SizedBox(height: 10.h),
                     Text(
-                      '${topic.heatScore}',
+                      topic.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w800,
+                        color: AppColors.textPrimary,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w900,
+                        height: 1.25,
                       ),
                     ),
-                  ],
-                ),
-                SizedBox(height: 10.h),
-                Text(
-                  topic.title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w900,
-                    height: 1.25,
-                  ),
-                ),
-                SizedBox(height: 8.h),
-                Expanded(
-                  child: Text(
-                    topic.overview,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 11.sp,
-                      height: 1.35,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 8.h),
-                Row(
-                  children: [
+                    SizedBox(height: 8.h),
                     Expanded(
                       child: Text(
-                        topic.tags.take(2).map((tag) => '#$tag').join('  '),
-                        maxLines: 1,
+                        topic.overview,
+                        maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: HomeV2Palette.trustGreen,
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.w700,
+                          color: AppColors.textSecondary,
+                          fontSize: 11.sp,
+                          height: 1.35,
                         ),
                       ),
                     ),
-                    Icon(
-                      Icons.arrow_forward_rounded,
-                      color: HomeV2Palette.trustGreen,
-                      size: 17.sp,
+                    SizedBox(height: 8.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            topic.tags.take(2).map((tag) => '#$tag').join('  '),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: isDark ? const Color(0xFF8CAF96) : const Color(0xFF4E7D5B),
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_rounded,
+                          color: isDark ? const Color(0xFF8CAF96) : const Color(0xFF4E7D5B),
+                          size: 17.sp,
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
@@ -307,37 +323,53 @@ class _HomeV2DiscussionEmpty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onMoreTap,
-        borderRadius: BorderRadius.circular(18.r),
-        child: Ink(
+    final radius = BorderRadius.circular(16.r);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final Color glassColor = isDark 
+        ? const Color(0xFF1E242B).withValues(alpha: 0.75) 
+        : const Color(0xFFFAF7F2).withValues(alpha: 0.75);
+    final Color glassBorder = isDark 
+        ? const Color(0xFF2C3845).withValues(alpha: 0.5) 
+        : const Color(0xFFECE6DB).withValues(alpha: 0.5);
+
+    return ClipRRect(
+      borderRadius: radius,
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(18.r),
-            border: Border.all(color: const Color(0xFFE7E0D3)),
+            color: glassColor,
+            borderRadius: radius,
+            border: Border.all(color: glassBorder),
           ),
-          child: Row(
-            children: [
-              Icon(
-                Icons.forum_outlined,
-                color: HomeV2Palette.trustGreen,
-                size: 22.sp,
-              ),
-              SizedBox(width: 10.w),
-              Expanded(
-                child: Text(
-                  '社群熱議整理中，稍後可到紀事頁查看完整議題。',
-                  style: TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w700,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onMoreTap,
+              borderRadius: radius,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.forum_outlined,
+                    color: isDark ? const Color(0xFF8CAF96) : const Color(0xFF4E7D5B),
+                    size: 22.sp,
                   ),
-                ),
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: Text(
+                      '社群熱議整理中，稍後可到紀事頁查看完整議題。',
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

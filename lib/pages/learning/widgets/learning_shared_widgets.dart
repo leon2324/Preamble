@@ -528,3 +528,121 @@ class _LearningCustomClassroomCardState
     );
   }
 }
+
+/// 呼吸發光容器，用以加強重點入口視覺優先級。
+class BreathingGlowContainer extends StatefulWidget {
+  const BreathingGlowContainer({
+    super.key,
+    required this.child,
+    this.glowColor = const Color(0xFF6B4B14),
+    this.duration = const Duration(milliseconds: 1800),
+  });
+
+  final Widget child;
+  final Color glowColor;
+  final Duration duration;
+
+  @override
+  State<BreathingGlowContainer> createState() => _BreathingGlowContainerState();
+}
+
+class _BreathingGlowContainerState extends State<BreathingGlowContainer>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: widget.duration)
+      ..repeat(reverse: true);
+    _animation = Tween<double>(begin: 1.5, end: 6.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16.r),
+            boxShadow: [
+              BoxShadow(
+                color: widget.glowColor.withValues(alpha: 0.15 * (_animation.value / 6.0)),
+                blurRadius: _animation.value * 2.w,
+                spreadRadius: _animation.value * 0.5.w,
+              ),
+            ],
+          ),
+          child: widget.child,
+        );
+      },
+      child: widget.child,
+    );
+  }
+}
+
+/// 呼吸發光小圓點，用於提醒或高亮入口。
+class BreathingDot extends StatefulWidget {
+  const BreathingDot({super.key, this.color = const Color(0xFF4E7D5B)});
+  final Color color;
+  @override
+  State<BreathingDot> createState() => _BreathingDotState();
+}
+
+class _BreathingDotState extends State<BreathingDot> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200))
+      ..repeat(reverse: true);
+    _animation = Tween<double>(begin: 0.3, end: 1.0).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return Opacity(
+          opacity: _animation.value,
+          child: Container(
+            width: 6.w,
+            height: 6.w,
+            decoration: BoxDecoration(
+              color: widget.color,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: widget.color.withValues(alpha: 0.5),
+                  blurRadius: 4.w,
+                  spreadRadius: 1.w,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+

@@ -131,7 +131,7 @@ class _CaseLegalVocabularyPageState extends State<CaseLegalVocabularyPage> {
                         padding: EdgeInsets.symmetric(horizontal: 60.w),
                         child: Text(
                           '法律詞卡',
-                          style: CaseTimeMachineTextStyles.pageTitle(context)
+                          style: LightTextStyles.pageTitle(context)
                               .copyWith(
                             fontSize: 17.sp,
                             fontWeight: FontWeight.w900,
@@ -231,7 +231,7 @@ class _CaseLegalVocabularyPageState extends State<CaseLegalVocabularyPage> {
                   ? Center(
                       child: Text(
                         '找不到相符的法律詞卡',
-                        style: CaseTimeMachineTextStyles.caption(context),
+                        style: LightTextStyles.caption(context),
                       ),
                     )
                   : GridView.builder(
@@ -377,7 +377,7 @@ class _VocabularyFlipCardState extends State<_VocabularyFlipCard>
                   Text(
                     item['term'] as String,
                     style:
-                        CaseTimeMachineTextStyles.cardTitle(context).copyWith(
+                        LightTextStyles.cardTitle(context).copyWith(
                       fontSize: 14.5.sp,
                       color: CaseTimeMachineColors.primaryGreen,
                     ),
@@ -405,7 +405,7 @@ class _VocabularyFlipCardState extends State<_VocabularyFlipCard>
           Expanded(
             child: Text(
               item['plainExplanation'] as String,
-              style: CaseTimeMachineTextStyles.body(context).copyWith(
+              style: LightTextStyles.body(context).copyWith(
                 fontSize: 12.sp,
                 height: 1.45,
               ),

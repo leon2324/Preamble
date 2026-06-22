@@ -156,7 +156,7 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                         padding: EdgeInsets.symmetric(horizontal: 60.w),
                         child: Text(
                           '觀點光譜',
-                          style: CaseTimeMachineTextStyles.pageTitle(context)
+                          style: LightTextStyles.pageTitle(context)
                               .copyWith(
                             fontSize: 17.sp,
                             fontWeight: FontWeight.w900,
@@ -185,14 +185,14 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                   Text(
                     '案名：${widget.book.shortTitleZh.isNotEmpty ? widget.book.shortTitleZh : widget.book.titleZh}',
                     style:
-                        CaseTimeMachineTextStyles.cardTitle(context).copyWith(
+                        LightTextStyles.cardTitle(context).copyWith(
                       fontSize: 12.sp,
                     ),
                   ),
                   SizedBox(height: 3.h),
                   Text(
                     '說明：滑動光譜線來探索不同的司法與社會觀點，點擊節點可快速跳轉。',
-                    style: CaseTimeMachineTextStyles.caption(context).copyWith(
+                    style: LightTextStyles.caption(context).copyWith(
                       fontSize: 9.5.sp,
                     ),
                   ),
@@ -218,7 +218,7 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                       children: [
                         Text(
                           '⚖️ 拖曳金色滑鈕表達你的位置：',
-                          style: CaseTimeMachineTextStyles.cardTitle(context)
+                          style: LightTextStyles.cardTitle(context)
                               .copyWith(
                             fontSize: 13.sp,
                           ),
@@ -363,7 +363,7 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                           children: [
                             Text('秩序與安定性',
                                 style:
-                                    CaseTimeMachineTextStyles.caption(context)
+                                    LightTextStyles.caption(context)
                                         .copyWith(fontWeight: FontWeight.bold)),
                             Text('您的選擇：${_currentValue.toInt()}%',
                                 style: TextStyle(
@@ -372,7 +372,7 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                                     color: CaseTimeMachineColors.primaryGreen)),
                             Text('權益與抵抗權',
                                 style:
-                                    CaseTimeMachineTextStyles.caption(context)
+                                    LightTextStyles.caption(context)
                                         .copyWith(fontWeight: FontWeight.bold)),
                           ],
                         ),
@@ -419,7 +419,7 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                             SizedBox(width: 8.w),
                             Text(
                               '偏向此區間的法理邏輯：',
-                              style: CaseTimeMachineTextStyles.caption(context)
+                              style: LightTextStyles.caption(context)
                                   .copyWith(
                                 color: CaseTimeMachineColors.textPrimary,
                                 fontWeight: FontWeight.bold,
@@ -431,7 +431,7 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                         Text(
                           closestNode['fullText'] as String,
                           style:
-                              CaseTimeMachineTextStyles.body(context).copyWith(
+                              LightTextStyles.body(context).copyWith(
                             fontSize: 12.sp,
                             color: CaseTimeMachineColors.textPrimary,
                             height: 1.5,
@@ -457,7 +457,7 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                         onPressed: _onVote,
                         child: Text(
                           '🗳️ 投下我的一票，查看社群觀點分佈',
-                          style: CaseTimeMachineTextStyles.buttonText(context),
+                          style: LightTextStyles.buttonText(context),
                         ),
                       ),
                     )

@@ -289,7 +289,17 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
                       ),
                     ),
 
-                    // 1. 矚目大案聚焦 (3D 疊加縮放輪播)
+                    // 1. 檢索館藏目錄格線區塊 (將此移至最上方，方便使用者一目了然點擊)
+                    _buildDirectoryCards(context),
+
+                    SizedBox(height: 24.h),
+
+                    // 2. 館長今日推薦 (Curated Bookcase)
+                    _buildCuratedBookcase(context),
+
+                    SizedBox(height: 24.h),
+
+                    // 3. 矚目大案聚焦 (3D 疊加縮放輪播)
                     _heroLoading
                         ? SizedBox(
                             height: 180.h,
@@ -322,19 +332,9 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
                             ],
                           ),
 
-                    SizedBox(height: 16.h),
-
-                    // 2. 檢索館藏目錄格線區塊 (年代 / 議題 / 法院 / 網友思辨)
-                    _buildDirectoryCards(context),
-
                     SizedBox(height: 24.h),
 
-                    // 2.5 館長今日推薦 (Curated Bookcase)
-                    _buildCuratedBookcase(context),
-
-                    SizedBox(height: 24.h),
-
-                    // 3. 重大焦點案卷 (取代原本普通小案 feed)
+                    // 4. 重大焦點案卷 (取代原本普通小案 feed)
                     _heroLoading
                         ? const Center(child: CupertinoActivityIndicator())
                         : _LandmarkSpotlights(
