@@ -398,6 +398,7 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isCorrect = record['isCorrect'] as bool? ?? false;
     final category = record['category'] as String? ?? '法學知識';
+    final topicSlug = record['topicSlug'] as String?;
     final stepLabel = record['stepLabel'] as String? ?? '專題測驗';
     final question = record['question'] as String? ?? '';
     final options = List<String>.from(record['options'] ?? []);
@@ -632,7 +633,11 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
                       ),
                       onPressed: () {
                         Navigator.pop(context);
-                        _navigateToQuizUnit(category, stepLabel);
+                        _navigateToQuizUnit(
+                          category,
+                          stepLabel,
+                          topicSlug: topicSlug,
+                        );
                       },
                       child: Text(isCorrect ? '前往複習' : '重新挑戰'),
                     ),
@@ -680,8 +685,40 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
     );
   }
 
-  void _navigateToQuizUnit(String category, String stepLabel) async {
-    LearningTopicData? topic = featuredLearningTopics[category];
+  void _navigateToQuizUnit(
+    String category,
+    String stepLabel, {
+    String? topicSlug,
+  }) async {
+    final normalizedTopicSlug = topicSlug?.trim();
+    LearningTopicData? topic;
+    var routeCategory = category;
+
+    // 歷史紀錄導頁優先使用穩定 topicSlug；舊紀錄則相容分類 key 與顯示標題。
+    if (normalizedTopicSlug != null && normalizedTopicSlug.isNotEmpty) {
+      topic = featuredLearningTopicsBySlug[normalizedTopicSlug];
+      if (topic != null) {
+        for (final entry in featuredLearningTopics.entries) {
+          if (entry.value.topicSlug == normalizedTopicSlug) {
+            routeCategory = entry.key;
+            break;
+          }
+        }
+      }
+    }
+
+    topic ??= featuredLearningTopics[category];
+    if (topic == null) {
+      for (final entry in featuredLearningTopics.entries) {
+        if (entry.value.title == category ||
+            entry.value.topicSlug == normalizedTopicSlug) {
+          topic = entry.value;
+          routeCategory = entry.key;
+          break;
+        }
+      }
+    }
+
     if (topic == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -738,7 +775,8 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
           builder: (context) => LearningMockDetailPage(
             article: targetArticle!,
             unitStepLabel: finalStepLabel,
-            category: category,
+            category: routeCategory,
+            topicSlug: finalTopic.topicSlug,
           ),
         ),
       );

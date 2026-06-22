@@ -98,6 +98,7 @@ class LearningQuizEntryData {
 
 class LearningTopicData {
   const LearningTopicData({
+    this.topicSlug,
     required this.title,
     required this.summary,
     required this.reasonToLearn,
@@ -109,6 +110,8 @@ class LearningTopicData {
     required this.quizEntry,
   });
 
+  // 穩定專題識別碼：導頁與歷史紀錄請優先使用它，避免顯示標題改名後找不到專題。
+  final String? topicSlug;
   final String title;
   final String summary;
   final String reasonToLearn;
@@ -369,6 +372,7 @@ const _caseArticle = LearningMockArticle(
 );
 
 const learningTopic = LearningTopicData(
+  topicSlug: 'rental_dispute',
   title: '租屋糾紛怎麼看懂',
   summary: '從押金、提前解約到修繕責任，這個主專題會帶你用一條完整順序理解租屋裡最常見的爭議。',
   reasonToLearn: '租屋問題常發生在日常生活，而且很容易因為資訊不對稱吃虧。先把這個主題學懂，遇到糾紛時比較知道該先問什麼、看什麼。',
@@ -606,6 +610,7 @@ const _carUnit5Article = LearningMockArticle(
 );
 
 const learningTopicCarAccident = LearningTopicData(
+  topicSlug: 'traffic_accident',
   title: '車禍事故怎麼看懂',
   summary: '從事故發生的第一時間處理，到責任釐清與民事折舊計算，掌握求償黃金順序。',
   reasonToLearn: '車禍發生時常慌亂無措，懂路權與民事折舊計算，才能保障權益，不上當吃虧。',
@@ -781,6 +786,7 @@ const _workUnit5Article = LearningMockArticle(
 );
 
 const learningTopicWorkplace = LearningTopicData(
+  topicSlug: 'workplace_rights',
   title: '職場權益怎麼看懂',
   summary: '從加班費計算、特別休假到預告期與非自願離職，保護你的勞動基本權益。',
   reasonToLearn: '勞資爭議常因條款模糊，搞懂法律界線與證據存證，才能安全離職並拿到應得補償。',
@@ -956,6 +962,7 @@ const _consumerUnit5Article = LearningMockArticle(
 );
 
 const learningTopicConsumer = LearningTopicData(
+  topicSlug: 'consumer_dispute',
   title: '網購消費怎麼看懂',
   summary: '掌握七天鑑賞期、瑕疵品退換貨以及網購詐騙的自保申訴途徑。',
   reasonToLearn: '消保法保障通訊交易，但特價品、個人衛生用品等例外狀況必須先分辨清楚。',
@@ -1131,6 +1138,7 @@ const _privacyUnit5Article = LearningMockArticle(
 );
 
 const learningTopicPrivacy = LearningTopicData(
+  topicSlug: 'privacy_rights',
   title: '個資隱私怎麼看懂',
   summary: '了解截圖轉傳、社群公開他人個資以及未經同意攝影的隱私侵權邊界。',
   reasonToLearn: '網路社群發言容易踩雷，搞懂個資法與隱私侵權，防範民刑事責任。',
@@ -1203,5 +1211,14 @@ const featuredLearningTopics = {
   '職場權益': learningTopicWorkplace,
   '網購消費': learningTopicConsumer,
   '個資隱私': learningTopicPrivacy,
+};
+
+// 以穩定 id 查找精選專題，供歷史紀錄與跨頁導頁使用。
+const featuredLearningTopicsBySlug = {
+  'rental_dispute': learningTopic,
+  'traffic_accident': learningTopicCarAccident,
+  'workplace_rights': learningTopicWorkplace,
+  'consumer_dispute': learningTopicConsumer,
+  'privacy_rights': learningTopicPrivacy,
 };
 const learningQuizQuestions = homeQuizQuestions;

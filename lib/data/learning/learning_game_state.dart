@@ -489,9 +489,11 @@ class LearningGameState extends ChangeNotifier {
     required String correctAnswer,
     required bool isCorrect,
     required String category,
+    String? topicSlug,
     required String stepLabel,
     required String explanation,
   }) {
+    final normalizedTopicSlug = topicSlug?.trim();
     // 避免重複加入同一個問題，若有則移除舊紀錄
     _quizHistory.removeWhere((item) => item['question'] == question);
     _quizHistory.insert(0, {
@@ -501,6 +503,8 @@ class LearningGameState extends ChangeNotifier {
       'correctAnswer': correctAnswer,
       'isCorrect': isCorrect,
       'category': category,
+      if (normalizedTopicSlug != null && normalizedTopicSlug.isNotEmpty)
+        'topicSlug': normalizedTopicSlug,
       'stepLabel': stepLabel,
       'explanation': explanation,
       'timestamp': DateTime.now().toIso8601String(),

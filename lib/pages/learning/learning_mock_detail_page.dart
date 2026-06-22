@@ -17,12 +17,14 @@ class LearningMockDetailPage extends StatefulWidget {
     required this.article,
     this.unitStepLabel,
     this.category,
+    this.topicSlug,
     this.onSwitchTopic,
   });
 
   final LearningMockArticle article;
   final String? unitStepLabel;
   final String? category;
+  final String? topicSlug;
   final VoidCallback? onSwitchTopic;
 
   @override
@@ -485,6 +487,7 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
     final cat = widget.category ??
         widget.article.category ??
         _guessCategory(widget.article.title);
+    final topicSlug = _resolveTopicSlugForHistory(cat);
     LearningGameState.instance.recordQuizHistory(
       question: quiz['question'],
       options: List<String>.from(quiz['options']),
@@ -492,6 +495,7 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
       correctAnswer: quiz['options'][quiz['correctIndex']],
       isCorrect: isCorrect,
       category: cat,
+      topicSlug: topicSlug,
       stepLabel: widget.unitStepLabel ?? '專題測驗',
       explanation: quiz['explanation'],
     );
@@ -499,6 +503,22 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
     setState(() {
       _isQuizAnswered = true;
     });
+  }
+
+  String? _resolveTopicSlugForHistory(String categoryOrTitle) {
+    final explicitTopicSlug = widget.topicSlug?.trim();
+    if (explicitTopicSlug != null && explicitTopicSlug.isNotEmpty) {
+      return explicitTopicSlug;
+    }
+
+    // 歷史紀錄以穩定 topicSlug 導頁；這裡保留分類 key 與顯示標題兩種舊資料來源的對應。
+    for (final entry in featuredLearningTopics.entries) {
+      if (entry.key == categoryOrTitle ||
+          entry.value.title == categoryOrTitle) {
+        return entry.value.topicSlug;
+      }
+    }
+    return null;
   }
 
   void _showNotebookBottomSheet(BuildContext context) {
