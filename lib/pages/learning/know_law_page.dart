@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 // google_fonts is imported in notebook_aesthetics
 import 'package:lawapp/app/app_state.dart';
 import 'package:lawapp/components/home/v2/home_v2_palette.dart';

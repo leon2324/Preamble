@@ -4,7 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
-import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart';
+import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart'
+    hide LightTextStyles;
 import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
 
 // 台灣繁體中文教學註解：
@@ -234,16 +235,12 @@ class _CaseLegalVocabularyPageState extends State<CaseLegalVocabularyPage> {
                         style: LightTextStyles.caption(context),
                       ),
                     )
-                  : GridView.builder(
+                  : ListView.separated(
                       keyboardDismissBehavior:
                           ScrollViewKeyboardDismissBehavior.onDrag,
                       padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 32.h),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 1, // 單欄大卡片，以容納豐富的白話解釋
-                        childAspectRatio: 1.55,
-                        mainAxisSpacing: 16.h,
-                      ),
                       itemCount: filteredVocab.length,
+                      separatorBuilder: (context, index) => SizedBox(height: 16.h),
                       itemBuilder: (context, idx) {
                         final item = filteredVocab[idx];
                         return _VocabularyFlipCard(item: item);
@@ -402,15 +399,14 @@ class _VocabularyFlipCardState extends State<_VocabularyFlipCard>
             ],
           ),
           SizedBox(height: 10.h),
-          Expanded(
-            child: Text(
-              item['plainExplanation'] as String,
-              style: LightTextStyles.body(context).copyWith(
-                fontSize: 12.sp,
-                height: 1.45,
-              ),
+          Text(
+            item['plainExplanation'] as String,
+            style: LightTextStyles.body(context).copyWith(
+              fontSize: 12.sp,
+              height: 1.45,
             ),
           ),
+          SizedBox(height: 12.h),
           Align(
             alignment: Alignment.bottomRight,
             child: Row(
@@ -458,17 +454,16 @@ class _VocabularyFlipCardState extends State<_VocabularyFlipCard>
             ),
           ),
           SizedBox(height: 6.h),
-          Expanded(
-            child: Text(
-              item['lifeExample'] as String,
-              style: TextStyle(
-                fontSize: 11.5.sp,
-                color: CaseTimeMachineColors.textSecondary,
-                height: 1.45,
-                fontStyle: FontStyle.italic,
-              ),
+          Text(
+            item['lifeExample'] as String,
+            style: TextStyle(
+              fontSize: 11.5.sp,
+              color: CaseTimeMachineColors.textSecondary,
+              height: 1.45,
+              fontStyle: FontStyle.italic,
             ),
           ),
+          SizedBox(height: 12.h),
           const Divider(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

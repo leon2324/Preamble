@@ -19,6 +19,7 @@ import 'package:lawapp/features/case_time_machine/pages/case_witness_cross_page.
 import 'package:lawapp/features/case_time_machine/pages/case_social_graph_page.dart';
 import 'package:lawapp/features/case_time_machine/pages/case_opinion_board_page.dart';
 import 'package:lawapp/pages/learning/know_law_page.dart';
+import 'package:lawapp/app/app_state.dart';
 
 part 'widgets/case_dossier_tabs.dart';
 part 'widgets/case_dossier_primitives.dart';
@@ -1996,7 +1997,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
             ),
             label: '筆記',
             onTap: () {
-              _showNoteBottomSheet(context);
+              _CaseDossierBottomSheets(this).showNoteBottomSheet(context);
             },
           ),
           // 3. 追蹤 Pill button (加號/打勾改用自訂 SVG)

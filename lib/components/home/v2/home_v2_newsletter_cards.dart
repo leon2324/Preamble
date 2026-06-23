@@ -1,12 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/components/home/home_content.dart';
-import 'package:lawapp/components/home/v2/home_v2_palette.dart';
 import 'package:lawapp/theme/app_colors.dart';
 import 'package:lawapp/components/shared/share_sheet.dart';
 
-// 首頁 V2 的生活法律提醒卡片群。
-// 只放 Newsletter / 生活避坑筆記相關 UI，不放首頁路由與資料載入邏輯。
+// 台灣繁體中文教學註解：
+// 首頁 V2 避坑筆記入口卡片群。
+// 完全對齊設計圖與「扁平多彩雜誌風」視覺：
+// 採用極細 `0.8.w` 灰色外框的純平白底卡片（無陰影、無厚重底色），
+// 左側邊緣嵌入 `4.w` 類別彩虹邊條，右側圓框填充實心莫蘭迪雙色漸層，
+// 頂部帶有高對比雙色編輯特色標籤，底部保留讚數、分享、留言與書籤的平面化按鈕列。
+
+class ProtoColors {
+  static const Color sageGreen = Color(0xFFAFC3B4);
+  static const Color blueGray = Color(0xFFA9B4C4);
+  static const Color warmBeige = Color(0xFFF2EDE6);
+  static const Color softTaupe = Color(0xFFD7CEC2);
+  static const Color clay = Color(0xFFC48A7A);
+  static const Color charcoal = Color(0xFF3E454D);
+}
+
+class EditorialBadge {
+  final String label;
+  final Color textColor;
+  final Color bgColor;
+  const EditorialBadge(this.label, this.textColor, this.bgColor);
+}
+
+EditorialBadge _getEditorialBadge(String title) {
+  if (title.contains('租屋') || title.contains('購') || title.contains('退貨')) {
+    return const EditorialBadge('編輯精選', ProtoColors.clay, Color(0xFFFFF0EC));
+  }
+  if (title.contains('狗') || title.contains('拍') || title.contains('隱私') || title.contains('自拍')) {
+    return const EditorialBadge('官方整理', Color(0xFF2C5E43), Color(0xFFEEF7F2));
+  }
+  return const EditorialBadge('開發者推薦', Color(0xFF1976D2), Color(0xFFEEF3F8));
+}
+
+Color _getCategoryColor(String category) {
+  if (category.contains('狗') || category.contains('寵物')) {
+    return const Color(0xFF2C5E43); // 森林深綠
+  }
+  if (category.contains('租')) {
+    return ProtoColors.clay; // 陶土紅
+  }
+  if (category.contains('拍照') || category.contains('隱私')) {
+    return const Color(0xFF4C2A75); // 皇家紫
+  }
+  if (category.contains('網購')) {
+    return const Color(0xFF752434); // 酒紅
+  }
+  if (category.contains('交通')) {
+    return const Color(0xFF754318); // 琥珀褐
+  }
+  return ProtoColors.charcoal;
+}
+
+List<Color> _getIconGradient(String category) {
+  if (category.contains('狗') || category.contains('寵物')) {
+    return const [Color(0xFF2C5E43), Color(0xFFAFC3B4)];
+  }
+  if (category.contains('租')) {
+    return const [ProtoColors.clay, Color(0xFFE2B265)];
+  }
+  if (category.contains('拍照') || category.contains('隱私')) {
+    return const [Color(0xFF4C2A75), Color(0xFFA9B4C4)];
+  }
+  if (category.contains('網購')) {
+    return const [Color(0xFF752434), ProtoColors.clay];
+  }
+  if (category.contains('交通')) {
+    return const [Color(0xFF754318), Color(0xFFD7CEC2)];
+  }
+  return const [ProtoColors.charcoal, Color(0xFF888888)];
+}
 
 class HomeV2NewsletterCard extends StatefulWidget {
   const HomeV2NewsletterCard({
@@ -70,131 +137,215 @@ class _HomeV2NewsletterCardState extends State<HomeV2NewsletterCard> {
 
   @override
   Widget build(BuildContext context) {
-    final radius = BorderRadius.circular(16.r);
-    final icon = _iconForItem(item);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    final Color cardBg = isDark ? const Color(0xFF262422) : const Color(0xFFFAF7F2);
-    final Color cardBorder = isDark ? const Color(0xFF3B3835) : const Color(0xFFEBE6DB);
-    final Color titleColor = isDark ? const Color(0xFFE8B95F) : const Color(0xFF6B4B14);
-    final Color tipColor = isDark ? const Color(0xFF8CAF96) : const Color(0xFF4E7D5B);
-    final Color imageBg = isDark ? const Color(0xFF383531) : const Color(0xFFECE6DB);
-    final Color iconColor = isDark ? const Color(0xFFE8B95F) : const Color(0xFF6B4B14);
+    final badge = _getEditorialBadge(item.title);
+    final accentColor = _getCategoryColor(item.category);
+    final iconGradient = _getIconGradient(item.category);
+    
+    final isLikedColor = _isLiked ? const Color(0xFFC48A7A) : (isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085));
+    final isBookmarkColor = _isBookmarked ? const Color(0xFFAFC3B4) : (isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085));
+    final cleanTip = item.tip.replaceFirst(RegExp(r'^小提醒：'), '').replaceFirst(RegExp(r'^💡\s*'), '');
 
     return Material(
       color: Colors.transparent,
-      child: InkWell(
-        onTap: widget.onTap,
-        borderRadius: radius,
-        child: Ink(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16.r),
+        child: Container(
           width: double.infinity,
-          padding: EdgeInsets.fromLTRB(14.w, 16.h, 14.w, 12.h),
           decoration: BoxDecoration(
-            color: cardBg,
-            borderRadius: radius,
-            border: Border.all(color: cardBorder, width: 1.w),
-            boxShadow: [
-              BoxShadow(
-                color: isDark ? Colors.black.withValues(alpha: 0.1) : const Color(0x0A8B6A3C),
-                blurRadius: 12,
-                offset: const Offset(0, 6),
-              ),
-            ],
+            color: isDark ? const Color(0xFF1E2228) : Colors.white,
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(
+              color: isDark ? const Color(0xFF2D333F) : const Color(0xFFE5E7EB),
+              width: 0.8.w,
+            ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Stack(
             children: [
-              Text(
-                item.title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: titleColor,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w900,
-                  height: 1.25,
+              // 左側類別彩虹邊條
+              Positioned(
+                left: 0,
+                top: 0,
+                bottom: 0,
+                width: 4.w,
+                child: Container(color: accentColor),
+              ),
+              InkWell(
+                onTap: widget.onTap,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 12.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // 頂部列：編輯特色標籤與類別
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                            decoration: BoxDecoration(
+                              color: badge.bgColor,
+                              borderRadius: BorderRadius.circular(4.r),
+                              border: Border.all(color: badge.textColor.withOpacity(0.2), width: 0.8.w),
+                            ),
+                            child: Text(
+                              badge.label,
+                              style: TextStyle(
+                                color: badge.textColor,
+                                fontSize: 9.5.sp,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                width: 5.w,
+                                height: 5.w,
+                                decoration: BoxDecoration(
+                                  color: accentColor,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              SizedBox(width: 5.w),
+                              Text(
+                                item.category,
+                                style: TextStyle(
+                                  color: accentColor,
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10.h),
+                      // 標題與簡介 + 右側漸層圖示
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.title,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: isDark ? Colors.white : const Color(0xFF3E454D),
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w900,
+                                    height: 1.35,
+                                  ),
+                                ),
+                                SizedBox(height: 6.h),
+                                Text(
+                                  item.summary,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085),
+                                    fontSize: 12.sp,
+                                    height: 1.45,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 14.w),
+                          // 實心漸層圖示圈
+                          Container(
+                            width: 44.w,
+                            height: 44.w,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: iconGradient,
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              _iconForItem(item),
+                              color: Colors.white,
+                              size: 20.sp,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 12.h),
+                      // 簡潔的小提醒
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                        decoration: BoxDecoration(
+                          color: isDark ? const Color(0xFF1E2228) : const Color(0xFFF8FAFC),
+                          borderRadius: BorderRadius.circular(8.r),
+                          border: Border.all(
+                            color: isDark ? const Color(0xFF2D333F) : const Color(0xFFF1F5F9),
+                            width: 0.8.w,
+                          ),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.lightbulb_outline_rounded,
+                              color: accentColor,
+                              size: 14.sp,
+                            ),
+                            SizedBox(width: 6.w),
+                            Expanded(
+                              child: Text(
+                                cleanTip,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: isDark ? const Color(0xFFCBD5E1) : const Color(0xFF475467),
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.w800,
+                                  height: 1.4,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+                      // 底部平面化社群操作列
+                      Row(
+                        children: [
+                          _NewsletterMetric(
+                            icon: _isLiked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                            color: isLikedColor,
+                            label: _metricText(item.likes, _isLiked ? 1 : 0),
+                            onTap: _toggleLike,
+                          ),
+                          _NewsletterMetric(
+                            icon: Icons.share_rounded,
+                            color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085),
+                            label: _metricText(item.shares, _shareCountDelta),
+                            onTap: _share,
+                          ),
+                          _NewsletterMetric(
+                            icon: Icons.chat_bubble_outline_rounded,
+                            color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085),
+                            label: _metricText(item.comments, _commentCountDelta),
+                            onTap: _comment,
+                          ),
+                          _NewsletterMetric(
+                            icon: _isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
+                            color: isBookmarkColor,
+                            label: '儲存',
+                            onTap: _toggleBookmark,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 12.h),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.summary,
-                          maxLines: 4,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: AppColors.textSecondary,
-                            fontSize: 11.5.sp,
-                            height: 1.45,
-                          ),
-                        ),
-                        SizedBox(height: 8.h),
-                        Text(
-                          item.tip,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: tipColor,
-                            fontSize: 10.5.sp,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 12.w),
-                  Container(
-                    width: 90.w,
-                    height: 84.h,
-                    decoration: BoxDecoration(
-                      color: imageBg,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Icon(
-                      icon,
-                      color: iconColor.withValues(alpha: 0.8),
-                      size: 32.sp,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 12.h),
-              Row(
-                children: [
-                  _NewsletterMetric(
-                    icon: _isLiked
-                        ? Icons.favorite_rounded
-                        : Icons.favorite_border_rounded,
-                    color: const Color(0xFFD85A53),
-                    label: _metricText(item.likes, _isLiked ? 1 : 0),
-                    onTap: _toggleLike,
-                  ),
-                  _NewsletterMetric(
-                    icon: Icons.share_outlined,
-                    color: isDark ? const Color(0xFFC7AF72) : const Color(0xFF9B874A),
-                    label: _metricText(item.shares, _shareCountDelta),
-                    onTap: _share,
-                  ),
-                  _NewsletterMetric(
-                    icon: Icons.comment_rounded,
-                    color: isDark ? const Color(0xFF70B15B) : const Color(0xFF4F8F36),
-                    label: _metricText(item.comments, _commentCountDelta),
-                    onTap: _comment,
-                  ),
-                  _NewsletterMetric(
-                    icon: _isBookmarked
-                        ? Icons.bookmark_rounded
-                        : Icons.bookmark_border_rounded,
-                    color: isDark ? const Color(0xFF67B0AA) : const Color(0xFF4A8E88),
-                    label: _metricText(item.downloads, _isBookmarked ? 1 : 0),
-                    onTap: _toggleBookmark,
-                  ),
-                ],
               ),
             ],
           ),
@@ -278,6 +429,186 @@ class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
     });
   }
 
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final badge = _getEditorialBadge(item.title);
+    final accentColor = _getCategoryColor(item.category);
+    final iconGradient = _getIconGradient(item.category);
+    
+    final isLikedColor = _isLiked ? const Color(0xFFC48A7A) : (isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085));
+    final isBookmarkColor = _isBookmarked ? const Color(0xFFAFC3B4) : (isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085));
+
+    return Material(
+      color: Colors.transparent,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20.r),
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF1E2228) : Colors.white,
+            borderRadius: BorderRadius.circular(20.r),
+            border: Border.all(
+              color: isDark ? const Color(0xFF2D333F) : const Color(0xFFE5E7EB),
+              width: 0.8.w,
+            ),
+          ),
+          child: Stack(
+            children: [
+              // 左側類別彩虹邊條
+              Positioned(
+                left: 0,
+                top: 0,
+                bottom: 0,
+                width: 4.w,
+                child: Container(color: accentColor),
+              ),
+              InkWell(
+                onTap: widget.onTap,
+                child: Padding(
+                  padding: EdgeInsets.all(18.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // 頂部列：編輯特色標籤與類別
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                            decoration: BoxDecoration(
+                              color: badge.bgColor,
+                              borderRadius: BorderRadius.circular(4.r),
+                              border: Border.all(color: badge.textColor.withOpacity(0.2), width: 0.8.w),
+                            ),
+                            child: Text(
+                              badge.label,
+                              style: TextStyle(
+                                color: badge.textColor,
+                                fontSize: 9.5.sp,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                width: 5.w,
+                                height: 5.w,
+                                decoration: BoxDecoration(
+                                  color: accentColor,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              SizedBox(width: 5.w),
+                              Text(
+                                item.category,
+                                style: TextStyle(
+                                  color: accentColor,
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 12.h),
+                      // 標題與簡介 + 右側實心漸層圖示
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.title,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: isDark ? Colors.white : const Color(0xFF3E454D),
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w900,
+                                    height: 1.35,
+                                  ),
+                                ),
+                                SizedBox(height: 8.h),
+                                Text(
+                                  item.summary,
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085),
+                                    fontSize: 12.sp,
+                                    height: 1.45,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 14.w),
+                          // 實心漸層圖示圈
+                          Container(
+                            width: 44.w,
+                            height: 44.w,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: iconGradient,
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              _iconForItem(item),
+                              color: Colors.white,
+                              size: 20.sp,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 14.h),
+                      // 底部極簡平面化社群操作列
+                      Row(
+                        children: [
+                          _NewsletterMetric(
+                            icon: _isLiked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                            color: isLikedColor,
+                            label: _metricText(item.likes, _isLiked ? 1 : 0),
+                            onTap: _toggleLike,
+                          ),
+                          _NewsletterMetric(
+                            icon: Icons.share_rounded,
+                            color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085),
+                            label: _metricText(item.shares, _shareCountDelta),
+                            onTap: _share,
+                          ),
+                          _NewsletterMetric(
+                            icon: Icons.chat_bubble_outline_rounded,
+                            color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085),
+                            label: _metricText(item.comments, _commentCountDelta),
+                            onTap: _comment,
+                          ),
+                          _NewsletterMetric(
+                            icon: _isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
+                            color: isBookmarkColor,
+                            label: '儲存',
+                            onTap: _toggleBookmark,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   IconData _iconForItem(HomeNewsletterItem item) {
     if (item.category.contains('狗') || item.category.contains('寵物')) {
       return Icons.pets_rounded;
@@ -289,180 +620,6 @@ class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
     if (item.category.contains('網購')) return Icons.shopping_bag_outlined;
     if (item.category.contains('交通')) return Icons.directions_car_outlined;
     return Icons.lightbulb_outline_rounded;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final radius = BorderRadius.circular(16.r); // 統一使用 16.r
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final icon = _iconForItem(item);
-
-    // 莫蘭迪綠漸層與高質感色彩設計
-    final List<Color> gradientColors = isDark
-        ? [const Color(0xFF1E2D24), const Color(0xFF141F1A)]
-        : [const Color(0xFFEAF2ED), const Color(0xFFD3E5D9)];
-    final Color borderCol = isDark ? const Color(0xFF2D4436) : const Color(0xFFC4DCD0);
-    final Color titleColor = isDark ? const Color(0xFF76BA8B) : const Color(0xFF275435);
-    final Color tipBg = isDark ? const Color(0xFF1E3525) : const Color(0xFFDCECE1);
-    final Color tipTextCol = isDark ? const Color(0xFF76BA8B) : const Color(0xFF275435);
-
-    final List<Color> imageGradient = isDark
-        ? [const Color(0xFF2B4436), const Color(0xFF1E3227)]
-        : [const Color(0xFFB9D8C6), const Color(0xFF9EBFAC)];
-
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: widget.onTap,
-        borderRadius: radius,
-        child: Ink(
-          width: double.infinity,
-          padding: EdgeInsets.fromLTRB(16.w, 18.h, 16.w, 14.h),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: gradientColors,
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: radius,
-            border: Border.all(
-              color: borderCol,
-              width: 1.2.w,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: isDark ? Colors.black.withValues(alpha: 0.15) : const Color(0x0A275435),
-                blurRadius: 16,
-                offset: const Offset(0, 6),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: titleColor,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w900,
-                            height: 1.25,
-                          ),
-                        ),
-                        SizedBox(height: 8.h),
-                        Text(
-                          item.summary,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: AppColors.textSecondary,
-                            fontSize: 11.5.sp,
-                            height: 1.45,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 12.w),
-                  Container(
-                    width: 72.w,
-                    height: 72.w,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: imageGradient,
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(14.r),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black
-                              .withValues(alpha: isDark ? 0.15 : 0.04),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      icon,
-                      color: Colors.white,
-                      size: 28.sp,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 12.h),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-                decoration: BoxDecoration(
-                  color: tipBg,
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Text(
-                  item.tip,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: tipTextCol,
-                    fontSize: 10.5.sp,
-                    fontWeight: FontWeight.w700,
-                    height: 1.35,
-                  ),
-                ),
-              ),
-              SizedBox(height: 12.h),
-              Row(
-                children: [
-                  _NewsletterMetric(
-                    icon: _isLiked
-                        ? Icons.favorite_rounded
-                        : Icons.favorite_border_rounded,
-                    color: const Color(0xFFD85A53),
-                    label: _metricText(item.likes, _isLiked ? 1 : 0),
-                    onTap: _toggleLike,
-                  ),
-                  _NewsletterMetric(
-                    icon: Icons.share_outlined,
-                    color: isDark ? const Color(0xFF76BA8B) : const Color(0xFF275435),
-                    label: _metricText(item.shares, _shareCountDelta),
-                    onTap: _share,
-                  ),
-                  _NewsletterMetric(
-                    icon: Icons.comment_rounded,
-                    color: isDark ? const Color(0xFF76BA8B) : const Color(0xFF275435),
-                    label: _metricText(item.comments, _commentCountDelta),
-                    onTap: _comment,
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    onPressed: _toggleBookmark,
-                    icon: Icon(
-                      _isBookmarked
-                          ? Icons.bookmark_rounded
-                          : Icons.bookmark_border_rounded,
-                      color: _isBookmarked
-                          ? const Color(0xFFDCA834)
-                          : AppColors.textSecondary,
-                      size: 18.sp,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }
 
@@ -481,25 +638,26 @@ class _NewsletterMetric extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Expanded(
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12.r),
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 4.h),
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(10.r),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 6.h),
             child: Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(icon, color: color.withValues(alpha: 0.92), size: 17.sp),
-                SizedBox(width: 4.w),
+                Icon(icon, color: color, size: 16.sp),
+                SizedBox(width: 6.w),
                 Text(
                   label,
                   style: TextStyle(
-                    color: HomeV2Palette.ink.withValues(alpha: 0.72),
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w700,
+                    color: isDark ? const Color(0xFF94A3B8) : AppColors.textSecondary,
+                    fontSize: 11.5.sp,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
               ],

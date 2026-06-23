@@ -422,9 +422,11 @@ extension _CaseDossierBottomSheets on _CaseDossierDetailPageState {
             ],
           ),
         );
+      },
+    );
   }
 
-  void _showNoteBottomSheet(BuildContext context) {
+  void showNoteBottomSheet(BuildContext context) {
     final appState = LawAppScope.of(context);
     final caseId = widget.book.id;
     final initialNote = appState.caseNoteDraft(caseId) ?? '';
@@ -588,4 +590,3 @@ extension _CaseDossierBottomSheets on _CaseDossierDetailPageState {
     );
   }
 }
-

@@ -1,23 +1,49 @@
-# Walkthrough
+# 生活避坑筆記 UI/UX Prototype 成果說明
 
-## Tenth Period: Case Dossier Detail Page Refinements
-
-本階段針對案件卷宗詳情頁 `case_dossier_detail_page.dart` 進行了三項核心功能提煉，皆符合莫蘭迪淡雅色調與 Cream 白色主題設計：
-
-### 1. 裁判結果徽章 (Verdict Outcome Badge) 與 AI 小法助橫幅 (AI Q&A Banner)
-- **裁判結果徽章 (Verdict Outcome Badge)**：在案件標題與標籤列下方，新增了精美的莫蘭迪色系徽章。針對不同的裁判結果（無罪、違憲/合憲、徒刑有罪處分、其他），動態套用柔和的背景、邊框與文字顏色（例如：無罪為綠色 `Color(0xFFEAF5F0)`，合憲/違憲為金色 `Color(0xFFFFF7E6)`，有罪為紅色 `Color(0xFFFFF1F0)`），清晰凸顯最終裁決。
-- **AI 小法助橫幅 (AI Q&A Banner)**：在主內容下方，將原有的問法助橫幅重新設計為莫蘭迪粉綠漸層 (`Color(0xFFFAF8F5)` 到 `Color(0xFFE6EFEA)`)，邊框採用淡綠色 (`Color(0xFFC7DED1)`)，並將心理學圖示替換為專屬的「閃爍 (Sparkles)」向量圖示。點擊該橫幅會先觸發 Snackbar 提示，接著流暢載入 AI 小法助搜尋頁面並預填本案 prompt。
-
-### 2. 互動式相關法條底頁 (Interactive Law Sheet)
-- 在「相關法條」標籤頁中，原本的法條卡片被包覆於 `GestureDetector` 中，使其可點擊。
-- 原本的外部連結圖示替換為向右箭頭 (`CtmSvgIcons.chevronRight`)。
-- 點擊卡片將會開啟一個高度自適應、背景採用莫蘭迪米色 Cream 的 `showModalBottomSheet`，呈現該法條的詳細條文概要（Summary）以及此法條與本案的關聯（Relevance to Case），提供層次分明的沉浸式學習體驗。
-
-### 3. 判決書分頁錨點滾動 (Judgment Book Section Anchors & Smooth Scrolling)
-- 在「完整判決書」標籤頁頂端，新增了一個水平滾動的錨點按鈕列（主文、程序概述、理由與心證、適用法條），並使用 `CtmSvgIcons.article` 圖示修飾。
-- 判決書全文從單一長文字區塊重構為區塊化（SelectionArea 包裹的 Column）結構，各區塊（主文、程序概述、實體理由與心證闡述、適用法條）分別綁定對應的 `GlobalKey`，並渲染在典雅的仿羊皮紙色（Parchment）背景容器中。
-- 當使用者點擊頂部的錨點時，系統會調用 `Scrollable.ensureVisible` 於 400 毫秒內平滑滾動（`Curves.easeInOut`）至目標區塊。
+我們已成功依據您的 UI/UX Prototype 設計圖，將「生活避坑筆記」首頁卡片、清單分類頁以及詳細頁重構完畢。所有元件皆遵循極簡平面、乾淨線框的設計語彙，並以多彩莫蘭迪配色點綴。
 
 ---
 
-*備註：在開發過程中，亦同步修正了 `lib/pages/learning/know_law_page.dart` 中因為私有類別 `_TranslatorCard` 未傳入選用參數 `variant` 導致的 Dart `unused_element_parameter` 靜態分析警告。目前 `flutter analyze` 掃描結果為 0 issues，完美通過。*
+## 🛠️ 技術實作亮點
+
+### 1. 繞過 Flutter BoxDecoration 限制實現「多彩邊條」
+*   **挑戰**：在 Flutter 中，若為 `BoxDecoration` 設置了 `borderRadius`，則其 `border` 必須是均一的 `Border.all()`。如果我們嘗試使用 `Border(left: BorderSide(...))` 搭配 `borderRadius`，會導致 Flutter 框架拋出斷言錯誤並崩潰。
+*   **解決方案**：我們在卡片與區塊外層使用 `ClipRRect` 限制圓角，並在內部使用 `Stack` 疊加，將一個寬度為 `4.w` 的 `Container`（設定為類別專屬色彩）透過 `Positioned(left: 0, top: 0, bottom: 0)` 固定在最左側。這樣做完美呈現了 Prototype 中的「多彩邊條」設計，同時保證了渲染性能與 UI 穩定性。
+
+### 2. 修復 const BorderSide 編譯錯誤
+*   **修正**：在 `LifeLegalTipDetailPage` 底部的「問法助」按鈕中，原先將帶有 `1.w` (ScreenUtil 擴充方法) 的 `BorderSide` 置於 `const` 表達式內，造成了 `const_eval_extension_method` 編譯器錯誤。我們已將其修改為動態物件宣告，確保專案能順利編譯。
+
+---
+
+## 🎨 重點設計與互動細節
+
+### 1. 首頁入口卡片 (`HomeV2NewsletterFocusCard` & `HomeV2NewsletterCard`)
+對應設計圖中 **「1 首頁」** 的原型樣式：
+*   **莫蘭迪色系淡底色**：卡片背景並非單純白底，而是套用了輕盈柔和的莫蘭迪分類底色（Tints）：
+    *   *養狗*：淡雅鼠尾草綠 (`#F2FAF6`)。
+    *   *租屋*：溫潤香檳奶油色 (`#F8F4EE`)。
+    *   *自拍隱私*：清透藍灰色 (`#EEF3F8`)。
+    *   *網購*：粉玫瑰陶土紅 (`#FAF0F2`)。
+    *   *交通*：古樸暖灰褐色 (`#FAF2ED`)。
+*   **編輯部特色標籤 (Top Chip)**：卡片頂部以細緻小標籤顯示「編輯精選」、「官方整理」與「開發者推薦」，顏色均來自莫蘭迪色票。
+*   **保留社群互動列**：在卡片底端完美保留「讚數、分享、留言與書籤」按鈕，但全部以**平面極簡的 Charcoal 深炭灰**呈現，點按啟用時才會亮起相對應的代表色，與 Prototype 的乾淨風格完美相稱。
+
+### 2. 筆記分類與列表頁 (`LifeLegalTipsPage`)
+對應設計圖中 **「2 筆記分類 / 列表」**：
+*   **搜尋欄**：極簡白底框、細灰邊線。
+*   **炭灰選中軌道**：類別軌道在未選中時為白底炭字，選中時則變為**深炭灰 (Charcoal)** 背景與純白文字。
+*   **小膠囊篩選列**：新增「最新更新 ▾」、「官方整理優先 ▾」等細線邊框篩選按鈕。
+*   **橫向「左圖右文」清單卡片**：
+    *   左側：設計了圓角的**縮圖預留框**，塗上該類別的莫蘭迪柔色，中央置中擺放類別 Icon（如爪子、房屋），模仿設計圖的 Placeholder 形式。
+    *   *右側*：呈現粗體標題、灰底分類小標籤（如「租屋」）、編輯推薦標籤及「05/12 更新」字樣。卡片本體為平面細框造型，清爽無比。
+
+### 3. 詳情指引頁 (`LifeLegalTipDetailPage`)
+對應設計圖中 **「3 筆記詳情」**：
+*   **筆記首部**：顯示官方整理標籤、20.sp 特大粗體標題、更新日期，以及灰色分割線。
+*   **四大線框區塊**：
+    1.  **踩坑情境**：以 **Warm Beige (暖米色)** 底色卡片，清晰框起情境範例文字。
+    2.  **你要注意**：以陶土紅圓點（Clay Dot）條列核心法規警示項目。
+    3.  **避坑做法**：保留互動勾選的數字按鈕（點擊後會由數字「1、2、3」轉換為綠色 Check 打勾），右側的 **Apple Style 進度環** 會隨著勾選進度流暢地實時繪製比例。
+    4.  **相關法規 / 生活提醒**：使用細灰色邊框的純白扁平卡片裝載法規條款。
+*   **底部懸浮三鍵操作列**：
+    *   底部固定懸浮由三個扁平化按鈕組成的操作列：左側兩個細線按鈕（**「收藏」**與**「問法助」**）和右側 50% 寬度的實心深炭灰按鈕（**「查法規」**），與設計圖底頁佈局完全吻合。
