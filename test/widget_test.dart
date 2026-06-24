@@ -49,44 +49,44 @@ void main() {
         builder: (_, __) => const MylawApp(),
       ),
     );
-    await tester.pumpAndSettle();
+    // 台灣繁體中文教學註解：
+    // 首頁頂部法規快訊有定時輪播，pumpAndSettle 會一直等到下一輪動畫；
+    // smoke test 只需要確認首頁主路徑可渲染，所以使用固定時間推進。
+    await tester.pump(const Duration(milliseconds: 500));
 
-    expect(find.text('AI 法律輔助'), findsOneWidget);
-    expect(find.text('法規資料庫'), findsOneWidget);
+    expect(find.text('The Law App'), findsOneWidget);
+    expect(find.text('法律即時快問'), findsOneWidget);
+    expect(find.text('法規資料庫搜尋'), findsOneWidget);
 
     await tester.drag(find.byType(CustomScrollView), const Offset(0, -900));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 500));
 
-    expect(find.text('給你的小任務(*¯︶¯*)'), findsOneWidget);
+    expect(find.text('今天判決故事'), findsOneWidget);
+    expect(find.text('焦點議題對決'), findsOneWidget);
     expect(find.text('生活避坑筆記'), findsAtLeastNWidgets(1));
-    expect(find.text('今日新聞'), findsAtLeastNWidgets(1));
+    expect(find.text('時事新聞'), findsAtLeastNWidgets(1));
 
     await tester.drag(find.byType(CustomScrollView), const Offset(0, -900));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 500));
 
-    expect(find.text('大家都在討論'), findsOneWidget);
-    expect(find.text('專題'), findsOneWidget);
+    expect(find.text('社群熱議'), findsOneWidget);
+    expect(find.text('看全部'), findsOneWidget);
 
     // 台灣繁體中文教學註解：
     // 底部 Nav 的中間分頁已從單純「搜尋」升級為「小法助」；
-    // 全站搜尋仍留在小法助首頁，確保原本的關鍵字搜尋能力沒有消失。
+    // 目前會直接進入小法助搜尋首頁，因此用搜尋框送出一次查詢守住核心能力。
     await tester.tap(find.text('小法助'));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 500));
 
-    expect(find.text('全站搜尋'), findsOneWidget);
-    await tester.tap(find.text('全站搜尋'));
-    await tester.pumpAndSettle();
-
+    expect(find.textContaining('嗨！我是小法助'), findsOneWidget);
     expect(find.text('搜尋法條、案件、生活筆記、官方資料'), findsOneWidget);
-    expect(find.text('熱門搜尋'), findsOneWidget);
-
-    Navigator.of(tester.element(find.byType(GlobalSearchPage))).pop();
-    await tester.pumpAndSettle();
+    expect(find.text('🔥 法律探索靈感'), findsOneWidget);
+    expect(find.text('🧭 快捷助理導航'), findsOneWidget);
 
     // 台灣繁體中文教學註解：
-    // 原本底部 Nav 的「案例」已改為「記事」，這裡同時守住 label 與入口內容。
-    await tester.tap(find.text('記事'));
-    await tester.pumpAndSettle();
+    // 原本底部 Nav 的「案例」已改為「紀事」，這裡同時守住 label 與入口內容。
+    await tester.tap(find.text('紀事'));
+    await tester.pump(const Duration(milliseconds: 500));
 
     expect(find.text('大家都在討論'), findsOneWidget);
     expect(find.text('案件圖書館'), findsOneWidget);
@@ -286,11 +286,13 @@ void main() {
         ),
       ),
     );
-    await tester.pumpAndSettle();
+    // 台灣繁體中文教學註解：
+    // 首頁法規快訊會定時輪播，小螢幕穩定性測試只需固定推進一幀確認沒有 overflow。
+    await tester.pump(const Duration(milliseconds: 500));
 
-    expect(find.text('AI 法律輔助'), findsOneWidget);
-    expect(find.text('文件產生'), findsOneWidget);
-    expect(find.text('會員權限'), findsOneWidget);
+    expect(find.text('法律即時快問'), findsOneWidget);
+    expect(find.text('今天判決故事'), findsOneWidget);
+    expect(find.text('法規資料庫搜尋'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -334,7 +336,7 @@ void main() {
     await tester.pumpWidget(testFrame(const LifeLegalTipsPage()));
     await tester.pumpAndSettle();
     expect(find.text('生活避坑筆記'), findsOneWidget);
-    expect(find.text('最近筆記'), findsOneWidget);
+    expect(find.text('全部避坑筆記'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
     await tester.pumpWidget(

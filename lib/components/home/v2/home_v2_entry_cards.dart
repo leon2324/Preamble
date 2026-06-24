@@ -370,6 +370,9 @@ class HomeV2LawDatabaseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 台灣繁體中文教學註解：
+    // 這張卡是 MAIC Demo 的 Spotlight 落地入口候選；
+    // 未來 iOS 端把法條與案例索引到 Core Spotlight 後，可直接深連結回這個搜尋流程。
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(22.r),
@@ -396,7 +399,7 @@ class HomeV2LawDatabaseCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '法規資料庫',
+                        '法規資料庫搜尋',
                         style: TextStyle(
                           color: const Color(0xFF1F4E87),
                           fontSize: 17.sp,
@@ -404,7 +407,9 @@ class HomeV2LawDatabaseCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '查詢法條、條文、解釋函令',
+                        '查詢法條、條文、解釋函令與生活關鍵字',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: const Color(0xFF4C6D95),
                           fontSize: 11.sp,

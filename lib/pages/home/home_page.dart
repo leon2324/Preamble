@@ -81,12 +81,16 @@ class _HomePageState extends State<HomePage> {
           animation: appState,
           builder: (context, _) {
             final isDark = appState.isDarkMode;
-            final bg = isDark ? const Color(0xFF171C22) : const Color(0xFFFAF6F0);
+            final bg =
+                isDark ? const Color(0xFF171C22) : const Color(0xFFFAF6F0);
             final card = isDark ? const Color(0xFF1F262F) : Colors.white;
-            final border = isDark ? const Color(0xFF2D3748) : const Color(0xFFEDE4D8);
-            final text = isDark ? const Color(0xFFFAF6F0) : const Color(0xFF234D3B);
-            final muted = isDark ? const Color(0xFFA0AEC0) : const Color(0xFF828078);
-            
+            final border =
+                isDark ? const Color(0xFF2D3748) : const Color(0xFFEDE4D8);
+            final text =
+                isDark ? const Color(0xFFFAF6F0) : const Color(0xFF234D3B);
+            final muted =
+                isDark ? const Color(0xFFA0AEC0) : const Color(0xFF828078);
+
             return Container(
               decoration: BoxDecoration(
                 color: bg,
@@ -115,8 +119,14 @@ class _HomePageState extends State<HomePage> {
                         radius: 28.r,
                         backgroundColor: const Color(0xFF234D3B),
                         child: Text(
-                          appState.currentUser.isGuest ? '訪' : appState.currentUser.displayName.substring(0, 1),
-                          style: TextStyle(color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),
+                          appState.currentUser.isGuest
+                              ? '訪'
+                              : appState.currentUser.displayName
+                                  .substring(0, 1),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                       SizedBox(width: 14.w),
@@ -125,13 +135,21 @@ class _HomePageState extends State<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              appState.currentUser.isGuest ? '訪客中心' : appState.currentUser.displayName,
-                              style: TextStyle(color: text, fontSize: 18.sp, fontWeight: FontWeight.w800),
+                              appState.currentUser.isGuest
+                                  ? '訪客中心'
+                                  : appState.currentUser.displayName,
+                              style: TextStyle(
+                                  color: text,
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w800),
                             ),
                             SizedBox(height: 4.h),
                             Text(
                               '${appState.accessTier.label}方案 ｜ 今日 AI 額度：${appState.remainingAiQuota}',
-                              style: TextStyle(color: muted, fontSize: 12.sp, fontWeight: FontWeight.w600),
+                              style: TextStyle(
+                                  color: muted,
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w600),
                             ),
                           ],
                         ),
@@ -143,7 +161,10 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(height: 10.h),
                   Text(
                     '快速設定',
-                    style: TextStyle(color: text, fontSize: 13.sp, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: text,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 12.h),
                   // Dark Mode Row
@@ -153,10 +174,12 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(16.r),
                       border: Border.all(color: border),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                     child: Row(
                       children: [
-                        Icon(Icons.dark_mode_rounded, color: Colors.purple, size: 22.sp),
+                        Icon(Icons.dark_mode_rounded,
+                            color: Colors.purple, size: 22.sp),
                         SizedBox(width: 12.w),
                         Expanded(
                           child: Column(
@@ -164,7 +187,10 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Text(
                                 '深色模式',
-                                style: TextStyle(color: text, fontSize: 14.sp, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    color: text,
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.bold),
                               ),
                               Text(
                                 '調整介面明暗以利夜間閱讀',
@@ -178,7 +204,7 @@ class _HomePageState extends State<HomePage> {
                           onChanged: (val) {
                             appState.setDarkMode(val);
                           },
-                          activeColor: const Color(0xFF234D3B),
+                          activeThumbColor: const Color(0xFF234D3B),
                         ),
                       ],
                     ),
@@ -201,11 +227,15 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.person_outline_rounded, color: Colors.white, size: 20.sp),
+                          Icon(Icons.person_outline_rounded,
+                              color: Colors.white, size: 20.sp),
                           SizedBox(width: 8.w),
                           Text(
                             '前往『我的』個人中心',
-                            style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -227,9 +257,11 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context) {
         final isDark = Theme.of(context).brightness == Brightness.dark;
         final bg = isDark ? const Color(0xFF171C22) : const Color(0xFFFAF6F0);
-        final border = isDark ? const Color(0xFF2D3748) : const Color(0xFFEDE4D8);
+        final border =
+            isDark ? const Color(0xFF2D3748) : const Color(0xFFEDE4D8);
         final text = isDark ? const Color(0xFFFAF6F0) : const Color(0xFF234D3B);
-        final muted = isDark ? const Color(0xFFA0AEC0) : const Color(0xFF828078);
+        final muted =
+            isDark ? const Color(0xFFA0AEC0) : const Color(0xFF828078);
 
         return Dialog(
           backgroundColor: bg,
@@ -245,7 +277,8 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.notifications_active_rounded, color: const Color(0xFFD6A04D), size: 24.sp),
+                    Icon(Icons.notifications_active_rounded,
+                        color: const Color(0xFFD6A04D), size: 24.sp),
                     SizedBox(width: 10.w),
                     Expanded(
                       child: Text(
@@ -309,7 +342,8 @@ class _HomePageState extends State<HomePage> {
                       Navigator.of(context).pop();
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (__) => const FollowingPage(initialTab: 'updates'),
+                          builder: (__) =>
+                              const FollowingPage(initialTab: 'updates'),
                         ),
                       );
                     },
@@ -350,9 +384,9 @@ class _HomePageState extends State<HomePage> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: bg.withOpacity(0.4),
+        color: bg.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: border.withOpacity(0.5)),
+        border: Border.all(color: border.withValues(alpha: 0.5)),
       ),
       padding: EdgeInsets.all(12.w),
       child: Row(
@@ -414,6 +448,8 @@ class _HomePageState extends State<HomePage> {
     final layout = context.homeSearchLayout;
     final topContentPadding =
         context.hasLargeTopInset ? context.topSafeInset + 10.h : 18.h;
+    final isCompactWidth = MediaQuery.sizeOf(context).width < 360;
+    final dailyDockHeight = isCompactWidth ? 174.h : 158.h;
 
     return Stack(
       children: [
@@ -445,35 +481,45 @@ class _HomePageState extends State<HomePage> {
                           const HomeV2WatchlistCard(),
                           SizedBox(height: 18.h),
                           SizedBox(
-                            height: 155.h,
+                            // 台灣繁體中文教學註解：
+                            // iPhone SE 寬度較窄，雙卡內容容易因字級換算被壓縮；
+                            // 這裡只加一點固定高度，不改 Prototype 的卡片比例與視覺語言。
+                            height: dailyDockHeight,
                             child: Row(
                               children: [
-                                const Expanded(child: HomeV2AchievementCard()),
-                                SizedBox(width: 12.w),
                                 const Expanded(
                                     child: HomeV2DailyCaseStoryCard()),
+                                SizedBox(width: 12.w),
+                                const Expanded(child: HomeV2AchievementCard()),
                               ],
                             ),
                           ),
                           SizedBox(height: 18.h),
-                          HomeV2ToolsDrawer(
-                              onNavigateToTab: widget.onNavigateToTab),
-                          SizedBox(height: 18.h),
+                          // 台灣繁體中文教學註解：
+                          // MAIC Demo 的主線是「快問 → 今日判決 → 法規搜尋」；
+                          // 因此法規資料庫放在工具捷徑前，之後接 Spotlight 深連結時也較自然。
                           HomeV2LawDatabaseCard(
                             onTap: _openStatuteDatabase,
                           ),
                           SizedBox(height: 18.h),
+                          HomeV2ToolsDrawer(
+                              onNavigateToTab: widget.onNavigateToTab),
+                          SizedBox(height: 20.h),
                           HomeV2SectionHeader(
                             title: '焦點議題對決',
                             action: '進入思辨',
                             onTap: () {
-                              final rentalCase = caseTimeMachineCases.firstWhere(
-                                (c) => c.titleZh.contains('租屋') || c.shortTitleZh.contains('租'),
+                              final rentalCase =
+                                  caseTimeMachineCases.firstWhere(
+                                (c) =>
+                                    c.titleZh.contains('租屋') ||
+                                    c.shortTitleZh.contains('租'),
                                 orElse: () => caseTimeMachineCases.first,
                               );
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (__) => CaseDossierDetailPage(book: rentalCase),
+                                  builder: (__) =>
+                                      CaseDossierDetailPage(book: rentalCase),
                                 ),
                               );
                             },
@@ -502,7 +548,7 @@ class _HomePageState extends State<HomePage> {
                             onMoreDiscussionTap: () =>
                                 widget.onNavigateToTab(3),
                           ),
-                          SizedBox(height: 112.h),
+                          SizedBox(height: 132.h),
                         ],
                       ),
                     ),

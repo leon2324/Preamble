@@ -1,17 +1,54 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/components/home/home_content.dart';
-import 'package:lawapp/components/home/v2/home_v2_palette.dart';
 import 'package:lawapp/components/shared/custom_toast.dart';
 import 'package:lawapp/data/mock_data/home/home_mock_data.dart';
 import 'package:lawapp/pages/home/subpages/home_subpage_primitives.dart';
 import 'package:lawapp/pages/learning/know_law_page.dart';
 import 'package:lawapp/pages/learning/statute_database_page.dart';
 import 'package:lawapp/theme/app_colors.dart';
+import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+
+const String _svgPets = '''
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="5" r="2"></circle>
+  <circle cx="7" cy="7" r="2"></circle>
+  <circle cx="17" cy="7" r="2"></circle>
+  <path d="M12 21c-2.8 0-5-2.2-5-5 0-1.7 1-3.2 2.5-4 .8-.4 1.7-.6 2.5-.6s1.7.2 2.5.6c1.5.8 2.5 2.3 2.5 4 0 2.8-2.2 5-5 5Z"></path>
+</svg>
+''';
+
+const String _svgShareNetwork = '''
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="18" cy="5" r="3"></circle>
+  <circle cx="6" cy="12" r="3"></circle>
+  <circle cx="18" cy="19" r="3"></circle>
+  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+</svg>
+''';
+
+const String _svgDownload = '''
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+  <polyline points="7 10 12 15 17 10"></polyline>
+  <line x1="12" y1="15" x2="12" y2="3"></line>
+</svg>
+''';
+
+String _svgPathForCategory(String category) {
+  if (category.contains('狗') || category.contains('寵物')) return _svgPets;
+  if (category.contains('租')) return CtmSvgIcons.home;
+  if (category.contains('拍照') || category.contains('隱私')) {
+    return CtmSvgIcons.smartphone;
+  }
+  if (category.contains('網購')) return CtmSvgIcons.shoppingBag;
+  if (category.contains('交通')) return CtmSvgIcons.car;
+  return CtmSvgIcons.idea;
+}
 
 // 台灣繁體中文教學註解：
 // UI/UX 多彩平面編輯風（Flat Colorful Editorial）設計系統。
@@ -23,9 +60,9 @@ class ProtoColors {
   static const Color warmBeige = Color(0xFFF2EDE6);
   static const Color softTaupe = Color(0xFFD7CEC2);
   static const Color clay = Color(0xFFC48A7A);
-  static const Color charcoal = Color(0xFF3E454D);
-  static const Color lightBg = Color(0xFFF9FAFB);
-  static const Color border = Color(0xFFE5E7EB);
+  static const Color charcoal = AppColors.textPrimary;
+  static const Color lightBg = AppColors.background;
+  static const Color border = AppColors.border;
 }
 
 class EditorialBadge {
@@ -39,7 +76,10 @@ EditorialBadge _getEditorialBadge(String title) {
   if (title.contains('租屋') || title.contains('購') || title.contains('退貨')) {
     return const EditorialBadge('編輯精選', ProtoColors.clay, Color(0xFFFFF0EC));
   }
-  if (title.contains('狗') || title.contains('拍') || title.contains('隱私') || title.contains('自拍')) {
+  if (title.contains('狗') ||
+      title.contains('拍') ||
+      title.contains('隱私') ||
+      title.contains('自拍')) {
     return const EditorialBadge('官方整理', Color(0xFF2C5E43), Color(0xFFEEF7F2));
   }
   return const EditorialBadge('開發者推薦', Color(0xFF1976D2), Color(0xFFEEF3F8));
@@ -116,7 +156,7 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
     super.initState();
     _featuredController = PageController(viewportFraction: 0.85);
     _searchController = TextEditingController();
-    
+
     _featuredController.addListener(() {
       if (_featuredController.hasClients) {
         setState(() {
@@ -154,7 +194,7 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.paddingOf(context).top;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     final featuredItems = homeNewsletterItems.take(5).toList(growable: false);
     final filteredItems = homeNewsletterItems.where((item) {
       final matchesCategory =
@@ -167,7 +207,8 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
       return matchesCategory && matchesQuery;
     }).toList(growable: false);
 
-    final activeColor = aestheticsForCategory(_selectedCategory, isDark).primary;
+    final activeColor =
+        aestheticsForCategory(_selectedCategory, isDark).primary;
 
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF0F1216) : ProtoColors.lightBg,
@@ -188,7 +229,8 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
               SizedBox(height: 10.h),
               _buildSorterRow(isDark),
               SizedBox(height: 20.h),
-              _SubpageInlineHeader(title: '今日焦點精選', count: featuredItems.length),
+              _SubpageInlineHeader(
+                  title: '今日焦點精選', count: featuredItems.length),
               SizedBox(height: 12.h),
               // 3D 視差縮放輪播
               SizedBox(
@@ -211,9 +253,11 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
                         } else {
                           value = (index - _featuredIndex).toDouble();
                         }
-                        
-                        final double scale = (1.0 - (value.abs() * 0.06)).clamp(0.92, 1.0);
-                        final double opacity = (1.0 - (value.abs() * 0.35)).clamp(0.6, 1.0);
+
+                        final double scale =
+                            (1.0 - (value.abs() * 0.06)).clamp(0.92, 1.0);
+                        final double opacity =
+                            (1.0 - (value.abs() * 0.35)).clamp(0.6, 1.0);
 
                         return Transform.scale(
                           scale: scale,
@@ -346,7 +390,7 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
     super.initState();
     _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
-    
+
     _steps = _buildActionSteps(widget.item);
     _stepsChecked = List.generate(_steps.length, (_) => false);
   }
@@ -391,7 +435,7 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
               // 頂部首部資訊區
               _buildHeaderSection(isDark, badge),
               SizedBox(height: 20.h),
-              
+
               // 1. 踩坑情境
               _buildScenarioSection(isDark, aes),
               SizedBox(height: 20.h),
@@ -408,35 +452,43 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
               _buildLawsSection(isDark, aes),
             ],
           ),
-          // 頂部導覽列
+          // 頂部導覽列 (使用 SafeArea 自動計算安全區域)
           Positioned(
-            top: topPadding + 8.h,
-            left: 12.w,
-            right: 16.w,
-            child: Row(
-              children: [
-                SubpageTopBar(onBack: () => Navigator.of(context).pop()),
-                SizedBox(width: 8.w),
-                Text(
-                  '避坑指引',
-                  style: TextStyle(
-                    fontSize: 16.5.sp,
-                    fontWeight: FontWeight.w900,
-                    color: isDark ? Colors.white : ProtoColors.charcoal,
-                  ),
+            top: 0,
+            left: 0,
+            right: 0,
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                child: Row(
+                  children: [
+                    SubpageTopBar(onBack: () => Navigator.of(context).pop()),
+                    SizedBox(width: 8.w),
+                    Text(
+                      '避坑指引',
+                      style: TextStyle(
+                        fontSize: 16.5.sp,
+                        fontWeight: FontWeight.w900,
+                        color: isDark ? Colors.white : AppColors.textPrimary,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
           // 極簡進度條
           Positioned(
-            top: topPadding + 54.h,
+            top: topPadding + 52.h,
             left: 0,
             right: 0,
             child: Container(
               alignment: Alignment.centerLeft,
               height: 2.5.h,
-              color: isDark ? Colors.white.withOpacity(0.03) : Colors.black.withOpacity(0.02),
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.03)
+                  : Colors.black.withValues(alpha: 0.02),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 80),
                 width: MediaQuery.of(context).size.width * _readingProgress,
@@ -460,7 +512,8 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
           decoration: BoxDecoration(
             color: badge.bgColor,
             borderRadius: BorderRadius.circular(4.r),
-            border: Border.all(color: badge.textColor.withOpacity(0.2), width: 0.8.w),
+            border: Border.all(
+                color: badge.textColor.withValues(alpha: 0.2), width: 0.8.w),
           ),
           child: Text(
             badge.label,
@@ -489,7 +542,8 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.bold,
-                color: aestheticsForCategory(widget.item.category, isDark).primary,
+                color:
+                    aestheticsForCategory(widget.item.category, isDark).primary,
               ),
             ),
             SizedBox(width: 8.w),
@@ -499,79 +553,86 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
               '更新日期：2024/05/12',
               style: TextStyle(
                 fontSize: 11.sp,
-                color: isDark ? const Color(0xFF64748B) : const Color(0xFF94A3B8),
+                color:
+                    isDark ? const Color(0xFF64748B) : const Color(0xFF94A3B8),
               ),
             ),
           ],
         ),
         SizedBox(height: 16.h),
-        Divider(color: isDark ? const Color(0xFF2D333F) : ProtoColors.border, height: 1.w),
+        Divider(
+            color: isDark ? const Color(0xFF2D333F) : ProtoColors.border,
+            height: 1.w),
       ],
     );
   }
 
   Widget _buildScenarioSection(bool isDark, CategoryAesthetics aes) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16.r),
-      child: Container(
-        decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF181C23) : Colors.white,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: isDark ? const Color(0xFF2D333F) : const Color(0xFFE5E7EB), width: 0.8.w),
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF232018) : const Color(0xFFFCF8EC),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(
+          color: isDark ? const Color(0xFF3B3425) : const Color(0xFFEFE4C7),
+          width: 0.8.w,
         ),
-        child: Stack(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
+            blurRadius: 4,
+            offset: const Offset(1, 2),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Positioned(
-              left: 0, top: 0, bottom: 0, width: 4.w,
-              child: Container(color: ProtoColors.clay),
+            Row(
+              children: [
+                CtmSvgIcon(CtmSvgIcons.question,
+                    color: const Color(0xFFC48A7A), size: 18.sp),
+                SizedBox(width: 8.w),
+                Text(
+                  '踩坑情境',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w900,
+                    color: isDark ? Colors.white : AppColors.textPrimary,
+                  ),
+                ),
+              ],
             ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(16.w, 14.h, 14.w, 14.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.report_problem_outlined, color: ProtoColors.clay, size: 18.sp),
-                      SizedBox(width: 8.w),
-                      Text(
-                        '踩坑情境',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w900,
-                          color: isDark ? Colors.white : ProtoColors.charcoal,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8.h),
-                  Text(
-                    '退租時房東能扣哪些費用？哪些情況屬於不當扣款？快速掌握重點，保障你的權益。',
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      height: 1.5,
-                      color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF475467),
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(12.w),
-                    decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF2C241E) : ProtoColors.warmBeige,
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Text(
-                      '情境範例：退租時房東以『清潔費』『油漆費』等名義，從押金中扣款，但未提供明確證據或收據。',
-                      style: TextStyle(
-                        fontSize: 12.5.sp,
-                        height: 1.5,
-                        color: isDark ? const Color(0xFFE2B095) : const Color(0xFF7A624A),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
+            SizedBox(height: 8.h),
+            Text(
+              '退租時房東能扣哪些費用？哪些情況屬於不當扣款？快速掌握重點，保障你的權益。',
+              style: TextStyle(
+                fontSize: 13.sp,
+                height: 1.5,
+                color:
+                    isDark ? const Color(0xFFCBD5E1) : const Color(0xFF475467),
+              ),
+            ),
+            SizedBox(height: 10.h),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(12.w),
+              decoration: BoxDecoration(
+                color:
+                    isDark ? const Color(0xFF332D23) : const Color(0xFFF7EED2),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Text(
+                '情境範例：退租時房東以『清潔費』『油漆費』等名義，從押金中扣款，但未提供明確證據或收據。',
+                style: TextStyle(
+                  fontSize: 12.5.sp,
+                  height: 1.5,
+                  color: isDark
+                      ? const Color(0xFFE2B095)
+                      : const Color(0xFF7A624A),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
@@ -586,71 +647,73 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
       '房東應提出實際損壞證明與修繕單據。',
       '一般正常使用造成之耗損，不得扣款。',
     ];
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16.r),
-      child: Container(
-        decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF181C23) : Colors.white,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: isDark ? const Color(0xFF2D333F) : const Color(0xFFE5E7EB), width: 0.8.w),
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF232018) : const Color(0xFFFCF8EC),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(
+          color: isDark ? const Color(0xFF3B3425) : const Color(0xFFEFE4C7),
+          width: 0.8.w,
         ),
-        child: Stack(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
+            blurRadius: 4,
+            offset: const Offset(1, 2),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Positioned(
-              left: 0, top: 0, bottom: 0, width: 4.w,
-              child: Container(color: ProtoColors.clay),
+            Row(
+              children: [
+                CtmSvgIcon(CtmSvgIcons.idea,
+                    color: const Color(0xFFD6A85F), size: 18.sp),
+                SizedBox(width: 8.w),
+                Text(
+                  '你要注意',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w900,
+                    color: isDark ? Colors.white : AppColors.textPrimary,
+                  ),
+                ),
+              ],
             ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(16.w, 14.h, 14.w, 14.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+            SizedBox(height: 10.h),
+            ...bullets.map((bullet) => Padding(
+                  padding: EdgeInsets.only(bottom: 6.h),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.error_outline_rounded, color: ProtoColors.clay, size: 18.sp),
+                      Container(
+                        margin: EdgeInsets.only(top: 6.h),
+                        width: 5.w,
+                        height: 5.w,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFD6A85F),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
                       SizedBox(width: 8.w),
-                      Text(
-                        '你要注意',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w900,
-                          color: isDark ? Colors.white : ProtoColors.charcoal,
+                      Expanded(
+                        child: Text(
+                          bullet,
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            height: 1.45,
+                            color: isDark
+                                ? const Color(0xFFCBD5E1)
+                                : const Color(0xFF334155),
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 10.h),
-                  ...bullets.map((bullet) => Padding(
-                    padding: EdgeInsets.only(bottom: 6.h),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(top: 6.h),
-                          width: 5.w,
-                          height: 5.w,
-                          decoration: const BoxDecoration(
-                            color: ProtoColors.clay,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        SizedBox(width: 8.w),
-                        Expanded(
-                          child: Text(
-                            bullet,
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              height: 1.45,
-                              color: isDark ? const Color(0xFFCBD5E1) : const Color(0xFF334155),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )),
-                ],
-              ),
-            ),
+                )),
           ],
         ),
       ),
@@ -662,17 +725,22 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
     final progress = _steps.isEmpty ? 0.0 : completedCount / _steps.length;
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(16.r),
+      borderRadius: BorderRadius.circular(12.r),
       child: Container(
         decoration: BoxDecoration(
           color: isDark ? const Color(0xFF181C23) : Colors.white,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: isDark ? const Color(0xFF2D333F) : const Color(0xFFE5E7EB), width: 0.8.w),
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(
+              color: isDark ? const Color(0xFF2D333F) : const Color(0xFFE5E7EB),
+              width: 0.8.w),
         ),
         child: Stack(
           children: [
             Positioned(
-              left: 0, top: 0, bottom: 0, width: 4.w,
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: 4.w,
               child: Container(color: ProtoColors.sageGreen),
             ),
             Padding(
@@ -685,14 +753,16 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.fact_check_outlined, color: ProtoColors.sageGreen, size: 18.sp),
+                          CtmSvgIcon(CtmSvgIcons.filePen,
+                              color: ProtoColors.sageGreen, size: 18.sp),
                           SizedBox(width: 8.w),
                           Text(
                             '避坑做法',
                             style: TextStyle(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w900,
-                              color: isDark ? Colors.white : ProtoColors.charcoal,
+                              color:
+                                  isDark ? Colors.white : AppColors.textPrimary,
                             ),
                           ),
                         ],
@@ -709,7 +779,11 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
                     final isChecked = _stepsChecked[index];
                     return GestureDetector(
                       onTap: () {
-                        HapticFeedback.lightImpact();
+                        if (!isChecked) {
+                          HapticFeedback.mediumImpact();
+                        } else {
+                          HapticFeedback.lightImpact();
+                        }
                         setState(() {
                           _stepsChecked[index] = !_stepsChecked[index];
                         });
@@ -717,16 +791,23 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
                         margin: EdgeInsets.only(bottom: 8.h),
-                        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 12.w, vertical: 10.h),
                         decoration: BoxDecoration(
                           color: isChecked
-                              ? (isDark ? const Color(0xFF14241B) : const Color(0xFFEEF7F2))
-                              : (isDark ? const Color(0xFF1E2228) : Colors.white),
+                              ? (isDark
+                                  ? const Color(0xFF14241B)
+                                  : AppColors.success.withValues(alpha: 0.12))
+                              : (isDark
+                                  ? const Color(0xFF1E2228)
+                                  : Colors.white),
                           borderRadius: BorderRadius.circular(8.r),
                           border: Border.all(
                             color: isChecked
-                                ? ProtoColors.sageGreen
-                                : (isDark ? const Color(0xFF2D333F) : ProtoColors.border),
+                                ? AppColors.success
+                                : (isDark
+                                    ? const Color(0xFF2D333F)
+                                    : ProtoColors.border),
                             width: 0.8.w,
                           ),
                         ),
@@ -737,16 +818,24 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
                               width: 18.w,
                               height: 18.w,
                               decoration: BoxDecoration(
-                                color: isChecked ? ProtoColors.sageGreen : Colors.transparent,
+                                color: isChecked
+                                    ? AppColors.success
+                                    : Colors.transparent,
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color: ProtoColors.sageGreen,
+                                  color: isChecked
+                                      ? AppColors.success
+                                      : ProtoColors.sageGreen,
                                   width: 1.5.w,
                                 ),
                               ),
                               child: Center(
                                 child: isChecked
-                                    ? Icon(Icons.check, size: 12.sp, color: Colors.white)
+                                    ? Icon(Icons.check,
+                                        size: 12.sp,
+                                        color: isDark
+                                            ? Colors.black
+                                            : Colors.white)
                                     : Text(
                                         '${index + 1}',
                                         style: TextStyle(
@@ -765,9 +854,15 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
                                   fontSize: 12.5.sp,
                                   height: 1.45,
                                   color: isChecked
-                                      ? (isDark ? const Color(0xFF8CAF96) : const Color(0xFF4A6E59))
-                                      : (isDark ? const Color(0xFFE2E8F0) : const Color(0xFF334155)),
-                                  decoration: isChecked ? TextDecoration.lineThrough : null,
+                                      ? (isDark
+                                          ? const Color(0xFF8CAF96)
+                                          : const Color(0xFF3B5E4A))
+                                      : (isDark
+                                          ? const Color(0xFFE2E8F0)
+                                          : const Color(0xFF334155)),
+                                  decoration: isChecked
+                                      ? TextDecoration.lineThrough
+                                      : null,
                                 ),
                               ),
                             ),
@@ -787,18 +882,23 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
 
   Widget _buildLawsSection(bool isDark, CategoryAesthetics aes) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(16.r),
+      borderRadius: BorderRadius.circular(12.r),
       child: Container(
         decoration: BoxDecoration(
           color: isDark ? const Color(0xFF181C23) : Colors.white,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: isDark ? const Color(0xFF2D333F) : const Color(0xFFE5E7EB), width: 0.8.w),
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(
+              color: isDark ? const Color(0xFF2D333F) : const Color(0xFFE5E7EB),
+              width: 0.8.w),
         ),
         child: Stack(
           children: [
             Positioned(
-              left: 0, top: 0, bottom: 0, width: 4.w,
-              child: Container(color: ProtoColors.blueGray),
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: 4.w,
+              child: Container(color: AppColors.accent),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(16.w, 14.h, 14.w, 14.h),
@@ -807,14 +907,15 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.gavel_rounded, color: ProtoColors.blueGray, size: 18.sp),
+                      CtmSvgIcon(CtmSvgIcons.gavel,
+                          color: AppColors.accent, size: 18.sp),
                       SizedBox(width: 8.w),
                       Text(
                         '相關法規 / 生活提醒',
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w900,
-                          color: isDark ? Colors.white : ProtoColors.charcoal,
+                          color: isDark ? Colors.white : AppColors.textPrimary,
                         ),
                       ),
                     ],
@@ -824,10 +925,14 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
                     width: double.infinity,
                     padding: EdgeInsets.all(12.w),
                     decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF1E2228) : Colors.white,
+                      color: isDark
+                          ? const Color(0xFF2E2719)
+                          : const Color(0xFFFFF9E6),
                       borderRadius: BorderRadius.circular(8.r),
                       border: Border.all(
-                        color: isDark ? const Color(0xFF2D333F) : ProtoColors.border,
+                        color: isDark
+                            ? const Color(0xFF3D3425)
+                            : const Color(0xFFF1E4C3),
                         width: 0.8.w,
                       ),
                     ),
@@ -836,7 +941,10 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
                       style: TextStyle(
                         fontSize: 12.5.sp,
                         height: 1.5,
-                        color: isDark ? const Color(0xFFCBD5E1) : const Color(0xFF334155),
+                        color: isDark
+                            ? const Color(0xFFE2B095)
+                            : const Color(0xFF7A624A),
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -850,12 +958,13 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
   }
 
   Widget _buildBottomStickyPanel(bool isDark, CategoryAesthetics aes) {
+    final foregroundCol = isDark ? Colors.white : AppColors.textPrimary;
     return Positioned(
       bottom: MediaQuery.paddingOf(context).bottom + 16.h,
       left: 16.w,
       right: 16.w,
       child: Container(
-        padding: EdgeInsets.all(10.w),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
         decoration: BoxDecoration(
           color: isDark ? const Color(0xFF181C23) : Colors.white,
           borderRadius: BorderRadius.circular(12.r),
@@ -865,7 +974,7 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(isDark ? 0.3 : 0.04),
+              color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.04),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -876,43 +985,68 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
             // 收藏 Outlined
             Expanded(
               flex: 3,
-              child: OutlinedButton.icon(
-                onPressed: () {
-                  HapticFeedback.lightImpact();
-                  CustomToast.show(context, '已加入收藏', icon: Icons.bookmark_rounded);
-                },
-                style: OutlinedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 12.h),
-                  side: BorderSide(color: isDark ? const Color(0xFF2D333F) : ProtoColors.border, width: 1.w),
-                  foregroundColor: isDark ? Colors.white : ProtoColors.charcoal,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+              child: SizedBox(
+                height: 48.h,
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    HapticFeedback.lightImpact();
+                    CustomToast.show(context, '已加入收藏',
+                        icon: Icons.bookmark_rounded);
+                  },
+                  style: OutlinedButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    side: BorderSide(
+                        color: isDark
+                            ? const Color(0xFF2D333F)
+                            : ProtoColors.border,
+                        width: 1.w),
+                    foregroundColor: foregroundCol,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.r)),
+                  ),
+                  icon: CtmSvgIcon(CtmSvgIcons.bookmark,
+                      size: 16.sp, color: foregroundCol),
+                  label: Text('收藏',
+                      style: TextStyle(
+                          fontSize: 12.sp, fontWeight: FontWeight.bold)),
                 ),
-                icon: Icon(Icons.bookmark_border_rounded, size: 16.sp),
-                label: Text('收藏', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold)),
               ),
             ),
             SizedBox(width: 8.w),
             // 問法助 Outlined Green
             Expanded(
               flex: 3,
-              child: OutlinedButton.icon(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (__) => LawAssistantChatPage(
-                        initialPrompt: '我想了解「${widget.item.title}」這個生活法律問題，可以怎麼處理？',
+              child: SizedBox(
+                height: 48.h,
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (__) => LawAssistantChatPage(
+                          initialPrompt:
+                              '我想了解「${widget.item.title}」這個生活法律問題，可以怎麼處理？',
+                        ),
                       ),
-                    ),
-                  );
-                },
-                style: OutlinedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 12.h),
-                  side: BorderSide(color: ProtoColors.sageGreen, width: 1.w),
-                  foregroundColor: isDark ? ProtoColors.sageGreen : const Color(0xFF2C5E43),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                    );
+                  },
+                  style: OutlinedButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    side: BorderSide(color: ProtoColors.sageGreen, width: 1.w),
+                    foregroundColor: isDark
+                        ? ProtoColors.sageGreen
+                        : const Color(0xFF2C5E43),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.r)),
+                  ),
+                  icon: CtmSvgIcon(CtmSvgIcons.brain,
+                      size: 16.sp,
+                      color: isDark
+                          ? ProtoColors.sageGreen
+                          : const Color(0xFF2C5E43)),
+                  label: Text('問法助',
+                      style: TextStyle(
+                          fontSize: 12.sp, fontWeight: FontWeight.bold)),
                 ),
-                icon: Icon(Icons.psychology_alt_rounded, size: 16.sp),
-                label: Text('問法助', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold)),
               ),
             ),
             SizedBox(width: 8.w),
@@ -920,6 +1054,7 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
             Expanded(
               flex: 4,
               child: Container(
+                height: 48.h,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: aes.gradient,
@@ -941,12 +1076,16 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
                   style: FilledButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
+                    padding: EdgeInsets.zero,
                     foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.r)),
                   ),
-                  icon: const Icon(Icons.manage_search_rounded, size: 16),
-                  label: Text('查法規', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold)),
+                  icon: CtmSvgIcon(CtmSvgIcons.search,
+                      size: 16.sp, color: Colors.white),
+                  label: Text('查法規',
+                      style: TextStyle(
+                          fontSize: 12.sp, fontWeight: FontWeight.bold)),
                 ),
               ),
             ),
@@ -993,37 +1132,14 @@ class _LifeTrapTopFrostMask extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Positioned(
       top: 0,
       left: 0,
       right: 0,
       child: IgnorePointer(
-        child: ClipRect(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-            child: Container(
-              height: topPadding + 146.h,
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: isDark ? Colors.white.withOpacity(0.03) : Colors.black.withOpacity(0.02),
-                    width: 0.8.w,
-                  ),
-                ),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    (isDark ? const Color(0xFF0F1216) : ProtoColors.lightBg).withOpacity(0.95),
-                    (isDark ? const Color(0xFF0F1216) : ProtoColors.lightBg).withOpacity(0.85),
-                    (isDark ? const Color(0xFF0F1216) : ProtoColors.lightBg).withOpacity(0),
-                  ],
-                  stops: const [0, 0.72, 1],
-                ),
-              ),
-            ),
-          ),
+        child: Container(
+          height: topPadding + 146.h,
+          color: ProtoColors.lightBg,
         ),
       ),
     );
@@ -1098,18 +1214,20 @@ class _LifeTrapSearchBarState extends State<_LifeTrapSearchBar> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final accentColor = ProtoColors.charcoal;
+    final primaryColor = AppColors.primary;
+    final secondaryColor =
+        isDark ? const Color(0xFF64748B) : AppColors.textSecondary;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 2.h),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E2228) : Colors.white,
-        borderRadius: BorderRadius.circular(8.r),
+        color: _isFocused
+            ? (isDark ? const Color(0xFF1E2228) : AppColors.surface)
+            : (isDark ? const Color(0xFF1E2228) : AppColors.searchSurface),
+        borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
-          color: _isFocused
-              ? accentColor
-              : (isDark ? const Color(0xFF2D333F) : ProtoColors.border),
+          color: _isFocused ? primaryColor : Colors.transparent,
           width: 0.8.w,
         ),
       ),
@@ -1129,20 +1247,21 @@ class _LifeTrapSearchBarState extends State<_LifeTrapSearchBar> {
           border: InputBorder.none,
           icon: Icon(
             Icons.search_rounded,
-            color: _isFocused ? accentColor : (isDark ? const Color(0xFF64748B) : AppColors.textMuted),
+            color: _isFocused ? primaryColor : secondaryColor,
             size: 20.sp,
           ),
           suffixIcon: widget.controller.text.isEmpty
               ? null
               : IconButton(
                   onPressed: widget.controller.clear,
-                  icon: Icon(Icons.close_rounded, size: 18.sp, color: AppColors.textSecondary),
+                  icon: Icon(Icons.close_rounded,
+                      size: 18.sp, color: secondaryColor),
                 ),
         ),
         style: TextStyle(
           fontSize: 12.5.sp,
           fontWeight: FontWeight.w700,
-          color: isDark ? Colors.white : ProtoColors.charcoal,
+          color: isDark ? Colors.white : AppColors.textSecondary,
         ),
       ),
     );
@@ -1204,25 +1323,30 @@ class _LifeTipPageDots extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final activeCol = isDark ? Colors.white : AppColors.primary;
+    final inactiveCol = isDark
+        ? Colors.white.withValues(alpha: 0.2)
+        : Colors.black.withValues(alpha: 0.1);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(count, (index) {
         final double distance = (index - pageOffset).abs();
         final double activeWeight = (1.0 - distance).clamp(0.0, 1.0);
-        final double width = 5.w + (12.w * activeWeight);
-        final isDark = Theme.of(context).brightness == Brightness.dark;
+        final double width = 4.w + (12.w * activeWeight);
 
         return Container(
           width: width,
-          height: 5.h,
-          margin: EdgeInsets.symmetric(horizontal: 2.5.w),
+          height: 3.h,
+          margin: EdgeInsets.symmetric(horizontal: 2.w),
           decoration: BoxDecoration(
             color: Color.lerp(
-              isDark ? Colors.white.withOpacity(0.12) : AppColors.border,
-              accentColor,
+              inactiveCol,
+              activeCol,
               activeWeight,
             ),
-            borderRadius: BorderRadius.circular(99.r),
+            borderRadius: BorderRadius.circular(100.r),
           ),
         );
       }),
@@ -1257,11 +1381,11 @@ class _LifeTipCategoryRail extends StatelessWidget {
           final isSelected = label == selectedLabel;
           final aes = aestheticsForCategory(label, isDark);
           final pillBg = isSelected
-              ? aes.primary
-              : (isDark ? const Color(0xFF1E2228) : Colors.white);
+              ? AppColors.primary
+              : (isDark ? const Color(0xFF1E2228) : AppColors.chipSurface);
           final textCol = isSelected
               ? Colors.white
-              : (isDark ? const Color(0xFF94A3B8) : ProtoColors.charcoal);
+              : (isDark ? const Color(0xFF94A3B8) : AppColors.textSecondary);
 
           return AnimatedContainer(
             duration: const Duration(milliseconds: 200),
@@ -1272,14 +1396,14 @@ class _LifeTipCategoryRail extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8.r),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                   decoration: BoxDecoration(
                     color: pillBg,
                     borderRadius: BorderRadius.circular(8.r),
                     border: Border.all(
-                      color: isSelected
-                          ? aes.primary
-                          : (isDark ? const Color(0xFF2D333F) : ProtoColors.border),
+                      color:
+                          isSelected ? AppColors.primary : Colors.transparent,
                       width: 1.w,
                     ),
                   ),
@@ -1329,17 +1453,19 @@ class _LifeTipFeaturedCard extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final aes = aestheticsForCategory(item.category, isDark);
     final badge = _getEditorialBadge(item.title);
-    final cleanTip = item.tip.replaceFirst(RegExp(r'^小提醒：'), '').replaceFirst(RegExp(r'^💡\s*'), '');
+    final cleanTip = item.tip
+        .replaceFirst(RegExp(r'^小提醒：'), '')
+        .replaceFirst(RegExp(r'^💡\s*'), '');
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(14.w),
         decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF181C23) : Colors.white,
-          borderRadius: BorderRadius.circular(16.r),
+          color: isDark ? const Color(0xFF181C23) : const Color(0xFFFAF5EC),
+          borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
-            color: isDark ? const Color(0xFF2D333F) : const Color(0xFFE5E7EB),
+            color: isDark ? const Color(0xFF2D333F) : const Color(0xFFEDE4D8),
             width: 0.8.w,
           ),
         ),
@@ -1356,12 +1482,15 @@ class _LifeTipFeaturedCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: badge.bgColor,
                     borderRadius: BorderRadius.circular(4.r),
-                    border: Border.all(color: badge.textColor.withOpacity(0.2), width: 0.8.w),
+                    border: Border.all(
+                        color: badge.textColor.withValues(alpha: 0.2),
+                        width: 0.8.w),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(aes.icon, size: 10.sp, color: badge.textColor),
+                      CtmSvgIcon(_svgPathForCategory(item.category),
+                          size: 10.sp, color: badge.textColor),
                       SizedBox(width: 4.w),
                       Text(
                         badge.label,
@@ -1374,9 +1503,11 @@ class _LifeTipFeaturedCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Icon(
-                  Icons.arrow_forward_rounded,
-                  color: isDark ? const Color(0xFF64748B) : AppColors.textSecondary,
+                CtmSvgIcon(
+                  CtmSvgIcons.arrowRight,
+                  color: isDark
+                      ? const Color(0xFF64748B)
+                      : AppColors.textSecondary,
                   size: 15.sp,
                 ),
               ],
@@ -1387,7 +1518,7 @@ class _LifeTipFeaturedCard extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: isDark ? Colors.white : ProtoColors.charcoal,
+                color: isDark ? Colors.white : const Color(0xFF243B63),
                 fontSize: 15.sp,
                 fontWeight: FontWeight.w900,
               ),
@@ -1399,25 +1530,30 @@ class _LifeTipFeaturedCard extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085),
+                  color: isDark
+                      ? const Color(0xFF94A3B8)
+                      : const Color(0xFF667085),
                   fontSize: 11.5.sp,
                   height: 1.4,
                 ),
               ),
             ),
             SizedBox(height: 6.h),
-            // 平面化的小提醒一行條
+            // 平面化的小提醒一行條 (綠色底線版)
             Container(
               padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 8.w),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF22252A) : const Color(0xFFF1F5F9),
+                color:
+                    isDark ? const Color(0xFF22252A) : const Color(0xFFEEF7F2),
                 borderRadius: BorderRadius.circular(6.r),
               ),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.lightbulb_outline_rounded,
-                    color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085),
+                  CtmSvgIcon(
+                    CtmSvgIcons.idea,
+                    color: isDark
+                        ? const Color(0xFF8BF45F)
+                        : const Color(0xFF2E7D32),
                     size: 13.sp,
                   ),
                   SizedBox(width: 6.w),
@@ -1427,7 +1563,9 @@ class _LifeTipFeaturedCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: isDark ? const Color(0xFFCBD5E1) : const Color(0xFF475467),
+                        color: isDark
+                            ? const Color(0xFFCBD5E1)
+                            : const Color(0xFF2E7D32),
                         fontSize: 10.5.sp,
                         fontWeight: FontWeight.w900,
                       ),
@@ -1448,12 +1586,10 @@ class _LifeTipListCard extends StatefulWidget {
   const _LifeTipListCard({
     required this.item,
     this.onTap,
-    this.disableNavigation = false,
   });
 
   final HomeNewsletterItem item;
   final VoidCallback? onTap;
-  final bool disableNavigation;
 
   @override
   State<_LifeTipListCard> createState() => _LifeTipListCardState();
@@ -1473,19 +1609,25 @@ class _LifeTipListCardState extends State<_LifeTipListCard> {
         borderRadius: BorderRadius.circular(12.r),
         child: Container(
           decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF1E2228) : Colors.white,
+            color: isDark ? const Color(0xFF1E2228) : const Color(0xFFFAF5EC),
             borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(color: isDark ? const Color(0xFF2D333F) : ProtoColors.border, width: 0.8.w),
+            border: Border.all(
+                color:
+                    isDark ? const Color(0xFF2D333F) : const Color(0xFFEDE4D8),
+                width: 0.8.w),
           ),
           child: Stack(
             children: [
               // 左側類別彩虹邊條
               Positioned(
-                left: 0, top: 0, bottom: 0, width: 4.w,
+                left: 0,
+                top: 0,
+                bottom: 0,
+                width: 4.w,
                 child: Container(color: aes.primary),
               ),
               InkWell(
-                onTap: widget.disableNavigation ? null : widget.onTap,
+                onTap: widget.onTap,
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(16.w, 12.h, 12.w, 12.h),
                   child: Row(
@@ -1498,23 +1640,25 @@ class _LifeTipListCardState extends State<_LifeTipListCard> {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              aes.primary.withOpacity(isDark ? 0.2 : 0.12),
-                              aes.primary.withOpacity(isDark ? 0.08 : 0.05),
+                              aes.primary
+                                  .withValues(alpha: isDark ? 0.2 : 0.12),
+                              aes.primary
+                                  .withValues(alpha: isDark ? 0.08 : 0.05),
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
                           borderRadius: BorderRadius.circular(8.r),
                           border: Border.all(
-                            color: aes.primary.withOpacity(0.2),
+                            color: aes.primary.withValues(alpha: 0.2),
                             width: 0.8.w,
                           ),
                         ),
                         child: Center(
-                          child: Icon(
-                            aes.icon,
+                          child: CtmSvgIcon(
+                            CtmSvgIcons.bookOpen,
                             color: aes.primary,
-                            size: 28.sp,
+                            size: 26.sp,
                           ),
                         ),
                       ),
@@ -1532,7 +1676,9 @@ class _LifeTipListCardState extends State<_LifeTipListCard> {
                               style: TextStyle(
                                 fontSize: 13.5.sp,
                                 fontWeight: FontWeight.w900,
-                                color: isDark ? Colors.white : ProtoColors.charcoal,
+                                color: isDark
+                                    ? Colors.white
+                                    : const Color(0xFF243B63),
                                 height: 1.35,
                               ),
                             ),
@@ -1541,9 +1687,12 @@ class _LifeTipListCardState extends State<_LifeTipListCard> {
                               children: [
                                 // 分類標籤 (如「租屋」)
                                 Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 6.w, vertical: 2.h),
                                   decoration: BoxDecoration(
-                                    color: isDark ? const Color(0xFF282F3B) : const Color(0xFFF1F5F9),
+                                    color: isDark
+                                        ? const Color(0xFF282F3B)
+                                        : const Color(0xFFF1F5F9),
                                     borderRadius: BorderRadius.circular(4.r),
                                   ),
                                   child: Text(
@@ -1551,18 +1700,24 @@ class _LifeTipListCardState extends State<_LifeTipListCard> {
                                     style: TextStyle(
                                       fontSize: 9.sp,
                                       fontWeight: FontWeight.bold,
-                                      color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF475467),
+                                      color: isDark
+                                          ? const Color(0xFF94A3B8)
+                                          : const Color(0xFF475467),
                                     ),
                                   ),
                                 ),
                                 SizedBox(width: 6.w),
                                 // 官方整理/編輯精選標籤
                                 Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 6.w, vertical: 2.h),
                                   decoration: BoxDecoration(
                                     color: badge.bgColor,
                                     borderRadius: BorderRadius.circular(4.r),
-                                    border: Border.all(color: badge.textColor.withOpacity(0.2), width: 0.8.w),
+                                    border: Border.all(
+                                        color: badge.textColor
+                                            .withValues(alpha: 0.2),
+                                        width: 0.8.w),
                                   ),
                                   child: Text(
                                     badge.label,
@@ -1578,7 +1733,9 @@ class _LifeTipListCardState extends State<_LifeTipListCard> {
                                   '05/12 更新',
                                   style: TextStyle(
                                     fontSize: 9.5.sp,
-                                    color: isDark ? const Color(0xFF64748B) : const Color(0xFF94A3B8),
+                                    color: isDark
+                                        ? const Color(0xFF64748B)
+                                        : const Color(0xFF94A3B8),
                                   ),
                                 ),
                               ],
@@ -1614,11 +1771,13 @@ class CircularProgressRing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final trackColor = isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.05);
+    final trackColor = isDark
+        ? Colors.white.withValues(alpha: 0.08)
+        : Colors.black.withValues(alpha: 0.05);
     final List<Color> ringGradient = [
-      accentColor.withOpacity(0.6),
+      accentColor.withValues(alpha: 0.6),
       accentColor,
-      accentColor.withOpacity(0.9),
+      accentColor.withValues(alpha: 0.9),
     ];
 
     return SizedBox(
@@ -1679,7 +1838,8 @@ class ProgressRingPainter extends CustomPainter {
         ..strokeCap = StrokeCap.round
         ..strokeWidth = 5.w;
 
-      canvas.drawArc(rect, -3.14159 / 2, progress * 2 * 3.14159, false, ringPaint);
+      canvas.drawArc(
+          rect, -3.14159 / 2, progress * 2 * 3.14159, false, ringPaint);
     }
   }
 

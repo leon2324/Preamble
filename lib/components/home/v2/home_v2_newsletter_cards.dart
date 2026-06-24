@@ -1,15 +1,46 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/components/home/home_content.dart';
 import 'package:lawapp/theme/app_colors.dart';
 import 'package:lawapp/components/shared/share_sheet.dart';
+import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+
+const String _svgPets = '''
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="5" r="2"></circle>
+  <circle cx="7" cy="7" r="2"></circle>
+  <circle cx="17" cy="7" r="2"></circle>
+  <path d="M12 21c-2.8 0-5-2.2-5-5 0-1.7 1-3.2 2.5-4 .8-.4 1.7-.6 2.5-.6s1.7.2 2.5.6c1.5.8 2.5 2.3 2.5 4 0 2.8-2.2 5-5 5Z"></path>
+</svg>
+''';
+
+const String _svgShareNetwork = '''
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="18" cy="5" r="3"></circle>
+  <circle cx="6" cy="12" r="3"></circle>
+  <circle cx="18" cy="19" r="3"></circle>
+  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+</svg>
+''';
+
+const String _svgDownload = '''
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+  <polyline points="7 10 12 15 17 10"></polyline>
+  <line x1="12" y1="15" x2="12" y2="3"></line>
+</svg>
+''';
 
 // 台灣繁體中文教學註解：
 // 首頁 V2 避坑筆記入口卡片群。
-// 完全對齊設計圖與「扁平多彩雜誌風」視覺：
-// 採用極細 `0.8.w` 灰色外框的純平白底卡片（無陰影、無厚重底色），
-// 左側邊緣嵌入 `4.w` 類別彩虹邊條，右側圓框填充實心莫蘭迪雙色漸層，
-// 頂部帶有高對比雙色編輯特色標籤，底部保留讚數、分享、留言與書籤的平面化按鈕列。
+//
+// 台灣繁體中文教學註解：
+// `HomeV2NewsletterFocusCard` 是首頁「生活避坑筆記」入口，現在以使用者提供的設計截圖為母版：
+// 奶油色大圓角、藍色主標、灰色法規摘要、綠色小提醒、右側小插圖區與底部互動數據列。
+// 下方一般 Newsletter 卡仍保留較通用的列表樣式，避免入口改版時連帶影響其他可能復用的小卡。
 
 class ProtoColors {
   static const Color sageGreen = Color(0xFFAFC3B4);
@@ -31,7 +62,10 @@ EditorialBadge _getEditorialBadge(String title) {
   if (title.contains('租屋') || title.contains('購') || title.contains('退貨')) {
     return const EditorialBadge('編輯精選', ProtoColors.clay, Color(0xFFFFF0EC));
   }
-  if (title.contains('狗') || title.contains('拍') || title.contains('隱私') || title.contains('自拍')) {
+  if (title.contains('狗') ||
+      title.contains('拍') ||
+      title.contains('隱私') ||
+      title.contains('自拍')) {
     return const EditorialBadge('官方整理', Color(0xFF2C5E43), Color(0xFFEEF7F2));
   }
   return const EditorialBadge('開發者推薦', Color(0xFF1976D2), Color(0xFFEEF3F8));
@@ -108,6 +142,11 @@ class _HomeV2NewsletterCardState extends State<HomeV2NewsletterCard> {
   }
 
   void _toggleLike() {
+    if (!_isLiked) {
+      HapticFeedback.mediumImpact();
+    } else {
+      HapticFeedback.lightImpact();
+    }
     setState(() {
       _isLiked = !_isLiked;
     });
@@ -121,15 +160,23 @@ class _HomeV2NewsletterCardState extends State<HomeV2NewsletterCard> {
   }
 
   void _comment() {
-    setState(() {
-      _commentCountDelta += 1;
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('留言功能已預留，先幫你記一筆互動。')),
+    CommentBottomSheet.show(
+      context,
+      title: item.title,
+      onCommentPosted: () {
+        setState(() {
+          _commentCountDelta += 1;
+        });
+      },
     );
   }
 
   void _toggleBookmark() {
+    if (!_isBookmarked) {
+      HapticFeedback.mediumImpact();
+    } else {
+      HapticFeedback.lightImpact();
+    }
     setState(() {
       _isBookmarked = !_isBookmarked;
     });
@@ -141,22 +188,28 @@ class _HomeV2NewsletterCardState extends State<HomeV2NewsletterCard> {
     final badge = _getEditorialBadge(item.title);
     final accentColor = _getCategoryColor(item.category);
     final iconGradient = _getIconGradient(item.category);
-    
-    final isLikedColor = _isLiked ? const Color(0xFFC48A7A) : (isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085));
-    final isBookmarkColor = _isBookmarked ? const Color(0xFFAFC3B4) : (isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085));
-    final cleanTip = item.tip.replaceFirst(RegExp(r'^小提醒：'), '').replaceFirst(RegExp(r'^💡\s*'), '');
+
+    final isLikedColor = _isLiked
+        ? const Color(0xFFC48A7A)
+        : (isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085));
+    final isBookmarkColor = _isBookmarked
+        ? const Color(0xFFAFC3B4)
+        : (isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085));
+    final cleanTip = item.tip
+        .replaceFirst(RegExp(r'^小提醒：'), '')
+        .replaceFirst(RegExp(r'^💡\s*'), '');
 
     return Material(
       color: Colors.transparent,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(12.r),
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF1E2228) : Colors.white,
-            borderRadius: BorderRadius.circular(16.r),
+            color: isDark ? const Color(0xFF1E2228) : const Color(0xFFFAF5EC),
+            borderRadius: BorderRadius.circular(12.r),
             border: Border.all(
-              color: isDark ? const Color(0xFF2D333F) : const Color(0xFFE5E7EB),
+              color: isDark ? const Color(0xFF2D333F) : const Color(0xFFEDE4D8),
               width: 0.8.w,
             ),
           ),
@@ -182,11 +235,14 @@ class _HomeV2NewsletterCardState extends State<HomeV2NewsletterCard> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8.w, vertical: 3.h),
                             decoration: BoxDecoration(
                               color: badge.bgColor,
                               borderRadius: BorderRadius.circular(4.r),
-                              border: Border.all(color: badge.textColor.withOpacity(0.2), width: 0.8.w),
+                              border: Border.all(
+                                  color: badge.textColor.withValues(alpha: 0.2),
+                                  width: 0.8.w),
                             ),
                             child: Text(
                               badge.label,
@@ -234,7 +290,9 @@ class _HomeV2NewsletterCardState extends State<HomeV2NewsletterCard> {
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    color: isDark ? Colors.white : const Color(0xFF3E454D),
+                                    color: isDark
+                                        ? Colors.white
+                                        : const Color(0xFF243B63),
                                     fontSize: 15.sp,
                                     fontWeight: FontWeight.w900,
                                     height: 1.35,
@@ -246,7 +304,9 @@ class _HomeV2NewsletterCardState extends State<HomeV2NewsletterCard> {
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085),
+                                    color: isDark
+                                        ? const Color(0xFF94A3B8)
+                                        : const Color(0xFF667085),
                                     fontSize: 12.sp,
                                     height: 1.45,
                                   ),
@@ -267,34 +327,43 @@ class _HomeV2NewsletterCardState extends State<HomeV2NewsletterCard> {
                               ),
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(
-                              _iconForItem(item),
-                              color: Colors.white,
-                              size: 20.sp,
+                            child: Center(
+                              child: CtmSvgIcon(
+                                _svgPathForItem(item),
+                                size: 18.sp,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ],
                       ),
                       SizedBox(height: 12.h),
-                      // 簡潔的小提醒
+                      // 簡潔的小提醒 (綠色主題)
                       Container(
                         width: double.infinity,
-                        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 10.w, vertical: 8.h),
                         decoration: BoxDecoration(
-                          color: isDark ? const Color(0xFF1E2228) : const Color(0xFFF8FAFC),
+                          color: isDark
+                              ? const Color(0xFF1E2228)
+                              : const Color(0xFFEEF7F2),
                           borderRadius: BorderRadius.circular(8.r),
                           border: Border.all(
-                            color: isDark ? const Color(0xFF2D333F) : const Color(0xFFF1F5F9),
+                            color: isDark
+                                ? const Color(0xFF2D333F)
+                                : const Color(0xFFD0E7D2),
                             width: 0.8.w,
                           ),
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(
-                              Icons.lightbulb_outline_rounded,
-                              color: accentColor,
-                              size: 14.sp,
+                            CtmSvgIcon(
+                              CtmSvgIcons.idea,
+                              color: isDark
+                                  ? const Color(0xFF8BF45F)
+                                  : const Color(0xFF2E7D32),
+                              size: 13.sp,
                             ),
                             SizedBox(width: 6.w),
                             Expanded(
@@ -303,7 +372,9 @@ class _HomeV2NewsletterCardState extends State<HomeV2NewsletterCard> {
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                  color: isDark ? const Color(0xFFCBD5E1) : const Color(0xFF475467),
+                                  color: isDark
+                                      ? const Color(0xFFCBD5E1)
+                                      : const Color(0xFF2E7D32),
                                   fontSize: 11.sp,
                                   fontWeight: FontWeight.w800,
                                   height: 1.4,
@@ -314,30 +385,33 @@ class _HomeV2NewsletterCardState extends State<HomeV2NewsletterCard> {
                         ),
                       ),
                       SizedBox(height: 12.h),
-                      // 底部平面化社群操作列
+                      // 底部平面化社群操作列 (多彩永久配色)
                       Row(
                         children: [
                           _NewsletterMetric(
-                            icon: _isLiked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                            color: isLikedColor,
+                            svgPath: _isLiked
+                                ? CtmSvgIcons.heartFilled
+                                : CtmSvgIcons.heart,
+                            color: const Color(0xFFE53935),
                             label: _metricText(item.likes, _isLiked ? 1 : 0),
                             onTap: _toggleLike,
                           ),
                           _NewsletterMetric(
-                            icon: Icons.share_rounded,
-                            color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085),
+                            svgPath: _svgShareNetwork,
+                            color: const Color(0xFF8A7712),
                             label: _metricText(item.shares, _shareCountDelta),
                             onTap: _share,
                           ),
                           _NewsletterMetric(
-                            icon: Icons.chat_bubble_outline_rounded,
-                            color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085),
-                            label: _metricText(item.comments, _commentCountDelta),
+                            svgPath: CtmSvgIcons.message,
+                            color: const Color(0xFF0F7D4B),
+                            label:
+                                _metricText(item.comments, _commentCountDelta),
                             onTap: _comment,
                           ),
                           _NewsletterMetric(
-                            icon: _isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
-                            color: isBookmarkColor,
+                            svgPath: _svgDownload,
+                            color: const Color(0xFF0A7AA6),
                             label: '儲存',
                             onTap: _toggleBookmark,
                           ),
@@ -354,17 +428,17 @@ class _HomeV2NewsletterCardState extends State<HomeV2NewsletterCard> {
     );
   }
 
-  IconData _iconForItem(HomeNewsletterItem item) {
+  String _svgPathForItem(HomeNewsletterItem item) {
     if (item.category.contains('狗') || item.category.contains('寵物')) {
-      return Icons.pets_rounded;
+      return _svgPets;
     }
-    if (item.category.contains('租')) return Icons.home_work_outlined;
+    if (item.category.contains('租')) return CtmSvgIcons.home;
     if (item.category.contains('拍照') || item.category.contains('隱私')) {
-      return Icons.photo_camera_outlined;
+      return CtmSvgIcons.smartphone;
     }
-    if (item.category.contains('網購')) return Icons.shopping_bag_outlined;
-    if (item.category.contains('交通')) return Icons.directions_car_outlined;
-    return Icons.lightbulb_outline_rounded;
+    if (item.category.contains('網購')) return CtmSvgIcons.shoppingBag;
+    if (item.category.contains('交通')) return CtmSvgIcons.car;
+    return CtmSvgIcons.idea;
   }
 }
 
@@ -385,7 +459,6 @@ class HomeV2NewsletterFocusCard extends StatefulWidget {
 
 class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
   var _isLiked = false;
-  var _isBookmarked = false;
   var _shareCountDelta = 0;
   var _commentCountDelta = 0;
 
@@ -402,6 +475,11 @@ class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
   }
 
   void _toggleLike() {
+    if (!_isLiked) {
+      HapticFeedback.mediumImpact();
+    } else {
+      HapticFeedback.lightImpact();
+    }
     setState(() {
       _isLiked = !_isLiked;
     });
@@ -415,190 +493,230 @@ class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
   }
 
   void _comment() {
-    setState(() {
-      _commentCountDelta += 1;
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('留言功能已預留，先幫你記一筆互動。')),
+    CommentBottomSheet.show(
+      context,
+      title: item.title,
+      onCommentPosted: () {
+        setState(() {
+          _commentCountDelta += 1;
+        });
+      },
     );
-  }
-
-  void _toggleBookmark() {
-    setState(() {
-      _isBookmarked = !_isBookmarked;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final badge = _getEditorialBadge(item.title);
-    final accentColor = _getCategoryColor(item.category);
-    final iconGradient = _getIconGradient(item.category);
-    
-    final isLikedColor = _isLiked ? const Color(0xFFC48A7A) : (isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085));
-    final isBookmarkColor = _isBookmarked ? const Color(0xFFAFC3B4) : (isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085));
-
-    return Material(
-      color: Colors.transparent,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20.r),
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF1E2228) : Colors.white,
-            borderRadius: BorderRadius.circular(20.r),
-            border: Border.all(
-              color: isDark ? const Color(0xFF2D333F) : const Color(0xFFE5E7EB),
-              width: 0.8.w,
-            ),
-          ),
-          child: Stack(
-            children: [
-              // 左側類別彩虹邊條
-              Positioned(
-                left: 0,
-                top: 0,
-                bottom: 0,
-                width: 4.w,
-                child: Container(color: accentColor),
+    final cleanTip = _cleanFocusTip(item.tip);
+    return Column(
+      children: [
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: widget.onTap,
+            borderRadius: BorderRadius.circular(12.r),
+            child: Ink(
+              decoration: BoxDecoration(
+                color:
+                    isDark ? const Color(0xFF1E2228) : const Color(0xFFFAF5EC),
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: isDark
+                      ? const Color(0xFF2D333F)
+                      : const Color(0xFFEDE4D8),
+                  width: 0.8.w,
+                ),
               ),
-              InkWell(
-                onTap: widget.onTap,
-                child: Padding(
-                  padding: EdgeInsets.all(18.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // 頂部列：編輯特色標籤與類別
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
-                            decoration: BoxDecoration(
-                              color: badge.bgColor,
-                              borderRadius: BorderRadius.circular(4.r),
-                              border: Border.all(color: badge.textColor.withOpacity(0.2), width: 0.8.w),
-                            ),
-                            child: Text(
-                              badge.label,
-                              style: TextStyle(
-                                color: badge.textColor,
-                                fontSize: 9.5.sp,
-                                fontWeight: FontWeight.w900,
-                              ),
-                            ),
-                          ),
-                          Row(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(16.w, 16.h, 12.w, 13.h),
+                child: Column(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                width: 5.w,
-                                height: 5.w,
-                                decoration: BoxDecoration(
-                                  color: accentColor,
-                                  shape: BoxShape.circle,
+                              Text(
+                                item.title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: isDark
+                                      ? Colors.white
+                                      : const Color(0xFF243B63),
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w900,
+                                  height: 1.25,
+                                  letterSpacing: 0,
                                 ),
                               ),
-                              SizedBox(width: 5.w),
+                              SizedBox(height: 8.h),
                               Text(
-                                item.category,
+                                item.summary,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                  color: accentColor,
-                                  fontSize: 10.sp,
-                                  fontWeight: FontWeight.bold,
+                                  color: isDark
+                                      ? const Color(0xFF94A3B8)
+                                      : AppColors.textSecondary,
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w800,
+                                  height: 1.4,
+                                  letterSpacing: 0,
                                 ),
+                              ),
+                              SizedBox(height: 8.h),
+                              Row(
+                                children: [
+                                  CtmSvgIcon(
+                                    CtmSvgIcons.idea,
+                                    color: isDark
+                                        ? const Color(0xFF8BF45F)
+                                        : const Color(0xFF2E7D32),
+                                    size: 13.sp,
+                                  ),
+                                  SizedBox(width: 5.w),
+                                  Expanded(
+                                    child: Text(
+                                      cleanTip,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: isDark
+                                            ? const Color(0xFF8BF45F)
+                                            : const Color(0xFF2E7D32),
+                                        fontSize: 11.5.sp,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 12.h),
-                      // 標題與簡介 + 右側實心漸層圖示
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  item.title,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: isDark ? Colors.white : const Color(0xFF3E454D),
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w900,
-                                    height: 1.35,
-                                  ),
-                                ),
-                                SizedBox(height: 8.h),
-                                Text(
-                                  item.summary,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085),
-                                    fontSize: 12.sp,
-                                    height: 1.45,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 14.w),
-                          // 實心漸層圖示圈
-                          Container(
-                            width: 44.w,
-                            height: 44.w,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: iconGradient,
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              _iconForItem(item),
-                              color: Colors.white,
-                              size: 20.sp,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 14.h),
-                      // 底部極簡平面化社群操作列
-                      Row(
-                        children: [
-                          _NewsletterMetric(
-                            icon: _isLiked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                            color: isLikedColor,
-                            label: _metricText(item.likes, _isLiked ? 1 : 0),
-                            onTap: _toggleLike,
-                          ),
-                          _NewsletterMetric(
-                            icon: Icons.share_rounded,
-                            color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085),
-                            label: _metricText(item.shares, _shareCountDelta),
-                            onTap: _share,
-                          ),
-                          _NewsletterMetric(
-                            icon: Icons.chat_bubble_outline_rounded,
-                            color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085),
-                            label: _metricText(item.comments, _commentCountDelta),
-                            onTap: _comment,
-                          ),
-                          _NewsletterMetric(
-                            icon: _isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
-                            color: isBookmarkColor,
-                            label: '儲存',
-                            onTap: _toggleBookmark,
-                          ),
-                        ],
-                      ),
-                    ],
+                        ),
+                        SizedBox(width: 12.w),
+                        const _NewsletterEntryIllustration(),
+                      ],
+                    ),
+                    SizedBox(height: 12.h),
+                    Row(
+                      children: [
+                        _NewsletterFocusMetric(
+                          svgPath: _isLiked
+                              ? CtmSvgIcons.heartFilled
+                              : CtmSvgIcons.heart,
+                          color: const Color(0xFFE53935),
+                          label: _metricText(item.likes, _isLiked ? 1 : 0),
+                          onTap: _toggleLike,
+                        ),
+                        _NewsletterFocusMetric(
+                          svgPath: _svgShareNetwork,
+                          color: const Color(0xFF8A7712),
+                          label: _metricText(item.shares, _shareCountDelta),
+                          onTap: _share,
+                        ),
+                        _NewsletterFocusMetric(
+                          svgPath: CtmSvgIcons.message,
+                          color: const Color(0xFF0F7D4B),
+                          label: _metricText(item.comments, _commentCountDelta),
+                          onTap: _comment,
+                        ),
+                        _NewsletterFocusMetric(
+                          svgPath: _svgDownload,
+                          color: const Color(0xFF0A7AA6),
+                          label: '儲存',
+                          onTap: () {
+                            HapticFeedback.mediumImpact();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('已保存這則避坑筆記。')),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 13.h),
+        const _NewsletterFocusDots(),
+      ],
+    );
+  }
+}
+
+class _NewsletterEntryIllustration extends StatelessWidget {
+  const _NewsletterEntryIllustration();
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      width: 100.w,
+      height: 100.w,
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF2C323C) : const Color(0xFFF1F5F9),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(
+          color: isDark ? const Color(0xFF3F4756) : const Color(0xFFE2E8F0),
+          width: 0.8.w,
+        ),
+      ),
+      child: Center(
+        child: CtmSvgIcon(
+          CtmSvgIcons.bookOpen,
+          size: 28.sp,
+          color: isDark ? const Color(0xFF64748B) : const Color(0xFF94A3B8),
+        ),
+      ),
+    );
+  }
+}
+
+class _NewsletterFocusMetric extends StatelessWidget {
+  const _NewsletterFocusMetric({
+    required this.svgPath,
+    required this.color,
+    required this.label,
+    required this.onTap,
+  });
+
+  final String svgPath;
+  final Color color;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10.r),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 4.h),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CtmSvgIcon(svgPath, color: color, size: 20.sp),
+              SizedBox(width: 5.w),
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: isDark
+                        ? const Color(0xFF94A3B8)
+                        : AppColors.textSecondary,
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0,
                   ),
                 ),
               ),
@@ -608,30 +726,47 @@ class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
       ),
     );
   }
+}
 
-  IconData _iconForItem(HomeNewsletterItem item) {
-    if (item.category.contains('狗') || item.category.contains('寵物')) {
-      return Icons.pets_rounded;
-    }
-    if (item.category.contains('租')) return Icons.home_work_outlined;
-    if (item.category.contains('拍照') || item.category.contains('隱私')) {
-      return Icons.photo_camera_outlined;
-    }
-    if (item.category.contains('網購')) return Icons.shopping_bag_outlined;
-    if (item.category.contains('交通')) return Icons.directions_car_outlined;
-    return Icons.lightbulb_outline_rounded;
+class _NewsletterFocusDots extends StatelessWidget {
+  const _NewsletterFocusDots();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(7, (index) {
+        return Container(
+          width: 10.w,
+          height: 10.w,
+          margin: EdgeInsets.symmetric(horizontal: 6.w),
+          decoration: BoxDecoration(
+            color:
+                index == 0 ? const Color(0xFFFFF5E9) : const Color(0xFFD0D0D0),
+            shape: BoxShape.circle,
+          ),
+        );
+      }),
+    );
   }
+}
+
+String _cleanFocusTip(String tip) {
+  return tip
+      .replaceFirst(RegExp(r'^小提醒：'), '')
+      .replaceFirst(RegExp(r'^💡\s*'), '')
+      .trim();
 }
 
 class _NewsletterMetric extends StatelessWidget {
   const _NewsletterMetric({
-    required this.icon,
+    required this.svgPath,
     required this.color,
     required this.label,
     this.onTap,
   });
 
-  final IconData icon;
+  final String svgPath;
   final Color color;
   final String label;
   final VoidCallback? onTap;
@@ -650,18 +785,250 @@ class _NewsletterMetric extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(icon, color: color, size: 16.sp),
+                CtmSvgIcon(svgPath, color: color, size: 16.sp),
                 SizedBox(width: 6.w),
                 Text(
                   label,
                   style: TextStyle(
-                    color: isDark ? const Color(0xFF94A3B8) : AppColors.textSecondary,
+                    color: isDark
+                        ? const Color(0xFF94A3B8)
+                        : AppColors.textSecondary,
                     fontSize: 11.5.sp,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CommentBottomSheet {
+  const CommentBottomSheet._();
+
+  static void show(BuildContext context,
+      {required String title, VoidCallback? onCommentPosted}) {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return _CommentBottomSheetContent(
+            title: title, onCommentPosted: onCommentPosted);
+      },
+    );
+  }
+}
+
+class _CommentBottomSheetContent extends StatefulWidget {
+  const _CommentBottomSheetContent({required this.title, this.onCommentPosted});
+  final String title;
+  final VoidCallback? onCommentPosted;
+
+  @override
+  State<_CommentBottomSheetContent> createState() =>
+      _CommentBottomSheetContentState();
+}
+
+class _CommentBottomSheetContentState
+    extends State<_CommentBottomSheetContent> {
+  final List<String> _comments = [
+    '這篇太實用了！上次退租就被扣了三千元清潔費，超氣！',
+    '推！《住宅租賃契約應記載事項》第11點一定要看熟，才不會被房東吃死死。',
+    '請問如果是家具自然損壞，房東還是強行扣押金的話，可以直接申訴嗎？',
+  ];
+  final _controller = TextEditingController();
+
+  void _submitComment() {
+    if (_controller.text.trim().isEmpty) return;
+    HapticFeedback.mediumImpact();
+    setState(() {
+      _comments.add(_controller.text.trim());
+      _controller.clear();
+    });
+    widget.onCommentPosted?.call();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+
+    final bg = isDark ? const Color(0xDC171C22) : const Color(0xDCFAF6F0);
+    final border = isDark ? const Color(0xFF2D3748) : const Color(0xFFEDE4D8);
+    final text = isDark ? const Color(0xFFFAF6F0) : const Color(0xFF234D3B);
+    final muted = isDark ? const Color(0xFFA0AEC0) : const Color(0xFF828078);
+
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+      child: Padding(
+        padding: EdgeInsets.only(bottom: bottomInset),
+        child: Container(
+          decoration: BoxDecoration(
+            color: bg,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+            border: Border.all(color: border, width: 1.5.w),
+          ),
+          padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 24.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 48.w,
+                  height: 5.h,
+                  decoration: BoxDecoration(
+                    color: border,
+                    borderRadius: BorderRadius.circular(100.r),
+                  ),
+                ),
+              ),
+              SizedBox(height: 18.h),
+              Text(
+                '避坑交流區',
+                style: TextStyle(
+                  color: text,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                widget.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: muted,
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 16.h),
+              ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: 220.h),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: _comments.length,
+                  itemBuilder: (context, index) {
+                    final comment = _comments[index];
+                    return Container(
+                      margin: EdgeInsets.only(bottom: 10.h),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 12.w, vertical: 10.h),
+                      decoration: BoxDecoration(
+                        color: isDark ? const Color(0xFF1F262F) : Colors.white,
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(color: border, width: 0.8.w),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 24.w,
+                            height: 24.w,
+                            decoration: BoxDecoration(
+                              color: AppColors.primary.withValues(alpha: 0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Text(
+                                '${index + 1}',
+                                style: TextStyle(
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 10.w),
+                          Expanded(
+                            child: Text(
+                              comment,
+                              style: TextStyle(
+                                color: isDark
+                                    ? const Color(0xFFCBD5E1)
+                                    : const Color(0xFF334155),
+                                fontSize: 12.5.sp,
+                                height: 1.45,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _controller,
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        color: isDark ? Colors.white : AppColors.textPrimary,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: '分享您的避坑心得...',
+                        hintStyle: TextStyle(
+                          fontSize: 13.sp,
+                          color: isDark
+                              ? const Color(0xFF64748B)
+                              : AppColors.textMuted,
+                        ),
+                        fillColor:
+                            isDark ? const Color(0xFF1F262F) : Colors.white,
+                        filled: true,
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: 14.w, vertical: 12.h),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                          borderSide: BorderSide(color: border),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                          borderSide: BorderSide(color: border),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                          borderSide: BorderSide(color: AppColors.primary),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+                  SizedBox(
+                    height: 44.h,
+                    child: ElevatedButton(
+                      onPressed: _submitComment,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: const Text('發佈',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

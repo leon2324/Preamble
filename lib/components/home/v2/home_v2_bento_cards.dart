@@ -41,12 +41,18 @@ class _HomeV2QuickAskSectionState extends State<HomeV2QuickAskSection> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final boxBg = isDark ? const Color(0xFF1E242F) : const Color(0xFFF3FAF6);
-    final borderColor = isDark ? const Color(0xFF2C3545) : const Color(0xFFC7DED1);
+    final borderColor =
+        isDark ? const Color(0xFF2C3545) : const Color(0xFFC7DED1);
     final text = isDark ? const Color(0xFFF2F4F7) : const Color(0xFF1B3F38);
-    final hintColor = isDark ? const Color(0xFF6B7785) : const Color(0xFF6A8680);
+    final hintColor =
+        isDark ? const Color(0xFF6B7785) : const Color(0xFF6A8680);
     final chipBg = isDark ? const Color(0xFF161B22) : const Color(0xFFFFFFFF);
-    final chipBorder = isDark ? const Color(0xFF26303D) : const Color(0xFFE2EBE7);
+    final chipBorder =
+        isDark ? const Color(0xFF26303D) : const Color(0xFFE2EBE7);
 
+    // 台灣繁體中文教學註解：
+    // 這些短 prompt 之後可直接映射到 App Intents 的常用捷徑參數；
+    // 目前仍先維持 Flutter 端可點擊送出的完整互動。
     final recommendations = [
       {'text': '租屋押金房東不退', 'color': const Color(0xFF4A7C8C)},
       {'text': '車禍理賠和解程序', 'color': const Color(0xFF9E7B2D)},
@@ -62,7 +68,8 @@ class _HomeV2QuickAskSectionState extends State<HomeV2QuickAskSection> {
             Container(
               padding: EdgeInsets.all(4.w),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF2E394A) : const Color(0xFFE6F2EC),
+                color:
+                    isDark ? const Color(0xFF2E394A) : const Color(0xFFE6F2EC),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -84,11 +91,11 @@ class _HomeV2QuickAskSectionState extends State<HomeV2QuickAskSection> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
               decoration: BoxDecoration(
-                color: const Color(0xFF2EA26F).withOpacity(0.12),
+                color: const Color(0xFF2EA26F).withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(100.r),
               ),
               child: Text(
-                'AI 助手',
+                '快捷問法',
                 style: TextStyle(
                   color: const Color(0xFF2EA26F),
                   fontSize: 9.sp,
@@ -114,7 +121,8 @@ class _HomeV2QuickAskSectionState extends State<HomeV2QuickAskSection> {
           ),
           child: TextField(
             controller: _controller,
-            style: TextStyle(fontSize: 13.sp, color: text, fontWeight: FontWeight.w600),
+            style: TextStyle(
+                fontSize: 13.sp, color: text, fontWeight: FontWeight.w600),
             onSubmitted: _submitPrompt,
             onTapOutside: (event) {
               FocusManager.instance.primaryFocus?.unfocus();
@@ -198,7 +206,7 @@ class _HomeV2QuickAskSectionState extends State<HomeV2QuickAskSection> {
                           style: TextStyle(
                             fontSize: 11.sp,
                             fontWeight: FontWeight.w700,
-                            color: text.withOpacity(0.85),
+                            color: text.withValues(alpha: 0.85),
                           ),
                         ),
                       ],
@@ -248,35 +256,57 @@ class HomeV2WatchlistCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(6.w),
-                    decoration: BoxDecoration(
-                      color: const Color(0x151565C0),
-                      borderRadius: BorderRadius.circular(10.r),
+              Expanded(
+                child: Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(6.w),
+                      decoration: BoxDecoration(
+                        color: const Color(0x151565C0),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: Icon(
+                        Icons.notifications_active_rounded,
+                        color: const Color(0xFF1565C0),
+                        size: 18.sp,
+                      ),
                     ),
-                    child: Icon(
-                      Icons.notifications_active_rounded,
-                      color: const Color(0xFF1565C0),
-                      size: 18.sp,
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '我的關注更新',
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w900,
+                              color: isDark
+                                  ? const Color(0xFFF2F4F7)
+                                  : AppColors.textPrimary,
+                            ),
+                          ),
+                          SizedBox(height: 2.h),
+                          Text(
+                            hasUpdates ? '今天的追蹤摘要已整理好' : '先給你一則今日精選案卷',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w600,
+                              color: isDark
+                                  ? const Color(0xFFA3ABB6)
+                                  : AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 8.w),
-                  Text(
-                    '我的關注更新',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w900,
-                      color: isDark
-                          ? const Color(0xFFF2F4F7)
-                          : AppColors.textPrimary,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+              SizedBox(width: 10.w),
               InkWell(
                 onTap: () {
                   Navigator.of(context).push(
@@ -302,7 +332,9 @@ class HomeV2WatchlistCard extends StatelessWidget {
               final isLaw = item.tag.contains('法');
               final badgeBg = isLaw
                   ? (isDark ? const Color(0x1F2E7D32) : const Color(0xFFE9F5EE))
-                  : (isDark ? const Color(0x1F1565C0) : const Color(0xFFE8F3FF));
+                  : (isDark
+                      ? const Color(0x1F1565C0)
+                      : const Color(0xFFE8F3FF));
               final badgeColor =
                   isLaw ? const Color(0xFF2E7D32) : const Color(0xFF1565C0);
 
@@ -391,14 +423,19 @@ class HomeV2WatchlistCard extends StatelessWidget {
               );
             }),
           ] else ...[
-            // 無動態時展示「今日推薦案卷」
+            // 台灣繁體中文教學註解：
+            // 無追蹤動態時，首頁仍提供一則今日精選案卷；
+            // 未來 Widget 點回 App 時，也可以共用這個「今日精選」語意。
             Container(
               padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF1B241E) : const Color(0xFFF2F8F4),
+                color:
+                    isDark ? const Color(0xFF1B241E) : const Color(0xFFF2F8F4),
                 borderRadius: BorderRadius.circular(12.r),
                 border: Border.all(
-                  color: isDark ? const Color(0xFF275435) : const Color(0xFFD4E8DA),
+                  color: isDark
+                      ? const Color(0xFF275435)
+                      : const Color(0xFFD4E8DA),
                 ),
               ),
               child: Column(
@@ -407,15 +444,20 @@ class HomeV2WatchlistCard extends StatelessWidget {
                   Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 6.w, vertical: 2.h),
                         decoration: BoxDecoration(
-                          color: isDark ? const Color(0xFF275435) : const Color(0xFFD4E8DA),
+                          color: isDark
+                              ? const Color(0xFF275435)
+                              : const Color(0xFFD4E8DA),
                           borderRadius: BorderRadius.circular(4.r),
                         ),
                         child: Text(
-                          '今日推薦案卷',
+                          '今日精選案卷',
                           style: TextStyle(
-                            color: isDark ? const Color(0xFF76BA8B) : const Color(0xFF275435),
+                            color: isDark
+                                ? const Color(0xFF76BA8B)
+                                : const Color(0xFF275435),
                             fontSize: 9.sp,
                             fontWeight: FontWeight.bold,
                           ),
@@ -459,12 +501,17 @@ class HomeV2WatchlistCard extends StatelessWidget {
                           // 點擊「立即思辨」進入該案卷
                           final caseBook = caseTimeMachineCases.first;
                           Navigator.of(context).push(
-                            MaterialPageRoute(builder: (__) => CaseDossierDetailPage(book: caseBook)),
+                            MaterialPageRoute(
+                                builder: (__) =>
+                                    CaseDossierDetailPage(book: caseBook)),
                           );
                         },
                         style: TextButton.styleFrom(
-                          foregroundColor: isDark ? const Color(0xFF76BA8B) : const Color(0xFF275435),
-                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                          foregroundColor: isDark
+                              ? const Color(0xFF76BA8B)
+                              : const Color(0xFF275435),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 12.w, vertical: 6.h),
                           visualDensity: VisualDensity.compact,
                         ),
                         child: const Text('立即思辨 →'),
@@ -509,34 +556,36 @@ class HomeV2AchievementCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                '每日任務',
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w900,
-                  color:
-                      isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
+              Expanded(
+                child: Text(
+                  '每日任務',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w900,
+                    color: isDark
+                        ? const Color(0xFFF2F4F7)
+                        : AppColors.textPrimary,
+                  ),
                 ),
               ),
+              SizedBox(width: 4.w),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 3.h),
                 decoration: BoxDecoration(
                   color: const Color(0x15FF9800),
                   borderRadius: BorderRadius.circular(6.r),
                 ),
-                child: Row(
-                  children: [
-                    Text(
-                      '🔥 5天連續',
-                      style: TextStyle(
-                        fontSize: 9.sp,
-                        fontWeight: FontWeight.w900,
-                        color: Colors.orange,
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  '5天連續',
+                  maxLines: 1,
+                  style: TextStyle(
+                    fontSize: 8.5.sp,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.orange,
+                  ),
                 ),
               ),
             ],
@@ -609,6 +658,10 @@ class HomeV2AchievementCard extends StatelessWidget {
 }
 
 /// 4. 今日 AI 判決故事卡片
+///
+/// 台灣繁體中文教學註解：
+/// 這張卡是 MAIC Demo 的 Widget 落地入口候選；
+/// Widget 顯示短摘要，點回 App 後就能從這裡進入完整白話解說。
 class HomeV2DailyCaseStoryCard extends StatelessWidget {
   const HomeV2DailyCaseStoryCard({super.key});
 
@@ -643,13 +696,34 @@ class HomeV2DailyCaseStoryCard extends StatelessWidget {
                 size: 14.sp,
               ),
               SizedBox(width: 4.w),
-              Text(
-                '今日判決故事',
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w900,
-                  color:
-                      isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
+              Expanded(
+                child: Text(
+                  '今天判決故事',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w900,
+                    color: isDark
+                        ? const Color(0xFFF2F4F7)
+                        : AppColors.textPrimary,
+                  ),
+                ),
+              ),
+              SizedBox(width: 4.w),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFC62828).withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(99.r),
+                ),
+                child: Text(
+                  '每日精選',
+                  style: TextStyle(
+                    color: const Color(0xFFC62828),
+                    fontSize: 8.5.sp,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
               ),
             ],
@@ -834,7 +908,7 @@ class HomeV2ToolsDrawer extends StatelessWidget {
                           padding: EdgeInsets.all(8.w),
                           decoration: BoxDecoration(
                             color: isDark
-                                ? item.iconColor.withOpacity(0.15)
+                                ? item.iconColor.withValues(alpha: 0.15)
                                 : item.color,
                             borderRadius: BorderRadius.circular(12.r),
                           ),
