@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -49,10 +50,14 @@ enum _ResultType { assistant, statute, caseItem, lifeNote, official }
 enum _SearchTab { all, assistant, statutes, cases, lifeNotes, official }
 
 class GlobalSearchPage extends StatefulWidget {
-  const GlobalSearchPage({super.key, SearchRepository? searchRepository})
-      : _searchRepository = searchRepository;
+  const GlobalSearchPage({
+    super.key,
+    SearchRepository? searchRepository,
+    this.quickAskPromptListenable,
+  }) : _searchRepository = searchRepository;
 
   final SearchRepository? _searchRepository;
+  final ValueListenable<String?>? quickAskPromptListenable;
 
   @override
   State<GlobalSearchPage> createState() => _GlobalSearchPageState();
@@ -71,6 +76,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
   var _isSearching = false;
   String? _searchError;
   var _searchRevision = 0;
+  String? _lastExternalQuickAskPrompt;
 
   // AI Assistant Overview state variables
   bool _aiIsThinking = false;
@@ -83,15 +89,48 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
     super.initState();
     _ownsSearchRepository = widget._searchRepository == null;
     _searchRepository = widget._searchRepository ?? SearchRepository();
+    widget.quickAskPromptListenable?.addListener(_handleExternalQuickAskPrompt);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _handleExternalQuickAskPrompt();
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant GlobalSearchPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.quickAskPromptListenable == widget.quickAskPromptListenable) {
+      return;
+    }
+    oldWidget.quickAskPromptListenable
+        ?.removeListener(_handleExternalQuickAskPrompt);
+    widget.quickAskPromptListenable?.addListener(_handleExternalQuickAskPrompt);
   }
 
   @override
   void dispose() {
+    widget.quickAskPromptListenable
+        ?.removeListener(_handleExternalQuickAskPrompt);
     _controller.dispose();
     if (_ownsSearchRepository) {
       _searchRepository.dispose();
     }
     super.dispose();
+  }
+
+  void _handleExternalQuickAskPrompt() {
+    final prompt = widget.quickAskPromptListenable?.value?.trim();
+    if (prompt == null || prompt.isEmpty) {
+      _lastExternalQuickAskPrompt = null;
+      return;
+    }
+    if (prompt == _lastExternalQuickAskPrompt) return;
+
+    _lastExternalQuickAskPrompt = prompt;
+    // 台灣繁體中文教學註解：
+    // 原生 Siri / Shortcuts 入口只提供「問題文字」；這裡沿用既有小法助狀態機，
+    // 讓外部入口、首頁快問、搜尋結果追問都走同一套 UI 與資料流程。
+    _openAssistant(prompt);
   }
 
   // 模擬 AI 根據語氣與長度重新生成內容

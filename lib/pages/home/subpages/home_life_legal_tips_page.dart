@@ -8,7 +8,6 @@ import 'package:lawapp/components/shared/custom_toast.dart';
 import 'package:lawapp/data/mock_data/home/home_mock_data.dart';
 import 'package:lawapp/pages/home/subpages/home_subpage_primitives.dart';
 import 'package:lawapp/pages/learning/know_law_page.dart';
-import 'package:lawapp/pages/learning/statute_database_page.dart';
 import 'package:lawapp/theme/app_colors.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
 
@@ -50,6 +49,17 @@ String _svgPathForCategory(String category) {
   return CtmSvgIcons.idea;
 }
 
+String _imageForCategory(String category) {
+  return switch (category) {
+    '養狗' => 'assets/images/learning/levels/level_02_article_reader.png',
+    '租屋' => 'assets/images/learning/rent_course_room.png',
+    '拍照隱私' => 'assets/images/learning/privacy_course_room.png',
+    '網購' => 'assets/images/learning/consumer_course_room.png',
+    '交通' => 'assets/images/learning/car_course_room.png',
+    _ => 'assets/images/learning/levels/level_01_legal_beginner.png',
+  };
+}
+
 // 台灣繁體中文教學註解：
 // UI/UX 多彩平面編輯風（Flat Colorful Editorial）設計系統。
 // 結合極限扁平外觀與鮮豔局部彩帶，在主頁及列表卡片左側加上「類別彩虹邊條」，
@@ -61,7 +71,7 @@ class ProtoColors {
   static const Color softTaupe = Color(0xFFD7CEC2);
   static const Color clay = Color(0xFFC48A7A);
   static const Color charcoal = AppColors.textPrimary;
-  static const Color lightBg = AppColors.background;
+  static const Color lightBg = Color(0xFFFAF8F5); // 暖米白色背景
   static const Color border = AppColors.border;
 }
 
@@ -100,28 +110,28 @@ class CategoryAesthetics {
 CategoryAesthetics aestheticsForCategory(String category, bool isDark) {
   return switch (category) {
     '養狗' => const CategoryAesthetics(
-        primary: Color(0xFF2C5E43),
-        gradient: [Color(0xFF2C5E43), ProtoColors.sageGreen],
+        primary: Color(0xFF8FA89B), // 莫蘭迪粉綠
+        gradient: [Color(0xFF8FA89B), Color(0xFFBDC7C1)],
         icon: Icons.pets_rounded,
       ),
     '租屋' => const CategoryAesthetics(
-        primary: ProtoColors.clay,
-        gradient: [ProtoColors.clay, Color(0xFFE2B265)],
+        primary: Color(0xFFAB9D95), // 莫蘭迪暖灰
+        gradient: [Color(0xFFAB9D95), Color(0xFFD3C8C2)],
         icon: Icons.home_work_outlined,
       ),
     '拍照隱私' => const CategoryAesthetics(
-        primary: Color(0xFF4C2A75),
-        gradient: [Color(0xFF4C2A75), ProtoColors.blueGray],
+        primary: Color(0xFF9F8FA8), // 莫蘭迪藕紫
+        gradient: [Color(0xFF9F8FA8), Color(0xFFCBBECF)],
         icon: Icons.photo_camera_outlined,
       ),
     '網購' => const CategoryAesthetics(
-        primary: Color(0xFF752434),
-        gradient: [Color(0xFF752434), ProtoColors.clay],
+        primary: Color(0xFFAB8E8F), // 莫蘭迪玫瑰粉
+        gradient: [Color(0xFFAB8E8F), Color(0xFFD2C0C1)],
         icon: Icons.shopping_bag_outlined,
       ),
     '交通' => const CategoryAesthetics(
-        primary: Color(0xFF754318),
-        gradient: [Color(0xFF754318), Color(0xFFD7CEC2)],
+        primary: Color(0xFF8F9DA8), // 莫蘭迪霧藍
+        gradient: [Color(0xFF8F9DA8), Color(0xFFBEC9D2)],
         icon: Icons.traffic_rounded,
       ),
     _ => const CategoryAesthetics(
@@ -150,6 +160,7 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
   var _featuredIndex = 0;
   var _query = '';
   double _pageOffset = 0.0;
+  var _showSearchField = false; // 控制搜尋框是否展開
 
   @override
   void initState() {
@@ -217,7 +228,7 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
           ListView(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.fromLTRB(16.w, topPadding + 146.h, 16.w, 40.h),
+            padding: EdgeInsets.fromLTRB(16.w, topPadding + (_showSearchField ? 146.h : 86.h), 16.w, 40.h),
             children: [
               _LifeTipCategoryRail(
                 labels: _categories,
@@ -234,7 +245,7 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
               SizedBox(height: 12.h),
               // 3D 視差縮放輪播
               SizedBox(
-                height: 164.h,
+                height: 260.h,
                 child: PageView.builder(
                   controller: _featuredController,
                   physics: const BouncingScrollPhysics(),
@@ -291,7 +302,7 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
               ),
               SizedBox(height: 12.h),
               if (filteredItems.isEmpty)
-                const SubpageStatusCard(message: '目前沒有符合條件的避坑筆記，換個關鍵字試試看。')
+                const SubpageStatusCard(message: '目前沒有符合條件 of 避坑筆記，換個關鍵字試試看。')
               else
                 ...filteredItems.map(
                   (item) => Padding(
@@ -308,7 +319,7 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
               ),
             ],
           ),
-          _LifeTrapTopFrostMask(topPadding: topPadding),
+          _LifeTrapTopFrostMask(topPadding: topPadding, isSearchActive: _showSearchField),
           Positioned(
             top: topPadding + 8.h,
             left: 16.w,
@@ -316,9 +327,31 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _LifeTrapAppBar(onBack: () => Navigator.of(context).pop()),
-                SizedBox(height: 14.h),
-                _LifeTrapSearchBar(controller: _searchController),
+                _LifeTrapAppBar(
+                  onBack: () => Navigator.of(context).pop(),
+                  isSearchActive: _showSearchField,
+                  onSearchToggle: () {
+                    setState(() {
+                      _showSearchField = !_showSearchField;
+                      if (!_showSearchField) {
+                        _searchController.clear();
+                      }
+                    });
+                  },
+                ),
+                AnimatedCrossFade(
+                  firstChild: const SizedBox.shrink(),
+                  secondChild: Column(
+                    children: [
+                      SizedBox(height: 10.h),
+                      _LifeTrapSearchBar(controller: _searchController),
+                    ],
+                  ),
+                  crossFadeState: _showSearchField
+                      ? CrossFadeState.showSecond
+                      : CrossFadeState.showFirst,
+                  duration: const Duration(milliseconds: 200),
+                ),
               ],
             ),
           ),
@@ -385,6 +418,9 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
   late List<bool> _stepsChecked;
   double _readingProgress = 0.0;
 
+  var _isFollowing = false;
+  var _isBookmarked = false;
+
   @override
   void initState() {
     super.initState();
@@ -411,6 +447,210 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
     });
   }
 
+  void _showNotesBottomSheet() {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        final bg = isDark ? const Color(0xFF1E2228) : Colors.white;
+        final textCol = isDark ? Colors.white : const Color(0xFF17231F);
+        return Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            decoration: BoxDecoration(
+              color: bg,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '編輯生活避坑筆記',
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.bold,
+                        color: textCol,
+                      ),
+                    ),
+                    IconButton(
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      icon: const Icon(Icons.close_rounded, color: Colors.grey),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12.h),
+                Text(
+                  '主題：${widget.item.title}',
+                  style: TextStyle(
+                    fontSize: 11.5.sp,
+                    color: Colors.grey,
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                TextField(
+                  maxLines: 4,
+                  autofocus: true,
+                  style: TextStyle(fontSize: 13.sp, color: textCol),
+                  decoration: InputDecoration(
+                    hintText: '在此輸入您的心得或整理筆記...',
+                    hintStyle: TextStyle(fontSize: 12.5.sp, color: Colors.grey),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                      borderSide: const BorderSide(color: Color(0xFF2EA26F)),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                SizedBox(
+                  width: double.infinity,
+                  height: 44.h,
+                  child: FilledButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('避坑筆記儲存成功！')),
+                      );
+                    },
+                    style: FilledButton.styleFrom(
+                      backgroundColor: const Color(0xFF2EA26F),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                    ),
+                    child: const Text('儲存筆記'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildBottomBarItem({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+    required Color color,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8.r),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 20.sp, color: color),
+            SizedBox(height: 4.h),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 10.sp,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBottomNavigationBar(bool isDark, CategoryAesthetics aes) {
+    final bg = isDark ? const Color(0xFF151A20) : Colors.white;
+    final borderCol = isDark ? const Color(0xFF28313D) : const Color(0xFFEDE4D8);
+    final textCol = isDark ? const Color(0xFFA3ABB6) : const Color(0xFF5A615C);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: bg,
+        border: Border(
+          top: BorderSide(color: borderCol, width: 1.w),
+        ),
+      ),
+      padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, MediaQuery.paddingOf(context).bottom + 10.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildBottomBarItem(
+            icon: Icons.chat_bubble_outline_rounded,
+            label: '問法助',
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (__) => LawAssistantChatPage(
+                    initialPrompt: '我想了解「${widget.item.title}」這個生活法律問題，可以怎麼處理？',
+                  ),
+                ),
+              );
+            },
+            color: textCol,
+          ),
+          _buildBottomBarItem(
+            icon: Icons.edit_note_rounded,
+            label: '筆記',
+            onTap: _showNotesBottomSheet,
+            color: textCol,
+          ),
+          _buildBottomBarItem(
+            icon: _isFollowing ? Icons.notifications_active_rounded : Icons.notifications_none_rounded,
+            label: '追蹤',
+            onTap: () {
+              setState(() {
+                _isFollowing = !_isFollowing;
+              });
+              CustomToast.show(
+                context,
+                _isFollowing ? '已開啟此主題追蹤' : '已取消此主題追蹤',
+                icon: _isFollowing ? Icons.notifications_active_rounded : Icons.notifications_none_rounded,
+              );
+            },
+            color: _isFollowing ? const Color(0xFF2EA26F) : textCol,
+          ),
+          _buildBottomBarItem(
+            icon: _isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_outline_rounded,
+            label: '收藏',
+            onTap: () {
+              setState(() {
+                _isBookmarked = !_isBookmarked;
+              });
+              CustomToast.show(
+                context,
+                _isBookmarked ? '已加入收藏' : '已取消收藏',
+                icon: _isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_outline_rounded,
+              );
+            },
+            color: _isBookmarked ? const Color(0xFF2EA26F) : textCol,
+          ),
+          _buildBottomBarItem(
+            icon: Icons.share_outlined,
+            label: '分享',
+            onTap: () {
+              Clipboard.setData(ClipboardData(text: 'https://lawapp.com/tips/${widget.item.title}'));
+              CustomToast.show(context, '已複製連結至剪貼簿', icon: Icons.link_rounded);
+            },
+            color: textCol,
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.paddingOf(context).top;
@@ -419,7 +659,8 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
     final badge = _getEditorialBadge(widget.item.title);
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF0F1216) : ProtoColors.lightBg,
+      backgroundColor: isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF8F5),
+      bottomNavigationBar: _buildBottomNavigationBar(isDark, aes),
       body: Stack(
         children: [
           ListView(
@@ -429,7 +670,7 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
               16.w,
               topPadding + 64.h,
               16.w,
-              124.h,
+              24.h,
             ),
             children: [
               // 頂部首部資訊區
@@ -497,7 +738,6 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
               ),
             ),
           ),
-          _buildBottomStickyPanel(isDark, aes),
         ],
       ),
     );
@@ -957,143 +1197,7 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
     );
   }
 
-  Widget _buildBottomStickyPanel(bool isDark, CategoryAesthetics aes) {
-    final foregroundCol = isDark ? Colors.white : AppColors.textPrimary;
-    return Positioned(
-      bottom: MediaQuery.paddingOf(context).bottom + 16.h,
-      left: 16.w,
-      right: 16.w,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-        decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF181C23) : Colors.white,
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color: isDark ? const Color(0xFF2D333F) : ProtoColors.border,
-            width: 0.8.w,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.04),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            // 收藏 Outlined
-            Expanded(
-              flex: 3,
-              child: SizedBox(
-                height: 48.h,
-                child: OutlinedButton.icon(
-                  onPressed: () {
-                    HapticFeedback.lightImpact();
-                    CustomToast.show(context, '已加入收藏',
-                        icon: Icons.bookmark_rounded);
-                  },
-                  style: OutlinedButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    side: BorderSide(
-                        color: isDark
-                            ? const Color(0xFF2D333F)
-                            : ProtoColors.border,
-                        width: 1.w),
-                    foregroundColor: foregroundCol,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.r)),
-                  ),
-                  icon: CtmSvgIcon(CtmSvgIcons.bookmark,
-                      size: 16.sp, color: foregroundCol),
-                  label: Text('收藏',
-                      style: TextStyle(
-                          fontSize: 12.sp, fontWeight: FontWeight.bold)),
-                ),
-              ),
-            ),
-            SizedBox(width: 8.w),
-            // 問法助 Outlined Green
-            Expanded(
-              flex: 3,
-              child: SizedBox(
-                height: 48.h,
-                child: OutlinedButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (__) => LawAssistantChatPage(
-                          initialPrompt:
-                              '我想了解「${widget.item.title}」這個生活法律問題，可以怎麼處理？',
-                        ),
-                      ),
-                    );
-                  },
-                  style: OutlinedButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    side: BorderSide(color: ProtoColors.sageGreen, width: 1.w),
-                    foregroundColor: isDark
-                        ? ProtoColors.sageGreen
-                        : const Color(0xFF2C5E43),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.r)),
-                  ),
-                  icon: CtmSvgIcon(CtmSvgIcons.brain,
-                      size: 16.sp,
-                      color: isDark
-                          ? ProtoColors.sageGreen
-                          : const Color(0xFF2C5E43)),
-                  label: Text('問法助',
-                      style: TextStyle(
-                          fontSize: 12.sp, fontWeight: FontWeight.bold)),
-                ),
-              ),
-            ),
-            SizedBox(width: 8.w),
-            // 查法規 Filled Category Gradient
-            Expanded(
-              flex: 4,
-              child: Container(
-                height: 48.h,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: aes.gradient,
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: FilledButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (__) => StatuteDatabasePage(
-                          initialQuery: _statuteQueryForTip(widget.item),
-                        ),
-                      ),
-                    );
-                  },
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    padding: EdgeInsets.zero,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.r)),
-                  ),
-                  icon: CtmSvgIcon(CtmSvgIcons.search,
-                      size: 16.sp, color: Colors.white),
-                  label: Text('查法規',
-                      style: TextStyle(
-                          fontSize: 12.sp, fontWeight: FontWeight.bold)),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+
 
   static List<String> _buildActionSteps(HomeNewsletterItem item) {
     if (item.title.contains('狗')) {
@@ -1126,9 +1230,13 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
 
 /// 懸浮毛玻璃頂部背景裝飾
 class _LifeTrapTopFrostMask extends StatelessWidget {
-  const _LifeTrapTopFrostMask({required this.topPadding});
+  const _LifeTrapTopFrostMask({
+    required this.topPadding,
+    required this.isSearchActive,
+  });
 
   final double topPadding;
+  final bool isSearchActive;
 
   @override
   Widget build(BuildContext context) {
@@ -1138,7 +1246,7 @@ class _LifeTrapTopFrostMask extends StatelessWidget {
       right: 0,
       child: IgnorePointer(
         child: Container(
-          height: topPadding + 146.h,
+          height: topPadding + (isSearchActive ? 146.h : 86.h),
           color: ProtoColors.lightBg,
         ),
       ),
@@ -1148,9 +1256,15 @@ class _LifeTrapTopFrostMask extends StatelessWidget {
 
 /// 頂部 AppBar
 class _LifeTrapAppBar extends StatelessWidget {
-  const _LifeTrapAppBar({required this.onBack});
+  const _LifeTrapAppBar({
+    required this.onBack,
+    required this.onSearchToggle,
+    required this.isSearchActive,
+  });
 
   final VoidCallback onBack;
+  final VoidCallback onSearchToggle;
+  final bool isSearchActive;
 
   @override
   Widget build(BuildContext context) {
@@ -1172,6 +1286,17 @@ class _LifeTrapAppBar extends StatelessWidget {
               fontSize: 17.sp,
               fontWeight: FontWeight.w900,
               color: isDark ? Colors.white : ProtoColors.charcoal,
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: IconButton(
+              onPressed: onSearchToggle,
+              icon: Icon(
+                isSearchActive ? Icons.search_off_rounded : Icons.search_rounded,
+                color: isDark ? Colors.white : ProtoColors.charcoal,
+                size: 22.sp,
+              ),
             ),
           ),
         ],
@@ -1453,135 +1578,160 @@ class _LifeTipFeaturedCard extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final aes = aestheticsForCategory(item.category, isDark);
     final badge = _getEditorialBadge(item.title);
-    final cleanTip = item.tip
-        .replaceFirst(RegExp(r'^小提醒：'), '')
-        .replaceFirst(RegExp(r'^💡\s*'), '');
+    final imageAsset = _imageForCategory(item.category);
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(14.w),
         decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF181C23) : const Color(0xFFFAF5EC),
-          borderRadius: BorderRadius.circular(12.r),
+          color: isDark ? const Color(0xFF181C23) : Colors.white,
+          borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
             color: isDark ? const Color(0xFF2D333F) : const Color(0xFFEDE4D8),
-            width: 0.8.w,
+            width: 1.w,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: isDark ? 0.15 : 0.03),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // 編輯推薦特色標籤
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
-                  decoration: BoxDecoration(
-                    color: badge.bgColor,
-                    borderRadius: BorderRadius.circular(4.r),
-                    border: Border.all(
-                        color: badge.textColor.withValues(alpha: 0.2),
-                        width: 0.8.w),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16.r),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 1. 最上方：顯示 AI 生成的該主題圖片
+              Image.asset(
+                imageAsset,
+                height: 115.h,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+              // 下方內容區
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.all(12.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      CtmSvgIcon(_svgPathForCategory(item.category),
-                          size: 10.sp, color: badge.textColor),
-                      SizedBox(width: 4.w),
+                      // 2. 中上：顯示屬性晶片 (chips)
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                            decoration: BoxDecoration(
+                              color: isDark ? const Color(0xFF232A24) : const Color(0xFFEEF7F2),
+                              borderRadius: BorderRadius.circular(6.r),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(aes.icon, size: 10.sp, color: aes.primary),
+                                SizedBox(width: 4.w),
+                                Text(
+                                  item.category,
+                                  style: TextStyle(
+                                    fontSize: 9.5.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: aes.primary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 8.w),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                            decoration: BoxDecoration(
+                              color: badge.bgColor,
+                              borderRadius: BorderRadius.circular(6.r),
+                            ),
+                            child: Text(
+                              badge.label,
+                              style: TextStyle(
+                                color: badge.textColor,
+                                fontSize: 9.5.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 6.h),
+                      // 3. 中下：顯示主標題
                       Text(
-                        badge.label,
+                        item.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: badge.textColor,
-                          fontSize: 9.5.sp,
+                          color: isDark ? Colors.white : const Color(0xFF243B63),
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w900,
                         ),
+                      ),
+                      SizedBox(height: 4.h),
+                      // 4. 底部：顯示簡介說明與立即閱讀按鈕的橫向排版
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              item.summary,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF667085),
+                                fontSize: 11.sp,
+                                height: 1.4,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 8.w),
+                          // 立即閱讀按鈕 (莫蘭迪粉綠)
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFE2EFE7), // 莫蘭迪粉綠
+                              borderRadius: BorderRadius.circular(6.r),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  '立即閱讀',
+                                  style: TextStyle(
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF2EA26F),
+                                  ),
+                                ),
+                                SizedBox(width: 2.w),
+                                Icon(
+                                  Icons.arrow_forward_rounded,
+                                  size: 10.sp,
+                                  color: const Color(0xFF2EA26F),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-                CtmSvgIcon(
-                  CtmSvgIcons.arrowRight,
-                  color: isDark
-                      ? const Color(0xFF64748B)
-                      : AppColors.textSecondary,
-                  size: 15.sp,
-                ),
-              ],
-            ),
-            SizedBox(height: 6.h),
-            Text(
-              item.title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: isDark ? Colors.white : const Color(0xFF243B63),
-                fontSize: 15.sp,
-                fontWeight: FontWeight.w900,
               ),
-            ),
-            SizedBox(height: 4.h),
-            Expanded(
-              child: Text(
-                item.summary,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: isDark
-                      ? const Color(0xFF94A3B8)
-                      : const Color(0xFF667085),
-                  fontSize: 11.5.sp,
-                  height: 1.4,
-                ),
-              ),
-            ),
-            SizedBox(height: 6.h),
-            // 平面化的小提醒一行條 (綠色底線版)
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 8.w),
-              decoration: BoxDecoration(
-                color:
-                    isDark ? const Color(0xFF22252A) : const Color(0xFFEEF7F2),
-                borderRadius: BorderRadius.circular(6.r),
-              ),
-              child: Row(
-                children: [
-                  CtmSvgIcon(
-                    CtmSvgIcons.idea,
-                    color: isDark
-                        ? const Color(0xFF8BF45F)
-                        : const Color(0xFF2E7D32),
-                    size: 13.sp,
-                  ),
-                  SizedBox(width: 6.w),
-                  Expanded(
-                    child: Text(
-                      cleanTip,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: isDark
-                            ? const Color(0xFFCBD5E1)
-                            : const Color(0xFF2E7D32),
-                        fontSize: 10.5.sp,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-/// 列表專用精美大卡片 (左側多彩邊條與漸層左圖右文平面設計)
+/// 列表專用精美大卡片 (左側文字與右側縮圖平面設計)
 class _LifeTipListCard extends StatefulWidget {
   const _LifeTipListCard({
     required this.item,
@@ -1602,6 +1752,7 @@ class _LifeTipListCardState extends State<_LifeTipListCard> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final aes = aestheticsForCategory(item.category, isDark);
     final badge = _getEditorialBadge(item.title);
+    final imageAsset = _imageForCategory(item.category);
 
     return Material(
       color: Colors.transparent,
@@ -1609,12 +1760,12 @@ class _LifeTipListCardState extends State<_LifeTipListCard> {
         borderRadius: BorderRadius.circular(12.r),
         child: Container(
           decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF1E2228) : const Color(0xFFFAF5EC),
+            color: isDark ? const Color(0xFF1E2228) : Colors.white,
             borderRadius: BorderRadius.circular(12.r),
             border: Border.all(
-                color:
-                    isDark ? const Color(0xFF2D333F) : const Color(0xFFEDE4D8),
-                width: 0.8.w),
+              color: isDark ? const Color(0xFF2D333F) : const Color(0xFFEDE4D8),
+              width: 0.8.w,
+            ),
           ),
           child: Stack(
             children: [
@@ -1633,37 +1784,7 @@ class _LifeTipListCardState extends State<_LifeTipListCard> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // 左側：縮圖預留框 (色彩飽和漸層)
-                      Container(
-                        width: 80.w,
-                        height: 80.w,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              aes.primary
-                                  .withValues(alpha: isDark ? 0.2 : 0.12),
-                              aes.primary
-                                  .withValues(alpha: isDark ? 0.08 : 0.05),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(8.r),
-                          border: Border.all(
-                            color: aes.primary.withValues(alpha: 0.2),
-                            width: 0.8.w,
-                          ),
-                        ),
-                        child: Center(
-                          child: CtmSvgIcon(
-                            CtmSvgIcons.bookOpen,
-                            color: aes.primary,
-                            size: 26.sp,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 12.w),
-                      // 右側資訊
+                      // 左側資訊
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1676,23 +1797,38 @@ class _LifeTipListCardState extends State<_LifeTipListCard> {
                               style: TextStyle(
                                 fontSize: 13.5.sp,
                                 fontWeight: FontWeight.w900,
-                                color: isDark
-                                    ? Colors.white
-                                    : const Color(0xFF243B63),
+                                color: isDark ? Colors.white : const Color(0xFF243B63),
                                 height: 1.35,
                               ),
                             ),
-                            SizedBox(height: 12.h),
+                            SizedBox(height: 6.h),
+                            Row(
+                              children: [
+                                Text(
+                                  '編輯部',
+                                  style: TextStyle(
+                                    fontSize: 9.5.sp,
+                                    color: isDark ? const Color(0xFF64748B) : const Color(0xFF888888),
+                                  ),
+                                ),
+                                SizedBox(width: 8.w),
+                                Text(
+                                  '1.2k 閱讀',
+                                  style: TextStyle(
+                                    fontSize: 9.5.sp,
+                                    color: isDark ? const Color(0xFF64748B) : const Color(0xFF888888),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10.h),
                             Row(
                               children: [
                                 // 分類標籤 (如「租屋」)
                                 Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 6.w, vertical: 2.h),
+                                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                                   decoration: BoxDecoration(
-                                    color: isDark
-                                        ? const Color(0xFF282F3B)
-                                        : const Color(0xFFF1F5F9),
+                                    color: isDark ? const Color(0xFF282F3B) : const Color(0xFFF1F5F9),
                                     borderRadius: BorderRadius.circular(4.r),
                                   ),
                                   child: Text(
@@ -1700,24 +1836,21 @@ class _LifeTipListCardState extends State<_LifeTipListCard> {
                                     style: TextStyle(
                                       fontSize: 9.sp,
                                       fontWeight: FontWeight.bold,
-                                      color: isDark
-                                          ? const Color(0xFF94A3B8)
-                                          : const Color(0xFF475467),
+                                      color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF475467),
                                     ),
                                   ),
                                 ),
                                 SizedBox(width: 6.w),
                                 // 官方整理/編輯精選標籤
                                 Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 6.w, vertical: 2.h),
+                                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                                   decoration: BoxDecoration(
                                     color: badge.bgColor,
                                     borderRadius: BorderRadius.circular(4.r),
                                     border: Border.all(
-                                        color: badge.textColor
-                                            .withValues(alpha: 0.2),
-                                        width: 0.8.w),
+                                      color: badge.textColor.withValues(alpha: 0.2),
+                                      width: 0.8.w,
+                                    ),
                                   ),
                                   child: Text(
                                     badge.label,
@@ -1728,19 +1861,29 @@ class _LifeTipListCardState extends State<_LifeTipListCard> {
                                     ),
                                   ),
                                 ),
-                                const Spacer(),
-                                Text(
-                                  '05/12 更新',
-                                  style: TextStyle(
-                                    fontSize: 9.5.sp,
-                                    color: isDark
-                                        ? const Color(0xFF64748B)
-                                        : const Color(0xFF94A3B8),
-                                  ),
-                                ),
                               ],
                             ),
                           ],
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      // 右側：縮圖 (由 category 顯示對應圖片，有剪裁)
+                      Container(
+                        width: 80.w,
+                        height: 80.w,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.r),
+                          border: Border.all(
+                            color: aes.primary.withValues(alpha: 0.2),
+                            width: 0.8.w,
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.r),
+                          child: Image.asset(
+                            imageAsset,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ],

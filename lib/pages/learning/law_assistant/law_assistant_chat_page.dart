@@ -5,12 +5,128 @@ class _LearningSearchTopBar extends StatelessWidget {
 
   final VoidCallback onBack;
 
+  void _showHistoryDialog(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 40.h),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.r),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.15),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 8.h),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '諮詢歷史紀錄',
+                        style: TextStyle(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF17231F),
+                        ),
+                      ),
+                      IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        icon: Icon(Icons.close_rounded, size: 20.sp, color: Colors.grey),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(color: Color(0xFFE9DFD2), height: 1),
+                Flexible(
+                  child: ListView(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.symmetric(vertical: 8.h),
+                    children: [
+                      _buildHistoryItem(context, '租約提前解約與房東權益', '2026/06/20', '我租約下個月到期...'),
+                      _buildHistoryItem(context, '車禍賠償範圍與調解程序', '2026/06/15', '車禍對方受傷拖延...'),
+                      _buildHistoryItem(context, '公司無預警裁員與資遣費', '2026/06/10', '公司突然宣布裁員...'),
+                      _buildHistoryItem(context, '網購特價品瑕疵退換爭議', '2026/06/05', '網購特價商品有瑕疵...'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildHistoryItem(BuildContext context, String title, String date, String preview) {
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('已載入歷史紀錄：「$title」')),
+        );
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF17231F),
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Text(
+                  date,
+                  style: TextStyle(
+                    fontSize: 10.sp,
+                    color: const Color(0xFF8B928D),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 4.h),
+            Text(
+              preview,
+              style: TextStyle(
+                fontSize: 11.sp,
+                color: const Color(0xFF5A615C),
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final assistantPalette = _LawAssistantPalette.of(context);
-
     return SizedBox(
-      height: 42.w,
+      height: 48.w,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -24,23 +140,34 @@ class _LearningSearchTopBar extends StatelessWidget {
                 child: Icon(
                   Icons.arrow_back_ios_new_rounded,
                   size: 20.sp,
-                  color: assistantPalette.primaryText,
+                  color: const Color(0xFF2C5E43),
                 ),
               ),
             ),
           ),
           Text(
-            '問小法助',
+            '問問小法助',
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w900,
-              color: assistantPalette.primaryText,
+              fontSize: 18.sp,
+              fontWeight: FontWeight.normal,
+              color: const Color(0xFF2C5E43),
             ),
           ),
           Align(
             alignment: Alignment.centerRight,
-            child: SizedBox(width: 42.w, height: 42.w),
+            child: SizedBox(
+              width: 42.w,
+              height: 42.w,
+              child: InkWell(
+                onTap: () => _showHistoryDialog(context),
+                child: Icon(
+                  Icons.history,
+                  size: 24.sp,
+                  color: const Color(0xFF2C5E43),
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -280,10 +407,9 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
     final conversation = _conversation;
     final messages = conversation?.messages ?? const <LawAssistantMessage>[];
-    final assistantPalette = _LawAssistantPalette.of(context);
 
     return Scaffold(
-      backgroundColor: assistantPalette.pageBackground,
+      backgroundColor: const Color(0xFFFAF8F5), // 暖米色背景
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -328,6 +454,7 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
                 ],
               ),
             ),
+            _buildSuggestionPills(),
             _LawAssistantReplyBox(
               controller: _replyController,
               bottomInset: bottomInset,
@@ -337,6 +464,48 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
               onSend: _sendFollowUp,
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSuggestionPills() {
+    final suggestions = const [
+      '房東違約會怎麼算？',
+      '押金不退還怎麼辦？',
+      '寄存證信函範本',
+    ];
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        child: Row(
+          children: suggestions.map((text) {
+            return GestureDetector(
+              onTap: () {
+                _replyController.text = text;
+                _sendFollowUp();
+              },
+              child: Container(
+                margin: EdgeInsets.only(right: 8.w),
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(100.r),
+                  border: Border.all(color: const Color(0xFFEDE4D8)),
+                ),
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    color: const Color(0xFF2C5E43),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
         ),
       ),
     );
@@ -362,37 +531,61 @@ class _LawAssistantChatBubble extends StatelessWidget {
     final assistantPalette = _LawAssistantPalette.of(context);
 
     if (isUser) {
-      return Align(
-        alignment: Alignment.centerRight,
-        child: Container(
-          constraints: BoxConstraints(maxWidth: 270.w),
-          margin: EdgeInsets.only(bottom: 16.h),
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-          decoration: BoxDecoration(
-            color: assistantPalette.accent,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16.r),
-              topRight: Radius.circular(16.r),
-              bottomLeft: Radius.circular(16.r),
-              bottomRight: Radius.zero,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: assistantPalette.accent.withValues(alpha: 0.15),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+      return Padding(
+        padding: EdgeInsets.only(bottom: 16.h),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Flexible(
+              child: Container(
+                constraints: BoxConstraints(maxWidth: 270.w),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFFDF9), // 暖米白/白色
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16.r),
+                    topRight: Radius.circular(16.r),
+                    bottomLeft: Radius.circular(16.r),
+                    bottomRight: Radius.zero,
+                  ),
+                  border: Border.all(color: const Color(0xFFEDE4D8)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.03),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  message.content,
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    height: 1.5,
+                    color: const Color(0xFF17231F), // 深色文字
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
-            ],
-          ),
-          child: Text(
-            message.content,
-            style: TextStyle(
-              fontSize: 13.sp,
-              height: 1.5,
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
             ),
-          ),
+            SizedBox(width: 10.w),
+            Container(
+              width: 32.w,
+              height: 32.w,
+              decoration: const BoxDecoration(
+                color: Color(0xFFF2994A), // 橘色頭像
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Icon(
+                  Icons.person_rounded,
+                  color: Colors.white,
+                  size: 20.sp,
+                ),
+              ),
+            ),
+          ],
         ),
       );
     }
@@ -403,31 +596,24 @@ class _LawAssistantChatBubble extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Premium AI Sparkle Avatar
+          // Mascot Avatar (吉祥物頭像)
           Container(
             width: 32.w,
             height: 32.w,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFFE6BA79), Color(0xFFC8A261)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFFC8A261).withValues(alpha: 0.22),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 8,
                   offset: const Offset(0, 3),
                 ),
               ],
             ),
-            child: Center(
-              child: SvgPicture.string(
-                _svgSparkles,
-                width: 15.w,
-                height: 15.w,
-                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+            child: ClipOval(
+              child: Image.asset(
+                'assets/images/assistant/law_assistant_home.png',
+                fit: BoxFit.cover,
               ),
             ),
           ),
@@ -722,9 +908,117 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
 
   void _refresh() => setState(() {});
 
+  void _showPlusMenu(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '加入附件或功能',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF17231F),
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildPlusMenuItem(
+                    context,
+                    icon: Icons.description_outlined,
+                    label: '上傳契約文件',
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('模擬上傳契約文件成功！已為您分析內容。')),
+                      );
+                    },
+                  ),
+                  _buildPlusMenuItem(
+                    context,
+                    icon: Icons.photo_outlined,
+                    label: '對話截圖',
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('模擬讀取對話截圖成功！')),
+                      );
+                    },
+                  ),
+                  _buildPlusMenuItem(
+                    context,
+                    icon: Icons.mic_none_rounded,
+                    label: '語音輸入',
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('語音識別中...')),
+                      );
+                    },
+                  ),
+                  _buildPlusMenuItem(
+                    context,
+                    icon: Icons.bookmark_outline_rounded,
+                    label: '匯入歷史諮詢',
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('歷史諮詢已匯入完成！')),
+                      );
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(height: 16.h),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildPlusMenuItem(BuildContext context, {
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12.r),
+      child: SizedBox(
+        width: 80.w,
+        child: Column(
+          children: [
+            CircleAvatar(
+              radius: 24.r,
+              backgroundColor: const Color(0xFFF3FAF6),
+              child: Icon(icon, color: const Color(0xFF2EA26F), size: 22.sp),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              label,
+              style: TextStyle(fontSize: 10.5.sp, color: const Color(0xFF5A615C)),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final assistantPalette = _LawAssistantPalette.of(context);
     final canSend = widget.controller.text.trim().isNotEmpty &&
         !widget.isSending &&
         (widget.isFirstMessage || !widget.isGuest);
@@ -735,20 +1029,32 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
       duration: const Duration(milliseconds: 180),
       padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, widget.bottomInset + 16.h),
       child: Container(
-        padding: EdgeInsets.fromLTRB(14.w, 8.h, 8.w, 8.h),
+        padding: EdgeInsets.fromLTRB(14.w, 8.h, 12.w, 8.h),
         decoration: BoxDecoration(
-          color: assistantPalette.cardSurface,
-          borderRadius: BorderRadius.circular(18.r),
-          border: Border.all(color: assistantPalette.border),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24.r),
+          border: Border.all(color: const Color(0xFFEDE4D8)),
         ),
         child: Row(
           children: [
+            IconButton(
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              icon: Icon(
+                Icons.add,
+                size: 24.sp,
+                color: const Color(0xFF5A615C),
+              ),
+              onPressed: () => _showPlusMenu(context),
+            ),
+            SizedBox(width: 8.w),
             Expanded(
               child: TextField(
                 controller: widget.controller,
                 enabled: !showDisabled,
                 minLines: 1,
                 maxLines: 3,
+                style: TextStyle(fontSize: 13.sp, color: const Color(0xFF17231F)),
                 decoration: InputDecoration(
                   hintText: widget.isFirstMessage
                       ? '請輸入您的法律問題，例如：車禍和解...'
@@ -759,20 +1065,43 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
               ),
             ),
             IconButton(
-              onPressed: canSend ? widget.onSend : null,
-              icon: widget.isSending
-                  ? SizedBox(
-                      width: 18.w,
-                      height: 18.w,
-                      child: const CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : Icon(
-                      Icons.arrow_upward_rounded,
-                      size: 20.sp,
-                      color: canSend
-                          ? assistantPalette.accent
-                          : assistantPalette.mutedText,
-                    ),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              icon: Icon(
+                Icons.mic_none_rounded,
+                size: 22.sp,
+                color: const Color(0xFF5A615C),
+              ),
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('語音識別中...')),
+                );
+              },
+            ),
+            SizedBox(width: 8.w),
+            GestureDetector(
+              onTap: canSend ? widget.onSend : null,
+              child: Opacity(
+                opacity: canSend ? 1.0 : 0.4,
+                child: CircleAvatar(
+                  backgroundColor: const Color(0xFF2EA26F),
+                  radius: 16.r,
+                  child: widget.isSending
+                      ? SizedBox(
+                          width: 14.w,
+                          height: 14.w,
+                          child: const CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : Icon(
+                          Icons.arrow_upward_rounded,
+                          color: Colors.white,
+                          size: 16.sp,
+                        ),
+                ),
+              ),
             ),
           ],
         ),

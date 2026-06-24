@@ -4,7 +4,6 @@ import 'dart:ui' show ImageFilter;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
 import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
 import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart';
@@ -178,18 +177,17 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
       showBackButton: false,
       useSafeArea: false,
       child: Container(
-        color: CaseTimeMachineColors.bgCream,
+        color: const Color(0xFFFAF8F5), // 暖米色背景
         child: SafeArea(
           bottom: false,
           child: Column(
             children: [
-              // 台灣繁體中文教學註解：
-              // 自訂導航標題欄與搜尋入口
+              // 自訂導航標題欄 (對齊設計圖：左側返回箭頭、中間標題與副標題、右側搜尋 icon)
               Padding(
-                padding: EdgeInsets.fromLTRB(10.w, 8.h, 10.w, 4.h),
+                padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 4.h),
                 child: SizedBox(
                   width: double.infinity,
-                  height: 48.h,
+                  height: 56.h,
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
@@ -198,8 +196,11 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
                         child: IconButton(
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
-                          icon: SvgPicture.string(_svgBackIcon,
-                              width: 20.w, height: 20.w),
+                          icon: Icon(
+                            Icons.arrow_back_ios_new_rounded,
+                            size: 20.sp,
+                            color: const Color(0xFF17231F),
+                          ),
                           onPressed: () => Navigator.of(context).pop(),
                         ),
                       ),
@@ -208,13 +209,14 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
                         children: [
                           Text(
                             '案件圖書館',
-                            style: CaseTimeMachineTextStyles.pageTitle(context)
-                                .copyWith(
-                              fontSize: 17.sp,
-                              color: CaseTimeMachineColors.primaryGreen,
+                            style: TextStyle(
+                              fontFamily: 'Songti TC',
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.normal, // 主標不要粗體字
+                              color: const Color(0xFF17231F),
                             ),
                           ),
-                          SizedBox(height: 1.h),
+                          SizedBox(height: 2.h),
                           Text(
                             '閱讀・討論・思辨臺灣重大案件',
                             style: TextStyle(
@@ -230,8 +232,11 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
                         child: IconButton(
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
-                          icon: SvgPicture.string(_svgSearchIcon,
-                              width: 22.w, height: 22.w),
+                          icon: Icon(
+                            Icons.search,
+                            size: 24.sp,
+                            color: const Color(0xFF17231F),
+                          ),
                           onPressed: () => _openSearch(context),
                         ),
                       ),
@@ -245,102 +250,18 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
                 child: ListView(
                   padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 40.h),
                   children: [
-                    // 熱搜跑馬燈條
-                    Container(
-                      height: 32.h,
-                      margin: EdgeInsets.only(bottom: 16.h),
-                      padding: EdgeInsets.symmetric(horizontal: 12.w),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF7F5F0),
-                        borderRadius: BorderRadius.circular(20.r),
-                        border: Border.all(
-                          color: CaseTimeMachineColors.borderLight,
-                          width: 0.8,
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.trending_up_rounded,
-                            size: 14.sp,
-                            color: CaseTimeMachineColors.accentGold,
-                          ),
-                          SizedBox(width: 8.w),
-                          Expanded(
-                            child: _HotSearchMarquee(
-                              queries: const [
-                                '318 太陽花',
-                                '釋字 799 號',
-                                '幼兒園案',
-                                '集會自由',
-                                '車禍過失'
-                              ],
-                              onTap: (q) {
-                                Navigator.of(context).push(
-                                  CupertinoPageRoute<void>(
-                                    builder: (__) => CaseTimeMachineSearchPage(
-                                        initialQuery: q),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // 1. 檢索館藏目錄格線區塊 (將此移至最上方，方便使用者一目了然點擊)
-                    _buildDirectoryCards(context),
+                    // 1. 每日精選 (輪播卡片)
+                    _buildDailySelectionCarousel(context),
 
                     SizedBox(height: 24.h),
 
-                    // 2. 館長今日推薦 (Curated Bookcase)
-                    _buildCuratedBookcase(context),
+                    // 2. 專題場館 (年代館、主題館、經典館)
+                    _buildSpecialPavilions(context),
 
-                    SizedBox(height: 24.h),
+                    SizedBox(height: 28.h),
 
-                    // 3. 矚目大案聚焦 (3D 疊加縮放輪播)
-                    _heroLoading
-                        ? SizedBox(
-                            height: 180.h,
-                            child: const Center(
-                              child: CupertinoActivityIndicator(
-                                radius: 14,
-                                color: CaseTimeMachineColors.primaryGreen,
-                              ),
-                            ),
-                          )
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '矚目大案聚焦',
-                                style: TextStyle(
-                                  fontSize: 15.sp,
-                                  fontWeight: FontWeight.w900,
-                                  color: CaseTimeMachineColors.primaryGreen,
-                                ),
-                              ),
-                              SizedBox(height: 12.h),
-                              _ThreeDStackedCarousel(
-                                books: _heroBooks,
-                                onBookTap: (book) =>
-                                    _openCaseDetail(context, book),
-                                onChatTap: (book) =>
-                                    _openChatRoom(context, book),
-                              ),
-                            ],
-                          ),
-
-                    SizedBox(height: 24.h),
-
-                    // 4. 重大焦點案卷 (取代原本普通小案 feed)
-                    _heroLoading
-                        ? const Center(child: CupertinoActivityIndicator())
-                        : _LandmarkSpotlights(
-                            books: _heroBooks,
-                            onCaseTap: (book) => _openCaseDetail(context, book),
-                          ),
+                    // 3. 近期熱議 (卡片列表)
+                    _buildRecentDiscussions(context),
                   ],
                 ),
               ),
@@ -351,108 +272,195 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
     );
   }
 
-  // 檢索館藏目錄導覽卡
-  Widget _buildDirectoryCards(BuildContext context) {
+  // 每日精選輪播區塊
+  Widget _buildDailySelectionCarousel(BuildContext context) {
+    if (_heroBooks.isEmpty) {
+      return SizedBox(
+        height: 240.h,
+        child: const Center(
+          child: CupertinoActivityIndicator(
+            color: CaseTimeMachineColors.primaryGreen,
+          ),
+        ),
+      );
+    }
+
+    final carouselBooks = _heroBooks.take(4).toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '檢索館藏目錄',
-              style: TextStyle(
-                fontSize: 15.sp,
-                fontWeight: FontWeight.w900,
-                color: CaseTimeMachineColors.primaryGreen,
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                if (_heroBooks.isNotEmpty) {
-                  final listCopy = List<CaseBook>.from(_heroBooks);
-                  listCopy.shuffle();
-                  _openCaseDetail(context, listCopy.first);
-                }
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF7F5F0),
-                  borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(
-                    color:
-                        CaseTimeMachineColors.accentGold.withValues(alpha: 0.3),
-                    width: 0.8,
+        Text(
+          '每日精選',
+          style: TextStyle(
+            fontSize: 17.sp,
+            fontWeight: FontWeight.w800,
+            color: const Color(0xFF1C3A27),
+          ),
+        ),
+        SizedBox(height: 12.h),
+        SizedBox(
+          height: 250.h,
+          child: PageView.builder(
+            controller: PageController(viewportFraction: 0.85),
+            physics: const BouncingScrollPhysics(),
+            itemCount: carouselBooks.length,
+            itemBuilder: (context, index) {
+              final book = carouselBooks[index];
+              
+              String imageAsset = 'assets/images/case_time_machine_v2/ctm_v2_case_book_cover.png';
+              if (index == 0) {
+                imageAsset = 'assets/images/case_time_machine_v2/daily_hunting.png';
+              } else if (index == 1) {
+                imageAsset = 'assets/images/case_time_machine_v2/daily_remote_work.png';
+              } else if (index == 2) {
+                imageAsset = 'assets/images/case_time_machine_v2/daily_rent_subsidy.png';
+              } else if (index == 3) {
+                imageAsset = 'assets/images/case_time_machine_v2/daily_gig_platform.png';
+              }
+
+              String yearChip = '${book.year}年';
+              String locationChip = index % 2 == 0 ? '台北' : '高雄';
+              String statusChip = index % 2 == 0 ? '已定讞' : '審理中';
+
+              return GestureDetector(
+                onTap: () => _openCaseDetail(context, book),
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16.r),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image.asset(
+                          imageAsset,
+                          height: 120.h,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(12.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  _buildInfoChip(yearChip),
+                                  SizedBox(width: 6.w),
+                                  _buildInfoChip(locationChip),
+                                  SizedBox(width: 6.w),
+                                  _buildInfoChip(statusChip),
+                                ],
+                              ),
+                              SizedBox(height: 8.h),
+                              Text(
+                                book.titleZh,
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xFF17231F),
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              SizedBox(height: 4.h),
+                              Text(
+                                book.shortDescription,
+                                style: TextStyle(
+                                  fontSize: 10.5.sp,
+                                  color: const Color(0xFF5A615C),
+                                  height: 1.4,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.casino_outlined,
-                      size: 13.w,
-                      color: CaseTimeMachineColors.accentGold,
-                    ),
-                    SizedBox(width: 4.w),
-                    Text(
-                      '隨機選書',
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w900,
-                        color: CaseTimeMachineColors.accentGold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInfoChip(String label) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF2F4F3),
+        borderRadius: BorderRadius.circular(6.r),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 9.5.sp,
+          fontWeight: FontWeight.bold,
+          color: const Color(0xFF5A615C),
+        ),
+      ),
+    );
+  }
+
+  // 專題場館區塊
+  Widget _buildSpecialPavilions(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '專題場館',
+          style: TextStyle(
+            fontSize: 17.sp,
+            fontWeight: FontWeight.w800,
+            color: const Color(0xFF1C3A27),
+          ),
         ),
         SizedBox(height: 12.h),
         Row(
           children: [
             Expanded(
-              child: _DirectoryCard(
-                title: '年代紀元',
-                subtitle: '收錄 1950 至今歷年人權與法治軌跡',
-                icon: Icons.history_toggle_off_rounded,
-                color: CaseTimeMachineColors.morandiBlue,
+              child: _buildPavilionCard(
+                context,
+                title: '年代館',
+                imagePath: 'assets/images/case_time_machine_v2/ctm_v2_era_emblem.png',
+                icon: Icons.edit_note_rounded,
                 onTap: () => _openHall(context, 'timeline'),
               ),
             ),
-            SizedBox(width: 10.w),
+            SizedBox(width: 8.w),
             Expanded(
-              child: _DirectoryCard(
-                title: '法律議題',
-                subtitle: '聚焦車禍、租屋、解雇等 8 大核心爭議',
-                icon: Icons.gavel_rounded,
-                color: CaseTimeMachineColors.morandiGreen,
+              child: _buildPavilionCard(
+                context,
+                title: '主題館',
+                imagePath: 'assets/images/case_time_machine_v2/ctm_v2_theme_emblem.png',
+                icon: Icons.account_balance_rounded,
                 onTap: () => _openHall(context, 'theme'),
               ),
             ),
-          ],
-        ),
-        SizedBox(height: 10.h),
-        Row(
-          children: [
+            SizedBox(width: 8.w),
             Expanded(
-              child: _DirectoryCard(
-                title: '法院層級',
-                subtitle: '橫跨地院至最高法院裁判',
-                icon: Icons.account_balance_rounded,
-                color: CaseTimeMachineColors.morandiGold,
+              child: _buildPavilionCard(
+                context,
+                title: '經典館',
+                imagePath: 'assets/images/case_time_machine_v2/ctm_v2_classic_emblem.png',
+                icon: Icons.auto_awesome_rounded,
                 onTap: () => _openHall(context, 'classic'),
-              ),
-            ),
-            SizedBox(width: 10.w),
-            Expanded(
-              child: _DirectoryCard(
-                title: '思辨討論',
-                subtitle: '參與觀點對質，投下關鍵票',
-                icon: Icons.forum_rounded,
-                color: CaseTimeMachineColors.morandiLavender,
-                onTap: () => _openSelection(context),
               ),
             ),
           ],
@@ -461,41 +469,263 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
     );
   }
 
-  Widget _buildCuratedBookcase(BuildContext context) {
-    if (_heroBooks.isEmpty) return const SizedBox.shrink();
+  Widget _buildPavilionCard(
+    BuildContext context, {
+    required String title,
+    required String imagePath,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 120.h,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16.r),
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: Image.asset(
+                  imagePath,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned.fill(
+                child: Container(
+                  color: Colors.black.withValues(alpha: 0.35),
+                ),
+              ),
+              Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      icon,
+                      color: Colors.white,
+                      size: 24.sp,
+                    ),
+                    SizedBox(height: 6.h),
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 16.sp, // 放大字體
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
-    // 取 4 筆不同的案件作為館長今日推薦（過濾掉 318 學運，讓其他大案露臉）
-    final curatedBooks =
-        _heroBooks.where((b) => b.id != '318').take(4).toList();
-
+  // 近期熱議區塊
+  Widget _buildRecentDiscussions(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '館長今日推薦',
-          style: TextStyle(
-            fontSize: 15.sp,
-            fontWeight: FontWeight.w900,
-            color: CaseTimeMachineColors.primaryGreen,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '近期熱議',
+              style: TextStyle(
+                fontSize: 17.sp,
+                fontWeight: FontWeight.w800,
+                color: const Color(0xFF1C3A27),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                _openHall(context, 'theme');
+              },
+              child: Text(
+                '查看全部',
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF2C5E43),
+                ),
+              ),
+            ),
+          ],
         ),
         SizedBox(height: 12.h),
-        SizedBox(
-          height: 145.h,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            itemCount: curatedBooks.length,
-            itemBuilder: (context, index) {
-              final book = curatedBooks[index];
-              return _CuratedBookCard(
-                book: book,
-                onTap: () => _openCaseDetail(context, book),
-              );
-            },
-          ),
+        
+        _buildRecentDiscussionCard(
+          context,
+          tag: '#居住正義',
+          tagColor: const Color(0xFF8FA89B), // 莫蘭迪粉綠
+          time: '5小時前',
+          title: '居住正義：租屋補貼法源探索',
+          snippet: '內政部最新修正草案解析，針對租賃市場透明化與補貼機制之法律效力進行深度評估...',
+          imageAsset: 'assets/images/case_time_machine_v2/recent_housing.png',
+          onTap: () {
+            if (_heroBooks.isNotEmpty) {
+              _openCaseDetail(context, _heroBooks.first);
+            }
+          },
+        ),
+
+        SizedBox(height: 12.h),
+
+        _buildRecentDiscussionCard(
+          context,
+          tag: '#勞動權益',
+          tagColor: const Color(0xFFAB8E8F), // 莫蘭迪玫瑰粉
+          time: '昨天',
+          title: '數位平台與勞動契約爭議',
+          snippet: '外送平台夥伴之法律見解，探討承攬與雇傭關係在數位經濟下的新型態法律界定...',
+          imageAsset: 'assets/images/case_time_machine_v2/recent_labor.png',
+          onTap: () {
+            if (_heroBooks.length > 1) {
+              _openCaseDetail(context, _heroBooks[1]);
+            }
+          },
         ),
       ],
+    );
+  }
+
+  Widget _buildRecentDiscussionCard(
+    BuildContext context, {
+    required String tag,
+    required Color tagColor,
+    required String time,
+    required String title,
+    required String snippet,
+    required String imageAsset,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(12.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                              decoration: BoxDecoration(
+                                color: tagColor.withValues(alpha: 0.15),
+                                borderRadius: BorderRadius.circular(6.r),
+                              ),
+                              child: Text(
+                                tag,
+                                style: TextStyle(
+                                  fontSize: 9.5.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: tagColor,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
+                            Text(
+                              time,
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                color: const Color(0xFF8B928D),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 8.h),
+                        Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF17231F),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          snippet,
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            color: const Color(0xFF5A615C),
+                            height: 1.4,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12.r),
+                    child: Image.asset(
+                      imageAsset,
+                      width: 76.w,
+                      height: 76.w,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8.h),
+              const Divider(color: Color(0xFFE6E2D8), height: 1),
+              SizedBox(height: 8.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '閱讀全文',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF17231F),
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_rounded,
+                    size: 16.sp,
+                    color: const Color(0xFF17231F),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

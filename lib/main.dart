@@ -10,6 +10,8 @@ import 'package:lawapp/pages/journal/journal_page.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
 import 'package:lawapp/theme/app_theme.dart';
 import 'package:lawapp/features/case_time_machine/data/case_time_machine_repository.dart';
+import 'package:lawapp/platform/ios_quick_ask_intent_bridge.dart';
+import 'package:lawapp/platform/ios_today_case_widget_bridge.dart';
 
 /// 應用程式進入點。
 ///
@@ -20,6 +22,10 @@ void main() async {
 
   // 初始化本地 SQLite 資料庫與記憶體快取倉庫
   await CaseTimeMachineRepository.instance.initialize();
+  // 台灣繁體中文教學註解：
+  // iOS WidgetKit 讀不到 Flutter widget tree，因此 App 啟動時先把今日判決故事同步到 App Group；
+  // Android、測試環境或原生橋接尚未完成時會安全略過，不影響主流程。
+  await IosTodayCaseWidgetBridge.syncDefaultStory();
 
   runApp(
     ScreenUtilInit(
@@ -43,6 +49,7 @@ class MylawApp extends StatefulWidget {
 
 class _MylawAppState extends State<MylawApp> {
   late final LawAppState _appState;
+  late final ValueNotifier<String?> _quickAskPromptNotifier;
   int selectedIndex = 0;
   int? _knowLawInitialTabIndex;
   String? _knowLawInitialToolTab;
@@ -79,12 +86,40 @@ class _MylawAppState extends State<MylawApp> {
   void initState() {
     super.initState();
     _appState = LawAppState()..load();
+    _quickAskPromptNotifier = ValueNotifier<String?>(null);
+    IosQuickAskIntentBridge.registerPromptHandler(_openQuickAskFromNative);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final prompt = await IosQuickAskIntentBridge.consumeInitialPrompt();
+      if (!mounted || prompt == null) return;
+      _openQuickAskFromNative(prompt);
+    });
   }
 
   @override
   void dispose() {
+    IosQuickAskIntentBridge.unregisterPromptHandler();
+    _quickAskPromptNotifier.dispose();
     _appState.dispose();
     super.dispose();
+  }
+
+  void _openQuickAskFromNative(String prompt) {
+    final trimmedPrompt = prompt.trim();
+    if (trimmedPrompt.isEmpty) return;
+
+    final assistantIndex = _appState.navbarOrder.indexOf(2);
+    if (assistantIndex == -1) return;
+
+    // 台灣繁體中文教學註解：
+    // Siri / Shortcuts / Widget 進來時，只由主殼層負責切換底部分頁；
+    // 實際的小法助 prompt 處理仍交給 GlobalSearchPage，避免原生入口繞過既有搜尋狀態機。
+    setState(() {
+      _knowLawInitialTabIndex = null;
+      _knowLawInitialToolTab = null;
+      selectedIndex = assistantIndex;
+    });
+    _quickAskPromptNotifier.value = null;
+    _quickAskPromptNotifier.value = trimmedPrompt;
   }
 
   @override
@@ -138,7 +173,7 @@ class _MylawAppState extends State<MylawApp> {
         initialTabIndex: _knowLawInitialTabIndex,
         initialToolTab: _knowLawInitialToolTab,
       ),
-      const GlobalSearchPage(),
+      GlobalSearchPage(quickAskPromptListenable: _quickAskPromptNotifier),
       const JournalPage(),
       const ProfilePage(),
     ];
