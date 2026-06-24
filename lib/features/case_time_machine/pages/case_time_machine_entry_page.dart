@@ -438,7 +438,7 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
               child: _buildPavilionCard(
                 context,
                 title: '年代館',
-                imagePath: 'assets/images/case_time_machine_v2/ctm_v2_era_emblem.png',
+                gradientColors: const [Color(0xFF5E8B75), Color(0xFF7FA893)],
                 icon: Icons.edit_note_rounded,
                 onTap: () => _openHall(context, 'timeline'),
               ),
@@ -448,7 +448,7 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
               child: _buildPavilionCard(
                 context,
                 title: '主題館',
-                imagePath: 'assets/images/case_time_machine_v2/ctm_v2_theme_emblem.png',
+                gradientColors: const [Color(0xFF5E738B), Color(0xFF7E92A8)],
                 icon: Icons.account_balance_rounded,
                 onTap: () => _openHall(context, 'theme'),
               ),
@@ -458,7 +458,7 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
               child: _buildPavilionCard(
                 context,
                 title: '經典館',
-                imagePath: 'assets/images/case_time_machine_v2/ctm_v2_classic_emblem.png',
+                gradientColors: const [Color(0xFF8B5E63), Color(0xFFA87E83)],
                 icon: Icons.auto_awesome_rounded,
                 onTap: () => _openHall(context, 'classic'),
               ),
@@ -472,7 +472,7 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
   Widget _buildPavilionCard(
     BuildContext context, {
     required String title,
-    required String imagePath,
+    required List<Color> gradientColors,
     required IconData icon,
     required VoidCallback onTap,
   }) {
@@ -482,6 +482,11 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
         height: 120.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.r),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: gradientColors,
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.08),
@@ -490,40 +495,22 @@ class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
             ),
           ],
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16.r),
-          child: Stack(
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Positioned.fill(
-                child: Image.asset(
-                  imagePath,
-                  fit: BoxFit.cover,
-                ),
+              Icon(
+                icon,
+                color: Colors.white,
+                size: 24.sp,
               ),
-              Positioned.fill(
-                child: Container(
-                  color: Colors.black.withValues(alpha: 0.35),
-                ),
-              ),
-              Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      icon,
-                      color: Colors.white,
-                      size: 24.sp,
-                    ),
-                    SizedBox(height: 6.h),
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 16.sp, // 放大字體
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
+              SizedBox(height: 6.h),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16.sp, // 放大字體
+                  fontWeight: FontWeight.w800,
+                  color: Colors.white,
                 ),
               ),
             ],

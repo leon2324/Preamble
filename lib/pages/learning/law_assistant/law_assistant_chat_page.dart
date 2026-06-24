@@ -415,10 +415,13 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Column(
           children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(16.w, topPadding + 14.h, 16.w, 8.h),
-              child: _LearningSearchTopBar(
-                onBack: () => Navigator.of(context).pop(),
+            SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(16.w, 6.h, 16.w, 8.h),
+                child: _LearningSearchTopBar(
+                  onBack: () => Navigator.of(context).pop(),
+                ),
               ),
             ),
             Expanded(
