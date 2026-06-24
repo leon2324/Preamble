@@ -39,7 +39,7 @@ const String _svgDownload = '''
 //
 // 台灣繁體中文教學註解：
 // `HomeV2NewsletterFocusCard` 是首頁「生活避坑筆記」入口，現在以使用者提供的設計截圖為母版：
-// 奶油色大圓角、藍色主標、灰色法規摘要、綠色小提醒、右側小插圖區與底部互動數據列。
+// 奶油色大圓角、深色故事標題、灰色風險摘要、綠色小提醒、右側生活情境圖片與底部互動數據列。
 // 下方一般 Newsletter 卡仍保留較通用的列表樣式，避免入口改版時連帶影響其他可能復用的小卡。
 
 class ProtoColors {
@@ -48,7 +48,8 @@ class ProtoColors {
   static const Color warmBeige = Color(0xFFF2EDE6);
   static const Color softTaupe = Color(0xFFD7CEC2);
   static const Color clay = Color(0xFFC48A7A);
-  static const Color charcoal = Color(0xFF3E454D);
+  static const Color deepGreen = Color(0xFF2C5E43);
+  static const Color charcoal = Color(0xFF17231F);
 }
 
 class EditorialBadge {
@@ -73,40 +74,82 @@ EditorialBadge _getEditorialBadge(String title) {
 
 Color _getCategoryColor(String category) {
   if (category.contains('狗') || category.contains('寵物')) {
-    return const Color(0xFF2C5E43); // 森林深綠
+    return ProtoColors.deepGreen;
   }
   if (category.contains('租')) {
-    return ProtoColors.clay; // 陶土紅
+    return const Color(0xFF7A624A);
   }
   if (category.contains('拍照') || category.contains('隱私')) {
-    return const Color(0xFF4C2A75); // 皇家紫
+    return const Color(0xFF426E9F);
   }
   if (category.contains('網購')) {
-    return const Color(0xFF752434); // 酒紅
+    return const Color(0xFFC9877B);
   }
   if (category.contains('交通')) {
-    return const Color(0xFF754318); // 琥珀褐
+    return const Color(0xFF8A7B5C);
   }
   return ProtoColors.charcoal;
 }
 
 List<Color> _getIconGradient(String category) {
   if (category.contains('狗') || category.contains('寵物')) {
-    return const [Color(0xFF2C5E43), Color(0xFFAFC3B4)];
+    return const [ProtoColors.deepGreen, ProtoColors.sageGreen];
   }
   if (category.contains('租')) {
-    return const [ProtoColors.clay, Color(0xFFE2B265)];
+    return const [Color(0xFF7A624A), ProtoColors.softTaupe];
   }
   if (category.contains('拍照') || category.contains('隱私')) {
-    return const [Color(0xFF4C2A75), Color(0xFFA9B4C4)];
+    return const [Color(0xFF426E9F), ProtoColors.blueGray];
   }
   if (category.contains('網購')) {
-    return const [Color(0xFF752434), ProtoColors.clay];
+    return const [Color(0xFFC9877B), Color(0xFFE8C8BE)];
   }
   if (category.contains('交通')) {
-    return const [Color(0xFF754318), Color(0xFFD7CEC2)];
+    return const [Color(0xFF8A7B5C), Color(0xFFE5D5A8)];
   }
   return const [ProtoColors.charcoal, Color(0xFF888888)];
+}
+
+String _storyImageForCategory(String category) {
+  return switch (category) {
+    '養狗' => 'assets/images/learning/levels/level_02_article_reader.png',
+    '租屋' => 'assets/images/learning/rent_course_room.png',
+    '拍照隱私' => 'assets/images/learning/privacy_course_room.png',
+    '網購' => 'assets/images/learning/consumer_course_room.png',
+    '交通' => 'assets/images/learning/car_course_room.png',
+    _ => 'assets/images/learning/levels/level_01_legal_beginner.png',
+  };
+}
+
+String _issueHintForHomeTip(HomeNewsletterItem item) {
+  // 台灣繁體中文教學註解：
+  // 首頁入口只給一行「小動作可能導致什麼法律風險」，
+  // 使用者點進去後，詳細頁再展開完整情境與處理步驟。
+  if (item.category.contains('養狗') || item.title.contains('狗')) {
+    return '可能涉及：動物占有人責任、醫療費、精神損害賠償';
+  }
+  if (item.category.contains('拍照') ||
+      item.category.contains('隱私') ||
+      item.title.contains('自拍') ||
+      item.title.contains('截圖')) {
+    return '可能涉及：肖像權、隱私權、個人資料使用';
+  }
+  if (item.category.contains('租') || item.title.contains('押金')) {
+    return '可能涉及：押金返還、修繕責任、退租點交';
+  }
+  if (item.category.contains('網購') || item.title.contains('退貨')) {
+    return '可能涉及：七日鑑賞期、退款期限、交易證明';
+  }
+  if (item.category.contains('交通') || item.title.contains('車禍')) {
+    return '可能涉及：肇責判斷、和解書、保險理賠';
+  }
+  return '可能涉及：證據保存、通知方式、協商紀錄';
+}
+
+String _readTimeForHomeTip(HomeNewsletterItem item) {
+  if (item.category.contains('租')) return '4 分鐘';
+  if (item.category.contains('交通')) return '5 分鐘';
+  return '3 分鐘';
 }
 
 class HomeV2NewsletterCard extends StatefulWidget {
@@ -459,6 +502,7 @@ class HomeV2NewsletterFocusCard extends StatefulWidget {
 
 class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
   var _isLiked = false;
+  var _isBookmarked = false;
   var _shareCountDelta = 0;
   var _commentCountDelta = 0;
 
@@ -504,10 +548,25 @@ class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
     );
   }
 
+  void _toggleBookmark() {
+    if (!_isBookmarked) {
+      HapticFeedback.mediumImpact();
+    } else {
+      HapticFeedback.lightImpact();
+    }
+    setState(() {
+      _isBookmarked = !_isBookmarked;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cleanTip = _cleanFocusTip(item.tip);
+    final accentColor = _getCategoryColor(item.category);
+    final issue = _issueHintForHomeTip(item);
+    final readTime = _readTimeForHomeTip(item);
+
     return Column(
       children: [
         Material(
@@ -530,7 +589,28 @@ class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
               child: Padding(
                 padding: EdgeInsets.fromLTRB(16.w, 16.h, 12.w, 13.h),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 9.w, vertical: 4.h),
+                        decoration: BoxDecoration(
+                          color: accentColor.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(999.r),
+                        ),
+                        child: Text(
+                          '日常小動作',
+                          style: TextStyle(
+                            color: accentColor,
+                            fontSize: 10.5.sp,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10.h),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -545,7 +625,7 @@ class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
                                 style: TextStyle(
                                   color: isDark
                                       ? Colors.white
-                                      : const Color(0xFF243B63),
+                                      : ProtoColors.charcoal,
                                   fontSize: 18.sp,
                                   fontWeight: FontWeight.w900,
                                   height: 1.25,
@@ -554,8 +634,8 @@ class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
                               ),
                               SizedBox(height: 8.h),
                               Text(
-                                item.summary,
-                                maxLines: 3,
+                                issue,
+                                maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   color: isDark
@@ -594,11 +674,30 @@ class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
                                   ),
                                 ],
                               ),
+                              SizedBox(height: 10.h),
+                              Row(
+                                children: [
+                                  _NewsletterStoryChip(
+                                    label: item.category,
+                                    color: accentColor,
+                                  ),
+                                  SizedBox(width: 6.w),
+                                  _NewsletterStoryChip(
+                                    label: '民法',
+                                    color: const Color(0xFF426E9F),
+                                  ),
+                                  SizedBox(width: 6.w),
+                                  _NewsletterStoryChip(
+                                    label: readTime,
+                                    color: const Color(0xFF8A7B5C),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ),
                         SizedBox(width: 12.w),
-                        const _NewsletterEntryIllustration(),
+                        _NewsletterEntryIllustration(category: item.category),
                       ],
                     ),
                     SizedBox(height: 12.h),
@@ -625,15 +724,14 @@ class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
                           onTap: _comment,
                         ),
                         _NewsletterFocusMetric(
-                          svgPath: _svgDownload,
-                          color: const Color(0xFF0A7AA6),
+                          svgPath: _isBookmarked
+                              ? CtmSvgIcons.bookmark
+                              : _svgDownload,
+                          color: _isBookmarked
+                              ? ProtoColors.deepGreen
+                              : const Color(0xFF0A7AA6),
                           label: '儲存',
-                          onTap: () {
-                            HapticFeedback.mediumImpact();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('已保存這則避坑筆記。')),
-                            );
-                          },
+                          onTap: _toggleBookmark,
                         ),
                       ],
                     ),
@@ -651,27 +749,67 @@ class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
 }
 
 class _NewsletterEntryIllustration extends StatelessWidget {
-  const _NewsletterEntryIllustration();
+  const _NewsletterEntryIllustration({required this.category});
+
+  final String category;
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final accentColor = _getCategoryColor(category);
+
     return Container(
       width: 100.w,
       height: 100.w,
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF2C323C) : const Color(0xFFF1F5F9),
+        color: isDark
+            ? const Color(0xFF2C323C)
+            : accentColor.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
-          color: isDark ? const Color(0xFF3F4756) : const Color(0xFFE2E8F0),
+          color: isDark
+              ? const Color(0xFF3F4756)
+              : accentColor.withValues(alpha: 0.16),
           width: 0.8.w,
         ),
       ),
-      child: Center(
-        child: CtmSvgIcon(
-          CtmSvgIcons.bookOpen,
-          size: 28.sp,
-          color: isDark ? const Color(0xFF64748B) : const Color(0xFF94A3B8),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12.r),
+        child: Image.asset(
+          _storyImageForCategory(category),
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+}
+
+class _NewsletterStoryChip extends StatelessWidget {
+  const _NewsletterStoryChip({
+    required this.label,
+    required this.color,
+  });
+
+  final String label;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(999.r),
+      ),
+      child: Text(
+        label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          color: color,
+          fontSize: 10.sp,
+          fontWeight: FontWeight.w900,
+          letterSpacing: 0,
         ),
       ),
     );

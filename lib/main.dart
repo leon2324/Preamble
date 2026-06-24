@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/app/app_state.dart';
@@ -5,12 +7,14 @@ import 'package:lawapp/components/navigation/island_bottom_nav.dart';
 import 'package:lawapp/pages/profile/profile_page.dart';
 import 'package:lawapp/pages/home/home_page.dart';
 import 'package:lawapp/pages/learning/know_law_page.dart';
+import 'package:lawapp/pages/learning/statute_database_page.dart';
 import 'package:lawapp/pages/search/global_search_page.dart';
 import 'package:lawapp/pages/journal/journal_page.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
 import 'package:lawapp/theme/app_theme.dart';
 import 'package:lawapp/features/case_time_machine/data/case_time_machine_repository.dart';
 import 'package:lawapp/platform/ios_quick_ask_intent_bridge.dart';
+import 'package:lawapp/platform/ios_statute_spotlight_bridge.dart';
 import 'package:lawapp/platform/ios_today_case_widget_bridge.dart';
 
 /// 應用程式進入點。
@@ -26,6 +30,10 @@ void main() async {
   // iOS WidgetKit 讀不到 Flutter widget tree，因此 App 啟動時先把今日判決故事同步到 App Group；
   // Android、測試環境或原生橋接尚未完成時會安全略過，不影響主流程。
   await IosTodayCaseWidgetBridge.syncDefaultStory();
+  // 台灣繁體中文教學註解：
+  // Core Spotlight 索引是系統層加分入口，不需要阻塞第一屏；先背景同步精選法條，
+  // 使用者之後在 iPhone 搜尋「民法184」「租屋押金」就能回到法規資料庫。
+  unawaited(IosStatuteSpotlightBridge.syncDefaultIndex());
 
   runApp(
     ScreenUtilInit(
@@ -48,6 +56,7 @@ class MylawApp extends StatefulWidget {
 }
 
 class _MylawAppState extends State<MylawApp> {
+  late final GlobalKey<NavigatorState> _navigatorKey;
   late final LawAppState _appState;
   late final ValueNotifier<String?> _quickAskPromptNotifier;
   int selectedIndex = 0;
@@ -85,19 +94,31 @@ class _MylawAppState extends State<MylawApp> {
   @override
   void initState() {
     super.initState();
+    _navigatorKey = GlobalKey<NavigatorState>();
     _appState = LawAppState()..load();
     _quickAskPromptNotifier = ValueNotifier<String?>(null);
     IosQuickAskIntentBridge.registerPromptHandler(_openQuickAskFromNative);
+    IosStatuteSpotlightBridge.registerQueryHandler(
+      _openStatuteDatabaseFromNative,
+    );
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final prompt = await IosQuickAskIntentBridge.consumeInitialPrompt();
-      if (!mounted || prompt == null) return;
-      _openQuickAskFromNative(prompt);
+      if (!mounted) return;
+      if (prompt != null) {
+        _openQuickAskFromNative(prompt);
+      }
+
+      final statuteQuery =
+          await IosStatuteSpotlightBridge.consumeInitialQuery();
+      if (!mounted || statuteQuery == null) return;
+      _openStatuteDatabaseFromNative(statuteQuery);
     });
   }
 
   @override
   void dispose() {
     IosQuickAskIntentBridge.unregisterPromptHandler();
+    IosStatuteSpotlightBridge.unregisterQueryHandler();
     _quickAskPromptNotifier.dispose();
     _appState.dispose();
     super.dispose();
@@ -120,6 +141,29 @@ class _MylawAppState extends State<MylawApp> {
     });
     _quickAskPromptNotifier.value = null;
     _quickAskPromptNotifier.value = trimmedPrompt;
+  }
+
+  void _openStatuteDatabaseFromNative(String query) {
+    final trimmedQuery = query.trim();
+    if (trimmedQuery.isEmpty) return;
+
+    final navigator = _navigatorKey.currentState;
+    if (navigator == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _openStatuteDatabaseFromNative(trimmedQuery);
+      });
+      return;
+    }
+
+    // 台灣繁體中文教學註解：
+    // Spotlight 點擊代表使用者已經在系統搜尋選定某個法條，因此直接 push 法規資料庫；
+    // 不先切換底部 Tab，避免從 iOS 搜尋結果進 App 後還要再多點一次。
+    navigator.push(
+      MaterialPageRoute<void>(
+        builder: (_) => StatuteDatabasePage(initialQuery: trimmedQuery),
+      ),
+    );
   }
 
   @override
@@ -187,6 +231,7 @@ class _MylawAppState extends State<MylawApp> {
         animation: _appState,
         builder: (context, _) {
           return MaterialApp(
+            navigatorKey: _navigatorKey,
             locale: const Locale('zh', 'TW'),
             debugShowCheckedModeBanner: false,
             title: 'LawApp',

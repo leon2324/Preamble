@@ -1,4 +1,5 @@
 import Flutter
+import CoreSpotlight
 import UIKit
 import WidgetKit
 
@@ -24,11 +25,23 @@ private enum QuickAskAppIntentBridge {
   static let todayCasePrompt = "我想看今天判決故事的白話整理，並請小法助補充相關法律重點。"
 }
 
+private enum StatuteSpotlightBridge {
+  // 台灣繁體中文教學註解：
+  // 法條內容與索引策略留在 Dart；Swift 只保存 Core Spotlight 需要的系統常數。
+  // 這樣日後要改成正式資料庫、使用者追蹤法條或個人化推薦時，不必重寫原生層。
+  static let channelName = "lawapp/statute_spotlight"
+  static let domainIdentifier = "com.leonchen.lawapp.dev1.statutes"
+  static let itemPrefix = "lawapp.statute."
+}
+
 @main
 @objc class AppDelegate: FlutterAppDelegate {
   private var quickAskChannel: FlutterMethodChannel?
   private var quickAskBridgeReady = false
   private var pendingQuickAskPrompt: String?
+  private var statuteSpotlightChannel: FlutterMethodChannel?
+  private var statuteSpotlightBridgeReady = false
+  private var pendingStatuteSpotlightQuery: String?
 
   override func application(
     _ application: UIApplication,
@@ -37,6 +50,7 @@ private enum QuickAskAppIntentBridge {
     GeneratedPluginRegistrant.register(with: self)
     registerTodayCaseWidgetBridge()
     registerQuickAskAppIntentBridge()
+    registerStatuteSpotlightBridge()
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
@@ -61,6 +75,10 @@ private enum QuickAskAppIntentBridge {
     continue userActivity: NSUserActivity,
     restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
   ) -> Bool {
+    if handleSpotlightUserActivity(userActivity) {
+      return true
+    }
+
     if let url = userActivity.webpageURL, handleLawAppURL(url) {
       return true
     }
@@ -126,6 +144,40 @@ private enum QuickAskAppIntentBridge {
     }
   }
 
+  private func registerStatuteSpotlightBridge() {
+    guard let controller = window?.rootViewController as? FlutterViewController else {
+      return
+    }
+
+    let channel = FlutterMethodChannel(
+      name: StatuteSpotlightBridge.channelName,
+      binaryMessenger: controller.binaryMessenger
+    )
+    statuteSpotlightChannel = channel
+
+    channel.setMethodCallHandler { [weak self] call, result in
+      guard let self else {
+        result(nil)
+        return
+      }
+
+      switch call.method {
+      case "indexStatuteSpotlightItems":
+        self.indexStatuteSpotlightItems(arguments: call.arguments, result: result)
+      case "consumeInitialStatuteQuery":
+        // 台灣繁體中文教學註解：
+        // 使用者從 Spotlight 冷啟動 App 時，NSUserActivity 可能早於 Flutter listener；
+        // 因此先把 query 暫存在原生層，待 Dart 主殼層初始化後再取回。
+        self.statuteSpotlightBridgeReady = true
+        let query = self.pendingStatuteSpotlightQuery
+        self.pendingStatuteSpotlightQuery = nil
+        result(query.map { ["query": $0] })
+      default:
+        result(FlutterMethodNotImplemented)
+      }
+    }
+  }
+
   private func handleLawAppURL(_ url: URL) -> Bool {
     guard url.scheme == "lawapp",
           let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
@@ -160,6 +212,35 @@ private enum QuickAskAppIntentBridge {
       )
     } else {
       pendingQuickAskPrompt = normalizedPrompt
+    }
+  }
+
+  private func handleSpotlightUserActivity(_ userActivity: NSUserActivity) -> Bool {
+    guard userActivity.activityType == CSSearchableItemActionType,
+          let identifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String,
+          identifier.hasPrefix(StatuteSpotlightBridge.itemPrefix) else {
+      return false
+    }
+
+    let encodedQuery = String(identifier.dropFirst(StatuteSpotlightBridge.itemPrefix.count))
+    let query = encodedQuery.removingPercentEncoding ?? encodedQuery
+    deliverStatuteSpotlightQuery(query)
+    return true
+  }
+
+  private func deliverStatuteSpotlightQuery(_ query: String) {
+    let normalizedQuery = query.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !normalizedQuery.isEmpty else {
+      return
+    }
+
+    if statuteSpotlightBridgeReady, let statuteSpotlightChannel {
+      statuteSpotlightChannel.invokeMethod(
+        "openStatuteDatabase",
+        arguments: ["query": normalizedQuery]
+      )
+    } else {
+      pendingStatuteSpotlightQuery = normalizedQuery
     }
   }
 
@@ -233,5 +314,94 @@ private enum QuickAskAppIntentBridge {
         details: error.localizedDescription
       ))
     }
+  }
+
+  private func indexStatuteSpotlightItems(arguments: Any?, result: @escaping FlutterResult) {
+    guard let payload = arguments as? [String: Any],
+          let rawItems = payload["items"] as? [[String: Any]] else {
+      result(FlutterError(
+        code: "invalid_spotlight_payload",
+        message: "Statute Spotlight payload must contain an items array.",
+        details: nil
+      ))
+      return
+    }
+
+    let searchableItems = rawItems.compactMap(makeStatuteSearchableItem)
+    guard !searchableItems.isEmpty else {
+      result(nil)
+      return
+    }
+
+    // 台灣繁體中文教學註解：
+    // Core Spotlight 是 iOS 系統索引服務，Flutter 不直接呼叫；
+    // Swift 只把 Dart 傳進來的法條摘要轉成 CSSearchableItem，不決定法條內容本身。
+    CSSearchableIndex.default().indexSearchableItems(searchableItems) { error in
+      DispatchQueue.main.async {
+        if let error {
+          result(FlutterError(
+            code: "spotlight_index_failed",
+            message: "Unable to index statute Spotlight items.",
+            details: error.localizedDescription
+          ))
+          return
+        }
+
+        result(nil)
+      }
+    }
+  }
+
+  private func makeStatuteSearchableItem(from rawItem: [String: Any]) -> CSSearchableItem? {
+    guard let title = stringValue(rawItem["title"]),
+          let query = stringValue(rawItem["query"]) else {
+      return nil
+    }
+
+    let rawIdentifier = stringValue(rawItem["id"])
+    let identifier = rawIdentifier?.hasPrefix(StatuteSpotlightBridge.itemPrefix) == true
+      ? rawIdentifier!
+      : StatuteSpotlightBridge.itemPrefix + encodedSpotlightQuery(query)
+
+    let attributeSet = CSSearchableItemAttributeSet(itemContentType: "public.text")
+    attributeSet.title = title
+    attributeSet.displayName = title
+    attributeSet.contentDescription = stringValue(rawItem["summary"])
+    attributeSet.keywords = normalizedKeywords(from: rawItem, title: title, query: query)
+
+    let item = CSSearchableItem(
+      uniqueIdentifier: identifier,
+      domainIdentifier: StatuteSpotlightBridge.domainIdentifier,
+      attributeSet: attributeSet
+    )
+    item.expirationDate = Date.distantFuture
+    return item
+  }
+
+  private func normalizedKeywords(
+    from rawItem: [String: Any],
+    title: String,
+    query: String
+  ) -> [String] {
+    let rawKeywords = rawItem["keywords"] as? [Any] ?? []
+    let keywords = rawKeywords.compactMap { stringValue($0) }
+    let queryTokens = query
+      .split(whereSeparator: { $0.isWhitespace })
+      .map(String.init)
+    return Array(Set(([title, query] + keywords + queryTokens).filter { !$0.isEmpty }))
+      .sorted()
+  }
+
+  private func encodedSpotlightQuery(_ query: String) -> String {
+    query.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? query
+  }
+
+  private func stringValue(_ value: Any?) -> String? {
+    guard let value else {
+      return nil
+    }
+
+    let text = "\(value)".trimmingCharacters(in: .whitespacesAndNewlines)
+    return text.isEmpty ? nil : text
   }
 }

@@ -280,7 +280,29 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
                   decoration: BoxDecoration(
                     color: isSelected
                         ? CaseTimeMachineColors.primaryGreen
-               // Case Cards List
+                        : CaseTimeMachineColors.bgWhite,
+                    borderRadius: BorderRadius.circular(18.r),
+                    border:
+                        Border.all(color: CaseTimeMachineColors.borderLight),
+                  ),
+                  child: Text(
+                    era,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w800,
+                      color: isSelected
+                          ? CaseTimeMachineColors.bgWhite
+                          : CaseTimeMachineColors.textSecondary,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        SizedBox(height: 16.h),
+
+        // Case Cards List
         Expanded(
           child: ListView.separated(
             padding: EdgeInsets.fromLTRB(18.w, 0, 18.w, 24.h),
@@ -714,8 +736,11 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
   }
 
   String _getCaseCoverImage(CaseBook book, int index) {
-    if (book.displayImages.isNotEmpty && book.displayImages.first.url.startsWith('http')) {
-      return book.displayImages.first.url;
+    if (book.displayImages.isNotEmpty) {
+      final url = book.displayImages.first.url;
+      if (url != null && url.startsWith('http')) {
+        return url;
+      }
     }
     final assets = [
       'assets/images/case_time_machine_v2/daily_hunting.png',

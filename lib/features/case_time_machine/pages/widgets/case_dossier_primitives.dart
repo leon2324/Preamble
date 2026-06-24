@@ -45,35 +45,6 @@ extension _CaseDossierPrimitives on _CaseDossierDetailPageState {
       ),
     );
   }
-
-  Widget _buildTextActionButton({
-    required Widget iconWidget,
-    required String label,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        // 台灣繁體中文教學註解：將內部垂直 padding 由 8h 調整為 4h，使底部 Bar 整體高度更精簡美觀。
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            iconWidget,
-            SizedBox(height: 2.h),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 10.sp,
-                fontWeight: FontWeight.bold,
-                color: CaseTimeMachineColors.primaryGreen,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 // 台灣繁體中文教學註解：

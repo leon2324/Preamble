@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lawapp/components/shared/law_app_story_action_bar.dart';
 import 'package:lawapp/theme/app_fonts.dart';
 import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
 import 'package:lawapp/features/case_time_machine/data/case_time_machine_repository.dart';
@@ -95,23 +96,6 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
 
   // 台灣繁體中文教學註解：
   // 定義自訂的 SVG 圖示字串，避免使用 Google Material Icons。
-  static const String _svgNotesIcon = '''
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#1B3F38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-  <polyline points="14 2 14 8 20 8"></polyline>
-  <line x1="16" y1="13" x2="8" y2="13"></line>
-  <line x1="16" y1="17" x2="8" y2="17"></line>
-  <polyline points="10 9 9 9 8 9"></polyline>
-</svg>
-''';
-
-  static const String _svgShareIcon = '''
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#1B3F38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
-  <polyline points="16 6 12 2 8 6"></polyline>
-  <line x1="12" y1="2" x2="12" y2="15"></line>
-</svg>
-''';
   static const String _svgBackIcon = '''
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#1B3F38" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
   <polyline points="15 18 9 12 15 6"></polyline>
@@ -121,31 +105,6 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
   static const String _svgForumIcon = '''
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#1B3F38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-</svg>
-''';
-
-  static const String _svgStarOutlineIcon = '''
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#1B3F38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-</svg>
-''';
-
-  static const String _svgStarFilledIcon = '''
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="#1B3F38">
-  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-</svg>
-''';
-
-  static const String _svgAddIcon = '''
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-  <line x1="12" y1="5" x2="12" y2="19"></line>
-  <line x1="5" y1="12" x2="19" y2="12"></line>
-</svg>
-''';
-
-  static const String _svgCheckIcon = '''
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-  <polyline points="20 6 9 17 4 12"></polyline>
 </svg>
 ''';
 
@@ -1943,141 +1902,45 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
   // --- TAB 3: 延伸 ---
   // --- Bottom Action Bar ---
   Widget _buildBottomActionBar() {
-    return Container(
-      // 台灣繁體中文教學註解：縮短底端 Bar 高度，將上下 padding 改小 (由原先 10h/24h 縮為 4h/8h)。
-      padding: EdgeInsets.fromLTRB(16.w, 4.h, 16.w, 8.h),
-      decoration: BoxDecoration(
-        color: CaseTimeMachineColors.bgWhite,
-        border: const Border(
-          top: BorderSide(color: CaseTimeMachineColors.borderLight),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -4),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // 1. 問法助 button (使用專案內建小法助人頭像)
-          // 台灣繁體中文教學註解：
-          // 將 Material Icon 替換為專案內的頭像圖片 `law_assistant_home.png`，
-          // 並使用 ClipOval 包裹使其圓形化，建立客製 AI 快捷鍵。
-          _buildTextActionButton(
-            iconWidget: ClipOval(
-              child: Image.asset(
-                'assets/images/assistant/law_assistant_home.png',
-                width: 24.w,
-                height: 24.w,
-                fit: BoxFit.cover,
-              ),
-            ),
-            label: '問法助',
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => LawAssistantChatPage(
-                    initialPrompt: '我想了解關於「${book.titleZh}」的法律爭點與實務見解。',
-                  ),
-                ),
-              );
-            },
-          ),
-          // 2. 筆記 button (自訂筆記本 SVG)
-          // 台灣繁體中文教學註解：
-          // 新增自訂 SVG 渲染的筆記按鈕，與右側的分享形成完美對稱排版。
-          _buildTextActionButton(
-            iconWidget: SvgPicture.string(
-              _svgNotesIcon,
-              width: 22.w,
-              height: 22.w,
-            ),
-            label: '筆記',
-            onTap: () {
-              _CaseDossierBottomSheets(this).showNoteBottomSheet(context);
-            },
-          ),
-          // 3. 追蹤 Pill button (加號/打勾改用自訂 SVG)
-          // 台灣繁體中文教學註解：
-          // 追蹤按鈕內部的 Icon 全面換成 SvgPicture.string 渲染自訂向量圖案，禁用 Material Icons。
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                _isFollowed = !_isFollowed;
-              });
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(_isFollowed ? '已加入我的追蹤' : '已取消追蹤')),
-              );
-            },
-            child: Container(
-              // 台灣繁體中文教學註解：配合短 Bar 設計，將膠囊高度 padding 由 12h 調整為 8h。
-              padding: EdgeInsets.symmetric(
-                  horizontal: 24.w, vertical: 8.h), // 調整寬度以適配 5 按鈕佈局
-              decoration: BoxDecoration(
-                color: CaseTimeMachineColors.primaryGreen,
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SvgPicture.string(
-                    _isFollowed ? _svgCheckIcon : _svgAddIcon,
-                    width: 14.sp,
-                    height: 14.sp,
-                  ),
-                  SizedBox(width: 4.w),
-                  Text(
-                    _isFollowed ? '已追蹤' : '追蹤',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
+    // 台灣繁體中文教學註解：
+    // 底部行動列已抽成跨功能共用元件，生活避坑筆記也會使用同一套；
+    // 這能避免案件詳情與文章詳情各自複製一份相似 UI，造成之後維護漂移。
+    return LawAppStoryActionBar(
+      isFollowed: _isFollowed,
+      isSaved: _isSaved,
+      onAskAssistant: () {
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => LawAssistantChatPage(
+              initialPrompt: '我想了解關於「${book.titleZh}」的法律爭點與實務見解。',
             ),
           ),
-          // 4. 收藏 button (星星改用自訂 SVG)
-          // 台灣繁體中文教學註解：
-          // 收藏按鈕圖示使用 SvgPicture.string 動態載入實心與空心星星 SVG。
-          _buildTextActionButton(
-            iconWidget: SvgPicture.string(
-              _isSaved ? _svgStarFilledIcon : _svgStarOutlineIcon,
-              width: 22.w,
-              height: 22.w,
-            ),
-            label: '收藏',
-            onTap: () {
-              setState(() {
-                _isSaved = !_isSaved;
-              });
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(_isSaved ? '已加入我的收藏' : '已取消收藏')),
-              );
-            },
-          ),
-          // 5. 分享 button (分享改用自訂 SVG)
-          // 台灣繁體中文教學註解：
-          // 新增自訂 SVG 渲染的分享按鈕，放置於最右側，與左側的「問法助」和「筆記」達到雙向對稱。
-          _buildTextActionButton(
-            iconWidget: SvgPicture.string(
-              _svgShareIcon,
-              width: 22.w,
-              height: 22.w,
-            ),
-            label: '分享',
-            onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('已複製分享連結（本機模擬）')),
-              );
-            },
-          ),
-        ],
-      ),
+        );
+      },
+      onNote: () {
+        _CaseDossierBottomSheets(this).showNoteBottomSheet(context);
+      },
+      onFollow: () {
+        setState(() {
+          _isFollowed = !_isFollowed;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(_isFollowed ? '已加入我的追蹤' : '已取消追蹤')),
+        );
+      },
+      onSave: () {
+        setState(() {
+          _isSaved = !_isSaved;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(_isSaved ? '已加入我的收藏' : '已取消收藏')),
+        );
+      },
+      onShare: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('已複製分享連結（本機模擬）')),
+        );
+      },
     );
   }
 
