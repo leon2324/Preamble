@@ -229,7 +229,7 @@ class HomeV2WatchlistCard extends StatelessWidget {
   void _openFollowingUpdates(BuildContext context) {
     // 台灣繁體中文教學註解：
     // 首頁「我的關注更新」要導向新版 FollowingPage 的「我的動態」，
-    // 不再推舊版 FollowedUpdatesPage，避免新舊追蹤頁狀態混用造成返回或渲染異常。
+    // 不再推舊版關注更新頁，避免新舊追蹤頁狀態混用造成返回或渲染異常。
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (__) => const FollowingPage(initialTab: 'updates'),
