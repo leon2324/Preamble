@@ -41,6 +41,28 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void _openLaborUpdate() {
+    // 台灣繁體中文教學註解：
+    // 首頁上方的綠色新上架快訊是法規內容入口，不是純展示 banner；
+    // 目前先帶入勞基法加班費查詢字串，之後接後台時可改成 ticker item 自帶 deep link。
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (__) => const StatuteDatabasePage(initialQuery: '勞動基準法 加班費'),
+      ),
+    );
+  }
+
+  void _openFollowingUpdates() {
+    // 台灣繁體中文教學註解：
+    // 「早安」卡片的法律更新摘要要能回到完整清單；這裡直接開啟追蹤頁的更新分頁，
+    // 讓使用者從首頁看到數字後，有明確地方可以驗收與繼續閱讀。
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (__) => const FollowingPage(initialTab: 'updates'),
+      ),
+    );
+  }
+
   void _openOfficialFeed(MojFeedCategory category) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -66,7 +88,9 @@ class _HomePageState extends State<HomePage> {
     // 首頁的「我的」現在直接開會員頁，不再依賴底部第 5 個 tab；
     // 這樣底部導覽可以改成新的「追蹤」，同時保留原本會員功能入口。
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (__) => const ProfilePage()),
+      MaterialPageRoute(
+        builder: (__) => const ProfilePage(showBackButton: true),
+      ),
     );
   }
 
@@ -472,9 +496,10 @@ class _HomePageState extends State<HomePage> {
                           HomeV2HeroHeader(
                             onProfileTap: _openQuickSettingsPanel,
                             onNotificationTap: _showNotificationBubble,
+                            onTickerTap: _openLaborUpdate,
                           ),
                           SizedBox(height: 14.h),
-                          const HomeV2GreetingCard(),
+                          HomeV2GreetingCard(onTap: _openFollowingUpdates),
                           SizedBox(height: 16.h),
                           const HomeV2QuickAskSection(),
                           SizedBox(height: 18.h),

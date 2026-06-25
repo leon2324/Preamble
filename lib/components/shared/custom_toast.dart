@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// 台灣繁體中文教學註解：
 /// 高質感自訂 Toast 提示。
-/// 使用 OverlayEntry 在螢幕正中央呈現一個正方形、深色半透明的提示面板。
-/// 支援微縮放進場與淡出出場動畫，顯示時間較短（1秒），用以完全替代原本長條的 Snackbar。
+/// 使用 OverlayEntry 在螢幕正中央呈現 4:5 直式提示卡，避免傳統 Snackbar 貼底遮住底欄。
+/// 支援微縮放進場動畫，顯示 1.5 秒後自動移除，用以替代短訊息型 Snackbar。
 class CustomToast {
   static void show(
     BuildContext context,
@@ -32,15 +32,16 @@ class CustomToast {
                 return Transform.scale(
                   scale: scale,
                   child: Container(
-                    width: 120.w,
-                    height: 120.w,
-                    padding: EdgeInsets.all(14.w),
+                    width: 128.w,
+                    height: 160.w,
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 16.h),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.82),
+                      color: Colors.black.withValues(alpha: 0.82),
                       borderRadius: BorderRadius.circular(16.r),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.24),
+                          color: Colors.black.withValues(alpha: 0.24),
                           blurRadius: 16,
                           offset: const Offset(0, 8),
                         ),
@@ -81,8 +82,8 @@ class CustomToast {
 
     overlayState.insert(overlayEntry);
 
-    // 1.0 秒後自動移除
-    Timer(const Duration(milliseconds: 1000), () {
+    // 台灣繁體中文教學註解：Toast 保持 1.5 秒，讓使用者能讀完短句，但不打斷操作節奏。
+    Timer(const Duration(milliseconds: 1500), () {
       overlayEntry.remove();
     });
   }

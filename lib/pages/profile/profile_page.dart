@@ -9,12 +9,17 @@ import 'package:lawapp/pages/profile/widgets/profile_widgets.dart';
 import 'package:lawapp/pages/profile/widgets/profile_editor.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({super.key, this.showBackButton = false});
+
+  /// 台灣繁體中文教學註解：
+  /// 個人頁同時會出現在底部導覽列，也可能被首頁以新路由 push 開啟。
+  /// 不能直接用 Navigator.canPop() 判斷是否顯示返回鍵，否則從子功能返回底部 tab 後，
+  /// 根 Navigator 仍可能回報可 pop，造成母頁多出返回箭頭並把主畫面 pop 成黑屏。
+  final bool showBackButton;
 
   @override
   Widget build(BuildContext context) {
     final appState = LawAppScope.of(context);
-    final canPop = Navigator.of(context).canPop();
     final topPadding =
         context.hasLargeTopInset ? context.topSafeInset + 10.h : 22.h;
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -34,7 +39,8 @@ class ProfilePage extends StatelessWidget {
         padding: EdgeInsets.fromLTRB(
             16.w, topPadding, 16.w, context.pageContentBottomPadding + 32.h),
         children: [
-          if (canPop) _BackButton(onBack: () => Navigator.of(context).pop()),
+          if (showBackButton)
+            _BackButton(onBack: () => Navigator.of(context).pop()),
 
           // Header: 自訂個人頭像與狀態（大頭像居中排列，偏上方視覺）
           Container(

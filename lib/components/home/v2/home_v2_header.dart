@@ -13,10 +13,12 @@ class HomeV2HeroHeader extends StatefulWidget {
     super.key,
     required this.onProfileTap,
     required this.onNotificationTap,
+    required this.onTickerTap,
   });
 
   final VoidCallback onProfileTap;
   final VoidCallback onNotificationTap;
+  final VoidCallback onTickerTap;
 
   @override
   State<HomeV2HeroHeader> createState() => _HomeV2HeroHeaderState();
@@ -94,72 +96,81 @@ class _HomeV2HeroHeaderState extends State<HomeV2HeroHeader> {
           ],
         ),
         SizedBox(height: 16.h),
-        Container(
-          width: double.infinity,
-          padding: EdgeInsets.fromLTRB(12.w, 10.h, 12.w, 10.h),
-          decoration: BoxDecoration(
-            color: HomeV2Palette.trustGreen,
+        Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(20.r),
+          child: InkWell(
+            onTap: widget.onTickerTap,
             borderRadius: BorderRadius.circular(20.r),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x14000000),
-                blurRadius: 18,
-                offset: Offset(0, 8),
+            child: Ink(
+              width: double.infinity,
+              padding: EdgeInsets.fromLTRB(12.w, 10.h, 12.w, 10.h),
+              decoration: BoxDecoration(
+                color: HomeV2Palette.trustGreen,
+                borderRadius: BorderRadius.circular(20.r),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x14000000),
+                    blurRadius: 18,
+                    offset: Offset(0, 8),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: SizedBox(
-            height: 24.h,
-            child: PageView.builder(
-              controller: _tickerController,
-              scrollDirection: Axis.vertical,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: homeV2TickerItems.length,
-              onPageChanged: (index) => setState(() => _tickerIndex = index),
-              itemBuilder: (context, index) {
-                final tickerItem = homeV2TickerItems[index];
-                return Row(
-                  children: [
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.16),
-                        borderRadius: BorderRadius.circular(99.r),
-                      ),
-                      child: Text(
-                        tickerItem.badge,
-                        maxLines: 1,
-                        style: TextStyle(
-                          color: const Color(0xFFFFD36D),
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.w900,
+              child: SizedBox(
+                height: 24.h,
+                child: PageView.builder(
+                  controller: _tickerController,
+                  scrollDirection: Axis.vertical,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: homeV2TickerItems.length,
+                  onPageChanged: (index) =>
+                      setState(() => _tickerIndex = index),
+                  itemBuilder: (context, index) {
+                    final tickerItem = homeV2TickerItems[index];
+                    return Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.w, vertical: 5.h),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.16),
+                            borderRadius: BorderRadius.circular(99.r),
+                          ),
+                          child: Text(
+                            tickerItem.badge,
+                            maxLines: 1,
+                            style: TextStyle(
+                              color: const Color(0xFFFFD36D),
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    SizedBox(width: 8.w),
-                    Expanded(
-                      child: Text(
-                        tickerItem.title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w800,
-                          height: 1.15,
+                        SizedBox(width: 8.w),
+                        Expanded(
+                          child: Text(
+                            tickerItem.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w800,
+                              height: 1.15,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    SizedBox(width: 4.w),
-                    Icon(
-                      Icons.chevron_right_rounded,
-                      color: Colors.white.withValues(alpha: 0.9),
-                      size: 20.sp,
-                    ),
-                  ],
-                );
-              },
+                        SizedBox(width: 4.w),
+                        Icon(
+                          Icons.chevron_right_rounded,
+                          color: Colors.white.withValues(alpha: 0.9),
+                          size: 20.sp,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
             ),
           ),
         ),
@@ -169,7 +180,9 @@ class _HomeV2HeroHeaderState extends State<HomeV2HeroHeader> {
 }
 
 class HomeV2GreetingCard extends StatelessWidget {
-  const HomeV2GreetingCard({super.key});
+  const HomeV2GreetingCard({super.key, required this.onTap});
+
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -177,34 +190,45 @@ class HomeV2GreetingCard extends StatelessWidget {
         MediaQuery.textScalerOf(context).scale(1) > 1.08;
 
     return HomeV2SurfaceCard(
-      padding: EdgeInsets.fromLTRB(18.w, 16.h, 14.w, 16.h),
-      child: shouldStack
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _GreetingTextBlock(),
-                SizedBox(height: 10.h),
-                const HomeV2SmallPill(
-                  label: '查看全部',
-                  icon: Icons.chevron_right_rounded,
-                  background: Colors.white,
-                  borderColor: AppColors.border,
-                  textColor: HomeV2Palette.ink,
-                ),
-              ],
-            )
-          : Row(
-              children: [
-                Expanded(child: _GreetingTextBlock()),
-                const HomeV2SmallPill(
-                  label: '查看全部',
-                  icon: Icons.chevron_right_rounded,
-                  background: Colors.white,
-                  borderColor: AppColors.border,
-                  textColor: HomeV2Palette.ink,
-                ),
-              ],
-            ),
+      padding: EdgeInsets.zero,
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(18.r),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(18.r),
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(18.w, 16.h, 14.w, 16.h),
+            child: shouldStack
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _GreetingTextBlock(),
+                      SizedBox(height: 10.h),
+                      const HomeV2SmallPill(
+                        label: '查看全部',
+                        icon: Icons.chevron_right_rounded,
+                        background: Colors.white,
+                        borderColor: AppColors.border,
+                        textColor: HomeV2Palette.ink,
+                      ),
+                    ],
+                  )
+                : Row(
+                    children: [
+                      Expanded(child: _GreetingTextBlock()),
+                      const HomeV2SmallPill(
+                        label: '查看全部',
+                        icon: Icons.chevron_right_rounded,
+                        background: Colors.white,
+                        borderColor: AppColors.border,
+                        textColor: HomeV2Palette.ink,
+                      ),
+                    ],
+                  ),
+          ),
+        ),
+      ),
     );
   }
 }

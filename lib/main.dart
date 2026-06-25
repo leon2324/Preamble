@@ -219,7 +219,7 @@ class _MylawAppState extends State<MylawApp> {
       ),
       GlobalSearchPage(quickAskPromptListenable: _quickAskPromptNotifier),
       const JournalPage(),
-      const ProfilePage(),
+      const ProfilePage(showBackButton: false),
     ];
 
     final displayNavItems = order.map((idx) => originalNavItems[idx]).toList();

@@ -4,7 +4,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lawapp/components/shared/custom_toast.dart';
 import 'package:lawapp/components/shared/law_app_story_action_bar.dart';
+import 'package:lawapp/components/shared/share_sheet.dart';
 import 'package:lawapp/theme/app_fonts.dart';
 import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
 import 'package:lawapp/features/case_time_machine/data/case_time_machine_repository.dart';
@@ -1063,11 +1065,10 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                           // 實作精緻的莫蘭迪粉綠漸層「小法助 AI 捷徑」橫幅（Banner），並改用 sparkling 圖示。
                           GestureDetector(
                             onTap: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('✨ 正在開啟 AI 小法助對話，為您解析本案判決...'),
-                                  duration: Duration(seconds: 2),
-                                ),
+                              CustomToast.show(
+                                context,
+                                '正在開啟\n小法助',
+                                icon: Icons.support_agent_rounded,
                               );
                               Navigator.of(context).push(
                                 MaterialPageRoute<void>(
@@ -1419,8 +1420,10 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                               disagreeCount
                             ];
                           });
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('👍 投票成功！您投了「合理」')),
+                          CustomToast.show(
+                            context,
+                            '已投合理',
+                            icon: Icons.thumb_up_alt_rounded,
                           );
                         },
                       ),
@@ -1452,8 +1455,10 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                               disagreeCount + 1
                             ];
                           });
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('👎 投票成功！您投了「不合理」')),
+                          CustomToast.show(
+                            context,
+                            '已投不合理',
+                            icon: Icons.thumb_down_alt_rounded,
                           );
                         },
                       ),
@@ -1658,8 +1663,10 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                     onPressed: () {
                       final text = _commentController.text.trim();
                       if (text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('請先輸入看法內容')),
+                        CustomToast.show(
+                          context,
+                          '請先輸入內容',
+                          icon: Icons.edit_note_rounded,
                         );
                         return;
                       }
@@ -1681,8 +1688,10 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                         });
                         _commentController.clear();
                       });
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('✏️ 發表看法成功！已同步至留言板')),
+                      CustomToast.show(
+                        context,
+                        '觀點已發表',
+                        icon: Icons.check_circle_outline_rounded,
                       );
                     },
                     child: Text(
@@ -1924,21 +1933,29 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
         setState(() {
           _isFollowed = !_isFollowed;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(_isFollowed ? '已加入我的追蹤' : '已取消追蹤')),
+        CustomToast.show(
+          context,
+          _isFollowed ? '已加入追蹤' : '已取消追蹤',
+          icon: _isFollowed
+              ? Icons.notifications_active_rounded
+              : Icons.notifications_off_rounded,
         );
       },
       onSave: () {
         setState(() {
           _isSaved = !_isSaved;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(_isSaved ? '已加入我的收藏' : '已取消收藏')),
+        CustomToast.show(
+          context,
+          _isSaved ? '已加入收藏' : '已取消收藏',
+          icon: _isSaved ? Icons.bookmark_rounded : Icons.bookmark_border,
         );
       },
       onShare: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('已複製分享連結（本機模擬）')),
+        ShareSheet.show(
+          context,
+          title: book.titleZh,
+          url: 'https://lawapp.com/cases/${Uri.encodeComponent(book.id)}',
         );
       },
     );
@@ -2245,8 +2262,10 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
 
                 Clipboard.setData(
                     ClipboardData(text: fullTextBuffer.toString()));
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('已複製判決書全文至剪貼簿')),
+                CustomToast.show(
+                  context,
+                  '全文已複製',
+                  icon: Icons.content_copy_rounded,
                 );
               },
               child: Container(

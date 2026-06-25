@@ -34,6 +34,13 @@ private enum StatuteSpotlightBridge {
   static let itemPrefix = "lawapp.statute."
 }
 
+private enum NativeShareBridge {
+  // 台灣繁體中文教學註解：
+  // Flutter 端只負責傳入圖卡文字內容；真正的 Apple 分享面板與「儲存圖片」選項
+  // 由 iOS 原生 UIActivityViewController 提供，避免 App 直接假裝已分享或已存入相簿。
+  static let channelName = "lawapp/native_share"
+}
+
 @main
 @objc class AppDelegate: FlutterAppDelegate {
   private var quickAskChannel: FlutterMethodChannel?
@@ -51,6 +58,7 @@ private enum StatuteSpotlightBridge {
     registerTodayCaseWidgetBridge()
     registerQuickAskAppIntentBridge()
     registerStatuteSpotlightBridge()
+    registerNativeShareBridge()
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
@@ -172,6 +180,33 @@ private enum StatuteSpotlightBridge {
         let query = self.pendingStatuteSpotlightQuery
         self.pendingStatuteSpotlightQuery = nil
         result(query.map { ["query": $0] })
+      default:
+        result(FlutterMethodNotImplemented)
+      }
+    }
+  }
+
+  private func registerNativeShareBridge() {
+    guard let controller = window?.rootViewController as? FlutterViewController else {
+      return
+    }
+
+    let channel = FlutterMethodChannel(
+      name: NativeShareBridge.channelName,
+      binaryMessenger: controller.binaryMessenger
+    )
+
+    channel.setMethodCallHandler { [weak self] call, result in
+      guard let self else {
+        result(nil)
+        return
+      }
+
+      switch call.method {
+      case "shareText":
+        self.shareText(arguments: call.arguments, result: result)
+      case "shareTipCard":
+        self.shareTipCard(arguments: call.arguments, result: result)
       default:
         result(FlutterMethodNotImplemented)
       }
@@ -350,6 +385,185 @@ private enum StatuteSpotlightBridge {
         result(nil)
       }
     }
+  }
+
+  private func shareTipCard(arguments: Any?, result: @escaping FlutterResult) {
+    guard let payload = arguments as? [String: Any],
+          let title = stringValue(payload["title"]),
+          let summary = stringValue(payload["summary"]) else {
+      result(FlutterError(
+        code: "invalid_share_payload",
+        message: "Native share payload must contain title and summary.",
+        details: nil
+      ))
+      return
+    }
+
+    let source = stringValue(payload["source"]) ?? "LawApp 生活避坑筆記"
+    let image = makeTipCardImage(title: title, summary: summary, source: source)
+    let activityController = UIActivityViewController(
+      activityItems: [image, "\(title)\n\(summary)"],
+      applicationActivities: nil
+    )
+
+    if let popover = activityController.popoverPresentationController,
+       let rootView = window?.rootViewController?.view {
+      popover.sourceView = rootView
+      popover.sourceRect = CGRect(
+        x: rootView.bounds.midX,
+        y: rootView.bounds.midY,
+        width: 1,
+        height: 1
+      )
+      popover.permittedArrowDirections = []
+    }
+
+    DispatchQueue.main.async { [weak self] in
+      guard let rootController = self?.topMostViewController() else {
+        result(FlutterError(
+          code: "no_presenter",
+          message: "Unable to find a view controller for native share sheet.",
+          details: nil
+        ))
+        return
+      }
+
+      rootController.present(activityController, animated: true) {
+        result(nil)
+      }
+    }
+  }
+
+  private func shareText(arguments: Any?, result: @escaping FlutterResult) {
+    guard let payload = arguments as? [String: Any],
+          let text = stringValue(payload["text"]) else {
+      result(FlutterError(
+        code: "invalid_share_text_payload",
+        message: "Native share payload must contain text.",
+        details: nil
+      ))
+      return
+    }
+
+    let activityController = UIActivityViewController(
+      activityItems: [text],
+      applicationActivities: nil
+    )
+
+    if let popover = activityController.popoverPresentationController,
+       let rootView = window?.rootViewController?.view {
+      popover.sourceView = rootView
+      popover.sourceRect = CGRect(
+        x: rootView.bounds.midX,
+        y: rootView.bounds.midY,
+        width: 1,
+        height: 1
+      )
+      popover.permittedArrowDirections = []
+    }
+
+    DispatchQueue.main.async { [weak self] in
+      guard let rootController = self?.topMostViewController() else {
+        result(FlutterError(
+          code: "no_presenter",
+          message: "Unable to find a view controller for native share sheet.",
+          details: nil
+        ))
+        return
+      }
+
+      rootController.present(activityController, animated: true) {
+        result(nil)
+      }
+    }
+  }
+
+  private func makeTipCardImage(title: String, summary: String, source: String) -> UIImage {
+    let size = CGSize(width: 1080, height: 1350)
+    let renderer = UIGraphicsImageRenderer(size: size)
+
+    return renderer.image { context in
+      let rect = CGRect(origin: .zero, size: size)
+      UIColor(red: 0.976, green: 0.957, blue: 0.925, alpha: 1).setFill()
+      context.cgContext.fill(rect)
+
+      let cardRect = CGRect(x: 86, y: 120, width: 908, height: 1110)
+      let cardPath = UIBezierPath(roundedRect: cardRect, cornerRadius: 42)
+      UIColor.white.setFill()
+      cardPath.fill()
+
+      UIColor(red: 0.925, green: 0.878, blue: 0.788, alpha: 1).setStroke()
+      cardPath.lineWidth = 3
+      cardPath.stroke()
+
+      drawText(
+        "生活避坑筆記",
+        in: CGRect(x: 140, y: 190, width: 800, height: 60),
+        font: UIFont.systemFont(ofSize: 34, weight: .heavy),
+        color: UIColor(red: 0.106, green: 0.247, blue: 0.220, alpha: 1)
+      )
+
+      drawText(
+        title,
+        in: CGRect(x: 140, y: 310, width: 800, height: 220),
+        font: UIFont.systemFont(ofSize: 56, weight: .black),
+        color: UIColor(red: 0.067, green: 0.137, blue: 0.122, alpha: 1)
+      )
+
+      drawText(
+        summary,
+        in: CGRect(x: 140, y: 570, width: 800, height: 360),
+        font: UIFont.systemFont(ofSize: 36, weight: .semibold),
+        color: UIColor(red: 0.294, green: 0.333, blue: 0.392, alpha: 1),
+        lineSpacing: 12
+      )
+
+      drawText(
+        source,
+        in: CGRect(x: 140, y: 1068, width: 800, height: 80),
+        font: UIFont.systemFont(ofSize: 28, weight: .bold),
+        color: UIColor(red: 0.106, green: 0.247, blue: 0.220, alpha: 1)
+      )
+    }
+  }
+
+  private func drawText(
+    _ text: String,
+    in rect: CGRect,
+    font: UIFont,
+    color: UIColor,
+    lineSpacing: CGFloat = 6
+  ) {
+    let paragraph = NSMutableParagraphStyle()
+    paragraph.lineSpacing = lineSpacing
+    paragraph.lineBreakMode = .byTruncatingTail
+
+    let attributes: [NSAttributedString.Key: Any] = [
+      .font: font,
+      .foregroundColor: color,
+      .paragraphStyle: paragraph
+    ]
+
+    text.draw(with: rect, options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: attributes, context: nil)
+  }
+
+  private func topMostViewController(
+    from controller: UIViewController? = UIApplication.shared.connectedScenes
+      .compactMap { $0 as? UIWindowScene }
+      .flatMap { $0.windows }
+      .first(where: { $0.isKeyWindow })?
+      .rootViewController
+  ) -> UIViewController? {
+    if let navigationController = controller as? UINavigationController {
+      return topMostViewController(from: navigationController.visibleViewController)
+    }
+    if let tabController = controller as? UITabBarController {
+      return topMostViewController(from: tabController.selectedViewController)
+    }
+    if let presented = controller?.presentedViewController {
+      return topMostViewController(from: presented)
+    }
+    return controller
   }
 
   private func makeStatuteSearchableItem(from rawItem: [String: Any]) -> CSSearchableItem? {

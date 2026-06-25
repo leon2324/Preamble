@@ -3,10 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/app/app_state.dart';
 import 'package:lawapp/components/home/home_content.dart';
+import 'package:lawapp/components/shared/custom_toast.dart';
 import 'package:lawapp/components/shared/law_app_story_action_bar.dart';
+import 'package:lawapp/components/shared/share_sheet.dart';
 import 'package:lawapp/data/mock_data/home/home_mock_data.dart';
 import 'package:lawapp/pages/home/subpages/home_subpage_primitives.dart';
 import 'package:lawapp/pages/learning/know_law_page.dart';
+import 'package:lawapp/platform/native_share_bridge.dart';
 import 'package:lawapp/theme/app_colors.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
 
@@ -460,9 +463,7 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
                   child: FilledButton(
                     onPressed: () {
                       Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('避坑筆記儲存成功！')),
-                      );
+                      CustomToast.show(this.context, '筆記已儲存');
                     },
                     style: FilledButton.styleFrom(
                       backgroundColor: const Color(0xFF2EA26F),
@@ -621,11 +622,10 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
                               text:
                                   '【生活避坑筆記】\n標題：$title\n摘要：$summary\n來源：法助官網 https://lawapp.com/tips'));
                           Navigator.of(context).pop();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('已複製避坑筆記文字至剪貼簿！'),
-                              backgroundColor: Color(0xFF2C5E43),
-                            ),
+                          CustomToast.show(
+                            this.context,
+                            '文字已複製',
+                            icon: Icons.content_copy_rounded,
                           );
                         },
                         style: OutlinedButton.styleFrom(
@@ -643,13 +643,11 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
                     SizedBox(width: 12.w),
                     Expanded(
                       child: FilledButton(
-                        onPressed: () {
+                        onPressed: () async {
                           Navigator.of(context).pop();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('圖卡已儲存至相簿，可直接分享！'),
-                              backgroundColor: Color(0xFF2C5E43),
-                            ),
+                          await _shareTipCardWithAppleSheet(
+                            title: title,
+                            summary: summary,
                           );
                         },
                         style: FilledButton.styleFrom(
@@ -673,20 +671,35 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
     );
   }
 
-  Widget _buildBottomNavigationBar(bool isDark, CategoryAesthetics aes) {
-    final bg = isDark ? const Color(0xFF151A20) : Colors.white;
-    final borderCol =
-        isDark ? const Color(0xFF28313D) : const Color(0xFFEDE4D8);
-
+  Future<void> _shareTipCardWithAppleSheet({
+    required String title,
+    required String summary,
+  }) async {
     // 台灣繁體中文教學註解：
-    // 生活避坑筆記詳細頁直接共用案件詳情頁同源底欄，
-    // 維持「問法助、筆記、追蹤、收藏、分享」在所有法律故事頁的一致手感。
+    // 分享圖卡不再直接宣稱「已儲存至相簿」。iOS 先開 Apple 原生分享面板，
+    // 讓使用者在系統選項中自行選擇儲存圖片、AirDrop 或分享到其他 App。
+    final openedNativeSheet = await NativeShareBridge.shareTipCard(
+      title: title,
+      summary: summary,
+      source: '摘自生活避坑筆記《$title》',
+    );
+    if (openedNativeSheet) return;
+    if (!mounted) return;
+
+    ShareSheet.show(
+      context,
+      title: title,
+      url: 'https://lawapp.com/tips/${Uri.encodeComponent(title)}',
+    );
+  }
+
+  Widget _buildBottomNavigationBar(bool isDark, CategoryAesthetics aes) {
+    // 台灣繁體中文教學註解：
+    // 生活避坑筆記詳細頁直接共用案件詳情頁同源底欄，且不覆蓋顏色；
+    // 避免同一組 NavBar 在案件與筆記詳情頁出現「設計一樣但顏色不同」的維護漂移。
     return LawAppStoryActionBar(
       isFollowed: _isFollowing,
       isSaved: _isBookmarked,
-      backgroundColor: bg,
-      borderColor: borderCol,
-      primaryColor: const Color(0xFF2C5E43),
       onAskAssistant: () {
         Navigator.of(context).push(
           MaterialPageRoute<void>(
@@ -700,20 +713,20 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
       onNote: _showNotesBottomSheet,
       onFollow: () {
         _toggleFollow();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(_isFollowing ? '已開啟此主題追蹤' : '已取消此主題追蹤'),
-            backgroundColor: const Color(0xFF2C5E43),
-          ),
+        CustomToast.show(
+          context,
+          _isFollowing ? '已開啟追蹤' : '已取消追蹤',
+          icon: _isFollowing
+              ? Icons.notifications_active_rounded
+              : Icons.notifications_off_rounded,
         );
       },
       onSave: () {
         _toggleBookmark();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(_isBookmarked ? '已加入我的收藏' : '已取消收藏'),
-            backgroundColor: const Color(0xFF2C5E43),
-          ),
+        CustomToast.show(
+          context,
+          _isBookmarked ? '已加入收藏' : '已取消收藏',
+          icon: _isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border,
         );
       },
       onShare: _showShareCardDialog,
