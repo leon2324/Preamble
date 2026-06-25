@@ -65,7 +65,7 @@ class AvatarWidget extends StatelessWidget {
               border: Border.all(color: AppColors.accent, width: 2.w),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.accent.withOpacity(0.3),
+                  color: AppColors.accent.withValues(alpha: 0.3),
                   blurRadius: 10,
                   spreadRadius: 1.5,
                 )
@@ -121,12 +121,19 @@ class DashboardGrid extends StatelessWidget {
     final followedCount = following.followedCaseIds.length +
         following.followedStatuteIds.length +
         following.followedTopicIds.length;
+    final savedCaseCount = {
+      ...appState.savedCaseIds,
+      ...following.savedCaseIds,
+    }.length;
+    final savedCount = savedCaseCount +
+        following.savedStatuteIds.length +
+        following.savedArticleIds.length;
 
     // 台灣繁體中文教學註解：建立 4 個儀表板主要資料項目，分別對接 AppState 裡的真實筆數
     final items = [
       _DashboardItemData(
         title: '我的收藏',
-        value: '${appState.savedCaseIds.length} 筆',
+        value: '$savedCount 筆',
         icon: Icons.bookmark_rounded,
         color: AppColors.primary,
         onTap: () {
@@ -545,7 +552,7 @@ class LearningProgressBanner extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
-                color: const Color(0xFFD6A85F).withOpacity(0.08),
+                color: const Color(0xFFD6A85F).withValues(alpha: 0.08),
                 shape: BoxShape.circle,
               ),
               child: Icon(Icons.workspace_premium_rounded,
@@ -724,7 +731,8 @@ class AchievementRoomSheet extends StatelessWidget {
         color: cardColor,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color: isUnlocked ? badgeColor.withOpacity(0.4) : borderSide.color,
+          color:
+              isUnlocked ? badgeColor.withValues(alpha: 0.4) : borderSide.color,
           width: isUnlocked ? 1.5.w : 1.w,
         ),
       ),
@@ -734,8 +742,8 @@ class AchievementRoomSheet extends StatelessWidget {
             padding: EdgeInsets.all(8.w),
             decoration: BoxDecoration(
               color: isUnlocked
-                  ? badgeColor.withOpacity(0.12)
-                  : Colors.grey.withOpacity(0.1),
+                  ? badgeColor.withValues(alpha: 0.12)
+                  : Colors.grey.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(

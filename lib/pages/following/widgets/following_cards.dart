@@ -5,14 +5,16 @@ part of '../following_page.dart';
 // 事件處理都透過 callback 傳入，不在這裡修改追蹤、收藏或 AppState 邏輯。
 
 class _MemberCard extends StatelessWidget {
-  const _MemberCard({required this.appState});
+  const _MemberCard({required this.appState, required this.onPlan});
 
   final LawAppState appState;
+  final VoidCallback onPlan;
 
   @override
   Widget build(BuildContext context) {
     final isPro = appState.isSubscriber;
     return _ProtoCard(
+      onTap: onPlan,
       child: Row(
         children: [
           SvgPicture.asset(_ProfileAsset.avatar, width: 52.w, height: 52.w),
@@ -58,9 +60,10 @@ class _MemberCard extends StatelessWidget {
 }
 
 class _DemoUpsellCard extends StatelessWidget {
-  const _DemoUpsellCard({required this.appState});
+  const _DemoUpsellCard({required this.appState, required this.onPlan});
 
   final LawAppState appState;
+  final VoidCallback onPlan;
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +72,7 @@ class _DemoUpsellCard extends StatelessWidget {
     }
 
     return _ProtoCard(
+      onTap: onPlan,
       background: _FollowColors.softPaper,
       child: Row(
         children: [
@@ -446,9 +450,10 @@ class _FollowItemTile extends StatelessWidget {
 }
 
 class _LatestUpdateCard extends StatelessWidget {
-  const _LatestUpdateCard({required this.item});
+  const _LatestUpdateCard({required this.item, required this.onPressed});
 
   final _FollowItem item;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -467,7 +472,7 @@ class _LatestUpdateCard extends StatelessWidget {
                 _SecondaryButton(
                   label:
                       item.kind == _FollowDetailKind.statute ? '查看內容' : '查看更新',
-                  onPressed: () {},
+                  onPressed: onPressed,
                 ),
               ],
             ),
@@ -701,13 +706,15 @@ class _QuestionTile extends StatelessWidget {
 }
 
 class _DraftTile extends StatelessWidget {
-  const _DraftTile({required this.item});
+  const _DraftTile({required this.item, required this.onTap});
 
   final _DraftItem item;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return _ProtoCard(
+      onTap: onTap,
       child: Row(
         children: [
           Expanded(

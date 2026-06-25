@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lawapp/app/app_state.dart';
 import 'package:lawapp/components/home/home_content.dart';
 import 'package:lawapp/components/shared/law_app_story_action_bar.dart';
 import 'package:lawapp/data/mock_data/home/home_mock_data.dart';
@@ -19,6 +20,32 @@ String _imageForCategory(String category) {
     _ => 'assets/images/learning/levels/level_01_legal_beginner.png',
   };
 }
+
+String _lifeTipArticleId(HomeNewsletterItem item) {
+  return 'article-${_lifeTipSlugFor(item.title)}';
+}
+
+String _lifeTipTopicId(HomeNewsletterItem item) {
+  return 'topic-${_lifeTipSlugFor(item.title)}';
+}
+
+String _lifeTipSlugFor(String value) {
+  return value
+      .trim()
+      .toLowerCase()
+      .replaceAll(RegExp(r'\s+'), '')
+      .replaceAll(RegExp(r'[^a-z0-9\u4e00-\u9fff]+'), '');
+}
+
+const String _svgShareNetwork = '''
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="18" cy="5" r="3"></circle>
+  <circle cx="6" cy="12" r="3"></circle>
+  <circle cx="18" cy="19" r="3"></circle>
+  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+</svg>
+''';
 
 // 台灣繁體中文教學註解：
 // 生活避坑筆記這次改成「日常故事卡」設計系統。
@@ -97,6 +124,7 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
   late final TextEditingController _searchController;
   var _selectedCategory = '全部';
   var _query = '';
+  var _isSearchOpen = false;
 
   @override
   void initState() {
@@ -134,66 +162,76 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
 
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF0F1216) : ProtoColors.lightBg,
-      body: ListView(
+      body: CustomScrollView(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.fromLTRB(16.w, topPadding + 8.h, 16.w, 42.h),
-        children: [
-          _LifeTrapAppBar(
-            onBack: () => Navigator.of(context).pop(),
-            onSearchToggle: _searchController.clear,
-            isSearchActive: _query.isNotEmpty,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 2.w, top: 2.h, bottom: 14.h),
-            child: Text(
-              '用生活場景看懂法律風險',
-              style: TextStyle(
-                fontSize: 12.5.sp,
-                fontWeight: FontWeight.w700,
-                color: isDark ? const Color(0xFF94A3B8) : AppColors.textMuted,
-              ),
+        slivers: [
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: _LifeTrapFrozenHeaderDelegate(
+              topPadding: topPadding,
+              isDark: isDark,
+              searchController: _searchController,
+              labels: _categories,
+              selectedLabel: _selectedCategory,
+              isSearchOpen: _isSearchOpen,
+              isSearchActive: _query.isNotEmpty,
+              onBack: () => Navigator.of(context).pop(),
+              onSearchToggle: () {
+                setState(() {
+                  if (_isSearchOpen) {
+                    _searchController.clear();
+                  }
+                  _isSearchOpen = !_isSearchOpen;
+                });
+              },
+              onSelected: (label) {
+                setState(() => _selectedCategory = label);
+              },
             ),
           ),
-          _LifeTrapSearchBar(controller: _searchController),
-          SizedBox(height: 16.h),
-          _LifeTipCategoryRail(
-            labels: _categories,
-            selectedLabel: _selectedCategory,
-            onSelected: (label) {
-              setState(() => _selectedCategory = label);
-            },
-          ),
-          SizedBox(height: 18.h),
-          _LifeTipFeaturedCard(
-            item: homeNewsletterItems.first,
-            onTap: () => _openTip(context, homeNewsletterItems.first),
-          ),
-          if (_selectedCategory == '租屋') ...[
-            SizedBox(height: 18.h),
-            const _RentTimelineGuideCard(),
-          ],
-          SizedBox(height: 22.h),
-          _SubpageInlineHeader(
-            title: _selectedCategory == '全部' ? '今天的日常小動作' : _selectedCategory,
-            count: filteredItems.length,
-          ),
-          SizedBox(height: 12.h),
-          if (filteredItems.isEmpty)
-            const SubpageStatusCard(message: '目前沒有符合條件的避坑筆記，換個關鍵字試試看。')
-          else
-            ...filteredItems.take(16).map(
-                  (item) => Padding(
-                    padding: EdgeInsets.only(bottom: 10.h),
-                    child: _LifeTipListCard(
-                      item: item,
-                      onTap: () => _openTip(context, item),
-                    ),
+          SliverPadding(
+            padding: EdgeInsets.fromLTRB(16.w, 18.h, 16.w, 42.h),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  _LifeTipFeaturedCard(
+                    item: homeNewsletterItems.first,
+                    onTap: () => _openTip(context, homeNewsletterItems.first),
                   ),
-                ),
-          SizedBox(height: 12.h),
-          const SubpageStatusCard(
-            message: '生活避坑筆記僅提供一般法律常識與風險預防參考，非正式律師意見。若遇具體糾紛，請尋求專業法律服務。',
+                  if (_selectedCategory == '租屋') ...[
+                    SizedBox(height: 18.h),
+                    const _RentTimelineGuideCard(),
+                  ],
+                  SizedBox(height: 22.h),
+                  _SubpageInlineHeader(
+                    title: _selectedCategory == '全部'
+                        ? '今天的日常小動作'
+                        : _selectedCategory,
+                    count: filteredItems.length,
+                  ),
+                  SizedBox(height: 12.h),
+                  if (filteredItems.isEmpty)
+                    const SubpageStatusCard(
+                      message: '目前沒有符合條件的避坑筆記，換個關鍵字試試看。',
+                    )
+                  else
+                    ...filteredItems.take(16).map(
+                          (item) => Padding(
+                            padding: EdgeInsets.only(bottom: 10.h),
+                            child: _LifeTipListCard(
+                              item: item,
+                              onTap: () => _openTip(context, item),
+                            ),
+                          ),
+                        ),
+                  SizedBox(height: 12.h),
+                  const SubpageStatusCard(
+                    message: '生活避坑筆記僅提供一般法律常識與風險預防參考，非正式律師意見。若遇具體糾紛，請尋求專業法律服務。',
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
@@ -225,9 +263,13 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
   late final List<String> _steps;
   late List<bool> _stepsChecked;
   double _readingProgress = 0.0;
+  var _syncedInitialInteractionState = false;
 
   var _isFollowing = false;
   var _isBookmarked = false;
+  var _isLiked = false;
+  var _shareCountDelta = 0;
+  var _commentCountDelta = 0;
 
   @override
   void initState() {
@@ -246,6 +288,17 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
     super.dispose();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_syncedInitialInteractionState) return;
+
+    final appState = LawAppScope.of(context);
+    _isBookmarked = appState.isArticleSaved(_lifeTipArticleId(widget.item));
+    _isFollowing = appState.isTopicFollowed(_lifeTipTopicId(widget.item));
+    _syncedInitialInteractionState = true;
+  }
+
   void _onScroll() {
     if (!_scrollController.hasClients) return;
     final maxScroll = _scrollController.position.maxScrollExtent;
@@ -253,6 +306,84 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
     setState(() {
       _readingProgress = (_scrollController.offset / maxScroll).clamp(0.0, 1.0);
     });
+  }
+
+  int _metricBase(String value) {
+    final digits = RegExp(r'\d+').firstMatch(value)?.group(0);
+    return int.tryParse(digits ?? '') ?? 0;
+  }
+
+  String _metricText(String value, int delta) {
+    final next = _metricBase(value) + delta;
+    return '$next+';
+  }
+
+  void _toggleLike() {
+    if (!_isLiked) {
+      HapticFeedback.mediumImpact();
+    } else {
+      HapticFeedback.lightImpact();
+    }
+    setState(() {
+      _isLiked = !_isLiked;
+    });
+  }
+
+  Future<void> _toggleBookmark() async {
+    if (!_isBookmarked) {
+      HapticFeedback.mediumImpact();
+    } else {
+      HapticFeedback.lightImpact();
+    }
+    final next = !_isBookmarked;
+    setState(() {
+      _isBookmarked = next;
+    });
+    await LawAppScope.of(context).setArticleSaved(
+      _lifeTipArticleId(widget.item),
+      next,
+    );
+  }
+
+  Future<void> _toggleFollow() async {
+    if (!_isFollowing) {
+      HapticFeedback.mediumImpact();
+    } else {
+      HapticFeedback.lightImpact();
+    }
+    final next = !_isFollowing;
+    setState(() {
+      _isFollowing = next;
+    });
+    await LawAppScope.of(context).setTopicFollowed(
+      _lifeTipTopicId(widget.item),
+      next,
+    );
+  }
+
+  void _shareFromInteraction() {
+    setState(() {
+      _shareCountDelta += 1;
+    });
+    _showShareCardDialog();
+  }
+
+  void _showCommentsBottomSheet() {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        return _LifeTipCommentSheet(
+          title: widget.item.title,
+          onCommentPosted: () {
+            setState(() {
+              _commentCountDelta += 1;
+            });
+          },
+        );
+      },
+    );
   }
 
   void _showNotesBottomSheet() {
@@ -568,9 +699,7 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
       },
       onNote: _showNotesBottomSheet,
       onFollow: () {
-        setState(() {
-          _isFollowing = !_isFollowing;
-        });
+        _toggleFollow();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(_isFollowing ? '已開啟此主題追蹤' : '已取消此主題追蹤'),
@@ -579,9 +708,7 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
         );
       },
       onSave: () {
-        setState(() {
-          _isBookmarked = !_isBookmarked;
-        });
+        _toggleBookmark();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(_isBookmarked ? '已加入我的收藏' : '已取消收藏'),
@@ -647,6 +774,9 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
         children: [
           // 頂部首部資訊區
           _buildHeaderSection(isDark),
+          SizedBox(height: 20.h),
+
+          _buildInteractionSection(isDark, aes),
           SizedBox(height: 20.h),
 
           // 1. 踩坑情境
@@ -773,6 +903,110 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildInteractionSection(bool isDark, CategoryAesthetics aes) {
+    // 台灣繁體中文教學註解：
+    // 這是詳情內頁的「文章互動區」，和首頁入口卡的互動列語意一致。
+    // 底部 Nav 偏向下一步操作；這裡則讓使用者對文章本身按讚、留言、分享與儲存。
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.fromLTRB(14.w, 14.h, 14.w, 12.h),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF181C23) : Colors.white,
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(
+          color: isDark ? const Color(0xFF2D333F) : const Color(0xFFE8DFD1),
+          width: 0.8.w,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 34.w,
+                height: 34.w,
+                decoration: BoxDecoration(
+                  color: aes.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Center(
+                  child: CtmSvgIcon(
+                    CtmSvgIcons.sprout,
+                    color: aes.primary,
+                    size: 18.sp,
+                  ),
+                ),
+              ),
+              SizedBox(width: 10.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '我學到的避坑提醒',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w900,
+                        color: isDark ? Colors.white : ProtoColors.charcoal,
+                        letterSpacing: 0,
+                      ),
+                    ),
+                    SizedBox(height: 3.h),
+                    Text(
+                      '覺得有幫助，可以留下反應或收藏到稍後複習。',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 11.5.sp,
+                        fontWeight: FontWeight.w700,
+                        color: isDark
+                            ? const Color(0xFF94A3B8)
+                            : AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 12.h),
+          Row(
+            children: [
+              _LifeTipInteractionMetric(
+                svgPath: _isLiked ? CtmSvgIcons.heartFilled : CtmSvgIcons.heart,
+                color: const Color(0xFFC9877B),
+                label: _metricText(widget.item.likes, _isLiked ? 1 : 0),
+                onTap: _toggleLike,
+              ),
+              _LifeTipInteractionMetric(
+                svgPath: _svgShareNetwork,
+                color: const Color(0xFF8A7B5C),
+                label: _metricText(widget.item.shares, _shareCountDelta),
+                onTap: _shareFromInteraction,
+              ),
+              _LifeTipInteractionMetric(
+                svgPath: CtmSvgIcons.message,
+                color: const Color(0xFF426E9F),
+                label: _metricText(widget.item.comments, _commentCountDelta),
+                onTap: _showCommentsBottomSheet,
+              ),
+              _LifeTipInteractionMetric(
+                svgPath: CtmSvgIcons.bookmark,
+                color:
+                    _isBookmarked ? ProtoColors.deepGreen : AppColors.textMuted,
+                label: _isBookmarked ? '已儲存' : '儲存',
+                onTap: () {
+                  _toggleBookmark();
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -1289,6 +1523,96 @@ String _readTimeForTip(HomeNewsletterItem item) {
   return '3 分鐘';
 }
 
+class _LifeTrapFrozenHeaderDelegate extends SliverPersistentHeaderDelegate {
+  _LifeTrapFrozenHeaderDelegate({
+    required this.topPadding,
+    required this.isDark,
+    required this.searchController,
+    required this.labels,
+    required this.selectedLabel,
+    required this.isSearchOpen,
+    required this.isSearchActive,
+    required this.onBack,
+    required this.onSearchToggle,
+    required this.onSelected,
+  });
+
+  final double topPadding;
+  final bool isDark;
+  final TextEditingController searchController;
+  final List<String> labels;
+  final String selectedLabel;
+  final bool isSearchOpen;
+  final bool isSearchActive;
+  final VoidCallback onBack;
+  final VoidCallback onSearchToggle;
+  final ValueChanged<String> onSelected;
+
+  @override
+  double get minExtent => maxExtent;
+
+  @override
+  double get maxExtent => topPadding + (isSearchOpen ? 226.h : 148.h);
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    // 台灣繁體中文教學註解：
+    // 使用 pinned SliverPersistentHeader 模擬試算表「凍結窗格」：
+    // 上方返回、標題、搜尋與分類永遠停在可視區，下面的筆記清單獨立滾動。
+    final bg = isDark ? const Color(0xFF0F1216) : ProtoColors.lightBg;
+
+    return Container(
+      color: bg,
+      padding: EdgeInsets.fromLTRB(16.w, topPadding + 8.h, 16.w, 12.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _LifeTrapAppBar(
+            onBack: onBack,
+            onSearchToggle: onSearchToggle,
+            isSearchActive: isSearchOpen || isSearchActive,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 2.w, top: 2.h, bottom: 12.h),
+            child: Text(
+              '用生活場景看懂法律風險',
+              style: TextStyle(
+                fontSize: 12.5.sp,
+                fontWeight: FontWeight.w700,
+                color: isDark ? const Color(0xFF94A3B8) : AppColors.textMuted,
+              ),
+            ),
+          ),
+          if (isSearchOpen) ...[
+            _LifeTrapSearchBar(controller: searchController),
+            SizedBox(height: 14.h),
+          ],
+          _LifeTipCategoryRail(
+            labels: labels,
+            selectedLabel: selectedLabel,
+            onSelected: onSelected,
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant _LifeTrapFrozenHeaderDelegate oldDelegate) {
+    return oldDelegate.topPadding != topPadding ||
+        oldDelegate.isDark != isDark ||
+        oldDelegate.searchController != searchController ||
+        oldDelegate.selectedLabel != selectedLabel ||
+        oldDelegate.isSearchOpen != isSearchOpen ||
+        oldDelegate.isSearchActive != isSearchActive ||
+        oldDelegate.labels != labels;
+  }
+}
+
 /// 頂部 AppBar
 class _LifeTrapAppBar extends StatelessWidget {
   const _LifeTrapAppBar({
@@ -1328,9 +1652,7 @@ class _LifeTrapAppBar extends StatelessWidget {
             child: IconButton(
               onPressed: onSearchToggle,
               icon: Icon(
-                isSearchActive
-                    ? Icons.search_off_rounded
-                    : Icons.search_rounded,
+                isSearchActive ? Icons.close_rounded : Icons.search_rounded,
                 color: isDark ? Colors.white : ProtoColors.charcoal,
                 size: 22.sp,
               ),
@@ -1691,6 +2013,239 @@ class _StoryChip extends StatelessWidget {
           fontWeight: FontWeight.w900,
           color: color,
           letterSpacing: 0,
+        ),
+      ),
+    );
+  }
+}
+
+class _LifeTipInteractionMetric extends StatelessWidget {
+  const _LifeTipInteractionMetric({
+    required this.svgPath,
+    required this.color,
+    required this.label,
+    required this.onTap,
+  });
+
+  final String svgPath;
+  final Color color;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Expanded(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(10.r),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 6.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CtmSvgIcon(svgPath, color: color, size: 18.sp),
+                SizedBox(width: 5.w),
+                Flexible(
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: isDark
+                          ? const Color(0xFF94A3B8)
+                          : AppColors.textSecondary,
+                      fontSize: 12.5.sp,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _LifeTipCommentSheet extends StatefulWidget {
+  const _LifeTipCommentSheet({
+    required this.title,
+    required this.onCommentPosted,
+  });
+
+  final String title;
+  final VoidCallback onCommentPosted;
+
+  @override
+  State<_LifeTipCommentSheet> createState() => _LifeTipCommentSheetState();
+}
+
+class _LifeTipCommentSheetState extends State<_LifeTipCommentSheet> {
+  final _controller = TextEditingController();
+  final _comments = <String>[
+    '這篇很實用，原來只是日常小動作也要先留紀錄。',
+    '我會先收藏，退租或拍照前拿出來確認。',
+  ];
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    final text = _controller.text.trim();
+    if (text.isEmpty) return;
+
+    HapticFeedback.mediumImpact();
+    setState(() {
+      _comments.insert(0, text);
+      _controller.clear();
+    });
+    widget.onCommentPosted();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    final bg = isDark ? const Color(0xFF181C23) : Colors.white;
+    final text = isDark ? Colors.white : ProtoColors.charcoal;
+    final muted = isDark ? const Color(0xFF94A3B8) : AppColors.textSecondary;
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: bottomInset),
+      child: Container(
+        padding: EdgeInsets.fromLTRB(18.w, 12.h, 18.w, 18.h),
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 42.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? const Color(0xFF2D333F)
+                      : const Color(0xFFE8DFD1),
+                  borderRadius: BorderRadius.circular(999.r),
+                ),
+              ),
+            ),
+            SizedBox(height: 14.h),
+            Text(
+              '避坑留言',
+              style: TextStyle(
+                color: text,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            SizedBox(height: 4.h),
+            Text(
+              widget.title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: muted,
+                fontSize: 11.5.sp,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(height: 14.h),
+            ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: 190.h),
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: _comments.length,
+                separatorBuilder: (_, __) => SizedBox(height: 8.h),
+                itemBuilder: (context, index) {
+                  return Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? const Color(0xFF1E2228)
+                          : const Color(0xFFFAF8F5),
+                      borderRadius: BorderRadius.circular(10.r),
+                      border: Border.all(
+                        color: isDark
+                            ? const Color(0xFF2D333F)
+                            : const Color(0xFFE8DFD1),
+                        width: 0.8.w,
+                      ),
+                    ),
+                    child: Text(
+                      _comments[index],
+                      style: TextStyle(
+                        color: text,
+                        fontSize: 12.5.sp,
+                        height: 1.45,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: 14.h),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    minLines: 1,
+                    maxLines: 3,
+                    style: TextStyle(color: text, fontSize: 12.5.sp),
+                    decoration: InputDecoration(
+                      hintText: '寫下你的避坑心得...',
+                      hintStyle: TextStyle(color: muted, fontSize: 12.5.sp),
+                      filled: true,
+                      fillColor: isDark
+                          ? const Color(0xFF1E2228)
+                          : const Color(0xFFFAF8F5),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 10.h,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10.w),
+                GestureDetector(
+                  onTap: _submit,
+                  child: Container(
+                    width: 42.w,
+                    height: 42.w,
+                    decoration: const BoxDecoration(
+                      color: ProtoColors.deepGreen,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.arrow_upward_rounded,
+                      color: Colors.white,
+                      size: 20.sp,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

@@ -190,16 +190,21 @@ class _SectionHeader extends StatelessWidget {
 
 class _SettingRow extends StatelessWidget {
   const _SettingRow(
-      {required this.title, this.value, this.trailing, this.locked = false});
+      {required this.title,
+      this.value,
+      this.trailing,
+      this.locked = false,
+      this.onTap});
 
   final String title;
   final String? value;
   final IconData? trailing;
   final bool locked;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return _SettingShell(
+    final row = _SettingShell(
       child: Row(
         children: [
           Expanded(child: Text(title, style: _FollowText.bodyStrong())),
@@ -209,6 +214,11 @@ class _SettingRow extends StatelessWidget {
               color: _FollowColors.mutedText, size: 18.sp),
         ],
       ),
+    );
+    if (onTap == null) return row;
+    return InkWell(
+      onTap: onTap,
+      child: row,
     );
   }
 }

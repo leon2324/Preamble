@@ -5,9 +5,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lawapp/app/app_state.dart';
 import 'package:lawapp/data/documents/document_models.dart';
 import 'package:lawapp/data/following/following_models.dart';
+import 'package:lawapp/data/mock_data/home/home_mock_data.dart';
 import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
 import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart';
 import 'package:lawapp/pages/learning/statute_database_page.dart';
+import 'package:lawapp/pages/learning/widgets/legal_document_export_page.dart';
 import 'package:lawapp/components/shared/share_sheet.dart';
 
 part 'widgets/following_views.dart';
@@ -62,15 +64,19 @@ class FollowingPage extends StatefulWidget {
 /// 再把各子頁抽成獨立路由與資料來源。
 class _FollowingPageState extends State<FollowingPage> {
   late _FollowPage _page;
+  var _detailReturnPage = _FollowPage.tabs;
   _FollowTab _tab = _FollowTab.cases;
   _FollowItem _selectedItem = _caseItems.first;
   _NoteItem _selectedNote = _notes.first;
+  late final List<_NoteItem> _noteItems;
   int _updatesTabIndex = 0;
   int _trackingSegmentIndex = 0;
+  bool _questionsCleared = false;
 
   @override
   void initState() {
     super.initState();
+    _noteItems = List<_NoteItem>.of(_notes);
     _page = _parseInitialTab(widget.initialTab);
   }
 
@@ -208,9 +214,10 @@ class _FollowingPageState extends State<FollowingPage> {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _RoundIcon(icon: Icons.insights_rounded, onTap: () {}),
+          _RoundIcon(icon: Icons.insights_rounded, onTap: _showNoteInsights),
           SizedBox(width: 8.w),
-          _RoundIcon(icon: Icons.more_vert_rounded, onTap: () {}),
+          _RoundIcon(
+              icon: Icons.more_vert_rounded, onTap: _showNoteMoreActions),
         ],
       );
     }
@@ -236,6 +243,7 @@ class _FollowingPageState extends State<FollowingPage> {
           onNotes: () => setState(() => _page = _FollowPage.notes),
           onQuestions: () => setState(() => _page = _FollowPage.questions),
           onDrafts: () => setState(() => _page = _FollowPage.drafts),
+          onPlan: () => setState(() => _page = _FollowPage.plan),
           onSettings: () => setState(() => _page = _FollowPage.settings),
         );
       case _FollowPage.updates:
@@ -243,7 +251,10 @@ class _FollowingPageState extends State<FollowingPage> {
           items: _updatesForSummary(summary),
           selectedTabIndex: _updatesTabIndex,
           onTabChanged: (index) => setState(() => _updatesTabIndex = index),
-          onOpen: (item) => _openItem(item.followItem),
+          onOpen: (item) => _openItem(
+            item.followItem,
+            returnPage: _FollowPage.updates,
+          ),
           onReadAll: () => setState(() => _page = _FollowPage.home),
           onTrackTab: (tab) => setState(() {
             _tab = tab;
@@ -261,7 +272,8 @@ class _FollowingPageState extends State<FollowingPage> {
           }),
           onSegmentChanged: (index) =>
               setState(() => _trackingSegmentIndex = index),
-          onOpen: _openItem,
+          onOpen: (item) => _openItem(item, returnPage: _FollowPage.tabs),
+          onAddTrack: _openTrackSearch,
         );
       case _FollowPage.detail:
         return _DetailView(
@@ -285,7 +297,7 @@ class _FollowingPageState extends State<FollowingPage> {
         );
       case _FollowPage.notes:
         return _NotesView(
-          notes: _notes,
+          notes: _noteItems,
           selectedTabIndex: _noteTabIndex,
           onTabChanged: (index) => setState(() => _noteTabIndex = index),
           onOpen: (note) {
@@ -294,22 +306,37 @@ class _FollowingPageState extends State<FollowingPage> {
               _page = _FollowPage.noteDetail;
             });
           },
+          onCreateNote: _addQuickNote,
         );
       case _FollowPage.noteDetail:
-        return _NoteDetailView(note: _selectedNote);
+        return _NoteDetailView(
+          note: _selectedNote,
+          onEdit: _editSelectedNote,
+          onDelete: _deleteSelectedNote,
+        );
       case _FollowPage.profile:
-        return _ProfileView(appState: appState);
+        return _ProfileView(
+          appState: appState,
+          onTrackTab: (tab) => setState(() {
+            _tab = tab;
+            _page = _FollowPage.tabs;
+          }),
+          onPlan: () => setState(() => _page = _FollowPage.plan),
+        );
       case _FollowPage.collections:
         return _CollectionsView(
           summary: summary,
           selectedTabIndex: _collectionTabIndex,
           onTabChanged: (index) => setState(() => _collectionTabIndex = index),
-          onOpen: _openItem,
+          onOpen: (item) =>
+              _openItem(item, returnPage: _FollowPage.collections),
         );
       case _FollowPage.questions:
         return _QuestionsView(
+          questions: _questionsCleared ? const [] : _questions,
           selectedTabIndex: _questionTabIndex,
           onTabChanged: (index) => setState(() => _questionTabIndex = index),
+          onClear: _clearQuestionHistory,
         );
       case _FollowPage.drafts:
         return _DraftsView(
@@ -317,15 +344,16 @@ class _FollowingPageState extends State<FollowingPage> {
           onTabChanged: (index) => setState(() => _draftTabIndex = index),
           drafts: appState.documentRepository.drafts,
           backendStatus: appState.documentRepository.backendStatusLabel,
-          onCreateDraft: _showDraftComingSoon,
+          onCreateDraft: _createQuickDraft,
+          onOpenDraft: _openDraftPreview,
         );
       case _FollowPage.plan:
-        return _PlanView(appState: appState);
+        return _PlanView(appState: appState, onUpgrade: _activateProDemo);
       case _FollowPage.search:
         return _SearchView(
           onOpen: (item) {
             _trackFollowItem(appState, item);
-            _openItem(item);
+            _openItem(item, returnPage: _FollowPage.search);
           },
         );
       case _FollowPage.settings:
@@ -335,16 +363,22 @@ class _FollowingPageState extends State<FollowingPage> {
           onUpdateChanged: (value) =>
               setState(() => _updateNotification = value),
           onCaseChanged: (value) => setState(() => _caseNotification = value),
+          onProfile: () => setState(() => _page = _FollowPage.profile),
+          onPlan: () => setState(() => _page = _FollowPage.plan),
+          onSignOut: _signOutDemo,
         );
       case _FollowPage.guest:
         return _GuestView(
-            onDemo: () => setState(() => _page = _FollowPage.home));
+          onDemo: () => setState(() => _page = _FollowPage.home),
+          onLearnMore: _showGuestLearnMore,
+        );
     }
   }
 
-  void _openItem(_FollowItem item) {
+  void _openItem(_FollowItem item, {required _FollowPage returnPage}) {
     setState(() {
       _selectedItem = item;
+      _detailReturnPage = returnPage;
       _page = _FollowPage.detail;
     });
   }
@@ -360,6 +394,303 @@ class _FollowingPageState extends State<FollowingPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('已加入我的 LawApp 追蹤。')),
     );
+  }
+
+  void _openTrackSearch() {
+    setState(() => _page = _FollowPage.search);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('請搜尋案件、法條或主題後加入追蹤。')),
+    );
+  }
+
+  void _showNoteInsights() {
+    _showInfoSheet(
+      title: 'AI 筆記洞察',
+      message:
+          '這則筆記的重點是「${_selectedNote.relatedTopic}」。正式後端完成後，這裡會串接 AI 摘要、風險分級與下一步提醒；目前先保留本機摘要，避免按鈕無反應。',
+    );
+  }
+
+  void _showNoteMoreActions() {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(18.r)),
+      ),
+      builder: (sheetContext) {
+        return SafeArea(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(18.w, 12.h, 18.w, 18.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _SettingRow(
+                  title: '編輯這則筆記',
+                  trailing: Icons.edit_outlined,
+                  onTap: () {
+                    Navigator.of(sheetContext).pop();
+                    _editSelectedNote();
+                  },
+                ),
+                _SettingRow(
+                  title: '分享筆記摘要',
+                  trailing: Icons.share_outlined,
+                  onTap: () {
+                    Navigator.of(sheetContext).pop();
+                    ShareSheet.show(context, title: _selectedNote.title);
+                  },
+                ),
+                _SettingRow(
+                  title: '刪除這則筆記',
+                  trailing: Icons.delete_outline_rounded,
+                  onTap: () {
+                    Navigator.of(sheetContext).pop();
+                    _deleteSelectedNote();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _addQuickNote() {
+    final note = _NoteItem(
+      title: '新的生活法律筆記',
+      date: _todayText(),
+      tag: '一般筆記',
+      content: '記錄今天遇到的生活情境、對方說法、手上證據與想達成的結果。',
+      relatedLaw: '待補相關法條',
+      relatedTopic: '生活法律風險整理',
+    );
+    setState(() {
+      _noteTabIndex = 0;
+      _noteItems.insert(0, note);
+      _selectedNote = note;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('已建立一則本機筆記，可點入後編輯。')),
+    );
+  }
+
+  void _editSelectedNote() {
+    final titleController = TextEditingController(text: _selectedNote.title);
+    final contentController =
+        TextEditingController(text: _selectedNote.content);
+
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('編輯筆記'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: titleController,
+                decoration: const InputDecoration(labelText: '標題'),
+              ),
+              TextField(
+                controller: contentController,
+                maxLines: 4,
+                decoration: const InputDecoration(labelText: '內容'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text('取消'),
+            ),
+            FilledButton(
+              onPressed: () {
+                final title = titleController.text.trim();
+                final content = contentController.text.trim();
+                final updated = _NoteItem(
+                  title: title.isEmpty ? _selectedNote.title : title,
+                  date: _selectedNote.date,
+                  tag: _selectedNote.tag,
+                  content: content.isEmpty ? _selectedNote.content : content,
+                  relatedLaw: _selectedNote.relatedLaw,
+                  relatedTopic: _selectedNote.relatedTopic,
+                );
+                final index = _indexOfSelectedNote();
+                setState(() {
+                  if (index != -1) _noteItems[index] = updated;
+                  _selectedNote = updated;
+                });
+                Navigator.of(dialogContext).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('筆記已更新到本機清單。')),
+                );
+              },
+              child: const Text('儲存'),
+            ),
+          ],
+        );
+      },
+    ).whenComplete(() {
+      titleController.dispose();
+      contentController.dispose();
+    });
+  }
+
+  void _deleteSelectedNote() {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('刪除筆記'),
+          content: Text('確定要刪除「${_selectedNote.title}」嗎？'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text('取消'),
+            ),
+            FilledButton(
+              onPressed: () {
+                final index = _indexOfSelectedNote();
+                setState(() {
+                  if (index != -1) _noteItems.removeAt(index);
+                  _page = _FollowPage.notes;
+                  if (_noteItems.isNotEmpty) _selectedNote = _noteItems.first;
+                });
+                Navigator.of(dialogContext).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('筆記已從本機清單移除。')),
+                );
+              },
+              child: const Text('刪除'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  int _indexOfSelectedNote() {
+    return _noteItems.indexWhere((note) =>
+        identical(note, _selectedNote) ||
+        (note.title == _selectedNote.title && note.date == _selectedNote.date));
+  }
+
+  void _clearQuestionHistory() {
+    setState(() => _questionsCleared = true);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('提問紀錄已在本機清除。')),
+    );
+  }
+
+  Future<void> _activateProDemo() async {
+    final appState = LawAppScope.of(context);
+    if (appState.isSubscriber) {
+      _showInfoSheet(
+        title: 'Pro 已啟用',
+        message: '目前帳號已是 Pro Demo 狀態。正式商業化時，這裡會改接 App Store 訂閱與恢復購買。',
+      );
+      return;
+    }
+    await appState.activateSubscriberDemo();
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('已啟用 Pro Demo。正式版將改接 App Store 訂閱。')),
+    );
+  }
+
+  Future<void> _signOutDemo() async {
+    final appState = LawAppScope.of(context);
+    await appState.signOut();
+    if (!mounted) return;
+    setState(() => _page = _FollowPage.home);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('已登出 Demo 帳號。')),
+    );
+  }
+
+  Future<void> _createQuickDraft() async {
+    final appState = LawAppScope.of(context);
+    final draft = await appState.documentRepository.createDraft(
+      templateType: DocumentTemplateType.rentalDepositNegotiation,
+      input: DocumentTemplateInput(
+        senderName: appState.currentUser.displayName,
+        receiverName: '房東／對方',
+        facts: '退租時對方主張需扣除押金，但尚未提出明確修繕項目、照片、收據或估價單。',
+        extraRequest: '請於七日內提供扣款明細；若無具體依據，請協助返還押金。',
+        evidence: '租賃契約、押金收據、點交照片、LINE 對話紀錄。',
+        toneLabel: '正式但保留協商空間',
+      ),
+      title: '押金返還通知草稿',
+    );
+    if (!mounted) return;
+    _openDraftPreview(_DraftItem.fromDocument(draft));
+  }
+
+  void _openDraftPreview(_DraftItem draft) {
+    Navigator.of(context).push(
+      CupertinoPageRoute<void>(
+        builder: (_) => LegalDocumentExportPage(
+          title: draft.title,
+          content: draft.content,
+        ),
+      ),
+    );
+  }
+
+  void _showGuestLearnMore() {
+    _showInfoSheet(
+      title: '完整追蹤功能',
+      message: '登入後可以把案件、法條、生活避坑文章加入追蹤或收藏，並在我的 LawApp 集中查看更新。正式版會支援跨裝置同步與訂閱權限。',
+      actionLabel: '開啟 Demo 登入',
+      onAction: () => setState(() => _page = _FollowPage.home),
+    );
+  }
+
+  void _showInfoSheet({
+    required String title,
+    required String message,
+    String actionLabel = '知道了',
+    VoidCallback? onAction,
+  }) {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(18.r)),
+      ),
+      builder: (sheetContext) {
+        return SafeArea(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 20.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: _FollowText.section()),
+                SizedBox(height: 10.h),
+                Text(message, style: _FollowText.bodyStrong()),
+                SizedBox(height: 18.h),
+                _PrimaryButton(
+                  label: actionLabel,
+                  onPressed: () {
+                    Navigator.of(sheetContext).pop();
+                    onAction?.call();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  String _todayText() {
+    final now = DateTime.now();
+    String twoDigits(int value) => value.toString().padLeft(2, '0');
+    return '${now.year}/${twoDigits(now.month)}/${twoDigits(now.day)}';
   }
 
   void _openExternalDetail() {
@@ -400,15 +731,6 @@ class _FollowingPageState extends State<FollowingPage> {
     );
   }
 
-  void _showDraftComingSoon() {
-    // 台灣繁體中文教學註解：
-    // 舊版法律工具頁已隔離到 legacy，正式 App 先保留入口回饋，
-    // 等新版文件產生流程定版後，再從這裡接回正式頁面或服務。
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('文件產生工具即將推出。')),
-    );
-  }
-
   void _handleBack() {
     // 台灣繁體中文教學註解：
     // 若此頁面是從新版 ProfilePage 點擊卡片 push 進來的（canPop 為 true），
@@ -425,7 +747,7 @@ class _FollowingPageState extends State<FollowingPage> {
     setState(() {
       switch (_page) {
         case _FollowPage.detail:
-          _page = _FollowPage.tabs;
+          _page = _detailReturnPage;
           break;
         case _FollowPage.noteDetail:
           _page = _FollowPage.notes;
@@ -568,6 +890,7 @@ class _QuestionItem {
 class _DraftItem {
   const _DraftItem({
     required this.title,
+    required this.content,
     required this.time,
     required this.tag,
   });
@@ -575,12 +898,14 @@ class _DraftItem {
   factory _DraftItem.fromDocument(DocumentDraft draft) {
     return _DraftItem(
       title: draft.title,
+      content: draft.content,
       time: _formatDraftTime(draft.createdAt, draft.sourceLabel),
       tag: _tagForTemplate(draft.templateType),
     );
   }
 
   final String title;
+  final String content;
   final String time;
   final String tag;
 }
@@ -812,8 +1137,15 @@ String _followIdFor(_FollowItem item) {
 }
 
 String _titleFromInteractionId(String id) {
+  final normalizedId = id.replaceFirst(RegExp(r'^(article|topic)-'), '');
+  for (final item in homeNewsletterItems) {
+    if (_normalizeInteractionTitle(item.title) == normalizedId) {
+      return item.title;
+    }
+  }
+
   final withoutPrefix =
-      id.replaceFirst(RegExp(r'^(statute|case|article)-'), '');
+      id.replaceFirst(RegExp(r'^(statute|case|article|topic)-'), '');
   if (withoutPrefix.isEmpty) return id;
   return withoutPrefix;
 }

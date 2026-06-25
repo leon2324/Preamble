@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-/// 全域擬真分享面板。
+/// 全域分享面板。
 ///
 /// 台灣繁體中文教學註解：
-/// 本元件模擬了真實行動裝置上的社群分享面板（Line, FB, Copy Link, 系統分享），
-/// 點選複製連結時會真正寫入剪貼簿，並觸發高質感 SnackBar 提示。
+/// 不再用「模擬分享」文字假裝完成外部動作；Line、Facebook 與 Threads 會優先開啟
+/// 對應的公開分享 URL，若裝置或模擬器無法開啟，就退回複製連結，讓使用者仍拿得到分享內容。
 class ShareSheet {
   const ShareSheet._();
 
   static void show(BuildContext context, {required String title, String? url}) {
-    final effectiveUrl = url ?? 'https://lawapp.com/share/${Uri.encodeComponent(title)}';
-    
+    final effectiveUrl =
+        url ?? 'https://lawapp.com/share/${Uri.encodeComponent(title)}';
+
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
@@ -21,9 +23,11 @@ class ShareSheet {
         final isDark = Theme.of(context).brightness == Brightness.dark;
         final bg = isDark ? const Color(0xFF171C22) : const Color(0xFFFAF6F0);
         final card = isDark ? const Color(0xFF1F262F) : Colors.white;
-        final border = isDark ? const Color(0xFF2D3748) : const Color(0xFFEDE4D8);
+        final border =
+            isDark ? const Color(0xFF2D3748) : const Color(0xFFEDE4D8);
         final text = isDark ? const Color(0xFFFAF6F0) : const Color(0xFF234D3B);
-        final muted = isDark ? const Color(0xFFA0AEC0) : const Color(0xFF828078);
+        final muted =
+            isDark ? const Color(0xFFA0AEC0) : const Color(0xFF828078);
 
         return Container(
           decoration: BoxDecoration(
@@ -80,11 +84,20 @@ class ShareSheet {
                       color: const Color(0xFF06C755),
                       cardBg: card,
                       border: border,
-                      textStyle: TextStyle(color: text, fontSize: 11.sp, fontWeight: FontWeight.bold),
-                      onTap: () {
+                      textStyle: TextStyle(
+                          color: text,
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.bold),
+                      onTap: () async {
+                        final messenger = ScaffoldMessenger.of(context);
                         Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('已啟動 Line 社群分享（模擬）')),
+                        await _launchOrCopy(
+                          messenger,
+                          Uri.parse(
+                            'https://social-plugins.line.me/lineit/share?url=${Uri.encodeComponent(effectiveUrl)}&text=${Uri.encodeComponent(title)}',
+                          ),
+                          effectiveUrl,
+                          successText: '已開啟 Line 分享頁。',
                         );
                       },
                     ),
@@ -95,11 +108,20 @@ class ShareSheet {
                       color: const Color(0xFF1877F2),
                       cardBg: card,
                       border: border,
-                      textStyle: TextStyle(color: text, fontSize: 11.sp, fontWeight: FontWeight.bold),
-                      onTap: () {
+                      textStyle: TextStyle(
+                          color: text,
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.bold),
+                      onTap: () async {
+                        final messenger = ScaffoldMessenger.of(context);
                         Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('已複製並啟動 Facebook 分享（模擬）')),
+                        await _launchOrCopy(
+                          messenger,
+                          Uri.parse(
+                            'https://www.facebook.com/sharer/sharer.php?u=${Uri.encodeComponent(effectiveUrl)}',
+                          ),
+                          effectiveUrl,
+                          successText: '已開啟 Facebook 分享頁。',
                         );
                       },
                     ),
@@ -110,15 +132,18 @@ class ShareSheet {
                       color: const Color(0xFF2E7D32),
                       cardBg: card,
                       border: border,
-                      textStyle: TextStyle(color: text, fontSize: 11.sp, fontWeight: FontWeight.bold),
+                      textStyle: TextStyle(
+                          color: text,
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.bold),
                       onTap: () async {
+                        final messenger = ScaffoldMessenger.of(context);
                         Navigator.of(context).pop();
-                        await Clipboard.setData(ClipboardData(text: effectiveUrl));
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('🔗 連結已成功複製至剪貼簿！')),
-                          );
-                        }
+                        await Clipboard.setData(
+                            ClipboardData(text: effectiveUrl));
+                        messenger.showSnackBar(
+                          const SnackBar(content: Text('🔗 連結已成功複製至剪貼簿！')),
+                        );
                       },
                     ),
                     _buildShareOption(
@@ -128,11 +153,20 @@ class ShareSheet {
                       color: Colors.black,
                       cardBg: card,
                       border: border,
-                      textStyle: TextStyle(color: text, fontSize: 11.sp, fontWeight: FontWeight.bold),
-                      onTap: () {
+                      textStyle: TextStyle(
+                          color: text,
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.bold),
+                      onTap: () async {
+                        final messenger = ScaffoldMessenger.of(context);
                         Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('已發布至 Threads 動態（模擬）')),
+                        await _launchOrCopy(
+                          messenger,
+                          Uri.parse(
+                            'https://www.threads.net/intent/post?text=${Uri.encodeComponent('$title $effectiveUrl')}',
+                          ),
+                          effectiveUrl,
+                          successText: '已開啟 Threads 發文頁。',
                         );
                       },
                     ),
@@ -143,11 +177,17 @@ class ShareSheet {
                       color: const Color(0xFFE28743),
                       cardBg: card,
                       border: border,
-                      textStyle: TextStyle(color: text, fontSize: 11.sp, fontWeight: FontWeight.bold),
-                      onTap: () {
+                      textStyle: TextStyle(
+                          color: text,
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.bold),
+                      onTap: () async {
+                        final messenger = ScaffoldMessenger.of(context);
                         Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('已喚起系統原生分享面板（模擬）')),
+                        await Clipboard.setData(
+                            ClipboardData(text: '$title\n$effectiveUrl'));
+                        messenger.showSnackBar(
+                          const SnackBar(content: Text('分享文字已複製，可貼到任何 App。')),
                         );
                       },
                     ),
@@ -159,6 +199,29 @@ class ShareSheet {
           ),
         );
       },
+    );
+  }
+
+  static Future<void> _launchOrCopy(
+    ScaffoldMessengerState messenger,
+    Uri uri,
+    String fallbackUrl, {
+    required String successText,
+  }) async {
+    var launched = false;
+    try {
+      launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } on Object {
+      launched = false;
+    }
+    if (launched) {
+      messenger.showSnackBar(SnackBar(content: Text(successText)));
+      return;
+    }
+
+    await Clipboard.setData(ClipboardData(text: fallbackUrl));
+    messenger.showSnackBar(
+      const SnackBar(content: Text('無法開啟外部分享頁，已改為複製連結。')),
     );
   }
 

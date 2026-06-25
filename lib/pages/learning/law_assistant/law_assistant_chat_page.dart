@@ -43,7 +43,8 @@ class _LearningSearchTopBar extends StatelessWidget {
                       IconButton(
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
-                        icon: Icon(Icons.close_rounded, size: 20.sp, color: Colors.grey),
+                        icon: Icon(Icons.close_rounded,
+                            size: 20.sp, color: Colors.grey),
                         onPressed: () => Navigator.of(context).pop(),
                       ),
                     ],
@@ -55,10 +56,14 @@ class _LearningSearchTopBar extends StatelessWidget {
                     shrinkWrap: true,
                     padding: EdgeInsets.symmetric(vertical: 8.h),
                     children: [
-                      _buildHistoryItem(context, '租約提前解約與房東權益', '2026/06/20', '我租約下個月到期...'),
-                      _buildHistoryItem(context, '車禍賠償範圍與調解程序', '2026/06/15', '車禍對方受傷拖延...'),
-                      _buildHistoryItem(context, '公司無預警裁員與資遣費', '2026/06/10', '公司突然宣布裁員...'),
-                      _buildHistoryItem(context, '網購特價品瑕疵退換爭議', '2026/06/05', '網購特價商品有瑕疵...'),
+                      _buildHistoryItem(
+                          context, '租約提前解約與房東權益', '2026/06/20', '我租約下個月到期...'),
+                      _buildHistoryItem(
+                          context, '車禍賠償範圍與調解程序', '2026/06/15', '車禍對方受傷拖延...'),
+                      _buildHistoryItem(
+                          context, '公司無預警裁員與資遣費', '2026/06/10', '公司突然宣布裁員...'),
+                      _buildHistoryItem(
+                          context, '網購特價品瑕疵退換爭議', '2026/06/05', '網購特價商品有瑕疵...'),
                     ],
                   ),
                 ),
@@ -70,7 +75,8 @@ class _LearningSearchTopBar extends StatelessWidget {
     );
   }
 
-  Widget _buildHistoryItem(BuildContext context, String title, String date, String preview) {
+  Widget _buildHistoryItem(
+      BuildContext context, String title, String date, String preview) {
     return InkWell(
       onTap: () {
         Navigator.of(context).pop();
@@ -638,7 +644,8 @@ class _LawAssistantChatBubble extends StatelessWidget {
                     ),
                     SizedBox(width: 4.w),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                       decoration: BoxDecoration(
                         color: assistantPalette.subtleSurface,
                         borderRadius: BorderRadius.circular(4.r),
@@ -944,7 +951,9 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
                     onTap: () {
                       Navigator.of(context).pop();
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('模擬上傳契約文件成功！已為您分析內容。')),
+                        const SnackBar(
+                            content:
+                                Text('契約文件解析需接正式上傳 API，TestFlight 先保留入口。')),
                       );
                     },
                   ),
@@ -955,7 +964,9 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
                     onTap: () {
                       Navigator.of(context).pop();
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('模擬讀取對話截圖成功！')),
+                        const SnackBar(
+                            content:
+                                Text('對話截圖解析需接正式圖片上傳 API，TestFlight 先保留入口。')),
                       );
                     },
                   ),
@@ -991,7 +1002,8 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
     );
   }
 
-  Widget _buildPlusMenuItem(BuildContext context, {
+  Widget _buildPlusMenuItem(
+    BuildContext context, {
     required IconData icon,
     required String label,
     required VoidCallback onTap,
@@ -1011,7 +1023,8 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
             SizedBox(height: 8.h),
             Text(
               label,
-              style: TextStyle(fontSize: 10.5.sp, color: const Color(0xFF5A615C)),
+              style:
+                  TextStyle(fontSize: 10.5.sp, color: const Color(0xFF5A615C)),
               textAlign: TextAlign.center,
             ),
           ],
@@ -1057,7 +1070,8 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
                 enabled: !showDisabled,
                 minLines: 1,
                 maxLines: 3,
-                style: TextStyle(fontSize: 13.sp, color: const Color(0xFF17231F)),
+                style:
+                    TextStyle(fontSize: 13.sp, color: const Color(0xFF17231F)),
                 decoration: InputDecoration(
                   hintText: widget.isFirstMessage
                       ? '請輸入您的法律問題，例如：車禍和解...'
