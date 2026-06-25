@@ -75,6 +75,7 @@ class _UpdatesView extends StatelessWidget {
   const _UpdatesView({
     required this.items,
     required this.selectedTabIndex,
+    this.showTabs = true,
     required this.onTabChanged,
     required this.onOpen,
     required this.onReadAll,
@@ -83,6 +84,7 @@ class _UpdatesView extends StatelessWidget {
 
   final List<_UpdateItem> items;
   final int selectedTabIndex;
+  final bool showTabs;
   final ValueChanged<int> onTabChanged;
   final ValueChanged<_UpdateItem> onOpen;
   final VoidCallback onReadAll;
@@ -94,12 +96,14 @@ class _UpdatesView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _TabStrip(
-          labels: const ['全部', '案件', '法條', '主題', '關鍵字'],
-          selectedIndex: selectedTabIndex,
-          onChanged: onTabChanged,
-        ),
-        SizedBox(height: 18.h),
+        if (showTabs) ...[
+          _TabStrip(
+            labels: const ['全部', '案件', '法條', '主題', '關鍵字'],
+            selectedIndex: selectedTabIndex,
+            onChanged: onTabChanged,
+          ),
+          SizedBox(height: 18.h),
+        ],
         _SectionHeader(
           title: '今日更新',
           action: '查看全部',

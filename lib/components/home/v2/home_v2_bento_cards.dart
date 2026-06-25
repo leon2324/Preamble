@@ -4,7 +4,7 @@ import 'package:lawapp/pages/learning/know_law_page.dart';
 import 'package:lawapp/theme/app_colors.dart';
 import 'package:lawapp/data/mock_data/followed_updates/followed_updates_mock_data.dart';
 import 'package:lawapp/pages/learning/home_mission_quiz_page.dart';
-import 'package:lawapp/pages/followed_updates/followed_updates_page.dart';
+import 'package:lawapp/pages/following/following_page.dart';
 import 'package:lawapp/app/app_state.dart';
 import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart';
 import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
@@ -226,6 +226,17 @@ class _HomeV2QuickAskSectionState extends State<HomeV2QuickAskSection> {
 class HomeV2WatchlistCard extends StatelessWidget {
   const HomeV2WatchlistCard({super.key});
 
+  void _openFollowingUpdates(BuildContext context) {
+    // 台灣繁體中文教學註解：
+    // 首頁「我的關注更新」要導向新版 FollowingPage 的「我的動態」，
+    // 不再推舊版 FollowedUpdatesPage，避免新舊追蹤頁狀態混用造成返回或渲染異常。
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (__) => const FollowingPage(initialTab: 'updates'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -308,12 +319,7 @@ class HomeV2WatchlistCard extends StatelessWidget {
               ),
               SizedBox(width: 10.w),
               InkWell(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (__) => const FollowedUpdatesPage()),
-                  );
-                },
+                onTap: () => _openFollowingUpdates(context),
                 child: Text(
                   '管理關注',
                   style: TextStyle(
@@ -341,12 +347,7 @@ class HomeV2WatchlistCard extends StatelessWidget {
               return Padding(
                 padding: EdgeInsets.only(bottom: 8.h),
                 child: InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (__) => const FollowedUpdatesPage()),
-                    );
-                  },
+                  onTap: () => _openFollowingUpdates(context),
                   borderRadius: BorderRadius.circular(12.r),
                   child: Container(
                     padding: EdgeInsets.all(10.w),

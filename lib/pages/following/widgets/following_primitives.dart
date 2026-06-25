@@ -139,16 +139,54 @@ class _TopBar extends StatelessWidget {
     required this.title,
     required this.showBack,
     required this.onBack,
+    this.centerTitle = false,
     this.trailing,
   });
 
   final String title;
   final bool showBack;
   final VoidCallback onBack;
+  final bool centerTitle;
   final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
+    if (centerTitle) {
+      // 台灣繁體中文教學註解：
+      // 有返回鍵與搜尋鍵時，單純用 Row + Expanded 會讓標題被左側返回鍵推偏；
+      // 置中頁首改用 Stack，左右按鈕貼邊，標題永遠以整個螢幕寬度置中。
+      return SizedBox(
+        height: 40.h,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            if (showBack)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: _RoundIcon(
+                  icon: Icons.arrow_back_ios_new_rounded,
+                  onTap: onBack,
+                ),
+              ),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 64.w),
+                child: Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: _FollowText.navTitle(),
+                ),
+              ),
+            ),
+            if (trailing != null)
+              Align(alignment: Alignment.centerRight, child: trailing!),
+          ],
+        ),
+      );
+    }
+
     return Row(
       children: [
         if (showBack) ...[

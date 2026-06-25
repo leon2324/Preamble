@@ -117,6 +117,63 @@ class _FollowingPageState extends State<FollowingPage> {
     final summary = appState.followingSummary;
     final topPadding = MediaQuery.paddingOf(context).top;
 
+    if (effectivePage == _FollowPage.updates) {
+      // 台灣繁體中文教學註解：
+      // 「我的動態」是使用者用來掃描追蹤更新的頁面，分類列需要像凍結窗格一樣固定在頂端；
+      // 下方只讓動態內容滾動，避免使用者滑一段後失去目前分類脈絡。
+      return Scaffold(
+        backgroundColor: _FollowColors.background,
+        body: Column(
+          children: [
+            Container(
+              color: _FollowColors.background,
+              padding: EdgeInsets.fromLTRB(
+                16.w,
+                topPadding + 12.h,
+                16.w,
+                0,
+              ),
+              child: Column(
+                children: [
+                  _TopBar(
+                    title: _titleFor(effectivePage),
+                    showBack: true,
+                    centerTitle: true,
+                    onBack: _handleBack,
+                    trailing: _trailingFor(effectivePage),
+                  ),
+                  SizedBox(height: 14.h),
+                  _TabStrip(
+                    labels: const ['全部', '案件', '法條', '主題', '關鍵字'],
+                    selectedIndex: _updatesTabIndex,
+                    onChanged: (index) =>
+                        setState(() => _updatesTabIndex = index),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                physics: const BouncingScrollPhysics(),
+                padding: EdgeInsets.fromLTRB(16.w, 18.h, 16.w, 32.h),
+                children: [
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 180),
+                    child: KeyedSubtree(
+                      key: ValueKey(effectivePage),
+                      child: _contentFor(effectivePage, appState, summary),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: _FollowColors.background,
       body: ListView(
@@ -128,6 +185,7 @@ class _FollowingPageState extends State<FollowingPage> {
             title: _titleFor(effectivePage),
             showBack: effectivePage != _FollowPage.home &&
                 effectivePage != _FollowPage.guest,
+            centerTitle: false,
             onBack: _handleBack,
             trailing: _trailingFor(effectivePage),
           ),
@@ -250,6 +308,7 @@ class _FollowingPageState extends State<FollowingPage> {
         return _UpdatesView(
           items: _updatesForSummary(summary),
           selectedTabIndex: _updatesTabIndex,
+          showTabs: false,
           onTabChanged: (index) => setState(() => _updatesTabIndex = index),
           onOpen: (item) => _openItem(
             item.followItem,
