@@ -63,7 +63,7 @@ class _HomeView extends StatelessWidget {
           onSettings: onSettings,
         ),
         SizedBox(height: 12.h),
-        _DemoUpsellCard(appState: appState, onPlan: onPlan),
+        _PlanInfoCard(appState: appState, onPlan: onPlan),
         SizedBox(height: 8.h),
         _FooterIllustration(),
       ],
@@ -523,9 +523,9 @@ class _ProfileView extends StatelessWidget {
             summary: appState.followingSummary, onTrackTab: onTrackTab),
         SizedBox(height: 14.h),
         _InfoCard(
-          title: '自前為 ${appState.accessTier.label}',
+          title: '目前為 ${appState.accessTier.label}',
           body:
-              '每日 AI 提問額度：${appState.remainingAiQuota} / ${appState.accessTier.defaultDailyAiQuota} 次。收藏、筆記與追蹤資料目前先以示範資料呈現，正式同步後會改由會員後端提供。',
+              '每日 AI 輔助額度：${appState.remainingAiQuota} / ${appState.accessTier.defaultDailyAiQuota} 次。收藏、筆記與追蹤資料會先保存在此裝置；如涉及實際個案，請諮詢合格律師或相關專業人士。',
         ),
       ],
     );
@@ -683,7 +683,7 @@ class _DraftsView extends StatelessWidget {
           onChanged: onTabChanged,
         ),
         SizedBox(height: 14.h),
-        _HintText(backendStatus),
+        const _HintText('文件草稿會先保存在此裝置，可用來整理溝通內容與證據。正式寄出或送件前，仍建議由專業人士確認。'),
         SizedBox(height: 14.h),
         if (visibleDrafts.isEmpty)
           const _EmptyStateCard(message: '這個分類還沒有文件草稿。')
@@ -714,7 +714,6 @@ class _PlanView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isPro = appState.isSubscriber;
     return Column(
       children: [
         _ProtoCard(
@@ -722,15 +721,15 @@ class _PlanView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(isPro ? 'Pro 會員' : 'Demo 會員', style: _FollowText.section()),
+              Text('進階功能規劃', style: _FollowText.section()),
               SizedBox(height: 8.h),
               Text(
-                isPro ? '無限制提問、完整 Pro 功能開放。' : '每日可提問 5 次，部分功能開放。',
+                '目前已開放收藏、筆記、追蹤與文件草稿的本機整理流程。跨裝置同步、進階提醒與正式訂閱方案會在完成審查與驗證後再推出。',
                 style: _FollowText.bodyStrong(),
               ),
               SizedBox(height: 12.h),
               LinearProgressIndicator(
-                value: isPro ? 1 : 0.8,
+                value: 0.6,
                 color: _FollowColors.primary,
                 backgroundColor: Colors.white,
               ),
@@ -738,12 +737,12 @@ class _PlanView extends StatelessWidget {
           ),
         ),
         SizedBox(height: 14.h),
-        const _CheckLine(text: '追蹤、收藏、筆記同步'),
-        const _CheckLine(text: '每日更新一目了然'),
-        const _CheckLine(text: 'AI 摘要與提醒設定更細緻'),
+        const _CheckLine(text: '收藏、筆記與追蹤保存在此裝置'),
+        const _CheckLine(text: '案件、法條與學習內容會標示來源與限制'),
+        const _CheckLine(text: '法律資訊僅供學習參考，不構成法律意見'),
         SizedBox(height: 18.h),
         _PrimaryButton(
-          label: isPro ? '已啟用 Pro' : '升級 Pro 會員',
+          label: '了解目前方案',
           onPressed: onUpgrade,
         ),
       ],
@@ -782,7 +781,7 @@ class _SettingsView extends StatelessWidget {
         _SettingRow(title: '深色模式', value: '關閉'),
         _SettingRow(
           title: '會員方案',
-          value: 'Demo 會員',
+          value: '基礎使用',
           trailing: Icons.chevron_right_rounded,
           onTap: onPlan,
         ),
@@ -792,7 +791,7 @@ class _SettingsView extends StatelessWidget {
           onTap: () => _showSettingsInfo(
             context,
             '資料來源',
-            '目前法條以 MOJ 公開資料與本機備援資料呈現，案件與生活內容仍保留部分 mock seed。正式商業化前需要補上資料版本、更新時間與後端同步狀態。',
+            '法規內容以全國法規資料庫與公開資料為主要查核來源；案件、學習與生活法律內容包含內建整理資料。畫面若未標示即時更新，代表內容不保證為最新狀態，請以官方來源為準。',
           ),
         ),
         _SettingRow(
@@ -801,7 +800,7 @@ class _SettingsView extends StatelessWidget {
           onTap: () => _showSettingsInfo(
             context,
             '法律免責聲明',
-            'LawApp 提供法律知識整理與自我檢查，不取代律師正式法律意見。涉及時效、訴訟或重大權益時，仍應尋求專業協助。',
+            '本 App 提供的案件整理、法律知識與 AI 輔助說明，僅供學習與資訊參考，不構成法律意見。如涉及實際個案，請諮詢合格律師或相關專業人士。',
           ),
         ),
         _SettingRow(
@@ -810,7 +809,7 @@ class _SettingsView extends StatelessWidget {
           onTap: () => _showSettingsInfo(
             context,
             '隱私權政策',
-            '正式版需要在 App 內與 App Store Connect 同步提供隱私權政策，並明確說明 AI 對話、收藏、筆記與裝置資料的保存與刪除方式。',
+            'LawApp 會將你在裝置上建立的收藏、筆記、偏好設定與草稿保存在本機，以便下次開啟時延續使用。若你開啟外部官方網站或分享內容，資料會依該服務的規範處理。請避免在筆記或提問中輸入不必要的敏感個資。',
           ),
         ),
         _SettingRow(
@@ -820,7 +819,7 @@ class _SettingsView extends StatelessWidget {
           onTap: () => _showSettingsInfo(
             context,
             '關於 LawApp',
-            'LawApp 是以台灣日常法律情境為核心的法律學習與自我整理工具，目前正在 MAIC Demo 與 TestFlight 商業化前修補階段。',
+            'LawApp 是以台灣日常法律情境為核心的法律學習與自我整理工具，協助使用者用案件、法規與筆記理解生活中的法律問題。',
           ),
         ),
         SizedBox(height: 18.h),
@@ -833,12 +832,12 @@ class _SettingsView extends StatelessWidget {
           onTap: () => onUpdateChanged(!updateNotification),
         ),
         _SettingRow(
-          title: 'AI 摘要偏好（Pro）',
+          title: 'AI 摘要偏好',
           locked: true,
           onTap: () => _showSettingsInfo(
             context,
             'AI 摘要偏好',
-            '這是 Pro 權限功能。正式版會接訂閱權限與 AI 摘要設定，目前先保留鎖定狀態。',
+            '進階摘要偏好需要更完整的帳號、隱私與資料保存流程。正式開放前，本頁會以固定的學習輔助說明呈現。',
           ),
         ),
         _SwitchRow(
@@ -849,12 +848,12 @@ class _SettingsView extends StatelessWidget {
             title: '案件新增通知', value: caseNotification, onChanged: onCaseChanged),
         _SettingRow(
           title: '同步設定',
-          value: '已開啟',
+          value: '本機保存',
           trailing: Icons.chevron_right_rounded,
           onTap: () => _showSettingsInfo(
             context,
             '同步設定',
-            '目前收藏、追蹤與筆記仍以本機狀態為主；正式後端完成後，這裡會顯示跨裝置同步、最後同步時間與衝突處理。',
+            '收藏、追蹤與筆記目前會保存在此裝置。更換裝置或清除 App 資料前，請先自行備份重要筆記。',
           ),
         ),
         _SettingRow(
@@ -862,7 +861,7 @@ class _SettingsView extends StatelessWidget {
           value: '32.4 MB',
           onTap: () {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('已清除本機展示快取。')),
+              const SnackBar(content: Text('本機暫存狀態已重新整理。')),
             );
           },
         ),
@@ -872,7 +871,7 @@ class _SettingsView extends StatelessWidget {
           onTap: () => _showSettingsInfo(
             context,
             '關於法律動態',
-            '法律動態會整合追蹤案件、法條修正、生活情境文章與 AI 摘要提醒；正式版需要後端排程與通知服務支援。',
+            '法律動態會整理你在 App 內追蹤的案件、法條與生活法律內容。若需要確認最新法規或判決，請再回到官方來源查核。',
           ),
         ),
         SizedBox(height: 16.h),
@@ -883,7 +882,7 @@ class _SettingsView extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 10.h),
               child: Text(
-                '登出 Demo 帳號',
+                '清除本機使用狀態',
                 style:
                     _FollowText.action().copyWith(color: _FollowColors.orange),
               ),
@@ -914,9 +913,9 @@ class _SettingsView extends StatelessWidget {
 }
 
 class _GuestView extends StatelessWidget {
-  const _GuestView({required this.onDemo, required this.onLearnMore});
+  const _GuestView({required this.onEnter, required this.onLearnMore});
 
-  final VoidCallback onDemo;
+  final VoidCallback onEnter;
   final VoidCallback onLearnMore;
 
   @override
@@ -927,14 +926,14 @@ class _GuestView extends StatelessWidget {
           SizedBox(height: 32.h),
           SvgPicture.asset(_ProfileAsset.lock, width: 112.w, height: 112.w),
           SizedBox(height: 22.h),
-          Text('登入後開啟完整追蹤功能',
+          Text('開啟完整追蹤整理',
               style: _FollowText.section(), textAlign: TextAlign.center),
           SizedBox(height: 18.h),
           const _CheckLine(text: '追蹤案件、法條、主題與關鍵字'),
-          const _CheckLine(text: '接收更新通知與 AI 提醒（Pro）'),
-          const _CheckLine(text: '建立筆記與收藏，跨裝置同步'),
+          const _CheckLine(text: '建立本機筆記與收藏'),
+          const _CheckLine(text: '重要資料請以官方來源再查核'),
           SizedBox(height: 22.h),
-          _PrimaryButton(label: 'Demo 登入', onPressed: onDemo),
+          _PrimaryButton(label: '進入追蹤中心', onPressed: onEnter),
           SizedBox(height: 12.h),
           _SecondaryButton(label: '了解更多', onPressed: onLearnMore),
           SizedBox(height: 18.h),

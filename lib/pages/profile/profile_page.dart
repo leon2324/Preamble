@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/app/app_state.dart';
-import 'package:lawapp/components/shared/mvp_state_widgets.dart';
-import 'package:lawapp/data/legal_sources/legal_source_registry.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
 import 'package:lawapp/theme/app_colors.dart';
 import 'package:lawapp/pages/profile/widgets/profile_widgets.dart';
@@ -158,12 +156,6 @@ class ProfilePage extends StatelessWidget {
 
           SizedBox(height: 14.h),
 
-          // Pro Upgrade Banner (只有在非 Pro 會員時顯示)
-          if (!appState.isSubscriber) ...[
-            ProUpgradeBanner(onTap: appState.activateSubscriberDemo),
-            SizedBox(height: 14.h),
-          ],
-
           // Dashboard 卡片 Grid (對接統計數據)
           _SectionTitle('我的資料'),
           SizedBox(height: 10.h),
@@ -199,16 +191,16 @@ class ProfilePage extends StatelessWidget {
               SettingsTile(
                 icon: Icons.notifications_active_rounded,
                 iconColor: Colors.orange,
-                title: '通知推送設定',
-                subtitle: '自訂推播通知頻率與管道類型',
+                title: '提醒偏好',
+                subtitle: '調整 App 內提醒摘要的呈現方式',
                 onTap: () => _showNotificationSettingsSheet(context, appState),
               ),
               SettingsTile(
                 icon: Icons.security_rounded,
                 iconColor: Colors.blueAccent,
-                title: '帳號與安全管理',
-                subtitle: '管理第三方帳號綁定與安全設定',
-                onTap: () => _showAccountSecuritySheet(context, appState),
+                title: '資料與隱私安全',
+                subtitle: '了解本機資料、帳號與敏感資訊限制',
+                onTap: () => _showAccountSecuritySheet(context),
               ),
               SettingsTile(
                 icon: Icons.dashboard_customize_rounded,
@@ -220,9 +212,9 @@ class ProfilePage extends StatelessWidget {
               SettingsTile(
                 icon: Icons.delete_sweep_rounded,
                 iconColor: Colors.redAccent,
-                title: '清除快取暫存',
-                subtitle: '釋放本機暫存並優化 App 效能',
-                onTap: () => _showClearCacheDialog(context),
+                title: '本機資料說明',
+                subtitle: '了解收藏、筆記與草稿的保存方式',
+                onTap: () => _showLocalStorageInfo(context),
               ),
             ],
           ),
@@ -243,9 +235,23 @@ class ProfilePage extends StatelessWidget {
               SettingsTile(
                 icon: Icons.source_rounded,
                 iconColor: Colors.teal,
-                title: '資料來源介接狀態',
-                subtitle: '查看司法院、法務部等來源之同步狀態',
+                title: '資料來源說明',
+                subtitle: '查看案件、法規與學習內容的來源限制',
                 onTap: () => _showSourcesSheet(context),
+              ),
+              SettingsTile(
+                icon: Icons.privacy_tip_rounded,
+                iconColor: Colors.indigo,
+                title: '隱私權說明',
+                subtitle: '了解本機資料與外部連結使用限制',
+                onTap: () => _showPrivacySheet(context),
+              ),
+              SettingsTile(
+                icon: Icons.article_rounded,
+                iconColor: Colors.brown,
+                title: '使用條款摘要',
+                subtitle: '了解使用 LawApp 時的重要約定',
+                onTap: () => _showTermsSheet(context),
               ),
               SettingsTile(
                 icon: Icons.gavel_rounded,
@@ -270,99 +276,9 @@ class ProfilePage extends StatelessWidget {
             ],
           ),
 
-          SizedBox(height: 20.h),
-
-          // 開發者測試控制台
-          _SectionTitle('測試控制台'),
-          SizedBox(height: 10.h),
-          Container(
-            padding: EdgeInsets.all(14.w),
-            decoration: BoxDecoration(
-              color: cardColor,
-              borderRadius: BorderRadius.circular(20.r),
-              border: Border.all(color: borderColor),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '身分切換與模擬',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w900,
-                    color: textColor,
-                  ),
-                ),
-                SizedBox(height: 6.h),
-                Text(
-                  '此區塊為 Prototype 開發測試控制台，可用來展示不同權限層級的 UI 表現，不代表正式線上登入。',
-                  style: TextStyle(
-                    fontSize: 11.5.sp,
-                    height: 1.45,
-                    color: textMutedColor,
-                  ),
-                ),
-                SizedBox(height: 12.h),
-                Row(
-                  children: [
-                    if (appState.isGuest) ...[
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: appState.signInDemo,
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(color: borderColor),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.r)),
-                          ),
-                          child: const Text('登入 Demo 會員'),
-                        ),
-                      ),
-                      SizedBox(width: 8.w),
-                      Expanded(
-                        child: FilledButton(
-                          onPressed: appState.activateSubscriberDemo,
-                          style: FilledButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.r)),
-                          ),
-                          child: const Text('啟用 Pro Demo'),
-                        ),
-                      ),
-                    ] else ...[
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: appState.signOut,
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.redAccent,
-                            side: const BorderSide(color: Colors.redAccent),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.r)),
-                          ),
-                          child: const Text('登出並回到訪客'),
-                        ),
-                      ),
-                      if (appState.accessTier !=
-                          LawAppAccessTier.subscriber) ...[
-                        SizedBox(width: 8.w),
-                        Expanded(
-                          child: FilledButton(
-                            onPressed: appState.activateSubscriberDemo,
-                            style: FilledButton.styleFrom(
-                              backgroundColor: AppColors.primary,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.r)),
-                            ),
-                            child: const Text('啟用 Pro Demo'),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ],
-                ),
-              ],
-            ),
-          ),
+          // 台灣繁體中文教學註解：
+          // Release 版個人頁不放任何身份切換、內部展示或未接訂閱的控制入口；
+          // 使用者可見區域只保留已可實際保存到本機狀態的設定與正式說明。
         ],
       ),
     );
@@ -418,7 +334,16 @@ class ProfilePage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 12.h),
-                const LegalDisclaimerBox(),
+                Text(
+                  '本 App 提供的案件整理、法律知識與 AI 輔助說明，僅供學習與資訊參考，不構成法律意見。如涉及實際個案，請諮詢合格律師或相關專業人士。',
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    height: 1.55,
+                    color: isDark
+                        ? const Color(0xFFCAD0D8)
+                        : AppColors.textSecondary,
+                  ),
+                ),
                 SizedBox(height: 20.h),
                 SizedBox(
                   width: double.infinity,
@@ -441,128 +366,46 @@ class ProfilePage extends StatelessWidget {
   }
 
   void _showSourcesSheet(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        final isDark = Theme.of(context).brightness == Brightness.dark;
-        final textColor =
-            isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary;
-        final borderStyle = BorderSide(
-            color: isDark ? const Color(0xFF2B3441) : AppColors.border);
-
-        return Padding(
-          padding: EdgeInsets.all(16.w),
-          child: Container(
-            decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF171C22) : Colors.white,
-              borderRadius: BorderRadius.circular(24.r),
-              border: Border.all(
-                  color: isDark ? const Color(0xFF2B3441) : AppColors.border),
-            ),
-            padding: EdgeInsets.all(20.w),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  '資料來源介接狀態',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w900,
-                    color: textColor,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 16.h),
-                ConstrainedBox(
-                  constraints: BoxConstraints(maxHeight: 220.h),
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    itemCount: legalSourceEntries.length,
-                    separatorBuilder: (_, __) =>
-                        Divider(height: 10.h, color: Colors.transparent),
-                    itemBuilder: (context, index) {
-                      final source = legalSourceEntries[index];
-                      Color getStatusColor(LegalSourceStatus status) {
-                        switch (status) {
-                          case LegalSourceStatus.connected:
-                            return Colors.green;
-                          case LegalSourceStatus.credentialRequired:
-                            return Colors.orange;
-                          case LegalSourceStatus.planned:
-                            return Colors.blue;
-                        }
-                      }
-
-                      final statusColor = getStatusColor(source.status);
-
-                      return Container(
-                        padding: EdgeInsets.all(10.w),
-                        decoration: BoxDecoration(
-                          color: isDark
-                              ? const Color(0xFF0F1216)
-                              : const Color(0xFFFAF7F2),
-                          borderRadius: BorderRadius.circular(10.r),
-                          border: Border.all(
-                              color: isDark
-                                  ? const Color(0xFF2B3441)
-                                  : AppColors.border),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              source.title,
-                              style: TextStyle(
-                                  fontSize: 13.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: textColor),
-                            ),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 8.w, vertical: 2.h),
-                              decoration: BoxDecoration(
-                                color: statusColor.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(6.r),
-                              ),
-                              child: Text(
-                                source.statusLabel,
-                                style: TextStyle(
-                                  fontSize: 11.sp,
-                                  color: statusColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(height: 16.h),
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r)),
-                    ),
-                    child: const Text('關閉'),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+    _showPlainInfoDialog(
+      context,
+      title: '資料來源說明',
+      message:
+          '法規內容以全國法規資料庫與公開資料為主要查核來源；案件、學習文章與生活法律內容包含 LawApp 內建整理資料。若畫面未標示即時更新，代表內容不保證為最新狀態。涉及實際權益時，請回到官方來源或諮詢合格律師確認。',
     );
   }
 
-  void _showClearCacheDialog(BuildContext context) {
+  void _showLocalStorageInfo(BuildContext context) {
+    _showPlainInfoDialog(
+      context,
+      title: '本機資料說明',
+      message:
+          '你的收藏、追蹤、筆記、閱讀偏好與文件草稿會先保存在此裝置。更換裝置、移除 App 或清除系統資料前，請自行備份重要內容。LawApp 不會將本機筆記視為正式送件或法律通知。',
+    );
+  }
+
+  void _showPrivacySheet(BuildContext context) {
+    _showPlainInfoDialog(
+      context,
+      title: '隱私權說明',
+      message:
+          'LawApp 會在裝置上保存你主動建立的收藏、筆記、偏好設定與草稿，用於延續 App 內體驗。請避免輸入不必要的身分證字號、完整地址、金融資料或第三人敏感資訊。開啟外部官方網站或分享內容時，該服務會依其自身規範處理資料。',
+    );
+  }
+
+  void _showTermsSheet(BuildContext context) {
+    _showPlainInfoDialog(
+      context,
+      title: '使用條款摘要',
+      message:
+          'LawApp 提供法律學習、案件理解與資料整理工具。你應自行判斷內容是否適合特定情境，並以官方資料與專業意見作為最終依據。不得將本 App 內容用於騷擾、詐欺、規避法律責任或其他不當目的。',
+    );
+  }
+
+  void _showPlainInfoDialog(
+    BuildContext context, {
+    required String title,
+    required String message,
+  }) {
     showDialog<void>(
       context: context,
       builder: (context) {
@@ -576,35 +419,20 @@ class ProfilePage extends StatelessWidget {
         return AlertDialog(
           backgroundColor: surfaceColor,
           title: Text(
-            '清除快取暫存',
+            title,
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.w900,
               color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
             ),
           ),
-          content:
-              Text('這將會清除您本機的圖片與離線法規暫存，需要重新連網下載。是否確定清除？', style: textStyle),
+          content: Text(message, style: textStyle),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('取消'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('快取清除成功！'),
-                    backgroundColor: Color(0xFF2E7D32),
-                  ),
-                );
-              },
-              child: const Text('確認清除',
-                  style: TextStyle(
-                      color: Colors.redAccent, fontWeight: FontWeight.bold)),
+              child: const Text('知道了'),
             ),
           ],
         );
@@ -743,13 +571,13 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  // 台灣繁體中文教學註解：開啟帳號與安全管理底頁。
-  void _showAccountSecuritySheet(BuildContext context, LawAppState appState) {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => AccountSecuritySheet(appState: appState),
+  // 台灣繁體中文教學註解：Release 版尚未開放正式第三方登入，因此只呈現資料安全說明。
+  void _showAccountSecuritySheet(BuildContext context) {
+    _showPlainInfoDialog(
+      context,
+      title: '資料與隱私安全',
+      message:
+          '目前個人資料、收藏、筆記與偏好設定會保存在此裝置。正式帳號登入與第三方帳號連結完成安全驗證前，本頁不提供帳號綁定或密碼變更操作。請不要在 App 內保存不必要的敏感個資。',
     );
   }
 

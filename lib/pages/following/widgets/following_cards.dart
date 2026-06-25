@@ -12,7 +12,6 @@ class _MemberCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isPro = appState.isSubscriber;
     return _ProtoCard(
       onTap: onPlan,
       child: Row(
@@ -27,20 +26,18 @@ class _MemberCard extends StatelessWidget {
                   children: [
                     Flexible(
                       child: Text(
-                        isPro ? 'Pro 會員' : 'Demo 會員',
+                        appState.isSubscriber ? '進階方案' : '基礎使用',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: _FollowText.tileTitle(),
                       ),
                     ),
-                    if (!isPro) ...[
-                      SizedBox(width: 6.w),
-                      const _TinyBadge(label: 'Demo'),
-                    ],
+                    SizedBox(width: 6.w),
+                    const _TinyBadge(label: '本機保存'),
                   ],
                 ),
                 SizedBox(height: 4.h),
-                Text('每日 AI 提問額度\n4 / 5 次', style: _FollowText.caption()),
+                Text('收藏、筆記與追蹤資料會先保存在此裝置', style: _FollowText.caption()),
               ],
             ),
           ),
@@ -50,8 +47,7 @@ class _MemberCard extends StatelessWidget {
               color: _FollowColors.primary,
               borderRadius: BorderRadius.circular(99.r),
             ),
-            child: Text(isPro ? '已啟用' : '升級 Pro',
-                style: _FollowText.buttonSmall()),
+            child: Text('了解方案', style: _FollowText.buttonSmall()),
           ),
         ],
       ),
@@ -59,8 +55,8 @@ class _MemberCard extends StatelessWidget {
   }
 }
 
-class _DemoUpsellCard extends StatelessWidget {
-  const _DemoUpsellCard({required this.appState, required this.onPlan});
+class _PlanInfoCard extends StatelessWidget {
+  const _PlanInfoCard({required this.appState, required this.onPlan});
 
   final LawAppState appState;
   final VoidCallback onPlan;
@@ -83,9 +79,10 @@ class _DemoUpsellCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Demo 會員專屬功能', style: _FollowText.tileTitle()),
+                Text('進階功能規劃中', style: _FollowText.tileTitle()),
                 SizedBox(height: 4.h),
-                Text('升級 Pro 會員，解鎖更多追蹤與整理功能', style: _FollowText.caption()),
+                Text('正式推出前，所有已開放資料會以清楚標示的本機狀態保存。',
+                    style: _FollowText.caption()),
               ],
             ),
           ),
@@ -190,7 +187,7 @@ class _NavigationGuide extends StatelessWidget {
       _NavGuideItem(
           '整理收藏', '案件、法條與文章', Icons.star_border_rounded, onCollections),
       _NavGuideItem('維護筆記', '個人備忘與重點', Icons.edit_note_rounded, onNotes),
-      _NavGuideItem('通知設定', '提醒與會員說明', Icons.tune_rounded, onSettings),
+      _NavGuideItem('偏好設定', '提醒與資料說明', Icons.tune_rounded, onSettings),
     ];
 
     return _ProtoCard(

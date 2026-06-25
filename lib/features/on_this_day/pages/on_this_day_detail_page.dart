@@ -24,6 +24,7 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
 
   late PageController _mediaController;
   int _mediaIndex = 0;
+  bool _isBookmarked = false;
 
   @override
   void initState() {
@@ -66,6 +67,7 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
       setState(() {
         _case = onThisDayCaseById(widget.caseId) ?? onThisDayCases.first;
         _mediaIndex = 0;
+        _isBookmarked = false;
         _mediaController.jumpToPage(0);
       });
     }
@@ -90,6 +92,15 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
         SnackBar(content: Text('相關案卷「$title」暫無細節資料')),
       );
     }
+  }
+
+  void _toggleBookmark() {
+    setState(() => _isBookmarked = !_isBookmarked);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(_isBookmarked ? '已加入本機收藏。' : '已從本機收藏移除。'),
+      ),
+    );
   }
 
   @override
@@ -135,9 +146,13 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.bookmark_border_rounded,
-                        color: OnThisDayColors.accentGold),
-                    onPressed: () {},
+                    icon: Icon(
+                      _isBookmarked
+                          ? Icons.bookmark_rounded
+                          : Icons.bookmark_border_rounded,
+                      color: OnThisDayColors.accentGold,
+                    ),
+                    onPressed: _toggleBookmark,
                   ),
                 ],
               ),

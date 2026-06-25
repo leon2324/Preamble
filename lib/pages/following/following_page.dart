@@ -55,10 +55,10 @@ class FollowingPage extends StatefulWidget {
   State<FollowingPage> createState() => _FollowingPageState();
 }
 
-/// 「我的 LawApp」整合頁的 Prototype 版頁內導航容器。
+/// 「我的 LawApp」整合頁的頁內導航容器。
 ///
 /// 台灣繁體中文教學介紹型註解：
-/// 這個分頁把原本「追蹤」與「我的」合併成個人法律中心；prototype 需要首頁、
+/// 這個分頁把原本「追蹤」與「我的」合併成個人法律中心；目前需要首頁、
 /// 今日動態、追蹤中心、收藏、筆記、提問、文件草稿、方案與設定都保持同一套視覺。
 /// 目前先用 `_FollowPage` 做頁內切換，等後端 ID、通知設定與個人資料 API 穩定後，
 /// 再把各子頁抽成獨立路由與資料來源。
@@ -407,7 +407,7 @@ class _FollowingPageState extends State<FollowingPage> {
           onOpenDraft: _openDraftPreview,
         );
       case _FollowPage.plan:
-        return _PlanView(appState: appState, onUpgrade: _activateProDemo);
+        return _PlanView(appState: appState, onUpgrade: _showPlanInfo);
       case _FollowPage.search:
         return _SearchView(
           onOpen: (item) {
@@ -424,11 +424,11 @@ class _FollowingPageState extends State<FollowingPage> {
           onCaseChanged: (value) => setState(() => _caseNotification = value),
           onProfile: () => setState(() => _page = _FollowPage.profile),
           onPlan: () => setState(() => _page = _FollowPage.plan),
-          onSignOut: _signOutDemo,
+          onSignOut: _clearLocalAccountState,
         );
       case _FollowPage.guest:
         return _GuestView(
-          onDemo: () => setState(() => _page = _FollowPage.home),
+          onEnter: () => setState(() => _page = _FollowPage.home),
           onLearnMore: _showGuestLearnMore,
         );
     }
@@ -466,7 +466,7 @@ class _FollowingPageState extends State<FollowingPage> {
     _showInfoSheet(
       title: 'AI 筆記洞察',
       message:
-          '這則筆記的重點是「${_selectedNote.relatedTopic}」。正式後端完成後，這裡會串接 AI 摘要、風險分級與下一步提醒；目前先保留本機摘要，避免按鈕無反應。',
+          '這則筆記的重點是「${_selectedNote.relatedTopic}」。本頁會依你保存的內容提供整理提示；若牽涉實際權利義務，請再向合格律師或相關專業人士確認。',
     );
   }
 
@@ -522,7 +522,7 @@ class _FollowingPageState extends State<FollowingPage> {
       date: _todayText(),
       tag: '一般筆記',
       content: '記錄今天遇到的生活情境、對方說法、手上證據與想達成的結果。',
-      relatedLaw: '待補相關法條',
+      relatedLaw: '可自行補充相關法條',
       relatedTopic: '生活法律風險整理',
     );
     setState(() {
@@ -643,29 +643,21 @@ class _FollowingPageState extends State<FollowingPage> {
     );
   }
 
-  Future<void> _activateProDemo() async {
-    final appState = LawAppScope.of(context);
-    if (appState.isSubscriber) {
-      _showInfoSheet(
-        title: 'Pro 已啟用',
-        message: '目前帳號已是 Pro Demo 狀態。正式商業化時，這裡會改接 App Store 訂閱與恢復購買。',
-      );
-      return;
-    }
-    await appState.activateSubscriberDemo();
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('已啟用 Pro Demo。正式版將改接 App Store 訂閱。')),
+  Future<void> _showPlanInfo() async {
+    _showInfoSheet(
+      title: '目前方案',
+      message:
+          'LawApp 目前開放本機收藏、追蹤、筆記與文件草稿整理。正式會員、跨裝置同步與訂閱功能需要完成付款、帳號與隱私審查後才會開放；本版本不提供一鍵切換付費權限。',
     );
   }
 
-  Future<void> _signOutDemo() async {
+  Future<void> _clearLocalAccountState() async {
     final appState = LawAppScope.of(context);
     await appState.signOut();
     if (!mounted) return;
     setState(() => _page = _FollowPage.home);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('已登出 Demo 帳號。')),
+      const SnackBar(content: Text('已清除本機使用狀態。')),
     );
   }
 
@@ -701,8 +693,9 @@ class _FollowingPageState extends State<FollowingPage> {
   void _showGuestLearnMore() {
     _showInfoSheet(
       title: '完整追蹤功能',
-      message: '登入後可以把案件、法條、生活避坑文章加入追蹤或收藏，並在我的 LawApp 集中查看更新。正式版會支援跨裝置同步與訂閱權限。',
-      actionLabel: '開啟 Demo 登入',
+      message:
+          '你可以把案件、法條、生活避坑文章加入追蹤或收藏，並在我的 LawApp 集中查看。這些資料目前保存在此裝置；重要內容請自行備份並以官方來源查核。',
+      actionLabel: '進入追蹤中心',
       onAction: () => setState(() => _page = _FollowPage.home),
     );
   }

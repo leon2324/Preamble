@@ -56,7 +56,7 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
           ),
           SizedBox(height: 16.h),
           Text(
-            '通知精細設定',
+            '提醒偏好',
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.w900,
@@ -66,8 +66,9 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
           ),
           SizedBox(height: 20.h),
 
-          // 頻率選擇
-          Text('通知頻率',
+          // 台灣繁體中文教學註解：
+          // 這裡只保存 App 內提醒偏好，不宣稱已完成系統推播、信件或背景通知。
+          Text('摘要頻率',
               style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.bold,
@@ -78,7 +79,7 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
               _buildOptionCard(
                 type: 'frequency',
                 value: 'instant',
-                label: '即時推送',
+                label: '即時提示',
                 icon: Icons.flash_on_rounded,
               ),
               SizedBox(width: 8.w),
@@ -99,8 +100,8 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
           ),
           SizedBox(height: 20.h),
 
-          // 管道選擇
-          Text('通知管道',
+          // 呈現方式選擇
+          Text('呈現方式',
               style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.bold,
@@ -111,21 +112,21 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
               _buildOptionCard(
                 type: 'channel',
                 value: 'push',
-                label: '系統推送',
+                label: 'App 內提醒',
                 icon: Icons.notifications_active_rounded,
               ),
               SizedBox(width: 8.w),
               _buildOptionCard(
                 type: 'channel',
                 value: 'email',
-                label: '信箱副本',
+                label: '重點摘要',
                 icon: Icons.email_rounded,
               ),
               SizedBox(width: 8.w),
               _buildOptionCard(
                 type: 'channel',
                 value: 'both',
-                label: '雙管齊下',
+                label: '完整摘要',
                 icon: Icons.all_inclusive_rounded,
               ),
             ],
@@ -158,7 +159,7 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('通知設定已成功儲存！'),
+                        content: Text('提醒偏好已儲存。'),
                         backgroundColor: Color(0xFF2E7D32),
                       ),
                     );

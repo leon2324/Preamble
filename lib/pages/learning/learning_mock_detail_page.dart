@@ -2011,16 +2011,14 @@ void _showShareCardDialog(
                 ),
                 ElevatedButton.icon(
                   onPressed: () {
+                    Clipboard.setData(ClipboardData(
+                        text:
+                            '$highlightText\n\n—— 摘自《$articleTitle》• LawApp 學習摘錄'));
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: const Text('🎨 成功產生精美圖卡！已儲存至相簿，您可以直接分享！'),
+                        content: const Text('重點內容已複製，可自行截圖或貼到分享工具保存。'),
                         backgroundColor: HomeV2Palette.trustGreen,
-                        action: SnackBarAction(
-                          label: '分享',
-                          textColor: Colors.white,
-                          onPressed: () {},
-                        ),
                         duration: const Duration(seconds: 3),
                       ),
                     );

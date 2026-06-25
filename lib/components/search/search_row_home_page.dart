@@ -2,9 +2,7 @@ import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/components/search/search_row_round_icon.dart';
 import 'package:lawapp/theme/adaptive_layout.dart';
-import 'package:lawapp/theme/app_colors.dart';
 
 /// 首頁專用搜尋列。
 ///
@@ -83,7 +81,6 @@ class _SearchRowHomePageState extends State<SearchRowHomePage> {
   @override
   Widget build(BuildContext context) {
     final textBuffer = context.adaptiveBuffer(8);
-    final buttonWidth = 59.w;
     final buttonHeight = 47.h + textBuffer;
     final effectiveCollapseProgress =
         _isSearchFocused ? 1.0 : widget.collapseProgress;
@@ -92,65 +89,21 @@ class _SearchRowHomePageState extends State<SearchRowHomePage> {
         : <BoxShadow>[];
     // 一旦輸入框取得焦點，就直接視為完全展開，避免使用者打字時
     // 搜尋列還被 scroll 位置影響而晃動。
-    final leftIconWidth = widget.showNotificationCapsule
-        ? lerpDouble(buttonWidth, 0, effectiveCollapseProgress) ?? 0
-        : 0.0;
-    final searchLeftMargin = widget.showNotificationCapsule
-        ? lerpDouble(10.w, 0, effectiveCollapseProgress) ?? 0
-        : 0.0;
+    // 台灣繁體中文教學註解：
+    // Release 版先只保留可實際送出的文字搜尋；等額外輸入能力完成真機驗證後，
+    // 再把左右側 icon 以同一個參數開回來。
+    final searchLeftMargin =
+        lerpDouble(10.w, 0, effectiveCollapseProgress) ?? 0;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 8.h),
       child: Row(
         children: [
-          if (widget.showNotificationCapsule)
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 140),
-              curve: Curves.easeOut,
-              width: leftIconWidth,
-              child: AnimatedOpacity(
-                duration: const Duration(milliseconds: 120),
-                opacity: effectiveCollapseProgress < 0.92 ? 1 : 0,
-                child: IgnorePointer(
-                  ignoring: effectiveCollapseProgress >= 0.92,
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      RoundIconButton(
-                        icon: Icons.notifications_none,
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('通知中心開發中，追蹤更新請先到「追蹤」分頁查看。')),
-                          );
-                        },
-                        width: buttonWidth,
-                        height: buttonHeight,
-                        boxShadow: currentShadow,
-                        backgroundColor: widget.surfaceColor,
-                      ),
-                      Positioned(
-                        top: 6.h,
-                        right: 6.w,
-                        child: Container(
-                          width: 8.w,
-                          height: 8.w,
-                          decoration: const BoxDecoration(
-                            color: AppColors.info,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
           Expanded(
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 140),
               curve: Curves.easeOut,
-              margin: EdgeInsets.only(left: searchLeftMargin, right: 10.w),
+              margin: EdgeInsets.symmetric(horizontal: searchLeftMargin),
               child: Container(
                 height: buttonHeight,
                 decoration: BoxDecoration(
@@ -204,18 +157,6 @@ class _SearchRowHomePageState extends State<SearchRowHomePage> {
                 ),
               ),
             ),
-          ),
-          RoundIconButton(
-            icon: Icons.mic,
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('語音搜尋開發中；目前請先輸入關鍵字。')),
-              );
-            },
-            width: buttonWidth,
-            height: buttonHeight,
-            boxShadow: currentShadow,
-            backgroundColor: widget.surfaceColor,
           ),
         ],
       ),

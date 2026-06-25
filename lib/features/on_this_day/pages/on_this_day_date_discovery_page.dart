@@ -106,13 +106,6 @@ class _OnThisDayDateDiscoveryPageState
           style:
               OnThisDayTextStyles.pageTitle(context).copyWith(fontSize: 20.sp),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.bookmark_border_rounded,
-                color: OnThisDayColors.primaryGreen),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: Column(
         children: [

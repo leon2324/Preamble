@@ -326,7 +326,6 @@ class _SearchHome extends StatelessWidget {
     required this.onOfficial,
     required this.onClearRecent,
     required this.controller,
-    required this.onVoice,
   });
 
   final List<String> recent;
@@ -337,7 +336,6 @@ class _SearchHome extends StatelessWidget {
   final VoidCallback onOfficial;
   final VoidCallback onClearRecent;
   final TextEditingController controller;
-  final VoidCallback onVoice;
 
   @override
   Widget build(BuildContext context) {
@@ -397,7 +395,6 @@ class _SearchHome extends StatelessWidget {
           controller: controller,
           onSubmitted: onQuery,
           onClear: () => controller.clear(),
-          onVoice: onVoice,
         ),
         SizedBox(height: 12.h),
 

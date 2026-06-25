@@ -17,6 +17,7 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
   final List<String> _categories = ['全部', '言論自由', '民主運動', '公共安全', '司法爭議'];
   String _selectedCategory = '全部';
   List<OnThisDayCase> _filteredCases = [];
+  final Set<String> _savedCaseIds = <String>{};
 
   @override
   void initState() {
@@ -55,13 +56,6 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
           style:
               OnThisDayTextStyles.pageTitle(context).copyWith(fontSize: 20.sp),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.bookmark_border_rounded,
-                color: OnThisDayColors.primaryGreen),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: Column(
         children: [
@@ -134,6 +128,7 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
   }
 
   Widget _buildListRow(OnThisDayCase c) {
+    final isSaved = _savedCaseIds.contains(c.id);
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
@@ -212,12 +207,27 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.bookmark_border_rounded,
-                            color: OnThisDayColors.accentGold),
+                        icon: Icon(
+                          isSaved
+                              ? Icons.bookmark_rounded
+                              : Icons.bookmark_border_rounded,
+                          color: OnThisDayColors.accentGold,
+                        ),
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                         iconSize: 18.sp,
-                        onPressed: () {},
+                        onPressed: () {
+                          setState(() {
+                            isSaved
+                                ? _savedCaseIds.remove(c.id)
+                                : _savedCaseIds.add(c.id);
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(isSaved ? '已從本機收藏移除。' : '已加入本機收藏。'),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

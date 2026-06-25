@@ -397,7 +397,6 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
       showFilter: _page != _SearchPage.home,
       onFilter: () => setState(() => _page = _SearchPage.filters),
       onClear: _goHome,
-      onVoice: _showVoiceSearchBottomSheet,
     );
 
     if (_page == _SearchPage.home) return searchField;
@@ -456,7 +455,6 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
           onOfficial: () => _openList(_SearchPage.official),
           onClearRecent: _clearRecent,
           controller: _controller,
-          onVoice: _showVoiceSearchBottomSheet,
         );
       case _SearchPage.results:
         if (_isSearching) {
@@ -979,19 +977,6 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
           ? '已開啟官方來源，並複製「${item.title}」供站內搜尋。'
           : '無法開啟官方來源，已先複製「${item.title}」。',
     );
-  }
-
-  void _showVoiceSearchBottomSheet() {
-    showModalBottomSheet<String>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (sheetContext) => const _SearchVoiceBottomSheet(),
-    ).then((recognizedText) {
-      if (recognizedText != null && recognizedText.isNotEmpty) {
-        _submit(recognizedText);
-      }
-    });
   }
 
   void _showLifeNoteExplorer() {
@@ -1857,7 +1842,6 @@ class _SearchField extends StatelessWidget {
     required this.onClear,
     this.showFilter = false,
     this.onFilter,
-    this.onVoice,
   });
 
   final TextEditingController controller;
@@ -1865,7 +1849,6 @@ class _SearchField extends StatelessWidget {
   final VoidCallback onClear;
   final bool showFilter;
   final VoidCallback? onFilter;
-  final VoidCallback? onVoice;
 
   @override
   Widget build(BuildContext context) {
@@ -1908,16 +1891,6 @@ class _SearchField extends StatelessWidget {
           suffixIcon: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (onVoice != null && controller.text.isEmpty)
-                IconButton(
-                  tooltip: '語音搜尋',
-                  icon: Icon(
-                    Icons.mic_rounded,
-                    color: _SearchColors.primary,
-                    size: 21.sp,
-                  ),
-                  onPressed: onVoice,
-                ),
               if (showFilter)
                 IconButton(
                   tooltip: '篩選',

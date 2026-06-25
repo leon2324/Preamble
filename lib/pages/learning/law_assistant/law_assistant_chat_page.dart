@@ -947,37 +947,24 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
                   _buildPlusMenuItem(
                     context,
                     icon: Icons.description_outlined,
-                    label: '上傳契約文件',
+                    label: '契約重點整理',
                     onTap: () {
                       Navigator.of(context).pop();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                            content:
-                                Text('契約文件解析需接正式上傳 API，TestFlight 先保留入口。')),
+                            content: Text('目前請先以文字描述契約重點，小法助會協助整理爭點與證據。')),
                       );
                     },
                   ),
                   _buildPlusMenuItem(
                     context,
                     icon: Icons.photo_outlined,
-                    label: '對話截圖',
+                    label: '對話內容整理',
                     onTap: () {
                       Navigator.of(context).pop();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                            content:
-                                Text('對話截圖解析需接正式圖片上傳 API，TestFlight 先保留入口。')),
-                      );
-                    },
-                  ),
-                  _buildPlusMenuItem(
-                    context,
-                    icon: Icons.mic_none_rounded,
-                    label: '語音輸入',
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('語音識別中...')),
+                            content: Text('目前請先貼上或輸入對話重點，小法助會協助整理可能爭點。')),
                       );
                     },
                   ),
@@ -1081,21 +1068,6 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
                 ),
               ),
             ),
-            IconButton(
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-              icon: Icon(
-                Icons.mic_none_rounded,
-                size: 22.sp,
-                color: const Color(0xFF5A615C),
-              ),
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('語音識別中...')),
-                );
-              },
-            ),
-            SizedBox(width: 8.w),
             GestureDetector(
               onTap: canSend ? widget.onSend : null,
               child: Opacity(
@@ -1265,15 +1237,8 @@ class _AssistantBentoIntro extends StatelessWidget {
           ],
         ),
         SizedBox(height: 24.h),
-        // 4. 會員與額度卡片
+        // 4. 使用範圍與免責說明卡片
         const _AssistantBentoPlanCard(),
-        // 5. API 狀態提醒卡片
-        if (const String.fromEnvironment('LAWAPP_API_BASE_URL')
-            .trim()
-            .isEmpty) ...[
-          SizedBox(height: 12.h),
-          const _ApiNotConfiguredCard(),
-        ],
         SizedBox(height: 24.h),
       ],
     );
@@ -1370,7 +1335,7 @@ class _PromptBentoCard extends StatelessWidget {
 class _AssistantBentoPlanCard extends StatelessWidget {
   const _AssistantBentoPlanCard();
 
-  void _showUpgradeDialog(BuildContext context) {
+  void _showUsageDialog(BuildContext context) {
     showDialog<void>(
       context: context,
       builder: (context) {
@@ -1387,7 +1352,7 @@ class _AssistantBentoPlanCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '小法助方案對比',
+                  '小法助使用說明',
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w900,
@@ -1450,7 +1415,7 @@ class _AssistantBentoPlanCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Text(
-                  'Demo 會員',
+                  '法律學習輔助',
                   style: TextStyle(
                     fontSize: 10.5.sp,
                     fontWeight: FontWeight.bold,
@@ -1460,7 +1425,7 @@ class _AssistantBentoPlanCard extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                '每日提問額度剩餘 80%',
+                '僅供學習參考',
                 style: TextStyle(
                   fontSize: 10.5.sp,
                   color: assistantPalette.mutedText,
@@ -1478,7 +1443,7 @@ class _AssistantBentoPlanCard extends StatelessWidget {
                   child: SizedBox(
                     height: 6.h,
                     child: LinearProgressIndicator(
-                      value: 0.8,
+                      value: 1,
                       color: assistantPalette.accent,
                       backgroundColor: assistantPalette.cardSurface,
                     ),
@@ -1487,7 +1452,7 @@ class _AssistantBentoPlanCard extends StatelessWidget {
               ),
               SizedBox(width: 12.w),
               Text(
-                '200 / 200',
+                '請查核官方來源',
                 style: TextStyle(
                   fontSize: 11.sp,
                   fontWeight: FontWeight.w700,
@@ -1501,14 +1466,14 @@ class _AssistantBentoPlanCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '每日可提問次數上限為 200 次。',
+                '小法助會協助整理問題方向、證據與可能爭點。',
                 style: TextStyle(
                   fontSize: 10.sp,
                   color: assistantPalette.mutedText,
                 ),
               ),
               GestureDetector(
-                onTap: () => _showUpgradeDialog(context),
+                onTap: () => _showUsageDialog(context),
                 child: Container(
                   padding:
                       EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
@@ -1517,7 +1482,7 @@ class _AssistantBentoPlanCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Text(
-                    '升級 Pro',
+                    '使用說明',
                     style: TextStyle(
                       fontSize: 10.5.sp,
                       fontWeight: FontWeight.bold,
@@ -1541,18 +1506,16 @@ class _PlanCompareTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final assistantPalette = _LawAssistantPalette.of(context);
     final rows = const [
-      ['每日提問次數', '3 次', '5 次', '無限次'],
-      ['小法助記憶', '有限', '完整', '完整'],
-      ['引用法條數', '3 則', '5 則', '無限'],
-      ['追蹤法條提醒', '-', '-', '✓'],
+      ['適用範圍', '法律學習、案件理解與資料整理'],
+      ['資料限制', '畫面未標示即時更新時，請以官方來源為準'],
+      ['實際個案', '請諮詢合格律師或相關專業人士'],
+      ['法律效果', '不構成法律意見或委任關係'],
     ];
 
     return Table(
       columnWidths: const {
-        0: FlexColumnWidth(1.5),
-        1: FlexColumnWidth(),
-        2: FlexColumnWidth(),
-        3: FlexColumnWidth(),
+        0: FlexColumnWidth(1.1),
+        1: FlexColumnWidth(2.2),
       },
       border: TableBorder(
         horizontalInside: BorderSide(
@@ -1562,7 +1525,7 @@ class _PlanCompareTable extends StatelessWidget {
       ),
       children: [
         TableRow(
-          children: ['功能', '訪客', 'Demo', 'Pro']
+          children: ['項目', '說明']
               .map(
                 (text) => Padding(
                   padding: EdgeInsets.symmetric(vertical: 8.h),
@@ -1598,48 +1561,6 @@ class _PlanCompareTable extends StatelessWidget {
                 .toList(),
           ),
       ],
-    );
-  }
-}
-
-class _ApiNotConfiguredCard extends StatelessWidget {
-  const _ApiNotConfiguredCard();
-
-  @override
-  Widget build(BuildContext context) {
-    final assistantPalette = _LawAssistantPalette.of(context);
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF9EE),
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(
-          color: const Color(0xFFE8B95F).withValues(alpha: 0.4),
-          width: 1.w,
-        ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            Icons.warning_amber_rounded,
-            color: const Color(0xFF94610D),
-            size: 16.sp,
-          ),
-          SizedBox(width: 8.w),
-          Expanded(
-            child: Text(
-              '小法助 尚未設定 LAWAPP_API_BASE_URL，目前使用本機 mock data，不會連到正式後端。',
-              style: TextStyle(
-                fontSize: 10.sp,
-                height: 1.4,
-                color: const Color(0xFF94610D),
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
