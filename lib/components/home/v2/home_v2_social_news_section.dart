@@ -4,6 +4,8 @@ import 'package:lawapp/components/home/home_content.dart';
 import 'package:lawapp/components/home/home_news_section.dart';
 import 'package:lawapp/components/home/v2/home_v2_palette.dart';
 import 'package:lawapp/theme/app_colors.dart';
+import 'package:lawapp/pages/home/subpages/home_official_feed_pages.dart';
+import 'package:lawapp/data/moj/moj_feed_item.dart';
 import 'dart:ui' show ImageFilter;
 
 // 首頁 V2 的時事新聞與社群熱議切換區。
@@ -97,6 +99,20 @@ class _HomeV2SocialNewsSectionState extends State<HomeV2SocialNewsSection> {
                   key: const ValueKey('tab_news'),
                   items: widget.newsItems,
                   showHeader: false,
+                  onItemTap: (item) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (__) => OfficialFeedDetailPage(
+                          item: MojFeedItem(
+                            title: item.title,
+                            url: item.url ?? 'https://www.moj.gov.tw/2204/2795/2796/',
+                            category: MojFeedCategory.news,
+                            index: 1,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 )
               : _HomeV2DiscussionPreview(
                   key: const ValueKey('tab_discussion'),
