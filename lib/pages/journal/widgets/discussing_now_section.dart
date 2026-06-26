@@ -28,15 +28,15 @@ class DiscussingNowSection extends StatelessWidget {
         ),
         SizedBox(height: 10.h),
         ...discussionTrendItems.take(4).map(
-          (item) => Padding(
-            padding: EdgeInsets.only(bottom: 8.h),
-            child: _DiscussionTrendCard(
-              item: item,
-              palette: palette,
-              isPrimary: item.rank == 1,
+              (item) => Padding(
+                padding: EdgeInsets.only(bottom: 8.h),
+                child: _DiscussionTrendCard(
+                  item: item,
+                  palette: palette,
+                  isPrimary: item.rank == 1,
+                ),
+              ),
             ),
-          ),
-        ),
       ],
     );
   }
