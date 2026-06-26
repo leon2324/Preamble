@@ -1565,7 +1565,8 @@ class _LifeTrapFrozenHeaderDelegate extends SliverPersistentHeaderDelegate {
   double get minExtent => maxExtent;
 
   @override
-  double get maxExtent => topPadding + (isSearchOpen ? 226.h : 148.h);
+  double get maxExtent => (topPadding + (isSearchOpen ? 226.h : 148.h)).roundToDouble();
+
 
   @override
   Widget build(
