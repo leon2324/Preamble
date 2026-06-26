@@ -918,11 +918,308 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
 
   void _refresh() => setState(() {});
 
+  // 台灣繁體中文教學註解：
+  // Release 版的「＋」選單只做本機文字脈絡整理，不宣稱已支援檔案、圖片、
+  // 錄音或雲端匯入；所有輸出都會回填到同一個聊天輸入框，沿用既有送出流程。
+  void _insertContextText(BuildContext context, String text) {
+    final trimmed = text.trim();
+    if (trimmed.isEmpty) return;
+
+    final currentText = widget.controller.text;
+    final selection = widget.controller.selection;
+    final separator = currentText.trim().isEmpty ? '' : '\n\n';
+    final insertion = '$separator$trimmed';
+
+    if (selection.isValid && !selection.isCollapsed) {
+      final nextText = currentText.replaceRange(
+        selection.start,
+        selection.end,
+        insertion,
+      );
+      widget.controller.value = TextEditingValue(
+        text: nextText,
+        selection: TextSelection.collapsed(
+          offset: selection.start + insertion.length,
+        ),
+      );
+    } else if (selection.isValid &&
+        selection.baseOffset >= 0 &&
+        selection.baseOffset <= currentText.length) {
+      final cursor = selection.baseOffset;
+      final nextText = currentText.replaceRange(cursor, cursor, insertion);
+      widget.controller.value = TextEditingValue(
+        text: nextText,
+        selection: TextSelection.collapsed(offset: cursor + insertion.length),
+      );
+    } else {
+      final nextText = '$currentText$insertion';
+      widget.controller.value = TextEditingValue(
+        text: nextText,
+        selection: TextSelection.collapsed(offset: nextText.length),
+      );
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('已加入目前問題脈絡，可確認後送出。')),
+    );
+  }
+
+  void _showTextContextSheet({
+    required BuildContext context,
+    required String title,
+    required String description,
+    required String fieldLabel,
+    required String emptyMessage,
+    required String Function(String value) buildPrompt,
+  }) {
+    final controller = TextEditingController();
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (sheetContext) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+            ),
+            padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 20.h),
+            child: SafeArea(
+              top: false,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w900,
+                      color: const Color(0xFF17231F),
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    description,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      height: 1.45,
+                      color: const Color(0xFF5A615C),
+                    ),
+                  ),
+                  SizedBox(height: 14.h),
+                  TextField(
+                    controller: controller,
+                    autofocus: true,
+                    minLines: 4,
+                    maxLines: 8,
+                    textInputAction: TextInputAction.newline,
+                    decoration: InputDecoration(
+                      labelText: fieldLabel,
+                      alignLabelWithHint: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14.r),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.of(sheetContext).pop(),
+                          child: const Text('取消'),
+                        ),
+                      ),
+                      SizedBox(width: 10.w),
+                      Expanded(
+                        child: FilledButton(
+                          onPressed: () {
+                            final value = controller.text.trim();
+                            if (value.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(emptyMessage)),
+                              );
+                              return;
+                            }
+                            Navigator.of(sheetContext).pop();
+                            _insertContextText(context, buildPrompt(value));
+                          },
+                          child: const Text('加入脈絡'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    ).whenComplete(controller.dispose);
+  }
+
+  void _showCaseBackgroundSheet(BuildContext context) {
+    final timeController = TextEditingController();
+    final peopleController = TextEditingController();
+    final storyController = TextEditingController();
+    final questionController = TextEditingController();
+
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (sheetContext) {
+        Widget field(String label, TextEditingController controller,
+            {int maxLines = 1}) {
+          return TextField(
+            controller: controller,
+            maxLines: maxLines,
+            decoration: InputDecoration(
+              labelText: label,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14.r),
+              ),
+            ),
+          );
+        }
+
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+            ),
+            padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 20.h),
+            child: SafeArea(
+              top: false,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '補充案件背景',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w900,
+                        color: const Color(0xFF17231F),
+                      ),
+                    ),
+                    SizedBox(height: 8.h),
+                    Text(
+                      '把事件基本資料整理進輸入框，小法助會更容易先拆出爭點與需要補充的資料。',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        height: 1.45,
+                        color: const Color(0xFF5A615C),
+                      ),
+                    ),
+                    SizedBox(height: 14.h),
+                    field('事件時間', timeController),
+                    SizedBox(height: 10.h),
+                    field('涉及人物', peopleController),
+                    SizedBox(height: 10.h),
+                    field('發生經過', storyController, maxLines: 3),
+                    SizedBox(height: 10.h),
+                    field('目前疑問', questionController, maxLines: 2),
+                    SizedBox(height: 16.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () => Navigator.of(sheetContext).pop(),
+                            child: const Text('取消'),
+                          ),
+                        ),
+                        SizedBox(width: 10.w),
+                        Expanded(
+                          child: FilledButton(
+                            onPressed: () {
+                              final time = timeController.text.trim();
+                              final people = peopleController.text.trim();
+                              final story = storyController.text.trim();
+                              final question = questionController.text.trim();
+                              final hasAny = [
+                                time,
+                                people,
+                                story,
+                                question,
+                              ].any((value) => value.isNotEmpty);
+                              if (!hasAny) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('請先輸入要補充的案件背景。')),
+                                );
+                                return;
+                              }
+
+                              Navigator.of(sheetContext).pop();
+                              _insertContextText(
+                                context,
+                                '''
+【案件背景】
+時間：${time.isEmpty ? '（待補）' : time}
+人物：${people.isEmpty ? '（待補）' : people}
+經過：${story.isEmpty ? '（待補）' : story}
+目前疑問：${question.isEmpty ? '（待補）' : question}
+
+請先幫我整理這個問題的法律爭點。''',
+                              );
+                            },
+                            child: const Text('加入脈絡'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    ).whenComplete(() {
+      timeController.dispose();
+      peopleController.dispose();
+      storyController.dispose();
+      questionController.dispose();
+    });
+  }
+
+  void _appendQuestionStructure(BuildContext context) {
+    final current = widget.controller.text.trim();
+    if (current.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('請先輸入想詢問的問題。')),
+      );
+      return;
+    }
+
+    _insertContextText(
+      context,
+      '''
+請幫我把上面的問題整理成：
+1. 事件背景
+2. 主要爭點
+3. 可能涉及的法律概念
+4. 我還需要補充哪些資料''',
+    );
+  }
+
   void _showPlusMenu(BuildContext context) {
+    final parentContext = context;
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (context) {
+      builder: (sheetContext) {
         return Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -933,7 +1230,7 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '加入附件或功能',
+                '補充問題資料',
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
@@ -941,42 +1238,67 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
                 ),
               ),
               SizedBox(height: 16.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+              Wrap(
+                spacing: 14.w,
+                runSpacing: 14.h,
+                alignment: WrapAlignment.center,
                 children: [
                   _buildPlusMenuItem(
                     context,
-                    icon: Icons.description_outlined,
-                    label: '契約重點整理',
+                    icon: Icons.event_note_outlined,
+                    label: '補充案件背景',
                     onTap: () {
-                      Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('目前請先以文字描述契約重點，小法助會協助整理爭點與證據。')),
+                      Navigator.of(sheetContext).pop();
+                      _showCaseBackgroundSheet(parentContext);
+                    },
+                  ),
+                  _buildPlusMenuItem(
+                    sheetContext,
+                    icon: Icons.article_outlined,
+                    label: '貼上參考資料',
+                    onTap: () {
+                      Navigator.of(sheetContext).pop();
+                      _showTextContextSheet(
+                        context: parentContext,
+                        title: '貼上參考資料',
+                        description: '可貼上法條、判決、新聞、契約或對話文字；本功能只整理你貼上的文字，不會讀取檔案。',
+                        fieldLabel: '參考資料文字',
+                        emptyMessage: '請先貼上要補充的參考資料。',
+                        buildPrompt: (value) => '''
+【參考資料】
+$value
+
+請根據以上資料，幫我整理重點與可能的法律爭點。''',
                       );
                     },
                   ),
                   _buildPlusMenuItem(
-                    context,
-                    icon: Icons.photo_outlined,
-                    label: '對話內容整理',
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('目前請先貼上或輸入對話重點，小法助會協助整理可能爭點。')),
-                      );
-                    },
-                  ),
-                  _buildPlusMenuItem(
-                    context,
+                    sheetContext,
                     icon: Icons.bookmark_outline_rounded,
-                    label: '匯入歷史諮詢',
+                    label: '貼上過去問題',
                     onTap: () {
-                      Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('歷史諮詢已匯入完成！')),
+                      Navigator.of(sheetContext).pop();
+                      _showTextContextSheet(
+                        context: parentContext,
+                        title: '貼上過去問題重點',
+                        description: '把先前問過或整理過的問題重點貼上，會回填到目前輸入框作為背景。',
+                        fieldLabel: '過去問題重點',
+                        emptyMessage: '請先輸入要補充的問題重點。',
+                        buildPrompt: (value) => '''
+【過去問題重點】
+$value
+
+請根據以上背景，協助我整理目前問題。''',
                       );
+                    },
+                  ),
+                  _buildPlusMenuItem(
+                    sheetContext,
+                    icon: Icons.format_list_numbered_rounded,
+                    label: '整理提問',
+                    onTap: () {
+                      Navigator.of(sheetContext).pop();
+                      _appendQuestionStructure(parentContext);
                     },
                   ),
                 ],
