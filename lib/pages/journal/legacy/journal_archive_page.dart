@@ -6,7 +6,7 @@ import 'package:lawapp/theme/app_colors.dart';
 
 /// 可導覽的案件資料館頁。
 ///
-/// 這頁目前還沒有正式後端，所以先把 mock 卷宗做成「可篩選、可點進詳情」的真流程；
+/// 這頁目前還沒有正式後端，所以先把內建卷宗做成「可篩選、可點進詳情」的真流程；
 /// 未來接 API 時保留這裡的互動結構，只要把 archiveDossierItems 換成後端資料即可。
 class JournalArchivePage extends StatefulWidget {
   const JournalArchivePage({
@@ -112,7 +112,7 @@ class _JournalArchivePageState extends State<JournalArchivePage> {
                 SizedBox(height: 22.h),
                 _SectionTitle(
                   title: '年代館',
-                  subtitle: '點選年代後，下方卷宗列表會即時切換；現在先使用 mock data 誠實呈現可瀏覽內容。',
+                  subtitle: '點選年代後，下方卷宗列表會即時切換，方便依時代脈絡瀏覽內容。',
                 ),
                 SizedBox(height: 12.h),
                 _EraFilterChips(
@@ -281,7 +281,7 @@ class _ArchiveStatusBanner extends StatelessWidget {
           Expanded(
             child: Text(
               selectedEra == null
-                  ? '目前顯示全部 $totalCount 份 mock 卷宗。'
+                  ? '目前顯示全部 $totalCount 份卷宗。'
                   : '目前瀏覽 $selectedEra：$visibleCount / $totalCount 份卷宗。',
               style: TextStyle(
                 fontSize: 12.4.sp,
@@ -609,7 +609,7 @@ class _ArchiveSourceNote extends StatelessWidget {
           ),
           SizedBox(height: 8.h),
           Text(
-            '目前資料館使用 app 內建 mock data，目標是先讓使用者真的能瀏覽、篩選與閱讀詳情；接後端後可把卷宗列表、年代與時間軸改由 API 回傳。',
+            '目前資料館使用 App 內建整理資料，讓使用者能瀏覽、篩選與閱讀詳情；後續可再串接正式卷宗 API 更新列表、年代與時間軸。',
             style: TextStyle(
               fontSize: 12.2.sp,
               height: 1.5,

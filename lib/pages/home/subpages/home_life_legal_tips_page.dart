@@ -12,13 +12,15 @@ import 'package:lawapp/pages/learning/know_law_page.dart';
 import 'package:lawapp/platform/native_share_bridge.dart';
 import 'package:lawapp/theme/app_colors.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:lawapp/data/learning/supabase_life_tips_service.dart';
+import 'package:lawapp/data/mock_data/home/legacy/home_mock_data_legacy.dart';
 
 String _imageForCategory(String category) {
   return switch (category) {
-    '養狗' => 'assets/images/learning/levels/level_02_article_reader.png',
+    '養狗' || '寵物' || '寵物飼育' => 'assets/images/learning/levels/level_02_article_reader.png',
     '租屋' => 'assets/images/learning/rent_course_room.png',
-    '拍照隱私' => 'assets/images/learning/privacy_course_room.png',
-    '網購' => 'assets/images/learning/consumer_course_room.png',
+    '拍照隱私' || '個資' || '個資隱私' => 'assets/images/learning/privacy_course_room.png',
+    '網購' || '網購消費' => 'assets/images/learning/consumer_course_room.png',
     '交通' => 'assets/images/learning/car_course_room.png',
     _ => 'assets/images/learning/levels/level_01_legal_beginner.png',
   };
@@ -121,12 +123,26 @@ class LifeLegalTipsPage extends StatefulWidget {
 }
 
 class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
-  static const _categories = ['全部', '養狗', '租屋', '拍照隱私', '網購', '交通'];
+  static const _categories = [
+    '全部',
+    '租屋',
+    '職場',
+    '交通',
+    '網購消費',
+    '個資隱私',
+    '鄰里關係',
+    '二手交易',
+    '寵物飼育',
+    '生活常識'
+  ];
 
   late final TextEditingController _searchController;
   var _selectedCategory = '全部';
   var _query = '';
   var _isSearchOpen = false;
+
+  List<HomeNewsletterItem> _allTips = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -138,6 +154,27 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
         _query = _searchController.text.trim();
       });
     });
+
+    _loadTips();
+  }
+
+  Future<void> _loadTips() async {
+    try {
+      final tips = await SupabaseLifeTipsService.instance.fetchLifeTips();
+      if (mounted) {
+        setState(() {
+          _allTips = tips;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _allTips = homeNewsletterItems;
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -151,7 +188,18 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
     final topPadding = MediaQuery.paddingOf(context).top;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final filteredItems = homeNewsletterItems.where((item) {
+    if (_isLoading) {
+      return Scaffold(
+        backgroundColor: isDark ? const Color(0xFF0F1216) : ProtoColors.lightBg,
+        body: const Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+          ),
+        ),
+      );
+    }
+
+    final filteredItems = _allTips.where((item) {
       final matchesCategory =
           _selectedCategory == '全部' || item.category == _selectedCategory;
       final matchesQuery = _query.isEmpty ||
@@ -198,8 +246,8 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
               delegate: SliverChildListDelegate(
                 [
                   _LifeTipFeaturedCard(
-                    item: homeNewsletterItems.first,
-                    onTap: () => _openTip(context, homeNewsletterItems.first),
+                    item: _allTips.isNotEmpty ? _allTips.first : homeNewsletterItems.first,
+                    onTap: () => _openTip(context, _allTips.isNotEmpty ? _allTips.first : homeNewsletterItems.first),
                   ),
                   if (_selectedCategory == '租屋') ...[
                     SizedBox(height: 18.h),
@@ -218,7 +266,7 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
                       message: '目前沒有符合條件的避坑筆記，換個關鍵字試試看。',
                     )
                   else
-                    ...filteredItems.take(16).map(
+                    ...filteredItems.take(500).map(
                           (item) => Padding(
                             padding: EdgeInsets.only(bottom: 10.h),
                             child: _LifeTipListCard(

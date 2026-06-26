@@ -19,7 +19,7 @@ class ArchiveActivitySection extends StatelessWidget {
       children: [
         JournalSectionHeader(
           title: '圖書館動態',
-          subtitle: '新增判決、時間軸更新與資料補完，先用 mock data 呈現更新節奏。',
+          subtitle: '新增判決、時間軸更新與資料補完，呈現近期卷宗整理節奏。',
           palette: palette,
           actionLabel: '查看全部',
         ),

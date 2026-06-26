@@ -31,7 +31,7 @@ class _LearningQuizPageState extends State<LearningQuizPage> {
   void _nextQuestion() {
     setState(() {
       _currentQuestionIndex =
-          (_currentQuestionIndex + 1) % learningQuizQuestions.length;
+          ((_currentQuestionIndex + 1) % learningQuizQuestions.length).toInt();
       _selectedOptionIndex = null;
       _isAnsweredCorrectly = false;
     });

@@ -18,7 +18,7 @@ class HomeV2HeroHeader extends StatefulWidget {
 
   final VoidCallback onProfileTap;
   final VoidCallback onNotificationTap;
-  final VoidCallback onTickerTap;
+  final ValueChanged<HomeV2TickerItem> onTickerTap;
 
   @override
   State<HomeV2HeroHeader> createState() => _HomeV2HeroHeaderState();
@@ -99,7 +99,11 @@ class _HomeV2HeroHeaderState extends State<HomeV2HeroHeader> {
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(20.r),
           child: InkWell(
-            onTap: widget.onTickerTap,
+            onTap: () {
+              if (homeV2TickerItems.isNotEmpty) {
+                widget.onTickerTap(homeV2TickerItems[_tickerIndex]);
+              }
+            },
             borderRadius: BorderRadius.circular(20.r),
             child: Ink(
               width: double.infinity,

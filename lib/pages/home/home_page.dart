@@ -5,6 +5,10 @@ import 'package:lawapp/components/home/v2/home_v2_primitives.dart';
 import 'package:lawapp/components/home/v2/home_v2_sections.dart';
 import 'package:lawapp/components/home/v2/home_v2_bento_cards.dart';
 import 'package:lawapp/data/mock_data/home/home_mock_data.dart';
+import 'package:lawapp/data/mock_data/home/home_v2_mock_data.dart';
+import 'package:lawapp/data/mock_data/home/legacy/home_mock_data_legacy.dart';
+import 'package:lawapp/data/mock_data/learning/learning_mock_data.dart';
+import 'package:lawapp/pages/learning/learning_mock_detail_page.dart';
 import 'package:lawapp/data/moj/moj_feed_item.dart';
 import 'package:lawapp/pages/home/home_subpages.dart';
 import 'package:lawapp/pages/learning/statute_database_page.dart';
@@ -40,14 +44,52 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _openLaborUpdate() {
-    // 首頁上方的綠色新上架快訊是法規內容入口，不是純展示 banner；
-    // 目前先帶入勞基法加班費查詢字串，之後接後台時可改成 ticker item 自帶 deep link。
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (__) => const StatuteDatabasePage(initialQuery: '勞動基準法 加班費'),
-      ),
-    );
+  void _handleTickerTap(HomeV2TickerItem item) {
+    if (item.type == 'news') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (__) => OfficialFeedDetailPage(
+            item: MojFeedItem(
+              title: item.title,
+              url: item.targetUrl ?? 'https://www.moj.gov.tw/',
+              category: MojFeedCategory.news,
+              index: 0,
+            ),
+          ),
+        ),
+      );
+    } else if (item.type == 'learning') {
+      final topic = featuredLearningTopics[item.targetId];
+      if (topic != null) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (__) => LearningMockDetailPage(article: topic.heroArticle),
+          ),
+        );
+      } else {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (__) => const StatuteDatabasePage(initialQuery: '勞動基準法 加班費'),
+          ),
+        );
+      }
+    } else if (item.type == 'tip') {
+      final tip = homeNewsletterItems.firstWhere(
+        (n) => n.title == item.targetId,
+        orElse: () => homeNewsletterItems.first,
+      );
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (__) => LifeLegalTipDetailPage(item: tip),
+        ),
+      );
+    } else {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (__) => StatuteDatabasePage(initialQuery: item.query),
+        ),
+      );
+    }
   }
 
   void _openFollowingUpdates() {
@@ -492,7 +534,7 @@ class _HomePageState extends State<HomePage> {
                           HomeV2HeroHeader(
                             onProfileTap: _openQuickSettingsPanel,
                             onNotificationTap: _showNotificationBubble,
-                            onTickerTap: _openLaborUpdate,
+                            onTickerTap: _handleTickerTap,
                           ),
                           SizedBox(height: 14.h),
                           HomeV2GreetingCard(onTap: _openFollowingUpdates),

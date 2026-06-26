@@ -483,7 +483,7 @@ const archiveDossierItems = [
     fullDate: '2024 至今',
     location: '全台',
     statusLabel: '偵查與起訴高發',
-    lead: '這份卷宗沿用現有案例 mock data 的整理方向，讓資料館不只展示舊案，也能收納仍在大量發生的生活型刑事案件。',
+    lead: '這份卷宗沿用既有案例整理架構，讓資料館不只展示舊案，也能收納仍在大量發生的生活型刑事案件。',
     timeline: [
       ArchiveTimelineItem(
         label: '帳戶取得',

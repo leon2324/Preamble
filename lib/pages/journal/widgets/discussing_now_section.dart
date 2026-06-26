@@ -27,7 +27,7 @@ class DiscussingNowSection extends StatelessWidget {
           actionLabel: '查看全部',
         ),
         SizedBox(height: 10.h),
-        ...discussionTrendItems.map(
+        ...discussionTrendItems.take(4).map(
           (item) => Padding(
             padding: EdgeInsets.only(bottom: 8.h),
             child: _DiscussionTrendCard(

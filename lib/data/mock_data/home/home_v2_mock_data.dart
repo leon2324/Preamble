@@ -62,11 +62,17 @@ class HomeV2TickerItem {
     required this.badge,
     required this.title,
     required this.query,
+    this.type = 'statute',
+    this.targetUrl,
+    this.targetId,
   });
 
   final String badge;
   final String title;
   final String query;
+  final String type;
+  final String? targetUrl;
+  final String? targetId;
 }
 
 const homeV2TickerItems = [
@@ -74,51 +80,70 @@ const homeV2TickerItems = [
     badge: '新修正',
     title: '道路交通管理處罰條例修正',
     query: '道路交通管理處罰條例',
+    type: 'news',
+    targetUrl: 'https://www.moj.gov.tw/2204/2795/2796/2796-10672',
   ),
   HomeV2TickerItem(
     badge: '新公布',
     title: '行人交通安全設施條例公布',
     query: '行人 交通安全',
+    type: 'news',
+    targetUrl: 'https://www.moj.gov.tw/2204/2795/2796/2796-10673',
   ),
   HomeV2TickerItem(
     badge: '修正案',
     title: '住宅租賃定型化契約應記載事項修正',
     query: '住宅租賃 定型化契約',
+    type: 'news',
+    targetUrl: 'https://www.moj.gov.tw/2204/2795/2796/2796-10674',
   ),
   HomeV2TickerItem(
     badge: '新上架',
     title: '勞動基準法加班費常見爭議整理',
     query: '勞動基準法 加班費',
+    type: 'learning',
+    targetId: '職場權益',
   ),
   HomeV2TickerItem(
     badge: '熱門',
     title: '民法侵權行為與精神慰撫金查詢增加',
     query: '民法 侵權行為 精神慰撫金',
+    type: 'statute',
   ),
   HomeV2TickerItem(
     badge: '新修正',
     title: '消費者保護法網購退貨規範更新',
     query: '消費者保護法 網購退貨',
+    type: 'news',
+    targetUrl: 'https://www.moj.gov.tw/2204/2795/2796/2796-10675',
   ),
   HomeV2TickerItem(
     badge: '提醒',
     title: '個人資料保護法蒐集告知義務重點',
     query: '個人資料保護法 告知義務',
+    type: 'learning',
+    targetId: '個資隱私',
   ),
   HomeV2TickerItem(
     badge: '案例',
     title: '租屋押金返還與修繕責任案例新增',
     query: '租屋 押金 修繕',
+    type: 'tip',
+    targetId: '租屋提前解約，押金一定拿不回來嗎？',
   ),
   HomeV2TickerItem(
     badge: '新修正',
     title: '家庭暴力防治法保護令程序更新',
     query: '家庭暴力防治法 保護令',
+    type: 'news',
+    targetUrl: 'https://www.moj.gov.tw/2204/2795/2796/2796-10676',
   ),
   HomeV2TickerItem(
     badge: '精選',
     title: '車禍和解書簽署前應注意事項整理',
     query: '車禍 和解書',
+    type: 'tip',
+    targetId: '車禍後先道歉，會不會變成承認全責？',
   ),
 ];
 

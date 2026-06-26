@@ -59,9 +59,7 @@ class SupabaseCaseService {
             if (a.id.toLowerCase() == q && b.id.toLowerCase() != q) return -1;
             if (b.id.toLowerCase() == q && a.id.toLowerCase() != q) return 1;
           }
-          final yearCompare = b.year.compareTo(a.year);
-          if (yearCompare != 0) return yearCompare;
-          return b.id.compareTo(a.id);
+          return a.id.compareTo(b.id);
         });
 
       if (offset >= sorted.length) return [];
@@ -76,7 +74,7 @@ class SupabaseCaseService {
         'select=id,titleZh,titleEn,shortTitleZh,shortTitleEn,displayCode,year,location,status,category,tags,memoryLine,shortDescription,oneSentenceSummary,caseType,procedureStage,courtLevel,updatedAt,images',
         'limit=$limit',
         'offset=$offset',
-        'order=year.desc,id.desc',
+        'order=id.asc',
       ];
 
       if (category != null && category != '全部') {
