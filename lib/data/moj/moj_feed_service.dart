@@ -6,7 +6,6 @@ import 'package:lawapp/data/moj/moj_feed_item.dart';
 
 /// 讀取法務部公開列表頁的服務。
 ///
-/// 台灣繁體中文教學註解：
 /// 法務部有 RSS 說明頁，但實務上公開列表頁的資料更容易穩定取得標題與官方連結；
 /// 這裡只抓首頁可見的清單項目，裁判書與全文檢索仍應交給後端同步處理。
 class MojFeedService {

@@ -131,7 +131,6 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
   void _submitSearch(String value) {
     final query = value.trim();
     if (query.isEmpty) return;
-    // 台灣繁體中文教學註解：
     // TextField 的 onChanged 只負責即時篩選；使用者按鍵盤搜尋或點入口時，
     // 才把關鍵字記進最近查詢，避免每打一個字都產生一筆假瀏覽紀錄。
     setState(() {
@@ -366,10 +365,9 @@ class _StatuteDetailPageState extends State<StatuteDetailPage> {
   StatuteItem get item => widget.item;
 
   Future<void> _toggleFollow(bool isFollowed) async {
-    final appState = LawAppScope.of(context);
-    // 台灣繁體中文教學註解：
+    final appState = PreambleScope.of(context);
     // 法規頁的追蹤不是本頁自己的暫存 bool，而是寫進 App 共用的 FollowingSummary；
-    // 這樣從全站搜尋追蹤、從法規頁追蹤、到我的 LawApp 查看，都會看到同一份資料。
+    // 這樣從全站搜尋追蹤、從法規頁追蹤、到我的 Preamble 查看，都會看到同一份資料。
     await appState.setStatuteFollowed(_statuteInteractionId(item), !isFollowed);
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
@@ -378,7 +376,7 @@ class _StatuteDetailPageState extends State<StatuteDetailPage> {
   }
 
   Future<void> _toggleSaved(bool isSaved) async {
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     await appState.setStatuteSaved(_statuteInteractionId(item), !isSaved);
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
@@ -389,7 +387,7 @@ class _StatuteDetailPageState extends State<StatuteDetailPage> {
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.paddingOf(context).top;
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     final statuteId = _statuteInteractionId(item);
     final isFollowed = appState.isStatuteFollowed(statuteId);
     final isSaved = appState.isStatuteSaved(statuteId);
@@ -609,7 +607,6 @@ class _RoundToolButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 台灣繁體中文教學註解：
     // 返回鍵統一改成 iOS 簡潔箭頭，不再加底色圓框；
     // 點擊範圍仍保留 42.w，避免視覺變輕後手指不好點。
     return Material(

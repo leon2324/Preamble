@@ -3,7 +3,6 @@ import 'package:lawapp/theme/app_colors.dart';
 
 /// 記事頁主頁色票。
 ///
-/// 台灣繁體中文教學註解：
 /// 主頁 prototype 先使用獨立色票，避免把「案件資料館」的策展視覺直接寫進全站主題；
 /// 等記事頁定版後，再評估哪些顏色可以回收到 `AppColors` 共用。
 class JournalPalette {
@@ -21,7 +20,6 @@ class JournalPalette {
   final Color primaryText;
   final Color secondaryText;
 
-  /// 台灣繁體中文教學註解：
   /// 有些記事頁舊版元件使用 mutedText 命名；先保留這個相容 getter，
   /// 讓新舊元件都能吃同一份色票，之後統一命名時再一起清掉。
   Color get mutedText => secondaryText;

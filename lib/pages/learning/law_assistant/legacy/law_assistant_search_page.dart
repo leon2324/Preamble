@@ -2,13 +2,11 @@ part of '../../know_law_page.dart';
 
 /// 小法助 Prototype 入口與頁內流程狀態機。
 ///
-/// 台灣繁體中文教學介紹型註解：
 /// 這裡負責首頁、輸入、回答整理、法條、追問、來源、紀錄、收藏、設定與方案的頁內切換；
 /// 視覺元件與 mock 內容拆到其他檔案，讓流程邏輯保持可讀。
 ///
 /// 小法助提問入口頁。
 ///
-/// 台灣繁體中文教學註解：
 /// 這個頁面刻意做成公開 widget，讓首頁新版「AI 法律輔助」卡片與學習頁
 /// 搜尋列都共用同一套提問流程。未來若要調整 guest 額度、後端設定提示或
 /// 最近對話載入，只要改這裡，不需要追兩個入口。
@@ -74,7 +72,6 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
   @override
   void initState() {
     super.initState();
-    // 台灣繁體中文教學註解：
     // Prototype 版把「首頁、輸入、整理、紀錄、設定」都收在同一個頁內狀態機，
     // 讓首頁與所有子頁共用配色、卡片、分類 Tab 與返回邏輯，不再散落成不同樣式。
     _controller.addListener(() => setState(() {}));
@@ -177,7 +174,6 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
     return rawPrompt.split('\n\n問題類型：').first;
   }
 
-  /// 台灣繁體中文教學註解：
   /// 小法助 Prototype 頁不假裝有完整後端時也能追問；正式環境走 repository，
   /// mock 環境則由同一個 repository 補一則本機示範回覆，UI 流程保持一致。
   Future<void> _sendFollowUp([String? presetPrompt]) async {
@@ -185,7 +181,7 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
     final conversation = _conversation;
     if (prompt.isEmpty || conversation == null || _isSendingFollowUp) return;
 
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     if (conversation.isGuest && appState.isGuest) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -314,7 +310,7 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
   Future<void> _submitPrompt() async {
     final prompt = _controller.text.trim();
     if (prompt.isEmpty || _isCheckingGuestUsage || _isCreating) return;
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
 
     if (appState.isGuest && _hasGuestUsed) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -326,7 +322,6 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
     FocusManager.instance.primaryFocus?.unfocus();
     setState(() => _isCreating = true);
     try {
-      // 台灣繁體中文教學註解：
       // 使用者在 Prototype 裡選的案件類型、文件備註與補充資訊都要一起送進資料層；
       // 這樣前端不是只改畫面文字，而是讓 AI 或 mock 回答真的能收到完整問題脈絡。
       final enrichedPrompt = _composePromptForAssistant(prompt);
@@ -518,7 +513,7 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
   }
 
   Widget _homeContent() {
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     return Column(
       children: [
         const _AssistantHero(),
@@ -1050,7 +1045,7 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
   }
 
   Widget _planContent() {
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1173,7 +1168,7 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
       case LawAssistantCitationSourceType.news:
         return '新聞與公開資訊';
       case LawAssistantCitationSourceType.other:
-        return 'LawApp 本機示範資料';
+        return '緒言 Preamble 本機示範資料';
     }
   }
 
@@ -1212,7 +1207,6 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
   }
 
   void _clearVisibleRecords() {
-    // 台灣繁體中文教學註解：
     // 目前沒有正式刪除對話 API，所以 Prototype 先做「前端隱藏」；
     // 這比假裝已刪除伺服器資料誠實，後續接 API 時只要把這段換成 delete endpoint。
     final ids = <String>[

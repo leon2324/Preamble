@@ -4,12 +4,11 @@ import 'package:http/http.dart' as http;
 import 'package:lawapp/data/following/following_models.dart';
 import 'package:lawapp/data/law_assistant/law_assistant_api_service.dart';
 
-/// LawApp 追蹤/收藏後端代理服務。
+/// Preamble 追蹤/收藏後端代理服務。
 ///
-/// 台灣繁體中文教學介紹型註解：
 /// Flutter 端只知道「我要追蹤/收藏哪個 id」，不直接碰資料庫；正式同步時由
 /// `LAWAPP_API_BASE_URL` 指到後端，未設定時 repository 會回到本機 mock 狀態。
-/// 這樣全站搜尋、法規頁與我的 LawApp 可以共用同一套資料契約。
+/// 這樣全站搜尋、法規頁與我的 Preamble 可以共用同一套資料契約。
 class FollowingApiService {
   FollowingApiService({
     http.Client? client,
@@ -146,7 +145,6 @@ class FollowingApiService {
         message = decoded['message'].toString();
       }
     } catch (__) {
-      // 台灣繁體中文教學註解：
       // 後端錯誤格式不可控，解析失敗時保留 UI 可讀的預設訊息即可。
     }
 

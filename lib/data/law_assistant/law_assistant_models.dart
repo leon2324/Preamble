@@ -16,7 +16,6 @@ enum LawAssistantCitationSourceType {
 
 /// AI 回答的引用來源。
 ///
-/// 台灣繁體中文教學註解：
 /// 引用來源要和回答一起被保存，避免 UI 只顯示 AI 文字卻看不到法規、判決或官方資料來源。
 class LawAssistantCitation {
   const LawAssistantCitation({

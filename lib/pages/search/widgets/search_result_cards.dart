@@ -1,6 +1,5 @@
 part of '../global_search_page.dart';
 
-// 台灣繁體中文教學註解：
 // 搜尋結果卡片集中在此檔，維持 prototype 原本的顏色、間距與互動動畫；
 // 父層只傳入 _SearchResult 與 callback，因此不會影響搜尋資料來源或導頁判斷。
 

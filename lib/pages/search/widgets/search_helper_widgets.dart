@@ -1,6 +1,5 @@
 part of '../global_search_page.dart';
 
-// 台灣繁體中文教學註解：
 // 本檔集中放搜尋 Prototype 的小型展示 helper 與共用 primitive，例如卡片、按鈕、標籤與頂部列。
 // 這些元件只接收文字或 callback，不直接處理搜尋 state、repository 或導頁決策。
 

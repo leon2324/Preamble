@@ -7,7 +7,6 @@ const lawAppLegalDisclaimer = '本內容僅供法律知識參考，不構成正�
 
 /// 共用載入狀態。
 ///
-/// 台灣繁體中文教學註解：
 /// MVP 階段每個 repository 都可能切 mock/backend，因此 loading/error/empty 先統一成元件，
 /// 之後各頁要換文案即可，不需要重複寫一堆不一致的狀態卡。
 class AppLoadingView extends StatelessWidget {
@@ -240,7 +239,7 @@ class PermissionGateCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(

@@ -175,7 +175,6 @@ class LegalToolsPage extends StatefulWidget {
 
 /// 法律文件工具箱的 Prototype 版流程容器。
 ///
-/// 台灣繁體中文教學介紹型註解：
 /// 這裡刻意用 `_ToolPage` 在同一個 StatefulWidget 裡切換首頁、三步驟、
 /// 草稿列表、證據清單、會員狀態與免責說明，因為法律工具箱是 push 進來的子頁面；
 /// 子頁不建立自己的 Nav 欄，只保留上方返回與頁內流程狀態。等正式後端草稿 ID、
@@ -264,7 +263,7 @@ class _LegalToolsPageState extends State<LegalToolsPage> {
   }
 
   Future<void> _generateDraft() async {
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     final isSample = appState.isGuest;
     if (appState.isGuest) _showAccessSheet();
 
@@ -302,7 +301,7 @@ class _LegalToolsPageState extends State<LegalToolsPage> {
 
   Future<void> _copyShareText(String text) async {
     final shareText = [
-      'LawApp 法律文件草稿',
+      '緒言 Preamble 法律文件草稿',
       text,
       '提醒：$lawAppLegalDisclaimer',
     ].where((line) => line.trim().isNotEmpty).join('\n\n');
@@ -324,7 +323,6 @@ class _LegalToolsPageState extends State<LegalToolsPage> {
     final titleController = TextEditingController();
     final noteController = TextEditingController();
 
-    // 台灣繁體中文教學註解：
     // 證據清單先做成頁內本機資料，不假裝已上傳檔案；使用者新增的名稱與備註
     // 會立即被勾選並同步回「你手上有哪些證據」欄位，產生草稿時就能帶入。
     await showModalBottomSheet<void>(
@@ -385,7 +383,7 @@ class _LegalToolsPageState extends State<LegalToolsPage> {
   }
 
   void _showProUpgradeSheet() {
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
@@ -475,7 +473,7 @@ class _LegalToolsPageState extends State<LegalToolsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     final topPadding = MediaQuery.paddingOf(context).top;
 
     return GestureDetector(
@@ -556,7 +554,7 @@ class _LegalToolsPageState extends State<LegalToolsPage> {
     }
   }
 
-  Widget _currentPage(LawAppState appState) {
+  Widget _currentPage(PreambleState appState) {
     switch (_page) {
       case _ToolPage.home:
         return _HomePanel(
@@ -671,7 +669,7 @@ class _HomePanel extends StatelessWidget {
     required this.onOpenNotice,
   });
 
-  final LawAppState appState;
+  final PreambleState appState;
   final _DocumentScenario selected;
   final ValueChanged<_DocumentScenario> onScenarioTap;
   final VoidCallback onStart;
@@ -890,7 +888,7 @@ class _PreviewPanel extends StatelessWidget {
     required this.onPro,
   });
 
-  final LawAppState appState;
+  final PreambleState appState;
   final _DraftTone tone;
   final String draft;
   final ValueChanged<_DraftTone> onToneChanged;
@@ -1039,7 +1037,7 @@ class _ProPanel extends StatelessWidget {
     required this.onNotice,
   });
 
-  final LawAppState appState;
+  final PreambleState appState;
   final VoidCallback onUpgrade;
   final VoidCallback onNotice;
 
@@ -1366,7 +1364,7 @@ class _InfoBand extends StatelessWidget {
 class _LockPrompt extends StatelessWidget {
   const _LockPrompt({required this.appState, required this.onTap});
 
-  final LawAppState appState;
+  final PreambleState appState;
   final VoidCallback onTap;
 
   @override
@@ -1707,7 +1705,7 @@ class _ProUpgradeSheet extends StatelessWidget {
     required this.onProDemo,
   });
 
-  final LawAppState appState;
+  final PreambleState appState;
   final VoidCallback onDemo;
   final VoidCallback onProDemo;
 

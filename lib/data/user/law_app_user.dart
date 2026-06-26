@@ -1,12 +1,11 @@
 import 'package:lawapp/data/user/law_app_access_tier.dart';
 
-/// LawApp 使用者資料。
+/// Preamble 使用者資料。
 ///
-/// 台灣繁體中文教學註解：
 /// 這個 model 是 Flutter 端的「會員快照」，不是正式 auth token；
 /// token 仍應由 AuthService/後端處理，UI 只透過這份資料判斷顯示與權限提示。
-class LawAppUser {
-  const LawAppUser({
+class PreambleUser {
+  const PreambleUser({
     required this.id,
     required this.displayName,
     required this.email,
@@ -25,7 +24,7 @@ class LawAppUser {
   final String id;
   final String displayName;
   final String email;
-  final LawAppAccessTier accessTier;
+  final PreambleAccessTier accessTier;
   final DateTime createdAt;
   final DateTime updatedAt;
   final String? avatarUrl;
@@ -41,64 +40,64 @@ class LawAppUser {
     return remaining < 0 ? 0 : remaining;
   }
 
-  bool get isGuest => accessTier == LawAppAccessTier.guest;
+  bool get isGuest => accessTier == PreambleAccessTier.guest;
 
-  factory LawAppUser.guest() {
+  factory PreambleUser.guest() {
     final now = DateTime.now();
-    return LawAppUser(
+    return PreambleUser(
       id: 'guest',
       displayName: '訪客',
       email: '',
-      accessTier: LawAppAccessTier.guest,
+      accessTier: PreambleAccessTier.guest,
       createdAt: now,
       updatedAt: now,
-      usageQuota: LawAppAccessTier.guest.defaultDailyAiQuota,
+      usageQuota: PreambleAccessTier.guest.defaultDailyAiQuota,
       profession: 'citizen',
       aiStyle: 'simple',
     );
   }
 
-  factory LawAppUser.demoMember() {
+  factory PreambleUser.demoMember() {
     final now = DateTime.now();
-    return LawAppUser(
+    return PreambleUser(
       id: 'demo-member',
       displayName: 'Demo 會員',
       email: 'member@lawapp.demo',
-      accessTier: LawAppAccessTier.member,
+      accessTier: PreambleAccessTier.member,
       createdAt: now,
       updatedAt: now,
-      usageQuota: LawAppAccessTier.member.defaultDailyAiQuota,
+      usageQuota: PreambleAccessTier.member.defaultDailyAiQuota,
       profession: 'citizen',
       aiStyle: 'simple',
     );
   }
 
-  factory LawAppUser.demoSubscriber() {
+  factory PreambleUser.demoSubscriber() {
     final now = DateTime.now();
-    return LawAppUser(
+    return PreambleUser(
       id: 'demo-subscriber',
       displayName: 'Demo 訂閱者',
       email: 'subscriber@lawapp.demo',
-      accessTier: LawAppAccessTier.subscriber,
+      accessTier: PreambleAccessTier.subscriber,
       createdAt: now,
       updatedAt: now,
-      usageQuota: LawAppAccessTier.subscriber.defaultDailyAiQuota,
+      usageQuota: PreambleAccessTier.subscriber.defaultDailyAiQuota,
       profession: 'lawyer',
       aiStyle: 'pro_analysis',
     );
   }
 
-  factory LawAppUser.fromJson(Map<String, dynamic> json) {
+  factory PreambleUser.fromJson(Map<String, dynamic> json) {
     final tierText = _stringValue(json, const ['accessTier', 'access_tier']);
-    final tier = LawAppAccessTier.values.firstWhere(
+    final tier = PreambleAccessTier.values.firstWhere(
       (value) => value.name == tierText,
-      orElse: () => LawAppAccessTier.guest,
+      orElse: () => PreambleAccessTier.guest,
     );
 
     final prof = _stringValue(json, const ['profession']);
     final style = _stringValue(json, const ['aiStyle', 'ai_style']);
 
-    return LawAppUser(
+    return PreambleUser(
       id: _stringValue(json, const ['id', 'userId', 'user_id']),
       displayName: _stringValue(json, const ['displayName', 'display_name']),
       email: _stringValue(json, const ['email']),
@@ -143,11 +142,11 @@ class LawAppUser {
     };
   }
 
-  LawAppUser copyWith({
+  PreambleUser copyWith({
     String? id,
     String? displayName,
     String? email,
-    LawAppAccessTier? accessTier,
+    PreambleAccessTier? accessTier,
     DateTime? createdAt,
     DateTime? updatedAt,
     String? avatarUrl,
@@ -158,7 +157,7 @@ class LawAppUser {
     String? profession,
     String? aiStyle,
   }) {
-    return LawAppUser(
+    return PreambleUser(
       id: id ?? this.id,
       displayName: displayName ?? this.displayName,
       email: email ?? this.email,

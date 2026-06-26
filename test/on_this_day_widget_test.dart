@@ -12,7 +12,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     _setPhoneSize(tester);
 
-    final appState = LawAppState();
+    final appState = PreambleState();
     addTearDown(appState.dispose);
     await appState.load();
 
@@ -121,12 +121,12 @@ void _setPhoneSize(WidgetTester tester) {
   });
 }
 
-Widget _testFrame(LawAppState appState, Widget child) {
+Widget _testFrame(PreambleState appState, Widget child) {
   return ScreenUtilInit(
     designSize: const Size(375, 812),
     minTextAdapt: true,
     splitScreenMode: true,
-    builder: (_, __) => LawAppScope(
+    builder: (_, __) => PreambleScope(
       state: appState,
       child: MaterialApp(
         home: child,
@@ -135,21 +135,21 @@ Widget _testFrame(LawAppState appState, Widget child) {
   );
 }
 
-class LawAppScope extends InheritedWidget {
-  const LawAppScope({
+class PreambleScope extends InheritedWidget {
+  const PreambleScope({
     super.key,
     required this.state,
     required super.child,
   });
 
-  final LawAppState state;
+  final PreambleState state;
 
-  static LawAppState of(BuildContext context) {
-    final scope = context.dependOnInheritedWidgetOfExactType<LawAppScope>();
+  static PreambleState of(BuildContext context) {
+    final scope = context.dependOnInheritedWidgetOfExactType<PreambleScope>();
     return scope!.state;
   }
 
   @override
-  bool updateShouldNotify(covariant LawAppScope oldWidget) =>
+  bool updateShouldNotify(covariant PreambleScope oldWidget) =>
       state != oldWidget.state;
 }

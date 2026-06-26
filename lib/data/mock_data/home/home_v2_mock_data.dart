@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 /// 新版首頁常見法律問題入口資料。
 ///
-/// 台灣繁體中文教學註解：
 /// 這份資料只服務新版首頁，和舊首頁的 mock data 刻意分開，
 /// 這樣未來替換成 API 時可以各自演進，不會互相牽連。
 class HomeV2IssueItem {
@@ -34,7 +33,6 @@ class HomeV2TopicItem {
 
 /// 新版首頁小任務的二選一資料。
 ///
-/// 台灣繁體中文教學註解：
 /// 首頁的小任務故意做成輕量版，只放短題目與二選一，
 /// 完整四選一測驗則留給後續子頁面使用。
 class HomeV2MissionItem {
@@ -57,7 +55,6 @@ class HomeV2MissionItem {
 
 /// 新版首頁頂部法規快訊資料。
 ///
-/// 台灣繁體中文教學註解：
 /// 這裡先把快訊做成獨立 mock list，之後要做「由下往上輪播」時，
 /// UI 只要對 `homeV2TickerItems` 做 PageView / AnimatedSwitcher 即可。
 class HomeV2TickerItem {

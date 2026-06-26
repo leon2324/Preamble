@@ -89,14 +89,12 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
   late final PageController _galleryController;
   int _galleryIndex = 0;
 
-  // 台灣繁體中文教學註解：
   // 完整判決書分頁錨點滾動所使用的 GlobalKey，維持跨 Build 的狀態一致性。
   final GlobalKey _mainVerdictKey = GlobalKey();
   final GlobalKey _proceduralKey = GlobalKey();
   final GlobalKey _reasoningKey = GlobalKey();
   final GlobalKey _lawsKey = GlobalKey();
 
-  // 台灣繁體中文教學註解：
   // 定義自訂的 SVG 圖示字串，避免使用 Google Material Icons。
   static const String _svgBackIcon = '''
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#1B3F38" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -110,13 +108,11 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
 </svg>
 ''';
 
-  // 台灣繁體中文教學註解：
   // 為「鄉民討論」分頁設計的狀態變數，包含留言輸入控制、立場選擇、各案件的即時投開票數據、以及即時按讚與新增留言的快取。
   final TextEditingController _commentController = TextEditingController();
   String _selectedStance = '中立派';
   final Map<String, String> _myVotes = {};
 
-  // 台灣繁體中文教學註解：
   // 為了完全排除 LateInitializationError 崩潰風險，直接在聲明時對地圖變數進行初始賦值，不再使用 late 關鍵字。
   final Map<String, List<int>> _caseVotes = {
     '318': [142, 103], // 太陽花學運案件：合理 vs 不合理
@@ -412,7 +408,6 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
         child: Column(
           children: [
             // Shorter, elegant top App Bar (Centered Title & AI Assistant shortcut)
-            // 台灣繁體中文教學註解：
             // 為了讓長標題在中間完美對齊，此處使用 Stack 進行多層疊加排版。
             // 這裡一定要給 SizedBox 滿版寬度，否則 Column 會讓 Header 跟著標題內容縮小，
             // 導致 left/right 定位只貼在縮小後的標題區塊，而不是螢幕左右邊界。
@@ -424,7 +419,6 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    // 台灣繁體中文教學註解：
                     // 左側返回鍵，完全移除 Material Icons，改用自訂的 iOS 風格 SVG 返回圖示，並去除內距與約束靠最左側對齊。
                     Positioned(
                       left: 0,
@@ -443,7 +437,6 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                         onPressed: () => Navigator.of(context).pop(),
                       ),
                     ),
-                    // 台灣繁體中文教學註解：
                     // 置中案件名稱，水平方向預留安全空間，避免被左右兩側按鈕遮蓋，文字超出部分以「...」縮減顯示。
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 80.w),
@@ -460,7 +453,6 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                         ),
                       ),
                     ),
-                    // 台灣繁體中文教學註解：
                     // 右側僅放置單一討論功能按鈕，將原有的聊天室圖示替換為音波圖示，並防切邊右移 12.w 對齊。
                     Positioned(
                       right: 0,
@@ -474,7 +466,6 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                         ),
                         tooltip: '查看鄉民思辨討論',
                         onPressed: () {
-                          // 台灣繁體中文教學註解：
                           // 點擊右側討論按鈕後，直接 Push 跳轉進入全新的「專屬聊天討論室（CaseNetizenChatRoomPage）」，
                           // 並將數據引用傳入以進行多頁面間的資料即時同步。
                           Navigator.of(context).push(
@@ -657,7 +648,6 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                 ),
                                 SizedBox(height: 10.h),
                                 // Tags
-                                // 台灣繁體中文教學註解：
                                 // 此處使用 SingleChildScrollView 進行水平包裹，避免當案件 tags 超出螢幕寬度時引發 Layout 溢出。
                                 // 同時為每個標籤加上點擊事件，讓使用者可直接透過此標籤跳轉至搜尋頁進行案件篩選。
                                 SingleChildScrollView(
@@ -887,7 +877,6 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                 ),
                                 SizedBox(height: 20.h),
 
-                                // 台灣繁體中文教學註解：
                                 // 「思辨與探索」快捷方格 — 移自圖書館首頁，放在案件詳情頁更符合脈絡。
                                 // 使用者已在瀏覽特定案件時，才最需要這些分析工具。
                                 Text(
@@ -1061,7 +1050,6 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                         delegate: SliverChildListDelegate([
                           _buildActiveTabContent(context),
                           SizedBox(height: 24.h),
-                          // 台灣繁體中文教學註解：
                           // 實作精緻的莫蘭迪粉綠漸層「小法助 AI 捷徑」橫幅（Banner），並改用 sparkling 圖示。
                           GestureDetector(
                             onTap: () {
@@ -1271,7 +1259,6 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
   }
 
   // --- TAB: 鄉民討論 ---
-  // 台灣繁體中文教學註解：
   // 此處實作為所有案件設計的「鄉民討論」互動分頁。
   // 包含：
   // 1. 法律思辨投開票所 (PK Opinion Poll)：顯示該案在社群上的認同率，投票後展示美觀比例條與票數。
@@ -1871,7 +1858,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
     );
   }
 
-  // 台灣繁體中文教學註解：建立立場選擇 Chip 的輔助方法，點擊時會更換當前選擇的立場。
+  // 建立立場選擇 Chip 的輔助方法，點擊時會更換當前選擇的立場。
   Widget _buildStanceChip(String stance, Color activeColor) {
     final isSelected = _selectedStance == stance;
     return GestureDetector(
@@ -1906,15 +1893,13 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
   // --- TAB 0: 脈絡 ---
   // --- TAB 1: 爭點 ---
   // --- TAB 2: 法條 ---
-  // 台灣繁體中文教學註解：
   // 點擊法條卡片時彈出的莫蘭迪米白 (Cream) 精緻底頁，顯示完整條文概要與該案之關聯。
   // --- TAB 3: 延伸 ---
   // --- Bottom Action Bar ---
   Widget _buildBottomActionBar() {
-    // 台灣繁體中文教學註解：
     // 底部行動列已抽成跨功能共用元件，生活避坑筆記也會使用同一套；
     // 這能避免案件詳情與文章詳情各自複製一份相似 UI，造成之後維護漂移。
-    return LawAppStoryActionBar(
+    return PreambleStoryActionBar(
       isFollowed: _isFollowed,
       isSaved: _isSaved,
       onAskAssistant: () {

@@ -7,7 +7,6 @@ class LearningGameState extends ChangeNotifier {
   static const int totalLevels = 10;
   static const int experiencePerLevel = 100;
 
-  // 台灣繁體中文教學註解：
   // Level、稱號、頭像與輔助符號都用同一個 index 對齊；
   // 日後若要增減等級，請同步調整 totalLevels 與下方三個清單。
   static const List<String> _levelTitles = [
@@ -324,7 +323,6 @@ class LearningGameState extends ChangeNotifier {
   void addExperience(int amount) {
     if (amount <= 0) return;
 
-    // 台灣繁體中文教學註解：
     // 10 階是目前成長系統的天花板；達到最高階後經驗條固定顯示滿格，
     // 避免舊資料或大量加分把玩家推到未設計的 Level 11 之後。
     if (_level >= totalLevels) {

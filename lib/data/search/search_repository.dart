@@ -71,7 +71,7 @@ class SearchRepository {
         type: SearchResultType.caseItem,
         destination: 'case:${item.id}',
         score: 75,
-        source: item.isMockData ? 'LawApp mock data' : 'LawApp case API',
+        source: item.isMockData ? '緒言 Preamble mock data' : '緒言 Preamble case API',
         updatedAt: item.updatedAt,
         sourceUrl: caseSourceUrl,
         officialUrl: caseSourceUrl,
@@ -120,7 +120,6 @@ class SearchRepository {
   }
 
   void dispose() {
-    // 台灣繁體中文教學註解：
     // SearchRepository 目前只擁有法規資料 repository 的 HTTP client；
     // 之後若全站搜尋改接獨立後端 API，也把關閉連線的責任集中在這裡。
     _statuteRepository.dispose();
@@ -136,7 +135,7 @@ final _mockResults = [
     type: SearchResultType.assistant,
     destination: 'assistant',
     score: 60,
-    source: 'LawApp',
+    source: '緒言 Preamble',
     updatedAt: DateTime(2026, 5, 5),
     tags: ['AI', '法律助理', '問答'],
   ),
@@ -148,7 +147,7 @@ final _mockResults = [
     type: SearchResultType.document,
     destination: 'documents:deposit',
     score: 55,
-    source: 'LawApp local template',
+    source: '緒言 Preamble local template',
     updatedAt: DateTime(2026, 5, 5),
     tags: ['租屋', '押金', '文件'],
   ),
@@ -169,7 +168,6 @@ final _mockResults = [
 ];
 
 String _officialSourceUrlForCase(LawCase item) {
-  // 台灣繁體中文教學註解：
   // 案件 mock 可能帶 example.local 這種示範 URL，不能當成真官方來源。
   // 這裡只把看起來可公開查核的 http(s) 來源帶到搜尋結果；沒有就讓頁面退回司法院查詢入口。
   for (final link in item.sourceLinks) {

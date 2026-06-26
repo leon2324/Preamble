@@ -11,7 +11,6 @@ import 'package:lawapp/theme/app_colors.dart';
 
 /// 首頁專題的完整列表頁。
 ///
-/// 台灣繁體中文教學註解：
 /// 這頁復用 learning mock data，等學習 API 完成時，只要把資料來源換成 repository，
 /// 卡片與導頁方式可以沿用。
 class HomeLearningTopicsPage extends StatelessWidget {

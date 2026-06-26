@@ -1,6 +1,5 @@
 part of '../global_search_page.dart';
 
-// 台灣繁體中文教學註解：
 // 這裡放搜尋頁的狀態卡、Tab 與篩選外觀元件；
 // filter state 仍由父層管理，本檔只保留既有展示與按鈕 callback。
 

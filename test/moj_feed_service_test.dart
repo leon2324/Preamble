@@ -8,7 +8,6 @@ import 'package:lawapp/data/moj/moj_feed_service.dart';
 
 void main() {
   test('MojFeedService parses numbered official list anchors', () async {
-    // 台灣繁體中文教學註解：
     // 法務部列表頁目前是 HTML 清單，不是乾淨 JSON；這個測試鎖住「序號 + 標題」
     // 的解析規則，未來官方版型變動時會先在測試裡被發現。
     final service = MojFeedService(

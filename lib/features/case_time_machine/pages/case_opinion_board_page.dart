@@ -19,7 +19,6 @@ class _CaseOpinionBoardPageState extends State<CaseOpinionBoardPage> {
   @override
   void initState() {
     super.initState();
-    // 台灣繁體中文教學註解：
     // 初始化一些莫蘭迪色便利貼，展示溫和、有理性的感性共鳴話語
     _opinions.addAll([
       {
@@ -59,7 +58,6 @@ class _CaseOpinionBoardPageState extends State<CaseOpinionBoardPage> {
     final rawText = _opinionController.text.trim();
     if (rawText.isEmpty) return;
 
-    // 台灣繁體中文教學註解：
     // 偵測情緒化字眼並提供 AI 溫柔潤飾建議
     final hasEmotion = rawText.contains('爛') ||
         rawText.contains('扯') ||
@@ -76,7 +74,6 @@ class _CaseOpinionBoardPageState extends State<CaseOpinionBoardPage> {
     }
   }
 
-  // 台灣繁體中文教學註解：
   // 顯示男生小法助吉祥物溫柔引導的 AI 潤飾視窗，避免情緒出氣筒，轉化為有溫度的理性見解。
   void _showAiGroomingDialog(String rawText) {
     // 根據原情緒字眼進行 Mock 潤飾

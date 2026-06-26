@@ -49,7 +49,6 @@ class ImmersiveBookshelf extends StatelessWidget {
             ],
           ),
           SizedBox(height: CaseTimeMachineSpacing.spaceM.h),
-          // 台灣繁體中文教學註解：
           // 年代館的 Prototype 是「上方一層主書架、下方案件資訊」；
           // 所以書脊集中成單層 shelf，文字保持水平，完整名稱交給下方卡片。
           for (final shelfBooks in shelves) ...[

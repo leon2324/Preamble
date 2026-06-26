@@ -9,7 +9,6 @@ import 'package:lawapp/theme/app_colors.dart';
 
 /// 全部專題分類庫 BottomSheet。
 ///
-/// 台灣繁體中文教學註解：
 /// 此 Widget 從 know_law_page.dart 拆出（Step 4C），完全自包含，
 /// 內部自行管理分類篩選狀態與 Supabase fetch，只透過 [onArticleTap] 回呼
 /// 將使用者選擇的文章傳回給呼叫方。

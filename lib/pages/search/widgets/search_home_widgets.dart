@@ -1,6 +1,5 @@
 part of '../global_search_page.dart';
 
-// 台灣繁體中文教學註解：
 // 本檔集中放全站搜尋首頁的展示型 UI，包括迎賓吉祥物、最近搜尋、靈感卡與快捷入口；
 // 搜尋 state、submit 流程與 route 切換仍留在 GlobalSearchPage，避免 UI 拆分影響搜尋行為。
 
@@ -339,7 +338,7 @@ class _SearchHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     final quick = [
       _QuickAction('AI小法助', Icons.support_agent_rounded, onAssistant),
       _QuickAction('法規速查', Icons.menu_book_outlined, onStatutes),

@@ -1,6 +1,5 @@
 part of '../following_page.dart';
 
-// 台灣繁體中文教學註解：
 // 這個 part 檔只收納 Following Page 的各個頁面 view 組裝。
 // 頁面狀態、AppState 寫入與 route/navigation 仍保留在 following_page.dart。
 
@@ -18,7 +17,7 @@ class _HomeView extends StatelessWidget {
     required this.onSettings,
   });
 
-  final LawAppState appState;
+  final PreambleState appState;
   final FollowingSummary summary;
   final VoidCallback onUpdates;
   final ValueChanged<_FollowTab> onTrackTab;
@@ -509,7 +508,7 @@ class _ProfileView extends StatelessWidget {
     required this.onPlan,
   });
 
-  final LawAppState appState;
+  final PreambleState appState;
   final ValueChanged<_FollowTab> onTrackTab;
   final VoidCallback onPlan;
 
@@ -587,8 +586,8 @@ class _CollectionsView extends StatelessWidget {
         kind: _FollowDetailKind.statute,
         title: item.title,
         meta: item.subtitle,
-        description: '這是你收藏的法條；從我的 LawApp 開啟時會保留同一份收藏狀態。',
-        latestUpdate: '已收藏於我的 LawApp',
+        description: '這是你收藏的法條；從我的 緒言 Preamble 開啟時會保留同一份收藏狀態。',
+        latestUpdate: '已收藏於我的 緒言 Preamble',
         icon: item.icon,
       );
     }
@@ -598,7 +597,7 @@ class _CollectionsView extends StatelessWidget {
         title: item.title,
         meta: item.subtitle,
         description: '這是你收藏的內容；目前先以本機收藏狀態呈現，後端同步後會補上正式摘要。',
-        latestUpdate: '已收藏於我的 LawApp',
+        latestUpdate: '已收藏於我的 緒言 Preamble',
         icon: item.icon,
       );
     }
@@ -709,7 +708,7 @@ class _DraftsView extends StatelessWidget {
 class _PlanView extends StatelessWidget {
   const _PlanView({required this.appState, required this.onUpgrade});
 
-  final LawAppState appState;
+  final PreambleState appState;
   final VoidCallback onUpgrade;
 
   @override
@@ -809,17 +808,17 @@ class _SettingsView extends StatelessWidget {
           onTap: () => _showSettingsInfo(
             context,
             '隱私權政策',
-            'LawApp 會將你在裝置上建立的收藏、筆記、偏好設定與草稿保存在本機，以便下次開啟時延續使用。若你開啟外部官方網站或分享內容，資料會依該服務的規範處理。請避免在筆記或提問中輸入不必要的敏感個資。',
+            '緒言 Preamble 會將你在裝置上建立的收藏、筆記、偏好設定與草稿保存在本機，以便下次開啟時延續使用。若你開啟外部官方網站或分享內容，資料會依該服務的規範處理。請避免在筆記或提問中輸入不必要的敏感個資。',
           ),
         ),
         _SettingRow(
-          title: '關於 LawApp',
+          title: '關於 緒言 Preamble',
           value: '版本 1.0.0',
           trailing: Icons.chevron_right_rounded,
           onTap: () => _showSettingsInfo(
             context,
-            '關於 LawApp',
-            'LawApp 是以台灣日常法律情境為核心的法律學習與自我整理工具，協助使用者用案件、法規與筆記理解生活中的法律問題。',
+            '關於 緒言 Preamble',
+            '緒言 Preamble 是以台灣日常法律情境為核心的法律學習與自我整理工具，協助使用者用案件、法規與筆記理解生活中的法律問題。',
           ),
         ),
         SizedBox(height: 18.h),

@@ -9,7 +9,6 @@ import 'package:lawapp/pages/profile/widgets/profile_editor.dart';
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key, this.showBackButton = false});
 
-  /// 台灣繁體中文教學註解：
   /// 個人頁同時會出現在底部導覽列，也可能被首頁以新路由 push 開啟。
   /// 不能直接用 Navigator.canPop() 判斷是否顯示返回鍵，否則從子功能返回底部 tab 後，
   /// 根 Navigator 仍可能回報可 pop，造成母頁多出返回箭頭並把主畫面 pop 成黑屏。
@@ -17,7 +16,7 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     final topPadding =
         context.hasLargeTopInset ? context.topSafeInset + 10.h : 22.h;
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -117,7 +116,7 @@ class ProfilePage extends StatelessWidget {
                 ),
                 if (!appState.isGuest) ...[
                   SizedBox(height: 8.h),
-                  // 台灣繁體中文教學註解：依據使用者的專業身分顯示金色/金屬感標籤 Badge
+                  // 依據使用者的專業身分顯示金色/金屬感標籤 Badge
                   _buildProfessionBadge(
                       context, appState.currentUser.profession),
                 ],
@@ -161,7 +160,7 @@ class ProfilePage extends StatelessWidget {
           SizedBox(height: 10.h),
           DashboardGrid(appState: appState),
           SizedBox(height: 10.h),
-          // 台灣繁體中文教學註解：新增學習歷程與等級橫幅，顯示讀者法律智識等級
+          // 新增學習歷程與等級橫幅，顯示讀者法律智識等級
           LearningProgressBanner(appState: appState),
 
           SizedBox(height: 20.h),
@@ -250,7 +249,7 @@ class ProfilePage extends StatelessWidget {
                 icon: Icons.article_rounded,
                 iconColor: Colors.brown,
                 title: '使用條款摘要',
-                subtitle: '了解使用 LawApp 時的重要約定',
+                subtitle: '了解使用 緒言 Preamble 時的重要約定',
                 onTap: () => _showTermsSheet(context),
               ),
               SettingsTile(
@@ -276,7 +275,6 @@ class ProfilePage extends StatelessWidget {
             ],
           ),
 
-          // 台灣繁體中文教學註解：
           // Release 版個人頁不放任何身份切換、內部展示或未接訂閱的控制入口；
           // 使用者可見區域只保留已可實際保存到本機狀態的設定與正式說明。
         ],
@@ -284,7 +282,7 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  void _showProfileEditorSheet(BuildContext context, LawAppState appState) {
+  void _showProfileEditorSheet(BuildContext context, PreambleState appState) {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -293,7 +291,7 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  void _showFeedbackSheet(BuildContext context, LawAppState appState) {
+  void _showFeedbackSheet(BuildContext context, PreambleState appState) {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -370,7 +368,7 @@ class ProfilePage extends StatelessWidget {
       context,
       title: '資料來源說明',
       message:
-          '法規內容以全國法規資料庫與公開資料為主要查核來源；案件、學習文章與生活法律內容包含 LawApp 內建整理資料。若畫面未標示即時更新，代表內容不保證為最新狀態。涉及實際權益時，請回到官方來源或諮詢合格律師確認。',
+          '法規內容以全國法規資料庫與公開資料為主要查核來源；案件、學習文章與生活法律內容包含 緒言 Preamble 內建整理資料。若畫面未標示即時更新，代表內容不保證為最新狀態。涉及實際權益時，請回到官方來源或諮詢合格律師確認。',
     );
   }
 
@@ -379,7 +377,7 @@ class ProfilePage extends StatelessWidget {
       context,
       title: '本機資料說明',
       message:
-          '你的收藏、追蹤、筆記、閱讀偏好與文件草稿會先保存在此裝置。更換裝置、移除 App 或清除系統資料前，請自行備份重要內容。LawApp 不會將本機筆記視為正式送件或法律通知。',
+          '你的收藏、追蹤、筆記、閱讀偏好與文件草稿會先保存在此裝置。更換裝置、移除 App 或清除系統資料前，請自行備份重要內容。緒言 Preamble 不會將本機筆記視為正式送件或法律通知。',
     );
   }
 
@@ -388,7 +386,7 @@ class ProfilePage extends StatelessWidget {
       context,
       title: '隱私權說明',
       message:
-          'LawApp 會在裝置上保存你主動建立的收藏、筆記、偏好設定與草稿，用於延續 App 內體驗。請避免輸入不必要的身分證字號、完整地址、金融資料或第三人敏感資訊。開啟外部官方網站或分享內容時，該服務會依其自身規範處理資料。',
+          '緒言 Preamble 會在裝置上保存你主動建立的收藏、筆記、偏好設定與草稿，用於延續 App 內體驗。請避免輸入不必要的身分證字號、完整地址、金融資料或第三人敏感資訊。開啟外部官方網站或分享內容時，該服務會依其自身規範處理資料。',
     );
   }
 
@@ -397,7 +395,7 @@ class ProfilePage extends StatelessWidget {
       context,
       title: '使用條款摘要',
       message:
-          'LawApp 提供法律學習、案件理解與資料整理工具。你應自行判斷內容是否適合特定情境，並以官方資料與專業意見作為最終依據。不得將本 App 內容用於騷擾、詐欺、規避法律責任或其他不當目的。',
+          '緒言 Preamble 提供法律學習、案件理解與資料整理工具。你應自行判斷內容是否適合特定情境，並以官方資料與專業意見作為最終依據。不得將本 App 內容用於騷擾、詐欺、規避法律責任或其他不當目的。',
     );
   }
 
@@ -440,7 +438,7 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  // 台灣繁體中文教學註解：依據使用者的專業身分代碼，顯示對應風格的金色或金屬質感標籤。
+  // 依據使用者的專業身分代碼，顯示對應風格的金色或金屬質感標籤。
   Widget _buildProfessionBadge(BuildContext context, String profession) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     String label = '一般民眾';
@@ -495,8 +493,8 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  // 台灣繁體中文教學註解：點擊彈出字型大小調整 Dialog，點選後會將更新值儲存至 SharedPreferences。
-  void _showFontSizeDialog(BuildContext context, LawAppState appState) {
+  // 點擊彈出字型大小調整 Dialog，點選後會將更新值儲存至 SharedPreferences。
+  void _showFontSizeDialog(BuildContext context, PreambleState appState) {
     showDialog<void>(
       context: context,
       builder: (context) {
@@ -536,7 +534,7 @@ class ProfilePage extends StatelessWidget {
 
   Widget _buildFontSizeOption(
     BuildContext context,
-    LawAppState appState, {
+    PreambleState appState, {
     required String label,
     required double scale,
     required double current,
@@ -560,9 +558,9 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  // 台灣繁體中文教學註解：開啟通知精細設定 Bottom Sheet。
+  // 開啟通知精細設定 Bottom Sheet。
   void _showNotificationSettingsSheet(
-      BuildContext context, LawAppState appState) {
+      BuildContext context, PreambleState appState) {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -571,7 +569,7 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  // 台灣繁體中文教學註解：Release 版尚未開放正式第三方登入，因此只呈現資料安全說明。
+  // Release 版尚未開放正式第三方登入，因此只呈現資料安全說明。
   void _showAccountSecuritySheet(BuildContext context) {
     _showPlainInfoDialog(
       context,
@@ -581,8 +579,8 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  // 台灣繁體中文教學註解：開啟介面自訂偏好設定底頁。
-  void _showInterfaceSettingsSheet(BuildContext context, LawAppState appState) {
+  // 開啟介面自訂偏好設定底頁。
+  void _showInterfaceSettingsSheet(BuildContext context, PreambleState appState) {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,

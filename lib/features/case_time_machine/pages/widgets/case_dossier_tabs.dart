@@ -1,6 +1,5 @@
 part of '../case_dossier_detail_page.dart';
 
-// 台灣繁體中文教學註解：
 // 這個 part 檔集中收納案件詳情頁的展示型 Tab UI。
 // repository 載入、route/navigation、controller 與資料 mapping 仍保留在主檔。
 

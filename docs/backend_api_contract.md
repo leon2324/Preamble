@@ -1,6 +1,6 @@
-# LawApp 後端 API 契約
+# 緒言 Preamble 後端 API 契約
 
-Flutter 端只呼叫 LawApp 後端，不保存任何 OpenAI、Gemini 或其他 AI provider API key。後端 base URL 由 `LAWAPP_API_BASE_URL` 注入；未設定時 App 使用 mock mode。
+Flutter 端只呼叫 緒言 Preamble 後端，不保存任何 OpenAI、Gemini 或其他 AI provider API key。後端 base URL 由 `LAWAPP_API_BASE_URL` 注入；未設定時 App 使用 mock mode。
 
 ## 通用規則
 
@@ -141,7 +141,7 @@ Result 欄位：`id`、`title`、`subtitle`、`snippet`、`type`、`destination`
 `GET /following` 回傳 `FollowingSummary`，需同時包含
 `followedCaseIds`、`followedStatuteIds`、`followedTopicIds`、`followedKeywords`、
 `savedCaseIds`、`savedStatuteIds`、`savedArticleIds`、`notificationEnabled`、
-`createdAt`、`updatedAt`。全站搜尋、法規頁與我的 LawApp 都使用這份 summary。
+`createdAt`、`updatedAt`。全站搜尋、法規頁與我的 緒言 Preamble 都使用這份 summary。
 
 ## Documents
 

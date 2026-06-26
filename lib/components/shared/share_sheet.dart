@@ -7,7 +7,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 /// 全域分享面板。
 ///
-/// 台灣繁體中文教學註解：
 /// 不再用「模擬分享」文字假裝完成外部動作；Line、Facebook 與 Threads 會優先開啟
 /// 對應的公開分享 URL，主要 CTA 則走 iOS / Android 原生分享面板。若裝置或模擬器
 /// 無法開啟，就退回複製連結，讓使用者仍拿得到分享內容。

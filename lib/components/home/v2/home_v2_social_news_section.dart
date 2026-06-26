@@ -159,7 +159,6 @@ class _HomeV2DiscussionPreview extends StatelessWidget {
       return _HomeV2DiscussionEmpty(onMoreTap: onMoreTap);
     }
 
-    // 台灣繁體中文教學註解：
     // Step 2 Legacy 隔離後，首頁「社群熱議」只保留輕量 v2 預覽卡，
     // 完整互動流程交給紀事頁，避免正式首頁重新 import 舊版討論元件。
     return SizedBox(

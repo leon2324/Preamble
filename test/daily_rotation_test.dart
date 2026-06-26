@@ -69,7 +69,6 @@ void main() {
     });
 
     test('Date rotation should reach questions beyond the first 31 days', () {
-      // 台灣繁體中文教學註解：
       // 每日簽到題庫擴充到 50 題後，測試需守住「第 32 題以後也會出題」，
       // 避免未來有人改回 DateTime.day 造成每月只輪替前 31 題。
       final firstFortyDays = List.generate(

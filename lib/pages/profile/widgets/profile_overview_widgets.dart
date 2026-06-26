@@ -6,7 +6,6 @@ import 'package:lawapp/theme/app_colors.dart';
 
 import 'profile_editor.dart';
 
-// 台灣繁體中文教學註解：
 // 這個檔案集中收納個人頁上半部的展示型 widgets。
 // 會使用 AppState 讀取統計資料與保留既有 FollowingPage 導航，但不在此新增資料寫入流程。
 
@@ -106,7 +105,7 @@ class AvatarWidget extends StatelessWidget {
 class DashboardGrid extends StatelessWidget {
   const DashboardGrid({super.key, required this.appState});
 
-  final LawAppState appState;
+  final PreambleState appState;
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +115,7 @@ class DashboardGrid extends StatelessWidget {
     final textMuted =
         isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
 
-    // 台灣繁體中文教學註解：計算使用者追蹤的總項目數量（加總案件、法條與主題的追蹤數）
+    // 計算使用者追蹤的總項目數量（加總案件、法條與主題的追蹤數）
     final following = appState.followingSummary;
     final followedCount = following.followedCaseIds.length +
         following.followedStatuteIds.length +
@@ -129,7 +128,7 @@ class DashboardGrid extends StatelessWidget {
         following.savedStatuteIds.length +
         following.savedArticleIds.length;
 
-    // 台灣繁體中文教學註解：建立 4 個儀表板主要資料項目，分別對接 AppState 裡的真實筆數
+    // 建立 4 個儀表板主要資料項目，分別對接 AppState 裡的真實筆數
     final items = [
       _DashboardItemData(
         title: '我的收藏',
@@ -457,7 +456,7 @@ class ProUpgradeBanner extends StatelessWidget {
                               color: AppColors.accent, size: 20.sp),
                           SizedBox(width: 6.w),
                           Text(
-                            '解鎖 LawApp Pro',
+                            '解鎖 緒言 Preamble Pro',
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w900,
@@ -510,7 +509,7 @@ class ProUpgradeBanner extends StatelessWidget {
 class LearningProgressBanner extends StatelessWidget {
   const LearningProgressBanner({super.key, required this.appState});
 
-  final LawAppState appState;
+  final PreambleState appState;
 
   @override
   Widget build(BuildContext context) {
@@ -599,7 +598,7 @@ class LearningProgressBanner extends StatelessWidget {
 class AchievementRoomSheet extends StatelessWidget {
   const AchievementRoomSheet({super.key, required this.appState});
 
-  final LawAppState appState;
+  final PreambleState appState;
 
   @override
   Widget build(BuildContext context) {

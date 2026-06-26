@@ -50,7 +50,6 @@ class _HomeV2QuickAskSectionState extends State<HomeV2QuickAskSection> {
     final chipBorder =
         isDark ? const Color(0xFF26303D) : const Color(0xFFE2EBE7);
 
-    // 台灣繁體中文教學註解：
     // 這些短 prompt 之後可直接映射到 App Intents 的常用捷徑參數；
     // 目前仍先維持 Flutter 端可點擊送出的完整互動。
     final recommendations = [
@@ -227,7 +226,6 @@ class HomeV2WatchlistCard extends StatelessWidget {
   const HomeV2WatchlistCard({super.key});
 
   void _openFollowingUpdates(BuildContext context) {
-    // 台灣繁體中文教學註解：
     // 首頁「我的關注更新」要導向新版 FollowingPage 的「我的動態」，
     // 不再推舊版關注更新頁，避免新舊追蹤頁狀態混用造成返回或渲染異常。
     Navigator.of(context).push(
@@ -242,7 +240,7 @@ class HomeV2WatchlistCard extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark ? const Color(0xFF171C22) : Colors.white;
     final borderColor = isDark ? const Color(0xFF2B3441) : AppColors.border;
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
 
     // 檢查是否有更新
     final hasUpdates = appState.followingSummary.followedCaseIds.isNotEmpty ||
@@ -333,7 +331,7 @@ class HomeV2WatchlistCard extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
           if (hasUpdates) ...[
-            // 台灣繁體中文教學註解：讀取關注的主題更新列表
+            // 讀取關注的主題更新列表
             ...trackedTopicItems.take(2).map((item) {
               final isLaw = item.tag.contains('法');
               final badgeBg = isLaw
@@ -424,7 +422,6 @@ class HomeV2WatchlistCard extends StatelessWidget {
               );
             }),
           ] else ...[
-            // 台灣繁體中文教學註解：
             // 無追蹤動態時，首頁仍提供一則今日精選案卷；
             // 未來 Widget 點回 App 時，也可以共用這個「今日精選」語意。
             Container(
@@ -660,7 +657,6 @@ class HomeV2AchievementCard extends StatelessWidget {
 
 /// 4. 今日 AI 判決故事卡片
 ///
-/// 台灣繁體中文教學註解：
 /// 這張卡是 MAIC Demo 的 Widget 落地入口候選；
 /// Widget 顯示短摘要，點回 App 後就能從這裡進入完整白話解說。
 class HomeV2DailyCaseStoryCard extends StatelessWidget {
@@ -884,7 +880,7 @@ class HomeV2ToolsDrawer extends StatelessWidget {
                 padding: EdgeInsets.only(right: 12.w),
                 child: InkWell(
                   onTap: () {
-                    // 台灣繁體中文教學註解：直接導向「學習」頁的「生活工具箱」，並指定特定的工具分頁
+                    // 直接導向「學習」頁的「生活工具箱」，並指定特定的工具分頁
                     onNavigateToTab(1, subTabIndex: 1, toolTab: item.toolTab);
                   },
                   borderRadius: BorderRadius.circular(16.r),

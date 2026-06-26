@@ -11,7 +11,6 @@ import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_scaf
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
 
 class CaseTimeMachineSearchPage extends StatefulWidget {
-  // 台灣繁體中文教學註解：
   // 透過建構子傳入 initialQuery，可以讓其他頁面點擊標籤時直接導向搜尋頁，並帶入預設的關鍵字進行篩選。
   const CaseTimeMachineSearchPage({super.key, this.initialQuery});
 
@@ -69,7 +68,6 @@ class _CaseTimeMachineSearchPageState extends State<CaseTimeMachineSearchPage> {
   @override
   void initState() {
     super.initState();
-    // 台灣繁體中文教學註解：
     // 若在開啟搜尋頁面時有帶入 initialQuery（例如使用者點擊了標籤 chip），
     // 則在此處對搜尋框控制器的文字與搜尋字串進行初始化，讓進入頁面時能直接顯示搜尋結果。
     if (widget.initialQuery != null && widget.initialQuery!.isNotEmpty) {
@@ -157,7 +155,6 @@ class _CaseTimeMachineSearchPageState extends State<CaseTimeMachineSearchPage> {
           child: Column(
             children: [
               // Top App Bar
-              // 台灣繁體中文教學註解：
               // 為了讓標題完美置中於螢幕，此處將原本 Row 改為 Stack。
               // 如此一來，即使左側返回按鈕佔據寬度，標題文字依然能以主體中心為準進行對齊，而不會偏心。
               // 必須讓 SizedBox 撐滿寬度，左側返回鍵才會定位到真正的 AppBar 左緣。

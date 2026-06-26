@@ -6,7 +6,6 @@ import 'package:lawapp/theme/adaptive_layout.dart';
 
 /// 早期的熱門頁草稿，保留分類九宮格實驗版供後續參考。
 ///
-/// 台灣繁體中文教學註解：
 /// 正式主流程已改成搜尋頁與記事頁，這個舊頁有外部測試圖片與獵奇分類，
 /// 因此移到 legacy，避免被誤接回正式 UI。
 class TrendPageLegacy extends StatefulWidget {

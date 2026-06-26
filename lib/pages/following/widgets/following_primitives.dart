@@ -1,6 +1,5 @@
 part of '../following_page.dart';
 
-// 台灣繁體中文教學註解：
 // 這個 part 檔集中放 Following Page 可重用的基礎 UI 元件。
 // 這些元件只負責視覺呈現與簡單 callback，不承擔資料來源或頁面切換流程。
 
@@ -88,7 +87,6 @@ class _TabStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 台灣繁體中文教學註解：
     // Prototype 的分類列不是裝飾底線而已；這裡把選取狀態交給父層，
     // 讓「我的」底下的動態、收藏、筆記與草稿都能用同一個可互動元件切換資料。
     return Container(
@@ -152,7 +150,6 @@ class _TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (centerTitle) {
-      // 台灣繁體中文教學註解：
       // 有返回鍵與搜尋鍵時，單純用 Row + Expanded 會讓標題被左側返回鍵推偏；
       // 置中頁首改用 Stack，左右按鈕貼邊，標題永遠以整個螢幕寬度置中。
       return SizedBox(

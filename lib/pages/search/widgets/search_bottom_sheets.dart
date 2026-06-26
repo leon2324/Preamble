@@ -1,6 +1,5 @@
 part of '../global_search_page.dart';
 
-// 台灣繁體中文教學註解：
 // 本檔只放搜尋頁使用的 bottom sheet 展示元件與語音搜尋模擬 UI。
 // 父層仍負責開啟 sheet、接收辨識結果並執行 submit / route 行為。
 

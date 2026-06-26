@@ -2,7 +2,6 @@ part of '../../know_law_page.dart';
 
 /// 小法助 Prototype 共用 UI 元件與示範資料。
 ///
-/// 台灣繁體中文教學介紹型註解：
 /// 這個檔案集中放 Prototype 卡片、Tab、插圖、按鈕與 mock 對話資料；
 /// 搜尋頁只組流程，不直接塞大量樣式細節，後續要替換正式圖像或資料也比較好找。
 class _AssistantFrozenAppBar extends StatelessWidget {

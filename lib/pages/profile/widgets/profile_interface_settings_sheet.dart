@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/app/app_state.dart';
 import 'package:lawapp/theme/app_colors.dart';
 
-// 台灣繁體中文教學註解：
 // 介面自訂設定底頁，支援 iOS 風格橫向島嶼導覽列拖曳排序、非同步微幅晃動動效，
 // 以及導覽文字標籤開關與 Accent 主題色彩點選。
 
@@ -33,7 +32,7 @@ class _JiggleWidgetState extends State<_JiggleWidget>
       duration: const Duration(milliseconds: 140),
     );
 
-    // 台灣繁體中文教學註解：微幅的弧度旋轉動效（約 -1.1度 到 1.1度）
+    // 微幅的弧度旋轉動效（約 -1.1度 到 1.1度）
     _rotationAnim = Tween<double>(begin: -0.02, end: 0.02).animate(
       CurvedAnimation(
         parent: _controller,
@@ -41,7 +40,7 @@ class _JiggleWidgetState extends State<_JiggleWidget>
       ),
     );
 
-    // 台灣繁體中文教學註解：微幅的上下平移，加強懸浮晃動感
+    // 微幅的上下平移，加強懸浮晃動感
     _translationAnim = Tween<double>(begin: -0.6, end: 0.6).animate(
       CurvedAnimation(
         parent: _controller,
@@ -50,7 +49,7 @@ class _JiggleWidgetState extends State<_JiggleWidget>
     );
 
     if (widget.enabled) {
-      // 台灣繁體中文教學註解：使用項目 index 來決定相位偏移量，
+      // 使用項目 index 來決定相位偏移量，
       // 如此能確保每個分頁的抖動起動點不同，呈現擬真且不呆板的 iOS 非同步抖動效果。
       _controller.value = (widget.index * 0.23) % 1.0;
       _controller.repeat(reverse: true);
@@ -97,7 +96,7 @@ class _JiggleWidgetState extends State<_JiggleWidget>
 class InterfaceSettingsSheet extends StatefulWidget {
   const InterfaceSettingsSheet({super.key, required this.appState});
 
-  final LawAppState appState;
+  final PreambleState appState;
 
   @override
   State<InterfaceSettingsSheet> createState() => _InterfaceSettingsSheetState();
@@ -108,7 +107,7 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
   late bool _tempShowLabels;
   late int _tempAccentIndex;
 
-  // 台灣繁體中文教學註解：簡短文字標籤，適用於島嶼空間
+  // 簡短文字標籤，適用於島嶼空間
   static const Map<int, String> _tabLabelsShort = {
     0: '首頁',
     1: '學習',
@@ -221,7 +220,6 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
                       color: textMuted)),
               SizedBox(height: 12.h),
 
-              // 台灣繁體中文教學註解：
               // 水平「懸浮島嶼」拖曳排序列，高度固定為 84.h，大圓角與精緻陰影
               Container(
                 height: 84.h,

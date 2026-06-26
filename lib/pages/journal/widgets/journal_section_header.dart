@@ -18,7 +18,6 @@ class JournalSectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 台灣繁體中文教學註解：
     // 主頁所有區塊標題都走同一個元件，日後調字級或間距時只要改這裡。
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,

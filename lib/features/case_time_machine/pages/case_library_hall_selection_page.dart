@@ -64,7 +64,6 @@ class CaseLibraryHallSelectionPage extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(18.w, 12.h, 18.w, 32.h),
             children: [
               // Header back button & title (Centered Layout)
-              // 台灣繁體中文教學註解：
               // 此處使用 Stack 進行 AppBar 標題與副標題的置中排版。
               // 使用 Positioned.fill 將返回按鈕固定於左側，並讓 Column（包含標題與描述）置中。
               // 這能確保即使左側有按鈕，整體頁面的視覺主軸依然能夠維持在水平正中央。

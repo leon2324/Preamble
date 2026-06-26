@@ -1,6 +1,5 @@
 part of '../know_law_page.dart';
 
-// 台灣繁體中文教學註解：
 // 本機諮詢歷史紀錄條目，只存在 LawAssistantChatPage 的 local state，
 // 不寫入後端或 SharedPreferences，App 重開後清除。
 // 足以在 MAIC / TestFlight 展示真實功能流程。
@@ -167,7 +166,6 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
   var _isLoading = false;
   var _isSending = false;
 
-  // 台灣繁體中文教學註解：
   // 本機諮詢歷史，存在 local state。每次送出新問題時新增一筆。
   // 不寫後端、不寫 SharedPreferences，App 重開後清除。
   // MAIC / TestFlight 展示時，在同一次 session 內完整呈現新增與查看流程。
@@ -187,7 +185,6 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
     super.dispose();
   }
 
-  // 台灣繁體中文教學註解：
   // 送出問題時呼叫此方法，把問題文字加入本機歷史 list。
   // 相同文字在短時間內不重複記錄（1 秒內視為重複）。
   void _addLocalHistory(String prompt, {bool hasAttachment = false}) {
@@ -319,7 +316,6 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
                         final record = history[index];
                         return InkWell(
                           onTap: () {
-                            // 台灣繁體中文教學註解：
                             // 點擊歷史紀錄，把問題文字帶回輸入框，讓使用者可再次編輯或送出。
                             // 這是最安全的行為：不假裝重建完整對話，不呼叫後端。
                             Navigator.of(dialogContext).pop();
@@ -451,7 +447,6 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
   }
 
   Future<void> _createConversation(String prompt) async {
-    // 台灣繁體中文教學註解：
     // 使用者送出第一則問題時，先把問題文字存入本機歷史。
     // 無論 API 是否成功，都先記錄，確保歷史紀錄不會因為 API 失敗而消失。
     _addLocalHistory(prompt);
@@ -913,7 +908,6 @@ class _AssistantLegalDisclaimer extends StatelessWidget {
   Widget build(BuildContext context) {
     final assistantPalette = _LawAssistantPalette.of(context);
 
-    // 台灣繁體中文教學註解：
     // AI 回覆固定補上免責與求助提醒，避免使用者把初步整理誤認為律師正式意見。
     return Text(
       message,
@@ -1094,7 +1088,6 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
       );
   }
 
-  // 台灣繁體中文教學註解：
   // Release 版的「＋」選單只做本機問題脈絡整理與本機附件狀態，
   // 不宣稱 OCR、PDF/Word 解析、雲端上傳或 AI 已理解附件內容。
   void _insertContextText(BuildContext context, String text) {
@@ -1963,7 +1956,7 @@ class _AssistantBentoIntro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final assistantPalette = _LawAssistantPalette.of(context);
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     final user = appState.currentUser;
     final nameText = user.isGuest ? '您好' : user.displayName;
 

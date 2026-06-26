@@ -12,7 +12,6 @@ import 'package:lawapp/theme/app_colors.dart';
 
 /// 首頁常見法律問題的完整子頁。
 ///
-/// 台灣繁體中文教學註解：
 /// 這頁把首頁橫向小入口展開成完整情境選單；一般生活問題交給小法助，
 /// 法規查詢則直接進資料庫頁，讓使用者不用理解背後功能分工。
 class CommonLegalIssuesPage extends StatelessWidget {

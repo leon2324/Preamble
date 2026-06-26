@@ -1207,7 +1207,6 @@ class KnowLawPageState extends State<KnowLawPage> {
           ],
         ),
         SizedBox(height: 8.h),
-        // 台灣繁體中文教學註解：
         // 學習首頁只展示少量精選專題，避免活躍 App 內容增加後把首頁塞成百科列表；
         // 更多專題集中到「全部專題」面板，未來接 API 時阻擋並直接以 drawer 代替。
         SingleChildScrollView(
@@ -1333,7 +1332,6 @@ class KnowLawPageState extends State<KnowLawPage> {
                   localAsset: heroAsset,
                   fit: BoxFit.cover,
                 ),
-                // 台灣繁體中文教學註解：
                 // 這裡用兩層同圖柔焦做「景深式」過渡：中段先開始微糊，底部再加重糊。
                 // 這樣照片仍會延伸到底部，不會變成一塊紙色霧面造成斷層。
                 Positioned.fill(
@@ -1432,7 +1430,6 @@ class KnowLawPageState extends State<KnowLawPage> {
                   left: 14.w,
                   right: 14.w,
                   bottom: 14.h,
-                  // 台灣繁體中文教學註解：
                   // 文字直接壓在已經糊化的照片上，不再另做局部霧面卡；
                   // 可讀性靠底圖重糊、全寬漸層與文字陰影共同處理。
                   child: Column(
@@ -2251,7 +2248,6 @@ class KnowLawPageState extends State<KnowLawPage> {
         final textScale = MediaQuery.textScalerOf(context).scale(1);
         final shouldStack = constraints.maxWidth < 360 || textScale >= 1.18;
 
-        // 台灣繁體中文教學註解：
         // 小螢幕或 Dynamic Type 放大時，不把三個工具按鈕硬塞同一列。
         // 短操作維持同列，較長的 PDF CTA 換到第二列全寬，保留可讀與可點擊性。
         if (shouldStack) {

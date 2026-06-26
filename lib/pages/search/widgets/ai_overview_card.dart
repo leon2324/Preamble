@@ -1,6 +1,5 @@
 part of '../global_search_page.dart';
 
-// 台灣繁體中文教學註解：
 // AI 摘要卡只負責呈現已生成的摘要、引用來源與風格切換按鈕；
 // 真正的 AI 生成與狀態更新仍留在 GlobalSearchPage，避免 UI 拆分改到搜尋流程。
 

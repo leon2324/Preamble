@@ -69,7 +69,6 @@ class SearchResultItem {
     );
   }
 
-  // 台灣繁體中文教學註解：
   // sourceUrl 是資料索引或來源頁，officialUrl 是可直接查核的官方原文；
   // 序列化時保留兩者，讓搜尋頁、我的收藏與小法助引用未來能共用同一套來源資訊。
   Map<String, dynamic> toJson() => {

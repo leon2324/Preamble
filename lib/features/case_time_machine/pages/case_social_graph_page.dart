@@ -15,7 +15,6 @@ class CaseSocialGraphPage extends StatefulWidget {
 class _CaseSocialGraphPageState extends State<CaseSocialGraphPage> {
   String? _selectedNodeId;
 
-  // 台灣繁體中文教學註解：
   // 針對特定案件渲染量身打造的社會連鎖效應心智圖資料。
   // 若是一般案件，我們也提供一組具有法理與社會通用的變革效應樹狀圖。
   late final List<Map<String, dynamic>> _nodes;
@@ -339,7 +338,6 @@ class _CaseSocialGraphPageState extends State<CaseSocialGraphPage> {
     );
   }
 
-  // 台灣繁體中文教學註解：
   // 根據效應節點數量，利用三角函數環繞核心節點排版
   List<Widget> _buildEffectNodes(List<Map<String, dynamic>> effects) {
     final widgets = <Widget>[];
@@ -484,7 +482,6 @@ class _CaseSocialGraphPageState extends State<CaseSocialGraphPage> {
   }
 }
 
-// 台灣繁體中文教學註解：
 // 繪製心智圖連結的裝飾虛線，增加 WOW 的視覺引導
 class _GraphLinkPainter extends CustomPainter {
   _GraphLinkPainter({required this.nodeCount});

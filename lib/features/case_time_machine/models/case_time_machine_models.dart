@@ -2,7 +2,6 @@ enum CaseLibraryHallType { timeline, theme, classic, status }
 
 /// 案件圖書館第一層：館別。
 ///
-/// 台灣繁體中文教學註解：
 /// 這個 feature 的資訊架構不是「案件列表」，而是三層館藏：館 → 書架 → 案件之書。
 /// 所以 Hall/Shelf/Book 都要有獨立模型，未來接後端時也能維持同一個資料語意。
 class CaseLibraryHall {

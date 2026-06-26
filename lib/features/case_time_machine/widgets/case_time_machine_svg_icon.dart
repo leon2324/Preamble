@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-// 台灣繁體中文教學註解：
 // 案件時光機刻意避開 Google Material 原生 IconData，改用網路常見的開源 SVG 圖示語彙。
 // 這個 helper 讓每個 SVG 都能套用同一套顏色與尺寸，避免各頁面重複貼 SvgPicture.string。
 class CtmSvgIcon extends StatelessWidget {

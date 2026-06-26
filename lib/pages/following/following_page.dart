@@ -46,7 +46,6 @@ class _ProfileAsset {
 class FollowingPage extends StatefulWidget {
   const FollowingPage({super.key, this.initialTab});
 
-  /// 台灣繁體中文教學註解：
   /// 可傳入初始分頁名稱（如 'collections', 'notes', 'drafts', 'questions', 'tabs'），
   /// 便於從新的個人頁面直接導航至子畫面。
   final String? initialTab;
@@ -55,9 +54,8 @@ class FollowingPage extends StatefulWidget {
   State<FollowingPage> createState() => _FollowingPageState();
 }
 
-/// 「我的 LawApp」整合頁的頁內導航容器。
+/// 「我的 Preamble」整合頁的頁內導航容器。
 ///
-/// 台灣繁體中文教學介紹型註解：
 /// 這個分頁把原本「追蹤」與「我的」合併成個人法律中心；目前需要首頁、
 /// 今日動態、追蹤中心、收藏、筆記、提問、文件草稿、方案與設定都保持同一套視覺。
 /// 目前先用 `_FollowPage` 做頁內切換，等後端 ID、通知設定與個人資料 API 穩定後，
@@ -110,7 +108,7 @@ class _FollowingPageState extends State<FollowingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     final effectivePage = appState.isGuest && _page == _FollowPage.home
         ? _FollowPage.guest
         : _page;
@@ -118,7 +116,6 @@ class _FollowingPageState extends State<FollowingPage> {
     final topPadding = MediaQuery.paddingOf(context).top;
 
     if (effectivePage == _FollowPage.updates) {
-      // 台灣繁體中文教學註解：
       // 「我的動態」是使用者用來掃描追蹤更新的頁面，分類列需要像凍結窗格一樣固定在頂端；
       // 下方只讓動態內容滾動，避免使用者滑一段後失去目前分類脈絡。
       return Scaffold(
@@ -205,7 +202,7 @@ class _FollowingPageState extends State<FollowingPage> {
   String _titleFor(_FollowPage page) {
     switch (page) {
       case _FollowPage.home:
-        return '我的 LawApp';
+        return '我的 緒言 Preamble';
       case _FollowPage.updates:
         return '我的動態';
       case _FollowPage.tabs:
@@ -236,7 +233,7 @@ class _FollowingPageState extends State<FollowingPage> {
       case _FollowPage.settings:
         return '設定與說明';
       case _FollowPage.guest:
-        return '我的 LawApp';
+        return '我的 緒言 Preamble';
     }
   }
 
@@ -284,7 +281,7 @@ class _FollowingPageState extends State<FollowingPage> {
 
   Widget _contentFor(
     _FollowPage page,
-    LawAppState appState,
+    PreambleState appState,
     FollowingSummary summary,
   ) {
     switch (page) {
@@ -442,7 +439,7 @@ class _FollowingPageState extends State<FollowingPage> {
     });
   }
 
-  Future<void> _trackFollowItem(LawAppState appState, _FollowItem item) async {
+  Future<void> _trackFollowItem(PreambleState appState, _FollowItem item) async {
     final id = _followIdFor(item);
     if (item.kind == _FollowDetailKind.statute) {
       await appState.setStatuteFollowed(id, true);
@@ -451,7 +448,7 @@ class _FollowingPageState extends State<FollowingPage> {
     }
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('已加入我的 LawApp 追蹤。')),
+      const SnackBar(content: Text('已加入我的 緒言 Preamble 追蹤。')),
     );
   }
 
@@ -647,12 +644,12 @@ class _FollowingPageState extends State<FollowingPage> {
     _showInfoSheet(
       title: '目前方案',
       message:
-          'LawApp 目前開放本機收藏、追蹤、筆記與文件草稿整理。正式會員、跨裝置同步與訂閱功能需要完成付款、帳號與隱私審查後才會開放；本版本不提供一鍵切換付費權限。',
+          '緒言 Preamble 目前開放本機收藏、追蹤、筆記與文件草稿整理。正式會員、跨裝置同步與訂閱功能需要完成付款、帳號與隱私審查後才會開放；本版本不提供一鍵切換付費權限。',
     );
   }
 
   Future<void> _clearLocalAccountState() async {
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     await appState.signOut();
     if (!mounted) return;
     setState(() => _page = _FollowPage.home);
@@ -662,7 +659,7 @@ class _FollowingPageState extends State<FollowingPage> {
   }
 
   Future<void> _createQuickDraft() async {
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     final draft = await appState.documentRepository.createDraft(
       templateType: DocumentTemplateType.rentalDepositNegotiation,
       input: DocumentTemplateInput(
@@ -694,7 +691,7 @@ class _FollowingPageState extends State<FollowingPage> {
     _showInfoSheet(
       title: '完整追蹤功能',
       message:
-          '你可以把案件、法條、生活避坑文章加入追蹤或收藏，並在我的 LawApp 集中查看。這些資料目前保存在此裝置；重要內容請自行備份並以官方來源查核。',
+          '你可以把案件、法條、生活避坑文章加入追蹤或收藏，並在我的 緒言 Preamble 集中查看。這些資料目前保存在此裝置；重要內容請自行備份並以官方來源查核。',
       actionLabel: '進入追蹤中心',
       onAction: () => setState(() => _page = _FollowPage.home),
     );
@@ -756,7 +753,6 @@ class _FollowingPageState extends State<FollowingPage> {
       return;
     }
 
-    // 台灣繁體中文教學註解：
     // 將追蹤的 FollowItem 標題映射至新版案件圖書館的 CaseBook，
     // 以便點選「前往案件頁面」時能直接進入全新設計的 Morandi 風格 Tab 詳情頁，而不是大門入口。
     String caseId = '318';
@@ -784,7 +780,6 @@ class _FollowingPageState extends State<FollowingPage> {
   }
 
   void _handleBack() {
-    // 台灣繁體中文教學註解：
     // 若此頁面是從新版 ProfilePage 點擊卡片 push 進來的（canPop 為 true），
     // 且目前正處於該子功能的主列表頁面，點選返回時應直接 Pop 路由回到 ProfilePage，
     // 避免使用者退回已棄用的舊版 _HomeView 畫面中。
@@ -1110,7 +1105,7 @@ _FollowItem _followItemFromId({
     title: title,
     meta: meta,
     description: '這是你在其他頁面加入的項目；目前先以本機狀態呈現，後端同步後會補上正式摘要與更新紀錄。',
-    latestUpdate: '已加入我的 LawApp',
+    latestUpdate: '已加入我的 緒言 Preamble',
     icon: icon,
     unread: true,
   );
@@ -1150,7 +1145,7 @@ _CollectionItem _collectionItemFromId({
 }) {
   return _CollectionItem(
     title: _titleFromInteractionId(id),
-    subtitle: '收藏於本機 LawApp',
+    subtitle: '收藏於本機 緒言 Preamble',
     category: category,
     icon: icon,
     color: color,
@@ -1173,7 +1168,7 @@ _UpdateItem _updateFromFollowItem(_FollowItem item, String category) {
   return _UpdateItem(
     type: category,
     title: item.title,
-    subtitle: '已串接到我的 LawApp',
+    subtitle: '已串接到我的 緒言 Preamble',
     timeLabel: '剛剛',
     category: category,
     icon: item.icon,

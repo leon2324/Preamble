@@ -31,7 +31,6 @@ class CaseTimeMachineCard extends StatelessWidget {
               final width = constraints.maxWidth;
               final height = constraints.maxHeight;
 
-              // 台灣繁體中文教學註解：
               // 這張卡是接近海報式的視覺稿，所以不用一般 Column 平均排版，
               // 而是改用相對座標去對齊標題、圖騰、副標和按鈕位置，
               // 之後若要微調只要改各個 fraction，不必回去動圖檔。

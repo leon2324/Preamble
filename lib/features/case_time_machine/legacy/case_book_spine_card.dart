@@ -56,7 +56,6 @@ class CaseBookSpineCard extends StatelessWidget {
                 ),
                 SizedBox(height: CaseTimeMachineSpacing.spaceS.h),
                 Expanded(
-                  // 台灣繁體中文教學註解：
                   // 書脊只放「短碼＋符號」，完整中文／英文案名交給下方資訊卡。
                   // 這樣能忠實保留 Prototype 的書架感，也不會在英文案名變長時截斷。
                   child: FittedBox(

@@ -4,12 +4,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 /// 法律故事型詳情頁共用底部操作列。
 ///
-/// 台灣繁體中文教學註解：
 /// 案件圖書館與生活避坑筆記都屬於「讀完內容後接續行動」的詳情頁，
 /// 因此把問法助、筆記、追蹤、收藏、分享抽成同一個元件。
 /// 這樣未來要微調 Apple-like 底欄高度、圖示、顏色時，只需要改這裡。
-class LawAppStoryActionBar extends StatelessWidget {
-  const LawAppStoryActionBar({
+class PreambleStoryActionBar extends StatelessWidget {
+  const PreambleStoryActionBar({
     super.key,
     required this.isFollowed,
     required this.isSaved,

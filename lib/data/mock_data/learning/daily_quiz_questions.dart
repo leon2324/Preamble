@@ -12,7 +12,6 @@ class DailyQuizQuestion {
   final String explanation;
 }
 
-// 台灣繁體中文教學註解：
 // 每日簽到挑戰題庫獨立放在 data/mock_data，讓 UI 頁面專心負責畫面，
 // 題目維護者只要在這裡新增 DailyQuizQuestion 即可；未來若接 API，
 // 也能保留同一個資料模型，降低頁面改動範圍。
@@ -566,7 +565,6 @@ const List<DailyQuizQuestion> dailyQuizQuestions = [
   ),
 ];
 
-// 台灣繁體中文教學註解：
 // 題庫已擴充到 50 題，所以不能再用 DateTime.day（每月只有 1-31）挑題。
 // 這裡改用「一年中的第幾天」取餘數，確保第 32 題以後也會自然輪替出現。
 int dailyQuizQuestionIndexForDate(DateTime date, {int? total}) {

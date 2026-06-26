@@ -1,6 +1,5 @@
 part of '../case_dossier_detail_page.dart';
 
-// 台灣繁體中文教學註解：
 // 這個 part 檔集中收納案件詳情頁的 Bottom Sheet UI。
 // 呼叫時機、route/navigation 與資料 helper 仍保留在主頁狀態類別中。
 
@@ -427,7 +426,7 @@ extension _CaseDossierBottomSheets on _CaseDossierDetailPageState {
   }
 
   void showNoteBottomSheet(BuildContext context) {
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     final caseId = widget.book.id;
     final initialNote = appState.caseNoteDraft(caseId) ?? '';
     final controller = TextEditingController(text: initialNote);

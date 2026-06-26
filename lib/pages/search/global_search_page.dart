@@ -25,7 +25,6 @@ part 'widgets/search_detail_support_widgets.dart';
 part 'widgets/search_bottom_sheets.dart';
 part 'widgets/search_helper_widgets.dart';
 
-// 台灣繁體中文教學註解：
 // 搜尋 Prototype 採用單一頁面狀態機，讓底部 Nav 只負責進入「搜尋」入口；
 // 搜尋首頁、混合結果、各分類列表、詳情與篩選面板都在這裡切換，避免子頁再長出自己的 Nav。
 enum _SearchPage {
@@ -44,7 +43,6 @@ enum _SearchPage {
 
 enum _ResultType { assistant, statute, caseItem, lifeNote, official }
 
-// 台灣繁體中文教學註解：
 // Tab 只控制結果內容的分類呈現；真正的子頁瀏覽由 _SearchPage 負責，
 // 之後如果要新增資料類型，請同步補 _SearchTab、_ResultType 與 mock 清單。
 enum _SearchTab { all, assistant, statutes, cases, lifeNotes, official }
@@ -127,7 +125,6 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
     if (prompt == _lastExternalQuickAskPrompt) return;
 
     _lastExternalQuickAskPrompt = prompt;
-    // 台灣繁體中文教學註解：
     // 原生 Siri / Shortcuts 入口只提供「問題文字」；這裡沿用既有小法助狀態機，
     // 讓外部入口、首頁快問、搜尋結果追問都走同一套 UI 與資料流程。
     _openAssistant(prompt);
@@ -209,7 +206,6 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
     // 觸發 AI 摘要生成
     _triggerAiOverviewGeneration(query);
 
-    // 台灣繁體中文教學註解：
     // 全站搜尋的 UI 保留 prototype 的分頁與子頁，但資料來源改由
     // SearchRepository 統一彙整；這裡用 revision 避免較慢的舊查詢蓋掉新查詢。
     _searchRepository.searchAll(query).then((items) {
@@ -367,7 +363,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
                                       SizedBox(width: 8.w),
                                       _RoundIcon(
                                         icon: _isSaved(
-                                          LawAppScope.of(context),
+                                          PreambleScope.of(context),
                                           _selected,
                                         )
                                             ? Icons.bookmark_rounded
@@ -472,7 +468,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
           onTab: (tab) => setState(() => _tab = tab),
           onOpen: _openResult,
           onOpenList: _openList,
-          isSaved: (item) => _isSaved(LawAppScope.of(context), item),
+          isSaved: (item) => _isSaved(PreambleScope.of(context), item),
           onSaved: _toggleSaved,
           aiIsThinking: _aiIsThinking,
           aiTone: _aiTone,
@@ -505,7 +501,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
           items: statuteResults,
           onOpen: _openResult,
           actionLabel: '+ 新增追蹤法條',
-          isSaved: (item) => _isSaved(LawAppScope.of(context), item),
+          isSaved: (item) => _isSaved(PreambleScope.of(context), item),
           onSaved: _toggleSaved,
           onAction: statuteResults.isEmpty
               ? () => _showSnack('目前沒有可追蹤的法規搜尋結果。')
@@ -514,8 +510,8 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
       case _SearchPage.statuteDetail:
         return _StatuteDetail(
           item: _selected,
-          isFollowed: _isFollowed(LawAppScope.of(context), _selected),
-          isSaved: _isSaved(LawAppScope.of(context), _selected),
+          isFollowed: _isFollowed(PreambleScope.of(context), _selected),
+          isSaved: _isSaved(PreambleScope.of(context), _selected),
           onFollow: () => _toggleFollow(_selected),
           onSaved: () => _showArchiveBottomSheet(context, _selected),
           onAssistant: () => _openAssistant(_selected.query),
@@ -532,7 +528,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
           items: caseResults,
           onOpen: _openResult,
           actionLabel: '查看更多案件',
-          isSaved: (item) => _isSaved(LawAppScope.of(context), item),
+          isSaved: (item) => _isSaved(PreambleScope.of(context), item),
           onSaved: _toggleSaved,
           onAction: caseResults.isEmpty
               ? () => _showSnack('目前沒有可追蹤的案件搜尋結果。')
@@ -541,8 +537,8 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
       case _SearchPage.caseDetail:
         return _CaseDetail(
           item: _selected,
-          isFollowed: _isFollowed(LawAppScope.of(context), _selected),
-          isSaved: _isSaved(LawAppScope.of(context), _selected),
+          isFollowed: _isFollowed(PreambleScope.of(context), _selected),
+          isSaved: _isSaved(PreambleScope.of(context), _selected),
           onFollow: () => _toggleFollow(_selected),
           onSaved: () => _showArchiveBottomSheet(context, _selected),
           onOpenFullText: () => _openCaseJudgment(_selected),
@@ -561,7 +557,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
       case _SearchPage.lifeDetail:
         return _LifeNoteDetail(
           item: _selected,
-          isSaved: _isSaved(LawAppScope.of(context), _selected),
+          isSaved: _isSaved(PreambleScope.of(context), _selected),
           onSaved: () => _showArchiveBottomSheet(context, _selected),
           onAskScenario: _openAssistant,
         );
@@ -642,7 +638,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
     });
   }
 
-  bool _isFollowed(LawAppState appState, _SearchResult item) {
+  bool _isFollowed(PreambleState appState, _SearchResult item) {
     final id = _interactionIdFor(item);
     return switch (item.type) {
       _ResultType.statute => appState.isStatuteFollowed(id),
@@ -652,7 +648,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
     };
   }
 
-  bool _isSaved(LawAppState appState, _SearchResult item) {
+  bool _isSaved(PreambleState appState, _SearchResult item) {
     final id = _interactionIdFor(item);
     return switch (item.type) {
       _ResultType.statute => appState.isStatuteSaved(id),
@@ -665,13 +661,12 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
   }
 
   Future<void> _toggleFollow(_SearchResult item) async {
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     final id = _interactionIdFor(item);
     final next = !_isFollowed(appState, item);
 
-    // 台灣繁體中文教學註解：
-    // 全站搜尋的追蹤按鈕不再只改 icon，而是寫進 LawAppState 的共用 summary；
-    // 我的 LawApp 會讀同一份 summary，所以這裡按下後切到個人頁即可看到。
+    // 全站搜尋的追蹤按鈕不再只改 icon，而是寫進 PreambleState 的共用 summary；
+    // 我的 Preamble 會讀同一份 summary，所以這裡按下後切到個人頁即可看到。
     switch (item.type) {
       case _ResultType.statute:
         await appState.setStatuteFollowed(id, next);
@@ -685,11 +680,11 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
         return;
     }
     if (!mounted) return;
-    _showSnack(next ? '已加入我的 LawApp 追蹤。' : '已從我的 LawApp 取消追蹤。');
+    _showSnack(next ? '已加入我的 緒言 Preamble 追蹤。' : '已從我的 緒言 Preamble 取消追蹤。');
   }
 
   Future<void> _toggleSaved(_SearchResult item) async {
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     final id = _interactionIdFor(item);
     final next = !_isSaved(appState, item);
 
@@ -707,7 +702,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
     }
     if (!mounted) return;
     setState(() {});
-    _showSnack(next ? '已加入我的 LawApp 收藏。' : '已從我的 LawApp 收藏移除。');
+    _showSnack(next ? '已加入我的 緒言 Preamble 收藏。' : '已從我的 緒言 Preamble 收藏移除。');
   }
 
   void _showArchiveBottomSheet(BuildContext context, _SearchResult item) {
@@ -899,7 +894,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
     final text = [
       '小法助搜尋整理：$keyword',
       _selected.summary,
-      '來源：LawApp 全站搜尋',
+      '來源：緒言 Preamble 全站搜尋',
     ].where((line) => line.trim().isNotEmpty).join('\n\n');
     await Clipboard.setData(ClipboardData(text: text));
     if (!mounted) return;
@@ -930,7 +925,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
   }
 
   Future<void> _saveAssistantSummaryToNotebook() async {
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     final keyword = _query.trim().isEmpty ? 'AI 法律摘要' : _query.trim();
     final interactionId = 'assistant-${_slugFor(keyword)}';
     await appState.setArticleSaved(interactionId, true);
@@ -953,7 +948,6 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
       return;
     }
 
-    // 台灣繁體中文教學註解：
     // 目前搜尋結果沒有穩定保存每一筆裁判全文 URL，所以不要假裝直達全文；
     // 先開司法院官方裁判查詢並複製查詢字串，讓使用者能在官方站完成確認。
     final launched = await _openExternalUri(
@@ -1959,7 +1953,7 @@ class _SearchResult {
       type: _resultTypeFor(item.type),
       title: item.title,
       summary: item.snippet.isEmpty ? item.subtitle : item.snippet,
-      source: sourceParts.isEmpty ? 'LawApp' : sourceParts.join('・'),
+      source: sourceParts.isEmpty ? '緒言 Preamble' : sourceParts.join('・'),
       query: item.title,
       sourceUrl: item.sourceUrl,
       officialUrl: item.officialUrl,
@@ -1990,7 +1984,7 @@ _SearchResult _assistantResultFor(String query) {
     type: _ResultType.assistant,
     title: '請小法助整理「$keyword」',
     summary: '把這次搜尋字帶入 AI 法律輔助，整理相關法規、案件與下一步。',
-    source: 'LawApp 小法助',
+    source: '緒言 Preamble 小法助',
     query: keyword,
   );
 }
@@ -2165,7 +2159,7 @@ const _assistantResults = [
     type: _ResultType.assistant,
     title: '詐欺罪的成立要件是什麼？',
     summary: '小法助會拆成欺罔、錯誤、處分、損害與不法所有意圖。',
-    source: 'LawApp 小法助',
+    source: '緒言 Preamble 小法助',
     query: '詐欺',
   ),
 ];

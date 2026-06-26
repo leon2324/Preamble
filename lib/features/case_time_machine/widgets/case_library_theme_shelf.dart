@@ -4,7 +4,6 @@ import 'package:lawapp/features/case_time_machine/models/case_time_machine_model
 import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_library_section_header.dart';
 
-// 台灣繁體中文教學註解：
 // 核心議題→固定配色對照表。這裡不要再用 index 輪播顏色，
 // 否則同一個案件出現在不同 Shelf 時會變色，使用者會失去案件類型的色彩記憶。
 const _coreIssueAccents = <String, ({Color color, Color bgTint})>{
@@ -18,7 +17,6 @@ const _coreIssueAccents = <String, ({Color color, Color bgTint})>{
   '詐欺犯罪': (color: Color(0xFF8C642B), bgTint: Color(0xFFFFF2CF)),
 };
 
-// 台灣繁體中文教學註解：
 // 重要案件 id 先做明確指定，避免資料的 category 或 tag 之後被文案調整時，
 // 太陽花、釋字 748、釋字 799、死刑憲判這類核心案件的色彩跟著漂移。
 const _caseIssueOverrides = <String, String>{
@@ -34,7 +32,6 @@ const _caseIssueOverrides = <String, String>{
   'ding-2015': '詐欺犯罪',
 };
 
-// 台灣繁體中文教學註解：
 // 若未來資料來源不是固定 id，而是來自搜尋或後端同步，仍可透過標題與 tags 的關鍵字
 // 解析核心議題。這是保底規則，不會取代上方 id 指定。
 const _coreIssueKeywords = <String, List<String>>{
@@ -49,7 +46,6 @@ const _coreIssueKeywords = <String, List<String>>{
 };
 
 String _resolveCoreIssue(CaseBook book) {
-  // 台灣繁體中文教學註解：
   // 解析順序：案件 id 明確指定 → tags → category → 標題/說明關鍵字 → 預設案件色。
   // 這樣能同時支援目前 mock data、未來後端資料，以及同案在不同 Shelf 的一致配色。
   final issueById = _caseIssueOverrides[book.id];
@@ -84,7 +80,7 @@ String _resolveCoreIssue(CaseBook book) {
     return (label: issue, color: accent.color, bgTint: accent.bgTint);
   }
 
-  // 台灣繁體中文教學註解：預設為案件圖書館深綠大地色，只用在尚未分類的一般案件。
+  // 預設為案件圖書館深綠大地色，只用在尚未分類的一般案件。
   return (
     label: book.tags.isNotEmpty ? book.tags.first : book.category,
     color: const Color(0xFF173C37),
@@ -92,7 +88,6 @@ String _resolveCoreIssue(CaseBook book) {
   );
 }
 
-// 台灣繁體中文教學註解：
 // 主題 Shelf 元件 V4 — 水平卡片列，每張小卡進行以下修正：
 // 1. 配色改為「依案件核心議題 (Tags) 定義固定專屬顏色」，橫向對齊色彩認知。
 // 2. 卡片高度維持 115.h，視覺緊湊精緻。
@@ -112,7 +107,7 @@ class CaseLibraryThemeShelf extends StatelessWidget {
   final ValueChanged<CaseBook> onCaseTap;
   final VoidCallback onViewAllTap;
 
-  // 台灣繁體中文教學註解：討論數 mock
+  // 討論數 mock
   static const _discussionCounts = <String, int>{
     '318': 142,
     '799': 245,
@@ -126,7 +121,7 @@ class CaseLibraryThemeShelf extends StatelessWidget {
     '104': 56,
   };
 
-  // 台灣繁體中文教學註解：依據案件內容，動態產生合適的副資訊一行
+  // 依據案件內容，動態產生合適的副資訊一行
   String _getSubInfo(CaseBook book) {
     if (book.category == '刑事案件' || book.category == '刑事') {
       if (book.tags.contains('集會遊行')) return '重大社會運動案件';
@@ -174,7 +169,7 @@ class CaseLibraryThemeShelf extends StatelessWidget {
             itemBuilder: (context, idx) {
               final book = cases[idx];
 
-              // 台灣繁體中文教學註解：依據案件本身的議題屬性獲取專屬色系與背景淡色，取代以 index 輪流分色
+              // 依據案件本身的議題屬性獲取專屬色系與背景淡色，取代以 index 輪流分色
               final accent = _getThemeAccent(book);
               final accentColor = accent.color;
               final bgTint = accent.bgTint;
@@ -215,7 +210,7 @@ class CaseLibraryThemeShelf extends StatelessWidget {
                   ),
                   child: Stack(
                     children: [
-                      // 台灣繁體中文教學註解：左側彩色邊條
+                      // 左側彩色邊條
                       Positioned(
                         left: 0,
                         top: 0,
@@ -231,7 +226,7 @@ class CaseLibraryThemeShelf extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // 台灣繁體中文教學註解：主要內容佈局
+                      // 主要內容佈局
                       Padding(
                         padding: EdgeInsets.fromLTRB(12.w, 8.h, 10.w, 8.h),
                         child: Column(
@@ -343,7 +338,6 @@ class CaseLibraryThemeShelf extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                // 台灣繁體中文教學註解：
                                 // 改用有顏色的小 Block 包裹「閱讀」字樣，與該案件議題專屬色一致。
                                 Container(
                                   padding: EdgeInsets.symmetric(

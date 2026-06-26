@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 /// 社會討論趨勢資料。
 ///
-/// 台灣繁體中文教學註解：
 /// 記事頁這裡不是直接吃首頁完整討論模型，而是先整理成排行榜與摘要 Bottom Sheet
 /// 需要的最小資料形狀，未來串後端時可先在這層做轉換，避免 UI 綁死在首頁模型。
 class DiscussionTrendItem {
@@ -33,7 +32,6 @@ class DiscussionTrendItem {
 
 /// 案件觀看角度。
 ///
-/// 台灣繁體中文教學註解：
 /// 這組資料直接綁到 SVG 與卡片底色，因為這一區是偏策展型入口，
 /// 之後若要改圖，只要換資產路徑與色票即可，不需要重寫 widget 佈局。
 /// 若不同 SVG 的畫布留白不一樣，也可以直接用 iconScale 做視覺校正。
@@ -61,7 +59,6 @@ class CaseAngleItem {
 
 /// 那年今日資料。
 ///
-/// 台灣繁體中文教學註解：
 /// 舊紙卡需要的不只是案名，還有日期、地點與一句有記憶點的引言，
 /// 因此獨立成專屬模型，避免和一般案件列表共用欄位後變得難維護。
 class OnThisDayItem {
@@ -88,7 +85,6 @@ class OnThisDayItem {
 
 /// 資料館更新資料。
 ///
-/// 台灣繁體中文教學註解：
 /// 這裡用 type + title + summary + time 組成一則 feed item，
 /// 比單純標題更接近之後資料館真的會出現的「更新記錄」。
 class ArchiveUpdateItem {
@@ -146,7 +142,6 @@ class ArchiveDossierItem {
 
 /// 資料館卷宗時間軸節點。
 ///
-/// 台灣繁體中文教學註解：
 /// 目前資料館還沒有後端，所以先把詳情頁會用到的時間軸拆成小模型；
 /// 未來接 API 時只要把後端事件列表轉成這個形狀，頁面就能維持可讀且好測。
 class ArchiveTimelineItem {

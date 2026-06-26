@@ -6,7 +6,7 @@ import 'package:lawapp/theme/app_colors.dart';
 class AccountSecuritySheet extends StatefulWidget {
   const AccountSecuritySheet({super.key, required this.appState});
 
-  final LawAppState appState;
+  final PreambleState appState;
 
   @override
   State<AccountSecuritySheet> createState() => _AccountSecuritySheetState();
@@ -99,7 +99,7 @@ class _AccountSecuritySheetState extends State<AccountSecuritySheet> {
                   color: AppColors.primary, size: 22.sp),
               title: const Text('重設登入密碼',
                   style: TextStyle(fontWeight: FontWeight.bold)),
-              subtitle: const Text('更換您用於登入 LawApp 的獨立密碼'),
+              subtitle: const Text('更換您用於登入 緒言 Preamble 的獨立密碼'),
               trailing: Icon(Icons.arrow_forward_ios_rounded, size: 14.sp),
               tileColor:
                   isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),

@@ -52,7 +52,6 @@ class CaseBookCover extends StatelessWidget {
               ),
               CustomPaint(painter: _GeneratedBookCoverFramePainter()),
               Center(
-                // 台灣繁體中文教學註解：
                 // 案件書封面改成 Flutter 原生繪製，不再吃舊版 cover asset；
                 // 文字區仍用 FittedBox 防止中文長標與橫向測試尺寸爆版。
                 child: FittedBox(

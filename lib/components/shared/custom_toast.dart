@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// 台灣繁體中文教學註解：
 /// 高質感自訂 Toast 提示。
 /// 使用 OverlayEntry 在螢幕正中央呈現 4:5 直式提示卡，避免傳統 Snackbar 貼底遮住底欄。
 /// 支援微縮放進場動畫，顯示 1.5 秒後自動移除，用以替代短訊息型 Snackbar。
@@ -82,7 +81,7 @@ class CustomToast {
 
     overlayState.insert(overlayEntry);
 
-    // 台灣繁體中文教學註解：Toast 保持 1.5 秒，讓使用者能讀完短句，但不打斷操作節奏。
+    // Toast 保持 1.5 秒，讓使用者能讀完短句，但不打斷操作節奏。
     Timer(const Duration(milliseconds: 1500), () {
       overlayEntry.remove();
     });

@@ -109,7 +109,6 @@ class StatuteItem {
       ...relatedKeywords,
     ].map((value) => value.toLowerCase());
 
-    // 台灣繁體中文教學註解：
     // 使用者常會輸入「民法 184」這種多段式關鍵字；如果只拿整串字做
     // contains，比對不到「民法」與「第184條」分散在不同欄位的資料。
     // 因此改成每個 token 都要在任一搜尋欄位中出現，讓前端查詢更接近真搜尋。

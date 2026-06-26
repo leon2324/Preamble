@@ -34,10 +34,8 @@ const String _svgDownload = '''
 </svg>
 ''';
 
-// 台灣繁體中文教學註解：
 // 首頁 V2 避坑筆記入口卡片群。
 //
-// 台灣繁體中文教學註解：
 // `HomeV2NewsletterFocusCard` 是首頁「生活避坑筆記」入口，現在以使用者提供的設計截圖為母版：
 // 奶油色大圓角、深色故事標題、灰色風險摘要、綠色小提醒、右側生活情境圖片與底部互動數據列。
 // 下方一般 Newsletter 卡仍保留較通用的列表樣式，避免入口改版時連帶影響其他可能復用的小卡。
@@ -122,7 +120,6 @@ String _storyImageForCategory(String category) {
 }
 
 String _issueHintForHomeTip(HomeNewsletterItem item) {
-  // 台灣繁體中文教學註解：
   // 首頁入口只給一行「小動作可能導致什麼法律風險」，
   // 使用者點進去後，詳細頁再展開完整情境與處理步驟。
   if (item.category.contains('養狗') || item.title.contains('狗')) {

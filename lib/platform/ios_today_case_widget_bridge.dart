@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 
 /// iOS 今日判決故事 Widget 的 Flutter 資料橋接。
 ///
-/// 台灣繁體中文教學註解：
 /// WidgetKit extension 不能直接讀 Flutter 記憶體，也不能載入 Dart runtime；
 /// 因此 Flutter 端把首頁「今天判決故事」整理成簡短 payload，
 /// 透過 MethodChannel 交給 iOS 寫入 App Group UserDefaults，Widget 再從原生端讀取。
@@ -30,11 +29,9 @@ class IosTodayCaseWidgetBridge {
         },
       );
     } on MissingPluginException {
-      // 台灣繁體中文教學註解：
       // Widget test、Android、或 iOS plugin 尚未註冊時都可能進到這裡；
       // Widget payload 只是加分入口，不應影響 App 啟動。
     } on PlatformException {
-      // 台灣繁體中文教學註解：
       // App Group 尚未在簽章後台開啟時，原生端可能回報寫入失敗；
       // 這裡保持靜默，避免比賽前 Demo App 因 Widget 設定尚未完成而中斷。
     }

@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 
 /// 原生系統分享面板橋接層。
 ///
-/// 台灣繁體中文教學註解：
 /// Flutter 端只負責整理要分享的文字或圖卡資料，再交給 iOS / Android 原生端開啟
 /// 系統分享畫面。這樣使用者看到的是 Apple / Android 原生分享面板，而不是 App 內
 /// 自己假裝完成分享；若平台尚未支援，呼叫端要準備複製連結等備援流程。

@@ -33,7 +33,6 @@ class _HomeV2HeroHeaderState extends State<HomeV2HeroHeader> {
   void initState() {
     super.initState();
     _tickerController = PageController();
-    // 台灣繁體中文教學註解：
     // 頂部法規快訊每 4 秒往上換一則，先使用 mock data；
     // 未來接 API 時只要替換 homeV2TickerItems 的資料來源即可。
     _tickerTimer = Timer.periodic(const Duration(seconds: 4), (__) {
@@ -236,7 +235,7 @@ class HomeV2GreetingCard extends StatelessWidget {
 class _GreetingTextBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     final user = appState.currentUser;
     final nameText = user.isGuest ? '訪客' : user.displayName;
     final updateCount = user.isGuest
@@ -306,7 +305,6 @@ class _HeaderAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 台灣繁體中文教學註解：
     // 通知右邊這顆頭像就是首頁的「我的」快捷入口，因此要做成真正可點擊按鈕，
     // 不要只保留視覺外觀。未來若要接會員照片或未讀徽章，也建議從這個元件擴充。
     return Material(

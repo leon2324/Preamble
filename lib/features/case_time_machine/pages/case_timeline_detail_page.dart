@@ -5,7 +5,6 @@ import 'package:lawapp/features/case_time_machine/models/case_time_machine_model
 import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
 
-// 台灣繁體中文教學註解：
 // 「案件時間軸」互動詳情頁 (CaseTimelineDetailPage)
 // 本頁面為特定的案件提供高度細緻的垂直時間軌跡探索。
 // 具備橫向滑動的里程碑分類篩選器（起因、衝突、審理判決、社會影響），
@@ -27,7 +26,6 @@ class _CaseTimelineDetailPageState extends State<CaseTimelineDetailPage> {
   String _selectedCategory = '全部';
   final Set<int> _expandedIndices = {};
 
-  // 台灣繁體中文教學註解：
   // 透過解析時間軸項目的標題或敘述，動態將其分類為：起因、衝突、司法判決、社會迴響。
   // 這可保證現有的 CaseBook 資料模型無須大改，便能呈現進階的分類篩選功能。
   String _getCategoryForItem(CaseTimelineItem item) {
@@ -58,7 +56,6 @@ class _CaseTimelineDetailPageState extends State<CaseTimelineDetailPage> {
     return '事件起因';
   }
 
-  // 台灣繁體中文教學註解：
   // 當卡片點擊展開時，根據不同的事件內容，動態產生對應的模擬「當日網友反應/歷史輿情」，
   // 讓使用者看懂當時法律事件引發的公眾情緒。
   Map<String, dynamic> _getEventRichContext(CaseTimelineItem item) {
@@ -471,7 +468,6 @@ class _CaseTimelineDetailPageState extends State<CaseTimelineDetailPage> {
     );
   }
 
-  // 台灣繁體中文教學註解：
   // 建立展開後的延伸卡片內容，包括當天法理觀點說明以及模擬的歷史輿論氛圍。
   Widget _buildEventDetails(CaseTimelineItem item) {
     final detail = _getEventRichContext(item);

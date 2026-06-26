@@ -10,7 +10,6 @@ class JournalPageHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 台灣繁體中文教學註解：
     // 這版 header 完全只顯示使用者提供的圖片，不再疊任何文字或搜尋欄；
     // 為了適應手機寬度，直接用圖片原始長寬比顯示，避免被固定高度裁切變形。
     return AspectRatio(

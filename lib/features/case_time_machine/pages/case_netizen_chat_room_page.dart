@@ -10,7 +10,6 @@ import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_
 import 'package:lawapp/features/case_time_machine/pages/case_opinion_spectrum_page.dart';
 import 'package:flutter/cupertino.dart';
 
-// 台灣繁體中文教學註解：
 // 本頁面定位為「案件思辨室」，不是一般聊天室。
 // 版面以投票、AI 摘要、立場觀點卡與簡潔發言欄構成，讓使用者在保持閱讀秩序的前提下參與討論。
 
@@ -89,7 +88,6 @@ class _CaseNetizenChatRoomPageState extends State<CaseNetizenChatRoomPage> {
   final ScrollController _scrollController = ScrollController();
   final FocusNode _messageFocusNode = FocusNode();
 
-  // 台灣繁體中文教學註解：
   // 這裡保留本機投票狀態即可，MVP 階段先不接後端；未來接 API 時可用同一個 key 對應案件 id。
   final Map<String, String> _myVotes = {};
   String _selectedStance = '中立派';
@@ -263,7 +261,7 @@ class _CaseNetizenChatRoomPageState extends State<CaseNetizenChatRoomPage> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // 台灣繁體中文教學註解：點擊可跳轉至本案的「觀點光譜」互動頁面，方便使用者對照大眾思辨立場。
+                      // 點擊可跳轉至本案的「觀點光譜」互動頁面，方便使用者對照大眾思辨立場。
                       IconButton(
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
@@ -325,7 +323,6 @@ class _CaseNetizenChatRoomPageState extends State<CaseNetizenChatRoomPage> {
       builder: (context) {
         final screenHeight = MediaQuery.sizeOf(context).height;
 
-        // 台灣繁體中文教學註解：
         // 統計視圖是輔助資訊，不應該像完整頁面一樣佔滿螢幕。
         // 外層 GestureDetector 讓使用者點擊卡片外空白處即可關閉；內層 GestureDetector 則吸收卡片本身點擊，避免誤關。
         return GestureDetector(
@@ -384,7 +381,6 @@ class _CaseNetizenChatRoomPageState extends State<CaseNetizenChatRoomPage> {
         (a, b) => (b['likes'] as int? ?? 0).compareTo(a['likes'] as int? ?? 0),
       );
 
-    // 台灣繁體中文教學註解：
     // 統計內容改由 bottom sheet 承載，避免主畫面在「閱讀討論」與「看統計」之間整頁切換，
     // 使用者可以把它當成輕量參考層，看完後自然回到思辨串。
     return Column(

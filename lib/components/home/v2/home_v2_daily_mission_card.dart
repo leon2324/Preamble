@@ -25,7 +25,6 @@ class HomeV2DailyMissionCard extends StatefulWidget {
 
 /// 首頁版的小任務卡。
 ///
-/// 台灣繁體中文教學註解：
 /// 這裡刻意只放二選一與短回饋，讓首頁維持輕盈；
 /// 若之後要做完整測驗，可另開子頁面承接。
 class _HomeV2DailyMissionCardState extends State<HomeV2DailyMissionCard> {

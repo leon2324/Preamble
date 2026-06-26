@@ -8,7 +8,7 @@
 
 ## 案件資料來源
 
-- MVP 目前使用 LawApp mock data 與公開資料摘要。
+- MVP 目前使用 緒言 Preamble mock data 與公開資料摘要。
 - 正式案件資料應由後端同步司法院裁判書 API、官方公告、可信來源與人工審稿資料。
 - 每筆案件都應標示 `isMockData`、`updatedAt`、`sourceLinks` 與 `privacyLevel`。
 

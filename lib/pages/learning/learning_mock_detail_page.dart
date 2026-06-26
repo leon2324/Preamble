@@ -2013,7 +2013,7 @@ void _showShareCardDialog(
                   onPressed: () {
                     Clipboard.setData(ClipboardData(
                         text:
-                            '$highlightText\n\n—— 摘自《$articleTitle》• LawApp 學習摘錄'));
+                            '$highlightText\n\n—— 摘自《$articleTitle》• 緒言 Preamble 學習摘錄'));
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

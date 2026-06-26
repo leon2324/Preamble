@@ -12,9 +12,8 @@ class FollowingSummary {
     required this.updatedAt,
   });
 
-  /// 台灣繁體中文教學註解：
   /// 追蹤與收藏都放在同一份 summary，是為了讓「全站搜尋」、「法規頁」與
-  /// 「我的 LawApp」不用各自維護一份 bool。UI 只要看這個模型，就能知道
+  /// 「我的 Preamble」不用各自維護一份 bool。UI 只要看這個模型，就能知道
   /// 目前使用者追蹤/收藏了哪些案件、法條、主題、關鍵字或文章。
   final List<String> followedTopicIds;
   final List<String> followedCaseIds;

@@ -26,11 +26,9 @@ void main() async {
 
   // 初始化本地 SQLite 資料庫與記憶體快取倉庫
   await CaseTimeMachineRepository.instance.initialize();
-  // 台灣繁體中文教學註解：
   // iOS WidgetKit 讀不到 Flutter widget tree，因此 App 啟動時先把今日判決故事同步到 App Group；
   // Android、測試環境或原生橋接尚未完成時會安全略過，不影響主流程。
   await IosTodayCaseWidgetBridge.syncDefaultStory();
-  // 台灣繁體中文教學註解：
   // Core Spotlight 索引是系統層加分入口，不需要阻塞第一屏；先背景同步精選法條，
   // 使用者之後在 iPhone 搜尋「民法184」「租屋押金」就能回到法規資料庫。
   unawaited(IosStatuteSpotlightBridge.syncDefaultIndex());
@@ -57,7 +55,7 @@ class MylawApp extends StatefulWidget {
 
 class _MylawAppState extends State<MylawApp> {
   late final GlobalKey<NavigatorState> _navigatorKey;
-  late final LawAppState _appState;
+  late final PreambleState _appState;
   late final ValueNotifier<String?> _quickAskPromptNotifier;
   int selectedIndex = 0;
   int? _knowLawInitialTabIndex;
@@ -95,7 +93,7 @@ class _MylawAppState extends State<MylawApp> {
   void initState() {
     super.initState();
     _navigatorKey = GlobalKey<NavigatorState>();
-    _appState = LawAppState()..load();
+    _appState = PreambleState()..load();
     _quickAskPromptNotifier = ValueNotifier<String?>(null);
     IosQuickAskIntentBridge.registerPromptHandler(_openQuickAskFromNative);
     IosStatuteSpotlightBridge.registerQueryHandler(
@@ -131,7 +129,6 @@ class _MylawAppState extends State<MylawApp> {
     final assistantIndex = _appState.navbarOrder.indexOf(2);
     if (assistantIndex == -1) return;
 
-    // 台灣繁體中文教學註解：
     // Siri / Shortcuts / Widget 進來時，只由主殼層負責切換底部分頁；
     // 實際的小法助 prompt 處理仍交給 GlobalSearchPage，避免原生入口繞過既有搜尋狀態機。
     setState(() {
@@ -156,7 +153,6 @@ class _MylawAppState extends State<MylawApp> {
       return;
     }
 
-    // 台灣繁體中文教學註解：
     // Spotlight 點擊代表使用者已經在系統搜尋選定某個法條，因此直接 push 法規資料庫；
     // 不先切換底部 Tab，避免從 iOS 搜尋結果進 App 後還要再多點一次。
     navigator.push(
@@ -201,7 +197,6 @@ class _MylawAppState extends State<MylawApp> {
     final originalPages = [
       HomePage(
         onNavigateToTab: (targetOriginalIndex, {subTabIndex, toolTab}) {
-          // 台灣繁體中文教學註解：
           // 當首頁按鈕點選跳頁時，在自訂順序列表（navbarOrder）中尋找原本的目標頁排在第幾個，並更新 selectedIndex。
           final realIndex = order.indexOf(targetOriginalIndex);
           if (realIndex != -1) {
@@ -225,7 +220,7 @@ class _MylawAppState extends State<MylawApp> {
     final displayNavItems = order.map((idx) => originalNavItems[idx]).toList();
     final displayPages = order.map((idx) => originalPages[idx]).toList();
 
-    return LawAppScope(
+    return PreambleScope(
       state: _appState,
       child: AnimatedBuilder(
         animation: _appState,
@@ -234,7 +229,7 @@ class _MylawAppState extends State<MylawApp> {
             navigatorKey: _navigatorKey,
             locale: const Locale('zh', 'TW'),
             debugShowCheckedModeBanner: false,
-            title: 'LawApp',
+            title: '緒言 Preamble',
             theme: AppTheme.light(),
             darkTheme: AppTheme.dark(),
             themeMode: _appState.themeMode,
@@ -244,8 +239,7 @@ class _MylawAppState extends State<MylawApp> {
               body: Builder(
                 builder: (context) {
                   final useTopSafeArea = !context.hasLargeTopInset;
-                  // 台灣繁體中文教學註解：
-                  // 全域底部 Nav 維持常駐，讓「我的 LawApp」仍能像其他主分頁一樣快速切換。
+                  // 全域底部 Nav 維持常駐，讓「我的 Preamble」仍能像其他主分頁一樣快速切換。
                   // 個別子頁若需要沉浸式流程，請在 push 新頁時另外處理，而不要從主殼層關掉 Nav。
 
                   return Stack(
@@ -257,6 +251,29 @@ class _MylawAppState extends State<MylawApp> {
                           child: IndexedStack(
                             index: selectedIndex,
                             children: displayPages,
+                          ),
+                        ),
+                      ),
+                      // 全域狀態列霧面遮罩：防止滾動內容與上方時間、狀態列重疊
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        child: IgnorePointer(
+                          child: Container(
+                            height: MediaQuery.paddingOf(context).top + 10,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                stops: const [0.0, 0.75, 1.0],
+                                colors: [
+                                  Theme.of(context).scaffoldBackgroundColor,
+                                  Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.88),
+                                  Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.0),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),

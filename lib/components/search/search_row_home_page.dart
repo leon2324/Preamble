@@ -89,7 +89,6 @@ class _SearchRowHomePageState extends State<SearchRowHomePage> {
         : <BoxShadow>[];
     // 一旦輸入框取得焦點，就直接視為完全展開，避免使用者打字時
     // 搜尋列還被 scroll 位置影響而晃動。
-    // 台灣繁體中文教學註解：
     // Release 版先只保留可實際送出的文字搜尋；等額外輸入能力完成真機驗證後，
     // 再把左右側 icon 以同一個參數開回來。
     final searchLeftMargin =
@@ -116,7 +115,6 @@ class _SearchRowHomePageState extends State<SearchRowHomePage> {
                   focusNode: _focusNode,
                   textInputAction: TextInputAction.search,
                   onSubmitted: (value) {
-                    // 台灣繁體中文教學註解：
                     // 共用搜尋列只負責收集與送出文字，實際要導去哪個搜尋流程
                     // 交給外層頁面決定，避免首頁、全站搜尋頁各自寫一套 TextField。
                     widget.onSubmitted?.call(value.trim());

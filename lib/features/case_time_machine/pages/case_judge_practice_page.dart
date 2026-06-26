@@ -5,7 +5,6 @@ import 'package:lawapp/features/case_time_machine/models/case_time_machine_model
 import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
 
-// 台灣繁體中文教學註解：
 // 「如果你是法官」互動練習頁面 (CaseJudgePracticePage)
 // 旨在讓使用者先閱讀案件背景與爭點，在不知道或對比實際判決前，
 // 先選取符合自身直覺法感的立場，再將其立場與法院實際理由進行 1:1 的雷達對照，
@@ -47,7 +46,6 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
     super.dispose();
   }
 
-  // 台灣繁體中文教學註解：
   // 針對特定重大案件（如 318 太陽花案）提供量身打造的直覺立場選項。
   // 若是其他案件，則根據其大類（如刑事、憲法、民事）動態提供泛用型的法感選項。
   List<Map<String, dynamic>> _getStances() {
@@ -143,7 +141,6 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
       body: SafeArea(
         child: Column(
           children: [
-            // 台灣繁體中文教學註解：
             // 置中 AppBar，左右圖示緊貼邊界，返回鍵置左，移除所有預設內距。
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
@@ -184,7 +181,6 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
               ),
             ),
 
-            // 台灣繁體中文教學註解：
             // 頂部進度指引與案件名稱橫幅。
             Container(
               width: double.infinity,
@@ -460,7 +456,6 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
   Widget _buildComparisonPanel(Map<String, dynamic> selectedStance) {
     return Column(
       children: [
-        // 台灣繁體中文教學註解：
         // 當使用者選取立場後，顯示精心設計的 SVG 天平動畫。
         // 天平會根據所選立場的 'tiltAngle' 產生動態傾斜，生動地表現出法益權衡。
         AnimatedBuilder(
@@ -619,7 +614,6 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
     );
   }
 
-  // 台灣繁體中文教學註解：
   // 返回鍵與天平圖形專用向量 SVG 定義。
   static const String _svgBackIcon = '''
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">

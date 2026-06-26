@@ -7,7 +7,6 @@ import 'package:lawapp/theme/app_colors.dart';
 
 /// 首頁小任務延伸出的完整測驗頁。
 ///
-/// 台灣繁體中文教學註解：
 /// 這裡使用卡牌堆疊的互動節奏：左右滑動會把頂層卡抽走換下一題，
 /// 點選答案後則翻到背面顯示解析。首頁負責引導，深入體驗集中在這裡。
 class HomeMissionQuizPage extends StatefulWidget {
@@ -81,7 +80,6 @@ class _HomeMissionQuizPageState extends State<HomeMissionQuizPage> {
     final double resolvedDirection = direction == 0 ? -1 : direction.sign;
 
     setState(() {
-      // 台灣繁體中文教學註解：
       // 換題時讓頂卡先水平滑出，同步讓後方卡片往前補位，
       // 這樣視覺會是「下一張從深處浮上來」，而不是內容偷換後退回原位。
       _animatingOut = true;
@@ -136,10 +134,8 @@ class _HomeMissionQuizPageState extends State<HomeMissionQuizPage> {
               Expanded(
                 child: LayoutBuilder(
                   builder: (context, constraints) {
-                    // 台灣繁體中文教學註解：
                     // 這個頁面暫時保留卡堆補位動畫，但抽牌深度感仍待後續微調，
                     // 目前先優先處理主要互動正確性。
-                    // 台灣繁體中文教學註解：
                     // 主要卡片改以可用區域的中心點對齊，這樣能穩定落在
                     // 進度點點與頁面底部邊界之間的視覺中線。
                     final double mainCardWidth = constraints.maxWidth * 0.9;
@@ -558,7 +554,6 @@ class _MissionBackFace extends StatelessWidget {
                 border: Border.all(color: const Color(0xFFD7C9FF)),
               ),
               child: SingleChildScrollView(
-                // 台灣繁體中文教學註解：
                 // 翻面後的解析文字高度不固定，這裡用可捲動容器承接，
                 // 就不會在 SE 等較矮螢幕上把底部按鈕推出卡片造成 overflow。
                 child: Text(

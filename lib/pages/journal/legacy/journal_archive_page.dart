@@ -6,7 +6,6 @@ import 'package:lawapp/theme/app_colors.dart';
 
 /// 可導覽的案件資料館頁。
 ///
-/// 台灣繁體中文教學註解：
 /// 這頁目前還沒有正式後端，所以先把 mock 卷宗做成「可篩選、可點進詳情」的真流程；
 /// 未來接 API 時保留這裡的互動結構，只要把 archiveDossierItems 換成後端資料即可。
 class JournalArchivePage extends StatefulWidget {
@@ -626,7 +625,6 @@ class _ArchiveSourceNote extends StatelessWidget {
 
 /// 卷宗詳情頁。
 ///
-/// 台灣繁體中文教學註解：
 /// 詳情頁先避免做成「死資料卡」，改用摘要、時間軸、觀察重點與來源四段；
 /// 這些段落都對應到日後後端最容易提供的資料欄位，維護時比較不會牽一髮動全身。
 class ArchiveDossierDetailPage extends StatelessWidget {

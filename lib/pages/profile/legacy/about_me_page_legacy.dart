@@ -3,7 +3,6 @@ import 'package:lawapp/components/search/search_page_layout.dart';
 
 /// 舊版我的頁骨架。
 ///
-/// 台灣繁體中文教學註解：
 /// 正式主流程已改用 `ProfilePage`，這個檔案只保留作為早期搜尋式個人頁參考，
 /// 不應再從正式入口導到這裡，避免使用者看到空白骨架。
 class AboutMePageLegacy extends StatefulWidget {

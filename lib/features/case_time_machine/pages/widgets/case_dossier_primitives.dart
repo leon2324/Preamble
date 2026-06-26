@@ -1,6 +1,5 @@
 part of '../case_dossier_detail_page.dart';
 
-// 台灣繁體中文教學註解：
 // 這個 part 檔集中收納案件詳情頁可重用的基礎 UI 元件與純展示 class。
 // 頁面 state、repository、route 與收藏追蹤行為仍留在 case_dossier_detail_page.dart。
 
@@ -47,7 +46,6 @@ extension _CaseDossierPrimitives on _CaseDossierDetailPageState {
   }
 }
 
-// 台灣繁體中文教學註解：
 // 「思辨與探索」區塊的個別快捷方格 Tile。
 // 複用 CaseLibraryInteractiveGrid 的莫蘭迪色設計，直接依此案件開啟對應分析頁面。
 class _ExploreShortcutTile extends StatelessWidget {

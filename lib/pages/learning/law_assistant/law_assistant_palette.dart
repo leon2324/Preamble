@@ -2,7 +2,6 @@ part of '../know_law_page.dart';
 
 /// 小法助 Prototype 專用色票。
 ///
-/// 台灣繁體中文教學介紹型註解：
 /// 這個檔案只放小法助流程的顏色語意，避免入口頁、整理頁與聊天頁各自硬寫色碼；
 /// 未來若 Prototype 色票調整，優先改這裡，再由共用元件同步套用。
 class _LawAssistantPalette {

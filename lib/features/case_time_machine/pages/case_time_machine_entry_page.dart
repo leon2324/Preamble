@@ -15,7 +15,6 @@ import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_scaffold.dart';
 import 'package:lawapp/features/case_time_machine/data/case_time_machine_repository.dart';
 
-// 台灣繁體中文教學註解：
 // 定義導覽圖示的 SVG 字串。
 const String _svgBackIcon = '''
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#1B3F38" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -30,17 +29,15 @@ const String _svgSearchIcon = '''
 </svg>
 ''';
 
-// 台灣繁體中文教學註解：
 // 精選案件 ID 列表，供 Hero 輪播使用（最多 6 張）
 const _heroIds = ['318', '799', '103', '101', 'hung-2013', 'cheng-2021'];
 
-// 台灣繁體中文教學註解：
 // 各分館對應的案件 ID（年代館、議題館、精選必讀）
 const _eraShelfIds = ['318', '799', '499', '520', 'hung-2013', 'ding-2015'];
 const _topicShelfIds = ['101', '103', '102', 'cheng-2021', '104', '318'];
 const _classicShelfIds = ['318', '101', '103', '799', 'hung-2013', '499'];
 
-// 台灣繁體中文教學註解：每個案件的討論數 mock 數據
+// 每個案件的討論數 mock 數據
 const _discussionCounts = {
   '318': 142,
   '799': 245,
@@ -52,7 +49,7 @@ const _discussionCounts = {
   'cheng-2021': 78,
 };
 
-// 台灣繁體中文教學註解：有投票功能的案件 ID
+// 有投票功能的案件 ID
 const _hasVoteIds = {'318', '799', '103', '101'};
 
 class CaseTimeMachineEntryPage extends StatefulWidget {
@@ -65,12 +62,11 @@ class CaseTimeMachineEntryPage extends StatefulWidget {
 }
 
 class _CaseTimeMachineEntryPageState extends State<CaseTimeMachineEntryPage> {
-  // 台灣繁體中文教學註解：
   // 書架精選案件清單，由原本的寫死 ID 改為動態拉取 Supabase。
   List<CaseBook> _heroBooks = [];
   bool _heroLoading = true;
 
-  // 台灣繁體中文教學註解：討論室數據，跨頁面共享
+  // 討論室數據，跨頁面共享
   final Map<String, List<int>> _caseVotes = {
     '318': [142, 103],
     '799': [245, 312],

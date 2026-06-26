@@ -49,7 +49,6 @@ void main() {
         builder: (_, __) => const MylawApp(),
       ),
     );
-    // 台灣繁體中文教學註解：
     // 首頁頂部法規快訊有定時輪播，pumpAndSettle 會一直等到下一輪動畫；
     // smoke test 只需要確認首頁主路徑可渲染，所以使用固定時間推進。
     await tester.pump(const Duration(milliseconds: 500));
@@ -72,7 +71,6 @@ void main() {
     expect(find.text('社群熱議'), findsOneWidget);
     expect(find.text('看全部'), findsOneWidget);
 
-    // 台灣繁體中文教學註解：
     // 底部 Nav 的中間分頁已從單純「搜尋」升級為「小法助」；
     // 目前會直接進入小法助搜尋首頁，因此用搜尋框送出一次查詢守住核心能力。
     await tester.tap(find.text('小法助'));
@@ -83,7 +81,6 @@ void main() {
     expect(find.text('🔥 法律探索靈感'), findsOneWidget);
     expect(find.text('🧭 快捷助理導航'), findsOneWidget);
 
-    // 台灣繁體中文教學註解：
     // 原本底部 Nav 的「案例」已改為「紀事」，這裡同時守住 label 與入口內容。
     await tester.tap(find.text('紀事'));
     await tester.pump(const Duration(milliseconds: 500));
@@ -122,7 +119,6 @@ void main() {
     expect(find.text('租屋糾紛'), findsOneWidget);
     expect(find.text('全部專題'), findsOneWidget);
 
-    // 台灣繁體中文教學註解：
     // 新版學習頁把工具內容收進「生活工具箱」分頁，測試需點分頁，而不是沿用舊版向下滑找工具卡。
     await tester.tap(find.text('生活工具箱'));
     await tester.pumpAndSettle();
@@ -165,12 +161,10 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    // 台灣繁體中文教學註解：
     // 這個測試鎖住首頁 AI 卡片的真導流行為，避免日後重構時只剩假輸入框。
     await tester.tap(find.text('AI 法律輔助'));
     await tester.pumpAndSettle();
 
-    // 台灣繁體中文教學註解：
     // 小法助入口已改成 prototype 的首頁狀態，右上角時鐘會進入第 7 張對話紀錄頁。
     expect(find.text('小法助'), findsOneWidget);
     expect(find.text('熱門提問'), findsOneWidget);
@@ -207,7 +201,6 @@ void main() {
     await tester.pumpAndSettle();
 
     final firstUnit = find.text('STEP 1：押金的法律角色是什麼？');
-    // 台灣繁體中文教學註解：
     // 主題標題只負責展示進度；真正會開啟詳情頁的是下方 STEP 單元列。
     await tester.scrollUntilVisible(
       firstUnit,
@@ -243,7 +236,6 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    // 台灣繁體中文教學註解：
     // 首頁 SectionHeader 的「更多」已改為 iOS 箭頭圖示，測試改走語意標籤，
     // 讓畫面維持精簡但自動化仍能確認導頁功能。
     final moreMissionButton = find.bySemanticsLabel('更多題目');
@@ -286,7 +278,6 @@ void main() {
         ),
       ),
     );
-    // 台灣繁體中文教學註解：
     // 首頁法規快訊會定時輪播，小螢幕穩定性測試只需固定推進一幀確認沒有 overflow。
     await tester.pump(const Duration(milliseconds: 500));
 
@@ -321,7 +312,6 @@ void main() {
       );
     }
 
-    // 台灣繁體中文教學註解：
     // 首頁子頁的 Hero 會在小螢幕或大字級時改為上下排列，避免 icon 壓縮標題。
     await tester.pumpWidget(testFrame(const CommonLegalIssuesPage()));
     await tester.pumpAndSettle();
@@ -361,7 +351,7 @@ void main() {
   ) async {
     tester.view.devicePixelRatio = 2.0;
     tester.view.physicalSize = const Size(640, 1136);
-    final appState = LawAppState();
+    final appState = PreambleState();
     addTearDown(() {
       tester.view.resetDevicePixelRatio();
       tester.view.resetPhysicalSize();
@@ -378,7 +368,7 @@ void main() {
           designSize: const Size(375, 812),
           minTextAdapt: true,
           splitScreenMode: true,
-          builder: (_, __) => LawAppScope(
+          builder: (_, __) => PreambleScope(
             state: appState,
             child: MaterialApp(home: child),
           ),
@@ -386,7 +376,6 @@ void main() {
       );
     }
 
-    // 台灣繁體中文教學註解：
     // 左右兩張參考圖對應法規資料庫與案件解析，這裡鎖住初始入口與詳細頁不爆版。
     await tester.pumpWidget(testFrame(const StatuteDatabasePage()));
     await tester.pumpAndSettle();
@@ -450,7 +439,6 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    // 台灣繁體中文教學註解：
     // 記事頁有大量橫向密集文字與插畫，這裡用 iPhone SE 尺寸加大字級逐段滾動，
     // 讓 RenderFlex overflow 會在測試中直接被 tester.takeException() 抓出來。
     expect(find.byType(JournalPageHeader), findsOneWidget);
@@ -531,7 +519,6 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    // 台灣繁體中文教學註解：
     // 資料館不能只停在策展卡；這裡鎖住焦點入口、年代篩選與詳情頁三段真流程。
     expect(find.text('入口焦點'), findsOneWidget);
     expect(find.text('1980s 目前有 1 份示範卷宗。'), findsOneWidget);
@@ -648,12 +635,12 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('My LawApp prototype opens tracking center and detail', (
+  testWidgets('My 緒言 Preamble prototype opens tracking center and detail', (
     WidgetTester tester,
   ) async {
     SharedPreferences.setMockInitialValues({});
     _setMvpPhoneSize(tester);
-    final appState = LawAppState();
+    final appState = PreambleState();
     addTearDown(appState.dispose);
     await appState.load();
     await appState.signInDemo();
@@ -661,9 +648,8 @@ void main() {
     await tester.pumpWidget(_mvpTestFrame(appState, const FollowingPage()));
     await tester.pumpAndSettle();
 
-    // 台灣繁體中文教學註解：
     // 「追蹤」與「我的」已整合成個人中心，測試從首頁進追蹤中心，再打開案件詳情。
-    expect(find.text('我的 LawApp'), findsOneWidget);
+    expect(find.text('我的 緒言 Preamble'), findsOneWidget);
     expect(find.text('今天的重點動態'), findsOneWidget);
     expect(find.text('我的追蹤總覽'), findsOneWidget);
     expect(find.textContaining('詐欺與洗錢'), findsWidgets);
@@ -686,7 +672,7 @@ void main() {
   ) async {
     SharedPreferences.setMockInitialValues({});
     _setMvpPhoneSize(tester);
-    final appState = LawAppState();
+    final appState = PreambleState();
     addTearDown(appState.dispose);
     await appState.load();
 
@@ -709,7 +695,7 @@ void main() {
   ) async {
     SharedPreferences.setMockInitialValues({});
     _setMvpPhoneSize(tester);
-    final appState = LawAppState();
+    final appState = PreambleState();
     addTearDown(appState.dispose);
     await appState.load();
 
@@ -748,14 +734,12 @@ void main() {
     expect(find.text('刑法 第 339 條'), findsOneWidget);
     expect(find.text('進階查詢路徑'), findsOneWidget);
 
-    // 台灣繁體中文教學註解：
     // 搜尋結果頁的頂部分類要能真的切換資料，不只是視覺上的 tab。
     await tester.tap(find.text('案件').first);
     await tester.pumpAndSettle();
 
     expect(find.textContaining('詐欺案'), findsAtLeastNWidgets(1));
 
-    // 台灣繁體中文教學註解：
     // 結果頁沒有大標題列時，仍要保留回主搜尋頁的路徑，避免使用者卡在子頁。
     await tester.tap(find.byIcon(Icons.arrow_back_ios_new_rounded).first);
     await tester.pumpAndSettle();
@@ -769,7 +753,7 @@ void main() {
   ) async {
     SharedPreferences.setMockInitialValues({});
     _setMvpPhoneSize(tester);
-    final appState = LawAppState();
+    final appState = PreambleState();
     addTearDown(appState.dispose);
     await appState.load();
     final repository = StatuteRepository(
@@ -825,7 +809,7 @@ void main() {
   ) async {
     SharedPreferences.setMockInitialValues({});
     _setMvpPhoneSize(tester);
-    final appState = LawAppState();
+    final appState = PreambleState();
     addTearDown(appState.dispose);
     await appState.load();
 
@@ -859,7 +843,7 @@ void main() {
   ) async {
     SharedPreferences.setMockInitialValues({});
     _setMvpPhoneSize(tester);
-    final appState = LawAppState();
+    final appState = PreambleState();
     addTearDown(appState.dispose);
     await appState.load();
 
@@ -868,7 +852,6 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    // 台灣繁體中文教學註解：
     // 案件時光機的核心不是列表，而是「館 → 書架 → 書 → 卷宗」；
     // 這個測試守住完整沉浸式路徑，避免未來重構退回普通卡片清單。
     expect(find.text('案件圖書館'), findsOneWidget);
@@ -881,7 +864,6 @@ void main() {
     await tester.tap(find.text('查看案件').first);
     await tester.pumpAndSettle();
 
-    // 台灣繁體中文教學註解：
     // 在一體化滾動的直向版面上，我們需要向上滑動以露出 TabBar 與 tab 內容。
     // 使用垂直方向的 Scrollable 作為拖曳對象，確保正確滾動外層的 NestedScrollView。
     final verticalScrollable = find
@@ -916,7 +898,7 @@ void main() {
       tester.view.resetDevicePixelRatio();
       tester.view.resetPhysicalSize();
     });
-    final appState = LawAppState();
+    final appState = PreambleState();
     addTearDown(appState.dispose);
     await appState.load();
     final hall = caseTimeMachineHalls.first;
@@ -928,7 +910,6 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    // 台灣繁體中文教學註解：
     // 橫向模式下，先驗證首頁核心摘要資訊有正確渲染出來。
     expect(find.text('事件摘要'), findsOneWidget);
 
@@ -958,19 +939,18 @@ void main() {
   });
 
   test('Life trap notes and loading quotes have enough content', () {
-    // 台灣繁體中文教學註解：
     // 這個測試守住首頁與子頁的內容量，避免未來整理 mock data 時不小心刪太多。
     expect(homeNewsletterItems.length, greaterThanOrEqualTo(500));
     expect(appLoadingQuotes.length, 200);
   });
 }
 
-Widget _mvpTestFrame(LawAppState appState, Widget child) {
+Widget _mvpTestFrame(PreambleState appState, Widget child) {
   return ScreenUtilInit(
     designSize: const Size(375, 812),
     minTextAdapt: true,
     splitScreenMode: true,
-    builder: (_, __) => LawAppScope(
+    builder: (_, __) => PreambleScope(
       state: appState,
       child: MaterialApp(home: child),
     ),
@@ -990,7 +970,6 @@ class _WidgetFakeStatuteApiService extends StatuteApiService {
 }
 
 void _setMvpPhoneSize(WidgetTester tester) {
-  // 台灣繁體中文教學註解：
   // MVP 頁面大量使用手機版卡片與底部 CTA，測試時固定成常見手機尺寸，
   // 才能避免預設 800x600 桌面視窗誤判「按鈕在畫面外」。
   tester.view.devicePixelRatio = 3.0;

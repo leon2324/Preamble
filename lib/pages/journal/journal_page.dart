@@ -13,7 +13,6 @@ import 'package:lawapp/theme/app_colors.dart';
 
 /// 記事頁。
 ///
-/// 台灣繁體中文教學註解：
 /// 這一版先把記事定位成「社會事件到案件資料館」的入口，
 /// 主頁只負責展示趨勢、策展角度與資料館動態；子頁與搜尋流程之後再接。
 /// 版型刻意承襲首頁的柔和卡片語言，但用案件圖書館做出記事頁自己的記憶感。
@@ -122,7 +121,6 @@ class _JournalPageState extends State<JournalPage> {
                   },
                 )
               else ...[
-                // 台灣繁體中文教學註解：
                 // 沒有搜尋字時仍維持原本策展首頁；一旦從全站搜尋帶 query 進來，
                 // 這裡會切成前端資料結果，清楚告訴使用者目前查的是已整理資料。
                 DiscussingNowSection(palette: palette),

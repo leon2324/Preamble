@@ -70,7 +70,6 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
     }
   }
 
-  // 台灣繁體中文教學註解：
   // 類別→顏色對照表，更新為 8 大真實裁判類別，並套用莫蘭迪色系
   static const Map<String, Color> _categoryColorMap = {
     '車禍賠償': Color(0xFF4A7C8C),
@@ -83,7 +82,6 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
     '傷害': Color(0xFF7A3535),
   };
 
-  // 台灣繁體中文教學註解：
   // 主題分頁→表情符號前綴對照表，更新為真實類別圖示
   static const Map<String, String> _themeEmojiMap = {
     '車禍賠償': '🚗 ',
@@ -96,7 +94,6 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
     '傷害': '🩹 ',
   };
 
-  /// 台灣繁體中文教學註解：
   /// 根據案件類別取得對應的莫蘭迪色系強調色。
   /// 若類別不在對照表中，則回傳主題色 primaryGreen 作為預設值。
   Color _getCategoryAccentColor(String category) {
@@ -157,7 +154,6 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
           child: Column(
             children: [
               // Top App Bar
-              // 台灣繁體中文教學註解：
               // 為了在各種尺寸螢幕上保持標題置中，此處將 Row 佈局重構為 Stack。
               // 使用 Positioned 定位返回按鈕與搜尋按鈕，以確保中間的標題文字不偏斜。
               // 滿版寬度能避免 Stack 依標題縮小，讓左右操作鍵真正靠近 AppBar 邊界。

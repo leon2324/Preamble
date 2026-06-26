@@ -78,7 +78,6 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
     final sansFont = pw.Font.ttf(sansData);
     final document = pw.Document();
 
-    // 台灣繁體中文教學註解：
     // PDF 套件預設字型不含完整繁中文字，因此明確載入專案內建的思源字型。
     // 這樣分享出去的書狀 PDF 才能在 iOS 預覽、郵件與列印流程中穩定顯示繁中。
     document.addPage(
@@ -109,7 +108,7 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           children: [
             pw.Text(
-              'LawApp 書狀草稿',
+              '緒言 Preamble 書狀草稿',
               style: pw.TextStyle(
                 font: sansFont,
                 fontSize: 9,
@@ -144,7 +143,7 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
           ),
           pw.SizedBox(height: 18),
           pw.Text(
-            '法律資訊提醒：本文件為使用者在 LawApp 中整理之書狀草稿，內容僅供學習與資訊整理參考，不構成法律意見。如涉及實際個案，請諮詢合格律師或相關專業人士。',
+            '法律資訊提醒：本文件為使用者在 緒言 Preamble 中整理之書狀草稿，內容僅供學習與資訊整理參考，不構成法律意見。如涉及實際個案，請諮詢合格律師或相關專業人士。',
             style: pw.TextStyle(
               font: sansFont,
               fontSize: 9.5,
@@ -169,7 +168,6 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
     });
     HapticFeedback.mediumImpact();
 
-    // 台灣繁體中文教學註解：
     // 匯出流程只負責產生 PDF bytes 並交給系統分享面板，不自行承諾已存到下載資料夾。
     // 這能保留正式產品的真實性，也避免額外檔案權限與平台路徑差異。
     await Future.delayed(const Duration(milliseconds: 600));
@@ -187,7 +185,6 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
       _exportStepText = '正在載入繁中文字型並排版書狀內容...';
     });
 
-    // 台灣繁體中文教學註解：
     // 分兩個 try/catch 層，精準區分「PDF bytes 產生失敗」與「share sheet 失敗」，
     // 避免使用者取消分享或模擬器 share sheet 問題被誤判為 PDF 產生失敗。
     Uint8List pdfBytes;
@@ -537,7 +534,6 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
                       ),
                     ),
                     SizedBox(width: 12.w),
-                    // 台灣繁體中文教學註解：
                     // PDF 匯出由 pdf 產生 bytes，再交給 printing 開啟系統分享。
                     // 沒有在這裡保留圖片匯出入口，避免正式版出現尚未實作的格式宣稱。
                     Expanded(

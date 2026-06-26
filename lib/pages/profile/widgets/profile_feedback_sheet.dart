@@ -7,7 +7,7 @@ import 'package:lawapp/theme/app_colors.dart';
 class FeedbackSheet extends StatefulWidget {
   const FeedbackSheet({super.key, required this.appState});
 
-  final LawAppState appState;
+  final PreambleState appState;
 
   @override
   State<FeedbackSheet> createState() => _FeedbackSheetState();

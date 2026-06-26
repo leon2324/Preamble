@@ -5,7 +5,6 @@ import 'package:lawapp/features/case_time_machine/models/case_time_machine_model
 import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
 
-// 台灣繁體中文教學註解：
 // 「觀點光譜」互動頁面 (CaseOpinionSpectrumPage)
 // 本頁面提供一條橫向色彩漸層的光譜滑軌，標示著社會與司法對該案件的多重論點節點。
 // 使用者可以左右滑動指標了解不同區段的法理見解，並能「投下一票」揭示大眾投票分佈的 Bezier 曲線圖，
@@ -49,7 +48,6 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
     super.dispose();
   }
 
-  // 台灣繁體中文教學註解：
   // 定義案件在光譜上的三個關鍵點：左側（反對/嚴懲/程序派）、中間（中立/折衷/衡平派）、右側（支持/保護/實質派）。
   List<Map<String, dynamic>> _getNodes() {
     if (widget.book.id == '318') {
@@ -520,7 +518,6 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
 ''';
 }
 
-// 台灣繁體中文教學註解：
 // 自訂畫筆 (_SpectrumDistributionPainter)
 // 利用貝茲曲線 (Bezier Curve) 描繪大眾投票的波峰分佈。
 // 針對 318 案繪製雙峰分佈波形 (Bimodal Distribution)，其他案件則繪製單峰分佈波形，

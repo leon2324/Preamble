@@ -109,7 +109,6 @@ class LawCaseSourceLink {
 
 /// 正式案件資料模型。
 ///
-/// 台灣繁體中文教學註解：
 /// 舊的 CaseStoryItem 偏 UI 示範；LawCase 是資料庫與後端要對齊的 MVP 模型，
 /// 欄位包含來源、是否 mock、隱私層級與可供搜尋/篩選的 era/category/tags。
 class LawCase {

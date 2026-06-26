@@ -17,8 +17,8 @@ import 'package:lawapp/data/user/law_app_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  test('LawAppUser parses quota and access tier', () {
-    final user = LawAppUser.fromJson({
+  test('緒言 PreambleUser parses quota and access tier', () {
+    final user = PreambleUser.fromJson({
       'id': 'u1',
       'displayName': '小明',
       'email': 'ming@example.test',
@@ -30,14 +30,14 @@ void main() {
       'savedCaseIds': ['case-a'],
     });
 
-    expect(user.accessTier, LawAppAccessTier.subscriber);
+    expect(user.accessTier, PreambleAccessTier.subscriber);
     expect(user.remainingAiQuota, 197);
     expect(user.savedCaseIds, ['case-a']);
   });
 
-  test('LawAppState centralizes permissions', () async {
+  test('緒言 PreambleState centralizes permissions', () async {
     SharedPreferences.setMockInitialValues({});
-    final appState = LawAppState(authService: DemoAuthService());
+    final appState = PreambleState(authService: DemoAuthService());
     addTearDown(appState.dispose);
 
     await appState.load();
@@ -110,7 +110,7 @@ void main() {
           type: SearchResultType.assistant,
           destination: 'assistant',
           score: 10,
-          source: 'LawApp',
+          source: '緒言 Preamble',
           updatedAt: DateTime(2026, 5, 5),
           tags: const ['押金'],
         ),
@@ -139,7 +139,6 @@ void main() {
     final fraudResults = await repository.searchJournal('詐騙');
     final publicSafetyResults = await repository.searchJournal('公共安全');
 
-    // 台灣繁體中文教學註解：
     // 記事搜尋同時涵蓋首頁趨勢、資料館動態與案件時光機書籍；
     // 這裡守住資料層索引，避免之後 UI 各自重新實作關鍵字比對。
     expect(fraudResults.map((item) => item.title), contains('詐騙車手與洗錢鏈'));
@@ -168,8 +167,7 @@ void main() {
     expect(draft.isMock, isTrue);
     expect(draft.content, contains('消費爭議'));
     expect(draft.disclaimer, contains('不構成正式法律意見'));
-    // 台灣繁體中文教學註解：
-    // 工具箱與「我的 LawApp」都讀同一個 repository 清單；這裡守住建立後會立刻
+    // 工具箱與「我的 Preamble」都讀同一個 repository 清單；這裡守住建立後會立刻
     // 寫進前端共用資料來源，避免兩個頁面又各自長出一份草稿假資料。
     expect(repository.drafts.map((item) => item.id), contains(draft.id));
     expect(repository.backendStatusLabel, contains('本機暫存模式'));

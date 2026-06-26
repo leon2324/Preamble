@@ -18,7 +18,6 @@ class AchievementBadgeWall extends StatelessWidget {
 
   final LearningGameState gameState;
 
-  // 台灣繁體中文教學註解：
   // 徽章資料同時保留色票與圖片路徑；色票負責解鎖卡片的底色，
   // 圖片則是主要視覺，日後要替換徽章只需要換 asset 或更新這份清單。
   static final List<Map<String, dynamic>> _badgesInfo = [
@@ -218,7 +217,6 @@ class AchievementBadgeWall extends StatelessWidget {
 
     if (isUnlocked) return image;
 
-    // 台灣繁體中文教學註解：
     // 未解鎖狀態不另外準備灰色圖片，直接用灰階濾鏡處理同一張 asset，
     // 之後新增徽章時只要補彩色版即可維持一致的鎖定樣式。
     return Opacity(

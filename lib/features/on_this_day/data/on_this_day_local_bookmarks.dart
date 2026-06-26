@@ -1,6 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-// 台灣繁體中文教學註解：
 // 「歷史上的今天」收藏屬於個人偏好資料；在沒有正式 Auth + RLS 前，
 // 只保存於本機 SharedPreferences，避免把個人閱讀偏好寫入雲端。
 class OnThisDayLocalBookmarks {

@@ -35,7 +35,6 @@ class CaseShelfPage extends StatelessWidget {
           final contentPadding = EdgeInsets.fromLTRB(20.w, 70.h, 20.w, 32.h);
 
           if (isLandscapeLibrary) {
-            // 台灣繁體中文教學註解：
             // 橫向模式不把直式 UI 硬拉寬，而是改成 Prototype 指定的
             // 左側「案件書架牆」＋右側「完整案件資訊卡」雙欄閱讀。
             return ListView(
@@ -103,7 +102,6 @@ class _CaseInfoColumn extends StatelessWidget {
       children: [
         Text('案件資訊卡', style: CaseTimeMachineTextStyles.sectionTitle(context)),
         SizedBox(height: CaseTimeMachineSpacing.spaceM.h),
-        // 台灣繁體中文教學註解：
         // 書脊負責營造「抽書」氛圍，完整中文／英文案名則放在資訊卡；
         // 這樣可同時保留沉浸感，也能支援未來較長的雙語案件名稱。
         for (final book in books) ...[

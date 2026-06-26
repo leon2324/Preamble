@@ -21,7 +21,7 @@ class MainActivity: FlutterActivity() {
             when (call.method) {
                 "shareText" -> {
                     val text = call.argument<String>("text")
-                    val title = call.argument<String>("title") ?: "LawApp"
+                    val title = call.argument<String>("title") ?: "緒言 Preamble"
                     if (text.isNullOrBlank()) {
                         result.error(
                             "invalid_share_text_payload",
@@ -41,9 +41,9 @@ class MainActivity: FlutterActivity() {
                 }
 
                 "shareTipCard" -> {
-                    val title = call.argument<String>("title") ?: "LawApp 生活避坑筆記"
+                    val title = call.argument<String>("title") ?: "緒言 Preamble 生活避坑筆記"
                     val summary = call.argument<String>("summary") ?: ""
-                    val source = call.argument<String>("source") ?: "LawApp"
+                    val source = call.argument<String>("source") ?: "緒言 Preamble"
                     val sendIntent = Intent(Intent.ACTION_SEND).apply {
                         type = "text/plain"
                         putExtra(Intent.EXTRA_SUBJECT, title)

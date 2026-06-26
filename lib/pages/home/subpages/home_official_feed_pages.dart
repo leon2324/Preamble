@@ -12,7 +12,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 /// 法務部公開資料列表頁。
 ///
-/// 台灣繁體中文教學註解：
 /// 首頁「今日新聞」與官方最新消息類入口會導到這裡，差別只在 category。
 /// 這樣之後若改成後端 RAG/資料庫同步，只要替換 MojFeedService 即可。
 class OfficialFeedPage extends StatefulWidget {
@@ -121,7 +120,6 @@ class _OfficialFeedPageState extends State<OfficialFeedPage> {
 
 /// 官方清單項目的輕量詳細頁。
 ///
-/// 台灣繁體中文教學註解：
 /// App 先顯示來源、標題與風險提醒，完整附件或修正理由仍以官方頁面為準；
 /// 這能避免在前端硬解析每種政府頁面，同時保留可追溯來源。
 class OfficialFeedDetailPage extends StatelessWidget {

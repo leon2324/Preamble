@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-// 台灣繁體中文教學註解：
 // 這個 widget 是案件討論室的觀點光譜摘要卡，只負責展示三種立場的代表留言。
 // 它不擁有 controller、route、投票或留言寫入狀態；主頁仍負責資料來源與頁面流程。
 class CaseNetizenPerspectiveSpectrumCard extends StatelessWidget {
@@ -18,7 +17,6 @@ class CaseNetizenPerspectiveSpectrumCard extends StatelessWidget {
     final neutral = _topCommentForStance(comments, '中立派');
     final opposition = _topCommentForStance(comments, '不合理派');
 
-    // 台灣繁體中文教學註解：
     // 觀點光譜把留言串先整理成「程序正義／中間思考／社會法感」三個閱讀入口。
     // 使用者不用先被大量留言淹沒，也能快速理解本案討論的主要分歧。
     return Container(

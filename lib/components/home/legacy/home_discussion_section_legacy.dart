@@ -22,11 +22,9 @@ class HomeDiscussionSection extends StatefulWidget {
   final VoidCallback onMoreTap;
   final HomeDiscussionFeed feed;
 
-  /// 台灣繁體中文教學註解：
   /// 這個開關讓新版首頁可以沿用舊討論內容，但把標題列交給新版 section header 統一處理。
   final bool showHeader;
 
-  /// 台灣繁體中文教學註解：
   /// 記事頁的 Bottom Sheet 會指定要先展開哪一則議題；
   /// 保留 nullable 是為了首頁維持原本「預設不展開」的互動。
   final int? initialExpandedIndex;

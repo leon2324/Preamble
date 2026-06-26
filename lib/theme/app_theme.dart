@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lawapp/theme/app_colors.dart';
 
-/// LawApp 全域 Theme 建構器。
+/// Preamble 全域 Theme 建構器。
 ///
-/// 台灣繁體中文教學註解：
 /// Theme 的顏色、字體與 Material 基礎樣式集中在這裡；`main.dart` 只負責套用，
 /// 避免 App 殼層同時承擔主題細節與分頁狀態管理。
 class AppTheme {
@@ -45,7 +44,6 @@ class AppTheme {
   }
 
   static ThemeData dark() {
-    // 台灣繁體中文教學註解：
     // 深色主題先處理全域背景、文字與 Material 元件基礎色；
     // 部分既有首頁插畫卡片仍保留品牌色，避免一鍵深色後失去首頁識別。
     const darkBackground = Color(0xFF0F1216);

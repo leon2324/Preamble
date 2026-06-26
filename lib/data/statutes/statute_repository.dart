@@ -15,7 +15,6 @@ class StatuteSearchResult {
 
 /// 法規資料 repository。
 ///
-/// 台灣繁體中文教學註解：
 /// API service 只負責抓 MOJ 原始資料；搜尋、快取、mock fallback 放在 repository，
 /// 讓 UI 可以穩定處理 loading/error/empty，而不是每個頁面自己 try/catch。
 class StatuteRepository {

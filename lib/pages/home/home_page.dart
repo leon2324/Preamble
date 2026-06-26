@@ -18,7 +18,6 @@ import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_da
 
 /// 新版首頁。
 ///
-/// 台灣繁體中文教學註解：
 /// 這個版本承接先前 prototype 的方向，已拆成多個 v2 元件檔案，
 /// 之後若要逐步接 API、補上會員狀態與互動流程，可以從各 section 分別替換。
 class HomePage extends StatefulWidget {
@@ -42,7 +41,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _openLaborUpdate() {
-    // 台灣繁體中文教學註解：
     // 首頁上方的綠色新上架快訊是法規內容入口，不是純展示 banner；
     // 目前先帶入勞基法加班費查詢字串，之後接後台時可改成 ticker item 自帶 deep link。
     Navigator.of(context).push(
@@ -53,7 +51,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _openFollowingUpdates() {
-    // 台灣繁體中文教學註解：
     // 「早安」卡片的法律更新摘要要能回到完整清單；這裡直接開啟追蹤頁的更新分頁，
     // 讓使用者從首頁看到數字後，有明確地方可以驗收與繼續閱讀。
     Navigator.of(context).push(
@@ -84,7 +81,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _openProfilePage() {
-    // 台灣繁體中文教學註解：
     // 首頁的「我的」現在直接開會員頁，不再依賴底部第 5 個 tab；
     // 這樣底部導覽可以改成新的「追蹤」，同時保留原本會員功能入口。
     Navigator.of(context).push(
@@ -95,7 +91,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _openQuickSettingsPanel() {
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
@@ -506,7 +502,6 @@ class _HomePageState extends State<HomePage> {
                           const HomeV2WatchlistCard(),
                           SizedBox(height: 18.h),
                           SizedBox(
-                            // 台灣繁體中文教學註解：
                             // iPhone SE 寬度較窄，雙卡內容容易因字級換算被壓縮；
                             // 這裡只加一點固定高度，不改 Prototype 的卡片比例與視覺語言。
                             height: dailyDockHeight,
@@ -520,7 +515,6 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           SizedBox(height: 18.h),
-                          // 台灣繁體中文教學註解：
                           // MAIC Demo 的主線是「快問 → 今日判決 → 法規搜尋」；
                           // 因此法規資料庫放在工具捷徑前，之後接 Spotlight 深連結時也較自然。
                           HomeV2LawDatabaseCard(

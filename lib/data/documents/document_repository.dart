@@ -86,7 +86,6 @@ class DocumentRepository extends ChangeNotifier {
     bool advanced = false,
     String? title,
   }) async {
-    // 台灣繁體中文教學註解：
     // UI 只呼叫 repository 建立草稿；若設定 `LAWAPP_API_BASE_URL` 就交給
     // `/documents/drafts` 後端產生並保存，否則落回同一份本機記憶體清單。
     // AI provider key、prompt 組合與正式資料庫寫入都應放在後端，不放 Flutter 端。
@@ -280,7 +279,6 @@ class DocumentRepository extends ChangeNotifier {
         message = decoded['message'].toString();
       }
     } catch (__) {
-      // 台灣繁體中文教學註解：
       // 後端錯誤格式可能隨部署版本變動，解析失敗時保留預設文案讓 UI 可讀。
     }
 

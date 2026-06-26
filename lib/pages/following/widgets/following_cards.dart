@@ -1,13 +1,12 @@
 part of '../following_page.dart';
 
-// 台灣繁體中文教學註解：
 // 這個 part 檔集中放追蹤頁的卡片、列表 tile 與小型展示 helper。
 // 事件處理都透過 callback 傳入，不在這裡修改追蹤、收藏或 AppState 邏輯。
 
 class _MemberCard extends StatelessWidget {
   const _MemberCard({required this.appState, required this.onPlan});
 
-  final LawAppState appState;
+  final PreambleState appState;
   final VoidCallback onPlan;
 
   @override
@@ -58,7 +57,7 @@ class _MemberCard extends StatelessWidget {
 class _PlanInfoCard extends StatelessWidget {
   const _PlanInfoCard({required this.appState, required this.onPlan});
 
-  final LawAppState appState;
+  final PreambleState appState;
   final VoidCallback onPlan;
 
   @override

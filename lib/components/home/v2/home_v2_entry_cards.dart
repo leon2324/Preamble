@@ -14,7 +14,6 @@ class HomeV2AiAssistantCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 台灣繁體中文教學註解：
     // 首頁這張卡只扮演「導到小法助入口」的角色，實際提問、guest 次數限制
     // 與後端設定判斷都集中在小法助主流程，避免日後維護兩套流程。
     return Material(
@@ -235,7 +234,6 @@ class HomeV2MmpFeatureStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 台灣繁體中文教學註解：
     // 這排是首頁進入完整 MMP 的三個主入口，對應「解決問題、看記事、管理權限」。
     // 之後若新增正式文件 API 或收藏 API，優先從各入口進到專頁，不把首頁塞成工具頁。
     final items = [
@@ -302,7 +300,6 @@ class _MmpFeatureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 台灣繁體中文教學註解：
     // 這張卡目前會被用在首頁的三個主入口上，因此改用 InkWell + Ink 的標準組合，
     // 可以讓點擊命中區與圓角背景完全一致，降低日後調整版型時出現「看得到但點不到」的風險。
     return Material(
@@ -370,7 +367,6 @@ class HomeV2LawDatabaseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 台灣繁體中文教學註解：
     // 這張卡是 MAIC Demo 的 Spotlight 落地入口候選；
     // 未來 iOS 端把法條與案例索引到 Core Spotlight 後，可直接深連結回這個搜尋流程。
     return InkWell(

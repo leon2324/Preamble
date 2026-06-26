@@ -4,7 +4,6 @@ import 'package:lawapp/data/law_assistant/law_assistant_models.dart';
 
 /// 小法助資料存取層。
 ///
-/// 台灣繁體中文教學註解：
 /// UI 不直接判斷「要打後端還是 mock」，全部交給 repository；
 /// 這樣後端尚未設定時 App 仍可展示完整流程，而且不會把 AI provider key 放在 Flutter。
 class LawAssistantRepository {
@@ -154,7 +153,7 @@ final _mockCitations = [
     updatedAt: DateTime(2026, 1, 1),
   ),
   LawAssistantCitation(
-    title: 'LawApp 示範回答模板',
+    title: '緒言 Preamble 示範回答模板',
     sourceType: LawAssistantCitationSourceType.other,
     updatedAt: DateTime(2026, 5, 5),
   ),

@@ -3,10 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/app/app_state.dart';
 import 'package:lawapp/theme/app_colors.dart';
 
-/// 台灣繁體中文教學註解：
 /// 本元件為個人資料編輯底頁 (ProfileEditorSheet)。
 /// 使用 StatefulWidget 暫存使用者在介面上的臨時選擇（如新暱稱、新頭像 ID），
-/// 當使用者點擊「儲存」時，才一次性呼叫 `LawAppState.updateUserProfile` 進行狀態寫入與 SharedPreferences 持久化。
+/// 當使用者點擊「儲存」時，才一次性呼叫 `PreambleState.updateUserProfile` 進行狀態寫入與 SharedPreferences 持久化。
 class PresetAvatar {
   const PresetAvatar({
     required this.id,
@@ -70,7 +69,7 @@ PresetAvatar getAvatarById(String? id) {
 class ProfileEditorSheet extends StatefulWidget {
   const ProfileEditorSheet({super.key, required this.appState});
 
-  final LawAppState appState;
+  final PreambleState appState;
 
   @override
   State<ProfileEditorSheet> createState() => _ProfileEditorSheetState();
@@ -289,7 +288,7 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
             ),
             SizedBox(height: 20.h),
 
-            // 台灣繁體中文教學註解：身分設定下拉選單
+            // 身分設定下拉選單
             Text(
               '專業身分',
               style: TextStyle(
@@ -338,7 +337,7 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
             ),
             SizedBox(height: 20.h),
 
-            // 台灣繁體中文教學註解：AI 對答風格自訂卡片
+            // AI 對答風格自訂卡片
             Text(
               '小法助對話風格',
               style: TextStyle(

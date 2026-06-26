@@ -1,6 +1,5 @@
 part of '../global_search_page.dart';
 
-// 台灣繁體中文教學註解：
 // 本檔集中放搜尋詳情頁會共用的輔助展示 UI，例如情境追問、語音朗讀、裁判時間軸與關聯法條。
 // 搜尋 state、route 切換與 repository 呼叫仍留在 GlobalSearchPage 或詳情頁本體，避免 UI 拆分改變資料流程。
 

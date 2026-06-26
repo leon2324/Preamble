@@ -17,7 +17,6 @@ class _CaseWitnessCrossPageState extends State<CaseWitnessCrossPage> {
   final List<Map<String, dynamic>> _chatMessages = [];
   final ScrollController _scrollController = ScrollController();
 
-  // 台灣繁體中文教學註解：
   // 針對不同角色預設 3 個最具交鋒張力的「快捷詰問金句」
   final Map<String, List<String>> _quickQuestions = {
     '被告': [
@@ -79,7 +78,6 @@ class _CaseWitnessCrossPageState extends State<CaseWitnessCrossPage> {
     });
   }
 
-  // 台灣繁體中文教學註解：
   // 模擬 AI 根據角色立場與案件事實產生擬真、有建設性的第一人稱回答
   void _sendQuestion(String text) {
     setState(() {

@@ -23,7 +23,6 @@ class AppColors {
   static const primary = Color(0xFF243B63);
   static const primarySoft = Color(0xFF31486F);
 
-  // 台灣繁體中文教學註解：
   // 動態 Accent 品牌色彩選擇器。
   // 0: 金色 (預設), 1: 典雅酒紅, 2: 正義深藍, 3: 森林草綠。
   static int accentColorIndex = 0;

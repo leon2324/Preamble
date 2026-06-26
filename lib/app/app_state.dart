@@ -8,18 +8,17 @@ import 'package:lawapp/data/following/following_models.dart';
 import 'package:lawapp/data/law_assistant/law_assistant_api_service.dart';
 import 'package:lawapp/data/user/law_app_access_tier.dart';
 import 'package:lawapp/data/user/law_app_user.dart';
-import 'package:lawapp/theme/app_colors.dart'; // 台灣繁體中文教學註解：匯入色票以利動態設定主題色 index
+import 'package:lawapp/theme/app_colors.dart'; // 匯入色票以利動態設定主題色 index
 import 'package:shared_preferences/shared_preferences.dart';
 
 export 'package:lawapp/data/user/law_app_access_tier.dart';
 
 /// App 層級狀態：會員層級、深色模式與後端 token 預留點。
 ///
-/// 台灣繁體中文教學註解：
 /// 第一版先用 SharedPreferences 保存 demo 狀態，讓 UI 可以完整演示三種權限；
 /// 之後要接 Firebase Auth、Sign in with Apple、Google 登入或正式訂閱，只要把
 /// `signInDemo` / `activateSubscriberDemo` 改成真正的 SDK 呼叫即可。
-class LawAppState extends ChangeNotifier implements AuthTokenProvider {
+class PreambleState extends ChangeNotifier implements AuthTokenProvider {
   static const _tierKey = 'lawAppAccessTier';
   static const _darkModeKey = 'lawAppDarkMode';
   static const _demoTokenKey = 'lawAppDemoToken';
@@ -34,14 +33,14 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
   static const _showNavbarLabelsKey = 'lawAppShowNavbarLabels';
   static const _accentColorIndexKey = 'lawAppAccentColorIndex';
 
-  LawAppState({AuthService? authService})
+  PreambleState({AuthService? authService})
       : _authService = authService ?? DemoAuthService() {
     documentRepository = DocumentRepository(authTokenProvider: this);
     documentRepository.addListener(notifyListeners);
   }
 
-  LawAppAccessTier _accessTier = LawAppAccessTier.guest;
-  LawAppUser _currentUser = LawAppUser.guest();
+  PreambleAccessTier _accessTier = PreambleAccessTier.guest;
+  PreambleUser _currentUser = PreambleUser.guest();
   final AuthService _authService;
   late final DocumentRepository documentRepository;
   bool _isDarkMode = false;
@@ -57,13 +56,13 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
   bool _showNavbarLabels = true;
   int _accentColorIndex = 0;
 
-  LawAppAccessTier get accessTier => _accessTier;
-  LawAppUser get currentUser => _currentUser;
+  PreambleAccessTier get accessTier => _accessTier;
+  PreambleUser get currentUser => _currentUser;
   bool get isLoaded => _isLoaded;
   bool get isDarkMode => _isDarkMode;
-  bool get isGuest => _accessTier == LawAppAccessTier.guest;
-  bool get isSignedIn => _accessTier != LawAppAccessTier.guest;
-  bool get isSubscriber => _accessTier == LawAppAccessTier.subscriber;
+  bool get isGuest => _accessTier == PreambleAccessTier.guest;
+  bool get isSignedIn => _accessTier != PreambleAccessTier.guest;
+  bool get isSubscriber => _accessTier == PreambleAccessTier.subscriber;
   double get fontSizeScale => _fontSizeScale;
   String get notifyFrequency => _notifyFrequency;
   String get notifyChannel => _notifyChannel;
@@ -111,9 +110,9 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
     try {
       final preferences = await SharedPreferences.getInstance();
       final tierName = preferences.getString(_tierKey);
-      _accessTier = LawAppAccessTier.values.firstWhere(
+      _accessTier = PreambleAccessTier.values.firstWhere(
         (tier) => tier.name == tierName,
-        orElse: () => LawAppAccessTier.guest,
+        orElse: () => PreambleAccessTier.guest,
       );
       _isDarkMode = preferences.getBool(_darkModeKey) ?? false;
       _authToken = preferences.getString(_demoTokenKey);
@@ -151,14 +150,13 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
       _showNavbarLabels = preferences.getBool(_showNavbarLabelsKey) ?? true;
       _accentColorIndex = preferences.getInt(_accentColorIndexKey) ?? 0;
       AppColors.accentColorIndex =
-          _accentColorIndex; // 台灣繁體中文教學註解：載入時同步給 AppColors 設定動態主題色
+          _accentColorIndex; // 載入時同步給 AppColors 設定動態主題色
       await documentRepository.fetchDrafts();
     } on MissingPluginException {
-      // 台灣繁體中文教學註解：
       // Widget test 或 hot restart 的 plugin 註冊空窗期可能取不到偏好設定；
       // 這裡回退成訪客狀態，讓 App 不會因本機儲存尚未就緒而無法啟動。
-      _accessTier = LawAppAccessTier.guest;
-      _currentUser = LawAppUser.guest();
+      _accessTier = PreambleAccessTier.guest;
+      _currentUser = PreambleUser.guest();
       _isDarkMode = false;
       _authToken = null;
       _savedCaseIds.clear();
@@ -251,7 +249,6 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
   }
 
   Future<void> saveCaseNoteDraft(String caseId, String note) async {
-    // 台灣繁體中文教學註解：
     // 案件筆記目前先做「本機草稿」而不是假裝已同步雲端；等會員後端完成後，
     // 只要把這個方法換成 API 呼叫，頁面端的互動狀態就能維持同一套介面。
     final trimmedNote = note.trim();
@@ -283,8 +280,8 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
 
   Future<void> signOut() async {
     await _authService.signOut();
-    _accessTier = LawAppAccessTier.guest;
-    _currentUser = LawAppUser.guest();
+    _accessTier = PreambleAccessTier.guest;
+    _currentUser = PreambleUser.guest();
     _authToken = null;
     await _persist();
     notifyListeners();
@@ -296,7 +293,7 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
     String? profession,
     String? aiStyle,
   }) async {
-    // 台灣繁體中文教學註解：更新使用者的專業身分與 AI 對話偏好，並持久化保存。
+    // 更新使用者的專業身分與 AI 對話偏好，並持久化保存。
     _currentUser = _currentUser.copyWith(
       displayName: displayName ?? _currentUser.displayName,
       avatarUrl: avatarUrl ?? _currentUser.avatarUrl,
@@ -312,7 +309,7 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
     String? notifyFrequency,
     String? notifyChannel,
   }) async {
-    // 台灣繁體中文教學註解：更新字型大小比例、通知頻率與通知管道設定，並寫入本機偏好設定中。
+    // 更新字型大小比例、通知頻率與通知管道設定，並寫入本機偏好設定中。
     _fontSizeScale = fontSizeScale ?? _fontSizeScale;
     _notifyFrequency = notifyFrequency ?? _notifyFrequency;
     _notifyChannel = notifyChannel ?? _notifyChannel;
@@ -325,7 +322,7 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
     bool? showNavbarLabels,
     int? accentColorIndex,
   }) async {
-    // 台灣繁體中文教學註解：更新導覽列順序、文字標籤開關與品牌 Accent 配色索引，並寫入 SharedPreferences 保存。
+    // 更新導覽列順序、文字標籤開關與品牌 Accent 配色索引，並寫入 SharedPreferences 保存。
     _navbarOrder = navbarOrder ?? _navbarOrder;
     _showNavbarLabels = showNavbarLabels ?? _showNavbarLabels;
     if (accentColorIndex != null) {
@@ -390,7 +387,6 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
         );
       }
     } on MissingPluginException {
-      // 台灣繁體中文教學註解：
       // 測試環境無法寫入 SharedPreferences 時保留記憶體狀態即可，
       // 避免因平台 plugin 缺席讓收藏或筆記流程中斷。
     }
@@ -424,8 +420,7 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
         return FollowingSummary.fromJson(decoded);
       }
     } on FormatException {
-      // 台灣繁體中文教學註解：
-      // 本機追蹤資料若因舊版格式壞掉，回到空 summary，避免我的 LawApp 開不起來。
+      // 本機追蹤資料若因舊版格式壞掉，回到空 summary，避免我的 Preamble 開不起來。
     }
     return FollowingSummary.empty();
   }
@@ -444,7 +439,7 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
     }
   }
 
-  LawAppUser _decodeUser(String? rawUser, LawAppAccessTier fallbackTier) {
+  PreambleUser _decodeUser(String? rawUser, PreambleAccessTier fallbackTier) {
     if (rawUser == null || rawUser.isEmpty) {
       return _fallbackUserForTier(fallbackTier);
     }
@@ -452,7 +447,7 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
     try {
       final decoded = jsonDecode(rawUser);
       if (decoded is Map<String, dynamic>) {
-        return LawAppUser.fromJson(decoded);
+        return PreambleUser.fromJson(decoded);
       }
     } on FormatException {
       // 使用者資料壞掉時回退權限層級即可，避免 App 啟動失敗。
@@ -460,14 +455,14 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
     return _fallbackUserForTier(fallbackTier);
   }
 
-  LawAppUser _fallbackUserForTier(LawAppAccessTier tier) {
+  PreambleUser _fallbackUserForTier(PreambleAccessTier tier) {
     switch (tier) {
-      case LawAppAccessTier.guest:
-        return LawAppUser.guest();
-      case LawAppAccessTier.member:
-        return LawAppUser.demoMember();
-      case LawAppAccessTier.subscriber:
-        return LawAppUser.demoSubscriber();
+      case PreambleAccessTier.guest:
+        return PreambleUser.guest();
+      case PreambleAccessTier.member:
+        return PreambleUser.demoMember();
+      case PreambleAccessTier.subscriber:
+        return PreambleUser.demoSubscriber();
     }
   }
 
@@ -479,16 +474,16 @@ class LawAppState extends ChangeNotifier implements AuthTokenProvider {
   }
 }
 
-class LawAppScope extends InheritedNotifier<LawAppState> {
-  const LawAppScope({
+class PreambleScope extends InheritedNotifier<PreambleState> {
+  const PreambleScope({
     super.key,
-    required LawAppState state,
+    required PreambleState state,
     required super.child,
   }) : super(notifier: state);
 
-  static LawAppState of(BuildContext context) {
-    final scope = context.dependOnInheritedWidgetOfExactType<LawAppScope>();
-    assert(scope != null, 'LawAppScope was not found in the widget tree.');
+  static PreambleState of(BuildContext context) {
+    final scope = context.dependOnInheritedWidgetOfExactType<PreambleScope>();
+    assert(scope != null, '緒言 PreambleScope was not found in the widget tree.');
     return scope!.notifier!;
   }
 }

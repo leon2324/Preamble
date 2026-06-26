@@ -50,7 +50,6 @@ const String _svgShareNetwork = '''
 </svg>
 ''';
 
-// 台灣繁體中文教學註解：
 // 生活避坑筆記這次改成「日常故事卡」設計系統。
 // 色彩以暖白紙張、深綠行動色、低飽和藍灰與少量陶土紅組成，
 // 讓使用者感覺是在閱讀生活提醒，而不是硬背法律條文。
@@ -296,7 +295,7 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
     super.didChangeDependencies();
     if (_syncedInitialInteractionState) return;
 
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     _isBookmarked = appState.isArticleSaved(_lifeTipArticleId(widget.item));
     _isFollowing = appState.isTopicFollowed(_lifeTipTopicId(widget.item));
     _syncedInitialInteractionState = true;
@@ -342,7 +341,7 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
     setState(() {
       _isBookmarked = next;
     });
-    await LawAppScope.of(context).setArticleSaved(
+    await PreambleScope.of(context).setArticleSaved(
       _lifeTipArticleId(widget.item),
       next,
     );
@@ -358,7 +357,7 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
     setState(() {
       _isFollowing = next;
     });
-    await LawAppScope.of(context).setTopicFollowed(
+    await PreambleScope.of(context).setTopicFollowed(
       _lifeTipTopicId(widget.item),
       next,
     );
@@ -675,7 +674,6 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
     required String title,
     required String summary,
   }) async {
-    // 台灣繁體中文教學註解：
     // 分享圖卡不再直接宣稱「已儲存至相簿」。iOS 先開 Apple 原生分享面板，
     // 讓使用者在系統選項中自行選擇儲存圖片、AirDrop 或分享到其他 App。
     final openedNativeSheet = await NativeShareBridge.shareTipCard(
@@ -694,10 +692,9 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
   }
 
   Widget _buildBottomNavigationBar(bool isDark, CategoryAesthetics aes) {
-    // 台灣繁體中文教學註解：
     // 生活避坑筆記詳細頁直接共用案件詳情頁同源底欄，且不覆蓋顏色；
     // 避免同一組 NavBar 在案件與筆記詳情頁出現「設計一樣但顏色不同」的維護漂移。
-    return LawAppStoryActionBar(
+    return PreambleStoryActionBar(
       isFollowed: _isFollowing,
       isSaved: _isBookmarked,
       onAskAssistant: () {
@@ -920,7 +917,6 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
   }
 
   Widget _buildInteractionSection(bool isDark, CategoryAesthetics aes) {
-    // 台灣繁體中文教學註解：
     // 這是詳情內頁的「文章互動區」，和首頁入口卡的互動列語意一致。
     // 底部 Nav 偏向下一步操作；這裡則讓使用者對文章本身按讚、留言、分享與儲存。
     return Container(
@@ -1367,7 +1363,6 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
   }
 
   static String _scenarioForTip(HomeNewsletterItem item) {
-    // 台灣繁體中文教學註解：
     // 詳情頁的第一屏要讓使用者先代入「我也可能這樣做」的生活情境，
     // 再往下讀法律風險；這比一開始列法條更容易完成學習轉換。
     if (item.category.contains('養狗') || item.title.contains('狗')) {
@@ -1506,7 +1501,6 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
 }
 
 String _issueHintForTip(HomeNewsletterItem item) {
-  // 台灣繁體中文教學註解：
   // 生活避坑筆記的核心不是「文章分類」，而是讓使用者看見小動作背後的法律風險。
   // 這裡先依既有 mock title/category 推導提示文字，未來可改由 API 直接回傳。
   if (item.category.contains('養狗') || item.title.contains('狗')) {
@@ -1574,7 +1568,6 @@ class _LifeTrapFrozenHeaderDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    // 台灣繁體中文教學註解：
     // 使用 pinned SliverPersistentHeader 模擬試算表「凍結窗格」：
     // 上方返回、標題、搜尋與分類永遠停在可視區，下面的筆記清單獨立滾動。
     final bg = isDark ? const Color(0xFF0F1216) : ProtoColors.lightBg;

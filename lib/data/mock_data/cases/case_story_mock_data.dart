@@ -26,7 +26,6 @@ class CaseStoryItem {
   final String category;
   final String country;
 
-  /// 台灣繁體中文教學註解：
   /// 詳情頁頂端只需要讓使用者快速抓到「何時、何地」；
   /// 先用可讀字串，未來若要排序或篩選再拆成 DateTime 與地點代碼。
   final String occurredAt;
@@ -43,7 +42,6 @@ class CaseStoryItem {
   final List<String> sources;
   final Color accentColor;
 
-  /// 台灣繁體中文教學註解：
   /// 目前案件資料仍是 mock，但收藏與筆記已經會寫入本機；
   /// 用標題與案號組成穩定 ID，之後後端補正式 caseId 時只要改這個 getter。
   String get storageId => '${title}__$caseNumber';
@@ -61,7 +59,6 @@ class CaseTimelineItem {
 
 /// 記事頁社會案件示範資料。
 ///
-/// 台灣繁體中文教學註解：
 /// 這裡故意用「社會案件整理」的語氣，而不是只放裁判書標題；
 /// 目標使用者包含愛看犯罪 Podcast、調查節目與社會新聞回顧的人，
 /// 所以每筆資料都要有時間線、法律爭點與可繼續追的觀察點。

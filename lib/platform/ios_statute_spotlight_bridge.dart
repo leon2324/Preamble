@@ -5,7 +5,6 @@ typedef StatuteSpotlightQueryHandler = void Function(String query);
 
 /// iOS Core Spotlight 法規資料庫橋接層。
 ///
-/// 台灣繁體中文教學註解：
 /// Flutter 負責整理「哪些法條值得被系統搜尋」，iOS 原生端負責把資料寫進
 /// Core Spotlight。這樣法規資料庫可以出現在 iPhone 搜尋結果中，又不需要
 /// 讓 Spotlight 直接理解 Flutter 頁面或 Dart model。
@@ -26,11 +25,9 @@ class IosStatuteSpotlightBridge {
         <String, Object>{'items': _defaultSpotlightItems},
       );
     } on MissingPluginException {
-      // 台灣繁體中文教學註解：
       // 測試環境或 Android 不會註冊 iOS Spotlight channel；這是加分入口，
       // 失敗時不應影響主 App 啟動。
     } on PlatformException {
-      // 台灣繁體中文教學註解：
       // Core Spotlight 可能因模擬器狀態、權限或系統索引服務暫時失敗；
       // 保持靜默，讓使用者仍能正常使用法規資料庫頁。
     }

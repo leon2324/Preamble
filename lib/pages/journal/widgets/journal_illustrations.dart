@@ -42,7 +42,6 @@ class JournalPortraitIllustration extends StatelessWidget {
 class _JournalHeroIllustrationPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    // 台灣繁體中文教學註解：
     // 這裡先用 CustomPaint 模擬 prototype 的資料館主視覺；未來若有正式插圖，
     // 可把這個 widget 換成 Image.asset，而其他頁面版型不需要重寫。
     final mint = Paint()

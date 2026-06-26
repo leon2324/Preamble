@@ -72,7 +72,7 @@ private enum NativeShareBridge {
     open url: URL,
     options: [UIApplication.OpenURLOptionsKey: Any] = [:]
   ) -> Bool {
-    if handleLawAppURL(url) {
+    if handlePreambleURL(url) {
       return true
     }
     return super.application(app, open: url, options: options)
@@ -87,7 +87,7 @@ private enum NativeShareBridge {
       return true
     }
 
-    if let url = userActivity.webpageURL, handleLawAppURL(url) {
+    if let url = userActivity.webpageURL, handlePreambleURL(url) {
       return true
     }
     return super.application(
@@ -213,7 +213,7 @@ private enum NativeShareBridge {
     }
   }
 
-  private func handleLawAppURL(_ url: URL) -> Bool {
+  private func handlePreambleURL(_ url: URL) -> Bool {
     guard url.scheme == "lawapp",
           let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
       return false
@@ -327,7 +327,7 @@ private enum NativeShareBridge {
             ) else {
         result(FlutterError(
           code: "app_group_unavailable",
-          message: "Unable to open LawApp App Group defaults.",
+          message: "Unable to open 緒言 Preamble App Group defaults.",
           details: TodayCaseWidgetBridge.appGroupIdentifier
         ))
         return
@@ -339,7 +339,7 @@ private enum NativeShareBridge {
       defaults.set(jsonString, forKey: TodayCaseWidgetBridge.payloadKey)
 
       if #available(iOS 14.0, *) {
-        WidgetCenter.shared.reloadTimelines(ofKind: "LawAppTodayCaseWidget")
+        WidgetCenter.shared.reloadTimelines(ofKind: "緒言 PreambleTodayCaseWidget")
       }
       result(nil)
     } catch {
@@ -399,7 +399,7 @@ private enum NativeShareBridge {
       return
     }
 
-    let source = stringValue(payload["source"]) ?? "LawApp 生活避坑筆記"
+    let source = stringValue(payload["source"]) ?? "緒言 Preamble 生活避坑筆記"
     let image = makeTipCardImage(title: title, summary: summary, source: source)
     let activityController = UIActivityViewController(
       activityItems: [image, "\(title)\n\(summary)"],

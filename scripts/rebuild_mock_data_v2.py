@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-LawApp Factual Case Scraping & LLM Structuring Pipeline (rebuild_mock_data_v2.py)
+Preamble Factual Case Scraping & LLM Structuring Pipeline (rebuild_mock_data_v2.py)
 
 此腳本負責二個核心任務：
 1. 設計模擬/實際對接司法院裁判書檢索系統之爬蟲框架（獲取各領域裁判事實）。
-2. 設計 LLM Prompt 將長篇裁判書客觀、無偏見地轉換為 LawApp 的結構化 CaseBook JSON 格式。
+2. 設計 LLM Prompt 將長篇裁判書客觀、無偏見地轉換為 Preamble 的結構化 CaseBook JSON 格式。
 3. 設計圖像檢索接口以補充案例的網絡配圖。
 
 注意：司法院網站設有嚴格的 Captcha 驗證機制。在實際生產環境中，推薦透過司法院開放資料 API，

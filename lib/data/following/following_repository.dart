@@ -81,7 +81,7 @@ class FollowingRepository {
         id: 'mock-update-1',
         title: '追蹤案件有新資料',
         summary: '你追蹤的案件或主題已有 mock 更新，正式後端會回傳實際異動。',
-        source: 'LawApp mock mode',
+        source: '緒言 Preamble mock mode',
         updatedAt: DateTime.now(),
         type: 'mock',
       ),
@@ -106,7 +106,6 @@ class FollowingRepository {
       return;
     }
 
-    // 台灣繁體中文教學註解：
     // mock mode 直接改記憶體 summary，讓前端可立即驗證流程；正式後端設定後，
     // 同一個 public method 會改走 API，不需要再改頁面上的按鈕。
     switch (collection) {

@@ -11,7 +11,6 @@ import 'package:lawapp/features/case_time_machine/pages/case_opinion_board_page.
 import 'package:lawapp/features/case_time_machine/widgets/case_library_section_header.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
 
-// 台灣繁體中文教學註解：
 // 現代清新的「思辨與探索專區」2x3 宮格元件。使用圓角卡片與淡淡的莫蘭迪主題色底色，
 // 移除時間軸入口（已搬至詳細Tab），加入虛擬詰問室、社會效應圖譜與意見塗鴉牆。
 class CaseLibraryInteractiveGrid extends StatelessWidget {

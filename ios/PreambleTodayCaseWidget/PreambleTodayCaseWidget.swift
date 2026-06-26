@@ -155,17 +155,17 @@ private struct TodayCaseWidgetView: View {
 }
 
 @main
-struct LawAppTodayCaseWidget: Widget {
+struct PreambleTodayCaseWidget: Widget {
   // 台灣繁體中文教學註解：
   // kind 必須和 AppDelegate reloadTimelines(ofKind:) 完全一致；
   // 這是主 App 通知 WidgetKit 重新讀取 App Group payload 的識別名稱。
-  let kind = "LawAppTodayCaseWidget"
+  let kind = "緒言 PreambleTodayCaseWidget"
 
   var body: some WidgetConfiguration {
     StaticConfiguration(kind: kind, provider: TodayCaseProvider()) { entry in
       TodayCaseWidgetView(entry: entry)
     }
-    .configurationDisplayName("LawApp 今日判決")
+    .configurationDisplayName("緒言 Preamble 今日判決")
     .description("每天用白話整理一則值得理解的台灣法律故事。")
     .supportedFamilies([.systemSmall, .systemMedium])
   }

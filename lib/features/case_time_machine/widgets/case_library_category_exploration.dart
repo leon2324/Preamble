@@ -4,7 +4,6 @@ import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.
 import 'package:lawapp/features/case_time_machine/widgets/case_library_section_header.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
 
-// 台灣繁體中文教學註解：
 // 圖書館分館探索區塊。採用現代橫向扁平膠囊卡片設計：
 // 移除木質卡片櫃抽屜拉手與標籤紙，改為乾淨的圓角色塊卡片，
 // 頂部為圓底白色 icon，中間為粗體分類標題，底部為副標說明。
@@ -126,7 +125,7 @@ class _CategoryPillButton extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 台灣繁體中文教學註解：圓底白色 icon 容器
+              // 圓底白色 icon 容器
               Container(
                 padding: EdgeInsets.all(6.w),
                 decoration: BoxDecoration(

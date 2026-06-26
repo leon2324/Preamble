@@ -6,7 +6,7 @@ import 'package:lawapp/theme/app_colors.dart';
 class NotificationSettingsSheet extends StatefulWidget {
   const NotificationSettingsSheet({super.key, required this.appState});
 
-  final LawAppState appState;
+  final PreambleState appState;
 
   @override
   State<NotificationSettingsSheet> createState() =>
@@ -66,7 +66,6 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
           ),
           SizedBox(height: 20.h),
 
-          // 台灣繁體中文教學註解：
           // 這裡只保存 App 內提醒偏好，不宣稱已完成系統推播、信件或背景通知。
           Text('摘要頻率',
               style: TextStyle(

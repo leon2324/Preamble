@@ -68,14 +68,14 @@ class _CaseStoryDetailPageState extends State<CaseStoryDetailPage> {
     _showMessage('已複製案件摘要，可貼到訊息或筆記。');
   }
 
-  Future<void> _toggleSaved(LawAppState appState) async {
+  Future<void> _toggleSaved(PreambleState appState) async {
     final nextSaved = !appState.isCaseSaved(_caseId);
     await appState.setCaseSaved(_caseId, nextSaved);
     if (!mounted) return;
     _showMessage(nextSaved ? '已收藏到本機案件清單。' : '已取消本機收藏。');
   }
 
-  Future<void> _openNoteSheet(LawAppState appState) async {
+  Future<void> _openNoteSheet(PreambleState appState) async {
     final note = await showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
@@ -106,7 +106,6 @@ class _CaseStoryDetailPageState extends State<CaseStoryDetailPage> {
   }
 
   String _caseAssistantPrompt(CaseStoryItem item) {
-    // 台灣繁體中文教學註解：
     // 案件頁的 AI CTA 不直接假裝完成分析，而是把案名、分類、狀態與已整理摘要
     // 帶到小法助入口，沿用既有 guest 額度、登入與後端錯誤處理流程。
     return [
@@ -122,7 +121,7 @@ class _CaseStoryDetailPageState extends State<CaseStoryDetailPage> {
   @override
   Widget build(BuildContext context) {
     final palette = _CasePalette.of(context);
-    final appState = LawAppScope.of(context);
+    final appState = PreambleScope.of(context);
     final item = widget.item;
     final isSaved = appState.isCaseSaved(_caseId);
     final hasNote = appState.hasCaseNoteDraft(_caseId);
@@ -338,7 +337,6 @@ class _CaseFrozenHeader extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // 台灣繁體中文教學註解：
           // 案件詳情是查閱型頁面，使用者會在不同資料分頁間比對；
           // 因此把標題、案件摘要與分頁固定在上方，讓下方內容滾動時脈絡不會消失。
           _CaseAnalysisTopBar(
@@ -476,7 +474,6 @@ class _CaseExpandedHeaderDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        // 台灣繁體中文教學註解：
         // 展開狀態只放「案名、分類、時間地點、狀態」四個維護欄位；
         // 不再塞入法條爭點與案號，避免案件閱讀頁一進來就被資訊噪音蓋住。
         return Align(
@@ -1187,7 +1184,6 @@ class _CaseNoteSheetState extends State<_CaseNoteSheet> {
                 ),
               ),
               SizedBox(height: 12.h),
-              // 台灣繁體中文教學註解：
               // 這裡只承諾「本機草稿」；不寫成雲端筆記或會員同步，
               // 是為了讓目前真的能完成的動作和使用者看到的文案一致。
               TextField(

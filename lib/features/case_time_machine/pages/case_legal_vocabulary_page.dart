@@ -8,7 +8,6 @@ import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page
     hide LightTextStyles;
 import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
 
-// 台灣繁體中文教學註解：
 // 「法律詞卡」探索與 3D 翻牌頁面 (CaseLegalVocabularyPage)
 // 旨在將判決中艱深難懂的法理名詞「說白話」。
 // 頁面提供搜尋欄位與分類選單，卡片點擊時會啟動 3D 旋轉翻牌動畫（Y 軸 180 度旋轉與透視 projection），
@@ -25,7 +24,6 @@ class _CaseLegalVocabularyPageState extends State<CaseLegalVocabularyPage> {
   String _searchQuery = '';
   String _selectedCategory = '全部';
 
-  // 台灣繁體中文教學註解：
   // 定義詞卡 mock 資料，包含正面（白話翻譯、圖案圖示）與背面（生活實例、對應案件 ID 與名稱）
   final List<Map<String, dynamic>> _vocabData = [
     {
@@ -260,7 +258,6 @@ class _CaseLegalVocabularyPageState extends State<CaseLegalVocabularyPage> {
 ''';
 }
 
-// 台灣繁體中文教學註解：
 // 單張 3D 翻轉詞卡組件 (_VocabularyFlipCard)
 // 透過 AnimatedBuilder 結合 Matrix4，當點擊時於 Y 軸旋轉 180 度，
 // 並在 90 度（正中央垂直）時動態切換正面與反面，做出精美自然的翻牌物理動畫。
@@ -304,7 +301,6 @@ class _VocabularyFlipCardState extends State<_VocabularyFlipCard>
     });
   }
 
-  // 台灣繁體中文教學註解：
   // 當在詞卡背面點擊「前往案件」時，需要跳轉至真實的 CaseBook 詳情頁，
   // 由於詞卡資料記錄了對應的 caseId，可順暢地完成學習導流。
   void _navigateToCase(BuildContext context, String caseId) {

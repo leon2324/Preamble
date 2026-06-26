@@ -3,12 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
 import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
 
-// 台灣繁體中文教學註解：
 // Hero 大卡元件 — 案件圖書館首頁的主視覺輪播卡片。
 // V2：加入分類漸層色帶（頂部裝飾條）和右下角半透明裝飾 icon，
 // 讓視覺更加豐富不單調。每個分類有獨立配色和 emoji。
 
-// 台灣繁體中文教學註解：分類→色系+emoji 對照表
+// 分類→色系+emoji 對照表
 const _categoryAccents = <String, ({Color color, Color bgTint, String emoji})>{
   '集會遊行': (color: Color(0xFF4A7C8C), bgTint: Color(0xFFEAF4F7), emoji: '🪧'),
   '強制治療': (color: Color(0xFF6D649A), bgTint: Color(0xFFF0EEF9), emoji: '🏥'),
@@ -21,7 +20,7 @@ const _categoryAccents = <String, ({Color color, Color bgTint, String emoji})>{
 };
 
 ({Color color, Color bgTint, String emoji}) _getAccent(CaseBook book) {
-  // 台灣繁體中文教學註解：先查分類，再查 tags，最後用預設值
+  // 先查分類，再查 tags，最後用預設值
   final cat = _categoryAccents[book.category];
   if (cat != null) return cat;
   for (final tag in book.tags) {
@@ -60,7 +59,6 @@ class CaseLibraryHeroCard extends StatelessWidget {
       width: double.infinity,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        // 台灣繁體中文教學註解：
         // 白底 + 極淡的分類色漸層，讓不同案件的 Hero 卡有不同色調
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -85,7 +83,6 @@ class CaseLibraryHeroCard extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          // 台灣繁體中文教學註解：
           // 右下角半透明大 emoji，作為裝飾元素，讓卡片不單調
           Positioned(
             right: -8.w,
@@ -107,7 +104,6 @@ class CaseLibraryHeroCard extends StatelessWidget {
               color: Colors.white.withValues(alpha: 0.75),
             ),
           ),
-          // 台灣繁體中文教學註解：
           // 頂部彩色裝飾條 — 用分類主色做 4px 高的漸層色帶
           Positioned(
             top: 0,
@@ -130,14 +126,14 @@ class CaseLibraryHeroCard extends StatelessWidget {
             ),
           ),
 
-          // 台灣繁體中文教學註解：主要內容
+          // 主要內容
           Padding(
             padding: EdgeInsets.fromLTRB(18.w, 14.h, 18.w, 16.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                // 台灣繁體中文教學註解：頂部標籤列 — emoji + 分類 + 年代
+                // 頂部標籤列 — emoji + 分類 + 年代
                 Row(
                   children: [
                     Text(accent.emoji, style: TextStyle(fontSize: 14.sp)),
@@ -192,7 +188,7 @@ class CaseLibraryHeroCard extends StatelessWidget {
                 ),
                 SizedBox(height: 12.h),
 
-                // 台灣繁體中文教學註解：案件主標題，使用宋體強調歷史感
+                // 案件主標題，使用宋體強調歷史感
                 Text(
                   book.titleZh,
                   maxLines: 2,
@@ -213,7 +209,7 @@ class CaseLibraryHeroCard extends StatelessWidget {
                 ),
                 SizedBox(height: 8.h),
 
-                // 台灣繁體中文教學註解：一句摘要
+                // 一句摘要
                 Text(
                   book.oneSentenceSummary.isNotEmpty
                       ? book.oneSentenceSummary
@@ -228,7 +224,7 @@ class CaseLibraryHeroCard extends StatelessWidget {
                 ),
                 SizedBox(height: 12.h),
 
-                // 台灣繁體中文教學註解：討論熱度徽章列
+                // 討論熱度徽章列
                 Row(
                   children: [
                     _buildBadge(
@@ -254,7 +250,7 @@ class CaseLibraryHeroCard extends StatelessWidget {
                     color: accent.color.withValues(alpha: 0.12), height: 1.h),
                 SizedBox(height: 12.h),
 
-                // 台灣繁體中文教學註解：雙 CTA 按鈕
+                // 雙 CTA 按鈕
                 Row(
                   children: [
                     Expanded(

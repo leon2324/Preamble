@@ -1,6 +1,5 @@
 /// App 共用的等待金句。
 ///
-/// 台灣繁體中文教學註解：
 /// 這份清單刻意放在 data/common，而不是某個單一頁面裡。
 /// 之後任何頁面的 loading、AI 思考中、資料同步中，都能共用同一批文案。
 final List<String> appLoadingQuotes = List.unmodifiable([

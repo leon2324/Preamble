@@ -32,7 +32,6 @@ class CaseTimeMachineScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 台灣繁體中文教學註解：
     // 舊版沉浸式圖書館頁面需要共用 scaffold 代管 SafeArea 與返回鍵；
     // 新版有自己 AppBar 的頁面則會把 useSafeArea 關掉，讓頁面背景能覆蓋狀態列，
     // 再由頁面內部只保留一層 SafeArea，避免舊圖層或舊返回鍵疊在新 AppBar 上。

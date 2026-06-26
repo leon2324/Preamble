@@ -16,7 +16,7 @@ void main() {
       tester.view.resetPhysicalSize();
     });
 
-    final appState = LawAppState();
+    final appState = PreambleState();
     addTearDown(appState.dispose);
     await appState.load();
 
@@ -25,7 +25,7 @@ void main() {
         designSize: const Size(375, 812),
         minTextAdapt: true,
         splitScreenMode: true,
-        builder: (context, __) => LawAppScope(
+        builder: (context, __) => PreambleScope(
           state: appState,
           child: MaterialApp(
             home: const KnowLawPage(),

@@ -1,4 +1,4 @@
-# Google Stitch Prompt：LawApp / 小法助 (已同步最新 Flutter 實作設計)
+# Google Stitch Prompt：緒言 Preamble / 小法助 (已同步最新 Flutter 實作設計)
 
 > 這份文件存放同步自目前實作代碼（0 Warning, 0 Error）的最新版 Stitch 設計提示詞。
 > 您可以直接將下方內容全部複製，貼入 Google Stitch 中產生與當前 App 一致的全新精緻 UI 設計稿。

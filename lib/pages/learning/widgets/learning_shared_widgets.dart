@@ -7,7 +7,6 @@ import 'package:lawapp/theme/app_colors.dart';
 
 /// 學習頁共用 hero 圖片。
 ///
-/// 台灣繁體中文教學註解：
 /// 這裡只處理圖片來源的顯示與 fallback，不保存頁面狀態；
 /// 讓 `KnowLawPage` 可以專注在資料與學習流程。
 Widget buildLearningHeroImage({
@@ -48,7 +47,6 @@ Widget buildLearningHeroImage({
 
 /// 主修課卡片上方的膠囊標籤。
 ///
-/// 台灣繁體中文教學註解：
 /// 這個 helper 只吃文字與深色模式，不依賴 `KnowLawPageState`，
 /// 適合先抽成共用純 UI。
 Widget buildLearningCourseBadge(String label, bool isDark) {
@@ -80,7 +78,6 @@ Widget buildLearningCourseBadge(String label, bool isDark) {
 
 /// 手繪風勾選列。
 ///
-/// 台灣繁體中文教學註解：
 /// 生活工具箱的檢核清單只需要把目前值與 onChanged 傳進來；
 /// 勾選後要不要 `setState` 由呼叫端決定，這裡不碰父層狀態。
 Widget buildLearningHanddrawnCheckbox({
@@ -144,7 +141,6 @@ Widget buildLearningHanddrawnCheckbox({
 
 /// 便利貼風文字輸入框。
 ///
-/// 台灣繁體中文教學註解：
 /// controller 由父層持有，這個 helper 只負責欄位外觀，
 /// 因此不會改變工具箱表單的資料流。
 Widget buildLearningPostItInput({
@@ -194,7 +190,6 @@ Widget buildLearningPostItInput({
 
 /// 筆記本橫線風輸入框。
 ///
-/// 台灣繁體中文教學註解：
 /// 這個 helper 被多個生活法律工具共用，抽出後仍由父層傳入 controller；
 /// 所以格式、keyboardType 與輸入結果都保持原本行為。
 Widget buildLearningNotebookInput({
@@ -252,7 +247,6 @@ Widget buildLearningNotebookInput({
 
 /// 印章風主要按鈕。
 ///
-/// 台灣繁體中文教學註解：
 /// 這裡只呈現按鈕外觀並觸發 callback；計算器與表單邏輯仍留在原本頁面。
 Widget buildLearningSealButton({
   required String label,
@@ -291,7 +285,6 @@ Widget buildLearningSealButton({
 
 /// 紙膠帶風次要按鈕。
 ///
-/// 台灣繁體中文教學註解：
 /// 保留原本輕量、扁平的紙膠帶樣式；呼叫端負責決定實際操作。
 Widget buildLearningWashiTapeButton({
   required String label,
@@ -324,7 +317,6 @@ Widget buildLearningWashiTapeButton({
 
 /// 摘錄顏色選擇圓點。
 ///
-/// 台灣繁體中文教學註解：
 /// 色點只知道目前選到哪個名稱與點擊 callback，
 /// 不直接修改手帳筆記資料，方便未來複用到其他 highlight UI。
 Widget buildLearningHighlightColorDot(
@@ -374,7 +366,6 @@ Widget buildLearningHighlightColorDot(
 
 /// 每日專題非同步載入骨架屏。
 ///
-/// 台灣繁體中文教學註解：
 /// 這個元件只做淡入淡出的 skeleton loading，不讀取任何頁面狀態；
 /// 因此從 `KnowLawPage` 抽出後不會影響資料載入流程。
 class LearningPulsingSkeleton extends StatefulWidget {
@@ -434,7 +425,6 @@ class _LearningPulsingSkeletonState extends State<LearningPulsingSkeleton>
 
 /// 自訂專屬法學課堂入口卡。
 ///
-/// 台灣繁體中文教學註解：
 /// 卡片本身只處理按壓縮放與畫面呈現；開啟 dialog 的流程仍由父層 callback 控制。
 class LearningCustomClassroomCard extends StatefulWidget {
   const LearningCustomClassroomCard({

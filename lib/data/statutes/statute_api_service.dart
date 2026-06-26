@@ -21,7 +21,6 @@ class StatuteApiService {
   final http.Client _client;
 
   Future<List<StatuteItem>> fetchChineseLawItems() async {
-    // 台灣繁體中文教學註解：
     // 使用者期待的是「台灣法規大全」，不只法律，也包含行政命令。
     // 因此第一版直接合併 MOJ 的 law 與 order 兩個官方 JSON 端點。
     final itemGroups = await Future.wait([

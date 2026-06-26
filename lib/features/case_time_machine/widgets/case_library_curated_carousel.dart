@@ -5,7 +5,6 @@ import 'package:lawapp/features/case_time_machine/models/case_time_machine_model
 import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_library_section_header.dart';
 
-// 台灣繁體中文教學註解：
 // 熱門案源探索輪播元件。採用現代橫向扁平卡片設計：
 // 白底圓角卡片，頂部並列分類標籤與年代，中間為案件名稱（宋體），
 // 右下角為暖金色的「切換研讀 ➔」按鈕。移除木製書架與垂直書脊等擬物化風格。
@@ -29,7 +28,7 @@ class CaseLibraryCuratedCarousel extends StatelessWidget {
         .map(caseTimeMachineCaseById)
         .toList();
 
-    // 台灣繁體中文教學註解：每張卡片使用不同的淡雅主題色底，形成視覺層次
+    // 每張卡片使用不同的淡雅主題色底，形成視覺層次
     final cardAccentColors = [
       const Color(0xFFEAF6EF), // 淡翠綠
       const Color(0xFFF0EEF9), // 淡薰衣草紫
@@ -93,7 +92,7 @@ class CaseLibraryCuratedCarousel extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // 台灣繁體中文教學註解：頂部標籤列 — 分類 + 年代並列
+                      // 頂部標籤列 — 分類 + 年代並列
                       Row(
                         children: [
                           Container(
@@ -126,7 +125,7 @@ class CaseLibraryCuratedCarousel extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 8.h),
-                      // 台灣繁體中文教學註解：案件名稱主標題
+                      // 案件名稱主標題
                       Expanded(
                         child: Text(
                           book.titleZh,
@@ -148,7 +147,7 @@ class CaseLibraryCuratedCarousel extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 8.h),
-                      // 台灣繁體中文教學註解：右下角暖金色「切換研讀 ➔」CTA
+                      // 右下角暖金色「切換研讀 ➔」CTA
                       Align(
                         alignment: Alignment.centerRight,
                         child: Container(

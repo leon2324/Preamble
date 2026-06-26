@@ -20,7 +20,6 @@ class RelatedCaseShelfSections extends StatelessWidget {
     final sameTheme = relatedCases.skip(1).take(1).toList();
     final curatorPicks = relatedCases.take(3).toList();
 
-    // 台灣繁體中文教學註解：
     // 延伸書架維持「直向分區」：同年代、同主題、館員推薦。
     // 這樣符合 Prototype 的案件圖書館世界觀，也避免變成一般橫向推薦 carousel。
     return Column(

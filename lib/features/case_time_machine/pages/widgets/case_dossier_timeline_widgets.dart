@@ -1,6 +1,5 @@
 part of '../case_dossier_detail_page.dart';
 
-// 台灣繁體中文教學註解：
 // 這個 part 檔集中收納案件詳情頁的 Timeline UI。
 // 時間軸資料來源、mock helper 與 repository 載入仍保留在 case_dossier_detail_page.dart。
 
