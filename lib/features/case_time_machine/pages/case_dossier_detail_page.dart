@@ -1940,7 +1940,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
         ShareSheet.show(
           context,
           title: book.titleZh,
-          url: 'https://lawapp.com/cases/${Uri.encodeComponent(book.id)}',
+          url: 'https://preamble.vernalcollective.com/cases/${Uri.encodeComponent(book.id)}',
         );
       },
     );

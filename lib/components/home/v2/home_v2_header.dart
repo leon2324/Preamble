@@ -65,7 +65,7 @@ class _HomeV2HeroHeaderState extends State<HomeV2HeroHeader> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'The Law App',
+                    'Preamble 緒言',
                     style: TextStyle(
                       color: HomeV2Palette.ink,
                       fontSize: 24.sp,

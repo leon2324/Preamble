@@ -234,7 +234,7 @@ class _MylawAppState extends State<MylawApp> {
             darkTheme: AppTheme.dark(),
             themeMode: _appState.themeMode,
             home: Scaffold(
-              extendBody: false,
+              extendBody: true,
               resizeToAvoidBottomInset: false,
               body: Builder(
                 builder: (context) {

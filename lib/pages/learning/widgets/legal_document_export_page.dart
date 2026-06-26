@@ -66,7 +66,7 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
     String twoDigits(int value) => value.toString().padLeft(2, '0');
     final date =
         '${now.year}${twoDigits(now.month)}${twoDigits(now.day)}_${twoDigits(now.hour)}${twoDigits(now.minute)}';
-    return 'lawapp_legal_document_$date.pdf';
+    return 'preamble_legal_document_$date.pdf';
   }
 
   Future<Uint8List> _buildPdfBytes() async {

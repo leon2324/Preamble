@@ -619,7 +619,7 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
                         onPressed: () {
                           Clipboard.setData(ClipboardData(
                               text:
-                                  '【生活避坑筆記】\n標題：$title\n摘要：$summary\n來源：法助官網 https://lawapp.com/tips'));
+                                  '【生活避坑筆記】\n標題：$title\n摘要：$summary\n來源：緒言官網 https://preamble.vernalcollective.com/tips'));
                           Navigator.of(context).pop();
                           CustomToast.show(
                             this.context,
@@ -687,7 +687,7 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
     ShareSheet.show(
       context,
       title: title,
-      url: 'https://lawapp.com/tips/${Uri.encodeComponent(title)}',
+      url: 'https://preamble.vernalcollective.com/tips/${Uri.encodeComponent(title)}',
     );
   }
 
