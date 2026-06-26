@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lawapp/features/on_this_day/data/on_this_day_local_bookmarks.dart';
 import 'package:lawapp/features/on_this_day/data/on_this_day_mock_data.dart';
 import 'package:lawapp/features/on_this_day/models/on_this_day_models.dart';
 import 'package:lawapp/features/on_this_day/theme/on_this_day_theme.dart';
@@ -23,6 +24,17 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
   void initState() {
     super.initState();
     _loadFilteredCases();
+    _loadSavedCases();
+  }
+
+  Future<void> _loadSavedCases() async {
+    final ids = await OnThisDayLocalBookmarks.load();
+    if (!mounted) return;
+    setState(() {
+      _savedCaseIds
+        ..clear()
+        ..addAll(ids);
+    });
   }
 
   void _loadFilteredCases() {
@@ -216,15 +228,18 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                         iconSize: 18.sp,
-                        onPressed: () {
+                        onPressed: () async {
+                          final next =
+                              await OnThisDayLocalBookmarks.toggle(c.id);
+                          if (!mounted) return;
                           setState(() {
-                            isSaved
-                                ? _savedCaseIds.remove(c.id)
-                                : _savedCaseIds.add(c.id);
+                            next
+                                ? _savedCaseIds.add(c.id)
+                                : _savedCaseIds.remove(c.id);
                           });
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text(isSaved ? '已從本機收藏移除。' : '已加入本機收藏。'),
+                              content: Text(next ? '已加入本機收藏。' : '已從本機收藏移除。'),
                             ),
                           );
                         },

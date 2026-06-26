@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lawapp/features/on_this_day/data/on_this_day_local_bookmarks.dart';
 import 'package:lawapp/features/on_this_day/data/on_this_day_mock_data.dart';
 import 'package:lawapp/features/on_this_day/models/on_this_day_models.dart';
 import 'package:lawapp/features/on_this_day/theme/on_this_day_theme.dart';
@@ -33,6 +34,7 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
     _tabs = ['案件簡略', '時間線', '歷史照片', '時代背景', '延伸影響', '資料來源'];
     _mediaController = PageController();
     _initRepository();
+    _loadBookmarkState();
   }
 
   Future<void> _initRepository() async {
@@ -43,6 +45,12 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
         setState(() {});
       }
     }
+  }
+
+  Future<void> _loadBookmarkState() async {
+    final isSaved = await OnThisDayLocalBookmarks.isSaved(_case.id);
+    if (!mounted) return;
+    setState(() => _isBookmarked = isSaved);
   }
 
   CaseBook? _findDossierSync(OnThisDayCase mainCase) {
@@ -67,9 +75,9 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
       setState(() {
         _case = onThisDayCaseById(widget.caseId) ?? onThisDayCases.first;
         _mediaIndex = 0;
-        _isBookmarked = false;
         _mediaController.jumpToPage(0);
       });
+      _loadBookmarkState();
     }
   }
 
@@ -94,11 +102,13 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
     }
   }
 
-  void _toggleBookmark() {
-    setState(() => _isBookmarked = !_isBookmarked);
+  Future<void> _toggleBookmark() async {
+    final isSaved = await OnThisDayLocalBookmarks.toggle(_case.id);
+    if (!mounted) return;
+    setState(() => _isBookmarked = isSaved);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(_isBookmarked ? '已加入本機收藏。' : '已從本機收藏移除。'),
+        content: Text(isSaved ? '已加入本機收藏。' : '已從本機收藏移除。'),
       ),
     );
   }
