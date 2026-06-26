@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lawapp/components/home/home_content.dart';
 import 'package:lawapp/components/home/v2/home_v2_header.dart';
 import 'package:lawapp/components/home/v2/home_v2_primitives.dart';
 import 'package:lawapp/components/home/v2/home_v2_sections.dart';
@@ -69,7 +70,8 @@ class _HomePageState extends State<HomePage> {
       } else {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (__) => const StatuteDatabasePage(initialQuery: '勞動基準法 加班費'),
+            builder: (__) =>
+                const StatuteDatabasePage(initialQuery: '勞動基準法 加班費'),
           ),
         );
       }
@@ -113,6 +115,12 @@ class _HomePageState extends State<HomePage> {
   void _openLifeLegalTips() {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (__) => const LifeLegalTipsPage()),
+    );
+  }
+
+  void _openLifeLegalTip(HomeNewsletterItem item) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (__) => LifeLegalTipDetailPage(item: item)),
     );
   }
 
@@ -596,9 +604,9 @@ class _HomePageState extends State<HomePage> {
                             onTap: _openLifeLegalTips,
                           ),
                           SizedBox(height: 10.h),
-                          HomeV2NewsletterFocusCard(
-                            item: homeNewsletterItems.first,
-                            onTap: _openLifeLegalTips,
+                          HomeV2NewsletterFocusCarousel(
+                            items: homeNewsletterItems,
+                            onItemTap: _openLifeLegalTip,
                           ),
                           SizedBox(height: 18.h),
                           HomeV2SocialNewsSection(

@@ -487,10 +487,12 @@ class HomeV2NewsletterFocusCard extends StatefulWidget {
     super.key,
     required this.item,
     this.onTap,
+    this.showDots = true,
   });
 
   final HomeNewsletterItem item;
   final VoidCallback? onTap;
+  final bool showDots;
 
   @override
   State<HomeV2NewsletterFocusCard> createState() =>
@@ -738,9 +740,57 @@ class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
             ),
           ),
         ),
-        SizedBox(height: 13.h),
-        const _NewsletterFocusDots(),
+        if (widget.showDots) ...[
+          SizedBox(height: 13.h),
+          const _NewsletterFocusDots(),
+        ],
       ],
+    );
+  }
+}
+
+class HomeV2NewsletterFocusCarousel extends StatelessWidget {
+  const HomeV2NewsletterFocusCarousel({
+    super.key,
+    required this.items,
+    this.onItemTap,
+  });
+
+  final List<HomeNewsletterItem> items;
+  final ValueChanged<HomeNewsletterItem>? onItemTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final visibleItems = items.take(8).toList(growable: false);
+    if (visibleItems.isEmpty) return const SizedBox.shrink();
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final cardWidth = constraints.maxWidth * 0.88;
+
+        return SizedBox(
+          // 台灣繁體中文教學註解：首頁只需要橫向露出多張避坑入口卡，固定外框高度可避免 ListView 在直向首頁中沒有高度而無法滑動。
+          height: 210.h,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.only(right: 4.w),
+            itemCount: visibleItems.length,
+            separatorBuilder: (_, __) => SizedBox(width: 12.w),
+            itemBuilder: (context, index) {
+              final item = visibleItems[index];
+              return SizedBox(
+                width: cardWidth,
+                child: HomeV2NewsletterFocusCard(
+                  item: item,
+                  showDots: false,
+                  onTap: () => onItemTap?.call(item),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
