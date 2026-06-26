@@ -77,7 +77,7 @@ class _HomePageNewLegalNewsletterState
               ),
               IconButton(
                 onPressed: () {
-                  // TODO: 之後接上「查看更多法律小報」頁面。
+                  // 台灣繁體中文教學註解：舊版首頁保留箭頭位置，正式首頁已改由新版入口承接完整列表。
                 },
                 icon: const Icon(Icons.arrow_forward_ios),
               ),

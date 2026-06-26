@@ -739,6 +739,7 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
       );
       topic =
           await SupabaseLearningService.instance.fetchTopicByTitle(category);
+      if (!mounted) return;
     }
 
     if (topic == null) {

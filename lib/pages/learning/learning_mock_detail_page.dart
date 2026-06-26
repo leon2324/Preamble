@@ -551,7 +551,7 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.15),
+                    color: Colors.black.withValues(alpha: 0.15),
                     blurRadius: 10.r,
                     offset: const Offset(0, -3),
                   ),
@@ -633,7 +633,7 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.02),
+                                color: Colors.black.withValues(alpha: 0.02),
                                 blurRadius: 4.r,
                                 offset: const Offset(0, 2),
                               ),
@@ -1808,7 +1808,7 @@ class HighlightedSelectableText extends StatelessWidget {
       spans.add(TextSpan(
         text: highlightStr,
         style: TextStyle(
-          backgroundColor: Colors.yellow.withOpacity(0.45),
+          backgroundColor: Colors.yellow.withValues(alpha: 0.45),
         ),
         recognizer: LongPressGestureRecognizer()
           ..onLongPress = () {
@@ -1901,7 +1901,7 @@ void _showShareCardDialog(
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
+                    color: Colors.black.withValues(alpha: 0.3),
                     blurRadius: 15.r,
                     offset: const Offset(0, 5),
                   ),
@@ -1916,7 +1916,7 @@ void _showShareCardDialog(
                       Icon(
                         Icons.format_quote_rounded,
                         size: 32.sp,
-                        color: HomeV2Palette.trustGreen.withOpacity(0.4),
+                        color: HomeV2Palette.trustGreen.withValues(alpha: 0.4),
                       ),
                     ],
                   ),
@@ -1931,7 +1931,7 @@ void _showShareCardDialog(
                         fontWeight: FontWeight.w700,
                         color: AppColors.textPrimary,
                         decoration: TextDecoration.underline,
-                        decorationColor: Colors.yellow.withOpacity(0.6),
+                        decorationColor: Colors.yellow.withValues(alpha: 0.6),
                         decorationThickness: 4,
                       ),
                     ),
@@ -1945,7 +1945,8 @@ void _showShareCardDialog(
                         child: Icon(
                           Icons.format_quote_rounded,
                           size: 32.sp,
-                          color: HomeV2Palette.trustGreen.withOpacity(0.4),
+                          color:
+                              HomeV2Palette.trustGreen.withValues(alpha: 0.4),
                         ),
                       ),
                     ],

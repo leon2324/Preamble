@@ -118,9 +118,7 @@ extension LearningClassroomTabBuilder on KnowLawPageState {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    setState(() => _selectedTabIndex = 2);
-                  },
+                  onPressed: openNotebookTab,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF4E7D5B),
                     foregroundColor: Colors.white,
@@ -300,9 +298,7 @@ extension LearningClassroomTabBuilder on KnowLawPageState {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {
-                  setState(() => _selectedTabIndex = 2);
-                },
+                onPressed: openNotebookTab,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF4E7D5B),
                   foregroundColor: Colors.white,

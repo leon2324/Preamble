@@ -231,7 +231,8 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
                   borderRadius: BorderRadius.circular(28.r),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
+                      color:
+                          Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
@@ -405,7 +406,7 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
                   : Border.all(color: Colors.transparent),
               boxShadow: [
                 BoxShadow(
-                  color: color.withOpacity(isSelected ? 0.5 : 0.2),
+                  color: color.withValues(alpha: isSelected ? 0.5 : 0.2),
                   blurRadius: isSelected ? 8 : 4,
                   spreadRadius: isSelected ? 2 : 0,
                   offset: const Offset(0, 2),

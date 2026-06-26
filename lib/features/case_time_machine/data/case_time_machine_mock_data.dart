@@ -25,8 +25,7 @@ List<CaseBook> get caseTimeMachineCases =>
         : caseTimeMachineCasesSeed;
 
 final caseTimeMachineCasesSeed = <CaseBook>[
-
-CaseBook(
+  CaseBook(
     id: '318',
     titleZh: '太陽花學運佔領立法院事件',
     titleEn: 'Sunflower Student Movement',
@@ -1253,7 +1252,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['隨機殺人', '死刑量刑', '精神鑑定', '社會安全網'],
     memoryLine: '關於捷運無差別隨機殺人案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及捷運無差別隨機殺人案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及捷運無差別隨機殺人案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -1261,27 +1261,49 @@ CaseBook(
       updatedAt: '2014/10/24',
     ),
     oneSentenceSummary: '捷運無差別隨機殺人案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生捷運無差別隨機殺人案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生捷運無差別隨機殺人案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2014/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2014/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2014/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2014/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2014/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2014/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於隨機殺人的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於隨機殺人的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -1309,7 +1331,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['公共危險', '爆炸物', '意圖勒索', '公共安全'],
     memoryLine: '關於高速鐵路爆炸未遂案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及高速鐵路爆炸未遂案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及高速鐵路爆炸未遂案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -1317,27 +1340,48 @@ CaseBook(
       updatedAt: '2013/10/24',
     ),
     oneSentenceSummary: '高速鐵路爆炸未遂案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生高速鐵路爆炸未遂案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生高速鐵路爆炸未遂案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2013/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2013/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2013/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2013/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2013/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2013/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於公共危險的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於公共危險的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -1365,7 +1409,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['粉塵爆炸', '業務過失致死', '公共安全', '集體求償'],
     memoryLine: '關於八仙樂園彩色派對粉塵爆炸案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及八仙樂園彩色派對粉塵爆炸案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及八仙樂園彩色派對粉塵爆炸案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -1373,27 +1418,49 @@ CaseBook(
       updatedAt: '2015/10/24',
     ),
     oneSentenceSummary: '八仙樂園彩色派對粉塵爆炸案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生八仙樂園彩色派對粉塵爆炸案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生八仙樂園彩色派對粉塵爆炸案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2015/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2015/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2015/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2015/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2015/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2015/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於粉塵爆炸的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於粉塵爆炸的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -1421,7 +1488,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['交通安全', '勞工過勞', '業務過失', '遊覽車監管'],
     memoryLine: '關於國道路段遊覽車翻覆重大傷亡案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及國道路段遊覽車翻覆重大傷亡案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及國道路段遊覽車翻覆重大傷亡案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -1429,27 +1497,49 @@ CaseBook(
       updatedAt: '2017/10/24',
     ),
     oneSentenceSummary: '國道路段遊覽車翻覆重大傷亡案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生國道路段遊覽車翻覆重大傷亡案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生國道路段遊覽車翻覆重大傷亡案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2017/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2017/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2017/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2017/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2017/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2017/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於交通安全的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於交通安全的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -1477,7 +1567,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['鐵路安全', 'ATP系統', '業務過失', '重大事故'],
     memoryLine: '關於台鐵普悠瑪列車出軌翻覆事故案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及台鐵普悠瑪列車出軌翻覆事故案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及台鐵普悠瑪列車出軌翻覆事故案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -1485,27 +1576,49 @@ CaseBook(
       updatedAt: '2018/10/24',
     ),
     oneSentenceSummary: '台鐵普悠瑪列車出軌翻覆事故案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生台鐵普悠瑪列車出軌翻覆事故案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生台鐵普悠瑪列車出軌翻覆事故案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2018/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2018/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2018/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2018/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2018/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2018/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於鐵路安全的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於鐵路安全的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -1533,7 +1646,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['組織犯罪', '人口販運', '非法拘禁', '虛擬貨幣洗錢'],
     memoryLine: '關於跨國詐騙集團洗錢與押人案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及跨國詐騙集團洗錢與押人案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及跨國詐騙集團洗錢與押人案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -1541,27 +1655,48 @@ CaseBook(
       updatedAt: '2022/10/24',
     ),
     oneSentenceSummary: '跨國詐騙集團洗錢與押人案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生跨國詐騙集團洗錢與押人案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生跨國詐騙集團洗錢與押人案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2022/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2022/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2022/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2022/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2022/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2022/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於組織犯罪的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於組織犯罪的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -1589,7 +1724,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['新興毒品', '過失致死', '轉讓毒品', '連帶賠償'],
     memoryLine: '關於知名藝人涉毒品派對致死案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及知名藝人涉毒品派對致死案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及知名藝人涉毒品派對致死案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -1597,27 +1733,49 @@ CaseBook(
       updatedAt: '2016/10/24',
     ),
     oneSentenceSummary: '知名藝人涉毒品派對致死案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生知名藝人涉毒品派對致死案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生知名藝人涉毒品派對致死案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2016/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2016/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2016/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2016/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2016/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2016/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於新興毒品的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於新興毒品的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -1645,7 +1803,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['證券交易法', '內線交易', '背信罪', '金融犯罪'],
     memoryLine: '關於金控集團內部人內線交易案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及金控集團內部人內線交易案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及金控集團內部人內線交易案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -1653,27 +1812,49 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '金控集團內部人內線交易案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生金控集團內部人內線交易案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生金控集團內部人內線交易案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於證券交易法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於證券交易法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -1701,7 +1882,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['營業秘密法', '競業禁止', '商業間諜', '智慧財產保護'],
     memoryLine: '關於跨國科技廠商業秘密竊取案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及跨國科技廠商業秘密竊取案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及跨國科技廠商業秘密竊取案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -1709,27 +1891,49 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '跨國科技廠商業秘密竊取案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生跨國科技廠商業秘密竊取案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生跨國科技廠商業秘密竊取案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於營業秘密法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於營業秘密法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -1757,7 +1961,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['毒品危害防制條例', '走私海運', '跨國執法', '洗錢防制'],
     memoryLine: '關於跨國販毒集團藏匿海運貨櫃案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及跨國販毒集團藏匿海運貨櫃案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及跨國販毒集團藏匿海運貨櫃案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -1765,27 +1970,48 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '跨國販毒集團藏匿海運貨櫃案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生跨國販毒集團藏匿海運貨櫃案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生跨國販毒集團藏匿海運貨櫃案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於毒品危害防制條例的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於毒品危害防制條例的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -1813,7 +2039,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['銀行法', '非法吸金', '詐欺集團', '被害人求償'],
     memoryLine: '關於假冒投資平台吸金數十億案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及假冒投資平台吸金數十億案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及假冒投資平台吸金數十億案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -1821,27 +2048,49 @@ CaseBook(
       updatedAt: '2023/10/24',
     ),
     oneSentenceSummary: '假冒投資平台吸金數十億案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生假冒投資平台吸金數十億案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生假冒投資平台吸金數十億案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2023/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2023/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2023/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2023/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2023/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2023/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於銀行法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於銀行法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -1869,7 +2118,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['放火燒燬現住建築物', '殺人罪', '都市更新', '消防安全'],
     memoryLine: '關於市區大樓縱火致多人死傷案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及市區大樓縱火致多人死傷案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及市區大樓縱火致多人死傷案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -1877,27 +2127,49 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '市區大樓縱火致多人死傷案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生市區大樓縱火致多人死傷案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生市區大樓縱火致多人死傷案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於放火燒燬現住建築物的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於放火燒燬現住建築物的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -1925,7 +2197,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['洗錢防制法', '賭博罪', '第三方支付', '扣押財產'],
     memoryLine: '關於地下賭博網站與跨國洗錢案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及地下賭博網站與跨國洗錢案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及地下賭博網站與跨國洗錢案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -1933,27 +2206,49 @@ CaseBook(
       updatedAt: '2022/10/24',
     ),
     oneSentenceSummary: '地下賭博網站與跨國洗錢案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生地下賭博網站與跨國洗錢案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生地下賭博網站與跨國洗錢案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2022/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2022/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2022/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2022/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2022/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2022/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於洗錢防制法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於洗錢防制法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -1981,7 +2276,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['律師倫理', '非正當防禦', '串證洩密', '司法信譽'],
     memoryLine: '關於知名律師涉嫌協助詐騙集團串證案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及知名律師涉嫌協助詐騙集團串證案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及知名律師涉嫌協助詐騙集團串證案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -1989,27 +2285,48 @@ CaseBook(
       updatedAt: '2024/10/24',
     ),
     oneSentenceSummary: '知名律師涉嫌協助詐騙集團串證案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生知名律師涉嫌協助詐騙集團串證案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生知名律師涉嫌協助詐騙集團串證案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2024/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2024/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2024/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2024/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2024/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2024/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於律師倫理的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於律師倫理的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -2037,7 +2354,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['槍砲彈藥刀械管制條例', '挾持人質', '獄政管理', '刑事執法'],
     memoryLine: '關於重大槍擊要犯強盜與逃獄案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及重大槍擊要犯強盜與逃獄案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及重大槍擊要犯強盜與逃獄案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -2045,27 +2363,49 @@ CaseBook(
       updatedAt: '2015/10/24',
     ),
     oneSentenceSummary: '重大槍擊要犯強盜與逃獄案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生重大槍擊要犯強盜與逃獄案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生重大槍擊要犯強盜與逃獄案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2015/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2015/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2015/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2015/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2015/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2015/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於槍砲彈藥刀械管制條例的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於槍砲彈藥刀械管制條例的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -2093,7 +2433,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['警察勤務條例', '臨檢程序', '人身自由', '隱私權'],
     memoryLine: '關於司法院釋字第 535 號解釋之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及司法院釋字第 535 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及司法院釋字第 535 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -2101,27 +2442,49 @@ CaseBook(
       updatedAt: '2001/10/24',
     ),
     oneSentenceSummary: '司法院釋字第 535 號解釋重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生司法院釋字第 535 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生司法院釋字第 535 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2001/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2001/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2001/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2001/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2001/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2001/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於警察勤務條例的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於警察勤務條例的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -2149,7 +2512,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['戶籍法', '強制指紋', '資訊隱私權', '憲法裁判'],
     memoryLine: '關於司法院釋字第 603 號解釋之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及司法院釋字第 603 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及司法院釋字第 603 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -2157,27 +2521,49 @@ CaseBook(
       updatedAt: '2005/10/24',
     ),
     oneSentenceSummary: '司法院釋字第 603 號解釋重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生司法院釋字第 603 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生司法院釋字第 603 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2005/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2005/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2005/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2005/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2005/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2005/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於戶籍法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於戶籍法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -2205,7 +2591,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['社會秩序維護法', '性交易', '平等原則', '生存權保障'],
     memoryLine: '關於司法院釋字第 666 號解釋之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及司法院釋字第 666 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及司法院釋字第 666 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -2213,27 +2600,48 @@ CaseBook(
       updatedAt: '2009/10/24',
     ),
     oneSentenceSummary: '司法院釋字第 666 號解釋重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生司法院釋字第 666 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生司法院釋字第 666 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2009/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2009/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2009/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2009/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2009/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2009/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於社會秩序維護法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於社會秩序維護法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -2261,7 +2669,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['強制抽血', '酒駕調查', '人身自由', '刑事訴訟程序'],
     memoryLine: '關於111 年憲判字第 1 號判決之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及111 年憲判字第 1 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及111 年憲判字第 1 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -2269,27 +2678,49 @@ CaseBook(
       updatedAt: '2022/10/24',
     ),
     oneSentenceSummary: '111 年憲判字第 1 號判決重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生111 年憲判字第 1 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生111 年憲判字第 1 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2022/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2022/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2022/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2022/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2022/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2022/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於強制抽血的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於強制抽血的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -2317,7 +2748,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['誹謗罪', '言論自由', '真實惡意原則', '名譽權保護'],
     memoryLine: '關於112 年憲判字第 4 號判決之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及112 年憲判字第 4 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及112 年憲判字第 4 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -2325,27 +2757,49 @@ CaseBook(
       updatedAt: '2023/10/24',
     ),
     oneSentenceSummary: '112 年憲判字第 4 號判決重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生112 年憲判字第 4 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生112 年憲判字第 4 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2023/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2023/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2023/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2023/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2023/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2023/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於誹謗罪的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於誹謗罪的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -2373,7 +2827,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['親權行使', '跨國父母', '子女最佳利益', '憲法程序'],
     memoryLine: '關於112 年憲判字第 8 號判決之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及112 年憲判字第 8 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及112 年憲判字第 8 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -2381,27 +2836,49 @@ CaseBook(
       updatedAt: '2023/10/24',
     ),
     oneSentenceSummary: '112 年憲判字第 8 號判決重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生112 年憲判字第 8 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生112 年憲判字第 8 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2023/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2023/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2023/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2023/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2023/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2023/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於親權行使的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於親權行使的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -2429,7 +2906,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['男女平等', '親權優先條款', '民法合憲審查', '兩性平權'],
     memoryLine: '關於司法院釋字第 365 號解釋之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及司法院釋字第 365 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及司法院釋字第 365 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -2437,27 +2915,48 @@ CaseBook(
       updatedAt: '1994/10/24',
     ),
     oneSentenceSummary: '司法院釋字第 365 號解釋重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生司法院釋字第 365 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生司法院釋字第 365 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '1994/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '1994/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '1994/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '1994/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '1994/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '1994/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於男女平等的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於男女平等的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -2485,7 +2984,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['國會調查權', '真調會', '權力分立', '機關權限爭議'],
     memoryLine: '關於司法院釋字第 585 號解釋之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及司法院釋字第 585 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及司法院釋字第 585 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -2493,27 +2993,49 @@ CaseBook(
       updatedAt: '2004/10/24',
     ),
     oneSentenceSummary: '司法院釋字第 585 號解釋重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生司法院釋字第 585 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生司法院釋字第 585 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2004/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2004/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2004/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2004/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2004/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2004/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於國會調查權的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於國會調查權的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -2541,7 +3063,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['原住民身分法', '認同權', '平等保障', '文化權利'],
     memoryLine: '關於111 年憲判字第 13 號判決之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及111 年憲判字第 13 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及111 年憲判字第 13 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -2549,27 +3072,49 @@ CaseBook(
       updatedAt: '2022/10/24',
     ),
     oneSentenceSummary: '111 年憲判字第 13 號判決重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生111 年憲判字第 13 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生111 年憲判字第 13 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2022/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2022/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2022/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2022/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2022/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2022/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於原住民身分法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於原住民身分法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -2597,7 +3142,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['公務員考績', '懲處爭議', '訴訟救濟權', '特別權力關係'],
     memoryLine: '關於112 年憲判字第 18 號判決之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及112 年憲判字第 18 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及112 年憲判字第 18 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -2605,27 +3151,49 @@ CaseBook(
       updatedAt: '2023/10/24',
     ),
     oneSentenceSummary: '112 年憲判字第 18 號判決重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生112 年憲判字第 18 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生112 年憲判字第 18 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2023/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2023/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2023/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2023/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2023/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2023/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於公務員考績的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於公務員考績的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -2653,7 +3221,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['磁磚剝落', '管委會責任', '共同侵權行為', '損害賠償'],
     memoryLine: '關於高樓外牆磁磚剝落砸傷路人損賠案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及高樓外牆磁磚剝落砸傷路人損賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及高樓外牆磁磚剝落砸傷路人損賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -2661,27 +3230,48 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '高樓外牆磁磚剝落砸傷路人損賠案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生高樓外牆磁磚剝落砸傷路人損賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生高樓外牆磁磚剝落砸傷路人損賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於磁磚剝落的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於磁磚剝落的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -2709,7 +3299,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['公寓大廈管理條例', '區分所有權', '過失侵權', '修繕求償'],
     memoryLine: '關於大樓住戶裝修挖斷公共水管淹水案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及大樓住戶裝修挖斷公共水管淹水案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及大樓住戶裝修挖斷公共水管淹水案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -2717,27 +3308,49 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '大樓住戶裝修挖斷公共水管淹水案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生大樓住戶裝修挖斷公共水管淹水案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生大樓住戶裝修挖斷公共水管淹水案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於公寓大廈管理條例的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於公寓大廈管理條例的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -2765,7 +3378,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['消費者保護法', '定型化契約', '給付遲延', '違約金扣抵'],
     memoryLine: '關於預售屋買賣建商無故遲延交屋訴訟之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及預售屋買賣建商無故遲延交屋訴訟。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及預售屋買賣建商無故遲延交屋訴訟。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -2773,27 +3387,49 @@ CaseBook(
       updatedAt: '2022/10/24',
     ),
     oneSentenceSummary: '預售屋買賣建商無故遲延交屋訴訟重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生預售屋買賣建商無故遲延交屋訴訟所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生預售屋買賣建商無故遲延交屋訴訟所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2022/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2022/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2022/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2022/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2022/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2022/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於消費者保護法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於消費者保護法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -2821,7 +3457,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['勞動基準法', '勞工身分認定', '僱傭關係', '職災補償'],
     memoryLine: '關於外送平台與合作騎士承攬僱傭爭議之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及外送平台與合作騎士承攬僱傭爭議。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及外送平台與合作騎士承攬僱傭爭議。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -2829,27 +3466,49 @@ CaseBook(
       updatedAt: '2023/10/24',
     ),
     oneSentenceSummary: '外送平台與合作騎士承攬僱傭爭議重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生外送平台與合作騎士承攬僱傭爭議所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生外送平台與合作騎士承攬僱傭爭議所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2023/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2023/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2023/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2023/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2023/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2023/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於勞動基準法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於勞動基準法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -2877,7 +3536,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['肖像權侵害', '人格權保護', '精神慰撫金', '不當得利'],
     memoryLine: '關於知名藝人肖像遭美容廣告盜用案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及知名藝人肖像遭美容廣告盜用案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及知名藝人肖像遭美容廣告盜用案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -2885,27 +3545,48 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '知名藝人肖像遭美容廣告盜用案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生知名藝人肖像遭美容廣告盜用案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生知名藝人肖像遭美容廣告盜用案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於肖像權侵害的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於肖像權侵害的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -2933,7 +3614,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['相鄰關係', '袋地通行權', '公寓規約', '強制拆除'],
     memoryLine: '關於公寓相鄰通道私設鐵門阻礙通行案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及公寓相鄰通道私設鐵門阻礙通行案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及公寓相鄰通道私設鐵門阻礙通行案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -2941,27 +3623,49 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '公寓相鄰通道私設鐵門阻礙通行案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生公寓相鄰通道私設鐵門阻礙通行案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生公寓相鄰通道私設鐵門阻礙通行案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於相鄰關係的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於相鄰關係的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -2989,7 +3693,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['國家賠償', '公共設施設置缺失', '警示牌效力', '過失比例'],
     memoryLine: '關於遊客在知名景點滑倒骨折國賠案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及遊客在知名景點滑倒骨折國賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及遊客在知名景點滑倒骨折國賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -2997,27 +3702,49 @@ CaseBook(
       updatedAt: '2022/10/24',
     ),
     oneSentenceSummary: '遊客在知名景點滑倒骨折國賠案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生遊客在知名景點滑倒骨折國賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生遊客在知名景點滑倒骨折國賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2022/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2022/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2022/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2022/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2022/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2022/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於國家賠償的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於國家賠償的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -3045,7 +3772,8 @@ CaseBook(
     category: '兒少保護',
     tags: const ['兒少法', '托育監管', '不當對待', '吊銷執照'],
     memoryLine: '關於私立托嬰中心不當對待幼兒處罰案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及私立托嬰中心不當對待幼兒處罰案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及私立托嬰中心不當對待幼兒處罰案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -3053,27 +3781,49 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '私立托嬰中心不當對待幼兒處罰案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生私立托嬰中心不當對待幼兒處罰案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生私立托嬰中心不當對待幼兒處罰案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於兒少法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於兒少法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -3101,7 +3851,8 @@ CaseBook(
     category: '兒少保護',
     tags: const ['兒少性剝削防制', '數位性暴力', '網路安全', '扣押數位證據'],
     memoryLine: '關於未成年網路交友遭誘騙私密照案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及未成年網路交友遭誘騙私密照案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及未成年網路交友遭誘騙私密照案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -3109,27 +3860,48 @@ CaseBook(
       updatedAt: '2022/10/24',
     ),
     oneSentenceSummary: '未成年網路交友遭誘騙私密照案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生未成年網路交友遭誘騙私密照案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生未成年網路交友遭誘騙私密照案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2022/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2022/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2022/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2022/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2022/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2022/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於兒少性剝削防制的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於兒少性剝削防制的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -3157,7 +3929,8 @@ CaseBook(
     category: '兒少保護',
     tags: const ['親權衝突', '略誘罪', '家事事件法', '子女探視權'],
     memoryLine: '關於離婚父母擅自带走子女藏匿妨害自由案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及離婚父母擅自带走子女藏匿妨害自由案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及離婚父母擅自带走子女藏匿妨害自由案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -3165,27 +3938,49 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '離婚父母擅自带走子女藏匿妨害自由案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生離婚父母擅自带走子女藏匿妨害自由案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生離婚父母擅自带走子女藏匿妨害自由案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於親權衝突的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於親權衝突的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -3213,7 +4008,8 @@ CaseBook(
     category: '兒少保護',
     tags: const ['居家托育', '業務過失致傷害', '居家安全', '保母執照廢止'],
     memoryLine: '關於保母超收托育導致幼兒受傷業務過失案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及保母超收托育導致幼兒受傷業務過失案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及保母超收托育導致幼兒受傷業務過失案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -3221,27 +4017,49 @@ CaseBook(
       updatedAt: '2023/10/24',
     ),
     oneSentenceSummary: '保母超收托育導致幼兒受傷業務過失案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生保母超收托育導致幼兒受傷業務過失案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生保母超收托育導致幼兒受傷業務過失案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2023/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2023/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2023/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2023/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2023/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2023/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於居家托育的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於居家托育的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -3269,7 +4087,8 @@ CaseBook(
     category: '家庭案件',
     tags: const ['遺產繼承', '特留分', '自書遺囑效力', '信託財產'],
     memoryLine: '關於豪門爭產遺囑特留分爭訟案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及豪門爭產遺囑特留分爭訟案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及豪門爭產遺囑特留分爭訟案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -3277,27 +4096,49 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '豪門爭產遺囑特留分爭訟案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生豪門爭產遺囑特留分爭訟案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生豪門爭產遺囑特留分爭訟案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於遺產繼承的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於遺產繼承的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -3325,7 +4166,8 @@ CaseBook(
     category: '家庭案件',
     tags: const ['配偶權侵害', '名譽權', '家事調解', '離異損害賠償'],
     memoryLine: '關於配偶發現外遇對第三人請求賠償案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及配偶發現外遇對第三人請求賠償案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及配偶發現外遇對第三人請求賠償案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -3333,27 +4175,48 @@ CaseBook(
       updatedAt: '2022/10/24',
     ),
     oneSentenceSummary: '配偶發現外遇對第三人請求賠償案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生配偶發現外遇對第三人請求賠償案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生配偶發現外遇對第三人請求賠償案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2022/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2022/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2022/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2022/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2022/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2022/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於配偶權侵害的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於配偶權侵害的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -3381,7 +4244,8 @@ CaseBook(
     category: '家庭案件',
     tags: const ['民法扶養義務', '免除扶養責任', '家暴事證', '法院裁定'],
     memoryLine: '關於長期不盡扶養義務成年子女免除責任案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及長期不盡扶養義務成年子女免除責任案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及長期不盡扶養義務成年子女免除責任案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -3389,27 +4253,49 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '長期不盡扶養義務成年子女免除責任案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生長期不盡扶養義務成年子女免除責任案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生長期不盡扶養義務成年子女免除責任案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於民法扶養義務的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於民法扶養義務的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -3437,7 +4323,8 @@ CaseBook(
     category: '家庭案件',
     tags: const ['跨國婚姻', '裁判離婚', '監護權判定', '探視方案'],
     memoryLine: '關於跨國婚姻離異爭奪子女監護權案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及跨國婚姻離異爭奪子女監護權案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及跨國婚姻離異爭奪子女監護權案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -3445,27 +4332,49 @@ CaseBook(
       updatedAt: '2023/10/24',
     ),
     oneSentenceSummary: '跨國婚姻離異爭奪子女監護權案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生跨國婚姻離異爭奪子女監護權案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生跨國婚姻離異爭奪子女監護權案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2023/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2023/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2023/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2023/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2023/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2023/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於跨國婚姻的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於跨國婚姻的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -3493,7 +4402,8 @@ CaseBook(
     category: '校園案件',
     tags: const ['退學處分', '學生申訴', '行政訴訟', '受教權保障'],
     memoryLine: '關於大學生因作弊遭勒令退學處分行政救濟案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及大學生因作弊遭勒令退學處分行政救濟案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及大學生因作弊遭勒令退學處分行政救濟案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -3501,27 +4411,49 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '大學生因作弊遭勒令退學處分行政救濟案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生大學生因作弊遭勒令退學處分行政救濟案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生大學生因作弊遭勒令退學處分行政救濟案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於退學處分的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於退學處分的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -3549,7 +4481,8 @@ CaseBook(
     category: '校園案件',
     tags: const ['髮禁限制', '學校管教界線', '特別權力關係突破', '人格發展自由'],
     memoryLine: '關於中學生因髮禁遭處分起訴學校案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及中學生因髮禁遭處分起訴學校案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及中學生因髮禁遭處分起訴學校案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -3557,27 +4490,48 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '中學生因髮禁遭處分起訴學校案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生中學生因髮禁遭處分起訴學校案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生中學生因髮禁遭處分起訴學校案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於髮禁限制的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於髮禁限制的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -3605,7 +4559,8 @@ CaseBook(
     category: '校園案件',
     tags: const ['校園霸凌', '家長連帶責任', '學校通報疏失', '損害賠償'],
     memoryLine: '關於校園內霸凌導致受害學生精神損害賠償案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及校園內霸凌導致受害學生精神損害賠償案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及校園內霸凌導致受害學生精神損害賠償案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -3613,27 +4568,49 @@ CaseBook(
       updatedAt: '2022/10/24',
     ),
     oneSentenceSummary: '校園內霸凌導致受害學生精神損害賠償案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生校園內霸凌導致受害學生精神損害賠償案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生校園內霸凌導致受害學生精神損害賠償案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2022/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2022/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2022/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2022/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2022/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2022/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於校園霸凌的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於校園霸凌的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -3661,7 +4638,8 @@ CaseBook(
     category: '智慧財產',
     tags: const ['商標權侵害', '著作權保護', '抄襲認定', '懲罰性賠償'],
     memoryLine: '關於知名設計師商標遭抄襲侵權損賠案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及知名設計師商標遭抄襲侵權損賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及知名設計師商標遭抄襲侵權損賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -3669,27 +4647,49 @@ CaseBook(
       updatedAt: '2022/10/24',
     ),
     oneSentenceSummary: '知名設計師商標遭抄襲侵權損賠案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生知名設計師商標遭抄襲侵權損賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生知名設計師商標遭抄襲侵權損賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2022/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2022/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2022/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2022/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2022/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2022/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於商標權侵害的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於商標權侵害的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -3717,7 +4717,8 @@ CaseBook(
     category: '智慧財產',
     tags: const ['著作權法', '網路侵權', '合理使用界線', '刑事告訴'],
     memoryLine: '關於網路論壇未經授權轉載原創文章案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及網路論壇未經授權轉載原創文章案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及網路論壇未經授權轉載原創文章案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -3725,27 +4726,49 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '網路論壇未經授權轉載原創文章案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生網路論壇未經授權轉載原創文章案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生網路論壇未經授權轉載原創文章案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於著作權法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於著作權法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -3773,7 +4796,8 @@ CaseBook(
     category: '智慧財產',
     tags: const ['專利侵權', '均等論', '禁制令', '損害賠償計算'],
     memoryLine: '關於科技公司侵犯行動裝置專利權訴訟之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及科技公司侵犯行動裝置專利權訴訟。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及科技公司侵犯行動裝置專利權訴訟。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -3781,27 +4805,48 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '科技公司侵犯行動裝置專利權訴訟重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生科技公司侵犯行動裝置專利權訴訟所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生科技公司侵犯行動裝置專利權訴訟所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於專利侵權的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於專利侵權的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -3829,7 +4874,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['隨機殺人', '死刑量刑', '精神鑑定', '社會安全網'],
     memoryLine: '關於捷運無差別隨機殺人案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及捷運無差別隨機殺人案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及捷運無差別隨機殺人案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -3837,27 +4883,49 @@ CaseBook(
       updatedAt: '2013/10/24',
     ),
     oneSentenceSummary: '捷運無差別隨機殺人案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生捷運無差別隨機殺人案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生捷運無差別隨機殺人案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2013/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2013/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2013/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2013/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2013/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2013/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於隨機殺人的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於隨機殺人的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -3885,7 +4953,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['公共危險', '爆炸物', '意圖勒索', '公共安全'],
     memoryLine: '關於高速鐵路爆炸未遂案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及高速鐵路爆炸未遂案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及高速鐵路爆炸未遂案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -3893,27 +4962,49 @@ CaseBook(
       updatedAt: '2012/10/24',
     ),
     oneSentenceSummary: '高速鐵路爆炸未遂案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生高速鐵路爆炸未遂案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生高速鐵路爆炸未遂案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2012/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2012/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2012/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2012/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2012/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2012/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於公共危險的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於公共危險的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -3941,7 +5032,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['粉塵爆炸', '業務過失致死', '公共安全', '集體求償'],
     memoryLine: '關於八仙樂園彩色派對粉塵爆炸案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及八仙樂園彩色派對粉塵爆炸案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及八仙樂園彩色派對粉塵爆炸案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -3949,27 +5041,49 @@ CaseBook(
       updatedAt: '2014/10/24',
     ),
     oneSentenceSummary: '八仙樂園彩色派對粉塵爆炸案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生八仙樂園彩色派對粉塵爆炸案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生八仙樂園彩色派對粉塵爆炸案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2014/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2014/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2014/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2014/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2014/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2014/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於粉塵爆炸的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於粉塵爆炸的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -3997,7 +5111,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['交通安全', '勞工過勞', '業務過失', '遊覽車監管'],
     memoryLine: '關於國道路段遊覽車翻覆重大傷亡案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及國道路段遊覽車翻覆重大傷亡案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及國道路段遊覽車翻覆重大傷亡案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -4005,27 +5120,48 @@ CaseBook(
       updatedAt: '2016/10/24',
     ),
     oneSentenceSummary: '國道路段遊覽車翻覆重大傷亡案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生國道路段遊覽車翻覆重大傷亡案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生國道路段遊覽車翻覆重大傷亡案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2016/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2016/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2016/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2016/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2016/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2016/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於交通安全的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於交通安全的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -4053,7 +5189,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['鐵路安全', 'ATP系統', '業務過失', '重大事故'],
     memoryLine: '關於台鐵普悠瑪列車出軌翻覆事故案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及台鐵普悠瑪列車出軌翻覆事故案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及台鐵普悠瑪列車出軌翻覆事故案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -4061,27 +5198,49 @@ CaseBook(
       updatedAt: '2017/10/24',
     ),
     oneSentenceSummary: '台鐵普悠瑪列車出軌翻覆事故案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生台鐵普悠瑪列車出軌翻覆事故案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生台鐵普悠瑪列車出軌翻覆事故案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2017/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2017/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2017/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2017/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2017/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2017/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於鐵路安全的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於鐵路安全的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -4109,7 +5268,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['組織犯罪', '人口販運', '非法拘禁', '虛擬貨幣洗錢'],
     memoryLine: '關於跨國詐騙集團洗錢與押人案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及跨國詐騙集團洗錢與押人案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及跨國詐騙集團洗錢與押人案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -4117,27 +5277,49 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '跨國詐騙集團洗錢與押人案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生跨國詐騙集團洗錢與押人案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生跨國詐騙集團洗錢與押人案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於組織犯罪的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於組織犯罪的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -4165,7 +5347,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['新興毒品', '過失致死', '轉讓毒品', '連帶賠償'],
     memoryLine: '關於知名藝人涉毒品派對致死案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及知名藝人涉毒品派對致死案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及知名藝人涉毒品派對致死案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -4173,27 +5356,49 @@ CaseBook(
       updatedAt: '2015/10/24',
     ),
     oneSentenceSummary: '知名藝人涉毒品派對致死案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生知名藝人涉毒品派對致死案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生知名藝人涉毒品派對致死案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2015/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2015/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2015/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2015/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2015/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2015/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於新興毒品的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於新興毒品的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -4221,7 +5426,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['證券交易法', '內線交易', '背信罪', '金融犯罪'],
     memoryLine: '關於金控集團內部人內線交易案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及金控集團內部人內線交易案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及金控集團內部人內線交易案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -4229,27 +5435,48 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '金控集團內部人內線交易案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生金控集團內部人內線交易案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生金控集團內部人內線交易案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於證券交易法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於證券交易法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -4277,7 +5504,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['營業秘密法', '競業禁止', '商業間諜', '智慧財產保護'],
     memoryLine: '關於跨國科技廠商業秘密竊取案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及跨國科技廠商業秘密竊取案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及跨國科技廠商業秘密竊取案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -4285,27 +5513,49 @@ CaseBook(
       updatedAt: '2018/10/24',
     ),
     oneSentenceSummary: '跨國科技廠商業秘密竊取案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生跨國科技廠商業秘密竊取案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生跨國科技廠商業秘密竊取案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2018/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2018/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2018/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2018/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2018/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2018/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於營業秘密法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於營業秘密法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -4333,7 +5583,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['毒品危害防制條例', '走私海運', '跨國執法', '洗錢防制'],
     memoryLine: '關於跨國販毒集團藏匿海運貨櫃案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及跨國販毒集團藏匿海運貨櫃案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及跨國販毒集團藏匿海運貨櫃案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -4341,27 +5592,49 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '跨國販毒集團藏匿海運貨櫃案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生跨國販毒集團藏匿海運貨櫃案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生跨國販毒集團藏匿海運貨櫃案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於毒品危害防制條例的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於毒品危害防制條例的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -4389,7 +5662,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['銀行法', '非法吸金', '詐欺集團', '被害人求償'],
     memoryLine: '關於假冒投資平台吸金數十億案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及假冒投資平台吸金數十億案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及假冒投資平台吸金數十億案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -4397,27 +5671,49 @@ CaseBook(
       updatedAt: '2022/10/24',
     ),
     oneSentenceSummary: '假冒投資平台吸金數十億案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生假冒投資平台吸金數十億案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生假冒投資平台吸金數十億案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2022/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2022/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2022/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2022/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2022/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2022/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於銀行法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於銀行法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -4445,7 +5741,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['放火燒燬現住建築物', '殺人罪', '都市更新', '消防安全'],
     memoryLine: '關於市區大樓縱火致多人死傷案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及市區大樓縱火致多人死傷案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及市區大樓縱火致多人死傷案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -4453,27 +5750,48 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '市區大樓縱火致多人死傷案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生市區大樓縱火致多人死傷案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生市區大樓縱火致多人死傷案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於放火燒燬現住建築物的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於放火燒燬現住建築物的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -4501,7 +5819,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['洗錢防制法', '賭博罪', '第三方支付', '扣押財產'],
     memoryLine: '關於地下賭博網站與跨國洗錢案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及地下賭博網站與跨國洗錢案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及地下賭博網站與跨國洗錢案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -4509,27 +5828,49 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '地下賭博網站與跨國洗錢案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生地下賭博網站與跨國洗錢案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生地下賭博網站與跨國洗錢案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於洗錢防制法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於洗錢防制法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -4557,7 +5898,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['律師倫理', '非正當防禦', '串證洩密', '司法信譽'],
     memoryLine: '關於知名律師涉嫌協助詐騙集團串證案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及知名律師涉嫌協助詐騙集團串證案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及知名律師涉嫌協助詐騙集團串證案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -4565,27 +5907,49 @@ CaseBook(
       updatedAt: '2023/10/24',
     ),
     oneSentenceSummary: '知名律師涉嫌協助詐騙集團串證案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生知名律師涉嫌協助詐騙集團串證案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生知名律師涉嫌協助詐騙集團串證案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2023/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2023/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2023/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2023/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2023/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2023/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於律師倫理的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於律師倫理的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -4613,7 +5977,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['槍砲彈藥刀械管制條例', '挾持人質', '獄政管理', '刑事執法'],
     memoryLine: '關於重大槍擊要犯強盜與逃獄案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及重大槍擊要犯強盜與逃獄案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及重大槍擊要犯強盜與逃獄案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -4621,27 +5986,49 @@ CaseBook(
       updatedAt: '2014/10/24',
     ),
     oneSentenceSummary: '重大槍擊要犯強盜與逃獄案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生重大槍擊要犯強盜與逃獄案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生重大槍擊要犯強盜與逃獄案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2014/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2014/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2014/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2014/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2014/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2014/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於槍砲彈藥刀械管制條例的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於槍砲彈藥刀械管制條例的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -4669,7 +6056,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['警察勤務條例', '臨檢程序', '人身自由', '隱私權'],
     memoryLine: '關於司法院釋字第 535 號解釋之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及司法院釋字第 535 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及司法院釋字第 535 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -4677,27 +6065,48 @@ CaseBook(
       updatedAt: '2000/10/24',
     ),
     oneSentenceSummary: '司法院釋字第 535 號解釋重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生司法院釋字第 535 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生司法院釋字第 535 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2000/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2000/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2000/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2000/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2000/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2000/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於警察勤務條例的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於警察勤務條例的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -4725,7 +6134,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['戶籍法', '強制指紋', '資訊隱私權', '憲法裁判'],
     memoryLine: '關於司法院釋字第 603 號解釋之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及司法院釋字第 603 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及司法院釋字第 603 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -4733,27 +6143,49 @@ CaseBook(
       updatedAt: '2004/10/24',
     ),
     oneSentenceSummary: '司法院釋字第 603 號解釋重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生司法院釋字第 603 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生司法院釋字第 603 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2004/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2004/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2004/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2004/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2004/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2004/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於戶籍法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於戶籍法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -4781,7 +6213,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['社會秩序維護法', '性交易', '平等原則', '生存權保障'],
     memoryLine: '關於司法院釋字第 666 號解釋之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及司法院釋字第 666 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及司法院釋字第 666 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -4789,27 +6222,49 @@ CaseBook(
       updatedAt: '2008/10/24',
     ),
     oneSentenceSummary: '司法院釋字第 666 號解釋重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生司法院釋字第 666 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生司法院釋字第 666 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2008/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2008/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2008/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2008/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2008/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2008/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於社會秩序維護法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於社會秩序維護法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -4837,7 +6292,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['強制抽血', '酒駕調查', '人身自由', '刑事訴訟程序'],
     memoryLine: '關於111 年憲判字第 1 號判決之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及111 年憲判字第 1 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及111 年憲判字第 1 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -4845,27 +6301,49 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '111 年憲判字第 1 號判決重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生111 年憲判字第 1 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生111 年憲判字第 1 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於強制抽血的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於強制抽血的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -4893,7 +6371,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['誹謗罪', '言論自由', '真實惡意原則', '名譽權保護'],
     memoryLine: '關於112 年憲判字第 4 號判決之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及112 年憲判字第 4 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及112 年憲判字第 4 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -4901,27 +6380,48 @@ CaseBook(
       updatedAt: '2022/10/24',
     ),
     oneSentenceSummary: '112 年憲判字第 4 號判決重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生112 年憲判字第 4 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生112 年憲判字第 4 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2022/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2022/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2022/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2022/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2022/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2022/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於誹謗罪的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於誹謗罪的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -4949,7 +6449,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['親權行使', '跨國父母', '子女最佳利益', '憲法程序'],
     memoryLine: '關於112 年憲判字第 8 號判決之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及112 年憲判字第 8 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及112 年憲判字第 8 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -4957,27 +6458,49 @@ CaseBook(
       updatedAt: '2022/10/24',
     ),
     oneSentenceSummary: '112 年憲判字第 8 號判決重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生112 年憲判字第 8 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生112 年憲判字第 8 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2022/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2022/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2022/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2022/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2022/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2022/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於親權行使的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於親權行使的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -5005,7 +6528,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['男女平等', '親權優先條款', '民法合憲審查', '兩性平權'],
     memoryLine: '關於司法院釋字第 365 號解釋之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及司法院釋字第 365 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及司法院釋字第 365 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -5013,27 +6537,49 @@ CaseBook(
       updatedAt: '1993/10/24',
     ),
     oneSentenceSummary: '司法院釋字第 365 號解釋重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生司法院釋字第 365 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生司法院釋字第 365 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '1993/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '1993/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '1993/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '1993/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '1993/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '1993/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於男女平等的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於男女平等的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -5061,7 +6607,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['國會調查權', '真調會', '權力分立', '機關權限爭議'],
     memoryLine: '關於司法院釋字第 585 號解釋之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及司法院釋字第 585 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及司法院釋字第 585 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -5069,27 +6616,49 @@ CaseBook(
       updatedAt: '2003/10/24',
     ),
     oneSentenceSummary: '司法院釋字第 585 號解釋重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生司法院釋字第 585 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生司法院釋字第 585 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2003/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2003/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2003/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2003/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2003/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2003/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於國會調查權的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於國會調查權的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -5117,7 +6686,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['原住民身分法', '認同權', '平等保障', '文化權利'],
     memoryLine: '關於111 年憲判字第 13 號判決之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及111 年憲判字第 13 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及111 年憲判字第 13 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -5125,27 +6695,48 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '111 年憲判字第 13 號判決重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生111 年憲判字第 13 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生111 年憲判字第 13 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於原住民身分法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於原住民身分法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -5173,7 +6764,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['公務員考績', '懲處爭議', '訴訟救濟權', '特別權力關係'],
     memoryLine: '關於112 年憲判字第 18 號判決之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及112 年憲判字第 18 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及112 年憲判字第 18 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -5181,27 +6773,49 @@ CaseBook(
       updatedAt: '2022/10/24',
     ),
     oneSentenceSummary: '112 年憲判字第 18 號判決重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生112 年憲判字第 18 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生112 年憲判字第 18 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2022/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2022/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2022/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2022/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2022/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2022/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於公務員考績的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於公務員考績的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -5229,7 +6843,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['磁磚剝落', '管委會責任', '共同侵權行為', '損害賠償'],
     memoryLine: '關於高樓外牆磁磚剝落砸傷路人損賠案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及高樓外牆磁磚剝落砸傷路人損賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及高樓外牆磁磚剝落砸傷路人損賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -5237,27 +6852,49 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '高樓外牆磁磚剝落砸傷路人損賠案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生高樓外牆磁磚剝落砸傷路人損賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生高樓外牆磁磚剝落砸傷路人損賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於磁磚剝落的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於磁磚剝落的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -5285,7 +6922,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['公寓大廈管理條例', '區分所有權', '過失侵權', '修繕求償'],
     memoryLine: '關於大樓住戶裝修挖斷公共水管淹水案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及大樓住戶裝修挖斷公共水管淹水案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及大樓住戶裝修挖斷公共水管淹水案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -5293,27 +6931,49 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '大樓住戶裝修挖斷公共水管淹水案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生大樓住戶裝修挖斷公共水管淹水案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生大樓住戶裝修挖斷公共水管淹水案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於公寓大廈管理條例的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於公寓大廈管理條例的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -5341,7 +7001,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['消費者保護法', '定型化契約', '給付遲延', '違約金扣抵'],
     memoryLine: '關於預售屋買賣建商無故遲延交屋訴訟之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及預售屋買賣建商無故遲延交屋訴訟。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及預售屋買賣建商無故遲延交屋訴訟。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -5349,27 +7010,48 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '預售屋買賣建商無故遲延交屋訴訟重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生預售屋買賣建商無故遲延交屋訴訟所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生預售屋買賣建商無故遲延交屋訴訟所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於消費者保護法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於消費者保護法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -5397,7 +7079,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['勞動基準法', '勞工身分認定', '僱傭關係', '職災補償'],
     memoryLine: '關於外送平台與合作騎士承攬僱傭爭議之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及外送平台與合作騎士承攬僱傭爭議。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及外送平台與合作騎士承攬僱傭爭議。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -5405,27 +7088,49 @@ CaseBook(
       updatedAt: '2022/10/24',
     ),
     oneSentenceSummary: '外送平台與合作騎士承攬僱傭爭議重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生外送平台與合作騎士承攬僱傭爭議所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生外送平台與合作騎士承攬僱傭爭議所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2022/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2022/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2022/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2022/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2022/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2022/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於勞動基準法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於勞動基準法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -5453,7 +7158,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['肖像權侵害', '人格權保護', '精神慰撫金', '不當得利'],
     memoryLine: '關於知名藝人肖像遭美容廣告盜用案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及知名藝人肖像遭美容廣告盜用案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及知名藝人肖像遭美容廣告盜用案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -5461,27 +7167,49 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '知名藝人肖像遭美容廣告盜用案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生知名藝人肖像遭美容廣告盜用案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生知名藝人肖像遭美容廣告盜用案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於肖像權侵害的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於肖像權侵害的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -5509,7 +7237,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['相鄰關係', '袋地通行權', '公寓規約', '強制拆除'],
     memoryLine: '關於公寓相鄰通道私設鐵門阻礙通行案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及公寓相鄰通道私設鐵門阻礙通行案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及公寓相鄰通道私設鐵門阻礙通行案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -5517,27 +7246,49 @@ CaseBook(
       updatedAt: '2018/10/24',
     ),
     oneSentenceSummary: '公寓相鄰通道私設鐵門阻礙通行案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生公寓相鄰通道私設鐵門阻礙通行案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生公寓相鄰通道私設鐵門阻礙通行案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2018/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2018/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2018/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2018/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2018/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2018/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於相鄰關係的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於相鄰關係的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -5565,7 +7316,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['國家賠償', '公共設施設置缺失', '警示牌效力', '過失比例'],
     memoryLine: '關於遊客在知名景點滑倒骨折國賠案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及遊客在知名景點滑倒骨折國賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及遊客在知名景點滑倒骨折國賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -5573,27 +7325,48 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '遊客在知名景點滑倒骨折國賠案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生遊客在知名景點滑倒骨折國賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生遊客在知名景點滑倒骨折國賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於國家賠償的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於國家賠償的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -5621,7 +7394,8 @@ CaseBook(
     category: '兒少保護',
     tags: const ['兒少法', '托育監管', '不當對待', '吊銷執照'],
     memoryLine: '關於私立托嬰中心不當對待幼兒處罰案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及私立托嬰中心不當對待幼兒處罰案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及私立托嬰中心不當對待幼兒處罰案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -5629,27 +7403,49 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '私立托嬰中心不當對待幼兒處罰案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生私立托嬰中心不當對待幼兒處罰案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生私立托嬰中心不當對待幼兒處罰案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於兒少法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於兒少法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -5677,7 +7473,8 @@ CaseBook(
     category: '兒少保護',
     tags: const ['兒少性剝削防制', '數位性暴力', '網路安全', '扣押數位證據'],
     memoryLine: '關於未成年網路交友遭誘騙私密照案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及未成年網路交友遭誘騙私密照案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及未成年網路交友遭誘騙私密照案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -5685,27 +7482,49 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '未成年網路交友遭誘騙私密照案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生未成年網路交友遭誘騙私密照案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生未成年網路交友遭誘騙私密照案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於兒少性剝削防制的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於兒少性剝削防制的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -5733,7 +7552,8 @@ CaseBook(
     category: '兒少保護',
     tags: const ['親權衝突', '略誘罪', '家事事件法', '子女探視權'],
     memoryLine: '關於離婚父母擅自带走子女藏匿妨害自由案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及離婚父母擅自带走子女藏匿妨害自由案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及離婚父母擅自带走子女藏匿妨害自由案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -5741,27 +7561,49 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '離婚父母擅自带走子女藏匿妨害自由案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生離婚父母擅自带走子女藏匿妨害自由案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生離婚父母擅自带走子女藏匿妨害自由案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於親權衝突的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於親權衝突的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -5789,7 +7631,8 @@ CaseBook(
     category: '兒少保護',
     tags: const ['居家托育', '業務過失致傷害', '居家安全', '保母執照廢止'],
     memoryLine: '關於保母超收托育導致幼兒受傷業務過失案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及保母超收托育導致幼兒受傷業務過失案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及保母超收托育導致幼兒受傷業務過失案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -5797,27 +7640,48 @@ CaseBook(
       updatedAt: '2022/10/24',
     ),
     oneSentenceSummary: '保母超收托育導致幼兒受傷業務過失案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生保母超收托育導致幼兒受傷業務過失案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生保母超收托育導致幼兒受傷業務過失案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2022/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2022/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2022/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2022/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2022/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2022/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於居家托育的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於居家托育的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -5845,7 +7709,8 @@ CaseBook(
     category: '家庭案件',
     tags: const ['遺產繼承', '特留分', '自書遺囑效力', '信託財產'],
     memoryLine: '關於豪門爭產遺囑特留分爭訟案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及豪門爭產遺囑特留分爭訟案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及豪門爭產遺囑特留分爭訟案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -5853,27 +7718,49 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '豪門爭產遺囑特留分爭訟案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生豪門爭產遺囑特留分爭訟案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生豪門爭產遺囑特留分爭訟案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於遺產繼承的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於遺產繼承的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -5901,7 +7788,8 @@ CaseBook(
     category: '家庭案件',
     tags: const ['配偶權侵害', '名譽權', '家事調解', '離異損害賠償'],
     memoryLine: '關於配偶發現外遇對第三人請求賠償案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及配偶發現外遇對第三人請求賠償案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及配偶發現外遇對第三人請求賠償案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -5909,27 +7797,49 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '配偶發現外遇對第三人請求賠償案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生配偶發現外遇對第三人請求賠償案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生配偶發現外遇對第三人請求賠償案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於配偶權侵害的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於配偶權侵害的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -5957,7 +7867,8 @@ CaseBook(
     category: '家庭案件',
     tags: const ['民法扶養義務', '免除扶養責任', '家暴事證', '法院裁定'],
     memoryLine: '關於長期不盡扶養義務成年子女免除責任案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及長期不盡扶養義務成年子女免除責任案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及長期不盡扶養義務成年子女免除責任案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -5965,27 +7876,49 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '長期不盡扶養義務成年子女免除責任案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生長期不盡扶養義務成年子女免除責任案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生長期不盡扶養義務成年子女免除責任案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於民法扶養義務的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於民法扶養義務的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -6013,7 +7946,8 @@ CaseBook(
     category: '家庭案件',
     tags: const ['跨國婚姻', '裁判離婚', '監護權判定', '探視方案'],
     memoryLine: '關於跨國婚姻離異爭奪子女監護權案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及跨國婚姻離異爭奪子女監護權案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及跨國婚姻離異爭奪子女監護權案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -6021,27 +7955,48 @@ CaseBook(
       updatedAt: '2022/10/24',
     ),
     oneSentenceSummary: '跨國婚姻離異爭奪子女監護權案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生跨國婚姻離異爭奪子女監護權案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生跨國婚姻離異爭奪子女監護權案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2022/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2022/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2022/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2022/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2022/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2022/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於跨國婚姻的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於跨國婚姻的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -6069,7 +8024,8 @@ CaseBook(
     category: '校園案件',
     tags: const ['退學處分', '學生申訴', '行政訴訟', '受教權保障'],
     memoryLine: '關於大學生因作弊遭勒令退學處分行政救濟案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及大學生因作弊遭勒令退學處分行政救濟案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及大學生因作弊遭勒令退學處分行政救濟案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -6077,27 +8033,49 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '大學生因作弊遭勒令退學處分行政救濟案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生大學生因作弊遭勒令退學處分行政救濟案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生大學生因作弊遭勒令退學處分行政救濟案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於退學處分的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於退學處分的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -6125,7 +8103,8 @@ CaseBook(
     category: '校園案件',
     tags: const ['髮禁限制', '學校管教界線', '特別權力關係突破', '人格發展自由'],
     memoryLine: '關於中學生因髮禁遭處分起訴學校案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及中學生因髮禁遭處分起訴學校案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及中學生因髮禁遭處分起訴學校案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -6133,27 +8112,49 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '中學生因髮禁遭處分起訴學校案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生中學生因髮禁遭處分起訴學校案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生中學生因髮禁遭處分起訴學校案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於髮禁限制的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於髮禁限制的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -6181,7 +8182,8 @@ CaseBook(
     category: '校園案件',
     tags: const ['校園霸凌', '家長連帶責任', '學校通報疏失', '損害賠償'],
     memoryLine: '關於校園內霸凌導致受害學生精神損害賠償案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及校園內霸凌導致受害學生精神損害賠償案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及校園內霸凌導致受害學生精神損害賠償案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -6189,27 +8191,49 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '校園內霸凌導致受害學生精神損害賠償案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生校園內霸凌導致受害學生精神損害賠償案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生校園內霸凌導致受害學生精神損害賠償案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於校園霸凌的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於校園霸凌的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -6237,7 +8261,8 @@ CaseBook(
     category: '智慧財產',
     tags: const ['商標權侵害', '著作權保護', '抄襲認定', '懲罰性賠償'],
     memoryLine: '關於知名設計師商標遭抄襲侵權損賠案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及知名設計師商標遭抄襲侵權損賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及知名設計師商標遭抄襲侵權損賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -6245,27 +8270,48 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '知名設計師商標遭抄襲侵權損賠案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生知名設計師商標遭抄襲侵權損賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生知名設計師商標遭抄襲侵權損賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於商標權侵害的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於商標權侵害的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -6293,7 +8339,8 @@ CaseBook(
     category: '智慧財產',
     tags: const ['著作權法', '網路侵權', '合理使用界線', '刑事告訴'],
     memoryLine: '關於網路論壇未經授權轉載原創文章案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及網路論壇未經授權轉載原創文章案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及網路論壇未經授權轉載原創文章案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -6301,27 +8348,49 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '網路論壇未經授權轉載原創文章案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生網路論壇未經授權轉載原創文章案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生網路論壇未經授權轉載原創文章案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於著作權法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於著作權法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -6349,7 +8418,8 @@ CaseBook(
     category: '智慧財產',
     tags: const ['專利侵權', '均等論', '禁制令', '損害賠償計算'],
     memoryLine: '關於科技公司侵犯行動裝置專利權訴訟之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及科技公司侵犯行動裝置專利權訴訟。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及科技公司侵犯行動裝置專利權訴訟。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -6357,27 +8427,49 @@ CaseBook(
       updatedAt: '2018/10/24',
     ),
     oneSentenceSummary: '科技公司侵犯行動裝置專利權訴訟重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生科技公司侵犯行動裝置專利權訴訟所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生科技公司侵犯行動裝置專利權訴訟所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2018/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2018/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2018/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2018/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2018/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2018/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於專利侵權的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於專利侵權的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -6405,7 +8497,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['隨機殺人', '死刑量刑', '精神鑑定', '社會安全網'],
     memoryLine: '關於捷運無差別隨機殺人案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及捷運無差別隨機殺人案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及捷運無差別隨機殺人案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -6413,27 +8506,49 @@ CaseBook(
       updatedAt: '2012/10/24',
     ),
     oneSentenceSummary: '捷運無差別隨機殺人案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生捷運無差別隨機殺人案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生捷運無差別隨機殺人案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2012/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2012/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2012/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2012/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2012/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2012/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於隨機殺人的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於隨機殺人的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -6461,7 +8576,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['公共危險', '爆炸物', '意圖勒索', '公共安全'],
     memoryLine: '關於高速鐵路爆炸未遂案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及高速鐵路爆炸未遂案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及高速鐵路爆炸未遂案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -6469,27 +8585,48 @@ CaseBook(
       updatedAt: '2011/10/24',
     ),
     oneSentenceSummary: '高速鐵路爆炸未遂案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生高速鐵路爆炸未遂案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生高速鐵路爆炸未遂案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2011/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2011/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2011/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2011/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2011/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2011/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於公共危險的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於公共危險的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -6517,7 +8654,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['粉塵爆炸', '業務過失致死', '公共安全', '集體求償'],
     memoryLine: '關於八仙樂園彩色派對粉塵爆炸案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及八仙樂園彩色派對粉塵爆炸案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及八仙樂園彩色派對粉塵爆炸案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -6525,27 +8663,49 @@ CaseBook(
       updatedAt: '2013/10/24',
     ),
     oneSentenceSummary: '八仙樂園彩色派對粉塵爆炸案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生八仙樂園彩色派對粉塵爆炸案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生八仙樂園彩色派對粉塵爆炸案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2013/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2013/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2013/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2013/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2013/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2013/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於粉塵爆炸的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於粉塵爆炸的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -6573,7 +8733,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['交通安全', '勞工過勞', '業務過失', '遊覽車監管'],
     memoryLine: '關於國道路段遊覽車翻覆重大傷亡案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及國道路段遊覽車翻覆重大傷亡案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及國道路段遊覽車翻覆重大傷亡案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -6581,27 +8742,49 @@ CaseBook(
       updatedAt: '2015/10/24',
     ),
     oneSentenceSummary: '國道路段遊覽車翻覆重大傷亡案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生國道路段遊覽車翻覆重大傷亡案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生國道路段遊覽車翻覆重大傷亡案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2015/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2015/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2015/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2015/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2015/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2015/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於交通安全的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於交通安全的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -6629,7 +8812,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['鐵路安全', 'ATP系統', '業務過失', '重大事故'],
     memoryLine: '關於台鐵普悠瑪列車出軌翻覆事故案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及台鐵普悠瑪列車出軌翻覆事故案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及台鐵普悠瑪列車出軌翻覆事故案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -6637,27 +8821,49 @@ CaseBook(
       updatedAt: '2016/10/24',
     ),
     oneSentenceSummary: '台鐵普悠瑪列車出軌翻覆事故案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生台鐵普悠瑪列車出軌翻覆事故案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生台鐵普悠瑪列車出軌翻覆事故案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2016/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2016/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2016/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2016/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2016/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2016/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於鐵路安全的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於鐵路安全的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -6685,7 +8891,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['組織犯罪', '人口販運', '非法拘禁', '虛擬貨幣洗錢'],
     memoryLine: '關於跨國詐騙集團洗錢與押人案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及跨國詐騙集團洗錢與押人案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及跨國詐騙集團洗錢與押人案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -6693,27 +8900,48 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '跨國詐騙集團洗錢與押人案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生跨國詐騙集團洗錢與押人案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生跨國詐騙集團洗錢與押人案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於組織犯罪的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於組織犯罪的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -6741,7 +8969,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['新興毒品', '過失致死', '轉讓毒品', '連帶賠償'],
     memoryLine: '關於知名藝人涉毒品派對致死案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及知名藝人涉毒品派對致死案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及知名藝人涉毒品派對致死案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -6749,27 +8978,49 @@ CaseBook(
       updatedAt: '2014/10/24',
     ),
     oneSentenceSummary: '知名藝人涉毒品派對致死案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生知名藝人涉毒品派對致死案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生知名藝人涉毒品派對致死案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2014/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2014/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2014/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2014/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2014/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2014/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於新興毒品的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於新興毒品的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -6797,7 +9048,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['證券交易法', '內線交易', '背信罪', '金融犯罪'],
     memoryLine: '關於金控集團內部人內線交易案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及金控集團內部人內線交易案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及金控集團內部人內線交易案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -6805,27 +9057,49 @@ CaseBook(
       updatedAt: '2018/10/24',
     ),
     oneSentenceSummary: '金控集團內部人內線交易案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生金控集團內部人內線交易案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生金控集團內部人內線交易案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2018/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2018/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2018/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2018/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2018/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2018/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於證券交易法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於證券交易法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -6853,7 +9127,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['營業秘密法', '競業禁止', '商業間諜', '智慧財產保護'],
     memoryLine: '關於跨國科技廠商業秘密竊取案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及跨國科技廠商業秘密竊取案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及跨國科技廠商業秘密竊取案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -6861,27 +9136,49 @@ CaseBook(
       updatedAt: '2017/10/24',
     ),
     oneSentenceSummary: '跨國科技廠商業秘密竊取案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生跨國科技廠商業秘密竊取案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生跨國科技廠商業秘密竊取案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2017/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2017/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2017/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2017/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2017/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2017/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於營業秘密法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於營業秘密法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -6909,7 +9206,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['毒品危害防制條例', '走私海運', '跨國執法', '洗錢防制'],
     memoryLine: '關於跨國販毒集團藏匿海運貨櫃案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及跨國販毒集團藏匿海運貨櫃案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及跨國販毒集團藏匿海運貨櫃案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -6917,27 +9215,48 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '跨國販毒集團藏匿海運貨櫃案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生跨國販毒集團藏匿海運貨櫃案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生跨國販毒集團藏匿海運貨櫃案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於毒品危害防制條例的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於毒品危害防制條例的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -6965,7 +9284,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['銀行法', '非法吸金', '詐欺集團', '被害人求償'],
     memoryLine: '關於假冒投資平台吸金數十億案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及假冒投資平台吸金數十億案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及假冒投資平台吸金數十億案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -6973,27 +9293,49 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '假冒投資平台吸金數十億案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生假冒投資平台吸金數十億案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生假冒投資平台吸金數十億案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於銀行法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於銀行法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -7021,7 +9363,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['放火燒燬現住建築物', '殺人罪', '都市更新', '消防安全'],
     memoryLine: '關於市區大樓縱火致多人死傷案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及市區大樓縱火致多人死傷案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及市區大樓縱火致多人死傷案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -7029,27 +9372,49 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '市區大樓縱火致多人死傷案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生市區大樓縱火致多人死傷案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生市區大樓縱火致多人死傷案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於放火燒燬現住建築物的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於放火燒燬現住建築物的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -7077,7 +9442,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['洗錢防制法', '賭博罪', '第三方支付', '扣押財產'],
     memoryLine: '關於地下賭博網站與跨國洗錢案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及地下賭博網站與跨國洗錢案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及地下賭博網站與跨國洗錢案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -7085,27 +9451,49 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '地下賭博網站與跨國洗錢案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生地下賭博網站與跨國洗錢案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生地下賭博網站與跨國洗錢案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於洗錢防制法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於洗錢防制法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -7133,7 +9521,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['律師倫理', '非正當防禦', '串證洩密', '司法信譽'],
     memoryLine: '關於知名律師涉嫌協助詐騙集團串證案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及知名律師涉嫌協助詐騙集團串證案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及知名律師涉嫌協助詐騙集團串證案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -7141,27 +9530,48 @@ CaseBook(
       updatedAt: '2022/10/24',
     ),
     oneSentenceSummary: '知名律師涉嫌協助詐騙集團串證案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生知名律師涉嫌協助詐騙集團串證案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生知名律師涉嫌協助詐騙集團串證案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2022/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2022/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2022/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2022/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2022/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2022/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於律師倫理的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於律師倫理的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -7189,7 +9599,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['槍砲彈藥刀械管制條例', '挾持人質', '獄政管理', '刑事執法'],
     memoryLine: '關於重大槍擊要犯強盜與逃獄案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及重大槍擊要犯強盜與逃獄案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及重大槍擊要犯強盜與逃獄案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -7197,27 +9608,49 @@ CaseBook(
       updatedAt: '2013/10/24',
     ),
     oneSentenceSummary: '重大槍擊要犯強盜與逃獄案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生重大槍擊要犯強盜與逃獄案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生重大槍擊要犯強盜與逃獄案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2013/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2013/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2013/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2013/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2013/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2013/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於槍砲彈藥刀械管制條例的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於槍砲彈藥刀械管制條例的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -7245,7 +9678,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['警察勤務條例', '臨檢程序', '人身自由', '隱私權'],
     memoryLine: '關於司法院釋字第 535 號解釋之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及司法院釋字第 535 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及司法院釋字第 535 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -7253,27 +9687,49 @@ CaseBook(
       updatedAt: '1999/10/24',
     ),
     oneSentenceSummary: '司法院釋字第 535 號解釋重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生司法院釋字第 535 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生司法院釋字第 535 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '1999/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '1999/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '1999/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '1999/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '1999/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '1999/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於警察勤務條例的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於警察勤務條例的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -7301,7 +9757,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['戶籍法', '強制指紋', '資訊隱私權', '憲法裁判'],
     memoryLine: '關於司法院釋字第 603 號解釋之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及司法院釋字第 603 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及司法院釋字第 603 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -7309,27 +9766,49 @@ CaseBook(
       updatedAt: '2003/10/24',
     ),
     oneSentenceSummary: '司法院釋字第 603 號解釋重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生司法院釋字第 603 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生司法院釋字第 603 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2003/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2003/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2003/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2003/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2003/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2003/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於戶籍法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於戶籍法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -7357,7 +9836,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['社會秩序維護法', '性交易', '平等原則', '生存權保障'],
     memoryLine: '關於司法院釋字第 666 號解釋之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及司法院釋字第 666 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及司法院釋字第 666 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -7365,27 +9845,48 @@ CaseBook(
       updatedAt: '2007/10/24',
     ),
     oneSentenceSummary: '司法院釋字第 666 號解釋重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生司法院釋字第 666 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生司法院釋字第 666 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2007/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2007/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2007/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2007/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2007/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2007/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於社會秩序維護法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於社會秩序維護法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -7413,7 +9914,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['強制抽血', '酒駕調查', '人身自由', '刑事訴訟程序'],
     memoryLine: '關於111 年憲判字第 1 號判決之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及111 年憲判字第 1 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及111 年憲判字第 1 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -7421,27 +9923,49 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '111 年憲判字第 1 號判決重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生111 年憲判字第 1 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生111 年憲判字第 1 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於強制抽血的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於強制抽血的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -7469,7 +9993,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['誹謗罪', '言論自由', '真實惡意原則', '名譽權保護'],
     memoryLine: '關於112 年憲判字第 4 號判決之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及112 年憲判字第 4 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及112 年憲判字第 4 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -7477,27 +10002,49 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '112 年憲判字第 4 號判決重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生112 年憲判字第 4 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生112 年憲判字第 4 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於誹謗罪的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於誹謗罪的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -7525,7 +10072,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['親權行使', '跨國父母', '子女最佳利益', '憲法程序'],
     memoryLine: '關於112 年憲判字第 8 號判決之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及112 年憲判字第 8 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及112 年憲判字第 8 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -7533,27 +10081,49 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '112 年憲判字第 8 號判決重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生112 年憲判字第 8 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生112 年憲判字第 8 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於親權行使的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於親權行使的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -7581,7 +10151,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['男女平等', '親權優先條款', '民法合憲審查', '兩性平權'],
     memoryLine: '關於司法院釋字第 365 號解釋之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及司法院釋字第 365 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及司法院釋字第 365 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -7589,27 +10160,48 @@ CaseBook(
       updatedAt: '1992/10/24',
     ),
     oneSentenceSummary: '司法院釋字第 365 號解釋重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生司法院釋字第 365 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生司法院釋字第 365 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '1992/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '1992/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '1992/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '1992/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '1992/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '1992/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於男女平等的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於男女平等的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -7637,7 +10229,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['國會調查權', '真調會', '權力分立', '機關權限爭議'],
     memoryLine: '關於司法院釋字第 585 號解釋之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及司法院釋字第 585 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及司法院釋字第 585 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -7645,27 +10238,49 @@ CaseBook(
       updatedAt: '2002/10/24',
     ),
     oneSentenceSummary: '司法院釋字第 585 號解釋重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生司法院釋字第 585 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生司法院釋字第 585 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2002/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2002/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2002/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2002/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2002/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2002/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於國會調查權的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於國會調查權的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -7693,7 +10308,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['原住民身分法', '認同權', '平等保障', '文化權利'],
     memoryLine: '關於111 年憲判字第 13 號判決之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及111 年憲判字第 13 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及111 年憲判字第 13 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -7701,27 +10317,49 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '111 年憲判字第 13 號判決重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生111 年憲判字第 13 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生111 年憲判字第 13 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於原住民身分法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於原住民身分法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -7749,7 +10387,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['公務員考績', '懲處爭議', '訴訟救濟權', '特別權力關係'],
     memoryLine: '關於112 年憲判字第 18 號判決之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及112 年憲判字第 18 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及112 年憲判字第 18 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -7757,27 +10396,49 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '112 年憲判字第 18 號判決重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生112 年憲判字第 18 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生112 年憲判字第 18 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於公務員考績的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於公務員考績的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -7805,7 +10466,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['磁磚剝落', '管委會責任', '共同侵權行為', '損害賠償'],
     memoryLine: '關於高樓外牆磁磚剝落砸傷路人損賠案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及高樓外牆磁磚剝落砸傷路人損賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及高樓外牆磁磚剝落砸傷路人損賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -7813,27 +10475,48 @@ CaseBook(
       updatedAt: '2018/10/24',
     ),
     oneSentenceSummary: '高樓外牆磁磚剝落砸傷路人損賠案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生高樓外牆磁磚剝落砸傷路人損賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生高樓外牆磁磚剝落砸傷路人損賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2018/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2018/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2018/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2018/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2018/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2018/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於磁磚剝落的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於磁磚剝落的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -7861,7 +10544,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['公寓大廈管理條例', '區分所有權', '過失侵權', '修繕求償'],
     memoryLine: '關於大樓住戶裝修挖斷公共水管淹水案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及大樓住戶裝修挖斷公共水管淹水案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及大樓住戶裝修挖斷公共水管淹水案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -7869,27 +10553,49 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '大樓住戶裝修挖斷公共水管淹水案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生大樓住戶裝修挖斷公共水管淹水案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生大樓住戶裝修挖斷公共水管淹水案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於公寓大廈管理條例的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於公寓大廈管理條例的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -7917,7 +10623,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['消費者保護法', '定型化契約', '給付遲延', '違約金扣抵'],
     memoryLine: '關於預售屋買賣建商無故遲延交屋訴訟之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及預售屋買賣建商無故遲延交屋訴訟。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及預售屋買賣建商無故遲延交屋訴訟。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -7925,27 +10632,49 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '預售屋買賣建商無故遲延交屋訴訟重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生預售屋買賣建商無故遲延交屋訴訟所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生預售屋買賣建商無故遲延交屋訴訟所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於消費者保護法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於消費者保護法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -7973,7 +10702,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['勞動基準法', '勞工身分認定', '僱傭關係', '職災補償'],
     memoryLine: '關於外送平台與合作騎士承攬僱傭爭議之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及外送平台與合作騎士承攬僱傭爭議。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及外送平台與合作騎士承攬僱傭爭議。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -7981,27 +10711,49 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '外送平台與合作騎士承攬僱傭爭議重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生外送平台與合作騎士承攬僱傭爭議所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生外送平台與合作騎士承攬僱傭爭議所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於勞動基準法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於勞動基準法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -8029,7 +10781,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['肖像權侵害', '人格權保護', '精神慰撫金', '不當得利'],
     memoryLine: '關於知名藝人肖像遭美容廣告盜用案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及知名藝人肖像遭美容廣告盜用案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及知名藝人肖像遭美容廣告盜用案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -8037,27 +10790,48 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '知名藝人肖像遭美容廣告盜用案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生知名藝人肖像遭美容廣告盜用案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生知名藝人肖像遭美容廣告盜用案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於肖像權侵害的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於肖像權侵害的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -8085,7 +10859,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['相鄰關係', '袋地通行權', '公寓規約', '強制拆除'],
     memoryLine: '關於公寓相鄰通道私設鐵門阻礙通行案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及公寓相鄰通道私設鐵門阻礙通行案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及公寓相鄰通道私設鐵門阻礙通行案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -8093,27 +10868,49 @@ CaseBook(
       updatedAt: '2017/10/24',
     ),
     oneSentenceSummary: '公寓相鄰通道私設鐵門阻礙通行案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生公寓相鄰通道私設鐵門阻礙通行案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生公寓相鄰通道私設鐵門阻礙通行案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2017/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2017/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2017/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2017/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2017/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2017/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於相鄰關係的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於相鄰關係的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -8141,7 +10938,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['國家賠償', '公共設施設置缺失', '警示牌效力', '過失比例'],
     memoryLine: '關於遊客在知名景點滑倒骨折國賠案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及遊客在知名景點滑倒骨折國賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及遊客在知名景點滑倒骨折國賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -8149,27 +10947,49 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '遊客在知名景點滑倒骨折國賠案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生遊客在知名景點滑倒骨折國賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生遊客在知名景點滑倒骨折國賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於國家賠償的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於國家賠償的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -8197,7 +11017,8 @@ CaseBook(
     category: '兒少保護',
     tags: const ['兒少法', '托育監管', '不當對待', '吊銷執照'],
     memoryLine: '關於私立托嬰中心不當對待幼兒處罰案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及私立托嬰中心不當對待幼兒處罰案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及私立托嬰中心不當對待幼兒處罰案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -8205,27 +11026,49 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '私立托嬰中心不當對待幼兒處罰案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生私立托嬰中心不當對待幼兒處罰案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生私立托嬰中心不當對待幼兒處罰案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於兒少法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於兒少法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -8253,7 +11096,8 @@ CaseBook(
     category: '兒少保護',
     tags: const ['兒少性剝削防制', '數位性暴力', '網路安全', '扣押數位證據'],
     memoryLine: '關於未成年網路交友遭誘騙私密照案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及未成年網路交友遭誘騙私密照案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及未成年網路交友遭誘騙私密照案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -8261,27 +11105,48 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '未成年網路交友遭誘騙私密照案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生未成年網路交友遭誘騙私密照案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生未成年網路交友遭誘騙私密照案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於兒少性剝削防制的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於兒少性剝削防制的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -8309,7 +11174,8 @@ CaseBook(
     category: '兒少保護',
     tags: const ['親權衝突', '略誘罪', '家事事件法', '子女探視權'],
     memoryLine: '關於離婚父母擅自带走子女藏匿妨害自由案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及離婚父母擅自带走子女藏匿妨害自由案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及離婚父母擅自带走子女藏匿妨害自由案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -8317,27 +11183,49 @@ CaseBook(
       updatedAt: '2018/10/24',
     ),
     oneSentenceSummary: '離婚父母擅自带走子女藏匿妨害自由案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生離婚父母擅自带走子女藏匿妨害自由案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生離婚父母擅自带走子女藏匿妨害自由案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2018/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2018/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2018/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2018/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2018/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2018/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於親權衝突的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於親權衝突的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -8365,7 +11253,8 @@ CaseBook(
     category: '兒少保護',
     tags: const ['居家托育', '業務過失致傷害', '居家安全', '保母執照廢止'],
     memoryLine: '關於保母超收托育導致幼兒受傷業務過失案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及保母超收托育導致幼兒受傷業務過失案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及保母超收托育導致幼兒受傷業務過失案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -8373,27 +11262,49 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '保母超收托育導致幼兒受傷業務過失案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生保母超收托育導致幼兒受傷業務過失案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生保母超收托育導致幼兒受傷業務過失案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於居家托育的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於居家托育的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -8421,7 +11332,8 @@ CaseBook(
     category: '家庭案件',
     tags: const ['遺產繼承', '特留分', '自書遺囑效力', '信託財產'],
     memoryLine: '關於豪門爭產遺囑特留分爭訟案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及豪門爭產遺囑特留分爭訟案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及豪門爭產遺囑特留分爭訟案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -8429,27 +11341,49 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '豪門爭產遺囑特留分爭訟案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生豪門爭產遺囑特留分爭訟案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生豪門爭產遺囑特留分爭訟案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於遺產繼承的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於遺產繼承的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -8477,7 +11411,8 @@ CaseBook(
     category: '家庭案件',
     tags: const ['配偶權侵害', '名譽權', '家事調解', '離異損害賠償'],
     memoryLine: '關於配偶發現外遇對第三人請求賠償案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及配偶發現外遇對第三人請求賠償案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及配偶發現外遇對第三人請求賠償案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -8485,27 +11420,48 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '配偶發現外遇對第三人請求賠償案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生配偶發現外遇對第三人請求賠償案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生配偶發現外遇對第三人請求賠償案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於配偶權侵害的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於配偶權侵害的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -8533,7 +11489,8 @@ CaseBook(
     category: '家庭案件',
     tags: const ['民法扶養義務', '免除扶養責任', '家暴事證', '法院裁定'],
     memoryLine: '關於長期不盡扶養義務成年子女免除責任案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及長期不盡扶養義務成年子女免除責任案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及長期不盡扶養義務成年子女免除責任案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -8541,27 +11498,49 @@ CaseBook(
       updatedAt: '2018/10/24',
     ),
     oneSentenceSummary: '長期不盡扶養義務成年子女免除責任案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生長期不盡扶養義務成年子女免除責任案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生長期不盡扶養義務成年子女免除責任案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2018/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2018/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2018/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2018/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2018/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2018/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於民法扶養義務的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於民法扶養義務的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -8589,7 +11568,8 @@ CaseBook(
     category: '家庭案件',
     tags: const ['跨國婚姻', '裁判離婚', '監護權判定', '探視方案'],
     memoryLine: '關於跨國婚姻離異爭奪子女監護權案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及跨國婚姻離異爭奪子女監護權案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及跨國婚姻離異爭奪子女監護權案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -8597,27 +11577,49 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '跨國婚姻離異爭奪子女監護權案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生跨國婚姻離異爭奪子女監護權案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生跨國婚姻離異爭奪子女監護權案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於跨國婚姻的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於跨國婚姻的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -8645,7 +11647,8 @@ CaseBook(
     category: '校園案件',
     tags: const ['退學處分', '學生申訴', '行政訴訟', '受教權保障'],
     memoryLine: '關於大學生因作弊遭勒令退學處分行政救濟案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及大學生因作弊遭勒令退學處分行政救濟案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及大學生因作弊遭勒令退學處分行政救濟案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -8653,27 +11656,49 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '大學生因作弊遭勒令退學處分行政救濟案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生大學生因作弊遭勒令退學處分行政救濟案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生大學生因作弊遭勒令退學處分行政救濟案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於退學處分的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於退學處分的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -8701,7 +11726,8 @@ CaseBook(
     category: '校園案件',
     tags: const ['髮禁限制', '學校管教界線', '特別權力關係突破', '人格發展自由'],
     memoryLine: '關於中學生因髮禁遭處分起訴學校案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及中學生因髮禁遭處分起訴學校案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及中學生因髮禁遭處分起訴學校案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -8709,27 +11735,48 @@ CaseBook(
       updatedAt: '2018/10/24',
     ),
     oneSentenceSummary: '中學生因髮禁遭處分起訴學校案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生中學生因髮禁遭處分起訴學校案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生中學生因髮禁遭處分起訴學校案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2018/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2018/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2018/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2018/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2018/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2018/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於髮禁限制的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於髮禁限制的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -8757,7 +11804,8 @@ CaseBook(
     category: '校園案件',
     tags: const ['校園霸凌', '家長連帶責任', '學校通報疏失', '損害賠償'],
     memoryLine: '關於校園內霸凌導致受害學生精神損害賠償案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及校園內霸凌導致受害學生精神損害賠償案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及校園內霸凌導致受害學生精神損害賠償案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -8765,27 +11813,49 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '校園內霸凌導致受害學生精神損害賠償案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生校園內霸凌導致受害學生精神損害賠償案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生校園內霸凌導致受害學生精神損害賠償案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於校園霸凌的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於校園霸凌的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -8813,7 +11883,8 @@ CaseBook(
     category: '智慧財產',
     tags: const ['商標權侵害', '著作權保護', '抄襲認定', '懲罰性賠償'],
     memoryLine: '關於知名設計師商標遭抄襲侵權損賠案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及知名設計師商標遭抄襲侵權損賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及知名設計師商標遭抄襲侵權損賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -8821,27 +11892,49 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '知名設計師商標遭抄襲侵權損賠案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生知名設計師商標遭抄襲侵權損賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生知名設計師商標遭抄襲侵權損賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於商標權侵害的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於商標權侵害的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -8869,7 +11962,8 @@ CaseBook(
     category: '智慧財產',
     tags: const ['著作權法', '網路侵權', '合理使用界線', '刑事告訴'],
     memoryLine: '關於網路論壇未經授權轉載原創文章案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及網路論壇未經授權轉載原創文章案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及網路論壇未經授權轉載原創文章案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -8877,27 +11971,49 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '網路論壇未經授權轉載原創文章案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生網路論壇未經授權轉載原創文章案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生網路論壇未經授權轉載原創文章案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於著作權法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於著作權法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -8925,7 +12041,8 @@ CaseBook(
     category: '智慧財產',
     tags: const ['專利侵權', '均等論', '禁制令', '損害賠償計算'],
     memoryLine: '關於科技公司侵犯行動裝置專利權訴訟之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及科技公司侵犯行動裝置專利權訴訟。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及科技公司侵犯行動裝置專利權訴訟。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -8933,27 +12050,48 @@ CaseBook(
       updatedAt: '2017/10/24',
     ),
     oneSentenceSummary: '科技公司侵犯行動裝置專利權訴訟重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生科技公司侵犯行動裝置專利權訴訟所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生科技公司侵犯行動裝置專利權訴訟所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2017/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2017/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2017/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2017/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2017/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2017/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於專利侵權的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於專利侵權的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -8981,7 +12119,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['隨機殺人', '死刑量刑', '精神鑑定', '社會安全網'],
     memoryLine: '關於捷運無差別隨機殺人案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及捷運無差別隨機殺人案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及捷運無差別隨機殺人案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -8989,27 +12128,49 @@ CaseBook(
       updatedAt: '2011/10/24',
     ),
     oneSentenceSummary: '捷運無差別隨機殺人案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生捷運無差別隨機殺人案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生捷運無差別隨機殺人案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2011/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2011/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2011/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2011/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2011/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2011/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於隨機殺人的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於隨機殺人的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -9037,7 +12198,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['公共危險', '爆炸物', '意圖勒索', '公共安全'],
     memoryLine: '關於高速鐵路爆炸未遂案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及高速鐵路爆炸未遂案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及高速鐵路爆炸未遂案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -9045,27 +12207,49 @@ CaseBook(
       updatedAt: '2010/10/24',
     ),
     oneSentenceSummary: '高速鐵路爆炸未遂案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生高速鐵路爆炸未遂案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生高速鐵路爆炸未遂案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2010/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2010/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2010/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2010/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2010/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2010/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於公共危險的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於公共危險的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -9093,7 +12277,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['粉塵爆炸', '業務過失致死', '公共安全', '集體求償'],
     memoryLine: '關於八仙樂園彩色派對粉塵爆炸案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及八仙樂園彩色派對粉塵爆炸案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及八仙樂園彩色派對粉塵爆炸案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -9101,27 +12286,49 @@ CaseBook(
       updatedAt: '2012/10/24',
     ),
     oneSentenceSummary: '八仙樂園彩色派對粉塵爆炸案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生八仙樂園彩色派對粉塵爆炸案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生八仙樂園彩色派對粉塵爆炸案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2012/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2012/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2012/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2012/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2012/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2012/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於粉塵爆炸的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於粉塵爆炸的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -9149,7 +12356,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['交通安全', '勞工過勞', '業務過失', '遊覽車監管'],
     memoryLine: '關於國道路段遊覽車翻覆重大傷亡案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及國道路段遊覽車翻覆重大傷亡案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及國道路段遊覽車翻覆重大傷亡案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -9157,27 +12365,48 @@ CaseBook(
       updatedAt: '2014/10/24',
     ),
     oneSentenceSummary: '國道路段遊覽車翻覆重大傷亡案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生國道路段遊覽車翻覆重大傷亡案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生國道路段遊覽車翻覆重大傷亡案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2014/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2014/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2014/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2014/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2014/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2014/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於交通安全的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於交通安全的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -9205,7 +12434,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['鐵路安全', 'ATP系統', '業務過失', '重大事故'],
     memoryLine: '關於台鐵普悠瑪列車出軌翻覆事故案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及台鐵普悠瑪列車出軌翻覆事故案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及台鐵普悠瑪列車出軌翻覆事故案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -9213,27 +12443,49 @@ CaseBook(
       updatedAt: '2015/10/24',
     ),
     oneSentenceSummary: '台鐵普悠瑪列車出軌翻覆事故案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生台鐵普悠瑪列車出軌翻覆事故案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生台鐵普悠瑪列車出軌翻覆事故案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2015/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2015/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2015/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2015/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2015/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2015/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於鐵路安全的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於鐵路安全的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -9261,7 +12513,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['組織犯罪', '人口販運', '非法拘禁', '虛擬貨幣洗錢'],
     memoryLine: '關於跨國詐騙集團洗錢與押人案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及跨國詐騙集團洗錢與押人案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及跨國詐騙集團洗錢與押人案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -9269,27 +12522,49 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '跨國詐騙集團洗錢與押人案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生跨國詐騙集團洗錢與押人案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生跨國詐騙集團洗錢與押人案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於組織犯罪的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於組織犯罪的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -9317,7 +12592,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['新興毒品', '過失致死', '轉讓毒品', '連帶賠償'],
     memoryLine: '關於知名藝人涉毒品派對致死案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及知名藝人涉毒品派對致死案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及知名藝人涉毒品派對致死案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -9325,27 +12601,49 @@ CaseBook(
       updatedAt: '2013/10/24',
     ),
     oneSentenceSummary: '知名藝人涉毒品派對致死案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生知名藝人涉毒品派對致死案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生知名藝人涉毒品派對致死案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2013/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2013/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2013/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2013/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2013/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2013/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於新興毒品的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於新興毒品的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -9373,7 +12671,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['證券交易法', '內線交易', '背信罪', '金融犯罪'],
     memoryLine: '關於金控集團內部人內線交易案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及金控集團內部人內線交易案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及金控集團內部人內線交易案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -9381,27 +12680,48 @@ CaseBook(
       updatedAt: '2017/10/24',
     ),
     oneSentenceSummary: '金控集團內部人內線交易案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生金控集團內部人內線交易案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生金控集團內部人內線交易案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2017/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2017/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2017/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2017/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2017/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2017/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於證券交易法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於證券交易法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -9429,7 +12749,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['營業秘密法', '競業禁止', '商業間諜', '智慧財產保護'],
     memoryLine: '關於跨國科技廠商業秘密竊取案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及跨國科技廠商業秘密竊取案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及跨國科技廠商業秘密竊取案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -9437,27 +12758,49 @@ CaseBook(
       updatedAt: '2016/10/24',
     ),
     oneSentenceSummary: '跨國科技廠商業秘密竊取案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生跨國科技廠商業秘密竊取案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生跨國科技廠商業秘密竊取案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2016/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2016/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2016/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2016/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2016/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2016/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於營業秘密法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於營業秘密法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -9485,7 +12828,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['毒品危害防制條例', '走私海運', '跨國執法', '洗錢防制'],
     memoryLine: '關於跨國販毒集團藏匿海運貨櫃案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及跨國販毒集團藏匿海運貨櫃案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及跨國販毒集團藏匿海運貨櫃案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -9493,27 +12837,49 @@ CaseBook(
       updatedAt: '2018/10/24',
     ),
     oneSentenceSummary: '跨國販毒集團藏匿海運貨櫃案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生跨國販毒集團藏匿海運貨櫃案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生跨國販毒集團藏匿海運貨櫃案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2018/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2018/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2018/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2018/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2018/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2018/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於毒品危害防制條例的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於毒品危害防制條例的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -9541,7 +12907,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['銀行法', '非法吸金', '詐欺集團', '被害人求償'],
     memoryLine: '關於假冒投資平台吸金數十億案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及假冒投資平台吸金數十億案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及假冒投資平台吸金數十億案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -9549,27 +12916,49 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '假冒投資平台吸金數十億案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生假冒投資平台吸金數十億案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生假冒投資平台吸金數十億案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於銀行法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於銀行法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -9597,7 +12986,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['放火燒燬現住建築物', '殺人罪', '都市更新', '消防安全'],
     memoryLine: '關於市區大樓縱火致多人死傷案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及市區大樓縱火致多人死傷案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及市區大樓縱火致多人死傷案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -9605,27 +12995,48 @@ CaseBook(
       updatedAt: '2018/10/24',
     ),
     oneSentenceSummary: '市區大樓縱火致多人死傷案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生市區大樓縱火致多人死傷案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生市區大樓縱火致多人死傷案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2018/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2018/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2018/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2018/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2018/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2018/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於放火燒燬現住建築物的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於放火燒燬現住建築物的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -9653,7 +13064,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['洗錢防制法', '賭博罪', '第三方支付', '扣押財產'],
     memoryLine: '關於地下賭博網站與跨國洗錢案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及地下賭博網站與跨國洗錢案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及地下賭博網站與跨國洗錢案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -9661,27 +13073,49 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '地下賭博網站與跨國洗錢案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生地下賭博網站與跨國洗錢案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生地下賭博網站與跨國洗錢案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於洗錢防制法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於洗錢防制法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -9709,7 +13143,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['律師倫理', '非正當防禦', '串證洩密', '司法信譽'],
     memoryLine: '關於知名律師涉嫌協助詐騙集團串證案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及知名律師涉嫌協助詐騙集團串證案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及知名律師涉嫌協助詐騙集團串證案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -9717,27 +13152,49 @@ CaseBook(
       updatedAt: '2021/10/24',
     ),
     oneSentenceSummary: '知名律師涉嫌協助詐騙集團串證案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生知名律師涉嫌協助詐騙集團串證案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生知名律師涉嫌協助詐騙集團串證案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2021/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2021/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2021/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2021/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2021/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於律師倫理的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於律師倫理的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -9765,7 +13222,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['槍砲彈藥刀械管制條例', '挾持人質', '獄政管理', '刑事執法'],
     memoryLine: '關於重大槍擊要犯強盜與逃獄案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及重大槍擊要犯強盜與逃獄案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及重大槍擊要犯強盜與逃獄案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -9773,27 +13231,49 @@ CaseBook(
       updatedAt: '2012/10/24',
     ),
     oneSentenceSummary: '重大槍擊要犯強盜與逃獄案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生重大槍擊要犯強盜與逃獄案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生重大槍擊要犯強盜與逃獄案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2012/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2012/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2012/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2012/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2012/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2012/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於槍砲彈藥刀械管制條例的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於槍砲彈藥刀械管制條例的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -9821,7 +13301,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['警察勤務條例', '臨檢程序', '人身自由', '隱私權'],
     memoryLine: '關於司法院釋字第 535 號解釋之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及司法院釋字第 535 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及司法院釋字第 535 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -9829,27 +13310,48 @@ CaseBook(
       updatedAt: '1998/10/24',
     ),
     oneSentenceSummary: '司法院釋字第 535 號解釋重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生司法院釋字第 535 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生司法院釋字第 535 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '1998/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '1998/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '1998/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '1998/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '1998/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '1998/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於警察勤務條例的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於警察勤務條例的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -9877,7 +13379,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['戶籍法', '強制指紋', '資訊隱私權', '憲法裁判'],
     memoryLine: '關於司法院釋字第 603 號解釋之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及司法院釋字第 603 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及司法院釋字第 603 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -9885,27 +13388,49 @@ CaseBook(
       updatedAt: '2002/10/24',
     ),
     oneSentenceSummary: '司法院釋字第 603 號解釋重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生司法院釋字第 603 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生司法院釋字第 603 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2002/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2002/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2002/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2002/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2002/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2002/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於戶籍法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於戶籍法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -9933,7 +13458,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['社會秩序維護法', '性交易', '平等原則', '生存權保障'],
     memoryLine: '關於司法院釋字第 666 號解釋之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及司法院釋字第 666 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及司法院釋字第 666 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -9941,27 +13467,49 @@ CaseBook(
       updatedAt: '2006/10/24',
     ),
     oneSentenceSummary: '司法院釋字第 666 號解釋重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生司法院釋字第 666 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生司法院釋字第 666 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2006/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2006/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2006/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2006/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2006/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2006/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於社會秩序維護法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於社會秩序維護法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -9989,7 +13537,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['強制抽血', '酒駕調查', '人身自由', '刑事訴訟程序'],
     memoryLine: '關於111 年憲判字第 1 號判決之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及111 年憲判字第 1 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及111 年憲判字第 1 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -9997,27 +13546,49 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '111 年憲判字第 1 號判決重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生111 年憲判字第 1 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生111 年憲判字第 1 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於強制抽血的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於強制抽血的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -10045,7 +13616,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['誹謗罪', '言論自由', '真實惡意原則', '名譽權保護'],
     memoryLine: '關於112 年憲判字第 4 號判決之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及112 年憲判字第 4 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及112 年憲判字第 4 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -10053,27 +13625,48 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '112 年憲判字第 4 號判決重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生112 年憲判字第 4 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生112 年憲判字第 4 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於誹謗罪的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於誹謗罪的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -10101,7 +13694,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['親權行使', '跨國父母', '子女最佳利益', '憲法程序'],
     memoryLine: '關於112 年憲判字第 8 號判決之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及112 年憲判字第 8 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及112 年憲判字第 8 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -10109,27 +13703,49 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '112 年憲判字第 8 號判決重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生112 年憲判字第 8 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生112 年憲判字第 8 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於親權行使的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於親權行使的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -10157,7 +13773,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['男女平等', '親權優先條款', '民法合憲審查', '兩性平權'],
     memoryLine: '關於司法院釋字第 365 號解釋之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及司法院釋字第 365 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及司法院釋字第 365 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -10165,27 +13782,49 @@ CaseBook(
       updatedAt: '1991/10/24',
     ),
     oneSentenceSummary: '司法院釋字第 365 號解釋重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生司法院釋字第 365 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生司法院釋字第 365 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '1991/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '1991/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '1991/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '1991/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '1991/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '1991/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於男女平等的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於男女平等的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -10213,7 +13852,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['國會調查權', '真調會', '權力分立', '機關權限爭議'],
     memoryLine: '關於司法院釋字第 585 號解釋之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及司法院釋字第 585 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及司法院釋字第 585 號解釋。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -10221,27 +13861,49 @@ CaseBook(
       updatedAt: '2001/10/24',
     ),
     oneSentenceSummary: '司法院釋字第 585 號解釋重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生司法院釋字第 585 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生司法院釋字第 585 號解釋所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2001/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2001/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2001/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2001/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2001/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2001/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於國會調查權的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於國會調查權的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -10269,7 +13931,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['原住民身分法', '認同權', '平等保障', '文化權利'],
     memoryLine: '關於111 年憲判字第 13 號判決之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及111 年憲判字第 13 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及111 年憲判字第 13 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -10277,27 +13940,48 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '111 年憲判字第 13 號判決重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生111 年憲判字第 13 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生111 年憲判字第 13 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於原住民身分法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於原住民身分法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -10325,7 +14009,8 @@ CaseBook(
     category: '司法解釋',
     tags: const ['公務員考績', '懲處爭議', '訴訟救濟權', '特別權力關係'],
     memoryLine: '關於112 年憲判字第 18 號判決之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及112 年憲判字第 18 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及112 年憲判字第 18 號判決。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法裁決',
       procedureStage: '解釋公布',
@@ -10333,27 +14018,49 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '112 年憲判字第 18 號判決重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生112 年憲判字第 18 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生112 年憲判字第 18 號判決所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於公務員考績的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於公務員考績的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -10381,7 +14088,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['磁磚剝落', '管委會責任', '共同侵權行為', '損害賠償'],
     memoryLine: '關於高樓外牆磁磚剝落砸傷路人損賠案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及高樓外牆磁磚剝落砸傷路人損賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及高樓外牆磁磚剝落砸傷路人損賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -10389,27 +14097,49 @@ CaseBook(
       updatedAt: '2017/10/24',
     ),
     oneSentenceSummary: '高樓外牆磁磚剝落砸傷路人損賠案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生高樓外牆磁磚剝落砸傷路人損賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生高樓外牆磁磚剝落砸傷路人損賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2017/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2017/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2017/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2017/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2017/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2017/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於磁磚剝落的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於磁磚剝落的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -10437,7 +14167,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['公寓大廈管理條例', '區分所有權', '過失侵權', '修繕求償'],
     memoryLine: '關於大樓住戶裝修挖斷公共水管淹水案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及大樓住戶裝修挖斷公共水管淹水案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及大樓住戶裝修挖斷公共水管淹水案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -10445,27 +14176,49 @@ CaseBook(
       updatedAt: '2018/10/24',
     ),
     oneSentenceSummary: '大樓住戶裝修挖斷公共水管淹水案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生大樓住戶裝修挖斷公共水管淹水案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生大樓住戶裝修挖斷公共水管淹水案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2018/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2018/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2018/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2018/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2018/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2018/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於公寓大廈管理條例的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於公寓大廈管理條例的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -10493,7 +14246,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['消費者保護法', '定型化契約', '給付遲延', '違約金扣抵'],
     memoryLine: '關於預售屋買賣建商無故遲延交屋訴訟之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及預售屋買賣建商無故遲延交屋訴訟。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及預售屋買賣建商無故遲延交屋訴訟。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -10501,27 +14255,48 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '預售屋買賣建商無故遲延交屋訴訟重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生預售屋買賣建商無故遲延交屋訴訟所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生預售屋買賣建商無故遲延交屋訴訟所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於消費者保護法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於消費者保護法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -10549,7 +14324,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['勞動基準法', '勞工身分認定', '僱傭關係', '職災補償'],
     memoryLine: '關於外送平台與合作騎士承攬僱傭爭議之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及外送平台與合作騎士承攬僱傭爭議。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及外送平台與合作騎士承攬僱傭爭議。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -10557,27 +14333,49 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '外送平台與合作騎士承攬僱傭爭議重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生外送平台與合作騎士承攬僱傭爭議所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生外送平台與合作騎士承攬僱傭爭議所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於勞動基準法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於勞動基準法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -10605,7 +14403,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['肖像權侵害', '人格權保護', '精神慰撫金', '不當得利'],
     memoryLine: '關於知名藝人肖像遭美容廣告盜用案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及知名藝人肖像遭美容廣告盜用案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及知名藝人肖像遭美容廣告盜用案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -10613,27 +14412,49 @@ CaseBook(
       updatedAt: '2018/10/24',
     ),
     oneSentenceSummary: '知名藝人肖像遭美容廣告盜用案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生知名藝人肖像遭美容廣告盜用案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生知名藝人肖像遭美容廣告盜用案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2018/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2018/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2018/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2018/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2018/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2018/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於肖像權侵害的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於肖像權侵害的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -10661,7 +14482,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['相鄰關係', '袋地通行權', '公寓規約', '強制拆除'],
     memoryLine: '關於公寓相鄰通道私設鐵門阻礙通行案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及公寓相鄰通道私設鐵門阻礙通行案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及公寓相鄰通道私設鐵門阻礙通行案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -10669,27 +14491,49 @@ CaseBook(
       updatedAt: '2016/10/24',
     ),
     oneSentenceSummary: '公寓相鄰通道私設鐵門阻礙通行案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生公寓相鄰通道私設鐵門阻礙通行案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生公寓相鄰通道私設鐵門阻礙通行案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2016/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2016/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2016/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2016/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2016/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2016/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於相鄰關係的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於相鄰關係的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -10717,7 +14561,8 @@ CaseBook(
     category: '民事案件',
     tags: const ['國家賠償', '公共設施設置缺失', '警示牌效力', '過失比例'],
     memoryLine: '關於遊客在知名景點滑倒骨折國賠案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及遊客在知名景點滑倒骨折國賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及遊客在知名景點滑倒骨折國賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '民事訴訟',
       procedureStage: '判決確定',
@@ -10725,27 +14570,48 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '遊客在知名景點滑倒骨折國賠案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生遊客在知名景點滑倒骨折國賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生遊客在知名景點滑倒骨折國賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於國家賠償的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['civ-184'])
+      LegalIssue(
+          title: '本案中關於國家賠償的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['civ-184'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -10773,7 +14639,8 @@ CaseBook(
     category: '兒少保護',
     tags: const ['兒少法', '托育監管', '不當對待', '吊銷執照'],
     memoryLine: '關於私立托嬰中心不當對待幼兒處罰案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及私立托嬰中心不當對待幼兒處罰案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及私立托嬰中心不當對待幼兒處罰案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -10781,27 +14648,49 @@ CaseBook(
       updatedAt: '2018/10/24',
     ),
     oneSentenceSummary: '私立托嬰中心不當對待幼兒處罰案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生私立托嬰中心不當對待幼兒處罰案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生私立托嬰中心不當對待幼兒處罰案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2018/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2018/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2018/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2018/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2018/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2018/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於兒少法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於兒少法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -10829,7 +14718,8 @@ CaseBook(
     category: '兒少保護',
     tags: const ['兒少性剝削防制', '數位性暴力', '網路安全', '扣押數位證據'],
     memoryLine: '關於未成年網路交友遭誘騙私密照案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及未成年網路交友遭誘騙私密照案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及未成年網路交友遭誘騙私密照案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -10837,27 +14727,49 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '未成年網路交友遭誘騙私密照案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生未成年網路交友遭誘騙私密照案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生未成年網路交友遭誘騙私密照案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於兒少性剝削防制的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於兒少性剝削防制的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -10885,7 +14797,8 @@ CaseBook(
     category: '兒少保護',
     tags: const ['親權衝突', '略誘罪', '家事事件法', '子女探視權'],
     memoryLine: '關於離婚父母擅自带走子女藏匿妨害自由案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及離婚父母擅自带走子女藏匿妨害自由案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及離婚父母擅自带走子女藏匿妨害自由案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -10893,27 +14806,49 @@ CaseBook(
       updatedAt: '2017/10/24',
     ),
     oneSentenceSummary: '離婚父母擅自带走子女藏匿妨害自由案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生離婚父母擅自带走子女藏匿妨害自由案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生離婚父母擅自带走子女藏匿妨害自由案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2017/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2017/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2017/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2017/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2017/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2017/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於親權衝突的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於親權衝突的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -10941,7 +14876,8 @@ CaseBook(
     category: '兒少保護',
     tags: const ['居家托育', '業務過失致傷害', '居家安全', '保母執照廢止'],
     memoryLine: '關於保母超收托育導致幼兒受傷業務過失案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及保母超收托育導致幼兒受傷業務過失案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及保母超收托育導致幼兒受傷業務過失案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -10949,27 +14885,48 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '保母超收托育導致幼兒受傷業務過失案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生保母超收托育導致幼兒受傷業務過失案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生保母超收托育導致幼兒受傷業務過失案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於居家托育的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於居家托育的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -10997,7 +14954,8 @@ CaseBook(
     category: '家庭案件',
     tags: const ['遺產繼承', '特留分', '自書遺囑效力', '信託財產'],
     memoryLine: '關於豪門爭產遺囑特留分爭訟案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及豪門爭產遺囑特留分爭訟案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及豪門爭產遺囑特留分爭訟案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -11005,27 +14963,49 @@ CaseBook(
       updatedAt: '2018/10/24',
     ),
     oneSentenceSummary: '豪門爭產遺囑特留分爭訟案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生豪門爭產遺囑特留分爭訟案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生豪門爭產遺囑特留分爭訟案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2018/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2018/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2018/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2018/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2018/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2018/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於遺產繼承的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於遺產繼承的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -11053,7 +15033,8 @@ CaseBook(
     category: '家庭案件',
     tags: const ['配偶權侵害', '名譽權', '家事調解', '離異損害賠償'],
     memoryLine: '關於配偶發現外遇對第三人請求賠償案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及配偶發現外遇對第三人請求賠償案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及配偶發現外遇對第三人請求賠償案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -11061,27 +15042,49 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '配偶發現外遇對第三人請求賠償案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生配偶發現外遇對第三人請求賠償案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生配偶發現外遇對第三人請求賠償案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於配偶權侵害的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於配偶權侵害的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -11109,7 +15112,8 @@ CaseBook(
     category: '家庭案件',
     tags: const ['民法扶養義務', '免除扶養責任', '家暴事證', '法院裁定'],
     memoryLine: '關於長期不盡扶養義務成年子女免除責任案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及長期不盡扶養義務成年子女免除責任案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及長期不盡扶養義務成年子女免除責任案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -11117,27 +15121,49 @@ CaseBook(
       updatedAt: '2017/10/24',
     ),
     oneSentenceSummary: '長期不盡扶養義務成年子女免除責任案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生長期不盡扶養義務成年子女免除責任案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生長期不盡扶養義務成年子女免除責任案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2017/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2017/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2017/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2017/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2017/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2017/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於民法扶養義務的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於民法扶養義務的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -11165,7 +15191,8 @@ CaseBook(
     category: '家庭案件',
     tags: const ['跨國婚姻', '裁判離婚', '監護權判定', '探視方案'],
     memoryLine: '關於跨國婚姻離異爭奪子女監護權案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及跨國婚姻離異爭奪子女監護權案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及跨國婚姻離異爭奪子女監護權案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -11173,27 +15200,48 @@ CaseBook(
       updatedAt: '2020/10/24',
     ),
     oneSentenceSummary: '跨國婚姻離異爭奪子女監護權案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生跨國婚姻離異爭奪子女監護權案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生跨國婚姻離異爭奪子女監護權案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2020/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2020/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2020/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2020/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2020/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2020/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於跨國婚姻的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於跨國婚姻的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -11221,7 +15269,8 @@ CaseBook(
     category: '校園案件',
     tags: const ['退學處分', '學生申訴', '行政訴訟', '受教權保障'],
     memoryLine: '關於大學生因作弊遭勒令退學處分行政救濟案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及大學生因作弊遭勒令退學處分行政救濟案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及大學生因作弊遭勒令退學處分行政救濟案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -11229,27 +15278,49 @@ CaseBook(
       updatedAt: '2018/10/24',
     ),
     oneSentenceSummary: '大學生因作弊遭勒令退學處分行政救濟案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生大學生因作弊遭勒令退學處分行政救濟案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生大學生因作弊遭勒令退學處分行政救濟案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2018/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2018/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2018/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2018/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2018/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2018/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於退學處分的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於退學處分的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -11277,7 +15348,8 @@ CaseBook(
     category: '校園案件',
     tags: const ['髮禁限制', '學校管教界線', '特別權力關係突破', '人格發展自由'],
     memoryLine: '關於中學生因髮禁遭處分起訴學校案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及中學生因髮禁遭處分起訴學校案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及中學生因髮禁遭處分起訴學校案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -11285,27 +15357,49 @@ CaseBook(
       updatedAt: '2017/10/24',
     ),
     oneSentenceSummary: '中學生因髮禁遭處分起訴學校案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生中學生因髮禁遭處分起訴學校案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生中學生因髮禁遭處分起訴學校案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2017/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2017/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2017/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2017/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2017/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2017/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於髮禁限制的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於髮禁限制的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -11333,7 +15427,8 @@ CaseBook(
     category: '校園案件',
     tags: const ['校園霸凌', '家長連帶責任', '學校通報疏失', '損害賠償'],
     memoryLine: '關於校園內霸凌導致受害學生精神損害賠償案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及校園內霸凌導致受害學生精神損害賠償案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及校園內霸凌導致受害學生精神損害賠償案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -11341,27 +15436,49 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '校園內霸凌導致受害學生精神損害賠償案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生校園內霸凌導致受害學生精神損害賠償案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生校園內霸凌導致受害學生精神損害賠償案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於校園霸凌的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於校園霸凌的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -11389,7 +15506,8 @@ CaseBook(
     category: '智慧財產',
     tags: const ['商標權侵害', '著作權保護', '抄襲認定', '懲罰性賠償'],
     memoryLine: '關於知名設計師商標遭抄襲侵權損賠案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及知名設計師商標遭抄襲侵權損賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及知名設計師商標遭抄襲侵權損賠案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -11397,27 +15515,48 @@ CaseBook(
       updatedAt: '2019/10/24',
     ),
     oneSentenceSummary: '知名設計師商標遭抄襲侵權損賠案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生知名設計師商標遭抄襲侵權損賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生知名設計師商標遭抄襲侵權損賠案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2019/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2019/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2019/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2019/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2019/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2019/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於商標權侵害的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於商標權侵害的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '高等行政法院經開庭審理，調閱相關行政處分卷宗及聽證紀錄，依法進行程序合法性審查。',
     courtReasoning: '法院審酌被告身為公務人員，受人民託付依法執行公務，竟圖謀私利違反職務行為，侵害國家法益重大，應予嚴懲以正官箴。',
     judgmentResult: '撤銷原行政處分及訴願決定，訴訟費用由被告機關負擔。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -11445,7 +15584,8 @@ CaseBook(
     category: '智慧財產',
     tags: const ['著作權法', '網路侵權', '合理使用界線', '刑事告訴'],
     memoryLine: '關於網路論壇未經授權轉載原創文章案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及網路論壇未經授權轉載原創文章案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及網路論壇未經授權轉載原創文章案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -11453,27 +15593,49 @@ CaseBook(
       updatedAt: '2018/10/24',
     ),
     oneSentenceSummary: '網路論壇未經授權轉載原創文章案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生網路論壇未經授權轉載原創文章案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生網路論壇未經授權轉載原創文章案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2018/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2018/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2018/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2018/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2018/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2018/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於著作權法的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於著作權法的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '司法院大法官受理聲請釋憲，召開言詞辯論，聽取專家學者與關係機關之意見陳述。',
-    courtReasoning: '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
+    courtReasoning:
+        '法院認定，契約當事人本於契約自由原則，應依誠實信用原則履行約定。任一方無故遲延或給付不能，皆應依法負擔違約賠償義務。',
     judgmentResult: '宣告相關限制條文因违背憲法比例原則或法律明確性原則，自本解釋公布之日起，至遲於兩年內失效。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -11501,7 +15663,8 @@ CaseBook(
     category: '智慧財產',
     tags: const ['專利侵權', '均等論', '禁制令', '損害賠償計算'],
     memoryLine: '關於科技公司侵犯行動裝置專利權訴訟之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及科技公司侵犯行動裝置專利權訴訟。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及科技公司侵犯行動裝置專利權訴訟。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -11509,27 +15672,49 @@ CaseBook(
       updatedAt: '2016/10/24',
     ),
     oneSentenceSummary: '科技公司侵犯行動裝置專利權訴訟重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生科技公司侵犯行動裝置專利權訴訟所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生科技公司侵犯行動裝置專利權訴訟所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2016/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2016/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2016/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2016/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2016/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2016/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於專利侵權的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['con-23'])
+      LegalIssue(
+          title: '本案中關於專利侵權的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['con-23'])
     ],
     investigationAndTrial: '法庭進行言詞辯論，審酌交通事故鑑定報告與醫院診斷書，確認事證無誤。',
-    courtReasoning: '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
+    courtReasoning:
+        '法院指出，人民之基本人權受憲法保障，非有法律明文授權且符合比例原則，國家行政機關不得以行政命令任意予以限制，以符法治國原則。',
     judgmentResult: '判決被告應給付原告所請求之賠償金與法定遲延利息，全案仍可上訴。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -11557,7 +15742,8 @@ CaseBook(
     category: '刑事案件',
     tags: const ['隨機殺人', '死刑量刑', '精神鑑定', '社會安全網'],
     memoryLine: '關於捷運無差別隨機殺人案之核心法律適用與社會秩序維護認定。',
-    shortDescription: '本案涉及捷運無差別隨機殺人案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
+    shortDescription:
+        '本案涉及捷運無差別隨機殺人案。經過法庭完整證據調查與辯論程序，就該領域之法律爭點確立了具備指導意義的實務裁判標準。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事訴訟',
       procedureStage: '判決確定',
@@ -11565,27 +15751,49 @@ CaseBook(
       updatedAt: '2010/10/24',
     ),
     oneSentenceSummary: '捷運無差別隨機殺人案重大爭點判決，確立該領域之核心法學觀點與程序防線。',
-    background: '本案因發生捷運無差別隨機殺人案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
-    fullStory: '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
+    background:
+        '本案因發生捷運無差別隨機殺人案所涉社會事實，當事人各方因對現行法律條文之文義理解、行政處分之合法性或侵權責任歸屬產生重大分歧，遂依法提起訴訟爭取救濟。',
+    fullStory:
+        '在案件審理過程中，原告與被告方針對核心事證及法律適用範圍進行了激烈的言詞辯論。原告主張權利受損應受法律救濟，被告則提出過失相抵、免責事由或程序抗辯。法院經過多審級之詳細調查，調閱所有勘驗筆錄、鑑定報告及契約卷宗。最終，審判機關基於客觀法律原則與證據裁判原則，做出了具有法治指標性意義的終局裁判，進一步釐清了該類型社會衝突在現行法規範底下的界線與責任歸屬。',
     timeline: const [
-      CaseTimelineItem(dateLabel: '2010/03/12', title: '案件起訴與立案', description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
-      CaseTimelineItem(dateLabel: '2010/08/18', title: '言詞辯論終結', description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
-      CaseTimelineItem(dateLabel: '2010/10/24', title: '終局宣判與公布', description: '法院依法宣判或公布憲法判決，做出終局決定。')
+      CaseTimelineItem(
+          dateLabel: '2010/03/12',
+          title: '案件起訴與立案',
+          description: '當事人依法向管轄法院提起訴訟或向司法院提出解釋聲請。'),
+      CaseTimelineItem(
+          dateLabel: '2010/08/18',
+          title: '言詞辯論終結',
+          description: '法院召開言詞辯論，聽取雙方代理律師與關係機關之意見陳述。'),
+      CaseTimelineItem(
+          dateLabel: '2010/10/24',
+          title: '終局宣判與公布',
+          description: '法院依法宣判或公布憲法判決，做出終局決定。')
     ],
     people: const [
       CasePersonRole(role: '原告/聲請人', description: '案件之權利利害關係人及其委任之訴訟代理人律師。'),
       CasePersonRole(role: '被告/關係機關', description: '被指訴侵權之相對人、行政處分機關或相關法規主管機關。')
     ],
     legalIssues: const [
-      LegalIssue(title: '本案中關於隨機殺人的法律認定標準為何？', plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。', relationToCase: '本案中為核心法律適用與裁決基準。', relatedLawIds: const ['cri-154'])
+      LegalIssue(
+          title: '本案中關於隨機殺人的法律認定標準為何？',
+          plainExplanation: '法院指出，相關限制 or 侵權判定必須符合法律保留原則與法律明確性原則，且不得逾越必要之合理範疇。',
+          relationToCase: '本案中為核心法律適用與裁決基準。',
+          relatedLawIds: ['cri-154'])
     ],
     investigationAndTrial: '地方法院經召開言詞辯論程序，審酌雙方契約履行紀錄，進行法理研判與審理。',
-    courtReasoning: '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
+    courtReasoning:
+        '法院認為，民事侵權行為之損害賠償，旨在回復受害人所受之實質損害。被告對於損害之發生具備明確過失，自應負擔全部之賠償責任。',
     judgmentResult: '原告之訴駁回，訴訟費用由原告負擔。全案判決確定。',
     relatedLaws: const [
-      RelatedLaw(lawName: '中華民國憲法', articleNumber: '第 23 條', plainSummary: '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。', relationToCase: '本案關於本法規適用之說明。')
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary:
+              '以上各條列舉之自由權利，除為防止妨礙他人自由、避免緊急危難、維持社會秩序，或增進公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案關於本法規適用之說明。')
     ],
-    socialImpact: '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
+    socialImpact:
+        '此判決公布後，引起了學術界與實務界之廣泛研討，促進了相關行政流程之改革或民刑事責任歸屬的釐清，對保護人民基本權利具有重大貢獻。',
     relatedCases: const [],
     sources: const [
       CaseSource(
@@ -11600,7 +15808,6 @@ CaseBook(
     mediaReferences: const [],
     images: const [],
   ),
-
 ];
 
 final caseTimeMachineHalls = <CaseLibraryHall>[
@@ -11616,7 +15823,95 @@ final caseTimeMachineHalls = <CaseLibraryHall>[
         name: '2020s 書架',
         description: '現代憲政秩序與新興人權議題',
         coverStyle: 'green',
-        caseIds: const ['799', '103', '124', '161', 'case-006', 'case-008', 'case-010', 'case-011', 'case-012', 'case-013', 'case-014', 'case-019', 'case-020', 'case-021', 'case-024', 'case-025', 'case-026', 'case-027', 'case-028', 'case-029', 'case-030', 'case-032', 'case-033', 'case-034', 'case-035', 'case-036', 'case-037', 'case-038', 'case-039', 'case-040', 'case-041', 'case-042', 'case-043', 'case-044', 'case-045', 'case-052', 'case-056', 'case-057', 'case-058', 'case-059', 'case-060', 'case-065', 'case-066', 'case-067', 'case-070', 'case-071', 'case-073', 'case-074', 'case-075', 'case-076', 'case-078', 'case-079', 'case-080', 'case-082', 'case-083', 'case-084', 'case-086', 'case-087', 'case-089', 'case-090', 'case-091', 'case-098', 'case-103', 'case-105', 'case-106', 'case-111', 'case-112', 'case-113', 'case-116', 'case-117', 'case-120', 'case-121', 'case-124', 'case-126', 'case-128', 'case-130', 'case-132', 'case-135', 'case-136', 'case-149', 'case-152', 'case-158', 'case-159', 'case-163', 'case-167', 'case-174', 'case-178'],
+        caseIds: const [
+          '799',
+          '103',
+          '124',
+          '161',
+          'case-006',
+          'case-008',
+          'case-010',
+          'case-011',
+          'case-012',
+          'case-013',
+          'case-014',
+          'case-019',
+          'case-020',
+          'case-021',
+          'case-024',
+          'case-025',
+          'case-026',
+          'case-027',
+          'case-028',
+          'case-029',
+          'case-030',
+          'case-032',
+          'case-033',
+          'case-034',
+          'case-035',
+          'case-036',
+          'case-037',
+          'case-038',
+          'case-039',
+          'case-040',
+          'case-041',
+          'case-042',
+          'case-043',
+          'case-044',
+          'case-045',
+          'case-052',
+          'case-056',
+          'case-057',
+          'case-058',
+          'case-059',
+          'case-060',
+          'case-065',
+          'case-066',
+          'case-067',
+          'case-070',
+          'case-071',
+          'case-073',
+          'case-074',
+          'case-075',
+          'case-076',
+          'case-078',
+          'case-079',
+          'case-080',
+          'case-082',
+          'case-083',
+          'case-084',
+          'case-086',
+          'case-087',
+          'case-089',
+          'case-090',
+          'case-091',
+          'case-098',
+          'case-103',
+          'case-105',
+          'case-106',
+          'case-111',
+          'case-112',
+          'case-113',
+          'case-116',
+          'case-117',
+          'case-120',
+          'case-121',
+          'case-124',
+          'case-126',
+          'case-128',
+          'case-130',
+          'case-132',
+          'case-135',
+          'case-136',
+          'case-149',
+          'case-152',
+          'case-158',
+          'case-159',
+          'case-163',
+          'case-167',
+          'case-174',
+          'case-178'
+        ],
       ),
       CaseShelf(
         id: '2010s',
@@ -11624,7 +15919,95 @@ final caseTimeMachineHalls = <CaseLibraryHall>[
         name: '2010s 書架',
         description: '社會運動風起雲湧與公民權益覺醒',
         coverStyle: 'gold',
-        caseIds: const ['318', 'hung-2013', 'ding-2015', '102', '101', 'case-001', 'case-002', 'case-003', 'case-004', 'case-005', 'case-007', 'case-009', 'case-015', 'case-031', 'case-046', 'case-047', 'case-048', 'case-049', 'case-050', 'case-051', 'case-053', 'case-054', 'case-055', 'case-061', 'case-072', 'case-077', 'case-081', 'case-085', 'case-088', 'case-092', 'case-093', 'case-094', 'case-095', 'case-096', 'case-097', 'case-099', 'case-100', 'case-101', 'case-102', 'case-104', 'case-107', 'case-118', 'case-119', 'case-122', 'case-123', 'case-125', 'case-127', 'case-129', 'case-131', 'case-133', 'case-134', 'case-137', 'case-138', 'case-139', 'case-140', 'case-141', 'case-142', 'case-143', 'case-144', 'case-145', 'case-146', 'case-147', 'case-148', 'case-150', 'case-151', 'case-153', 'case-157', 'case-162', 'case-164', 'case-165', 'case-166', 'case-168', 'case-169', 'case-170', 'case-171', 'case-172', 'case-173', 'case-175', 'case-176', 'case-177', 'case-179', 'case-180', 'case-181', 'case-182', 'case-183', 'case-184', 'case-185'],
+        caseIds: const [
+          '318',
+          'hung-2013',
+          'ding-2015',
+          '102',
+          '101',
+          'case-001',
+          'case-002',
+          'case-003',
+          'case-004',
+          'case-005',
+          'case-007',
+          'case-009',
+          'case-015',
+          'case-031',
+          'case-046',
+          'case-047',
+          'case-048',
+          'case-049',
+          'case-050',
+          'case-051',
+          'case-053',
+          'case-054',
+          'case-055',
+          'case-061',
+          'case-072',
+          'case-077',
+          'case-081',
+          'case-085',
+          'case-088',
+          'case-092',
+          'case-093',
+          'case-094',
+          'case-095',
+          'case-096',
+          'case-097',
+          'case-099',
+          'case-100',
+          'case-101',
+          'case-102',
+          'case-104',
+          'case-107',
+          'case-118',
+          'case-119',
+          'case-122',
+          'case-123',
+          'case-125',
+          'case-127',
+          'case-129',
+          'case-131',
+          'case-133',
+          'case-134',
+          'case-137',
+          'case-138',
+          'case-139',
+          'case-140',
+          'case-141',
+          'case-142',
+          'case-143',
+          'case-144',
+          'case-145',
+          'case-146',
+          'case-147',
+          'case-148',
+          'case-150',
+          'case-151',
+          'case-153',
+          'case-157',
+          'case-162',
+          'case-164',
+          'case-165',
+          'case-166',
+          'case-168',
+          'case-169',
+          'case-170',
+          'case-171',
+          'case-172',
+          'case-173',
+          'case-175',
+          'case-176',
+          'case-177',
+          'case-179',
+          'case-180',
+          'case-181',
+          'case-182',
+          'case-183',
+          'case-184',
+          'case-185'
+        ],
       ),
       CaseShelf(
         id: '2000s',
@@ -11632,7 +16015,25 @@ final caseTimeMachineHalls = <CaseLibraryHall>[
         name: '2000s 書架',
         description: '首度政黨輪替與司法鑑定精進',
         coverStyle: 'slate',
-        caseIds: const ['499', '520', 'cheng-2021', 'case-016', 'case-017', 'case-018', 'case-023', 'case-062', 'case-063', 'case-064', 'case-069', 'case-109', 'case-110', 'case-115', 'case-155', 'case-156', 'case-161'],
+        caseIds: const [
+          '499',
+          '520',
+          'cheng-2021',
+          'case-016',
+          'case-017',
+          'case-018',
+          'case-023',
+          'case-062',
+          'case-063',
+          'case-064',
+          'case-069',
+          'case-109',
+          'case-110',
+          'case-115',
+          'case-155',
+          'case-156',
+          'case-161'
+        ],
       ),
       CaseShelf(
         id: '1990s',
@@ -11640,7 +16041,17 @@ final caseTimeMachineHalls = <CaseLibraryHall>[
         name: '1990s 書架',
         description: '解嚴初期的民主變遷與刑事大案',
         coverStyle: 'slate',
-        caseIds: const ['104', '105', '106', 'case-022', 'case-068', 'case-108', 'case-114', 'case-154', 'case-160'],
+        caseIds: const [
+          '104',
+          '105',
+          '106',
+          'case-022',
+          'case-068',
+          'case-108',
+          'case-114',
+          'case-154',
+          'case-160'
+        ],
       ),
     ],
   ),
@@ -11656,7 +16067,52 @@ final caseTimeMachineHalls = <CaseLibraryHall>[
         name: '社會關注',
         description: '大眾高度議論的民生與制度案',
         coverStyle: 'green',
-        caseIds: const ['ding-2015', '104', '105', '106', 'case-026', 'case-027', 'case-028', 'case-029', 'case-030', 'case-031', 'case-032', 'case-044', 'case-045', 'case-046', 'case-072', 'case-073', 'case-074', 'case-075', 'case-076', 'case-077', 'case-078', 'case-090', 'case-091', 'case-092', 'case-118', 'case-119', 'case-120', 'case-121', 'case-122', 'case-123', 'case-124', 'case-136', 'case-137', 'case-138', 'case-164', 'case-165', 'case-166', 'case-167', 'case-168', 'case-169', 'case-170', 'case-182', 'case-183', 'case-184'],
+        caseIds: const [
+          'ding-2015',
+          '104',
+          '105',
+          '106',
+          'case-026',
+          'case-027',
+          'case-028',
+          'case-029',
+          'case-030',
+          'case-031',
+          'case-032',
+          'case-044',
+          'case-045',
+          'case-046',
+          'case-072',
+          'case-073',
+          'case-074',
+          'case-075',
+          'case-076',
+          'case-077',
+          'case-078',
+          'case-090',
+          'case-091',
+          'case-092',
+          'case-118',
+          'case-119',
+          'case-120',
+          'case-121',
+          'case-122',
+          'case-123',
+          'case-124',
+          'case-136',
+          'case-137',
+          'case-138',
+          'case-164',
+          'case-165',
+          'case-166',
+          'case-167',
+          'case-168',
+          'case-169',
+          'case-170',
+          'case-182',
+          'case-183',
+          'case-184'
+        ],
       ),
       CaseShelf(
         id: 'rose',
@@ -11664,7 +16120,54 @@ final caseTimeMachineHalls = <CaseLibraryHall>[
         name: '司法制度',
         description: '大法官解釋與憲法裁判',
         coverStyle: 'gold',
-        caseIds: const ['799', '499', '520', '101', '102', '103', 'case-016', 'case-017', 'case-018', 'case-019', 'case-020', 'case-021', 'case-022', 'case-023', 'case-024', 'case-025', 'case-062', 'case-063', 'case-064', 'case-065', 'case-066', 'case-067', 'case-068', 'case-069', 'case-070', 'case-071', 'case-108', 'case-109', 'case-110', 'case-111', 'case-112', 'case-113', 'case-114', 'case-115', 'case-116', 'case-117', 'case-154', 'case-155', 'case-156', 'case-157', 'case-158', 'case-159', 'case-160', 'case-161', 'case-162', 'case-163'],
+        caseIds: const [
+          '799',
+          '499',
+          '520',
+          '101',
+          '102',
+          '103',
+          'case-016',
+          'case-017',
+          'case-018',
+          'case-019',
+          'case-020',
+          'case-021',
+          'case-022',
+          'case-023',
+          'case-024',
+          'case-025',
+          'case-062',
+          'case-063',
+          'case-064',
+          'case-065',
+          'case-066',
+          'case-067',
+          'case-068',
+          'case-069',
+          'case-070',
+          'case-071',
+          'case-108',
+          'case-109',
+          'case-110',
+          'case-111',
+          'case-112',
+          'case-113',
+          'case-114',
+          'case-115',
+          'case-116',
+          'case-117',
+          'case-154',
+          'case-155',
+          'case-156',
+          'case-157',
+          'case-158',
+          'case-159',
+          'case-160',
+          'case-161',
+          'case-162',
+          'case-163'
+        ],
       ),
       CaseShelf(
         id: 'campus',
@@ -11672,7 +16175,21 @@ final caseTimeMachineHalls = <CaseLibraryHall>[
         name: '校園案件',
         description: '學生權利與校園公共安全',
         coverStyle: 'cream',
-        caseIds: const ['318', 'case-041', 'case-042', 'case-043', 'case-087', 'case-088', 'case-089', 'case-133', 'case-134', 'case-135', 'case-179', 'case-180', 'case-181'],
+        caseIds: const [
+          '318',
+          'case-041',
+          'case-042',
+          'case-043',
+          'case-087',
+          'case-088',
+          'case-089',
+          'case-133',
+          'case-134',
+          'case-135',
+          'case-179',
+          'case-180',
+          'case-181'
+        ],
       ),
       CaseShelf(
         id: 'family',
@@ -11680,7 +16197,25 @@ final caseTimeMachineHalls = <CaseLibraryHall>[
         name: '家庭案件',
         description: '婚姻、繼承與親權糾紛',
         coverStyle: 'slate',
-        caseIds: const ['101', 'case-037', 'case-038', 'case-039', 'case-040', 'case-083', 'case-084', 'case-085', 'case-086', 'case-129', 'case-130', 'case-131', 'case-132', 'case-175', 'case-176', 'case-177', 'case-178'],
+        caseIds: const [
+          '101',
+          'case-037',
+          'case-038',
+          'case-039',
+          'case-040',
+          'case-083',
+          'case-084',
+          'case-085',
+          'case-086',
+          'case-129',
+          'case-130',
+          'case-131',
+          'case-132',
+          'case-175',
+          'case-176',
+          'case-177',
+          'case-178'
+        ],
       ),
       CaseShelf(
         id: 'child',
@@ -11688,7 +16223,25 @@ final caseTimeMachineHalls = <CaseLibraryHall>[
         name: '兒少保護',
         description: '兒童及青少年權利特別保障',
         coverStyle: 'green',
-        caseIds: const ['161', 'case-033', 'case-034', 'case-035', 'case-036', 'case-079', 'case-080', 'case-081', 'case-082', 'case-125', 'case-126', 'case-127', 'case-128', 'case-171', 'case-172', 'case-173', 'case-174'],
+        caseIds: const [
+          '161',
+          'case-033',
+          'case-034',
+          'case-035',
+          'case-036',
+          'case-079',
+          'case-080',
+          'case-081',
+          'case-082',
+          'case-125',
+          'case-126',
+          'case-127',
+          'case-128',
+          'case-171',
+          'case-172',
+          'case-173',
+          'case-174'
+        ],
       ),
       CaseShelf(
         id: 'criminal',
@@ -11696,7 +16249,73 @@ final caseTimeMachineHalls = <CaseLibraryHall>[
         name: '重大刑案',
         description: '影響社會治安之判決',
         coverStyle: 'slate',
-        caseIds: const ['hung-2013', 'cheng-2021', '105', '124', 'case-001', 'case-002', 'case-003', 'case-004', 'case-005', 'case-006', 'case-007', 'case-008', 'case-009', 'case-010', 'case-011', 'case-012', 'case-013', 'case-014', 'case-015', 'case-047', 'case-048', 'case-049', 'case-050', 'case-051', 'case-052', 'case-053', 'case-054', 'case-055', 'case-056', 'case-057', 'case-058', 'case-059', 'case-060', 'case-061', 'case-093', 'case-094', 'case-095', 'case-096', 'case-097', 'case-098', 'case-099', 'case-100', 'case-101', 'case-102', 'case-103', 'case-104', 'case-105', 'case-106', 'case-107', 'case-139', 'case-140', 'case-141', 'case-142', 'case-143', 'case-144', 'case-145', 'case-146', 'case-147', 'case-148', 'case-149', 'case-150', 'case-151', 'case-152', 'case-153', 'case-185'],
+        caseIds: const [
+          'hung-2013',
+          'cheng-2021',
+          '105',
+          '124',
+          'case-001',
+          'case-002',
+          'case-003',
+          'case-004',
+          'case-005',
+          'case-006',
+          'case-007',
+          'case-008',
+          'case-009',
+          'case-010',
+          'case-011',
+          'case-012',
+          'case-013',
+          'case-014',
+          'case-015',
+          'case-047',
+          'case-048',
+          'case-049',
+          'case-050',
+          'case-051',
+          'case-052',
+          'case-053',
+          'case-054',
+          'case-055',
+          'case-056',
+          'case-057',
+          'case-058',
+          'case-059',
+          'case-060',
+          'case-061',
+          'case-093',
+          'case-094',
+          'case-095',
+          'case-096',
+          'case-097',
+          'case-098',
+          'case-099',
+          'case-100',
+          'case-101',
+          'case-102',
+          'case-103',
+          'case-104',
+          'case-105',
+          'case-106',
+          'case-107',
+          'case-139',
+          'case-140',
+          'case-141',
+          'case-142',
+          'case-143',
+          'case-144',
+          'case-145',
+          'case-146',
+          'case-147',
+          'case-148',
+          'case-149',
+          'case-150',
+          'case-151',
+          'case-152',
+          'case-153',
+          'case-185'
+        ],
       ),
     ],
   ),

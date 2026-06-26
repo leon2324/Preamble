@@ -269,7 +269,8 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
                       boxShadow: isSelected
                           ? [
                               BoxShadow(
-                                  color: AppColors.accent.withOpacity(0.3),
+                                  color:
+                                      AppColors.accent.withValues(alpha: 0.3),
                                   blurRadius: 8,
                                   spreadRadius: 1)
                             ]

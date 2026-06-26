@@ -86,6 +86,7 @@ class _SavedNotesPageState extends State<SavedNotesPage> {
       );
       matchedArticle = await SupabaseLearningService.instance
           .fetchArticleByTitle(articleTitle);
+      if (!mounted) return;
       if (matchedArticle != null) {
         matchedCategory = matchedArticle.category ?? '法律情境';
         if (matchedArticle.stepNumber != null) {

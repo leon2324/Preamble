@@ -47,19 +47,22 @@ extension LearningNotebookTabBuilder on KnowLawPageState {
     ]);
   }
 
-  Widget _buildQuickNotesAndStatutesSection(bool isDark, LearningGameState gameState) {
+  Widget _buildQuickNotesAndStatutesSection(
+      bool isDark, LearningGameState gameState) {
     // 定義法條標籤及其對照條文
     final Map<String, String> statuteMapping = {
       '租賃契約': '民法第 421 條：\n稱租賃者，謂當事人約定，一方以物租與他方使用收益，他方支付租金之契約。',
       '侵權行為': '民法第 184 條：\n因故意或過失，不法侵害他人之權利者，負損害賠償責任。故意以背於善良風俗之方法加損害於他人者亦同。',
-      '消費者保護': '消保法第 19 條：\n通訊交易或訪問交易之消費者，得於收受商品或接受服務後七日內，退回商品或以書面通知方式解除契約，無須說明理由及負擔任何費用或對價。',
+      '消費者保護':
+          '消保法第 19 條：\n通訊交易或訪問交易之消費者，得於收受商品或接受服務後七日內，退回商品或以書面通知方式解除契約，無須說明理由及負擔任何費用或對價。',
       '勞基法': '勞基法第 24 條：\n雇主延長勞工工作時間者，其延長工作時間之工資，應依規定標準加給（加班費計算基準）。',
     };
 
     return NotebookCard(
       hasBookmark: true,
       bookmarkColor: const Color(0xFF8CAF96),
-      backgroundColor: isDark ? const Color(0xFF1B241E) : const Color(0xFFF2F8F4),
+      backgroundColor:
+          isDark ? const Color(0xFF1B241E) : const Color(0xFFF2F8F4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -100,13 +103,16 @@ extension LearningNotebookTabBuilder on KnowLawPageState {
                       fontSize: 12.sp,
                       color: AppColors.textSecondary.withValues(alpha: 0.7),
                     ),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
                     filled: true,
                     fillColor: isDark ? const Color(0xFF232B25) : Colors.white,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.r),
                       borderSide: BorderSide(
-                        color: isDark ? const Color(0xFF2D3B30) : const Color(0xFFD4E8DA),
+                        color: isDark
+                            ? const Color(0xFF2D3B30)
+                            : const Color(0xFFD4E8DA),
                         width: 1.w,
                       ),
                     ),
@@ -125,10 +131,7 @@ extension LearningNotebookTabBuilder on KnowLawPageState {
                 onPressed: () {
                   final text = _quickNoteController.text.trim();
                   if (text.isNotEmpty) {
-                    setState(() {
-                      _quickNotes.insert(0, text);
-                      _quickNoteController.clear();
-                    });
+                    saveQuickNote(text);
                     HapticFeedback.lightImpact();
                   }
                 },
@@ -138,11 +141,13 @@ extension LearningNotebookTabBuilder on KnowLawPageState {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.r),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
                 ),
                 child: Text(
                   '儲存',
-                  style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
+                  style:
+                      TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
                 ),
               ),
             ],
@@ -160,12 +165,17 @@ extension LearningNotebookTabBuilder on KnowLawPageState {
                 itemBuilder: (context, index) {
                   return Container(
                     margin: EdgeInsets.only(bottom: 6.h),
-                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
                     decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF131A15) : Colors.white.withValues(alpha: 0.6),
+                      color: isDark
+                          ? const Color(0xFF131A15)
+                          : Colors.white.withValues(alpha: 0.6),
                       borderRadius: BorderRadius.circular(6.r),
                       border: Border.all(
-                        color: isDark ? const Color(0xFF232D26) : const Color(0xFFE2EFE5),
+                        color: isDark
+                            ? const Color(0xFF232D26)
+                            : const Color(0xFFE2EFE5),
                         width: 0.8.w,
                       ),
                     ),
@@ -188,9 +198,7 @@ extension LearningNotebookTabBuilder on KnowLawPageState {
                         ),
                         GestureDetector(
                           onTap: () {
-                            setState(() {
-                              _quickNotes.removeAt(index);
-                            });
+                            removeQuickNoteAt(index);
                           },
                           child: Icon(
                             Icons.close_rounded,
@@ -242,31 +250,37 @@ extension LearningNotebookTabBuilder on KnowLawPageState {
               final isSelected = _selectedStatuteTag == tag;
               return GestureDetector(
                 onTap: () {
-                  setState(() {
-                    _selectedStatuteTag = tag;
-                  });
+                  selectStatuteTag(tag);
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? const Color(0xFF4E7D5B)
-                        : (isDark ? const Color(0xFF232B25) : const Color(0xFFE2EFE5)),
+                        : (isDark
+                            ? const Color(0xFF232B25)
+                            : const Color(0xFFE2EFE5)),
                     borderRadius: BorderRadius.circular(20.r),
                     border: Border.all(
                       color: isSelected
                           ? const Color(0xFF4E7D5B)
-                          : (isDark ? const Color(0xFF2D3B30) : const Color(0xFFC7DEC9)),
+                          : (isDark
+                              ? const Color(0xFF2D3B30)
+                              : const Color(0xFFC7DEC9)),
                     ),
                   ),
                   child: Text(
                     tag,
                     style: TextStyle(
                       fontSize: 11.sp,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
                       color: isSelected
                           ? Colors.white
-                          : (isDark ? const Color(0xFF8CAF96) : const Color(0xFF386343)),
+                          : (isDark
+                              ? const Color(0xFF8CAF96)
+                              : const Color(0xFF386343)),
                     ),
                   ),
                 ),
@@ -283,7 +297,8 @@ extension LearningNotebookTabBuilder on KnowLawPageState {
               color: isDark ? const Color(0xFF131A15) : Colors.white,
               borderRadius: BorderRadius.circular(8.r),
               border: Border.all(
-                color: isDark ? const Color(0xFF232D26) : const Color(0xFFE2EFE5),
+                color:
+                    isDark ? const Color(0xFF232D26) : const Color(0xFFE2EFE5),
               ),
             ),
             child: Text(

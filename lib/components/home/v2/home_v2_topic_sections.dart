@@ -203,20 +203,25 @@ class HomeV2TopicBentoGrid extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (__) => CaseDossierDetailPage(book: rentalCase),
+                            builder: (__) =>
+                                CaseDossierDetailPage(book: rentalCase),
                           ),
                         );
                       },
                       child: Container(
                         padding: EdgeInsets.all(12.w),
                         decoration: BoxDecoration(
-                          color: isDark ? const Color(0xFF1B2E24) : const Color(0xFFF2F8F4),
+                          color: isDark
+                              ? const Color(0xFF1B2E24)
+                              : const Color(0xFFF2F8F4),
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(12.r),
                             bottomLeft: Radius.circular(12.r),
                           ),
                           border: Border.all(
-                            color: isDark ? const Color(0xFF275435) : const Color(0xFFD4E8DA),
+                            color: isDark
+                                ? const Color(0xFF275435)
+                                : const Color(0xFFD4E8DA),
                           ),
                         ),
                         child: Column(
@@ -225,7 +230,9 @@ class HomeV2TopicBentoGrid extends StatelessWidget {
                             Text(
                               '正方：應恢復原狀',
                               style: TextStyle(
-                                color: isDark ? const Color(0xFF76BA8B) : const Color(0xFF275435),
+                                color: isDark
+                                    ? const Color(0xFF76BA8B)
+                                    : const Color(0xFF275435),
                                 fontSize: 11.5.sp,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -243,7 +250,9 @@ class HomeV2TopicBentoGrid extends StatelessWidget {
                             Text(
                               '深入探究 →',
                               style: TextStyle(
-                                color: isDark ? const Color(0xFF76BA8B) : const Color(0xFF275435),
+                                color: isDark
+                                    ? const Color(0xFF76BA8B)
+                                    : const Color(0xFF275435),
                                 fontSize: 10.sp,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -260,20 +269,25 @@ class HomeV2TopicBentoGrid extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (__) => CaseDossierDetailPage(book: rentalCase),
+                            builder: (__) =>
+                                CaseDossierDetailPage(book: rentalCase),
                           ),
                         );
                       },
                       child: Container(
                         padding: EdgeInsets.all(12.w),
                         decoration: BoxDecoration(
-                          color: isDark ? const Color(0xFF381E1E) : const Color(0xFFFAF2F2),
+                          color: isDark
+                              ? const Color(0xFF381E1E)
+                              : const Color(0xFFFAF2F2),
                           borderRadius: BorderRadius.only(
                             topRight: Radius.circular(12.r),
                             bottomRight: Radius.circular(12.r),
                           ),
                           border: Border.all(
-                            color: isDark ? const Color(0xFF7A4242) : const Color(0xFFF2D2D2),
+                            color: isDark
+                                ? const Color(0xFF7A4242)
+                                : const Color(0xFFF2D2D2),
                           ),
                         ),
                         child: Column(
@@ -282,7 +296,9 @@ class HomeV2TopicBentoGrid extends StatelessWidget {
                             Text(
                               '反方：折舊屬耗損',
                               style: TextStyle(
-                                color: isDark ? const Color(0xFFD88585) : const Color(0xFFB24C4C),
+                                color: isDark
+                                    ? const Color(0xFFD88585)
+                                    : const Color(0xFFB24C4C),
                                 fontSize: 11.5.sp,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -300,7 +316,9 @@ class HomeV2TopicBentoGrid extends StatelessWidget {
                             Text(
                               '深入探究 →',
                               style: TextStyle(
-                                color: isDark ? const Color(0xFFD88585) : const Color(0xFFB24C4C),
+                                color: isDark
+                                    ? const Color(0xFFD88585)
+                                    : const Color(0xFFB24C4C),
                                 fontSize: 10.sp,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -351,11 +369,9 @@ class HomeV2TopicBentoGrid extends StatelessWidget {
 class _BigBentoTopicCard extends StatelessWidget {
   const _BigBentoTopicCard({
     required this.item,
-    this.onTap,
   });
 
   final HomeV2TopicItem item;
-  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -365,7 +381,7 @@ class _BigBentoTopicCard extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: onTap,
+        onTap: null,
         borderRadius: radius,
         child: Ink(
           padding: EdgeInsets.all(16.w),
@@ -429,11 +445,9 @@ class _BigBentoTopicCard extends StatelessWidget {
 class _SmallBentoTopicCard extends StatelessWidget {
   const _SmallBentoTopicCard({
     required this.item,
-    this.onTap,
   });
 
   final HomeV2TopicItem item;
-  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -443,7 +457,7 @@ class _SmallBentoTopicCard extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: onTap,
+        onTap: null,
         borderRadius: radius,
         child: Ink(
           padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),

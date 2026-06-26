@@ -98,7 +98,7 @@ class _GridPainter extends CustomPainter {
     } else if (paperStyle == 'dotted') {
       // 3) 點陣紙：在交叉點繪製隱約的點
       final dotPaint = Paint()
-        ..color = lineColor.withOpacity(0.6)
+        ..color = lineColor.withValues(alpha: 0.6)
         ..style = PaintingStyle.fill;
       for (double y = gridSize; y < size.height; y += gridSize) {
         for (double x = gridSize; x < size.width; x += gridSize) {
@@ -131,7 +131,8 @@ class _GridPainter extends CustomPainter {
     // 畫左側紅色筆記本邊緣線 (僅在非康乃爾樣式下畫，避免干擾康乃爾版面)
     if (paperStyle != 'cornell') {
       final marginPaint = Paint()
-        ..color = isDark ? const Color(0xFF1E262F) : lineColor.withOpacity(0.8)
+        ..color =
+            isDark ? const Color(0xFF1E262F) : lineColor.withValues(alpha: 0.8)
         ..strokeWidth = 1.w;
 
       final double leftMargin = 8.w;

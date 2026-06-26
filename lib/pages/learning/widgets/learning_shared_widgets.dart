@@ -343,7 +343,7 @@ Widget buildLearningHighlightColorDot(
         boxShadow: isSelected
             ? [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.15),
+                  color: Colors.black.withValues(alpha: 0.15),
                   blurRadius: 3,
                   offset: const Offset(0, 1.5),
                 )
@@ -567,7 +567,8 @@ class _BreathingGlowContainerState extends State<BreathingGlowContainer>
             borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
-                color: widget.glowColor.withValues(alpha: 0.15 * (_animation.value / 6.0)),
+                color: widget.glowColor
+                    .withValues(alpha: 0.15 * (_animation.value / 6.0)),
                 blurRadius: _animation.value * 2.w,
                 spreadRadius: _animation.value * 0.5.w,
               ),
@@ -589,14 +590,16 @@ class BreathingDot extends StatefulWidget {
   State<BreathingDot> createState() => _BreathingDotState();
 }
 
-class _BreathingDotState extends State<BreathingDot> with SingleTickerProviderStateMixin {
+class _BreathingDotState extends State<BreathingDot>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200))
+    _controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 1200))
       ..repeat(reverse: true);
     _animation = Tween<double>(begin: 0.3, end: 1.0).animate(_controller);
   }
@@ -634,5 +637,3 @@ class _BreathingDotState extends State<BreathingDot> with SingleTickerProviderSt
     );
   }
 }
-
-

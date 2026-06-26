@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 // google_fonts is imported in notebook_aesthetics
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/components/home/v2/home_v2_palette.dart';
@@ -93,6 +92,29 @@ class KnowLawPageState extends State<KnowLawPage> {
   void dispose() {
     _quickNoteController.dispose();
     super.dispose();
+  }
+
+  void openNotebookTab() {
+    setState(() => _selectedTabIndex = 2);
+  }
+
+  void saveQuickNote(String text) {
+    setState(() {
+      _quickNotes.insert(0, text);
+      _quickNoteController.clear();
+    });
+  }
+
+  void removeQuickNoteAt(int index) {
+    setState(() {
+      _quickNotes.removeAt(index);
+    });
+  }
+
+  void selectStatuteTag(String tag) {
+    setState(() {
+      _selectedStatuteTag = tag;
+    });
   }
 
   @override
@@ -4380,7 +4402,7 @@ class KnowLawPageState extends State<KnowLawPage> {
               const Spacer(),
               Switch.adaptive(
                 value: gameState.useHandwrittenFont,
-                activeColor: HomeV2Palette.trustGreen,
+                activeThumbColor: HomeV2Palette.trustGreen,
                 onChanged: (val) {
                   gameState.setUseHandwrittenFont(val);
                 },
@@ -4535,7 +4557,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                       boxShadow: isUnlocked
                           ? [
                               BoxShadow(
-                                color: const Color(0xFFE8B95F).withOpacity(0.2),
+                                color: const Color(0xFFE8B95F)
+                                    .withValues(alpha: 0.2),
                                 blurRadius: 4,
                                 offset: const Offset(0, 2),
                               )
@@ -5270,7 +5293,7 @@ class KnowLawPageState extends State<KnowLawPage> {
                                 decoration: BoxDecoration(
                                   color: isSelected
                                       ? HomeV2Palette.trustGreen
-                                          .withOpacity(0.2)
+                                          .withValues(alpha: 0.2)
                                       : Colors.transparent,
                                   border: Border.all(
                                     color: isSelected

@@ -128,13 +128,13 @@ class ProfilePage extends StatelessWidget {
                       EdgeInsets.symmetric(horizontal: 14.w, vertical: 5.h),
                   decoration: BoxDecoration(
                     color: appState.isSubscriber
-                        ? AppColors.accent.withOpacity(0.12)
-                        : AppColors.primary.withOpacity(0.06),
+                        ? AppColors.accent.withValues(alpha: 0.12)
+                        : AppColors.primary.withValues(alpha: 0.06),
                     borderRadius: BorderRadius.circular(100.r),
                     border: Border.all(
                       color: appState.isSubscriber
                           ? AppColors.accent
-                          : AppColors.primary.withOpacity(0.15),
+                          : AppColors.primary.withValues(alpha: 0.15),
                       width: 1.w,
                     ),
                   ),
@@ -177,7 +177,7 @@ class ProfilePage extends StatelessWidget {
                 trailing: Switch.adaptive(
                   value: appState.isDarkMode,
                   onChanged: appState.setDarkMode,
-                  activeColor: AppColors.accent,
+                  activeThumbColor: AppColors.accent,
                 ),
               ),
               SettingsTile(
@@ -473,7 +473,8 @@ class ProfilePage extends StatelessWidget {
       decoration: BoxDecoration(
         color: badgeBg,
         borderRadius: BorderRadius.circular(100.r),
-        border: Border.all(color: badgeColor.withOpacity(0.3), width: 1.w),
+        border:
+            Border.all(color: badgeColor.withValues(alpha: 0.3), width: 1.w),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -539,21 +540,20 @@ class ProfilePage extends StatelessWidget {
     required double scale,
     required double current,
   }) {
-    return RadioListTile<double>(
+    final isSelected = current == scale;
+    return ListTile(
       title: Text(label, style: TextStyle(fontSize: 14.sp * scale)),
-      value: scale,
-      groupValue: current,
-      activeColor: AppColors.accent,
-      onChanged: (val) {
-        if (val != null) {
-          appState.updateSettings(fontSizeScale: val);
-          Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                content: Text('閱讀字型大小已更新！'),
-                backgroundColor: Color(0xFF2E7D32)),
-          );
-        }
+      trailing: Icon(
+        isSelected ? Icons.check_circle_rounded : Icons.circle_outlined,
+        color: isSelected ? AppColors.accent : AppColors.textSecondary,
+      ),
+      onTap: () {
+        appState.updateSettings(fontSizeScale: scale);
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('閱讀字型大小已更新！'), backgroundColor: Color(0xFF2E7D32)),
+        );
       },
     );
   }
@@ -580,7 +580,8 @@ class ProfilePage extends StatelessWidget {
   }
 
   // 開啟介面自訂偏好設定底頁。
-  void _showInterfaceSettingsSheet(BuildContext context, PreambleState appState) {
+  void _showInterfaceSettingsSheet(
+      BuildContext context, PreambleState appState) {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,

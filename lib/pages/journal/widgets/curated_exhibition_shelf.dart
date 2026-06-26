@@ -42,7 +42,7 @@ class CuratedExhibitionShelf extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4.r),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Colors.black.withValues(alpha: 0.2),
                       offset: Offset(0, 3.h),
                       blurRadius: 4,
                     ),
@@ -120,7 +120,7 @@ class _ExhibitionFolderCard extends StatelessWidget {
                     'EXHIBITION',
                     style: TextStyle(
                       fontSize: 8.sp,
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                       fontWeight: FontWeight.w900,
                       letterSpacing: 0.8,
                     ),
@@ -141,7 +141,7 @@ class _ExhibitionFolderCard extends StatelessWidget {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: item.themeColor.withOpacity(0.25),
+                        color: item.themeColor.withValues(alpha: 0.25),
                         offset: const Offset(0, 4),
                         blurRadius: 8,
                       ),
@@ -159,14 +159,14 @@ class _ExhibitionFolderCard extends StatelessWidget {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 7.w, vertical: 3.h),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.16),
+                              color: Colors.white.withValues(alpha: 0.16),
                               borderRadius: BorderRadius.circular(8.r),
                             ),
                             child: Text(
                               '已讀 ${item.readProgress}',
                               style: TextStyle(
                                 fontSize: 9.sp,
-                                color: Colors.white.withOpacity(0.95),
+                                color: Colors.white.withValues(alpha: 0.95),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -174,7 +174,7 @@ class _ExhibitionFolderCard extends StatelessWidget {
                           Icon(
                             CupertinoIcons.folder_open,
                             size: 13.sp,
-                            color: Colors.white.withOpacity(0.7),
+                            color: Colors.white.withValues(alpha: 0.7),
                           ),
                         ],
                       ),
@@ -198,7 +198,7 @@ class _ExhibitionFolderCard extends StatelessWidget {
                           fontSize: 10.sp,
                           height: 1.35,
                           fontWeight: FontWeight.w500,
-                          color: Colors.white.withOpacity(0.75),
+                          color: Colors.white.withValues(alpha: 0.75),
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -217,7 +217,7 @@ class _ExhibitionFolderCard extends StatelessWidget {
                                   '進入特展',
                                   style: TextStyle(
                                     fontSize: 10.sp,
-                                    color: Colors.white.withOpacity(0.9),
+                                    color: Colors.white.withValues(alpha: 0.9),
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -225,7 +225,7 @@ class _ExhibitionFolderCard extends StatelessWidget {
                                 Icon(
                                   CupertinoIcons.chevron_right_circle_fill,
                                   size: 11.sp,
-                                  color: Colors.white.withOpacity(0.9),
+                                  color: Colors.white.withValues(alpha: 0.9),
                                 ),
                               ],
                             ),
@@ -270,7 +270,7 @@ class _BookStack extends StatelessWidget {
                 angle: -0.15,
                 child: _MiniBook(
                   bookId: caseIds[2],
-                  baseColor: Colors.white.withOpacity(0.4),
+                  baseColor: Colors.white.withValues(alpha: 0.4),
                 ),
               ),
             ),
@@ -282,7 +282,7 @@ class _BookStack extends StatelessWidget {
                 angle: -0.07,
                 child: _MiniBook(
                   bookId: caseIds[1],
-                  baseColor: Colors.white.withOpacity(0.7),
+                  baseColor: Colors.white.withValues(alpha: 0.7),
                 ),
               ),
             ),
@@ -343,7 +343,7 @@ class _MiniBook extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.12),
+            color: Colors.black.withValues(alpha: 0.12),
             blurRadius: 2,
             offset: const Offset(1, 1),
           ),
@@ -358,7 +358,7 @@ class _MiniBook extends StatelessWidget {
             bottom: 0,
             width: 2.w,
             child: Container(
-              color: Colors.black.withOpacity(0.12),
+              color: Colors.black.withValues(alpha: 0.12),
             ),
           ),
           // Title on the front cover
