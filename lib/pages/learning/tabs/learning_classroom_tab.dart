@@ -48,7 +48,13 @@ extension LearningClassroomTabBuilder on KnowLawPageState {
                 ),
               ),
               ElevatedButton(
-                onPressed: null,
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (__) => const MockCourtChallengePage(),
+                    ),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: HomeV2Palette.trustGreen,
                   foregroundColor: Colors.white,
@@ -69,7 +75,8 @@ extension LearningClassroomTabBuilder on KnowLawPageState {
           child: NotebookCard(
             hasBookmark: true,
             bookmarkColor: const Color(0xFF4E7D5B),
-            backgroundColor: isDark ? const Color(0xFF1B241E) : const Color(0xFFF2F8F4),
+            backgroundColor:
+                isDark ? const Color(0xFF1B241E) : const Color(0xFFF2F8F4),
             child: Row(
               children: [
                 Container(
@@ -250,7 +257,8 @@ extension LearningClassroomTabBuilder on KnowLawPageState {
         child: NotebookCard(
           hasBookmark: true,
           bookmarkColor: const Color(0xFF4E7D5B),
-          backgroundColor: isDark ? const Color(0xFF1B241E) : const Color(0xFFF2F8F4),
+          backgroundColor:
+              isDark ? const Color(0xFF1B241E) : const Color(0xFFF2F8F4),
           child: Row(
             children: [
               Container(

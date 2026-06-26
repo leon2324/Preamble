@@ -31,7 +31,12 @@ import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_
 import 'package:lawapp/data/learning/supabase_learning_service.dart';
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui' show ImageFilter;
+
+import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as p;
 
 part 'law_assistant/law_assistant_palette.dart';
 part 'law_assistant/law_assistant_chat_page.dart';
@@ -1048,8 +1053,14 @@ class KnowLawPageState extends State<KnowLawPage> {
                   gradient: _selectedTabIndex == 2
                       ? LinearGradient(
                           colors: isDark
-                              ? [const Color(0xFF1E3525), const Color(0xFF14241B)]
-                              : [const Color(0xFFE8F2EA), const Color(0xFFD4E8DA)],
+                              ? [
+                                  const Color(0xFF1E3525),
+                                  const Color(0xFF14241B)
+                                ]
+                              : [
+                                  const Color(0xFFE8F2EA),
+                                  const Color(0xFFD4E8DA)
+                                ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         )
@@ -1071,7 +1082,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                       Icons.edit_note_rounded,
                       size: 16.sp,
                       color: _selectedTabIndex == 2
-                          ? (isDark ? const Color(0xFF76BA8B) : const Color(0xFF275435))
+                          ? (isDark
+                              ? const Color(0xFF76BA8B)
+                              : const Color(0xFF275435))
                           : AppColors.textSecondary,
                     ),
                     SizedBox(width: 2.w),
@@ -1084,7 +1097,9 @@ class KnowLawPageState extends State<KnowLawPage> {
                             fontSize: 11.5.sp,
                             fontWeight: FontWeight.bold,
                             color: _selectedTabIndex == 2
-                                ? (isDark ? const Color(0xFF76BA8B) : const Color(0xFF275435))
+                                ? (isDark
+                                    ? const Color(0xFF76BA8B)
+                                    : const Color(0xFF275435))
                                 : AppColors.textSecondary,
                           ),
                         ),

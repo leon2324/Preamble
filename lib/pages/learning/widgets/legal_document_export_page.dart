@@ -4,6 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/components/home/v2/home_v2_palette.dart';
 import 'package:lawapp/theme/app_colors.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 
 class LegalDocumentExportPage extends StatefulWidget {
   const LegalDocumentExportPage({
@@ -59,7 +62,105 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
     );
   }
 
-  Future<void> _prepareCopyPackage() async {
+  String _pdfFileName() {
+    final now = DateTime.now();
+    String twoDigits(int value) => value.toString().padLeft(2, '0');
+    final date =
+        '${now.year}${twoDigits(now.month)}${twoDigits(now.day)}_${twoDigits(now.hour)}${twoDigits(now.minute)}';
+    return 'lawapp_legal_document_$date.pdf';
+  }
+
+  Future<Uint8List> _buildPdfBytes() async {
+    final serifData = await rootBundle
+        .load('assets/fonts/open_source/SourceHanSerifTW-VF.ttf');
+    final sansData = await rootBundle
+        .load('assets/fonts/open_source/SourceHanSansTW-VF.ttf');
+    final serifFont = pw.Font.ttf(serifData);
+    final sansFont = pw.Font.ttf(sansData);
+    final document = pw.Document();
+
+    // 台灣繁體中文教學註解：
+    // PDF 套件預設字型不含完整繁中文字，因此明確載入專案內建的思源字型。
+    // 這樣分享出去的書狀 PDF 才能在 iOS 預覽、郵件與列印流程中穩定顯示繁中。
+    document.addPage(
+      pw.MultiPage(
+        pageFormat: PdfPageFormat.a4,
+        margin: const pw.EdgeInsets.fromLTRB(42, 44, 42, 48),
+        theme: pw.ThemeData.withFont(
+          base: serifFont,
+          bold: sansFont,
+        ),
+        header: (context) => pw.Container(
+          alignment: pw.Alignment.center,
+          padding: const pw.EdgeInsets.only(bottom: 12),
+          decoration: const pw.BoxDecoration(
+            border: pw.Border(bottom: pw.BorderSide(width: 0.6)),
+          ),
+          child: pw.Text(
+            widget.title,
+            style: pw.TextStyle(
+              font: sansFont,
+              fontSize: 16,
+              fontWeight: pw.FontWeight.bold,
+            ),
+            textAlign: pw.TextAlign.center,
+          ),
+        ),
+        footer: (context) => pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+          children: [
+            pw.Text(
+              'LawApp 書狀草稿',
+              style: pw.TextStyle(
+                font: sansFont,
+                fontSize: 9,
+                color: PdfColors.grey700,
+              ),
+            ),
+            pw.Text(
+              '${context.pageNumber} / ${context.pagesCount}',
+              style: pw.TextStyle(
+                font: sansFont,
+                fontSize: 9,
+                color: PdfColors.grey700,
+              ),
+            ),
+          ],
+        ),
+        build: (context) => [
+          pw.SizedBox(height: 18),
+          pw.Container(
+            width: double.infinity,
+            padding: const pw.EdgeInsets.all(18),
+            decoration: pw.BoxDecoration(
+              border: pw.Border.all(color: PdfColor.fromHex('#9E4A4A')),
+            ),
+            child: pw.Text(
+              widget.content,
+              style: const pw.TextStyle(
+                fontSize: 12,
+                lineSpacing: 6,
+              ),
+            ),
+          ),
+          pw.SizedBox(height: 18),
+          pw.Text(
+            '法律資訊提醒：本文件為使用者在 LawApp 中整理之書狀草稿，內容僅供學習與資訊整理參考，不構成法律意見。如涉及實際個案，請諮詢合格律師或相關專業人士。',
+            style: pw.TextStyle(
+              font: sansFont,
+              fontSize: 9.5,
+              lineSpacing: 3,
+              color: PdfColors.grey700,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return document.save();
+  }
+
+  Future<void> _exportPdf() async {
     if (_isExporting) return;
 
     setState(() {
@@ -70,8 +171,8 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
     HapticFeedback.mediumImpact();
 
     // 台灣繁體中文教學註解：
-    // Release 版尚未接入真正 PDF/圖片產生器，因此這裡只整理可複製的正式文字包，
-    // 不宣稱已寫入下載資料夾，也不要求相簿或檔案權限。
+    // 匯出流程只負責產生 PDF bytes 並交給系統分享面板，不自行承諾已存到下載資料夾。
+    // 這能保留正式產品的真實性，也避免額外檔案權限與平台路徑差異。
     await Future.delayed(const Duration(milliseconds: 600));
     if (!mounted) return;
     setState(() {
@@ -84,37 +185,52 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
     if (!mounted) return;
     setState(() {
       _exportProgress = 0.50;
-      _exportStepText = '正在整理可複製的標題、段落與簽名欄位...';
+      _exportStepText = '正在載入繁中文字型並排版書狀內容...';
     });
 
-    await Future.delayed(const Duration(milliseconds: 650));
-    if (!mounted) return;
-    setState(() {
-      _exportProgress = 0.75;
-      _exportStepText = '正在加入法律資訊免責與本機保存提醒...';
-    });
-    _sealAnimController.forward();
-    HapticFeedback.heavyImpact();
+    try {
+      final pdfBytes = await _buildPdfBytes();
+      if (!mounted) return;
+      setState(() {
+        _exportProgress = 0.75;
+        _exportStepText = '正在交給系統分享 PDF...';
+      });
+      _sealAnimController.forward();
+      HapticFeedback.heavyImpact();
 
-    await Future.delayed(const Duration(milliseconds: 800));
-    if (!mounted) return;
-    setState(() {
-      _exportProgress = 1.0;
-      _exportStepText = '書狀文字包已整理完成。';
-    });
+      await Printing.sharePdf(
+        bytes: pdfBytes,
+        filename: _pdfFileName(),
+      );
 
-    await Future.delayed(const Duration(milliseconds: 400));
-    if (!mounted) return;
+      if (!mounted) return;
+      setState(() {
+        _exportProgress = 1.0;
+        _exportStepText = 'PDF 已交給系統分享流程。';
+      });
 
-    Clipboard.setData(ClipboardData(text: widget.content));
-    setState(() {
-      _isExporting = false;
-    });
+      await Future.delayed(const Duration(milliseconds: 350));
+      if (!mounted) return;
 
-    _showCopyReadyDialog();
+      setState(() {
+        _isExporting = false;
+      });
+      _showPdfSharedDialog();
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _isExporting = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('PDF 匯出失敗，請稍後再試或先複製本文保存。'),
+          backgroundColor: Color(0xFFB3261E),
+        ),
+      );
+    }
   }
 
-  void _showCopyReadyDialog() {
+  void _showPdfSharedDialog() {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -142,13 +258,13 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
               ),
               SizedBox(height: 12.h),
               Text(
-                '書狀文字已整理',
+                'PDF 已準備完成',
                 style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
               ),
             ],
           ),
           content: Text(
-            '書狀文字已複製到剪貼簿，可貼到外部文件工具進一步編輯、列印或轉成 PDF。目前 App 不會自行產生 PDF、圖片或寫入下載資料夾。',
+            '已產生書狀 PDF 並開啟系統分享流程。你可以選擇儲存到檔案、傳送或列印；App 不會宣稱已自動寫入下載資料夾。',
             style: TextStyle(
                 fontSize: 12.5.sp,
                 height: 1.45,
@@ -392,7 +508,9 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
                       ),
                     ),
                     SizedBox(width: 12.w),
-                    // 台灣繁體中文教學註解：只提供真實可完成的剪貼簿整理，不宣稱產生檔案。
+                    // 台灣繁體中文教學註解：
+                    // PDF 匯出由 pdf 產生 bytes，再交給 printing 開啟系統分享。
+                    // 沒有在這裡保留圖片匯出入口，避免正式版出現尚未實作的格式宣稱。
                     Expanded(
                       child: FilledButton.icon(
                         icon: CtmSvgIcon(
@@ -400,7 +518,7 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
                           size: 14.sp,
                           color: Colors.white,
                         ),
-                        label: const Text('整理並複製文字'),
+                        label: const Text('匯出 PDF'),
                         style: FilledButton.styleFrom(
                           backgroundColor: HomeV2Palette.trustGreen,
                           foregroundColor: Colors.white,
@@ -408,7 +526,7 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
                               borderRadius: BorderRadius.circular(10.r)),
                           padding: EdgeInsets.symmetric(vertical: 12.h),
                         ),
-                        onPressed: _prepareCopyPackage,
+                        onPressed: _exportPdf,
                       ),
                     ),
                   ],
@@ -417,7 +535,7 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
             ],
           ),
 
-          // 匯出加載浮層 (編譯用印動畫)
+          // 匯出加載浮層
           if (_isExporting)
             Container(
               color: Colors.black.withValues(alpha: 0.75),

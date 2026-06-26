@@ -896,6 +896,9 @@ class _LawAssistantReplyBox extends StatefulWidget {
 }
 
 class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
+  final ImagePicker _imagePicker = ImagePicker();
+  final List<_AssistantLocalAttachment> _attachments = [];
+
   @override
   void initState() {
     super.initState();
@@ -919,8 +922,8 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
   void _refresh() => setState(() {});
 
   // 台灣繁體中文教學註解：
-  // Release 版的「＋」選單只做本機文字脈絡整理，不宣稱已支援檔案、圖片、
-  // 錄音或雲端匯入；所有輸出都會回填到同一個聊天輸入框，沿用既有送出流程。
+  // Release 版的「＋」選單只做本機問題脈絡整理與本機附件狀態，
+  // 不宣稱 OCR、PDF/Word 解析、雲端上傳或 AI 已理解附件內容。
   void _insertContextText(BuildContext context, String text) {
     final trimmed = text.trim();
     if (trimmed.isEmpty) return;
@@ -962,6 +965,151 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('已加入目前問題脈絡，可確認後送出。')),
     );
+  }
+
+  String _formatFileSize(int? bytes) {
+    if (bytes == null || bytes <= 0) return '大小未提供';
+    if (bytes < 1024) return '$bytes B';
+    if (bytes < 1024 * 1024) {
+      return '${(bytes / 1024).toStringAsFixed(1)} KB';
+    }
+    return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+  }
+
+  String _attachmentSendNote() {
+    if (_attachments.isEmpty) return '';
+    final lines = <String>['【附件脈絡】'];
+    for (final attachment in _attachments) {
+      if (attachment.kind == _AssistantAttachmentKind.image) {
+        lines.add(
+          '- 圖片：${attachment.name}（已加入圖片作為問題脈絡附件；目前圖片內容仍需以文字補充說明。）',
+        );
+      } else {
+        lines.add(
+          '- 文件：${attachment.name}（已加入文件作為問題附件。若需要小法助整理內容，請貼上文件中的重點文字。）',
+        );
+      }
+    }
+    return lines.join('\n');
+  }
+
+  void _handleSend() {
+    if (_attachments.isNotEmpty) {
+      final note = _attachmentSendNote();
+      if (note.isNotEmpty && !widget.controller.text.contains(note)) {
+        _insertContextText(context, note);
+      }
+    }
+    widget.onSend();
+    if (_attachments.isNotEmpty && mounted) {
+      setState(_attachments.clear);
+    }
+  }
+
+  Future<void> _pickPhotoAttachment() async {
+    try {
+      final image = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 92,
+      );
+      if (image == null) return;
+      if (!mounted) return;
+
+      setState(() {
+        _attachments.add(
+          _AssistantLocalAttachment(
+            id: 'image_${DateTime.now().microsecondsSinceEpoch}',
+            name: image.name,
+            typeLabel: '圖片',
+            path: image.path,
+            sizeBytes: null,
+            kind: _AssistantAttachmentKind.image,
+          ),
+        );
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('已加入圖片附件；請在問題中補充圖片重點。')),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('無法讀取相簿圖片，請稍後再試或改以文字補充。')),
+      );
+    }
+  }
+
+  Future<void> _pickDocumentAttachment() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: const ['txt', 'pdf', 'doc', 'docx'],
+        allowMultiple: false,
+        withData: false,
+      );
+      if (result == null || result.files.isEmpty) return;
+
+      final file = result.files.single;
+      final extension = (file.extension ?? p.extension(file.name))
+          .replaceFirst('.', '')
+          .toLowerCase();
+      final path = file.path;
+      if (!mounted) return;
+
+      setState(() {
+        _attachments.add(
+          _AssistantLocalAttachment(
+            id: 'document_${DateTime.now().microsecondsSinceEpoch}',
+            name: file.name,
+            typeLabel: extension.isEmpty ? '文件' : extension.toUpperCase(),
+            path: path,
+            sizeBytes: file.size,
+            kind: _AssistantAttachmentKind.document,
+          ),
+        );
+      });
+
+      if (extension == 'txt' && path != null) {
+        final content = await File(path).readAsString();
+        if (!mounted) return;
+        final trimmed = content.trim();
+        if (trimmed.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('已加入文字文件，但文件內容為空。')),
+          );
+          return;
+        }
+        final safeContent = trimmed.length > 6000
+            ? '${trimmed.substring(0, 6000)}\n\n（文字內容較長，已先帶入前 6000 字；可視需要再補充重點。）'
+            : trimmed;
+        _insertContextText(
+          context,
+          '''
+【文件文字內容：${file.name}】
+$safeContent
+
+請根據以上資料，幫我整理重點與可能的法律爭點。''',
+        );
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('已加入文件作為問題附件。若需要小法助整理內容，請貼上文件中的重點文字。'),
+        ),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('無法讀取文件，請稍後再試或改以貼上文字重點。')),
+      );
+    }
+  }
+
+  void _removeAttachment(String id) {
+    setState(() {
+      _attachments.removeWhere((attachment) => attachment.id == id);
+    });
   }
 
   void _showTextContextSheet({
@@ -1245,6 +1393,24 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
                 children: [
                   _buildPlusMenuItem(
                     context,
+                    icon: Icons.photo_library_outlined,
+                    label: '加入照片',
+                    onTap: () {
+                      Navigator.of(sheetContext).pop();
+                      _pickPhotoAttachment();
+                    },
+                  ),
+                  _buildPlusMenuItem(
+                    context,
+                    icon: Icons.attach_file_rounded,
+                    label: '匯入文件',
+                    onTap: () {
+                      Navigator.of(sheetContext).pop();
+                      _pickDocumentAttachment();
+                    },
+                  ),
+                  _buildPlusMenuItem(
+                    context,
                     icon: Icons.event_note_outlined,
                     label: '補充案件背景',
                     onTap: () {
@@ -1360,62 +1526,240 @@ $value
           borderRadius: BorderRadius.circular(24.r),
           border: Border.all(color: const Color(0xFFEDE4D8)),
         ),
-        child: Row(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            IconButton(
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-              icon: Icon(
-                Icons.add,
-                size: 24.sp,
-                color: const Color(0xFF5A615C),
+            if (_attachments.isNotEmpty) ...[
+              _AssistantAttachmentTray(
+                attachments: _attachments,
+                onRemove: _removeAttachment,
+                formatFileSize: _formatFileSize,
               ),
-              onPressed: () => _showPlusMenu(context),
-            ),
-            SizedBox(width: 8.w),
-            Expanded(
-              child: TextField(
-                controller: widget.controller,
-                enabled: !showDisabled,
-                minLines: 1,
-                maxLines: 3,
-                style:
-                    TextStyle(fontSize: 13.sp, color: const Color(0xFF17231F)),
-                decoration: InputDecoration(
-                  hintText: widget.isFirstMessage
-                      ? '請輸入您的法律問題，例如：車禍和解...'
-                      : (widget.isGuest ? '登入後可以繼續追問' : '繼續追問...'),
-                  border: InputBorder.none,
-                  isCollapsed: true,
+              SizedBox(height: 8.h),
+            ],
+            Row(
+              children: [
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  icon: Icon(
+                    Icons.add,
+                    size: 24.sp,
+                    color: const Color(0xFF5A615C),
+                  ),
+                  onPressed: () => _showPlusMenu(context),
                 ),
-              ),
-            ),
-            GestureDetector(
-              onTap: canSend ? widget.onSend : null,
-              child: Opacity(
-                opacity: canSend ? 1.0 : 0.4,
-                child: CircleAvatar(
-                  backgroundColor: const Color(0xFF2EA26F),
-                  radius: 16.r,
-                  child: widget.isSending
-                      ? SizedBox(
-                          width: 14.w,
-                          height: 14.w,
-                          child: const CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : Icon(
-                          Icons.arrow_upward_rounded,
-                          color: Colors.white,
-                          size: 16.sp,
-                        ),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: TextField(
+                    controller: widget.controller,
+                    enabled: !showDisabled,
+                    minLines: 1,
+                    maxLines: 3,
+                    style: TextStyle(
+                        fontSize: 13.sp, color: const Color(0xFF17231F)),
+                    decoration: InputDecoration(
+                      hintText: widget.isFirstMessage
+                          ? '請輸入您的法律問題，例如：車禍和解...'
+                          : (widget.isGuest ? '登入後可以繼續追問' : '繼續追問...'),
+                      border: InputBorder.none,
+                      isCollapsed: true,
+                    ),
+                  ),
                 ),
-              ),
+                GestureDetector(
+                  onTap: canSend ? _handleSend : null,
+                  child: Opacity(
+                    opacity: canSend ? 1.0 : 0.4,
+                    child: CircleAvatar(
+                      backgroundColor: const Color(0xFF2EA26F),
+                      radius: 16.r,
+                      child: widget.isSending
+                          ? SizedBox(
+                              width: 14.w,
+                              height: 14.w,
+                              child: const CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : Icon(
+                              Icons.arrow_upward_rounded,
+                              color: Colors.white,
+                              size: 16.sp,
+                            ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+enum _AssistantAttachmentKind { image, document }
+
+class _AssistantLocalAttachment {
+  const _AssistantLocalAttachment({
+    required this.id,
+    required this.name,
+    required this.typeLabel,
+    required this.kind,
+    this.path,
+    this.sizeBytes,
+  });
+
+  final String id;
+  final String name;
+  final String typeLabel;
+  final _AssistantAttachmentKind kind;
+  final String? path;
+  final int? sizeBytes;
+}
+
+class _AssistantAttachmentTray extends StatelessWidget {
+  const _AssistantAttachmentTray({
+    required this.attachments,
+    required this.onRemove,
+    required this.formatFileSize,
+  });
+
+  final List<_AssistantLocalAttachment> attachments;
+  final ValueChanged<String> onRemove;
+  final String Function(int? bytes) formatFileSize;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: attachments
+                .map(
+                  (attachment) => Padding(
+                    padding: EdgeInsets.only(right: 8.w),
+                    child: _AssistantAttachmentChip(
+                      attachment: attachment,
+                      onRemove: () => onRemove(attachment.id),
+                      sizeLabel: formatFileSize(attachment.sizeBytes),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+        ),
+        SizedBox(height: 4.h),
+        Text(
+          '附件只作為問題脈絡，圖片與 PDF/Word 內容仍需以文字補充說明。',
+          style: TextStyle(
+            fontSize: 10.sp,
+            height: 1.3,
+            color: const Color(0xFF7B817D),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AssistantAttachmentChip extends StatelessWidget {
+  const _AssistantAttachmentChip({
+    required this.attachment,
+    required this.onRemove,
+    required this.sizeLabel,
+  });
+
+  final _AssistantLocalAttachment attachment;
+  final VoidCallback onRemove;
+  final String sizeLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final isImage = attachment.kind == _AssistantAttachmentKind.image;
+    return Container(
+      width: 178.w,
+      padding: EdgeInsets.all(8.w),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF4FAF6),
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(color: const Color(0xFFD8EEE3)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 40.w,
+            height: 40.w,
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: isImage && attachment.path != null
+                ? Image.file(
+                    File(attachment.path!),
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Icon(
+                      Icons.image_outlined,
+                      size: 20.sp,
+                      color: const Color(0xFF2EA26F),
+                    ),
+                  )
+                : Icon(
+                    Icons.description_outlined,
+                    size: 20.sp,
+                    color: const Color(0xFF2EA26F),
+                  ),
+          ),
+          SizedBox(width: 8.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  attachment.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w800,
+                    color: const Color(0xFF17231F),
+                  ),
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  isImage
+                      ? attachment.typeLabel
+                      : '${attachment.typeLabel} · $sizeLabel',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 9.5.sp,
+                    color: const Color(0xFF6B736E),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(width: 4.w),
+          InkWell(
+            onTap: onRemove,
+            borderRadius: BorderRadius.circular(999.r),
+            child: Padding(
+              padding: EdgeInsets.all(4.w),
+              child: Icon(
+                Icons.close_rounded,
+                size: 16.sp,
+                color: const Color(0xFF5A615C),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
