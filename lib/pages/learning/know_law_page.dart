@@ -4395,8 +4395,9 @@ class KnowLawPageState extends State<KnowLawPage> {
           // 內頁紙張風格選擇
           Text('紙張底紋樣式：', style: labelStyle),
           SizedBox(height: 8.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Wrap(
+            spacing: 8.w,
+            runSpacing: 8.h,
             children: [
               _buildPaperStyleChip('經典方格', 'grid',
                   gameState.notebookPaperStyle == 'grid', isDark, gameState),

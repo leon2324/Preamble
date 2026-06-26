@@ -6,43 +6,43 @@ import 'package:lawapp/components/home/home_content.dart';
 const homeNewsItems = [
   HomeNewsItem(
     badge: '快訊',
-    title: '快訊／運動部今天揭牌',
+    title: '法務部攜手金管會，打擊新型態科技詐騙管道',
   ),
   HomeNewsItem(
-    badge: '天氣',
-    title: '午後變天！大台北防較大雨勢',
+    badge: '公告',
+    title: '犯罪被害人權益保障新制，全面溫暖陪伴被害家屬',
   ),
   HomeNewsItem(
-    badge: '社會',
-    title: '柯文哲7000萬交保，黃國昌更新FB',
+    badge: '服務',
+    title: '檢察機關推動數位申辦服務，提升便民司法效率',
   ),
   HomeNewsItem(
-    badge: '快訊',
-    title: '立院今續審總預算案，朝野再度交鋒',
+    badge: '宣導',
+    title: '法務部結合社區與校園，深耕無毒家園宣導活動',
   ),
   HomeNewsItem(
-    badge: '天氣',
-    title: '清晨偏涼白天回溫，中南部日夜溫差大',
+    badge: '更生',
+    title: '更生保護業務啟動轉型，多元協助更生人重返社會',
   ),
   HomeNewsItem(
-    badge: '社會',
-    title: '北捷車廂糾紛影片瘋傳，警方已通知到案',
+    badge: '立法',
+    title: '積極推動科技偵查法案，完備執法機關偵查工具',
   ),
   HomeNewsItem(
-    badge: '快訊',
-    title: '金管會公布新制，數位帳戶轉帳上限調整',
+    badge: '人權',
+    title: '精進人權保障制度，法務部公布國家人權報告',
   ),
   HomeNewsItem(
-    badge: '天氣',
-    title: '東北季風增強，北海岸與宜蘭局部短暫雨',
+    badge: '交流',
+    title: '加強台美司法互助，法務部派員赴美深化交流',
   ),
   HomeNewsItem(
-    badge: '社會',
-    title: '校園霸凌案延燒，教育局要求一週內提報告',
+    badge: '執法',
+    title: '反賄選宣導全面啟動，檢警調廉全力維護選舉公正',
   ),
   HomeNewsItem(
-    badge: '快訊',
-    title: '台股開盤震盪，AI概念股早盤走勢分歧',
+    badge: '公益',
+    title: '行政執行署推動綠色執法，結合公益關懷弱勢義務人',
   ),
 ];
 

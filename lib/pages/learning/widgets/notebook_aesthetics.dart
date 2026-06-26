@@ -11,6 +11,7 @@ TextStyle getNotebookTextStyle(BuildContext context, TextStyle baseStyle) {
       textStyle: baseStyle.copyWith(
         fontSize: (baseStyle.fontSize ?? 14.sp) * 1.15,
         fontWeight: FontWeight.normal, // 手寫字體不適合過粗的 font weight
+        fontFamilyFallback: const ['Kai', 'SourceHanSerifTW'],
       ),
     );
   }

@@ -51,7 +51,7 @@ class _HomeV2SocialNewsSectionState extends State<HomeV2SocialNewsSection> {
               padding: EdgeInsets.all(3.w),
               child: Row(
                 children: [
-                  _buildTabButton(0, '時事新聞', isDark),
+                  _buildTabButton(0, '法務部新聞', isDark),
                   SizedBox(width: 4.w),
                   _buildTabButton(1, '社群熱議', isDark),
                 ],
