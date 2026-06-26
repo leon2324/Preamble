@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/components/home/v2/home_v2_palette.dart';
-import 'package:lawapp/data/mock_data/home/home_v2_mock_data.dart';
-import 'package:lawapp/pages/home/subpages/home_subpage_primitives.dart';
-import 'package:lawapp/pages/learning/know_law_page.dart';
-import 'package:lawapp/pages/learning/statute_database_page.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/components/home/v2/home_v2_palette.dart';
+import 'package:preamble/data/mock_data/home/home_v2_mock_data.dart';
+import 'package:preamble/pages/home/subpages/home_subpage_primitives.dart';
+import 'package:preamble/pages/learning/know_law_page.dart';
+import 'package:preamble/pages/learning/statute_database_page.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 // 首頁子頁的常見法律問題入口。
 // 只放情境問題列表與卡片 UI，導航仍維持原本前往小法助或法規庫的行為。

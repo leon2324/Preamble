@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/components/home/v2/home_v2_palette.dart';
-import 'package:lawapp/data/mock_data/home/home_v2_mock_data.dart';
-import 'package:lawapp/theme/app_colors.dart';
-import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart';
-import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
+import 'package:preamble/components/home/v2/home_v2_palette.dart';
+import 'package:preamble/data/mock_data/home/home_v2_mock_data.dart';
+import 'package:preamble/theme/app_colors.dart';
+import 'package:preamble/features/case_time_machine/pages/case_dossier_detail_page.dart';
+import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
 
 // 首頁 V2 的專題區塊。
 // 只放專題橫向列表與 Bento Grid UI，不放首頁路由與資料載入邏輯。

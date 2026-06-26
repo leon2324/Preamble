@@ -2,16 +2,16 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lawapp/data/auth/auth_service.dart';
-import 'package:lawapp/data/documents/document_repository.dart';
-import 'package:lawapp/data/following/following_models.dart';
-import 'package:lawapp/data/law_assistant/law_assistant_api_service.dart';
-import 'package:lawapp/data/user/law_app_access_tier.dart';
-import 'package:lawapp/data/user/law_app_user.dart';
-import 'package:lawapp/theme/app_colors.dart'; // 匯入色票以利動態設定主題色 index
+import 'package:preamble/data/auth/auth_service.dart';
+import 'package:preamble/data/documents/document_repository.dart';
+import 'package:preamble/data/following/following_models.dart';
+import 'package:preamble/data/law_assistant/law_assistant_api_service.dart';
+import 'package:preamble/data/user/law_app_access_tier.dart';
+import 'package:preamble/data/user/law_app_user.dart';
+import 'package:preamble/theme/app_colors.dart'; // 匯入色票以利動態設定主題色 index
 import 'package:shared_preferences/shared_preferences.dart';
 
-export 'package:lawapp/data/user/law_app_access_tier.dart';
+export 'package:preamble/data/user/law_app_access_tier.dart';
 
 /// App 層級狀態：會員層級、深色模式與後端 token 預留點。
 ///

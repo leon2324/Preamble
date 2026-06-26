@@ -4,16 +4,16 @@ import 'dart:ui' show ImageFilter;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
-import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
-import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart';
-import 'package:lawapp/features/case_time_machine/pages/case_library_hall_page.dart';
-import 'package:lawapp/features/case_time_machine/pages/case_library_hall_selection_page.dart';
-import 'package:lawapp/features/case_time_machine/pages/case_netizen_chat_room_page.dart';
-import 'package:lawapp/features/case_time_machine/pages/case_time_machine_search_page.dart';
-import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
-import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_scaffold.dart';
-import 'package:lawapp/features/case_time_machine/data/case_time_machine_repository.dart';
+import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
+import 'package:preamble/features/case_time_machine/models/case_time_machine_models.dart';
+import 'package:preamble/features/case_time_machine/pages/case_dossier_detail_page.dart';
+import 'package:preamble/features/case_time_machine/pages/case_library_hall_page.dart';
+import 'package:preamble/features/case_time_machine/pages/case_library_hall_selection_page.dart';
+import 'package:preamble/features/case_time_machine/pages/case_netizen_chat_room_page.dart';
+import 'package:preamble/features/case_time_machine/pages/case_time_machine_search_page.dart';
+import 'package:preamble/features/case_time_machine/theme/case_time_machine_theme.dart';
+import 'package:preamble/features/case_time_machine/widgets/case_time_machine_scaffold.dart';
+import 'package:preamble/features/case_time_machine/data/case_time_machine_repository.dart';
 
 // 定義導覽圖示的 SVG 字串。
 const String _svgBackIcon = '''

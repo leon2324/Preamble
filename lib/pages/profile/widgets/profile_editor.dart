@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/app/app_state.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/app/app_state.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 /// 本元件為個人資料編輯底頁 (ProfileEditorSheet)。
 /// 使用 StatefulWidget 暫存使用者在介面上的臨時選擇（如新暱稱、新頭像 ID），

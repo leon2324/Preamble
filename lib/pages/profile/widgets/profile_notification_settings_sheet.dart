@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/app/app_state.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/app/app_state.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 class NotificationSettingsSheet extends StatefulWidget {
   const NotificationSettingsSheet({super.key, required this.appState});

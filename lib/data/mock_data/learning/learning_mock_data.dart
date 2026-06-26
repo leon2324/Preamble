@@ -1,4 +1,4 @@
-import 'package:lawapp/data/mock_data/home/home_mock_data.dart';
+import 'package:preamble/data/mock_data/home/home_mock_data.dart';
 
 class LearningMockArticle {
   const LearningMockArticle({

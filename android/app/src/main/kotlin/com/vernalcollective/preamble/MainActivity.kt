@@ -1,4 +1,4 @@
-package com.example.lawapp
+package com.vernalcollective.preamble
 
 import android.content.Intent
 import io.flutter.embedding.android.FlutterActivity
@@ -6,7 +6,7 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity: FlutterActivity() {
-    private val nativeShareChannelName = "lawapp/native_share"
+    private val nativeShareChannelName = "preamble/native_share"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)

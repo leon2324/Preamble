@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/components/home/home_content.dart';
-import 'package:lawapp/components/home/home_news_section.dart';
-import 'package:lawapp/components/home/v2/home_v2_palette.dart';
-import 'package:lawapp/theme/app_colors.dart';
-import 'package:lawapp/pages/home/subpages/home_official_feed_pages.dart';
-import 'package:lawapp/data/moj/moj_feed_item.dart';
+import 'package:preamble/components/home/home_content.dart';
+import 'package:preamble/components/home/home_news_section.dart';
+import 'package:preamble/components/home/v2/home_v2_palette.dart';
+import 'package:preamble/theme/app_colors.dart';
+import 'package:preamble/pages/home/subpages/home_official_feed_pages.dart';
+import 'package:preamble/data/moj/moj_feed_item.dart';
 import 'dart:ui' show ImageFilter;
 
 // 首頁 V2 的時事新聞與社群熱議切換區。

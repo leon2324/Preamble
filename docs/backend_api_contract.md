@@ -1,6 +1,6 @@
 # 緒言 Preamble 後端 API 契約
 
-Flutter 端只呼叫 緒言 Preamble 後端，不保存任何 OpenAI、Gemini 或其他 AI provider API key。後端 base URL 由 `LAWAPP_API_BASE_URL` 注入；未設定時 App 使用 mock mode。
+Flutter 端只呼叫 緒言 Preamble 後端，不保存任何 OpenAI、Gemini 或其他 AI provider API key。後端 base URL 由 `PREAMBLE_API_BASE_URL` 注入；未設定時 App 使用 mock mode。
 
 ## 通用規則
 

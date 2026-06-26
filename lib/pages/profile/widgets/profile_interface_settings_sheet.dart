@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/app/app_state.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/app/app_state.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 // 介面自訂設定底頁，支援 iOS 風格橫向島嶼導覽列拖曳排序、非同步微幅晃動動效，
 // 以及導覽文字標籤開關與 Accent 主題色彩點選。

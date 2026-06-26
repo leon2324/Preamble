@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:lawapp/config/supabase_config.dart';
+import 'package:preamble/config/supabase_config.dart';
 
 void main() async {
   print('========================================');

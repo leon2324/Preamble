@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:lawapp/data/moj/moj_feed_item.dart';
+import 'package:preamble/data/moj/moj_feed_item.dart';
 
 /// 讀取法務部公開列表頁的服務。
 ///

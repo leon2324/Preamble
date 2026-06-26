@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/components/home/home_content.dart';
-import 'package:lawapp/data/mock_data/home/home_mock_data.dart';
-import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
-import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
-import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart';
-import 'package:lawapp/pages/journal/data/journal_page_items.dart';
-import 'package:lawapp/pages/journal/widgets/journal_palette.dart';
+import 'package:preamble/components/home/home_content.dart';
+import 'package:preamble/data/mock_data/home/home_mock_data.dart';
+import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
+import 'package:preamble/features/case_time_machine/models/case_time_machine_models.dart';
+import 'package:preamble/features/case_time_machine/pages/case_dossier_detail_page.dart';
+import 'package:preamble/pages/journal/data/journal_page_items.dart';
+import 'package:preamble/pages/journal/widgets/journal_palette.dart';
 
 class DiscussionDetailPage extends StatefulWidget {
   const DiscussionDetailPage({

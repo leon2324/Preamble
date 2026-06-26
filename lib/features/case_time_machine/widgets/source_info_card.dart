@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
-import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
+import 'package:preamble/features/case_time_machine/models/case_time_machine_models.dart';
+import 'package:preamble/features/case_time_machine/theme/case_time_machine_theme.dart';
 
 class SourceInfoCard extends StatelessWidget {
   const SourceInfoCard({super.key, required this.source});

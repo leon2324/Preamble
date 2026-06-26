@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lawapp/components/search/search_page_layout.dart';
+import 'package:preamble/components/search/search_page_layout.dart';
 
 /// 舊版我的頁骨架。
 ///

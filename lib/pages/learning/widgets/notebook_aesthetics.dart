@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lawapp/data/learning/learning_game_state.dart';
+import 'package:preamble/data/learning/learning_game_state.dart';
 
 /// 全域手寫字體轉換器，當 useHandwrittenFont 啟用時套用
 TextStyle getNotebookTextStyle(BuildContext context, TextStyle baseStyle) {

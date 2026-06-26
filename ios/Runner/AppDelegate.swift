@@ -7,20 +7,20 @@ private enum TodayCaseWidgetBridge {
   // 台灣繁體中文教學註解：
   // 這組常數是 Flutter 主 App 與 Widget extension 的「原生整合契約」。
   // MethodChannel 名稱負責讓 Dart 呼叫 iOS，App Group 與 payload key 則負責讓 WidgetKit 讀取同一份資料。
-  static let channelName = "lawapp/today_case_widget"
-  static let appGroupIdentifier = "group.com.leonchen.lawapp.dev1"
+  static let channelName = "preamble/today_case_widget"
+  static let appGroupIdentifier = "group.com.vernalcollective.preamble"
   static let payloadKey = "today_case_widget_payload"
 }
 
 private enum QuickAskAppIntentBridge {
   // 台灣繁體中文教學註解：
-  // App Intents 與 Widget 點擊都會透過 lawapp:// URL scheme 回到主 App；
+  // App Intents 與 Widget 點擊都會透過 preamble:// URL scheme 回到主 App；
   // 這裡再轉成 MethodChannel，讓 Flutter 主殼層負責切換到「小法助」分頁。
-  static let channelName = "lawapp/quick_ask_intent"
+  static let channelName = "preamble/quick_ask_intent"
   static let quickAskHost = "quick-ask"
   static let todayCaseHost = "today-case"
   static let promptQueryName = "prompt"
-  static let appGroupIdentifier = "group.com.leonchen.lawapp.dev1"
+  static let appGroupIdentifier = "group.com.vernalcollective.preamble"
   static let pendingPromptKey = "quick_ask_intent_pending_prompt"
   static let todayCasePrompt = "我想看今天判決故事的白話整理，並請小法助補充相關法律重點。"
 }
@@ -29,16 +29,16 @@ private enum StatuteSpotlightBridge {
   // 台灣繁體中文教學註解：
   // 法條內容與索引策略留在 Dart；Swift 只保存 Core Spotlight 需要的系統常數。
   // 這樣日後要改成正式資料庫、使用者追蹤法條或個人化推薦時，不必重寫原生層。
-  static let channelName = "lawapp/statute_spotlight"
-  static let domainIdentifier = "com.leonchen.lawapp.dev1.statutes"
-  static let itemPrefix = "lawapp.statute."
+  static let channelName = "preamble/statute_spotlight"
+  static let domainIdentifier = "com.vernalcollective.preamble.statutes"
+  static let itemPrefix = "preamble.statute."
 }
 
 private enum NativeShareBridge {
   // 台灣繁體中文教學註解：
   // Flutter 端只負責傳入圖卡文字內容；真正的 Apple 分享面板與「儲存圖片」選項
   // 由 iOS 原生 UIActivityViewController 提供，避免 App 直接假裝已分享或已存入相簿。
-  static let channelName = "lawapp/native_share"
+  static let channelName = "preamble/native_share"
 }
 
 @main
@@ -214,7 +214,7 @@ private enum NativeShareBridge {
   }
 
   private func handlePreambleURL(_ url: URL) -> Bool {
-    guard url.scheme == "lawapp",
+    guard url.scheme == "preamble",
           let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
       return false
     }

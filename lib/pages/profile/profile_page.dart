@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/app/app_state.dart';
-import 'package:lawapp/theme/adaptive_layout.dart';
-import 'package:lawapp/theme/app_colors.dart';
-import 'package:lawapp/pages/profile/widgets/profile_widgets.dart';
-import 'package:lawapp/pages/profile/widgets/profile_editor.dart';
+import 'package:preamble/app/app_state.dart';
+import 'package:preamble/theme/adaptive_layout.dart';
+import 'package:preamble/theme/app_colors.dart';
+import 'package:preamble/pages/profile/widgets/profile_widgets.dart';
+import 'package:preamble/pages/profile/widgets/profile_editor.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key, this.showBackButton = false});

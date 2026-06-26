@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
 
 // 這個 widget 是案件討論室的單則留言卡，只負責顯示留言內容、立場、引用資訊與按讚入口。
 // 它不擁有排序、送出留言、投票或 controller 狀態；主頁仍負責資料來源、按讚 mutation 與頁面流程。

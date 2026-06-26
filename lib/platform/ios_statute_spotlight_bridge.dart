@@ -11,7 +11,7 @@ typedef StatuteSpotlightQueryHandler = void Function(String query);
 class IosStatuteSpotlightBridge {
   const IosStatuteSpotlightBridge._();
 
-  static const _channel = MethodChannel('lawapp/statute_spotlight');
+  static const _channel = MethodChannel('preamble/statute_spotlight');
 
   static bool get _isSupported =>
       !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
@@ -88,7 +88,7 @@ List<Map<String, Object>> get _defaultSpotlightItems {
     final query = item['query'] as String;
     return <String, Object>{
       ...item,
-      'id': 'lawapp.statute.${Uri.encodeComponent(query)}',
+      'id': 'preamble.statute.${Uri.encodeComponent(query)}',
     };
   }).toList(growable: false);
 }

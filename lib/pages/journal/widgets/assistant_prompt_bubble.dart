@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/pages/journal/widgets/journal_palette.dart';
-import 'package:lawapp/pages/learning/know_law_page.dart';
+import 'package:preamble/pages/journal/widgets/journal_palette.dart';
+import 'package:preamble/pages/learning/know_law_page.dart';
 
 /// 智慧小法助時事提問氣泡元件。
 ///

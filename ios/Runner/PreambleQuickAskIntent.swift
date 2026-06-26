@@ -2,7 +2,7 @@ import AppIntents
 import Foundation
 
 private enum PreambleQuickAskIntentStore {
-  static let appGroupIdentifier = "group.com.leonchen.lawapp.dev1"
+  static let appGroupIdentifier = "group.com.vernalcollective.preamble"
   static let pendingPromptKey = "quick_ask_intent_pending_prompt"
 }
 

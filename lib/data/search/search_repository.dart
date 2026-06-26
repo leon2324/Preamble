@@ -1,8 +1,8 @@
-import 'package:lawapp/data/cases/case_models.dart';
-import 'package:lawapp/data/cases/case_repository.dart';
-import 'package:lawapp/data/journal/journal_repository.dart';
-import 'package:lawapp/data/search/search_models.dart';
-import 'package:lawapp/data/statutes/statute_repository.dart';
+import 'package:preamble/data/cases/case_models.dart';
+import 'package:preamble/data/cases/case_repository.dart';
+import 'package:preamble/data/journal/journal_repository.dart';
+import 'package:preamble/data/search/search_models.dart';
+import 'package:preamble/data/statutes/statute_repository.dart';
 
 class SearchRepository {
   SearchRepository({

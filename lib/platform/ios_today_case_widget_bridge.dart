@@ -9,7 +9,7 @@ import 'package:flutter/services.dart';
 class IosTodayCaseWidgetBridge {
   const IosTodayCaseWidgetBridge._();
 
-  static const _channel = MethodChannel('lawapp/today_case_widget');
+  static const _channel = MethodChannel('preamble/today_case_widget');
 
   static Future<void> syncDefaultStory() async {
     if (kIsWeb || defaultTargetPlatform != TargetPlatform.iOS) {

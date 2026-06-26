@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
-import 'package:lawapp/features/case_time_machine/pages/widgets/case_netizen_opinion_card.dart';
-import 'package:lawapp/features/case_time_machine/pages/widgets/case_netizen_perspective_spectrum_card.dart';
-import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
-import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_scaffold.dart';
-import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
-import 'package:lawapp/features/case_time_machine/pages/case_opinion_spectrum_page.dart';
+import 'package:preamble/features/case_time_machine/models/case_time_machine_models.dart';
+import 'package:preamble/features/case_time_machine/pages/widgets/case_netizen_opinion_card.dart';
+import 'package:preamble/features/case_time_machine/pages/widgets/case_netizen_perspective_spectrum_card.dart';
+import 'package:preamble/features/case_time_machine/theme/case_time_machine_theme.dart';
+import 'package:preamble/features/case_time_machine/widgets/case_time_machine_scaffold.dart';
+import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/features/case_time_machine/pages/case_opinion_spectrum_page.dart';
 import 'package:flutter/cupertino.dart';
 
 // 本頁面定位為「案件思辨室」，不是一般聊天室。

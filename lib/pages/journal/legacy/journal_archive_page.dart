@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/pages/journal/data/journal_page_items.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/pages/journal/data/journal_page_items.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 /// 可導覽的案件資料館頁。
 ///

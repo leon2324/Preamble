@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/components/home/home_news_section.dart';
-import 'package:lawapp/components/home/legacy/home_discussion_section_legacy.dart';
-import 'package:lawapp/components/home/legacy/home_newsletter_section_legacy.dart';
-import 'package:lawapp/components/home/legacy/home_quiz_section_legacy.dart';
-import 'package:lawapp/components/home/legacy/home_tracked_topics_section_legacy.dart';
-import 'package:lawapp/components/search/search_row_home_page.dart';
-import 'package:lawapp/data/mock_data/home/legacy/home_mock_data_legacy.dart';
-import 'package:lawapp/theme/adaptive_layout.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/components/home/home_news_section.dart';
+import 'package:preamble/components/home/legacy/home_discussion_section_legacy.dart';
+import 'package:preamble/components/home/legacy/home_newsletter_section_legacy.dart';
+import 'package:preamble/components/home/legacy/home_quiz_section_legacy.dart';
+import 'package:preamble/components/home/legacy/home_tracked_topics_section_legacy.dart';
+import 'package:preamble/components/search/search_row_home_page.dart';
+import 'package:preamble/data/mock_data/home/legacy/home_mock_data_legacy.dart';
+import 'package:preamble/theme/adaptive_layout.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 /// 首頁整合新聞、法律小報、追蹤議題、小任務與熱門討論等主要入口。
 class HomePageLegacy extends StatefulWidget {

@@ -3,8 +3,8 @@ import 'dart:math';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:lawapp/config/supabase_config.dart';
-import 'package:lawapp/data/mock_data/learning/learning_mock_data.dart';
+import 'package:preamble/config/supabase_config.dart';
+import 'package:preamble/data/mock_data/learning/learning_mock_data.dart';
 
 /// 負責對接 Supabase 雲端資料庫抓取精選與日常法律情境專題的服務類別
 class SupabaseLearningService {

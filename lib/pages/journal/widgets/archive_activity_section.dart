@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/pages/journal/data/journal_page_items.dart';
-import 'package:lawapp/pages/journal/widgets/journal_palette.dart';
-import 'package:lawapp/pages/journal/widgets/journal_section_header.dart';
-import 'package:lawapp/features/case_time_machine/data/case_time_machine_repository.dart';
-import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart';
+import 'package:preamble/pages/journal/data/journal_page_items.dart';
+import 'package:preamble/pages/journal/widgets/journal_palette.dart';
+import 'package:preamble/pages/journal/widgets/journal_section_header.dart';
+import 'package:preamble/features/case_time_machine/data/case_time_machine_repository.dart';
+import 'package:preamble/features/case_time_machine/pages/case_dossier_detail_page.dart';
 
 class ArchiveActivitySection extends StatelessWidget {
   const ArchiveActivitySection({super.key, required this.palette});

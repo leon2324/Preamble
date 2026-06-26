@@ -11,7 +11,7 @@ typedef QuickAskPromptHandler = void Function(String prompt);
 class IosQuickAskIntentBridge {
   const IosQuickAskIntentBridge._();
 
-  static const _channel = MethodChannel('lawapp/quick_ask_intent');
+  static const _channel = MethodChannel('preamble/quick_ask_intent');
 
   static bool get _isSupported =>
       !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;

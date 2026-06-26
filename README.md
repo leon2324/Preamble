@@ -17,7 +17,7 @@
 - Flutter app：Material 3、`flutter_screenutil` 響應式尺寸、SharedPreferences 本機狀態。
 - Repository 層：AI、法規、案件、搜尋、追蹤、文件與官方資料都保留 mock/backend 切換。
 - Service 層：`LawAssistantApiService`、`StatuteApiService`、`MojFeedService` 負責實際資料來源。
-- 後端設定：Flutter 端只讀 `LAWAPP_API_BASE_URL`，不得放 OpenAI、Gemini 或其他 provider API key。
+- 後端設定：Flutter 端只讀 `PREAMBLE_API_BASE_URL`，不得放 OpenAI、Gemini 或其他 provider API key。
 
 ## Flutter SDK
 
@@ -45,10 +45,10 @@ environment:
 
 ```bash
 /Users/babychen/Documents/flutter/bin/flutter run \
-  --dart-define=LAWAPP_API_BASE_URL=https://api.example.com
+  --dart-define=PREAMBLE_API_BASE_URL=https://api.example.com
 ```
 
-未設定 `LAWAPP_API_BASE_URL` 時，App 會顯示 backend not configured 提示並使用 mock data。
+未設定 `PREAMBLE_API_BASE_URL` 時，App 會顯示 backend not configured 提示並使用 mock data。
 
 ## 測試
 

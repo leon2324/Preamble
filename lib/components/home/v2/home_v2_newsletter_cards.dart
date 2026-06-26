@@ -2,10 +2,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/components/home/home_content.dart';
-import 'package:lawapp/theme/app_colors.dart';
-import 'package:lawapp/components/shared/share_sheet.dart';
-import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/components/home/home_content.dart';
+import 'package:preamble/theme/app_colors.dart';
+import 'package:preamble/components/shared/share_sheet.dart';
+import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
 
 const String _svgPets = '''
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -742,14 +742,14 @@ class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
         ),
         if (widget.showDots) ...[
           SizedBox(height: 13.h),
-          const _NewsletterFocusDots(),
+          const _NewsletterFocusDots(count: 7, currentIndex: 0),
         ],
       ],
     );
   }
 }
 
-class HomeV2NewsletterFocusCarousel extends StatelessWidget {
+class HomeV2NewsletterFocusCarousel extends StatefulWidget {
   const HomeV2NewsletterFocusCarousel({
     super.key,
     required this.items,
@@ -760,37 +760,64 @@ class HomeV2NewsletterFocusCarousel extends StatelessWidget {
   final ValueChanged<HomeNewsletterItem>? onItemTap;
 
   @override
+  State<HomeV2NewsletterFocusCarousel> createState() =>
+      _HomeV2NewsletterFocusCarouselState();
+}
+
+class _HomeV2NewsletterFocusCarouselState
+    extends State<HomeV2NewsletterFocusCarousel> {
+  late final PageController _pageController;
+  var _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(viewportFraction: 0.9);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final visibleItems = items.take(8).toList(growable: false);
+    final visibleItems = widget.items.take(8).toList(growable: false);
     if (visibleItems.isEmpty) return const SizedBox.shrink();
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final cardWidth = constraints.maxWidth * 0.88;
-
-        return SizedBox(
-          // 台灣繁體中文教學註解：首頁只需要橫向露出多張避坑入口卡，固定外框高度可避免 ListView 在直向首頁中沒有高度而無法滑動。
-          height: 210.h,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
+    return Column(
+      children: [
+        SizedBox(
+          // 台灣繁體中文教學註解：首頁避坑入口使用 PageView 輪播，固定高度讓直向首頁能穩定配置卡片與下方指示燈。
+          height: 200.h,
+          child: PageView.builder(
+            controller: _pageController,
+            padEnds: false,
             physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.only(right: 4.w),
             itemCount: visibleItems.length,
-            separatorBuilder: (_, __) => SizedBox(width: 12.w),
+            onPageChanged: (index) {
+              setState(() => _currentIndex = index);
+            },
             itemBuilder: (context, index) {
               final item = visibleItems[index];
-              return SizedBox(
-                width: cardWidth,
+              return Padding(
+                padding: EdgeInsets.only(right: 12.w),
                 child: HomeV2NewsletterFocusCard(
                   item: item,
                   showDots: false,
-                  onTap: () => onItemTap?.call(item),
+                  onTap: () => widget.onItemTap?.call(item),
                 ),
               );
             },
           ),
-        );
-      },
+        ),
+        SizedBox(height: 13.h),
+        _NewsletterFocusDots(
+          count: visibleItems.length,
+          currentIndex: _currentIndex,
+        ),
+      ],
     );
   }
 }
@@ -914,21 +941,29 @@ class _NewsletterFocusMetric extends StatelessWidget {
 }
 
 class _NewsletterFocusDots extends StatelessWidget {
-  const _NewsletterFocusDots();
+  const _NewsletterFocusDots({
+    required this.count,
+    required this.currentIndex,
+  });
+
+  final int count;
+  final int currentIndex;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(7, (index) {
-        return Container(
-          width: 10.w,
+      children: List.generate(count, (index) {
+        final isActive = index == currentIndex;
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          curve: Curves.easeOut,
+          width: isActive ? 18.w : 10.w,
           height: 10.w,
           margin: EdgeInsets.symmetric(horizontal: 6.w),
           decoration: BoxDecoration(
-            color:
-                index == 0 ? const Color(0xFFFFF5E9) : const Color(0xFFD0D0D0),
-            shape: BoxShape.circle,
+            color: isActive ? const Color(0xFFFFF5E9) : const Color(0xFFD0D0D0),
+            borderRadius: BorderRadius.circular(999.r),
           ),
         );
       }),

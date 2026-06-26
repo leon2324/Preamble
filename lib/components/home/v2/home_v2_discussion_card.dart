@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/components/home/v2/home_v2_palette.dart';
-import 'package:lawapp/components/home/v2/home_v2_primitives.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/components/home/v2/home_v2_palette.dart';
+import 'package:preamble/components/home/v2/home_v2_primitives.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 // 首頁 V2 的熱門討論摘要卡。
 // 只放靜態摘要與指標 chip，不放社群列表與導航邏輯。

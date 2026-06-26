@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
-import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
+import 'package:preamble/features/case_time_machine/models/case_time_machine_models.dart';
+import 'package:preamble/features/case_time_machine/theme/case_time_machine_theme.dart';
 
 // Hero 大卡元件 — 案件圖書館首頁的主視覺輪播卡片。
 // V2：加入分類漸層色帶（頂部裝飾條）和右下角半透明裝飾 icon，

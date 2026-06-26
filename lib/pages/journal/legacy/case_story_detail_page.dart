@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
-import 'package:lawapp/app/app_state.dart';
-import 'package:lawapp/data/mock_data/cases/case_story_mock_data.dart';
-import 'package:lawapp/pages/learning/know_law_page.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/app/app_state.dart';
+import 'package:preamble/data/mock_data/cases/case_story_mock_data.dart';
+import 'package:preamble/pages/learning/know_law_page.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 class CaseStoryDetailPage extends StatefulWidget {
   const CaseStoryDetailPage({super.key, required this.item});

@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/components/home/home_content.dart';
-import 'package:lawapp/data/mock_data/home/home_mock_data.dart';
-import 'package:lawapp/features/case_time_machine/pages/case_time_machine_entry_page.dart';
-import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
-import 'package:lawapp/pages/journal/data/journal_page_items.dart';
-import 'package:lawapp/pages/journal/widgets/journal_palette.dart';
-import 'package:lawapp/pages/journal/widgets/journal_section_header.dart';
-import 'package:lawapp/pages/journal/widgets/discussion_detail_page.dart';
+import 'package:preamble/components/home/home_content.dart';
+import 'package:preamble/data/mock_data/home/home_mock_data.dart';
+import 'package:preamble/features/case_time_machine/pages/case_time_machine_entry_page.dart';
+import 'package:preamble/features/case_time_machine/theme/case_time_machine_theme.dart';
+import 'package:preamble/pages/journal/data/journal_page_items.dart';
+import 'package:preamble/pages/journal/widgets/journal_palette.dart';
+import 'package:preamble/pages/journal/widgets/journal_section_header.dart';
+import 'package:preamble/pages/journal/widgets/discussion_detail_page.dart';
 
 class DiscussingNowSection extends StatelessWidget {
   const DiscussingNowSection({super.key, required this.palette});

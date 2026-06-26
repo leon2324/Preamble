@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/components/home/v2/home_v2_palette.dart';
-import 'package:lawapp/data/learning/learning_game_state.dart';
-import 'package:lawapp/data/learning/supabase_learning_service.dart';
-import 'package:lawapp/data/mock_data/learning/learning_mock_data.dart';
-import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/components/home/v2/home_v2_palette.dart';
+import 'package:preamble/data/learning/learning_game_state.dart';
+import 'package:preamble/data/learning/supabase_learning_service.dart';
+import 'package:preamble/data/mock_data/learning/learning_mock_data.dart';
+import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 /// 全部專題分類庫 BottomSheet。
 ///

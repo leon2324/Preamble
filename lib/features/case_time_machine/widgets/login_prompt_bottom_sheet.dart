@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
-import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
-import 'package:lawapp/features/case_time_machine/widgets/_ctm_surface.dart';
+import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
+import 'package:preamble/features/case_time_machine/theme/case_time_machine_theme.dart';
+import 'package:preamble/features/case_time_machine/widgets/_ctm_surface.dart';
 
 Future<void> showLoginPromptBottomSheet(BuildContext context) {
   return showModalBottomSheet<void>(

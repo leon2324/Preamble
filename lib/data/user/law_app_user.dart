@@ -1,4 +1,4 @@
-import 'package:lawapp/data/user/law_app_access_tier.dart';
+import 'package:preamble/data/user/law_app_access_tier.dart';
 
 /// Preamble 使用者資料。
 ///
@@ -62,7 +62,7 @@ class PreambleUser {
     return PreambleUser(
       id: 'demo-member',
       displayName: 'Demo 會員',
-      email: 'member@lawapp.demo',
+      email: 'member@preamble.demo',
       accessTier: PreambleAccessTier.member,
       createdAt: now,
       updatedAt: now,
@@ -77,7 +77,7 @@ class PreambleUser {
     return PreambleUser(
       id: 'demo-subscriber',
       displayName: 'Demo 訂閱者',
-      email: 'subscriber@lawapp.demo',
+      email: 'subscriber@preamble.demo',
       accessTier: PreambleAccessTier.subscriber,
       createdAt: now,
       updatedAt: now,

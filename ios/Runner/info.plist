@@ -26,10 +26,10 @@
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>com.leonchen.lawapp.dev1</string>
+			<string>com.vernalcollective.preamble</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>lawapp</string>
+				<string>preamble</string>
 			</array>
 		</dict>
 	</array>

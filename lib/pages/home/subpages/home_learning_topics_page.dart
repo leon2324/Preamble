@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/components/home/v2/home_v2_palette.dart';
-import 'package:lawapp/data/mock_data/learning/learning_mock_data.dart';
-import 'package:lawapp/pages/home/subpages/home_subpage_primitives.dart';
-import 'package:lawapp/pages/learning/learning_mock_detail_page.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/components/home/v2/home_v2_palette.dart';
+import 'package:preamble/data/mock_data/learning/learning_mock_data.dart';
+import 'package:preamble/pages/home/subpages/home_subpage_primitives.dart';
+import 'package:preamble/pages/learning/learning_mock_detail_page.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 // 首頁子頁的法律學習專題列表。
 // 只放 learning topic 列表與文章卡片 UI，不放首頁資料組裝或其他子頁邏輯。

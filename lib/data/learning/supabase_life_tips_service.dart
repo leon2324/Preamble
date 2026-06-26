@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:lawapp/config/supabase_config.dart';
-import 'package:lawapp/components/home/home_content.dart';
-import 'package:lawapp/data/mock_data/home/legacy/home_mock_data_legacy.dart';
+import 'package:preamble/config/supabase_config.dart';
+import 'package:preamble/components/home/home_content.dart';
+import 'package:preamble/data/mock_data/home/legacy/home_mock_data_legacy.dart';
 
 /// 負責對接 Supabase 雲端資料庫抓取「生活避坑筆記」的服務類別。
 class SupabaseLifeTipsService {

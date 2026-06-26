@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 /// 首頁各區塊共用的標題列。
 ///

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/components/shared/custom_toast.dart';
-import 'package:lawapp/platform/native_share_bridge.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
+import 'package:preamble/platform/native_share_bridge.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// 全域分享面板。

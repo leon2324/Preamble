@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:lawapp/data/learning/learning_game_state.dart';
+import 'package:preamble/data/learning/learning_game_state.dart';
 
 void main() {
   test('LearningGameState records and retrieves quiz history correctly', () async {

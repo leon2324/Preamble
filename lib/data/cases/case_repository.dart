@@ -1,4 +1,4 @@
-import 'package:lawapp/data/cases/case_models.dart';
+import 'package:preamble/data/cases/case_models.dart';
 
 class CaseRepository {
   CaseRepository({List<LawCase>? seedCases}) : _cases = seedCases ?? _mockCases;
@@ -87,7 +87,7 @@ final _mockCases = [
     sourceLinks: [
       LawCaseSourceLink(
         title: '公開歷史資料',
-        url: 'https://example.lawapp.local/mock/nylon-cheng',
+        url: 'https://example.preamble.local/mock/nylon-cheng',
         sourceType: 'mock',
         publisher: '緒言 Preamble mock data',
         accessedAt: DateTime(2026, 5, 5),
@@ -128,7 +128,7 @@ final _mockCases = [
     sourceLinks: [
       LawCaseSourceLink(
         title: '法院公開裁判與新聞整理',
-        url: 'https://example.lawapp.local/mock/sunflower',
+        url: 'https://example.preamble.local/mock/sunflower',
         sourceType: 'mock',
         publisher: '緒言 Preamble mock data',
         accessedAt: DateTime(2026, 5, 5),
@@ -162,7 +162,7 @@ final _mockCases = [
     sourceLinks: [
       LawCaseSourceLink(
         title: '司法院裁判書與警政宣導整理',
-        url: 'https://example.lawapp.local/mock/fraud-chain',
+        url: 'https://example.preamble.local/mock/fraud-chain',
         sourceType: 'mock',
         publisher: '緒言 Preamble mock data',
         accessedAt: DateTime(2026, 5, 5),
@@ -196,7 +196,7 @@ final _mockCases = [
     sourceLinks: [
       LawCaseSourceLink(
         title: '臺灣臺中地方法院民事判決',
-        url: 'https://example.lawapp.local/mock/tripartite-fraud',
+        url: 'https://example.preamble.local/mock/tripartite-fraud',
         sourceType: 'mock',
         publisher: '緒言 Preamble mock data',
         accessedAt: DateTime(2026, 5, 5),
@@ -231,7 +231,7 @@ final _mockCases = [
     sourceLinks: [
       LawCaseSourceLink(
         title: '臺灣新北地方法院民事判決',
-        url: 'https://example.lawapp.local/mock/rental-deposit',
+        url: 'https://example.preamble.local/mock/rental-deposit',
         sourceType: 'mock',
         publisher: '緒言 Preamble mock data',
         accessedAt: DateTime(2026, 5, 5),
@@ -266,7 +266,7 @@ final _mockCases = [
     sourceLinks: [
       LawCaseSourceLink(
         title: '臺灣臺北地方法院民事判決',
-        url: 'https://example.lawapp.local/mock/consumer-return',
+        url: 'https://example.preamble.local/mock/consumer-return',
         sourceType: 'mock',
         publisher: '緒言 Preamble mock data',
         accessedAt: DateTime(2026, 5, 5),
@@ -311,7 +311,7 @@ final _mockCases = [
     sourceLinks: [
       LawCaseSourceLink(
         title: '臺灣臺中地方法院民事判決',
-        url: 'https://example.lawapp.local/mock/used-goods-return',
+        url: 'https://example.preamble.local/mock/used-goods-return',
         sourceType: 'mock',
         publisher: '緒言 Preamble mock data',
         accessedAt: DateTime(2026, 5, 5),
@@ -357,7 +357,7 @@ final _mockCases = [
     sourceLinks: [
       LawCaseSourceLink(
         title: '臺灣高雄地方法院民事判決',
-        url: 'https://example.lawapp.local/mock/rational-exception-return',
+        url: 'https://example.preamble.local/mock/rational-exception-return',
         sourceType: 'mock',
         publisher: '緒言 Preamble mock data',
         accessedAt: DateTime(2026, 5, 5),

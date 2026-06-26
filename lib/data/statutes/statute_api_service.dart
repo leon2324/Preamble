@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:archive/archive.dart';
 import 'package:http/http.dart' as http;
-import 'package:lawapp/data/statutes/statute_item.dart';
+import 'package:preamble/data/statutes/statute_item.dart';
 
 /// 讀取全國法規資料庫中文法律資料的服務。
 ///

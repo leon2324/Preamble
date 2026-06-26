@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
-import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
-import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/features/case_time_machine/models/case_time_machine_models.dart';
+import 'package:preamble/features/case_time_machine/theme/case_time_machine_theme.dart';
+import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
 
 // 「如果你是法官」互動練習頁面 (CaseJudgePracticePage)
 // 旨在讓使用者先閱讀案件背景與爭點，在不知道或對比實際判決前，

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
+import 'package:preamble/features/case_time_machine/theme/case_time_machine_theme.dart';
 
 class FavoriteFollowButton extends StatelessWidget {
   const FavoriteFollowButton(

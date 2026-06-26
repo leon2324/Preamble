@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:lawapp/components/shared/mvp_state_widgets.dart';
-import 'package:lawapp/data/law_assistant/law_assistant_api_service.dart';
-import 'package:lawapp/data/documents/document_models.dart';
+import 'package:preamble/components/shared/mvp_state_widgets.dart';
+import 'package:preamble/data/law_assistant/law_assistant_api_service.dart';
+import 'package:preamble/data/documents/document_models.dart';
 
 class DocumentTemplateOption {
   const DocumentTemplateOption({
@@ -27,7 +27,7 @@ class DocumentRepository extends ChangeNotifier {
   })  : _client = client ?? http.Client(),
         _authTokenProvider = authTokenProvider,
         _baseUrl = baseUrl ??
-            const String.fromEnvironment('LAWAPP_API_BASE_URL').trim(),
+            const String.fromEnvironment('PREAMBLE_API_BASE_URL').trim(),
         _drafts = [
           ...?initialDrafts,
           if (initialDrafts == null) ..._seedDrafts
@@ -51,12 +51,12 @@ class DocumentRepository extends ChangeNotifier {
   String get backendStatusLabel {
     if (_backendMessage.isNotEmpty) return _backendMessage;
     if (isBackendConfigured) return '文件後端已設定，草稿會同步到 /documents/drafts。';
-    return '目前使用本機共用草稿來源；設定 LAWAPP_API_BASE_URL 後會改走文件後端。';
+    return '目前使用本機共用草稿來源；設定 PREAMBLE_API_BASE_URL 後會改走文件後端。';
   }
 
   Future<List<DocumentDraft>> fetchDrafts() async {
     if (!isBackendConfigured) {
-      _backendMessage = '本機暫存模式：尚未設定 LAWAPP_API_BASE_URL。';
+      _backendMessage = '本機暫存模式：尚未設定 PREAMBLE_API_BASE_URL。';
       return drafts;
     }
 
@@ -86,7 +86,7 @@ class DocumentRepository extends ChangeNotifier {
     bool advanced = false,
     String? title,
   }) async {
-    // UI 只呼叫 repository 建立草稿；若設定 `LAWAPP_API_BASE_URL` 就交給
+    // UI 只呼叫 repository 建立草稿；若設定 `PREAMBLE_API_BASE_URL` 就交給
     // `/documents/drafts` 後端產生並保存，否則落回同一份本機記憶體清單。
     // AI provider key、prompt 組合與正式資料庫寫入都應放在後端，不放 Flutter 端。
     if (isBackendConfigured) {
@@ -105,7 +105,7 @@ class DocumentRepository extends ChangeNotifier {
         _backendMessage = '文件後端暫時無法保存，已先寫入本機草稿：$error';
       }
     } else {
-      _backendMessage = '本機暫存模式：尚未設定 LAWAPP_API_BASE_URL。';
+      _backendMessage = '本機暫存模式：尚未設定 PREAMBLE_API_BASE_URL。';
     }
 
     final draft = _localDraft(

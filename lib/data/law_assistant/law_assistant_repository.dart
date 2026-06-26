@@ -1,6 +1,6 @@
-import 'package:lawapp/components/shared/mvp_state_widgets.dart';
-import 'package:lawapp/data/law_assistant/law_assistant_api_service.dart';
-import 'package:lawapp/data/law_assistant/law_assistant_models.dart';
+import 'package:preamble/components/shared/mvp_state_widgets.dart';
+import 'package:preamble/data/law_assistant/law_assistant_api_service.dart';
+import 'package:preamble/data/law_assistant/law_assistant_models.dart';
 
 /// 小法助資料存取層。
 ///

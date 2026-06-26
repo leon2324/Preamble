@@ -2,7 +2,7 @@ import SwiftUI
 import WidgetKit
 
 private enum TodayCaseWidgetStore {
-  static let appGroupIdentifier = "group.com.leonchen.lawapp.dev1"
+  static let appGroupIdentifier = "group.com.vernalcollective.preamble"
   static let payloadKey = "today_case_widget_payload"
 
   // 台灣繁體中文教學註解：
@@ -103,7 +103,7 @@ private struct TodayCaseWidgetView: View {
       }
       .padding(family == .systemSmall ? 14 : 18)
     }
-    .widgetURL(URL(string: "lawapp://today-case"))
+    .widgetURL(URL(string: "preamble://today-case"))
   }
 
   private var background: some View {

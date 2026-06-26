@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:lawapp/data/law_assistant/law_assistant_models.dart';
+import 'package:preamble/data/law_assistant/law_assistant_models.dart';
 
 abstract class AuthTokenProvider {
   Future<String?> getAuthToken();
@@ -26,7 +26,7 @@ class LawAssistantApiService {
   })  : _client = client ?? http.Client(),
         _authTokenProvider = authTokenProvider,
         _baseUrl = baseUrl ??
-            const String.fromEnvironment('LAWAPP_API_BASE_URL').trim();
+            const String.fromEnvironment('PREAMBLE_API_BASE_URL').trim();
 
   final http.Client _client;
   final AuthTokenProvider _authTokenProvider;
@@ -121,7 +121,7 @@ class LawAssistantApiService {
   void _ensureConfigured() {
     if (!hasConfiguredBackend) {
       throw const LawAssistantApiException(
-        '尚未設定 LAWAPP_API_BASE_URL，暫時無法連線到小法助後端。',
+        '尚未設定 PREAMBLE_API_BASE_URL，暫時無法連線到小法助後端。',
       );
     }
   }

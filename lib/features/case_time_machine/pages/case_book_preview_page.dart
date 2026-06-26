@@ -1,16 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
-import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
-import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart';
-import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
-import 'package:lawapp/features/case_time_machine/widgets/_ctm_surface.dart';
-import 'package:lawapp/features/case_time_machine/widgets/case_book_cover.dart';
-import 'package:lawapp/features/case_time_machine/widgets/case_memory_line.dart';
-import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_scaffold.dart';
-import 'package:lawapp/features/case_time_machine/widgets/issue_chip_wrap.dart';
-import 'package:lawapp/features/case_time_machine/widgets/login_prompt_bottom_sheet.dart';
+import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
+import 'package:preamble/features/case_time_machine/models/case_time_machine_models.dart';
+import 'package:preamble/features/case_time_machine/pages/case_dossier_detail_page.dart';
+import 'package:preamble/features/case_time_machine/theme/case_time_machine_theme.dart';
+import 'package:preamble/features/case_time_machine/widgets/_ctm_surface.dart';
+import 'package:preamble/features/case_time_machine/widgets/case_book_cover.dart';
+import 'package:preamble/features/case_time_machine/widgets/case_memory_line.dart';
+import 'package:preamble/features/case_time_machine/widgets/case_time_machine_scaffold.dart';
+import 'package:preamble/features/case_time_machine/widgets/issue_chip_wrap.dart';
+import 'package:preamble/features/case_time_machine/widgets/login_prompt_bottom_sheet.dart';
 
 class CaseBookPreviewPage extends StatelessWidget {
   const CaseBookPreviewPage({super.key, required this.book});

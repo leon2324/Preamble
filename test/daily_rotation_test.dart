@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:lawapp/data/mock_data/learning/daily_quiz_questions.dart';
+import 'package:preamble/data/mock_data/learning/daily_quiz_questions.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

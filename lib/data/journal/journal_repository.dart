@@ -1,5 +1,5 @@
-import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
-import 'package:lawapp/pages/journal/data/journal_page_items.dart';
+import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
+import 'package:preamble/pages/journal/data/journal_page_items.dart';
 
 enum JournalSearchResultType {
   trend,

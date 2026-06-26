@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/pages/learning/know_law_page.dart';
-import 'package:lawapp/theme/app_colors.dart';
-import 'package:lawapp/data/mock_data/followed_updates/followed_updates_mock_data.dart';
-import 'package:lawapp/pages/learning/home_mission_quiz_page.dart';
-import 'package:lawapp/pages/following/following_page.dart';
-import 'package:lawapp/app/app_state.dart';
-import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart';
-import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
+import 'package:preamble/pages/learning/know_law_page.dart';
+import 'package:preamble/theme/app_colors.dart';
+import 'package:preamble/data/mock_data/followed_updates/followed_updates_mock_data.dart';
+import 'package:preamble/pages/learning/home_mission_quiz_page.dart';
+import 'package:preamble/pages/following/following_page.dart';
+import 'package:preamble/app/app_state.dart';
+import 'package:preamble/features/case_time_machine/pages/case_dossier_detail_page.dart';
+import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
 
 /// 1. AI 法律即時快問與 Prompt 推薦標籤
 class HomeV2QuickAskSection extends StatefulWidget {

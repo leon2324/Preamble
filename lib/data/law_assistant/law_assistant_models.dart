@@ -1,4 +1,4 @@
-import 'package:lawapp/components/shared/mvp_state_widgets.dart';
+import 'package:preamble/components/shared/mvp_state_widgets.dart';
 
 enum LawAssistantMessageRole {
   user,

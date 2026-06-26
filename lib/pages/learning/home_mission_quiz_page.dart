@@ -2,8 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/data/mock_data/home/home_v2_mock_data.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/data/mock_data/home/home_v2_mock_data.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 /// 首頁小任務延伸出的完整測驗頁。
 ///

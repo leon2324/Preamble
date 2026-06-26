@@ -9,7 +9,7 @@ import 'package:flutter/services.dart';
 class NativeShareBridge {
   const NativeShareBridge._();
 
-  static const _channel = MethodChannel('lawapp/native_share');
+  static const _channel = MethodChannel('preamble/native_share');
 
   static bool get _isSupported =>
       !kIsWeb &&

@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:lawapp/data/law_assistant/guest_law_assistant_usage.dart';
-import 'package:lawapp/data/law_assistant/law_assistant_api_service.dart';
-import 'package:lawapp/data/law_assistant/law_assistant_models.dart';
+import 'package:preamble/data/law_assistant/guest_law_assistant_usage.dart';
+import 'package:preamble/data/law_assistant/law_assistant_api_service.dart';
+import 'package:preamble/data/law_assistant/law_assistant_models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {

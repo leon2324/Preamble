@@ -1,4 +1,4 @@
-import 'package:lawapp/features/on_this_day/models/on_this_day_models.dart';
+import 'package:preamble/features/on_this_day/models/on_this_day_models.dart';
 
 const List<OnThisDayCase> onThisDayCases = [
   OnThisDayCase(

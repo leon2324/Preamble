@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
+import 'package:preamble/features/case_time_machine/models/case_time_machine_models.dart';
 
 class CaseDossierSqliteDb {
   CaseDossierSqliteDb._privateConstructor();

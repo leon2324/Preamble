@@ -1,7 +1,7 @@
-import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
-import 'package:lawapp/features/case_time_machine/data/case_dossier_sqlite_db.dart';
-import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
-import 'package:lawapp/features/case_time_machine/data/supabase_case_service.dart';
+import 'package:preamble/features/case_time_machine/models/case_time_machine_models.dart';
+import 'package:preamble/features/case_time_machine/data/case_dossier_sqlite_db.dart';
+import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
+import 'package:preamble/features/case_time_machine/data/supabase_case_service.dart';
 
 class CaseTimeMachineRepository {
   CaseTimeMachineRepository._privateConstructor();

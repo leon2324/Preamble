@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:lawapp/components/home/v2/home_v2_palette.dart';
-import 'package:lawapp/data/learning/learning_game_state.dart';
-import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
-import 'package:lawapp/pages/learning/widgets/notebook_aesthetics.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/components/home/v2/home_v2_palette.dart';
+import 'package:preamble/data/learning/learning_game_state.dart';
+import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/pages/learning/widgets/notebook_aesthetics.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 // 成就室的徽章牆 UI。
 // 只放徽章資料、徽章格狀牆與徽章詳細彈窗，不放學習歷程與錯題本邏輯。

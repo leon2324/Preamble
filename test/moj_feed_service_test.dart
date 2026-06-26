@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:lawapp/data/moj/moj_feed_item.dart';
-import 'package:lawapp/data/moj/moj_feed_service.dart';
+import 'package:preamble/data/moj/moj_feed_item.dart';
+import 'package:preamble/data/moj/moj_feed_service.dart';
 
 void main() {
   test('MojFeedService parses numbered official list anchors', () async {

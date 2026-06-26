@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/components/home/home_content.dart';
-import 'package:lawapp/data/mock_data/learning/learning_mock_data.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/components/home/home_content.dart';
+import 'package:preamble/data/mock_data/learning/learning_mock_data.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 class LearningQuizPage extends StatefulWidget {
   const LearningQuizPage({super.key});

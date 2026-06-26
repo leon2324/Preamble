@@ -1,5 +1,5 @@
-import 'package:lawapp/data/following/following_api_service.dart';
-import 'package:lawapp/data/following/following_models.dart';
+import 'package:preamble/data/following/following_api_service.dart';
+import 'package:preamble/data/following/following_models.dart';
 
 class FollowingRepository {
   FollowingRepository({FollowingApiService? apiService})

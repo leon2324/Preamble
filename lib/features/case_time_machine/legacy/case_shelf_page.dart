@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
-import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
-import 'package:lawapp/features/case_time_machine/pages/case_book_preview_page.dart';
-import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
-import 'package:lawapp/features/case_time_machine/legacy/case_info_card.dart';
-import 'package:lawapp/features/case_time_machine/legacy/case_shelf_header.dart';
-import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_scaffold.dart';
-import 'package:lawapp/features/case_time_machine/legacy/immersive_bookshelf.dart';
+import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
+import 'package:preamble/features/case_time_machine/models/case_time_machine_models.dart';
+import 'package:preamble/features/case_time_machine/pages/case_book_preview_page.dart';
+import 'package:preamble/features/case_time_machine/theme/case_time_machine_theme.dart';
+import 'package:preamble/features/case_time_machine/legacy/case_info_card.dart';
+import 'package:preamble/features/case_time_machine/legacy/case_shelf_header.dart';
+import 'package:preamble/features/case_time_machine/widgets/case_time_machine_scaffold.dart';
+import 'package:preamble/features/case_time_machine/legacy/immersive_bookshelf.dart';
 
 class CaseShelfPage extends StatelessWidget {
   const CaseShelfPage({super.key, required this.hall, required this.shelf});

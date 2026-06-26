@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:lawapp/components/home/v2/home_v2_palette.dart';
-import 'package:lawapp/data/learning/learning_game_state.dart';
-import 'package:lawapp/data/learning/supabase_learning_service.dart';
-import 'package:lawapp/data/mock_data/learning/learning_mock_data.dart';
-import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
-import 'package:lawapp/pages/learning/learning_mock_detail_page.dart';
-import 'package:lawapp/pages/learning/widgets/notebook_aesthetics.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/components/home/v2/home_v2_palette.dart';
+import 'package:preamble/data/learning/learning_game_state.dart';
+import 'package:preamble/data/learning/supabase_learning_service.dart';
+import 'package:preamble/data/mock_data/learning/learning_mock_data.dart';
+import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/pages/learning/learning_mock_detail_page.dart';
+import 'package:preamble/pages/learning/widgets/notebook_aesthetics.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 // 成就室的收藏筆記頁。
 // 只放收藏金句、文章收藏與重點劃記頁籤，不放成就室主頁、歷史紀錄或錯題本邏輯。

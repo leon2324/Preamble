@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lawapp/data/mock_data/followed_updates/followed_updates_mock_data.dart';
+import 'package:preamble/data/mock_data/followed_updates/followed_updates_mock_data.dart';
 
 /// 舊版追蹤頁篩選按鈕實驗元件。
 class SelectArea extends StatefulWidget {

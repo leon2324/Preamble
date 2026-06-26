@@ -2,20 +2,20 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/app/app_state.dart';
-import 'package:lawapp/components/navigation/island_bottom_nav.dart';
-import 'package:lawapp/pages/profile/profile_page.dart';
-import 'package:lawapp/pages/home/home_page.dart';
-import 'package:lawapp/pages/learning/know_law_page.dart';
-import 'package:lawapp/pages/learning/statute_database_page.dart';
-import 'package:lawapp/pages/search/global_search_page.dart';
-import 'package:lawapp/pages/journal/journal_page.dart';
-import 'package:lawapp/theme/adaptive_layout.dart';
-import 'package:lawapp/theme/app_theme.dart';
-import 'package:lawapp/features/case_time_machine/data/case_time_machine_repository.dart';
-import 'package:lawapp/platform/ios_quick_ask_intent_bridge.dart';
-import 'package:lawapp/platform/ios_statute_spotlight_bridge.dart';
-import 'package:lawapp/platform/ios_today_case_widget_bridge.dart';
+import 'package:preamble/app/app_state.dart';
+import 'package:preamble/components/navigation/island_bottom_nav.dart';
+import 'package:preamble/pages/profile/profile_page.dart';
+import 'package:preamble/pages/home/home_page.dart';
+import 'package:preamble/pages/learning/know_law_page.dart';
+import 'package:preamble/pages/learning/statute_database_page.dart';
+import 'package:preamble/pages/search/global_search_page.dart';
+import 'package:preamble/pages/journal/journal_page.dart';
+import 'package:preamble/theme/adaptive_layout.dart';
+import 'package:preamble/theme/app_theme.dart';
+import 'package:preamble/features/case_time_machine/data/case_time_machine_repository.dart';
+import 'package:preamble/platform/ios_quick_ask_intent_bridge.dart';
+import 'package:preamble/platform/ios_statute_spotlight_bridge.dart';
+import 'package:preamble/platform/ios_today_case_widget_bridge.dart';
 
 /// 應用程式進入點。
 ///

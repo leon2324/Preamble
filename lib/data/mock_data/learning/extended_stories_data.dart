@@ -1,7 +1,7 @@
 // 台灣在地化法律學習案例擴增資料庫
 // 包含 100 個插圖故事與 100 個對話故事，對應五大主題：租屋糾紛、車禍事故、職場權益、網購消費、個資隱私
 
-import 'package:lawapp/data/mock_data/learning/learning_mock_data.dart';
+import 'package:preamble/data/mock_data/learning/learning_mock_data.dart';
 
 class IllustrationStoryData {
   final String category;

@@ -1,5 +1,5 @@
-import 'package:lawapp/data/moj/moj_feed_item.dart';
-import 'package:lawapp/data/moj/moj_feed_service.dart';
+import 'package:preamble/data/moj/moj_feed_item.dart';
+import 'package:preamble/data/moj/moj_feed_service.dart';
 
 class OfficialFeedRepository {
   OfficialFeedRepository({MojFeedService? mojFeedService})

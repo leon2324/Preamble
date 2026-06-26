@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:lawapp/config/supabase_config.dart';
-import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
-import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
+import 'package:preamble/config/supabase_config.dart';
+import 'package:preamble/features/case_time_machine/models/case_time_machine_models.dart';
+import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
 
 void main() async {
   print('========================================');

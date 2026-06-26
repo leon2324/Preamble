@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/data/learning/learning_game_state.dart';
-import 'package:lawapp/components/home/v2/home_v2_palette.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/data/learning/learning_game_state.dart';
+import 'package:preamble/components/home/v2/home_v2_palette.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 class NotebookCoverEditorPage extends StatefulWidget {
   const NotebookCoverEditorPage({super.key});

@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/features/on_this_day/data/on_this_day_local_bookmarks.dart';
-import 'package:lawapp/features/on_this_day/data/on_this_day_mock_data.dart';
-import 'package:lawapp/features/on_this_day/models/on_this_day_models.dart';
-import 'package:lawapp/features/on_this_day/theme/on_this_day_theme.dart';
-import 'package:lawapp/features/case_time_machine/data/case_time_machine_repository.dart';
-import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart';
-import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
+import 'package:preamble/features/on_this_day/data/on_this_day_local_bookmarks.dart';
+import 'package:preamble/features/on_this_day/data/on_this_day_mock_data.dart';
+import 'package:preamble/features/on_this_day/models/on_this_day_models.dart';
+import 'package:preamble/features/on_this_day/theme/on_this_day_theme.dart';
+import 'package:preamble/features/case_time_machine/data/case_time_machine_repository.dart';
+import 'package:preamble/features/case_time_machine/pages/case_dossier_detail_page.dart';
+import 'package:preamble/features/case_time_machine/models/case_time_machine_models.dart';
 
 class OnThisDayDetailPage extends StatefulWidget {
   const OnThisDayDetailPage({super.key, required this.caseId});

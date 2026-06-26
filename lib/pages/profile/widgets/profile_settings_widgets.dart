@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 // 這個檔案只放個人頁設定清單的基礎 UI 元件。
 // 外層頁面仍透過 callback 控制實際設定、導覽或 AppState 更新行為。

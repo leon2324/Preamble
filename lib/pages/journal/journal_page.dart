@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/data/journal/journal_repository.dart';
-import 'package:lawapp/pages/journal/widgets/archive_activity_section.dart';
-import 'package:lawapp/pages/journal/widgets/case_time_machine_card.dart';
-import 'package:lawapp/pages/journal/widgets/curated_exhibition_shelf.dart';
-import 'package:lawapp/pages/journal/widgets/discussing_now_section.dart';
-import 'package:lawapp/pages/journal/widgets/journal_page_header.dart';
-import 'package:lawapp/pages/journal/widgets/journal_palette.dart';
-import 'package:lawapp/pages/journal/widgets/on_this_day_card.dart';
-import 'package:lawapp/theme/adaptive_layout.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/data/journal/journal_repository.dart';
+import 'package:preamble/pages/journal/widgets/archive_activity_section.dart';
+import 'package:preamble/pages/journal/widgets/case_time_machine_card.dart';
+import 'package:preamble/pages/journal/widgets/curated_exhibition_shelf.dart';
+import 'package:preamble/pages/journal/widgets/discussing_now_section.dart';
+import 'package:preamble/pages/journal/widgets/journal_page_header.dart';
+import 'package:preamble/pages/journal/widgets/journal_palette.dart';
+import 'package:preamble/pages/journal/widgets/on_this_day_card.dart';
+import 'package:preamble/theme/adaptive_layout.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 /// 記事頁。
 ///

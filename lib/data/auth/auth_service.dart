@@ -1,4 +1,4 @@
-import 'package:lawapp/data/user/law_app_user.dart';
+import 'package:preamble/data/user/law_app_user.dart';
 
 /// App 登入服務介面。
 ///

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/components/home/v2/home_v2_palette.dart';
-import 'package:lawapp/data/moj/moj_feed_item.dart';
-import 'package:lawapp/data/moj/moj_feed_service.dart';
-import 'package:lawapp/pages/home/subpages/home_subpage_primitives.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/components/home/v2/home_v2_palette.dart';
+import 'package:preamble/data/moj/moj_feed_item.dart';
+import 'package:preamble/data/moj/moj_feed_service.dart';
+import 'package:preamble/pages/home/subpages/home_subpage_primitives.dart';
+import 'package:preamble/theme/app_colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // 首頁子頁的官方消息頁面群。

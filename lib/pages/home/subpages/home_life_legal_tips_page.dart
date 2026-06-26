@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/app/app_state.dart';
-import 'package:lawapp/components/home/home_content.dart';
-import 'package:lawapp/components/shared/custom_toast.dart';
-import 'package:lawapp/components/shared/law_app_story_action_bar.dart';
-import 'package:lawapp/components/shared/share_sheet.dart';
-import 'package:lawapp/data/mock_data/home/home_mock_data.dart';
-import 'package:lawapp/pages/home/subpages/home_subpage_primitives.dart';
-import 'package:lawapp/pages/learning/know_law_page.dart';
-import 'package:lawapp/platform/native_share_bridge.dart';
-import 'package:lawapp/theme/app_colors.dart';
-import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
-import 'package:lawapp/data/learning/supabase_life_tips_service.dart';
-import 'package:lawapp/data/mock_data/home/legacy/home_mock_data_legacy.dart';
+import 'package:preamble/app/app_state.dart';
+import 'package:preamble/components/home/home_content.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
+import 'package:preamble/components/shared/law_app_story_action_bar.dart';
+import 'package:preamble/components/shared/share_sheet.dart';
+import 'package:preamble/data/mock_data/home/home_mock_data.dart';
+import 'package:preamble/pages/home/subpages/home_subpage_primitives.dart';
+import 'package:preamble/pages/learning/know_law_page.dart';
+import 'package:preamble/platform/native_share_bridge.dart';
+import 'package:preamble/theme/app_colors.dart';
+import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/data/learning/supabase_life_tips_service.dart';
+import 'package:preamble/data/mock_data/home/legacy/home_mock_data_legacy.dart';
 
 String _imageForCategory(String category) {
   return switch (category) {

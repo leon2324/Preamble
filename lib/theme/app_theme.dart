@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 /// Preamble 全域 Theme 建構器。
 ///

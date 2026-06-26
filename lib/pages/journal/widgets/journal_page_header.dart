@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/pages/journal/widgets/journal_palette.dart';
+import 'package:preamble/pages/journal/widgets/journal_palette.dart';
 
 class JournalPageHeader extends StatelessWidget {
   const JournalPageHeader({super.key, required this.palette});

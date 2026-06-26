@@ -1,19 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lawapp/app/app_state.dart';
-import 'package:lawapp/data/auth/auth_service.dart';
-import 'package:lawapp/data/cases/case_models.dart';
-import 'package:lawapp/data/cases/case_repository.dart';
-import 'package:lawapp/data/documents/document_models.dart';
-import 'package:lawapp/data/documents/document_repository.dart';
-import 'package:lawapp/data/following/following_repository.dart';
-import 'package:lawapp/data/journal/journal_repository.dart';
-import 'package:lawapp/data/law_assistant/law_assistant_repository.dart';
-import 'package:lawapp/data/search/search_models.dart';
-import 'package:lawapp/data/search/search_repository.dart';
-import 'package:lawapp/data/statutes/statute_api_service.dart';
-import 'package:lawapp/data/statutes/statute_item.dart';
-import 'package:lawapp/data/statutes/statute_repository.dart';
-import 'package:lawapp/data/user/law_app_user.dart';
+import 'package:preamble/app/app_state.dart';
+import 'package:preamble/data/auth/auth_service.dart';
+import 'package:preamble/data/cases/case_models.dart';
+import 'package:preamble/data/cases/case_repository.dart';
+import 'package:preamble/data/documents/document_models.dart';
+import 'package:preamble/data/documents/document_repository.dart';
+import 'package:preamble/data/following/following_repository.dart';
+import 'package:preamble/data/journal/journal_repository.dart';
+import 'package:preamble/data/law_assistant/law_assistant_repository.dart';
+import 'package:preamble/data/search/search_models.dart';
+import 'package:preamble/data/search/search_repository.dart';
+import 'package:preamble/data/statutes/statute_api_service.dart';
+import 'package:preamble/data/statutes/statute_item.dart';
+import 'package:preamble/data/statutes/statute_repository.dart';
+import 'package:preamble/data/user/law_app_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {

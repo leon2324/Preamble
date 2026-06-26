@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/features/on_this_day/data/on_this_day_local_bookmarks.dart';
-import 'package:lawapp/features/on_this_day/data/on_this_day_mock_data.dart';
-import 'package:lawapp/features/on_this_day/models/on_this_day_models.dart';
-import 'package:lawapp/features/on_this_day/theme/on_this_day_theme.dart';
-import 'package:lawapp/features/on_this_day/pages/on_this_day_detail_page.dart';
+import 'package:preamble/features/on_this_day/data/on_this_day_local_bookmarks.dart';
+import 'package:preamble/features/on_this_day/data/on_this_day_mock_data.dart';
+import 'package:preamble/features/on_this_day/models/on_this_day_models.dart';
+import 'package:preamble/features/on_this_day/theme/on_this_day_theme.dart';
+import 'package:preamble/features/on_this_day/pages/on_this_day_detail_page.dart';
 
 class OnThisDayListPage extends StatefulWidget {
   const OnThisDayListPage({super.key});

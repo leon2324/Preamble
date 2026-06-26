@@ -4,9 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
-import 'package:lawapp/features/case_time_machine/pages/case_time_machine_entry_page.dart';
-import 'package:lawapp/pages/journal/widgets/journal_palette.dart';
+import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
+import 'package:preamble/features/case_time_machine/pages/case_time_machine_entry_page.dart';
+import 'package:preamble/pages/journal/widgets/journal_palette.dart';
 
 class CaseTimeMachineCard extends StatelessWidget {
   const CaseTimeMachineCard({super.key, required this.palette});

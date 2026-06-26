@@ -1,5 +1,5 @@
-import 'package:lawapp/data/statutes/statute_api_service.dart';
-import 'package:lawapp/data/statutes/statute_item.dart';
+import 'package:preamble/data/statutes/statute_api_service.dart';
+import 'package:preamble/data/statutes/statute_item.dart';
 
 class StatuteSearchResult {
   const StatuteSearchResult({

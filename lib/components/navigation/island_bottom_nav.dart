@@ -1,7 +1,7 @@
 import 'dart:ui' show ImageFilter;
 import 'package:flutter/material.dart';
-import 'package:lawapp/theme/adaptive_layout.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/theme/adaptive_layout.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 /// App 主殼層底部的島嶼式導覽列。
 ///

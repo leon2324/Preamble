@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/components/home/v2/home_v2_palette.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/components/home/v2/home_v2_palette.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 // 首頁子頁共用的基礎 UI 元件。
 // 只放跨子頁使用的標題、返回列、狀態卡與小標籤，不放頁面資料或導航流程。

@@ -2,11 +2,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
-import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
-import 'package:lawapp/features/case_time_machine/pages/case_dossier_detail_page.dart'
+import 'package:preamble/features/case_time_machine/theme/case_time_machine_theme.dart';
+import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/features/case_time_machine/pages/case_dossier_detail_page.dart'
     hide LightTextStyles;
-import 'package:lawapp/features/case_time_machine/data/case_time_machine_mock_data.dart';
+import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
 
 // 「法律詞卡」探索與 3D 翻牌頁面 (CaseLegalVocabularyPage)
 // 旨在將判決中艱深難懂的法理名詞「說白話」。

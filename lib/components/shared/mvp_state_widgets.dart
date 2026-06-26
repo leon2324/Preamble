@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/app/app_state.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/app/app_state.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 const lawAppLegalDisclaimer = '本內容僅供法律知識參考，不構成正式法律意見；具體案件請諮詢律師或專業人士。';
 
@@ -300,7 +300,7 @@ class BackendNotConfiguredBanner extends StatelessWidget {
         border: Border.all(color: const Color(0xFFE8C77D)),
       ),
       child: Text(
-        '$featureName 尚未設定 LAWAPP_API_BASE_URL，目前使用本機 mock data，不會連到正式後端。',
+        '$featureName 尚未設定 PREAMBLE_API_BASE_URL，目前使用本機 mock data，不會連到正式後端。',
         style: TextStyle(
           fontSize: 11.5.sp,
           height: 1.45,

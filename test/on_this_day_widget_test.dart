@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:lawapp/app/app_state.dart';
-import 'package:lawapp/features/on_this_day/pages/on_this_day_home_page.dart';
-import 'package:lawapp/features/on_this_day/pages/on_this_day_date_discovery_page.dart';
+import 'package:preamble/app/app_state.dart';
+import 'package:preamble/features/on_this_day/pages/on_this_day_home_page.dart';
+import 'package:preamble/features/on_this_day/pages/on_this_day_date_discovery_page.dart';
 
 void main() {
   testWidgets('On This Day flow walks through home, detail, discovery and categories list',

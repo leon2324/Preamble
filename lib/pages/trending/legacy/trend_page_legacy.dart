@@ -1,8 +1,8 @@
 import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/material.dart';
-import 'package:lawapp/components/search/search_bar.dart';
-import 'package:lawapp/theme/adaptive_layout.dart';
+import 'package:preamble/components/search/search_bar.dart';
+import 'package:preamble/theme/adaptive_layout.dart';
 
 /// 早期的熱門頁草稿，保留分類九宮格實驗版供後續參考。
 ///

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:lawapp/config/supabase_config.dart';
-import 'package:lawapp/data/mock_data/home/legacy/home_mock_data_legacy.dart';
+import 'package:preamble/config/supabase_config.dart';
+import 'package:preamble/data/mock_data/home/legacy/home_mock_data_legacy.dart';
 
 void main() async {
   print('========================================');

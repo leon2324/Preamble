@@ -430,7 +430,7 @@
 
 **為什麼優先：** 這是最快提升 App 清楚度的動作，0 風險，10 分鐘完成。
 
-**涉及：** [`main.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/lawapp/lib/main.dart)
+**涉及：** [`main.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/preamble/lib/main.dart)
 
 **Codex 指令：**
 ```
@@ -448,7 +448,7 @@
 
 **為什麼優先：** 這段 `order.map(...)` 邏輯讓 `selectedIndex` 和實際 tab index 不一致，是 bug 溫床，且功能（讓使用者排序 5 個 Tab）在第一版不值得。
 
-**涉及：** [`main.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/lawapp/lib/main.dart)、[`app_state.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/lawapp/lib/app/app_state.dart)
+**涉及：** [`main.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/preamble/lib/main.dart)、[`app_state.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/preamble/lib/app/app_state.dart)
 
 **Codex 指令：**
 ```
@@ -473,17 +473,17 @@
 **為什麼優先：** Legacy 程式碼仍在 live import 鏈中，增加 build 體積和維護混亂。
 
 **涉及：**
-- [`home_page.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/lawapp/lib/pages/home/home_page.dart)（import legacy_home）
-- [`home_v2_sections.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/lawapp/lib/components/home/v2/home_v2_sections.dart)（import legacy_home）
-- [`following_page.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/lawapp/lib/pages/following/following_page.dart)（import `legal_tools_page.dart`）
+- [`home_page.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/preamble/lib/pages/home/home_page.dart)（import legacy_home）
+- [`home_v2_sections.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/preamble/lib/components/home/v2/home_v2_sections.dart)（import legacy_home）
+- [`following_page.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/preamble/lib/pages/following/following_page.dart)（import `legal_tools_page.dart`）
 
 **Codex 指令：**
 ```
-1. 在 lib/pages/home/home_page.dart 中，移除 `import 'package:lawapp/components/home/legacy/home_discussion_section_legacy.dart' as legacy_home;`，
+1. 在 lib/pages/home/home_page.dart 中，移除 `import 'package:preamble/components/home/legacy/home_discussion_section_legacy.dart' as legacy_home;`，
    並確認該 import 在 home_page.dart 中沒有被使用（如有使用，改用 v2 元件替代）。
 2. 在 lib/components/home/v2/home_v2_sections.dart 中，移除同一個 legacy import，
    並把對應 legacy widget 呼叫改為 v2 元件或移除該 section。
-3. 在 lib/pages/following/following_page.dart 中，移除 `import 'package:lawapp/pages/tools/legacy/legal_tools_page.dart';`，
+3. 在 lib/pages/following/following_page.dart 中，移除 `import 'package:preamble/pages/tools/legacy/legal_tools_page.dart';`，
    並把對該 legacy 頁面的引用改為直接內聯或刪除該功能入口。
 ```
 
@@ -495,7 +495,7 @@
 
 **為什麼優先：** 統一搜尋是使用者流程的核心，兩個搜尋入口必然讓人困惑。
 
-**涉及：** [`case_time_machine_search_page.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/lawapp/lib/features/case_time_machine/pages/case_time_machine_search_page.dart)、[`case_time_machine_entry_page.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/lawapp/lib/features/case_time_machine/pages/case_time_machine_entry_page.dart)
+**涉及：** [`case_time_machine_search_page.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/preamble/lib/features/case_time_machine/pages/case_time_machine_search_page.dart)、[`case_time_machine_entry_page.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/preamble/lib/features/case_time_machine/pages/case_time_machine_entry_page.dart)
 
 **Codex 指令：**
 ```
@@ -514,7 +514,7 @@
 
 **為什麼優先：** 減少一層不必要的跳頁，使用者直接在大廳選擇展館。
 
-**涉及：** [`case_library_hall_selection_page.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/lawapp/lib/features/case_time_machine/pages/case_library_hall_selection_page.dart)、[`case_library_hall_page.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/lawapp/lib/features/case_time_machine/pages/case_library_hall_page.dart)
+**涉及：** [`case_library_hall_selection_page.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/preamble/lib/features/case_time_machine/pages/case_library_hall_selection_page.dart)、[`case_library_hall_page.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/preamble/lib/features/case_time_machine/pages/case_library_hall_page.dart)
 
 **Codex 指令：**
 ```
@@ -533,7 +533,7 @@
 
 **為什麼優先：** 兩個測驗頁面功能重疊，保留一個，減少維護成本。
 
-**涉及：** [`home_mission_quiz_page.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/lawapp/lib/pages/learning/home_mission_quiz_page.dart)、[`learning_quiz_page.dart`](file:///Users/babychen/Dropbox/Baby Mac/python/lawapp/lib/pages/learning/learning_quiz_page.dart)
+**涉及：** [`home_mission_quiz_page.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/preamble/lib/pages/learning/home_mission_quiz_page.dart)、[`learning_quiz_page.dart`](file:///Users/babychen/Dropbox/Baby Mac/python/preamble/lib/pages/learning/learning_quiz_page.dart)
 
 **Codex 指令：**
 ```
@@ -551,7 +551,7 @@
 
 **為什麼優先：** 首頁資訊密度過高，成就和工具不應該是首頁的核心區塊。
 
-**涉及：** [`home_page.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/lawapp/lib/pages/home/home_page.dart)
+**涉及：** [`home_page.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/preamble/lib/pages/home/home_page.dart)
 
 **Codex 指令：**
 ```
@@ -571,7 +571,7 @@
 
 **為什麼優先：** `main.dart` 應該只是 App 的入口，不應該包含 UI Widget 和主題邏輯。
 
-**涉及：** [`main.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/lawapp/lib/main.dart)
+**涉及：** [`main.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/preamble/lib/main.dart)
 
 **Codex 指令：**
 ```
@@ -592,7 +592,7 @@
 
 **為什麼優先：** 277KB 的單一 Dart 檔案是整個專案最大的維護炸彈。
 
-**涉及：** [`know_law_page.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/lawapp/lib/pages/learning/know_law_page.dart)
+**涉及：** [`know_law_page.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/preamble/lib/pages/learning/know_law_page.dart)
 
 **Codex 指令：**
 ```
@@ -617,7 +617,7 @@
 
 **為什麼優先：** 三個模擬法庭功能並存，讓使用者和開發者都困惑。第一版只需要一個。
 
-**涉及：** [`case_dossier_detail_page.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/lawapp/lib/features/case_time_machine/pages/case_dossier_detail_page.dart)
+**涉及：** [`case_dossier_detail_page.dart`](file:///Users/babychen/Dropbox/Baby%20Mac/python/preamble/lib/features/case_time_machine/pages/case_dossier_detail_page.dart)
 
 **Codex 指令：**
 ```

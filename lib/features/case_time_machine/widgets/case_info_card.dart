@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/features/case_time_machine/models/case_time_machine_models.dart';
-import 'package:lawapp/features/case_time_machine/theme/case_time_machine_theme.dart';
-import 'package:lawapp/features/case_time_machine/widgets/_ctm_surface.dart';
-import 'package:lawapp/features/case_time_machine/widgets/issue_chip_wrap.dart';
+import 'package:preamble/features/case_time_machine/models/case_time_machine_models.dart';
+import 'package:preamble/features/case_time_machine/theme/case_time_machine_theme.dart';
+import 'package:preamble/features/case_time_machine/widgets/_ctm_surface.dart';
+import 'package:preamble/features/case_time_machine/widgets/issue_chip_wrap.dart';
 
 class CaseInfoCard extends StatelessWidget {
   const CaseInfoCard({super.key, required this.book, required this.onTap});

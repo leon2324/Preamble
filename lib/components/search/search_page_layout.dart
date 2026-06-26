@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/components/search/search_row_home_page.dart';
-import 'package:lawapp/components/shared/page_section_header.dart';
-import 'package:lawapp/theme/adaptive_layout.dart';
+import 'package:preamble/components/search/search_row_home_page.dart';
+import 'package:preamble/components/shared/page_section_header.dart';
+import 'package:preamble/theme/adaptive_layout.dart';
 
 /// 搜尋頁共用骨架。
 ///

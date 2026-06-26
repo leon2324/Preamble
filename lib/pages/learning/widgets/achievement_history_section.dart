@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/data/learning/learning_game_state.dart';
-import 'package:lawapp/pages/learning/widgets/notebook_aesthetics.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/data/learning/learning_game_state.dart';
+import 'package:preamble/pages/learning/widgets/notebook_aesthetics.dart';
+import 'package:preamble/theme/app_colors.dart';
 
 // 成就室的解答與學習歷史區塊。
 // 只放統計、最近紀錄與空狀態 UI，不放 bottom sheet、Supabase 或導頁 mapping。

@@ -2,7 +2,7 @@ import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/theme/adaptive_layout.dart';
+import 'package:preamble/theme/adaptive_layout.dart';
 
 /// 首頁專用搜尋列。
 ///

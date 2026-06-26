@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lawapp/app/app_state.dart';
-import 'package:lawapp/components/shared/mvp_state_widgets.dart';
-import 'package:lawapp/data/documents/document_models.dart';
+import 'package:preamble/app/app_state.dart';
+import 'package:preamble/components/shared/mvp_state_widgets.dart';
+import 'package:preamble/data/documents/document_models.dart';
 
 enum _ToolPage {
   home,

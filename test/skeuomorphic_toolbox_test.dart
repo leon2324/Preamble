@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:lawapp/app/app_state.dart';
-import 'package:lawapp/pages/learning/know_law_page.dart';
+import 'package:preamble/app/app_state.dart';
+import 'package:preamble/pages/learning/know_law_page.dart';
 
 void main() {
   testWidgets('Skeuomorphic toolbox handles car/motorcycle formulas and rent notice templates correctly', (WidgetTester tester) async {

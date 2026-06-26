@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:lawapp/data/following/following_models.dart';
-import 'package:lawapp/data/law_assistant/law_assistant_api_service.dart';
+import 'package:preamble/data/following/following_models.dart';
+import 'package:preamble/data/law_assistant/law_assistant_api_service.dart';
 
 /// Preamble 追蹤/收藏後端代理服務。
 ///
 /// Flutter 端只知道「我要追蹤/收藏哪個 id」，不直接碰資料庫；正式同步時由
-/// `LAWAPP_API_BASE_URL` 指到後端，未設定時 repository 會回到本機 mock 狀態。
+/// `PREAMBLE_API_BASE_URL` 指到後端，未設定時 repository 會回到本機 mock 狀態。
 /// 這樣全站搜尋、法規頁與我的 Preamble 可以共用同一套資料契約。
 class FollowingApiService {
   FollowingApiService({
@@ -17,7 +17,7 @@ class FollowingApiService {
   })  : _client = client ?? http.Client(),
         _authTokenProvider = authTokenProvider,
         _baseUrl = baseUrl ??
-            const String.fromEnvironment('LAWAPP_API_BASE_URL').trim();
+            const String.fromEnvironment('PREAMBLE_API_BASE_URL').trim();
 
   final http.Client _client;
   final AuthTokenProvider _authTokenProvider;
@@ -130,7 +130,7 @@ class FollowingApiService {
   void _ensureConfigured() {
     if (!hasConfiguredBackend) {
       throw const FollowingApiException(
-        '尚未設定 LAWAPP_API_BASE_URL，暫時無法同步追蹤與收藏後端。',
+        '尚未設定 PREAMBLE_API_BASE_URL，暫時無法同步追蹤與收藏後端。',
       );
     }
   }

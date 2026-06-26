@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lawapp/app/app_state.dart';
-import 'package:lawapp/components/shared/mvp_state_widgets.dart';
-import 'package:lawapp/data/common/app_loading_quotes.dart';
-import 'package:lawapp/data/statutes/statute_item.dart';
-import 'package:lawapp/data/statutes/statute_repository.dart';
-import 'package:lawapp/pages/learning/know_law_page.dart';
-import 'package:lawapp/theme/app_colors.dart';
+import 'package:preamble/app/app_state.dart';
+import 'package:preamble/components/shared/mvp_state_widgets.dart';
+import 'package:preamble/data/common/app_loading_quotes.dart';
+import 'package:preamble/data/statutes/statute_item.dart';
+import 'package:preamble/data/statutes/statute_repository.dart';
+import 'package:preamble/pages/learning/know_law_page.dart';
+import 'package:preamble/theme/app_colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class StatuteDatabasePage extends StatefulWidget {
