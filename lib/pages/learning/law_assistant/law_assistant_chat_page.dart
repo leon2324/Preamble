@@ -569,6 +569,8 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
     final messages = conversation?.messages ?? const <LawAssistantMessage>[];
 
     return Scaffold(
+      // 台灣繁體中文教學註解：本頁輸入框已用 viewInsets 手動避開鍵盤，這裡關閉 Scaffold 自動縮高，避免鍵盤高度被重複計算造成底部 overflow。
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFFFAF8F5), // 暖米色背景
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,

@@ -24,12 +24,12 @@ class IslandBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     // Liquid Glass 霧面半透明底色
     final shellColor = isDark
         ? const Color(0xFF161E28).withValues(alpha: 0.72)
         : const Color(0xFFF7F5F0).withValues(alpha: 0.78);
-        
+
     final selectedColor =
         isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary;
     final unselectedColor = selectedColor.withValues(alpha: 0.42);
@@ -48,7 +48,8 @@ class IslandBottomNav extends StatelessWidget {
             borderRadius: BorderRadius.circular(34),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.12),
+                // 台灣繁體中文教學註解：懸浮 Nav 的陰影只加深透明度 20%，保留原本 Liquid Glass 的高度、模糊與位移。
+                color: Colors.black.withValues(alpha: isDark ? 0.42 : 0.144),
                 blurRadius: 20,
                 spreadRadius: 1,
                 offset: const Offset(0, 10),
@@ -128,7 +129,8 @@ class IslandBottomNav extends StatelessWidget {
                                   Text(
                                     item.label,
                                     style: TextStyle(
-                                      fontSize: 11 + context.adaptiveBuffer(1.5),
+                                      fontSize:
+                                          11 + context.adaptiveBuffer(1.5),
                                       fontWeight: FontWeight.w400,
                                       color: selectedColor,
                                     ),
