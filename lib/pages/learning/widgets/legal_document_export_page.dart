@@ -59,7 +59,7 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
     );
   }
 
-  Future<void> _startExportAnimation() async {
+  Future<void> _prepareCopyPackage() async {
     if (_isExporting) return;
 
     setState(() {
@@ -69,7 +69,9 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
     });
     HapticFeedback.mediumImpact();
 
-    // 步驟 1
+    // 台灣繁體中文教學註解：
+    // Release 版尚未接入真正 PDF/圖片產生器，因此這裡只整理可複製的正式文字包，
+    // 不宣稱已寫入下載資料夾，也不要求相簿或檔案權限。
     await Future.delayed(const Duration(milliseconds: 600));
     if (!mounted) return;
     setState(() {
@@ -82,39 +84,37 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
     if (!mounted) return;
     setState(() {
       _exportProgress = 0.50;
-      _exportStepText = '正在套用防偽浮水印與安全特徵...';
+      _exportStepText = '正在整理可複製的標題、段落與簽名欄位...';
     });
 
-    // 步驟 3：蓋章動畫
     await Future.delayed(const Duration(milliseconds: 650));
     if (!mounted) return;
     setState(() {
       _exportProgress = 0.75;
-      _exportStepText = '正在加蓋小法助官方防護印章...';
+      _exportStepText = '正在加入法律資訊免責與本機保存提醒...';
     });
     _sealAnimController.forward();
     HapticFeedback.heavyImpact();
 
-    // 步驟 4
     await Future.delayed(const Duration(milliseconds: 800));
     if (!mounted) return;
     setState(() {
       _exportProgress = 1.0;
-      _exportStepText = '編譯高畫質 PDF 文件完成！';
+      _exportStepText = '書狀文字包已整理完成。';
     });
 
     await Future.delayed(const Duration(milliseconds: 400));
     if (!mounted) return;
 
-    // 關閉匯出浮層，顯示成功對話框
+    Clipboard.setData(ClipboardData(text: widget.content));
     setState(() {
       _isExporting = false;
     });
 
-    _showSuccessDialog();
+    _showCopyReadyDialog();
   }
 
-  void _showSuccessDialog() {
+  void _showCopyReadyDialog() {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -142,13 +142,13 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
               ),
               SizedBox(height: 12.h),
               Text(
-                '書狀導出成功！',
+                '書狀文字已整理',
                 style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
               ),
             ],
           ),
           content: Text(
-            '正式法律催告書狀（PDF格式）與高解析度圖片已成功渲染，並儲存至您裝置的：\n\n📁 /Download/LawApp/書狀_${DateTime.now().millisecondsSinceEpoch}.pdf\n\n您可以隨時前往列印或直接寄送！',
+            '書狀文字已複製到剪貼簿，可貼到外部文件工具進一步編輯、列印或轉成 PDF。目前 App 不會自行產生 PDF、圖片或寫入下載資料夾。',
             style: TextStyle(
                 fontSize: 12.5.sp,
                 height: 1.45,
@@ -392,7 +392,7 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
                       ),
                     ),
                     SizedBox(width: 12.w),
-                    // 模擬導出按鈕
+                    // 台灣繁體中文教學註解：只提供真實可完成的剪貼簿整理，不宣稱產生檔案。
                     Expanded(
                       child: FilledButton.icon(
                         icon: CtmSvgIcon(
@@ -400,7 +400,7 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
                           size: 14.sp,
                           color: Colors.white,
                         ),
-                        label: const Text('導出正式 PDF / 圖片'),
+                        label: const Text('整理並複製文字'),
                         style: FilledButton.styleFrom(
                           backgroundColor: HomeV2Palette.trustGreen,
                           foregroundColor: Colors.white,
@@ -408,7 +408,7 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
                               borderRadius: BorderRadius.circular(10.r)),
                           padding: EdgeInsets.symmetric(vertical: 12.h),
                         ),
-                        onPressed: _startExportAnimation,
+                        onPressed: _prepareCopyPackage,
                       ),
                     ),
                   ],

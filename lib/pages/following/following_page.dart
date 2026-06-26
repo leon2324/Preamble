@@ -1406,7 +1406,7 @@ final _updates = [
   _UpdateItem(
     type: '你的文件草稿',
     title: '押金返還通知（草稿）',
-    subtitle: '尚未完成，點擊繼續',
+    subtitle: '本機草稿已保存，點擊繼續編輯',
     timeLabel: '昨日 18:14',
     category: '關鍵字',
     icon: Icons.feed_outlined,

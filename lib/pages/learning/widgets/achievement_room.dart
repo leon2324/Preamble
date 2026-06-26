@@ -1148,12 +1148,20 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
                               ElevatedButton.icon(
                                 icon: CtmSvgIcon(CtmSvgIcons.externalLink,
                                     size: 14.sp, color: Colors.white),
-                                label: const Text('導出清單'),
+                                label: const Text('複製清單'),
                                 onPressed: () {
+                                  final title =
+                                      item['title'] as String? ?? '學習清單';
+                                  final content = [
+                                    '【$title】',
+                                    ...checkedItems.map((entry) => '✓ $entry'),
+                                  ].join('\n');
+                                  Clipboard.setData(
+                                      ClipboardData(text: content));
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text(
-                                          '已成功導出「${item['title']}」清單 PDF 到下載資料夾！'),
+                                      content:
+                                          Text('已複製「$title」清單文字，可貼到外部工具保存。'),
                                       backgroundColor: HomeV2Palette.trustGreen,
                                     ),
                                   );

@@ -407,7 +407,9 @@ class _SearchHome extends StatelessWidget {
               ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
-                  const SnackBar(content: Text('已為您開啟升級 PRO 特惠方案！')),
+                  const SnackBar(
+                    content: Text('目前提問額度以本機使用狀態計算；正式方案開放前不提供付費升級。'),
+                  ),
                 );
             },
           ),
