@@ -1,142 +1,51 @@
 part of '../know_law_page.dart';
 
+// 台灣繁體中文教學註解：
+// 本機諮詢歷史紀錄條目，只存在 LawAssistantChatPage 的 local state，
+// 不寫入後端或 SharedPreferences，App 重開後清除。
+// 足以在 MAIC / TestFlight 展示真實功能流程。
+class _LocalHistoryRecord {
+  const _LocalHistoryRecord({
+    required this.prompt,
+    required this.createdAt,
+    this.hasAttachment = false,
+  });
+
+  final String prompt;
+  final DateTime createdAt;
+  final bool hasAttachment;
+
+  // 顯示用的時間標籤：今天的紀錄顯示 HH:mm，其他顯示 MM/dd
+  String get timeLabel {
+    final now = DateTime.now();
+    final isToday = createdAt.year == now.year &&
+        createdAt.month == now.month &&
+        createdAt.day == now.day;
+    if (isToday) {
+      final h = createdAt.hour.toString().padLeft(2, '0');
+      final m = createdAt.minute.toString().padLeft(2, '0');
+      return '今天 $h:$m';
+    }
+    final mo = createdAt.month.toString().padLeft(2, '0');
+    final d = createdAt.day.toString().padLeft(2, '0');
+    return '$mo/$d';
+  }
+
+  // 預覽文字：最多 40 字
+  String get preview {
+    if (prompt.length <= 40) return prompt;
+    return '${prompt.substring(0, 40)}...';
+  }
+}
+
 class _LearningSearchTopBar extends StatelessWidget {
-  const _LearningSearchTopBar({required this.onBack});
+  const _LearningSearchTopBar({
+    required this.onBack,
+    required this.onShowHistory,
+  });
 
   final VoidCallback onBack;
-
-  void _showHistoryDialog(BuildContext context) {
-    showDialog<void>(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 40.h),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20.r),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.15),
-                  blurRadius: 20,
-                  offset: const Offset(0, 8),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 8.h),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '諮詢歷史紀錄',
-                        style: TextStyle(
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFF17231F),
-                        ),
-                      ),
-                      IconButton(
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                        icon: Icon(Icons.close_rounded,
-                            size: 20.sp, color: Colors.grey),
-                        onPressed: () => Navigator.of(context).pop(),
-                      ),
-                    ],
-                  ),
-                ),
-                const Divider(color: Color(0xFFE9DFD2), height: 1),
-                Flexible(
-                  child: ListView(
-                    shrinkWrap: true,
-                    padding: EdgeInsets.symmetric(vertical: 8.h),
-                    children: [
-                      _buildHistoryItem(
-                          context, '租約提前解約與房東權益', '2026/06/20', '我租約下個月到期...'),
-                      _buildHistoryItem(
-                          context, '車禍賠償範圍與調解程序', '2026/06/15', '車禍對方受傷拖延...'),
-                      _buildHistoryItem(
-                          context, '公司無預警裁員與資遣費', '2026/06/10', '公司突然宣布裁員...'),
-                      _buildHistoryItem(
-                          context, '網購特價品瑕疵退換爭議', '2026/06/05', '網購特價商品有瑕疵...'),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildHistoryItem(
-      BuildContext context, String title, String date, String preview) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).pop();
-        // 台灣繁體中文教學註解：
-        // 歷史紀錄目前為展示用，尚未接通實際對話載入功能。
-        // 不宣稱已載入，避免假成功。
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(
-            const SnackBar(
-              content: Text('諮詢歷史紀錄功能即將推出，請期待。'),
-              behavior: SnackBarBehavior.floating,
-              duration: Duration(milliseconds: 1500),
-            ),
-          );
-      },
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF17231F),
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                Text(
-                  date,
-                  style: TextStyle(
-                    fontSize: 10.sp,
-                    color: const Color(0xFF8B928D),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 4.h),
-            Text(
-              preview,
-              style: TextStyle(
-                fontSize: 11.sp,
-                color: const Color(0xFF5A615C),
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  final VoidCallback onShowHistory;
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +84,7 @@ class _LearningSearchTopBar extends StatelessWidget {
               width: 42.w,
               height: 42.w,
               child: InkWell(
-                onTap: () => _showHistoryDialog(context),
+                onTap: onShowHistory,
                 child: Icon(
                   Icons.history,
                   size: 24.sp,
@@ -258,6 +167,12 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
   var _isLoading = false;
   var _isSending = false;
 
+  // 台灣繁體中文教學註解：
+  // 本機諮詢歷史，存在 local state。每次送出新問題時新增一筆。
+  // 不寫後端、不寫 SharedPreferences，App 重開後清除。
+  // MAIC / TestFlight 展示時，在同一次 session 內完整呈現新增與查看流程。
+  final List<_LocalHistoryRecord> _localHistory = [];
+
   @override
   void initState() {
     super.initState();
@@ -270,6 +185,230 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
     _replyController.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  // 台灣繁體中文教學註解：
+  // 送出問題時呼叫此方法，把問題文字加入本機歷史 list。
+  // 相同文字在短時間內不重複記錄（1 秒內視為重複）。
+  void _addLocalHistory(String prompt, {bool hasAttachment = false}) {
+    final trimmed = prompt.trim();
+    if (trimmed.isEmpty) return;
+    final now = DateTime.now();
+    // 防止 1 秒內同一問題重複記錄
+    if (_localHistory.isNotEmpty) {
+      final last = _localHistory.first;
+      if (last.prompt == trimmed &&
+          now.difference(last.createdAt).inSeconds < 1) {
+        return;
+      }
+    }
+    setState(() {
+      _localHistory.insert(
+        0,
+        _LocalHistoryRecord(
+          prompt: trimmed,
+          createdAt: now,
+          hasAttachment: hasAttachment,
+        ),
+      );
+      // 最多保留 20 筆，避免 list 無限成長
+      if (_localHistory.length > 20) {
+        _localHistory.removeRange(20, _localHistory.length);
+      }
+    });
+  }
+
+  void _showHistoryDialog() {
+    final history = List<_LocalHistoryRecord>.unmodifiable(_localHistory);
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 40.h),
+          child: Container(
+            constraints: BoxConstraints(maxHeight: 480.h),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.r),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.15),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // 標題列
+                Padding(
+                  padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 8.h),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '諮詢歷史紀錄',
+                        style: TextStyle(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF17231F),
+                        ),
+                      ),
+                      IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        icon: Icon(Icons.close_rounded,
+                            size: 20.sp, color: Colors.grey),
+                        onPressed: () => Navigator.of(dialogContext).pop(),
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(color: Color(0xFFE9DFD2), height: 1),
+                // 列表區 or 空狀態
+                if (history.isEmpty)
+                  // 空狀態
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 24.w, vertical: 36.h),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.chat_bubble_outline_rounded,
+                          size: 40.sp,
+                          color: const Color(0xFFCDCDCD),
+                        ),
+                        SizedBox(height: 14.h),
+                        Text(
+                          '還沒有諮詢紀錄',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF5A615C),
+                          ),
+                        ),
+                        SizedBox(height: 6.h),
+                        Text(
+                          '送出第一個問題後，\n這裡會自動保存最近的提問。',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 11.5.sp,
+                            height: 1.45,
+                            color: const Color(0xFF8B928D),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  Flexible(
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.symmetric(vertical: 8.h),
+                      itemCount: history.length,
+                      separatorBuilder: (_, __) => const Divider(
+                        color: Color(0xFFF0EDE8),
+                        height: 1,
+                        indent: 16,
+                        endIndent: 16,
+                      ),
+                      itemBuilder: (_, index) {
+                        final record = history[index];
+                        return InkWell(
+                          onTap: () {
+                            // 台灣繁體中文教學註解：
+                            // 點擊歷史紀錄，把問題文字帶回輸入框，讓使用者可再次編輯或送出。
+                            // 這是最安全的行為：不假裝重建完整對話，不呼叫後端。
+                            Navigator.of(dialogContext).pop();
+                            _replyController.text = record.prompt;
+                            _replyController.selection =
+                                TextSelection.collapsed(
+                              offset: record.prompt.length,
+                            );
+                            _showAssistantToast('已帶入這筆提問，可再補充細節。');
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16.w, vertical: 12.h),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        record.preview,
+                                        style: TextStyle(
+                                          fontSize: 13.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: const Color(0xFF17231F),
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    SizedBox(width: 8.w),
+                                    Text(
+                                      record.timeLabel,
+                                      style: TextStyle(
+                                        fontSize: 10.sp,
+                                        color: const Color(0xFF8B928D),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                if (record.hasAttachment) ...[
+                                  SizedBox(height: 4.h),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.attach_file_rounded,
+                                        size: 11.sp,
+                                        color: const Color(0xFF8B928D),
+                                      ),
+                                      SizedBox(width: 3.w),
+                                      Text(
+                                        '含附件脈絡',
+                                        style: TextStyle(
+                                          fontSize: 10.sp,
+                                          color: const Color(0xFF8B928D),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                SizedBox(height: 8.h),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showAssistantToast(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(message),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(milliseconds: 1500),
+        ),
+      );
   }
 
   Future<void> _bootstrap() async {
@@ -312,6 +451,11 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
   }
 
   Future<void> _createConversation(String prompt) async {
+    // 台灣繁體中文教學註解：
+    // 使用者送出第一則問題時，先把問題文字存入本機歷史。
+    // 無論 API 是否成功，都先記錄，確保歷史紀錄不會因為 API 失敗而消失。
+    _addLocalHistory(prompt);
+
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -442,6 +586,7 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
                 padding: EdgeInsets.fromLTRB(16.w, 6.h, 16.w, 8.h),
                 child: _LearningSearchTopBar(
                   onBack: () => Navigator.of(context).pop(),
+                  onShowHistory: _showHistoryDialog,
                 ),
               ),
             ),
