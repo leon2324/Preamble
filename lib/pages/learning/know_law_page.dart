@@ -2215,6 +2215,75 @@ class KnowLawPageState extends State<KnowLawPage> {
     });
   }
 
+  Widget _buildLearningResultActionButton({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    return ElevatedButton.icon(
+      icon: Icon(icon, size: 12.sp, color: Colors.white),
+      label: Text(
+        label,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 10.5.sp, height: 1.15),
+      ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        foregroundColor: Colors.white,
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+        minimumSize: Size(0, 34.h),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      ),
+      onPressed: onPressed,
+    );
+  }
+
+  Widget _buildLearningResultActionBar({
+    required Widget copyAction,
+    required Widget noteAction,
+    required Widget exportAction,
+  }) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final textScale = MediaQuery.textScalerOf(context).scale(1);
+        final shouldStack = constraints.maxWidth < 360 || textScale >= 1.18;
+
+        // 台灣繁體中文教學註解：
+        // 小螢幕或 Dynamic Type 放大時，不把三個工具按鈕硬塞同一列。
+        // 短操作維持同列，較長的 PDF CTA 換到第二列全寬，保留可讀與可點擊性。
+        if (shouldStack) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  Expanded(child: copyAction),
+                  SizedBox(width: 8.w),
+                  Expanded(child: noteAction),
+                ],
+              ),
+              SizedBox(height: 8.h),
+              SizedBox(width: double.infinity, child: exportAction),
+            ],
+          );
+        }
+
+        return Row(
+          children: [
+            Expanded(child: copyAction),
+            SizedBox(width: 8.w),
+            Expanded(child: noteAction),
+            SizedBox(width: 8.w),
+            Expanded(child: exportAction),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _buildTranslatorTool(bool isDark) {
     return NotebookCard(
       hasPaperClip: true,
@@ -2589,79 +2658,53 @@ class KnowLawPageState extends State<KnowLawPage> {
                     ),
                   ),
                   SizedBox(height: 10.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton.icon(
-                        icon:
-                            Icon(Icons.copy, size: 12.sp, color: Colors.white),
-                        label:
-                            Text('複製文字', style: TextStyle(fontSize: 10.5.sp)),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF3F7FBF),
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10.w, vertical: 4.h),
-                        ),
-                        onPressed: () {
-                          Clipboard.setData(
-                              ClipboardData(text: _depreciationResult));
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('已複製折舊計算結果至剪貼簿！')),
-                          );
-                        },
-                      ),
-                      SizedBox(width: 8.w),
-                      ElevatedButton.icon(
-                        icon: Icon(Icons.bookmark_add_outlined,
-                            size: 12.sp, color: Colors.white),
-                        label: Text('📌 摘錄筆記',
-                            style: TextStyle(fontSize: 10.5.sp)),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF8D7F70),
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10.w, vertical: 4.h),
-                        ),
-                        onPressed: () {
-                          LearningGameState.instance.addHighlight(
-                            _depreciationResult,
-                            '車禍折舊理賠計算',
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('已成功將折舊結果摘錄至手帳筆記！📌'),
-                              backgroundColor: HomeV2Palette.trustGreen,
-                              duration: Duration(milliseconds: 1500),
+                  _buildLearningResultActionBar(
+                    copyAction: _buildLearningResultActionButton(
+                      icon: Icons.copy,
+                      label: '複製文字',
+                      color: const Color(0xFF3F7FBF),
+                      onPressed: () {
+                        Clipboard.setData(
+                            ClipboardData(text: _depreciationResult));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('已複製折舊計算結果至剪貼簿！')),
+                        );
+                      },
+                    ),
+                    noteAction: _buildLearningResultActionButton(
+                      icon: Icons.bookmark_add_outlined,
+                      label: '摘錄筆記',
+                      color: const Color(0xFF8D7F70),
+                      onPressed: () {
+                        LearningGameState.instance.addHighlight(
+                          _depreciationResult,
+                          '車禍折舊理賠計算',
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('已成功將折舊結果摘錄至手帳筆記！📌'),
+                            backgroundColor: HomeV2Palette.trustGreen,
+                            duration: Duration(milliseconds: 1500),
+                          ),
+                        );
+                      },
+                    ),
+                    exportAction: _buildLearningResultActionButton(
+                      icon: Icons.picture_as_pdf_rounded,
+                      label: '預覽與匯出 PDF',
+                      color: HomeV2Palette.trustGreen,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => LegalDocumentExportPage(
+                              title: '車禍折舊理賠計算明細表',
+                              content: _depreciationResult,
                             ),
-                          );
-                        },
-                      ),
-                      SizedBox(width: 8.w),
-                      ElevatedButton.icon(
-                        icon: Icon(Icons.picture_as_pdf_rounded,
-                            size: 12.sp, color: Colors.white),
-                        label:
-                            Text('預覽與導出', style: TextStyle(fontSize: 10.5.sp)),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: HomeV2Palette.trustGreen,
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10.w, vertical: 4.h),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => LegalDocumentExportPage(
-                                title: '車禍折舊理賠計算明細表',
-                                content: _depreciationResult,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -2946,81 +2989,55 @@ class KnowLawPageState extends State<KnowLawPage> {
                     ),
                   ),
                   SizedBox(height: 10.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton.icon(
-                        icon:
-                            Icon(Icons.copy, size: 12.sp, color: Colors.white),
-                        label:
-                            Text('複製文字', style: TextStyle(fontSize: 10.5.sp)),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF2E7D32),
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10.w, vertical: 4.h),
-                        ),
-                        onPressed: () {
-                          Clipboard.setData(
-                              ClipboardData(text: _rentNoticeResult));
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('已複製催告信函草稿至剪貼簿！')),
-                          );
-                        },
-                      ),
-                      SizedBox(width: 8.w),
-                      ElevatedButton.icon(
-                        icon: Icon(Icons.bookmark_add_outlined,
-                            size: 12.sp, color: Colors.white),
-                        label: Text('📌 摘錄筆記',
-                            style: TextStyle(fontSize: 10.5.sp)),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF8D7F70),
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10.w, vertical: 4.h),
-                        ),
-                        onPressed: () {
-                          LearningGameState.instance.addHighlight(
-                            _rentNoticeResult,
-                            _rentNoticeType == 0 ? '設備修繕催告存證信函' : '期滿退押金催告存證信函',
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('已成功將草稿摘錄至手帳筆記！📌'),
-                              backgroundColor: HomeV2Palette.trustGreen,
-                              duration: Duration(milliseconds: 1500),
+                  _buildLearningResultActionBar(
+                    copyAction: _buildLearningResultActionButton(
+                      icon: Icons.copy,
+                      label: '複製文字',
+                      color: const Color(0xFF2E7D32),
+                      onPressed: () {
+                        Clipboard.setData(
+                            ClipboardData(text: _rentNoticeResult));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('已複製催告信函草稿至剪貼簿！')),
+                        );
+                      },
+                    ),
+                    noteAction: _buildLearningResultActionButton(
+                      icon: Icons.bookmark_add_outlined,
+                      label: '摘錄筆記',
+                      color: const Color(0xFF8D7F70),
+                      onPressed: () {
+                        LearningGameState.instance.addHighlight(
+                          _rentNoticeResult,
+                          _rentNoticeType == 0 ? '設備修繕催告存證信函' : '期滿退押金催告存證信函',
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('已成功將草稿摘錄至手帳筆記！📌'),
+                            backgroundColor: HomeV2Palette.trustGreen,
+                            duration: Duration(milliseconds: 1500),
+                          ),
+                        );
+                      },
+                    ),
+                    exportAction: _buildLearningResultActionButton(
+                      icon: Icons.picture_as_pdf_rounded,
+                      label: '預覽與匯出 PDF',
+                      color: HomeV2Palette.trustGreen,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => LegalDocumentExportPage(
+                              title: _rentNoticeType == 0
+                                  ? '設備修繕催告存證信函'
+                                  : '期滿退押金催告存證信函',
+                              content: _rentNoticeResult,
                             ),
-                          );
-                        },
-                      ),
-                      SizedBox(width: 8.w),
-                      ElevatedButton.icon(
-                        icon: Icon(Icons.picture_as_pdf_rounded,
-                            size: 12.sp, color: Colors.white),
-                        label:
-                            Text('預覽與導出', style: TextStyle(fontSize: 10.5.sp)),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: HomeV2Palette.trustGreen,
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10.w, vertical: 4.h),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => LegalDocumentExportPage(
-                                title: _rentNoticeType == 0
-                                    ? '設備修繕催告存證信函'
-                                    : '期滿退押金催告存證信函',
-                                content: _rentNoticeResult,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -3388,79 +3405,53 @@ class KnowLawPageState extends State<KnowLawPage> {
                     ),
                   ),
                   SizedBox(height: 10.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton.icon(
-                        icon:
-                            Icon(Icons.copy, size: 12.sp, color: Colors.white),
-                        label:
-                            Text('複製文字', style: TextStyle(fontSize: 10.5.sp)),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFC2185B),
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10.w, vertical: 4.h),
-                        ),
-                        onPressed: () {
-                          Clipboard.setData(
-                              ClipboardData(text: _consumerNoticeResult));
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('已複製退貨催告信函草稿至剪貼簿！')),
-                          );
-                        },
-                      ),
-                      SizedBox(width: 8.w),
-                      ElevatedButton.icon(
-                        icon: Icon(Icons.bookmark_add_outlined,
-                            size: 12.sp, color: Colors.white),
-                        label: Text('📌 摘錄筆記',
-                            style: TextStyle(fontSize: 10.5.sp)),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF8D7F70),
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10.w, vertical: 4.h),
-                        ),
-                        onPressed: () {
-                          LearningGameState.instance.addHighlight(
-                            _consumerNoticeResult,
-                            '網購退貨存證信函',
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('已成功將草稿摘錄至手帳筆記！📌'),
-                              backgroundColor: HomeV2Palette.trustGreen,
-                              duration: Duration(milliseconds: 1500),
+                  _buildLearningResultActionBar(
+                    copyAction: _buildLearningResultActionButton(
+                      icon: Icons.copy,
+                      label: '複製文字',
+                      color: const Color(0xFFC2185B),
+                      onPressed: () {
+                        Clipboard.setData(
+                            ClipboardData(text: _consumerNoticeResult));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('已複製退貨催告信函草稿至剪貼簿！')),
+                        );
+                      },
+                    ),
+                    noteAction: _buildLearningResultActionButton(
+                      icon: Icons.bookmark_add_outlined,
+                      label: '摘錄筆記',
+                      color: const Color(0xFF8D7F70),
+                      onPressed: () {
+                        LearningGameState.instance.addHighlight(
+                          _consumerNoticeResult,
+                          '網購退貨存證信函',
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('已成功將草稿摘錄至手帳筆記！📌'),
+                            backgroundColor: HomeV2Palette.trustGreen,
+                            duration: Duration(milliseconds: 1500),
+                          ),
+                        );
+                      },
+                    ),
+                    exportAction: _buildLearningResultActionButton(
+                      icon: Icons.picture_as_pdf_rounded,
+                      label: '預覽與匯出 PDF',
+                      color: HomeV2Palette.trustGreen,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => LegalDocumentExportPage(
+                              title: '網購退貨催告書狀',
+                              content: _consumerNoticeResult,
                             ),
-                          );
-                        },
-                      ),
-                      SizedBox(width: 8.w),
-                      ElevatedButton.icon(
-                        icon: Icon(Icons.picture_as_pdf_rounded,
-                            size: 12.sp, color: Colors.white),
-                        label:
-                            Text('預覽與導出', style: TextStyle(fontSize: 10.5.sp)),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: HomeV2Palette.trustGreen,
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10.w, vertical: 4.h),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => LegalDocumentExportPage(
-                                title: '網購退貨催告書狀',
-                                content: _consumerNoticeResult,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
