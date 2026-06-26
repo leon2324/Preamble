@@ -80,9 +80,18 @@ class _LearningSearchTopBar extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('已載入歷史紀錄：「$title」')),
-        );
+        // 台灣繁體中文教學註解：
+        // 歷史紀錄目前為展示用，尚未接通實際對話載入功能。
+        // 不宣稱已載入，避免假成功。
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            const SnackBar(
+              content: Text('諮詢歷史紀錄功能即將推出，請期待。'),
+              behavior: SnackBarBehavior.floating,
+              duration: Duration(milliseconds: 1500),
+            ),
+          );
       },
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
@@ -364,9 +373,15 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
 
     final conversation = _conversation!;
     if (conversation.isGuest) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('登入後可以在同一段對話中繼續追問。')),
-      );
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(
+            content: Text('登入後可以在同一段對話中繼續追問。'),
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(milliseconds: 1500),
+          ),
+        );
       return;
     }
 

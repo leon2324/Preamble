@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lawapp/components/home/v2/home_v2_palette.dart';
+import 'package:lawapp/components/shared/custom_toast.dart';
 import 'package:lawapp/theme/app_colors.dart';
 import 'package:lawapp/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
 import 'package:pdf/pdf.dart';
@@ -53,12 +54,10 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
   void _copyToClipboard() {
     Clipboard.setData(ClipboardData(text: widget.content));
     HapticFeedback.lightImpact();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('🎉 已複製催告信函草稿至剪貼簿，可直接至外部貼上編輯！'),
-        backgroundColor: HomeV2Palette.trustGreen,
-        duration: Duration(seconds: 2),
-      ),
+    CustomToast.show(
+      context,
+      '書狀文字已複製。',
+      icon: Icons.copy_rounded,
     );
   }
 
@@ -188,46 +187,76 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
       _exportStepText = '正在載入繁中文字型並排版書狀內容...';
     });
 
+    // 台灣繁體中文教學註解：
+    // 分兩個 try/catch 層，精準區分「PDF bytes 產生失敗」與「share sheet 失敗」，
+    // 避免使用者取消分享或模擬器 share sheet 問題被誤判為 PDF 產生失敗。
+    Uint8List pdfBytes;
     try {
-      final pdfBytes = await _buildPdfBytes();
+      pdfBytes = await _buildPdfBytes();
+    } catch (e) {
       if (!mounted) return;
       setState(() {
-        _exportProgress = 0.75;
-        _exportStepText = '正在交給系統分享 PDF...';
+        _isExporting = false;
       });
-      _sealAnimController.forward();
-      HapticFeedback.heavyImpact();
+      CustomToast.show(
+        context,
+        'PDF 產生失敗，請稍後再試。',
+        icon: Icons.error_outline_rounded,
+      );
+      return;
+    }
 
+    if (!mounted) return;
+    if (pdfBytes.isEmpty) {
+      setState(() {
+        _isExporting = false;
+      });
+      CustomToast.show(
+        context,
+        'PDF 產生失敗，請稍後再試。',
+        icon: Icons.error_outline_rounded,
+      );
+      return;
+    }
+
+    setState(() {
+      _exportProgress = 0.75;
+      _exportStepText = '正在交給系統分享 PDF...';
+    });
+    _sealAnimController.forward();
+    HapticFeedback.heavyImpact();
+
+    try {
       await Printing.sharePdf(
         bytes: pdfBytes,
         filename: _pdfFileName(),
       );
-
-      if (!mounted) return;
-      setState(() {
-        _exportProgress = 1.0;
-        _exportStepText = 'PDF 已交給系統分享流程。';
-      });
-
-      await Future.delayed(const Duration(milliseconds: 350));
-      if (!mounted) return;
-
-      setState(() {
-        _isExporting = false;
-      });
-      _showPdfSharedDialog();
     } catch (_) {
       if (!mounted) return;
       setState(() {
         _isExporting = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('PDF 匯出失敗，請稍後再試或先複製本文保存。'),
-          backgroundColor: Color(0xFFB3261E),
-        ),
+      CustomToast.show(
+        context,
+        'PDF 已產生，但目前裝置無法開啟分享流程。',
+        icon: Icons.share_outlined,
       );
+      return;
     }
+
+    if (!mounted) return;
+    setState(() {
+      _exportProgress = 1.0;
+      _exportStepText = 'PDF 已交給系統分享流程。';
+    });
+
+    await Future.delayed(const Duration(milliseconds: 350));
+    if (!mounted) return;
+
+    setState(() {
+      _isExporting = false;
+    });
+    _showPdfSharedDialog();
   }
 
   void _showPdfSharedDialog() {
