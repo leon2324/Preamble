@@ -921,6 +921,19 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
 
   void _refresh() => setState(() {});
 
+  void _showAssistantToast(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(message),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(milliseconds: 1500),
+        ),
+      );
+  }
+
   // 台灣繁體中文教學註解：
   // Release 版的「＋」選單只做本機問題脈絡整理與本機附件狀態，
   // 不宣稱 OCR、PDF/Word 解析、雲端上傳或 AI 已理解附件內容。
@@ -962,9 +975,7 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
       );
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('已加入目前問題脈絡，可確認後送出。')),
-    );
+    _showAssistantToast('已加入目前問題脈絡，可確認後送出。');
   }
 
   String _formatFileSize(int? bytes) {
@@ -1007,36 +1018,77 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
   }
 
   Future<void> _pickPhotoAttachment() async {
+    XFile? image;
     try {
-      final image = await _imagePicker.pickImage(
+      image = await _imagePicker.pickImage(
         source: ImageSource.gallery,
         imageQuality: 92,
       );
-      if (image == null) return;
-      if (!mounted) return;
-
-      setState(() {
-        _attachments.add(
-          _AssistantLocalAttachment(
-            id: 'image_${DateTime.now().microsecondsSinceEpoch}',
-            name: image.name,
-            typeLabel: '圖片',
-            path: image.path,
-            sizeBytes: null,
-            kind: _AssistantAttachmentKind.image,
-          ),
-        );
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('已加入圖片附件；請在問題中補充圖片重點。')),
-      );
     } catch (_) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('無法讀取相簿圖片，請稍後再試或改以文字補充。')),
-      );
+      _showAssistantToast('目前無法開啟相簿，請確認照片權限後再試。');
+      return;
     }
+
+    final pickedImage = image;
+    if (pickedImage == null) return;
+
+    Uint8List? previewBytes;
+    int? sizeBytes;
+    var canShowPreview = true;
+    try {
+      previewBytes = await pickedImage.readAsBytes();
+      sizeBytes = previewBytes.length;
+    } catch (_) {
+      canShowPreview = false;
+      try {
+        sizeBytes = await pickedImage.length();
+      } catch (_) {
+        sizeBytes = null;
+      }
+    }
+    if (!mounted) return;
+
+    final displayName =
+        pickedImage.name.trim().isEmpty ? '已加入照片' : pickedImage.name;
+    setState(() {
+      _attachments.add(
+        _AssistantLocalAttachment(
+          id: 'image_${DateTime.now().microsecondsSinceEpoch}',
+          name: displayName,
+          typeLabel: '照片',
+          path: pickedImage.path,
+          previewBytes: previewBytes,
+          sizeBytes: sizeBytes,
+          canShowPreview: canShowPreview && previewBytes != null,
+          kind: _AssistantAttachmentKind.image,
+        ),
+      );
+    });
+
+    _showAssistantToast(
+      previewBytes == null ? '已加入照片，但無法顯示縮圖。' : '已加入照片，可再補充文字描述。',
+    );
+  }
+
+  void _addDocumentAttachment(
+      PlatformFile file, String extension, String? path) {
+    setState(() {
+      _attachments.add(
+        _AssistantLocalAttachment(
+          id: 'document_${DateTime.now().microsecondsSinceEpoch}',
+          name: file.name,
+          typeLabel: extension.isEmpty ? '文件' : extension.toUpperCase(),
+          path: path,
+          sizeBytes: file.size,
+          canShowPreview: false,
+          kind: _AssistantAttachmentKind.document,
+        ),
+      );
+    });
+  }
+
+  void _showAttachmentReadFailedToast() {
+    _showAssistantToast('無法讀取文件，請稍後再試或貼上文字重點。');
   }
 
   Future<void> _pickDocumentAttachment() async {
@@ -1056,27 +1108,14 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
       final path = file.path;
       if (!mounted) return;
 
-      setState(() {
-        _attachments.add(
-          _AssistantLocalAttachment(
-            id: 'document_${DateTime.now().microsecondsSinceEpoch}',
-            name: file.name,
-            typeLabel: extension.isEmpty ? '文件' : extension.toUpperCase(),
-            path: path,
-            sizeBytes: file.size,
-            kind: _AssistantAttachmentKind.document,
-          ),
-        );
-      });
+      _addDocumentAttachment(file, extension, path);
 
       if (extension == 'txt' && path != null) {
         final content = await File(path).readAsString();
         if (!mounted) return;
         final trimmed = content.trim();
         if (trimmed.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('已加入文字文件，但文件內容為空。')),
-          );
+          _showAssistantToast('已加入文字文件，但文件內容為空。');
           return;
         }
         final safeContent = trimmed.length > 6000
@@ -1093,16 +1132,9 @@ $safeContent
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('已加入文件作為問題附件。若需要小法助整理內容，請貼上文件中的重點文字。'),
-        ),
-      );
+      _showAssistantToast('已加入文件；PDF / Word 內容需貼上重點文字。');
     } catch (_) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('無法讀取文件，請稍後再試或改以貼上文字重點。')),
-      );
+      _showAttachmentReadFailedToast();
     }
   }
 
@@ -1110,6 +1142,7 @@ $safeContent
     setState(() {
       _attachments.removeWhere((attachment) => attachment.id == id);
     });
+    _showAssistantToast('附件已移除。');
   }
 
   void _showTextContextSheet({
@@ -1189,9 +1222,7 @@ $safeContent
                           onPressed: () {
                             final value = controller.text.trim();
                             if (value.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(emptyMessage)),
-                              );
+                              _showAssistantToast(emptyMessage);
                               return;
                             }
                             Navigator.of(sheetContext).pop();
@@ -1302,10 +1333,7 @@ $safeContent
                                 question,
                               ].any((value) => value.isNotEmpty);
                               if (!hasAny) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text('請先輸入要補充的案件背景。')),
-                                );
+                                _showAssistantToast('請先輸入要補充的案件背景。');
                                 return;
                               }
 
@@ -1345,9 +1373,7 @@ $safeContent
   void _appendQuestionStructure(BuildContext context) {
     final current = widget.controller.text.trim();
     if (current.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('請先輸入想詢問的問題。')),
-      );
+      _showAssistantToast('請先輸入想詢問的問題。');
       return;
     }
 
@@ -1609,7 +1635,9 @@ class _AssistantLocalAttachment {
     required this.typeLabel,
     required this.kind,
     this.path,
+    this.previewBytes,
     this.sizeBytes,
+    this.canShowPreview = false,
   });
 
   final String id;
@@ -1617,7 +1645,9 @@ class _AssistantLocalAttachment {
   final String typeLabel;
   final _AssistantAttachmentKind kind;
   final String? path;
+  final Uint8List? previewBytes;
   final int? sizeBytes;
+  final bool canShowPreview;
 }
 
 class _AssistantAttachmentTray extends StatelessWidget {
@@ -1699,9 +1729,9 @@ class _AssistantAttachmentChip extends StatelessWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(10.r),
             ),
-            child: isImage && attachment.path != null
-                ? Image.file(
-                    File(attachment.path!),
+            child: isImage && attachment.canShowPreview
+                ? Image.memory(
+                    attachment.previewBytes!,
                     fit: BoxFit.cover,
                     errorBuilder: (_, __, ___) => Icon(
                       Icons.image_outlined,
@@ -1710,7 +1740,7 @@ class _AssistantAttachmentChip extends StatelessWidget {
                     ),
                   )
                 : Icon(
-                    Icons.description_outlined,
+                    isImage ? Icons.image_outlined : Icons.description_outlined,
                     size: 20.sp,
                     color: const Color(0xFF2EA26F),
                   ),
