@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/components/shared/liquid_glass_widgets.dart';
+import 'package:preamble/platform/ios_today_case_widget_bridge.dart';
 
 /// 台灣繁體中文教學註解：
 /// 這是 Apple 生態展示中心 (AppleEcosystemDemoPage)。
@@ -45,6 +45,17 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
   bool _ocrScanDone = false;
 
   @override
+  void initState() {
+    super.initState();
+    // 初始化時同步一次待辦清單
+    final activeTasks = _widgetTodos
+        .where((t) => t["checked"] == false)
+        .map((t) => t["title"] as String)
+        .toList();
+    IosTodayCaseWidgetBridge.syncTodoList(activeTasks);
+  }
+
+  @override
   void dispose() {
     _siriTimer?.cancel();
     super.dispose();
@@ -67,7 +78,7 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
         setState(() {
           _siriResponse = "Siri：「您最近的開庭期日為 7 月 2 日 14:00，台北地院第 12 法庭。」";
           _siriWaveHeight = 5.0;
-          HapticFeedback.doubleTap();
+          HapticFeedback.mediumImpact();
         });
       } else if (ticks == 30) {
         timer.cancel();
@@ -341,6 +352,11 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                                 setState(() {
                                   _widgetTodos[idx]["checked"] = !_widgetTodos[idx]["checked"];
                                 });
+                                final activeTasks = _widgetTodos
+                                    .where((t) => t["checked"] == false)
+                                    .map((t) => t["title"] as String)
+                                    .toList();
+                                IosTodayCaseWidgetBridge.syncTodoList(activeTasks);
                               },
                               child: Container(
                                 decoration: BoxDecoration(

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:preamble/components/shared/custom_toast.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -55,12 +56,8 @@ class _CustomClassroomDialogState extends State<CustomClassroomDialog> {
   void _startGeneration() {
     final text = _controller.text.trim();
     if (text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('請輸入您的生活糾紛情境或選擇快速標籤！'),
-          backgroundColor: Colors.redAccent,
-        ),
-      );
+      CustomToast.show(context, '請輸入您的生活糾紛情境或選擇快速標籤！');
+
       return;
     }
 

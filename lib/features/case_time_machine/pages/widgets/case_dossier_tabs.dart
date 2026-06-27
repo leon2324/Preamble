@@ -1,3 +1,4 @@
+
 part of '../case_dossier_detail_page.dart';
 
 // 這個 part 檔集中收納案件詳情頁的展示型 Tab UI。
@@ -227,9 +228,8 @@ extension _CaseDossierTabs on _CaseDossierDetailPageState {
                 color: CaseTimeMachineColors.accentGold,
               ),
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('前往媒體：${ref.title}')),
-                );
+                CustomToast.show(context, '前往媒體：${ref.title}');
+
               },
             ),
           ),
@@ -471,9 +471,8 @@ extension _CaseDossierTabs on _CaseDossierDetailPageState {
                     color: CaseTimeMachineColors.accentGold,
                   ),
                   onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('前往媒體：${ref.title}')),
-                    );
+                    CustomToast.show(context, '前往媒體：${ref.title}');
+
                   },
                 ),
               );
@@ -698,9 +697,8 @@ extension _CaseDossierTabs on _CaseDossierDetailPageState {
                     color: CaseTimeMachineColors.accentGold,
                   ),
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('已複製文獻引用資訊：${item.title}')),
-                    );
+                    CustomToast.show(context, '已複製文獻引用資訊：${item.title}');
+
                   },
                 ),
               ],

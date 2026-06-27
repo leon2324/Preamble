@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -308,9 +309,9 @@ class _LiquidGlassShimmerState extends State<LiquidGlassShimmer> with SingleTick
 
 /// 5. Liquid Glass 漂浮動態彩色流體背景（創造景深折射）
 class LiquidGlassBackground extends StatefulWidget {
-  final Widget child;
+  final Widget? child;
 
-  const LiquidGlassBackground({super.key, required this.child});
+  const LiquidGlassBackground({super.key, this.child});
 
   @override
   State<LiquidGlassBackground> createState() => _LiquidGlassBackgroundState();
@@ -413,7 +414,7 @@ class _LiquidGlassBackgroundState extends State<LiquidGlassBackground> with Sing
               ),
             ),
             // 前景元件
-            widget.child,
+            if (widget.child != null) widget.child!,
           ],
         );
       },

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/components/home/home_content.dart';
@@ -743,13 +744,8 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
                             setState(() {
                               _isFollowing = !_isFollowing;
                             });
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content:
-                                    Text(_isFollowing ? '已追蹤此議題！' : '已取消追蹤'),
-                                duration: const Duration(seconds: 1),
-                              ),
-                            );
+                            CustomToast.show(context, _isFollowing ? '已追蹤此議題！' : '已取消追蹤');
+
                           },
                           icon: Icon(
                             _isFollowing

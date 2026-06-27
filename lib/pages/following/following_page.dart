@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -447,16 +448,14 @@ class _FollowingPageState extends State<FollowingPage> {
       await appState.setCaseFollowed(id, true);
     }
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('已加入我的 緒言 Preamble 追蹤。')),
-    );
+    CustomToast.show(context, '已加入我的 緒言 Preamble 追蹤。');
+
   }
 
   void _openTrackSearch() {
     setState(() => _page = _FollowPage.search);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('請搜尋案件、法條或主題後加入追蹤。')),
-    );
+    CustomToast.show(context, '請搜尋案件、法條或主題後加入追蹤。');
+
   }
 
   void _showNoteInsights() {
@@ -527,9 +526,8 @@ class _FollowingPageState extends State<FollowingPage> {
       _noteItems.insert(0, note);
       _selectedNote = note;
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('已建立一則本機筆記，可點入後編輯。')),
-    );
+    CustomToast.show(context, '已建立一則本機筆記，可點入後編輯。');
+
   }
 
   void _editSelectedNote() {
@@ -579,9 +577,8 @@ class _FollowingPageState extends State<FollowingPage> {
                   _selectedNote = updated;
                 });
                 Navigator.of(dialogContext).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('筆記已更新到本機清單。')),
-                );
+                CustomToast.show(context, '筆記已更新到本機清單。');
+
               },
               child: const Text('儲存'),
             ),
@@ -615,9 +612,8 @@ class _FollowingPageState extends State<FollowingPage> {
                   if (_noteItems.isNotEmpty) _selectedNote = _noteItems.first;
                 });
                 Navigator.of(dialogContext).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('筆記已從本機清單移除。')),
-                );
+                CustomToast.show(context, '筆記已從本機清單移除。');
+
               },
               child: const Text('刪除'),
             ),
@@ -635,9 +631,8 @@ class _FollowingPageState extends State<FollowingPage> {
 
   void _clearQuestionHistory() {
     setState(() => _questionsCleared = true);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('提問紀錄已在本機清除。')),
-    );
+    CustomToast.show(context, '提問紀錄已在本機清除。');
+
   }
 
   Future<void> _showPlanInfo() async {
@@ -653,9 +648,8 @@ class _FollowingPageState extends State<FollowingPage> {
     await appState.signOut();
     if (!mounted) return;
     setState(() => _page = _FollowPage.home);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('已清除本機使用狀態。')),
-    );
+    CustomToast.show(context, '已清除本機使用狀態。');
+
   }
 
   Future<void> _createQuickDraft() async {

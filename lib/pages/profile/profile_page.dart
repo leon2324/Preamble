@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/theme/adaptive_layout.dart';
@@ -561,10 +562,8 @@ class ProfilePage extends StatelessWidget {
       onTap: () {
         appState.updateSettings(fontSizeScale: scale);
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('閱讀字型大小已更新！'), backgroundColor: Color(0xFF2E7D32)),
-        );
+        CustomToast.show(context, '閱讀字型大小已更新！');
+
       },
     );
   }

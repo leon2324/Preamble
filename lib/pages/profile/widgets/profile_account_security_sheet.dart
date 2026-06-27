@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/theme/app_colors.dart';
@@ -187,12 +188,8 @@ class _AccountSecuritySheetState extends State<AccountSecuritySheet> {
   }
 
   void _showSnackBar(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(msg),
-        backgroundColor: const Color(0xFF2E7D32),
-      ),
-    );
+    CustomToast.show(context, msg);
+
   }
 
   void _showResetPasswordDialog() {
@@ -228,11 +225,8 @@ class _AccountSecuritySheetState extends State<AccountSecuritySheet> {
               onPressed: () {
                 final pw = controller.text.trim();
                 if (pw.length < 6) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('密碼長度需至少 6 字元！'),
-                        backgroundColor: Colors.redAccent),
-                  );
+                  CustomToast.show(context, '密碼長度需至少 6 字元！');
+
                   return;
                 }
                 Navigator.pop(context);
@@ -267,12 +261,8 @@ class _AccountSecuritySheetState extends State<AccountSecuritySheet> {
                 Navigator.pop(context); // 關閉對話框
                 Navigator.pop(context); // 關閉 Bottom Sheet
                 widget.appState.signOut(); // 執行登出（回復訪客狀態）
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('帳號已刪除，已為您回復訪客身分！'),
-                    backgroundColor: Colors.redAccent,
-                  ),
-                );
+                CustomToast.show(context, '帳號已刪除，已為您回復訪客身分！');
+
               },
               child: const Text('確定刪除',
                   style: TextStyle(

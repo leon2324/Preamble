@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/features/on_this_day/data/on_this_day_local_bookmarks.dart';
@@ -237,11 +238,8 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
                                 ? _savedCaseIds.add(c.id)
                                 : _savedCaseIds.remove(c.id);
                           });
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(next ? '已加入本機收藏。' : '已從本機收藏移除。'),
-                            ),
-                          );
+                          CustomToast.show(context, next ? '已加入本機收藏。' : '已從本機收藏移除。');
+
                         },
                       ),
                     ],

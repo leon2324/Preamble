@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
@@ -30,9 +31,8 @@ class CaseBookPreviewPage extends StatelessWidget {
       showLoginPromptBottomSheet(context);
       return;
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('已收藏案件之書')),
-    );
+    CustomToast.show(context, '已收藏案件之書');
+
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
@@ -1114,9 +1115,8 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
   }
 
   void _showSnack(String message) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(message)));
+    CustomToast.show(context, message);
+
   }
 
   List<_SearchResult> _resultsOfType(_ResultType type) {

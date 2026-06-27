@@ -1,3 +1,4 @@
+
 part of '../know_law_page.dart';
 
 // 本機諮詢歷史紀錄條目，只存在 LawAssistantChatPage 的 local state，
@@ -396,15 +397,8 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
 
   void _showAssistantToast(String message) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(message),
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(milliseconds: 1500),
-        ),
-      );
+    CustomToast.show(context, message);
+
   }
 
   Future<void> _bootstrap() async {
@@ -512,15 +506,8 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
 
     final conversation = _conversation!;
     if (conversation.isGuest) {
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          const SnackBar(
-            content: Text('登入後可以在同一段對話中繼續追問。'),
-            behavior: SnackBarBehavior.floating,
-            duration: Duration(milliseconds: 1500),
-          ),
-        );
+      CustomToast.show(context, '登入後可以在同一段對話中繼續追問。');
+
       return;
     }
 
@@ -1079,15 +1066,8 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
 
   void _showAssistantToast(String message) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(message),
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(milliseconds: 1500),
-        ),
-      );
+    CustomToast.show(context, message);
+
   }
 
   // Release 版的「＋」選單只做本機問題脈絡整理與本機附件狀態，

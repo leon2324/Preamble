@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:preamble/components/home/v2/home_v2_palette.dart';
@@ -106,9 +107,8 @@ class _SavedNotesPageState extends State<SavedNotesPage> {
         ),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('找不到對應的學習單元，可能已移除。')),
-      );
+      CustomToast.show(context, '找不到對應的學習單元，可能已移除。');
+
     }
   }
 
@@ -207,12 +207,8 @@ class _SavedNotesPageState extends State<SavedNotesPage> {
                     ),
                     onPressed: () {
                       gameState.toggleQuoteSave(quote, articleTitle);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('已取消收藏該金句！'),
-                          duration: Duration(seconds: 1),
-                        ),
-                      );
+                      CustomToast.show(context, '已取消收藏該金句！');
+
                     },
                   ),
                 ],
@@ -333,12 +329,8 @@ class _SavedNotesPageState extends State<SavedNotesPage> {
                       ),
                       onPressed: () {
                         gameState.toggleArticleSave(title);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('已取消收藏本單元！'),
-                            duration: Duration(seconds: 1),
-                          ),
-                        );
+                        CustomToast.show(context, '已取消收藏本單元！');
+
                       },
                     ),
                   ],
@@ -444,12 +436,8 @@ class _SavedNotesPageState extends State<SavedNotesPage> {
                     ),
                     onPressed: () {
                       gameState.removeHighlight(index);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('已刪除此劃記重點！'),
-                          duration: Duration(seconds: 1),
-                        ),
-                      );
+                      CustomToast.show(context, '已刪除此劃記重點！');
+
                     },
                   ),
                 ],

@@ -12,8 +12,11 @@ import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_
 // 旨在將判決中艱深難懂的法理名詞「說白話」。
 // 頁面提供搜尋欄位與分類選單，卡片點擊時會啟動 3D 旋轉翻牌動畫（Y 軸 180 度旋轉與透視 projection），
 // 卡片正面提供白話文解說，背面提供日常生活故事實例、以及點選直接跳轉至時光機相關案件的傳送點。
+import 'package:preamble/features/case_time_machine/models/case_time_machine_models.dart';
+
 class CaseLegalVocabularyPage extends StatefulWidget {
-  const CaseLegalVocabularyPage({super.key});
+  final CaseBook? book;
+  const CaseLegalVocabularyPage({super.key, this.book});
 
   @override
   State<CaseLegalVocabularyPage> createState() =>
@@ -85,16 +88,75 @@ class _CaseLegalVocabularyPageState extends State<CaseLegalVocabularyPage> {
     },
   ];
 
-  @override
-  Widget build(BuildContext context) {
-    // 依關鍵字與分類進行過濾
-    final filteredVocab = _vocabData.where((item) {
-      final matchesSearch = (item['term'] as String).contains(_searchQuery) ||
-          (item['plainExplanation'] as String).contains(_searchQuery);
+  List<Map<String, dynamic>> _getDisplayVocabs() {
+    final List<Map<String, dynamic>> list = [];
+    
+    // 1. 如果有傳入當前案卷，且該案卷有爭點 (legalIssues)，動態轉換為詞卡
+    if (widget.book != null) {
+      for (final issue in widget.book!.legalIssues) {
+        list.add({
+          'term': issue.title.replaceAll('本案中關於', '').replaceAll('的法律認定標準為何？', '').replaceAll('？', ''),
+          'category': widget.book!.category.contains('憲法') ? '憲法' : (widget.book!.category.contains('民事') ? '民事' : '刑法'),
+          'icon': CtmSvgIcons.scale,
+          'color': const Color(0xFF1B5E4F),
+          'plainExplanation': issue.plainExplanation,
+          'lifeExample': '本案爭點關聯：${issue.relationToCase}',
+          'caseId': widget.book!.id,
+          'caseName': widget.book!.titleZh,
+        });
+      }
+    }
+    
+    // 2. 加上預設的詞卡資料
+    list.addAll(_vocabData);
+    
+    // 3. 如果有傳入當前案卷，將與此案卷相關（caseId 一致）的詞卡排在最前面
+    if (widget.book != null) {
+      final seenTerms = <String>{};
+      final uniqueList = <Map<String, dynamic>>[];
+      for (final item in list) {
+        final term = item['term'] as String;
+        if (!seenTerms.contains(term)) {
+          seenTerms.add(term);
+          uniqueList.add(item);
+        }
+      }
+      
+      uniqueList.sort((a, b) {
+        final aMatch = a['caseId'] == widget.book!.id ? 1 : 0;
+        final bMatch = b['caseId'] == widget.book!.id ? 1 : 0;
+        if (aMatch != bMatch) {
+          return bMatch.compareTo(aMatch); // 優先顯示匹配本案的
+        }
+        
+        final aCat = a['category'] as String;
+        final bCat = b['category'] as String;
+        final bookCat = widget.book!.category;
+        final aCatMatch = bookCat.contains(aCat) ? 1 : 0;
+        final bCatMatch = bookCat.contains(bCat) ? 1 : 0;
+        return bCatMatch.compareTo(aCatMatch); // 次優先顯示分類大類一致的
+      });
+      list.clear();
+      list.addAll(uniqueList);
+    }
+    
+    // 4. 進行搜尋與分類過濾
+    return list.where((item) {
+      final matchesSearch = _searchQuery.isEmpty ||
+          (item['term'] as String).toLowerCase().contains(_searchQuery.toLowerCase()) ||
+          (item['plainExplanation'] as String).toLowerCase().contains(_searchQuery.toLowerCase());
+      
       final matchesCategory = _selectedCategory == '全部' ||
           (item['category'] as String).contains(_selectedCategory);
+          
       return matchesSearch && matchesCategory;
     }).toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // 依關鍵字與分類進行動態過濾
+    final filteredVocab = _getDisplayVocabs();
 
     final categories = ['全部', '憲法', '程序', '刑法'];
 

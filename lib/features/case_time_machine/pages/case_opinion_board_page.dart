@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/features/case_time_machine/models/case_time_machine_models.dart';
 import 'package:preamble/features/case_time_machine/theme/case_time_machine_theme.dart';
@@ -290,12 +291,8 @@ class _CaseOpinionBoardPageState extends State<CaseOpinionBoardPage> {
       _opinionController.clear();
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('思辨便利貼貼上牆成功！'),
-        duration: Duration(seconds: 1),
-      ),
-    );
+    CustomToast.show(context, '思辨便利貼貼上牆成功！');
+
   }
 
   void _toggleResonance(String id) {

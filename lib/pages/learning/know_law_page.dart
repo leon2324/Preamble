@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
 // google_fonts is imported in notebook_aesthetics
@@ -644,13 +645,8 @@ class KnowLawPageState extends State<KnowLawPage> {
               _activeTopic = newTopic.title;
             });
             HapticFeedback.heavyImpact();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('🎉 成功訂製您的專屬課程「${newTopic.title}」！'),
-                backgroundColor: HomeV2Palette.trustGreen,
-                duration: const Duration(seconds: 3),
-              ),
-            );
+            CustomToast.show(context, '🎉 成功訂製您的專屬課程「${newTopic.title}」！');
+
           },
         );
       },
@@ -736,24 +732,13 @@ class KnowLawPageState extends State<KnowLawPage> {
       _activeTopic = nextTopicName!;
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('已為您切換至選修專題：$nextTopicName 📚'),
-        backgroundColor: HomeV2Palette.trustGreen,
-        duration: const Duration(seconds: 2),
-      ),
-    );
+    CustomToast.show(context, '已為您切換至選修專題：$nextTopicName 📚');
+
   }
 
   void _showTopicComingSoon(String topic) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text('$topic 專題正在整理中，之後會加入主修課。'),
-          backgroundColor: HomeV2Palette.trustGreen,
-        ),
-      );
+    CustomToast.show(context, '$topic 專題正在整理中，之後會加入主修課。');
+
   }
 
   void _openLearningTopicCatalog({String? initialCategory}) {
@@ -2446,9 +2431,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                         onPressed: () {
                           Clipboard.setData(
                               ClipboardData(text: _translationOutput));
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('已複製譯文至剪貼簿！')),
-                          );
+                          CustomToast.show(context, '已複製譯文至剪貼簿！');
+
                         },
                       ),
                       SizedBox(width: 8.w),
@@ -2469,13 +2453,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                             '術語：$text\n$_translationOutput',
                             '法律術語白話翻譯',
                           );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('已成功將譯文摘錄至手帳筆記！📌'),
-                              backgroundColor: HomeV2Palette.trustGreen,
-                              duration: Duration(milliseconds: 1500),
-                            ),
-                          );
+                          CustomToast.show(context, '已成功將譯文摘錄至手帳筆記！📌');
+
                         },
                       ),
                     ],
@@ -2684,9 +2663,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                       onPressed: () {
                         Clipboard.setData(
                             ClipboardData(text: _depreciationResult));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('已複製折舊計算結果至剪貼簿！')),
-                        );
+                        CustomToast.show(context, '已複製折舊計算結果至剪貼簿！');
+
                       },
                     ),
                     noteAction: _buildLearningResultActionButton(
@@ -2698,13 +2676,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                           _depreciationResult,
                           '車禍折舊理賠計算',
                         );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('已成功將折舊結果摘錄至手帳筆記！📌'),
-                            backgroundColor: HomeV2Palette.trustGreen,
-                            duration: Duration(milliseconds: 1500),
-                          ),
-                        );
+                        CustomToast.show(context, '已成功將折舊結果摘錄至手帳筆記！📌');
+
                       },
                     ),
                     exportAction: _buildLearningResultActionButton(
@@ -3015,9 +2988,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                       onPressed: () {
                         Clipboard.setData(
                             ClipboardData(text: _rentNoticeResult));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('已複製催告信函草稿至剪貼簿！')),
-                        );
+                        CustomToast.show(context, '已複製催告信函草稿至剪貼簿！');
+
                       },
                     ),
                     noteAction: _buildLearningResultActionButton(
@@ -3029,13 +3001,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                           _rentNoticeResult,
                           _rentNoticeType == 0 ? '設備修繕催告存證信函' : '期滿退押金催告存證信函',
                         );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('已成功將草稿摘錄至手帳筆記！📌'),
-                            backgroundColor: HomeV2Palette.trustGreen,
-                            duration: Duration(milliseconds: 1500),
-                          ),
-                        );
+                        CustomToast.show(context, '已成功將草稿摘錄至手帳筆記！📌');
+
                       },
                     ),
                     exportAction: _buildLearningResultActionButton(
@@ -3223,9 +3190,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                         onPressed: () {
                           Clipboard.setData(
                               ClipboardData(text: _overtimeResult));
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('已複製加班費試算結果至剪貼簿！')),
-                          );
+                          CustomToast.show(context, '已複製加班費試算結果至剪貼簿！');
+
                         },
                       ),
                       SizedBox(width: 8.w),
@@ -3245,13 +3211,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                             _overtimeResult,
                             '加班費試算結果',
                           );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('已成功將加班費結果摘錄至手帳筆記！📌'),
-                              backgroundColor: HomeV2Palette.trustGreen,
-                              duration: Duration(milliseconds: 1500),
-                            ),
-                          );
+                          CustomToast.show(context, '已成功將加班費結果摘錄至手帳筆記！📌');
+
                         },
                       ),
                     ],
@@ -3431,9 +3392,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                       onPressed: () {
                         Clipboard.setData(
                             ClipboardData(text: _consumerNoticeResult));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('已複製退貨催告信函草稿至剪貼簿！')),
-                        );
+                        CustomToast.show(context, '已複製退貨催告信函草稿至剪貼簿！');
+
                       },
                     ),
                     noteAction: _buildLearningResultActionButton(
@@ -3445,13 +3405,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                           _consumerNoticeResult,
                           '網購退貨存證信函',
                         );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('已成功將草稿摘錄至手帳筆記！📌'),
-                            backgroundColor: HomeV2Palette.trustGreen,
-                            duration: Duration(milliseconds: 1500),
-                          ),
-                        );
+                        CustomToast.show(context, '已成功將草稿摘錄至手帳筆記！📌');
+
                       },
                     ),
                     exportAction: _buildLearningResultActionButton(
@@ -3576,9 +3531,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                     _checkedPrivacyEvidences.toList(),
                     _privacySops,
                   );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('已成功儲存自救步驟至小法助的「備忘錄」中！')),
-                  );
+                  CustomToast.show(context, '已成功儲存自救步驟至小法助的「備忘錄」中！');
+
                 },
                 color: const Color(0xFF512DA8),
               ),
@@ -3646,9 +3600,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                     _checkedNeighborEvidences.toList(),
                     _neighborSops,
                   );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('已將證據蒐證清單儲存至小法助的「備忘錄」中！')),
-                  );
+                  CustomToast.show(context, '已將證據蒐證清單儲存至小法助的「備忘錄」中！');
+
                 },
                 color: const Color(0xFF00796B),
               ),
@@ -3804,9 +3757,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                         onPressed: () {
                           Clipboard.setData(
                               ClipboardData(text: _marriagePropertyResult));
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('已複製夫妻財產分配計算結果至剪貼簿！')),
-                          );
+                          CustomToast.show(context, '已複製夫妻財產分配計算結果至剪貼簿！');
+
                         },
                       ),
                       SizedBox(width: 8.w),
@@ -3826,13 +3778,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                             _marriagePropertyResult,
                             '夫妻財產分配計算結果',
                           );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('已成功將分配結果摘錄至手帳筆記！📌'),
-                              backgroundColor: HomeV2Palette.trustGreen,
-                              duration: Duration(milliseconds: 1500),
-                            ),
-                          );
+                          CustomToast.show(context, '已成功將分配結果摘錄至手帳筆記！📌');
+
                         },
                       ),
                     ],
@@ -3903,9 +3850,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                     _checkedAntiFraudEvidences.toList(),
                     _antiFraudSops,
                   );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('已將防詐自救步驟儲存至小法助「備忘錄」中！')),
-                  );
+                  CustomToast.show(context, '已將防詐自救步驟儲存至小法助「備忘錄」中！');
+
                 },
                 color: const Color(0xFFD32F2F),
               ),
@@ -4324,13 +4270,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                       '解析：$explanation',
                       '每日隨堂簽到挑戰',
                     );
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('已將解析成功摘錄至手帳筆記！📌'),
-                        backgroundColor: HomeV2Palette.trustGreen,
-                        duration: Duration(milliseconds: 1500),
-                      ),
-                    );
+                    CustomToast.show(context, '已將解析成功摘錄至手帳筆記！📌');
+
                   },
                   style: OutlinedButton.styleFrom(
                     foregroundColor: HomeV2Palette.trustGreen,
@@ -5542,22 +5483,14 @@ class KnowLawPageState extends State<KnowLawPage> {
                               p.isEmpty ||
                               f.isEmpty ||
                               c.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('⚠️ 每個欄位都是必填的喔，才能構成完整的三段論邏輯！'),
-                                backgroundColor: Colors.orange,
-                              ),
-                            );
+                            CustomToast.show(context, '⚠️ 每個欄位都是必填的喔，才能構成完整的三段論邏輯！');
+
                             return;
                           }
                           gameState.addCornellNote(t, p, f, c);
                           Navigator.pop(sheetContext);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('🎉 三段論筆記建立成功！解鎖公平天平貼紙！'),
-                              backgroundColor: HomeV2Palette.trustGreen,
-                            ),
-                          );
+                          CustomToast.show(context, '🎉 三段論筆記建立成功！解鎖公平天平貼紙！');
+
                         },
                         child: const Text('儲存筆記',
                             style: TextStyle(color: Colors.white)),

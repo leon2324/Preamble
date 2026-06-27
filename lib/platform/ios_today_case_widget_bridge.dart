@@ -37,6 +37,27 @@ class IosTodayCaseWidgetBridge {
     }
   }
 
+  static Future<void> syncTodoList(List<String> tasks) async {
+    if (kIsWeb || defaultTargetPlatform != TargetPlatform.iOS) {
+      return;
+    }
+
+    try {
+      await _channel.invokeMethod<void>(
+        'updateTodoListWidget',
+        <String, Object>{
+          'title': '今日法律待辦',
+          'tasks': tasks,
+          'dateLabel': _todayLabel(DateTime.now()),
+        },
+      );
+    } on MissingPluginException {
+      // Ignore
+    } on PlatformException {
+      // Ignore
+    }
+  }
+
   static String _todayLabel(DateTime date) {
     final month = date.month.toString().padLeft(2, '0');
     final day = date.day.toString().padLeft(2, '0');

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/data/mock_data/learning/learning_mock_data.dart';
 import 'package:preamble/theme/app_colors.dart';
@@ -892,13 +893,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                 widget.article.summary,
                 widget.article.title,
               );
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('已成功將核心大綱摘錄至手帳筆記！📌'),
-                  backgroundColor: HomeV2Palette.trustGreen,
-                  duration: Duration(seconds: 1),
-                ),
-              );
+              CustomToast.show(context, '已成功將核心大綱摘錄至手帳筆記！📌');
+
             },
           ),
           ListenableBuilder(
@@ -915,17 +911,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                 tooltip: isBookmarked ? '取消收藏' : '加入收藏',
                 onPressed: () {
                   gameState.toggleArticleSave(widget.article.title);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        gameState.isArticleSaved(widget.article.title)
-                            ? '已加入我的收藏！'
-                            : '已取消收藏！',
-                      ),
-                      backgroundColor: HomeV2Palette.trustGreen,
-                      duration: const Duration(seconds: 1),
-                    ),
-                  );
+                  final isSaved = gameState.isArticleSaved(widget.article.title);
+                  CustomToast.show(context, isSaved ? '已加入收藏' : '已取消收藏');
                 },
               );
             },
@@ -1085,17 +1072,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                           onPressed: () {
                             gameState.toggleQuoteSave(
                                 point, widget.article.title);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  gameState.isQuoteSaved(point)
-                                      ? '已成功將金句收藏至備忘錄！'
-                                      : '已取消收藏金句！',
-                                ),
-                                backgroundColor: HomeV2Palette.trustGreen,
-                                duration: const Duration(seconds: 1),
-                              ),
-                            );
+                            final isSaved = gameState.isQuoteSaved(point);
+                            CustomToast.show(context, isSaved ? '已儲存字句卡' : '已取消儲存');
                           },
                         ),
                       ],
@@ -1847,13 +1825,8 @@ class HighlightedSelectableText extends StatelessWidget {
               LearningGameState.instance
                   .addHighlight(selectedText, articleTitle);
               editableTextState.hideToolbar();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('已成功劃記此重點並儲存至成就室備忘錄！'),
-                  backgroundColor: HomeV2Palette.trustGreen,
-                  duration: Duration(seconds: 1),
-                ),
-              );
+              CustomToast.show(context, '已成功劃記此重點並儲存至成就室備忘錄！');
+
             },
           ),
         );
@@ -1988,13 +1961,8 @@ void _showShareCardDialog(
                     Clipboard.setData(ClipboardData(
                         text: '$highlightText\n\n—— 摘自《$articleTitle》• 小法助'));
                     Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('已複製重點及來源文字！'),
-                        backgroundColor: HomeV2Palette.trustGreen,
-                        duration: Duration(seconds: 1),
-                      ),
-                    );
+                    CustomToast.show(context, '已複製重點及來源文字！');
+
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
@@ -2016,13 +1984,8 @@ void _showShareCardDialog(
                         text:
                             '$highlightText\n\n—— 摘自《$articleTitle》• 緒言 Preamble 學習摘錄'));
                     Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('重點內容已複製，可自行截圖或貼到分享工具保存。'),
-                        backgroundColor: HomeV2Palette.trustGreen,
-                        duration: const Duration(seconds: 3),
-                      ),
-                    );
+                    CustomToast.show(context, '重點內容已複製，可自行截圖或貼到分享工具保存。');
+
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: HomeV2Palette.trustGreen,

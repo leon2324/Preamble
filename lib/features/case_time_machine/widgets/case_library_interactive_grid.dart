@@ -90,7 +90,7 @@ class CaseLibraryInteractiveGrid extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).push(
                   CupertinoPageRoute<void>(
-                    builder: (__) => const CaseLegalVocabularyPage(),
+                    builder: (__) => CaseLegalVocabularyPage(book: selectedCase),
                   ),
                 );
               },

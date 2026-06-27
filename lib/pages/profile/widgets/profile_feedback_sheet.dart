@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/theme/app_colors.dart';
@@ -253,10 +254,8 @@ class _FeedbackSheetState extends State<FeedbackSheet> {
   Future<void> _submitFeedback() async {
     final content = _feedbackController.text.trim();
     if (content.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('請填寫回饋內容！'), backgroundColor: Colors.redAccent),
-      );
+      CustomToast.show(context, '請填寫回饋內容！');
+
       return;
     }
 
@@ -267,13 +266,8 @@ class _FeedbackSheetState extends State<FeedbackSheet> {
 
     if (mounted) {
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('感謝回報！我們會盡快處理「$_category」問題。'),
-          backgroundColor: const Color(0xFF2E7D32),
-          duration: const Duration(seconds: 3),
-        ),
-      );
+      CustomToast.show(context, '感謝回報！我們會盡快處理「$_category」問題。');
+
     }
   }
 }

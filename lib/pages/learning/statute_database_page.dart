@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/components/shared/mvp_state_widgets.dart';
@@ -370,18 +371,16 @@ class _StatuteDetailPageState extends State<StatuteDetailPage> {
     // 這樣從全站搜尋追蹤、從法規頁追蹤、到我的 Preamble 查看，都會看到同一份資料。
     await appState.setStatuteFollowed(_statuteInteractionId(item), !isFollowed);
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(isFollowed ? '已取消追蹤。' : '已加入追蹤法條。')),
-    );
+    CustomToast.show(context, isFollowed ? '已取消追蹤。' : '已加入追蹤法條。');
+
   }
 
   Future<void> _toggleSaved(bool isSaved) async {
     final appState = PreambleScope.of(context);
     await appState.setStatuteSaved(_statuteInteractionId(item), !isSaved);
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(isSaved ? '已取消收藏。' : '已收藏法條。')),
-    );
+    CustomToast.show(context, isSaved ? '已取消收藏。' : '已收藏法條。');
+
   }
 
   @override

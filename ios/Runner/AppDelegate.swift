@@ -12,6 +12,10 @@ private enum TodayCaseWidgetBridge {
   static let payloadKey = "today_case_widget_payload"
 }
 
+private enum TodoListWidgetBridge {
+  static let payloadKey = "todo_list_widget_payload"
+}
+
 private enum QuickAskAppIntentBridge {
   // 台灣繁體中文教學註解：
   // App Intents 與 Widget 點擊都會透過 preamble:// URL scheme 回到主 App；
@@ -114,6 +118,8 @@ private enum NativeShareBridge {
       switch call.method {
       case "updateTodayCaseWidget":
         self.updateTodayCaseWidget(arguments: call.arguments, result: result)
+      case "updateTodoListWidget":
+        self.updateTodoListWidget(arguments: call.arguments, result: result)
       default:
         result(FlutterMethodNotImplemented)
       }
@@ -346,6 +352,51 @@ private enum NativeShareBridge {
       result(FlutterError(
         code: "encode_failed",
         message: "Unable to encode today case widget payload.",
+        details: error.localizedDescription
+      ))
+    }
+  }
+
+  private func updateTodoListWidget(arguments: Any?, result: FlutterResult) {
+    guard let payload = arguments as? [String: Any] else {
+      result(FlutterError(
+        code: "invalid_payload",
+        message: "Todo list widget payload must be a dictionary.",
+        details: nil
+      ))
+      return
+    }
+
+    var normalizedPayload = payload
+    normalizedPayload["updatedAt"] = ISO8601DateFormatter().string(from: Date())
+
+    do {
+      let data = try JSONSerialization.data(
+        withJSONObject: normalizedPayload,
+        options: []
+      )
+      guard let jsonString = String(data: data, encoding: .utf8),
+            let defaults = UserDefaults(
+              suiteName: TodayCaseWidgetBridge.appGroupIdentifier
+            ) else {
+        result(FlutterError(
+          code: "app_group_unavailable",
+          message: "Unable to open 緒言 Preamble App Group defaults.",
+          details: TodayCaseWidgetBridge.appGroupIdentifier
+        ))
+        return
+      }
+
+      defaults.set(jsonString, forKey: TodoListWidgetBridge.payloadKey)
+
+      if #available(iOS 14.0, *) {
+        WidgetCenter.shared.reloadTimelines(ofKind: "緒言 PreambleTodoListWidget")
+      }
+      result(nil)
+    } catch {
+      result(FlutterError(
+        code: "encode_failed",
+        message: "Unable to encode todo list widget payload.",
         details: error.localizedDescription
       ))
     }

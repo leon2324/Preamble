@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
 import 'package:preamble/app/app_state.dart';
@@ -48,9 +49,8 @@ class _CaseStoryDetailPageState extends State<CaseStoryDetailPage> {
   }
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(message)));
+    CustomToast.show(context, message);
+
   }
 
   String get _caseId => widget.item.storageId;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/data/learning/learning_game_state.dart';
@@ -743,9 +744,8 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
     }
 
     if (topic == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('找不到對應的主題，可能尚未同步或已移除。')),
-      );
+      CustomToast.show(context, '找不到對應的主題，可能尚未同步或已移除。');
+
       return;
     }
 
@@ -782,9 +782,8 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
         ),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('找不到對應的學習單元。')),
-      );
+      CustomToast.show(context, '找不到對應的學習單元。');
+
     }
   }
 
@@ -1159,13 +1158,8 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
                                   ].join('\n');
                                   Clipboard.setData(
                                       ClipboardData(text: content));
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content:
-                                          Text('已複製「$title」清單文字，可貼到外部工具保存。'),
-                                      backgroundColor: HomeV2Palette.trustGreen,
-                                    ),
-                                  );
+                                  CustomToast.show(context, '已複製「$title」清單文字，可貼到外部工具保存。');
+
                                 },
                               ),
                             ],

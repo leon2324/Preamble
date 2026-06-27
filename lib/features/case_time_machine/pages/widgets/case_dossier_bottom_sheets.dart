@@ -1,3 +1,4 @@
+
 part of '../case_dossier_detail_page.dart';
 
 // 這個 part 檔集中收納案件詳情頁的 Bottom Sheet UI。
@@ -267,11 +268,9 @@ extension _CaseDossierBottomSheets on _CaseDossierDetailPageState {
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onPressed: () {
                         Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text(
-                                  '已複製：${step.courtName} ${step.caseNumber}')),
-                        );
+                        CustomToast.show(context, 
+                                  '已複製：${step.courtName} ${step.caseNumber}');
+
                       },
                     ),
                   ),
@@ -295,9 +294,8 @@ extension _CaseDossierBottomSheets on _CaseDossierDetailPageState {
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onPressed: () {
                         Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('正在開起司法行政機關裁判書系統...')),
-                        );
+                        CustomToast.show(context, '正在開起司法行政機關裁判書系統...');
+
                       },
                     ),
                   ),
@@ -567,9 +565,8 @@ extension _CaseDossierBottomSheets on _CaseDossierDetailPageState {
                       onPressed: () {
                         appState.saveCaseNoteDraft(caseId, controller.text);
                         Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('筆記儲存成功！')),
-                        );
+                        CustomToast.show(context, '筆記儲存成功！');
+
                       },
                       child: Text(
                         '儲存筆記',

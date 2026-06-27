@@ -1,3 +1,4 @@
+
 part of '../following_page.dart';
 
 // 這個 part 檔只收納 Following Page 的各個頁面 view 組裝。
@@ -859,9 +860,8 @@ class _SettingsView extends StatelessWidget {
           title: '清除快取',
           value: '32.4 MB',
           onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('本機暫存狀態已重新整理。')),
-            );
+            CustomToast.show(context, '本機暫存狀態已重新整理。');
+
           },
         ),
         _SettingRow(

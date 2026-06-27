@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -294,9 +295,8 @@ class _LegalToolsPageState extends State<LegalToolsPage> {
   Future<void> _copyDraft(String text) async {
     await Clipboard.setData(ClipboardData(text: text));
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('已複製草稿。')),
-    );
+    CustomToast.show(context, '已複製草稿。');
+
   }
 
   Future<void> _copyShareText(String text) async {
@@ -408,9 +408,8 @@ class _LegalToolsPageState extends State<LegalToolsPage> {
   }
 
   void _showSnack(String message) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(message)));
+    CustomToast.show(context, message);
+
   }
 
   void _showAccessSheet() {

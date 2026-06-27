@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/theme/app_colors.dart';
@@ -156,12 +157,8 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
                       notifyChannel: _channel,
                     );
                     Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('提醒偏好已儲存。'),
-                        backgroundColor: Color(0xFF2E7D32),
-                      ),
-                    );
+                    CustomToast.show(context, '提醒偏好已儲存。');
+
                   },
                   style: FilledButton.styleFrom(
                     backgroundColor: AppColors.primary,

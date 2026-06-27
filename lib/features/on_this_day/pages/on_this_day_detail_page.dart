@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/features/on_this_day/data/on_this_day_local_bookmarks.dart';
@@ -96,9 +97,8 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
         ),
       );
     } catch (__) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('相關案卷「$title」暫無細節資料')),
-      );
+      CustomToast.show(context, '相關案卷「$title」暫無細節資料');
+
     }
   }
 
@@ -106,11 +106,8 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
     final isSaved = await OnThisDayLocalBookmarks.toggle(_case.id);
     if (!mounted) return;
     setState(() => _isBookmarked = isSaved);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(isSaved ? '已加入本機收藏。' : '已從本機收藏移除。'),
-      ),
-    );
+    CustomToast.show(context, isSaved ? '已加入本機收藏。' : '已從本機收藏移除。');
+
   }
 
   @override
@@ -760,9 +757,8 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
                     color: OnThisDayColors.accentGold,
                   ),
                   onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('前往外部網頁：${reading.url}')),
-                    );
+                    CustomToast.show(context, '前往外部網頁：${reading.url}');
+
                   },
                 ),
               ),

@@ -1,3 +1,4 @@
+import 'package:preamble/components/shared/custom_toast.dart';
 part of '../../know_law_page.dart';
 
 /// 小法助 Prototype 入口與頁內流程狀態機。
@@ -126,9 +127,8 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
   void _openGlobalSearch() {
     final builder = widget.globalSearchBuilder;
     if (builder == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('全站搜尋入口尚未在此頁啟用。')),
-      );
+      CustomToast.show(context, '全站搜尋入口尚未在此頁啟用。');
+
       return;
     }
 
@@ -183,15 +183,8 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
 
     final appState = PreambleScope.of(context);
     if (conversation.isGuest && appState.isGuest) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('登入後可以在同一段對話中繼續追問並保存紀錄。'),
-          action: SnackBarAction(
-            label: '登入 Demo',
-            onPressed: appState.signInDemo,
-          ),
-        ),
-      );
+      CustomToast.show(context, '登入後可以在同一段對話中繼續追問並保存紀錄。');
+
       return;
     }
 
@@ -212,15 +205,13 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
         _page = _AssistantPrototypePage.answer;
         _isSendingFollowUp = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('已送出追問，小法助已更新整理結果。')),
-      );
+      CustomToast.show(context, '已送出追問，小法助已更新整理結果。');
+
     } catch (error) {
       if (!mounted) return;
       setState(() => _isSendingFollowUp = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('追問暫時無法送出：$error')),
-      );
+      CustomToast.show(context, '追問暫時無法送出：$error');
+
     }
   }
 
@@ -234,9 +225,8 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
     ].where((line) => line.trim().isNotEmpty).join('\n\n');
     await Clipboard.setData(ClipboardData(text: text));
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('已複製小法助整理結果。')),
-    );
+    CustomToast.show(context, '已複製小法助整理結果。');
+
   }
 
   void _saveConversation() {
@@ -271,16 +261,14 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
       _savedTabIndex = 0;
       _page = _AssistantPrototypePage.saved;
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(exists ? '這個項目已經在收藏 / 追蹤裡。' : message)),
-    );
+    CustomToast.show(context, exists ? '這個項目已經在收藏 / 追蹤裡。' : message);
+
   }
 
   void _removeSavedItem(_AssistantSavedItem item) {
     setState(() => _savedItems.removeWhere((saved) => saved.id == item.id));
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('已從收藏 / 追蹤移除。')),
-    );
+    CustomToast.show(context, '已從收藏 / 追蹤移除。');
+
   }
 
   void _openSavedItem(_AssistantSavedItem item) {
@@ -302,9 +290,8 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
       return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('已開啟「${item.title}」的本機收藏項目。')),
-    );
+    CustomToast.show(context, '已開啟「${item.title}」的本機收藏項目。');
+
   }
 
   Future<void> _submitPrompt() async {
@@ -313,9 +300,8 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
     final appState = PreambleScope.of(context);
 
     if (appState.isGuest && _hasGuestUsed) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('未登入使用者只能先問一次；登入後可以保存更多對話。')),
-      );
+      CustomToast.show(context, '未登入使用者只能先問一次；登入後可以保存更多對話。');
+
       return;
     }
 
@@ -342,9 +328,8 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
     } catch (error) {
       if (!mounted) return;
       setState(() => _isCreating = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('小法助暫時無法整理：$error')),
-      );
+      CustomToast.show(context, '小法助暫時無法整理：$error');
+
     }
   }
 
@@ -760,13 +745,10 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
           onTap: canFollowUp
               ? () => _sendFollowUp()
               : () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(_conversation == null
+                  CustomToast.show(context, _conversation == null
                           ? '請先完成一次提問，再繼續追問。'
-                          : '請先輸入追問內容。'),
-                    ),
-                  );
+                          : '請先輸入追問內容。');
+
                 },
           hint: '還有其他問題嗎？',
         ),
@@ -1218,9 +1200,8 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
       _conversation = null;
       _page = _AssistantPrototypePage.empty;
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('已在本機隱藏目前對話紀錄。')),
-    );
+    CustomToast.show(context, '已在本機隱藏目前對話紀錄。');
+
   }
 
   Future<void> _chooseIssueType() async {
@@ -1402,8 +1383,7 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
   }
 
   void _showVoiceSnack() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('語音輸入開發中；目前請先用文字描述問題。')),
-    );
+    CustomToast.show(context, '語音輸入開發中；目前請先用文字描述問題。');
+
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/data/learning/learning_game_state.dart';
@@ -63,13 +64,8 @@ class _NotebookCoverEditorPageState extends State<NotebookCoverEditorPage> {
   // 新增貼紙到封面中心 (相對百分比座標 0.5, 0.4)
   void _addStickerToCover(String id) {
     if (!_gameState.unlockedStickers.contains(id)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('🔒 此貼紙尚未解鎖！條件：${_stickersDb[id]?['desc']}'),
-          backgroundColor: Colors.red.shade800,
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      CustomToast.show(context, '🔒 此貼紙尚未解鎖！條件：${_stickersDb[id]?['desc']}');
+
       return;
     }
 
@@ -88,13 +84,8 @@ class _NotebookCoverEditorPageState extends State<NotebookCoverEditorPage> {
   void _saveDesign() {
     _gameState.saveNotebookCover(_selectedColorHex, _tempPlacedStickers);
     HapticFeedback.mediumImpact();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('💾 筆記本封面設計保存成功！'),
-        backgroundColor: HomeV2Palette.trustGreen,
-        duration: Duration(seconds: 2),
-      ),
-    );
+    CustomToast.show(context, '💾 筆記本封面設計保存成功！');
+
     Navigator.pop(context);
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/theme/app_colors.dart';
@@ -355,12 +356,8 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
                           accentColorIndex: _tempAccentIndex,
                         );
                         Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('介面自訂偏好已儲存！'),
-                            backgroundColor: Color(0xFF2E7D32),
-                          ),
-                        );
+                        CustomToast.show(context, '介面自訂偏好已儲存！');
+
                       },
                       style: FilledButton.styleFrom(
                         backgroundColor: AppColors.primary,
