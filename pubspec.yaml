@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+2
+version: 1.0.0+3
 
 environment:
   sdk: ^3.5.2
@@ -88,7 +88,6 @@ flutter:
     - assets/fonts/open_source/licenses/
 
   fonts:
-    # 台灣繁體中文教學註解：
     # Inter 用來承接英文與數字 UI；CJK 字型則放在 fallback，
     # 讓同一段文字混用 English / 繁中 / 簡中 / 日本語 時不會掉成系統預設字。
     - family: Inter
@@ -96,7 +95,6 @@ flutter:
         - asset: assets/fonts/open_source/InterVariable.ttf
         - asset: assets/fonts/open_source/InterVariable-Italic.ttf
           style: italic
-    # 台灣繁體中文教學註解：
     # Source Han Sans TW/CN/JP 是黑體系，適合 App 主要 UI、按鈕與一般內文。
     # 這裡使用 Subset Variable TTF，保留多字重能力，同時避免把完整 CJK 大包塞進 App。
     - family: SourceHanSansTW
@@ -108,7 +106,6 @@ flutter:
     - family: SourceHanSansJP
       fonts:
         - asset: assets/fonts/open_source/SourceHanSansJP-VF.ttf
-    # 台灣繁體中文教學註解：
     # Source Han Serif TW/CN/JP 是明體系，適合法律條文、案例節錄或需要書卷感的區塊。
     - family: SourceHanSerifTW
       fonts:

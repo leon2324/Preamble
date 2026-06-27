@@ -81,7 +81,10 @@ class IslandBottomNav extends StatelessWidget {
                       child: Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          onTap: () => onTap(index),
+                          onTap: () {
+                            HapticFeedback.lightImpact();
+                            onTap(index);
+                          },
                           splashFactory: NoSplash.splashFactory,
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent,
@@ -92,37 +95,42 @@ class IslandBottomNav extends StatelessWidget {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Container(
-                                  width: 50,
-                                  height: iconBoxHeight,
-                                  alignment: Alignment.center,
-                                  child: item.label == '小法助'
-                                      ? Opacity(
-                                          opacity: isSelected ? 1.0 : 0.6,
-                                          child: Container(
-                                            width: 25,
-                                            height: 25,
-                                            decoration: const BoxDecoration(
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: ClipOval(
-                                              child: Image.asset(
-                                                'assets/images/assistant/law_assistant_home.png',
-                                                fit: BoxFit.cover,
-                                                alignment: Alignment.topCenter,
+                                AnimatedScale(
+                                  scale: isSelected ? 1.08 : 0.93,
+                                  duration: const Duration(milliseconds: 250),
+                                  curve: Curves.easeOutBack,
+                                  child: Container(
+                                    width: 50,
+                                    height: iconBoxHeight,
+                                    alignment: Alignment.center,
+                                    child: item.label == '小法助'
+                                        ? Opacity(
+                                            opacity: isSelected ? 1.0 : 0.6,
+                                            child: Container(
+                                              width: 25,
+                                              height: 25,
+                                              decoration: const BoxDecoration(
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: ClipOval(
+                                                child: Image.asset(
+                                                  'assets/images/assistant/law_assistant_home.png',
+                                                  fit: BoxFit.cover,
+                                                  alignment: Alignment.topCenter,
+                                                ),
                                               ),
                                             ),
+                                          )
+                                        : Icon(
+                                            isSelected
+                                                ? item.selectedIcon
+                                                : item.icon,
+                                            size: 25,
+                                            color: isSelected
+                                                ? selectedColor
+                                                : unselectedColor,
                                           ),
-                                        )
-                                      : Icon(
-                                          isSelected
-                                              ? item.selectedIcon
-                                              : item.icon,
-                                          size: 25,
-                                          color: isSelected
-                                              ? selectedColor
-                                              : unselectedColor,
-                                        ),
+                                  ),
                                 ),
                                 if (showLabels) ...[
                                   const SizedBox(height: 5),
@@ -131,8 +139,8 @@ class IslandBottomNav extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize:
                                           11 + context.adaptiveBuffer(1.5),
-                                      fontWeight: FontWeight.w400,
-                                      color: selectedColor,
+                                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w400,
+                                      color: selectedColor.withValues(alpha: isSelected ? 1.0 : 0.7),
                                     ),
                                   ),
                                 ],

@@ -12,7 +12,7 @@ private enum PreambleQuickAskIntentStore {
 @available(iOS 16.0, *)
 struct PreambleQuickAskIntent: AppIntent {
   static var title: LocalizedStringResource = "快問小法助"
-  static var description = IntentDescription("用 Siri 或捷徑把生活法律問題直接交給 緒言 Preamble 小法助整理。")
+  static var description = IntentDescription("把生活中的法律問題快速交給緒言 Preamble 小法助整理。")
   static var openAppWhenRun = true
 
   @Parameter(

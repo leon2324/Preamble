@@ -8,6 +8,7 @@ import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:preamble/components/shared/law_app_story_action_bar.dart';
 import 'package:preamble/components/shared/share_sheet.dart';
 import 'package:preamble/theme/app_fonts.dart';
+import 'package:preamble/components/shared/liquid_glass_widgets.dart';
 import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
 import 'package:preamble/features/case_time_machine/data/case_time_machine_repository.dart';
 import 'package:preamble/features/case_time_machine/models/case_time_machine_models.dart';
@@ -30,37 +31,71 @@ part 'widgets/case_dossier_timeline_widgets.dart';
 part 'widgets/case_dossier_bottom_sheets.dart';
 
 class LightTextStyles {
-  static TextStyle displayTitle(BuildContext context) =>
-      CaseTimeMachineTextStyles.displayTitle(context)
-          .copyWith(color: CaseTimeMachineColors.primaryGreen);
+  static double multiplier = 1.0;
 
-  static TextStyle pageTitle(BuildContext context) =>
-      CaseTimeMachineTextStyles.pageTitle(context)
-          .copyWith(color: CaseTimeMachineColors.primaryGreen);
+  static TextStyle displayTitle(BuildContext context) {
+    final style = CaseTimeMachineTextStyles.displayTitle(context);
+    return style.copyWith(
+      color: CaseTimeMachineColors.primaryGreen,
+      fontSize: (style.fontSize ?? 24.sp) * multiplier,
+    );
+  }
 
-  static TextStyle sectionTitle(BuildContext context) =>
-      CaseTimeMachineTextStyles.sectionTitle(context)
-          .copyWith(color: CaseTimeMachineColors.primaryGreen);
+  static TextStyle pageTitle(BuildContext context) {
+    final style = CaseTimeMachineTextStyles.pageTitle(context);
+    return style.copyWith(
+      color: CaseTimeMachineColors.primaryGreen,
+      fontSize: (style.fontSize ?? 17.sp) * multiplier,
+    );
+  }
 
-  static TextStyle cardTitle(BuildContext context) =>
-      CaseTimeMachineTextStyles.cardTitle(context)
-          .copyWith(color: CaseTimeMachineColors.textPrimary);
+  static TextStyle sectionTitle(BuildContext context) {
+    final style = CaseTimeMachineTextStyles.sectionTitle(context);
+    return style.copyWith(
+      color: CaseTimeMachineColors.primaryGreen,
+      fontSize: (style.fontSize ?? 15.sp) * multiplier,
+    );
+  }
 
-  static TextStyle body(BuildContext context) =>
-      CaseTimeMachineTextStyles.body(context)
-          .copyWith(color: CaseTimeMachineColors.textPrimary);
+  static TextStyle cardTitle(BuildContext context) {
+    final style = CaseTimeMachineTextStyles.cardTitle(context);
+    return style.copyWith(
+      color: CaseTimeMachineColors.textPrimary,
+      fontSize: (style.fontSize ?? 13.sp) * multiplier,
+    );
+  }
 
-  static TextStyle bodySmall(BuildContext context) =>
-      CaseTimeMachineTextStyles.bodySmall(context)
-          .copyWith(color: CaseTimeMachineColors.textSecondary);
+  static TextStyle body(BuildContext context) {
+    final style = CaseTimeMachineTextStyles.body(context);
+    return style.copyWith(
+      color: CaseTimeMachineColors.textPrimary,
+      fontSize: (style.fontSize ?? 13.sp) * multiplier,
+    );
+  }
 
-  static TextStyle caption(BuildContext context) =>
-      CaseTimeMachineTextStyles.caption(context)
-          .copyWith(color: CaseTimeMachineColors.textMuted);
+  static TextStyle bodySmall(BuildContext context) {
+    final style = CaseTimeMachineTextStyles.bodySmall(context);
+    return style.copyWith(
+      color: CaseTimeMachineColors.textSecondary,
+      fontSize: (style.fontSize ?? 11.5.sp) * multiplier,
+    );
+  }
 
-  static TextStyle chipText(BuildContext context) =>
-      CaseTimeMachineTextStyles.chipText(context)
-          .copyWith(color: CaseTimeMachineColors.accentGold);
+  static TextStyle caption(BuildContext context) {
+    final style = CaseTimeMachineTextStyles.caption(context);
+    return style.copyWith(
+      color: CaseTimeMachineColors.textMuted,
+      fontSize: (style.fontSize ?? 10.sp) * multiplier,
+    );
+  }
+
+  static TextStyle chipText(BuildContext context) {
+    final style = CaseTimeMachineTextStyles.chipText(context);
+    return style.copyWith(
+      color: CaseTimeMachineColors.accentGold,
+      fontSize: (style.fontSize ?? 10.sp) * multiplier,
+    );
+  }
 }
 
 class CaseDossierDetailPage extends StatefulWidget {
@@ -85,6 +120,10 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
   bool _isSaved = false;
   bool _isFollowed = false;
   bool _isTimelineExpanded = false;
+
+  // Apple 閱讀偏好設定
+  double _fontSizeMultiplier = 1.0;
+  String _readingTint = 'none'; // 'none' (cream), 'cool' (blue), 'warm' (amber)
 
   late final PageController _galleryController;
   int _galleryIndex = 0;
@@ -401,8 +440,14 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
             ),
           ];
 
+    final backgroundColor = _readingTint == 'cool'
+        ? const Color(0xFFEBF3F9)
+        : _readingTint == 'warm'
+            ? const Color(0xFFF9F3E6)
+            : CaseTimeMachineColors.bgCream;
+
     return Scaffold(
-      backgroundColor: CaseTimeMachineColors.bgCream,
+      backgroundColor: backgroundColor,
       body: SafeArea(
         bottom: false,
         child: Column(
@@ -453,31 +498,46 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                         ),
                       ),
                     ),
-                    // 右側僅放置單一討論功能按鈕，將原有的聊天室圖示替換為音波圖示，並防切邊右移 12.w 對齊。
+                    // 右側：閱讀設定與討論按鈕
                     Positioned(
                       right: 0,
-                      child: IconButton(
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                        icon: CtmSvgIcon(
-                          CtmSvgIcons.waveform3,
-                          size: 22.w,
-                          color: CaseTimeMachineColors.primaryGreen,
-                        ),
-                        tooltip: '查看鄉民思辨討論',
-                        onPressed: () {
-                          // 點擊右側討論按鈕後，直接 Push 跳轉進入全新的「專屬聊天討論室（CaseNetizenChatRoomPage）」，
-                          // 並將數據引用傳入以進行多頁面間的資料即時同步。
-                          Navigator.of(context).push(
-                            CupertinoPageRoute<void>(
-                              builder: (_) => CaseNetizenChatRoomPage(
-                                book: widget.book,
-                                caseVotes: _caseVotes,
-                                netizenComments: _netizenComments,
-                              ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                            icon: const Icon(
+                              Icons.text_format_rounded,
+                              color: CaseTimeMachineColors.primaryGreen,
+                              size: 20,
                             ),
-                          );
-                        },
+                            tooltip: '調整閱讀字型與色溫',
+                            onPressed: () => _showReadingSettingsSheet(context),
+                          ),
+                          SizedBox(width: 10.w),
+                          IconButton(
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                            icon: CtmSvgIcon(
+                              CtmSvgIcons.waveform3,
+                              size: 22.w,
+                              color: CaseTimeMachineColors.primaryGreen,
+                            ),
+                            tooltip: '查看鄉民思辨討論',
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                CupertinoPageRoute<void>(
+                                  builder: (_) => CaseNetizenChatRoomPage(
+                                    book: widget.book,
+                                    caseVotes: _caseVotes,
+                                    netizenComments: _netizenComments,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -2489,6 +2549,193 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  void _showReadingSettingsSheet(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            final isDark = Theme.of(context).brightness == Brightness.dark;
+            final bg = isDark ? const Color(0xFF171C22) : const Color(0xFFFAF6F0);
+            final text = isDark ? const Color(0xFFFAF6F0) : const Color(0xFF234D3B);
+            
+            return Container(
+              decoration: BoxDecoration(
+                color: bg,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 48.w,
+                      height: 5.h,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[400],
+                        borderRadius: BorderRadius.circular(100.r),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+                  Text(
+                    " Apple 閱讀偏好設定",
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                      color: text,
+                    ),
+                  ),
+                  SizedBox(height: 18.h),
+                  
+                  // 色溫設定
+                  Text(
+                    "閱讀背景色溫",
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  Row(
+                    children: [
+                      _buildTintOption(
+                        label: "預設米白",
+                        value: "none",
+                        activeColor: const Color(0xFFFAF6F0),
+                        setSheetState: setSheetState,
+                      ),
+                      SizedBox(width: 8.w),
+                      _buildTintOption(
+                        label: "冷光護眼",
+                        value: "cool",
+                        activeColor: const Color(0xFFEBF3F9),
+                        setSheetState: setSheetState,
+                      ),
+                      SizedBox(width: 8.w),
+                      _buildTintOption(
+                        label: "暖陽紙質",
+                        value: "warm",
+                        activeColor: const Color(0xFFF9F3E6),
+                        setSheetState: setSheetState,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20.h),
+                  
+                  // 字型縮放
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "字型大小縮放",
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      Text(
+                        "${(_fontSizeMultiplier * 100).toInt()}%",
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.bold,
+                          color: text,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10.h),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.remove_circle_outline),
+                        onPressed: _fontSizeMultiplier <= 0.8
+                            ? null
+                            : () {
+                                HapticFeedback.selectionClick();
+                                setState(() {
+                                  _fontSizeMultiplier -= 0.05;
+                                  LightTextStyles.multiplier = _fontSizeMultiplier;
+                                });
+                                setSheetState(() {});
+                              },
+                      ),
+                      Expanded(
+                        child: Slider.adaptive(
+                          value: _fontSizeMultiplier,
+                          min: 0.8,
+                          max: 1.3,
+                          divisions: 10,
+                          onChanged: (val) {
+                            HapticFeedback.selectionClick();
+                            setState(() {
+                              _fontSizeMultiplier = val;
+                              LightTextStyles.multiplier = val;
+                            });
+                            setSheetState(() {});
+                          },
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.add_circle_outline),
+                        onPressed: _fontSizeMultiplier >= 1.3
+                            ? null
+                            : () {
+                                HapticFeedback.selectionClick();
+                                setState(() {
+                                  _fontSizeMultiplier += 0.05;
+                                  LightTextStyles.multiplier = _fontSizeMultiplier;
+                                });
+                                setSheetState(() {});
+                              },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildTintOption({
+    required String label,
+    required String value,
+    required Color activeColor,
+    required StateSetter setSheetState,
+  }) {
+    final isSelected = _readingTint == value;
+    return Expanded(
+      child: LiquidGlassButton(
+        padding: EdgeInsets.symmetric(vertical: 10.h),
+        buttonColor: isSelected ? const Color(0xFF1B5E4F) : Colors.grey[200],
+        onTap: () {
+          setState(() {
+            _readingTint = value;
+          });
+          setSheetState(() {});
+        },
+        child: Center(
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 11.sp,
+              fontWeight: FontWeight.bold,
+              color: isSelected ? Colors.white : Colors.black87,
+            ),
+          ),
         ),
       ),
     );

@@ -5,6 +5,7 @@ import 'package:preamble/theme/adaptive_layout.dart';
 import 'package:preamble/theme/app_colors.dart';
 import 'package:preamble/pages/profile/widgets/profile_widgets.dart';
 import 'package:preamble/pages/profile/widgets/profile_editor.dart';
+import 'package:preamble/pages/profile/apple_ecosystem_demo_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key, this.showBackButton = false});
@@ -128,8 +129,8 @@ class ProfilePage extends StatelessWidget {
                       EdgeInsets.symmetric(horizontal: 14.w, vertical: 5.h),
                   decoration: BoxDecoration(
                     color: appState.isSubscriber
-                        ? AppColors.accent.withValues(alpha: 0.12)
-                        : AppColors.primary.withValues(alpha: 0.06),
+                      ? AppColors.accent.withValues(alpha: 0.12)
+                      : AppColors.primary.withValues(alpha: 0.06),
                     borderRadius: BorderRadius.circular(100.r),
                     border: Border.all(
                       color: appState.isSubscriber
@@ -169,6 +170,16 @@ class ProfilePage extends StatelessWidget {
           GroupedSettingsList(
             title: '個人化與設定',
             tiles: [
+              SettingsTile(
+                icon: Icons.apple_rounded,
+                iconColor: const Color(0xFF0F1216),
+                title: ' Apple 生態系統與技術展示',
+                subtitle: '查看 Widgets, Siri 捷徑與 PencilKit 實作成果',
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AppleEcosystemDemoPage()),
+                ),
+              ),
               SettingsTile(
                 icon: Icons.dark_mode_rounded,
                 iconColor: Colors.purple,

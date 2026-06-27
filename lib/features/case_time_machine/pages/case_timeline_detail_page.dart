@@ -4,6 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:preamble/features/case_time_machine/models/case_time_machine_models.dart';
 import 'package:preamble/features/case_time_machine/theme/case_time_machine_theme.dart';
 import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/components/shared/liquid_glass_widgets.dart';
+import 'package:preamble/platform/calendar_sync_service.dart';
 
 // 「案件時間軸」互動詳情頁 (CaseTimelineDetailPage)
 // 本頁面為特定的案件提供高度細緻的垂直時間軌跡探索。
@@ -496,6 +498,118 @@ class _CaseTimelineDetailPageState extends State<CaseTimelineDetailPage> {
           ),
         ),
         SizedBox(height: 10.h),
+
+        // Apple 系統連動面板
+        Container(
+          margin: EdgeInsets.only(bottom: 12.h),
+          padding: EdgeInsets.all(10.w),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF1F8E9),
+            borderRadius: BorderRadius.circular(10.r),
+            border: Border.all(color: const Color(0xFFC8E6C9), width: 0.5.w),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.apple_rounded, color: Color(0xFF1B5E4F), size: 14),
+                  SizedBox(width: 4.w),
+                  Text(
+                    " Apple iOS 系統日程連動",
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF1B5E4F),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8.h),
+              Row(
+                children: [
+                  Expanded(
+                    child: LiquidGlassButton(
+                      padding: EdgeInsets.symmetric(vertical: 8.h),
+                      buttonColor: const Color(0xFF1B5E4F),
+                      opacity: 0.9,
+                      radius: 8,
+                      onTap: () {
+                        DateTime eventDate = DateTime.now();
+                        try {
+                          final parts = item.dateLabel.split('/');
+                          if (parts.length == 3) {
+                            eventDate = DateTime(
+                              int.parse(parts[0]),
+                              int.parse(parts[1]),
+                              int.parse(parts[2]),
+                              14, 0, // 預設下午兩點開庭
+                            );
+                          }
+                        } catch (_) {}
+                        
+                        CalendarSyncService.syncToCalendar(
+                          title: "【緒言】${widget.book.titleZh} - ${item.title}",
+                          dateTime: eventDate,
+                          location: "臺灣臺北地方法院民事第 12 法庭 (重慶南路一段126巷1號)",
+                          description: "案號：115年度勞訴字第99號\n訴訟程序里程碑：${item.title}\n裁判要旨概要：${item.description}",
+                        );
+                      },
+                      child: Center(
+                        child: Text(
+                          "📅 同步 iOS 行事曆",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 9.5.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: LiquidGlassButton(
+                      padding: EdgeInsets.symmetric(vertical: 8.h),
+                      buttonColor: const Color(0xFF2E7D32),
+                      opacity: 0.1,
+                      radius: 8,
+                      onTap: () {
+                        DateTime eventDate = DateTime.now();
+                        try {
+                          final parts = item.dateLabel.split('/');
+                          if (parts.length == 3) {
+                            eventDate = DateTime(
+                              int.parse(parts[0]),
+                              int.parse(parts[1]),
+                              int.parse(parts[2]),
+                              14, 0,
+                            );
+                          }
+                        } catch (_) {}
+
+                        CalendarSyncService.syncToReminders(
+                          taskName: "【備忘】準備 ${widget.book.titleZh} 相關訴訟材料",
+                          dueDate: eventDate.subtract(const Duration(days: 3)),
+                        );
+                      },
+                      child: Center(
+                        child: Text(
+                          "🔔 設定準備提醒",
+                          style: TextStyle(
+                            color: const Color(0xFF1B5E4F),
+                            fontSize: 9.5.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
 
         // 當時社群輿論反應
         Text(

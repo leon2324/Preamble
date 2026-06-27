@@ -14,6 +14,7 @@ import 'package:preamble/theme/app_colors.dart';
 import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
 import 'package:preamble/data/learning/supabase_life_tips_service.dart';
 import 'package:preamble/data/mock_data/home/legacy/home_mock_data_legacy.dart';
+import 'package:preamble/components/shared/liquid_glass_widgets.dart';
 
 String _imageForCategory(String category) {
   return switch (category) {
@@ -191,9 +192,20 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
     if (_isLoading) {
       return Scaffold(
         backgroundColor: isDark ? const Color(0xFF0F1216) : ProtoColors.lightBg,
-        body: const Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+        body: SafeArea(
+          child: ListView.builder(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+            itemCount: 4,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsets.only(bottom: 16.h),
+                child: LiquidGlassShimmer(
+                  width: double.infinity,
+                  height: 120.h,
+                  radius: 16,
+                ),
+              );
+            },
           ),
         ),
       );
@@ -2321,15 +2333,15 @@ class _RentTimelineGuideCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
+    return LiquidGlassCard(
+      blur: 10,
+      opacity: isDark ? 0.08 : 0.45,
+      radius: 16,
       padding: EdgeInsets.all(14.w),
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF181C23) : Colors.white,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: isDark ? const Color(0xFF2D333F) : const Color(0xFFE7DED0),
-          width: 1.w,
-        ),
+      glassColor: isDark ? const Color(0xFF1E2228) : Colors.white,
+      customBorder: Border.all(
+        color: isDark ? const Color(0xFF2D333F) : const Color(0xFFE8DFD1).withValues(alpha: 0.5),
+        width: 0.5.w,
       ),
       child: Row(
         children: [
@@ -2469,101 +2481,92 @@ class _LifeTipListCardState extends State<_LifeTipListCard> {
     final imageAsset = _imageForCategory(item.category);
     final issue = _issueHintForTip(item);
 
-    return Material(
-      color: Colors.transparent,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12.r),
-        child: Container(
-          decoration: BoxDecoration(
-            color: isDark
-                ? Color.alphaBlend(
-                    aes.primary.withValues(alpha: 0.03),
-                    const Color(0xFF1E2228),
-                  )
-                : Colors.white,
-            borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(
-              color: isDark ? const Color(0xFF2D333F) : const Color(0xFFE8DFD1),
-              width: 0.8.w,
-            ),
-          ),
-          child: InkWell(
-            onTap: widget.onTap,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // 左側資訊
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return LiquidGlassCard(
+      blur: 10,
+      opacity: isDark ? 0.08 : 0.45,
+      radius: 16,
+      padding: EdgeInsets.zero,
+      glassColor: isDark ? const Color(0xFF1E2228) : Colors.white,
+      customBorder: Border.all(
+        color: isDark ? const Color(0xFF2D333F) : const Color(0xFFE8DFD1).withValues(alpha: 0.5),
+        width: 0.5.w,
+      ),
+      child: InkWell(
+        onTap: widget.onTap,
+        borderRadius: BorderRadius.circular(16.r),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 左側資訊
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      item.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 13.5.sp,
+                        fontWeight: FontWeight.w900,
+                        color: isDark ? Colors.white : ProtoColors.charcoal,
+                        height: 1.35,
+                        letterSpacing: 0,
+                      ),
+                    ),
+                    SizedBox(height: 6.h),
+                    Text(
+                      issue,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 11.5.sp,
+                        height: 1.4,
+                        fontWeight: FontWeight.w700,
+                        color: isDark
+                            ? const Color(0xFF94A3B8)
+                            : AppColors.textSecondary,
+                      ),
+                    ),
+                    SizedBox(height: 10.h),
+                    Row(
                       children: [
-                        Text(
-                          item.title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 13.5.sp,
-                            fontWeight: FontWeight.w900,
-                            color: isDark ? Colors.white : ProtoColors.charcoal,
-                            height: 1.35,
-                            letterSpacing: 0,
-                          ),
-                        ),
-                        SizedBox(height: 6.h),
-                        Text(
-                          issue,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 11.5.sp,
-                            height: 1.4,
-                            fontWeight: FontWeight.w700,
-                            color: isDark
-                                ? const Color(0xFF94A3B8)
-                                : AppColors.textSecondary,
-                          ),
-                        ),
-                        SizedBox(height: 10.h),
-                        Row(
-                          children: [
-                            _StoryChip(
-                                label: item.category, color: aes.primary),
-                            SizedBox(width: 6.w),
-                            _StoryChip(
-                              label: _readTimeForTip(item),
-                              color: const Color(0xFF8A7B5C),
-                            ),
-                          ],
+                        _StoryChip(
+                            label: item.category, color: aes.primary),
+                        SizedBox(width: 6.w),
+                        _StoryChip(
+                          label: _readTimeForTip(item),
+                          color: const Color(0xFF8A7B5C),
                         ),
                       ],
                     ),
-                  ),
-                  SizedBox(width: 12.w),
-                  // 右側：縮圖 (由 category 顯示對應圖片，有剪裁)
-                  Container(
-                    width: 80.w,
-                    height: 80.w,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.r),
-                      border: Border.all(
-                        color: aes.primary.withValues(alpha: 0.2),
-                        width: 0.8.w,
-                      ),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8.r),
-                      child: Image.asset(
-                        imageAsset,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+              SizedBox(width: 12.w),
+              // 右側：縮圖 (由 category 顯示對應圖片，有剪裁)
+              Container(
+                width: 80.w,
+                height: 80.w,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.r),
+                  border: Border.all(
+                    color: aes.primary.withValues(alpha: 0.2),
+                    width: 0.8.w,
+                  ),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.r),
+                  child: Image.asset(
+                    imageAsset,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

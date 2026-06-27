@@ -5,6 +5,7 @@ import 'package:preamble/components/home/v2/home_v2_header.dart';
 import 'package:preamble/components/home/v2/home_v2_primitives.dart';
 import 'package:preamble/components/home/v2/home_v2_sections.dart';
 import 'package:preamble/components/home/v2/home_v2_bento_cards.dart';
+import 'package:preamble/components/shared/liquid_glass_widgets.dart';
 import 'package:preamble/data/mock_data/home/home_mock_data.dart';
 import 'package:preamble/data/mock_data/home/home_v2_mock_data.dart';
 import 'package:preamble/data/mock_data/home/legacy/home_mock_data_legacy.dart';
@@ -523,109 +524,107 @@ class _HomePageState extends State<HomePage> {
 
     return Stack(
       children: [
-        ColoredBox(
-          color: AppColors.background,
-          child: CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            slivers: [
-              SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding:
-                          EdgeInsets.fromLTRB(16.w, topContentPadding, 16.w, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          HomeV2HeroHeader(
-                            onProfileTap: _openQuickSettingsPanel,
-                            onNotificationTap: _showNotificationBubble,
-                            onTickerTap: _handleTickerTap,
+        const LiquidGlassBackground(),
+        CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding:
+                        EdgeInsets.fromLTRB(16.w, topContentPadding, 16.w, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        HomeV2HeroHeader(
+                          onProfileTap: _openQuickSettingsPanel,
+                          onNotificationTap: _showNotificationBubble,
+                          onTickerTap: _handleTickerTap,
+                        ),
+                        SizedBox(height: 14.h),
+                        HomeV2GreetingCard(onTap: _openFollowingUpdates),
+                        SizedBox(height: 16.h),
+                        const HomeV2QuickAskSection(),
+                        SizedBox(height: 18.h),
+                        const HomeV2WatchlistCard(),
+                        SizedBox(height: 18.h),
+                        SizedBox(
+                          // iPhone SE 寬度較窄，雙卡內容容易因字級換算被壓縮；
+                          // 這裡只加一點固定高度，不改 Prototype 的卡片比例與視覺語言。
+                          height: dailyDockHeight,
+                          child: Row(
+                            children: [
+                              const Expanded(
+                                  child: HomeV2DailyCaseStoryCard()),
+                              SizedBox(width: 12.w),
+                              const Expanded(child: HomeV2AchievementCard()),
+                            ],
                           ),
-                          SizedBox(height: 14.h),
-                          HomeV2GreetingCard(onTap: _openFollowingUpdates),
-                          SizedBox(height: 16.h),
-                          const HomeV2QuickAskSection(),
-                          SizedBox(height: 18.h),
-                          const HomeV2WatchlistCard(),
-                          SizedBox(height: 18.h),
-                          SizedBox(
-                            // iPhone SE 寬度較窄，雙卡內容容易因字級換算被壓縮；
-                            // 這裡只加一點固定高度，不改 Prototype 的卡片比例與視覺語言。
-                            height: dailyDockHeight,
-                            child: Row(
-                              children: [
-                                const Expanded(
-                                    child: HomeV2DailyCaseStoryCard()),
-                                SizedBox(width: 12.w),
-                                const Expanded(child: HomeV2AchievementCard()),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 18.h),
-                          // MAIC Demo 的主線是「快問 → 今日判決 → 法規搜尋」；
-                          // 因此法規資料庫放在工具捷徑前，之後接 Spotlight 深連結時也較自然。
-                          HomeV2LawDatabaseCard(
-                            onTap: _openStatuteDatabase,
-                          ),
-                          SizedBox(height: 18.h),
-                          HomeV2ToolsDrawer(
-                              onNavigateToTab: widget.onNavigateToTab),
-                          SizedBox(height: 20.h),
-                          HomeV2SectionHeader(
-                            title: '焦點議題對決',
-                            action: '進入思辨',
-                            onTap: () {
-                              final rentalCase =
-                                  caseTimeMachineCases.firstWhere(
-                                (c) =>
-                                    c.titleZh.contains('租屋') ||
-                                    c.shortTitleZh.contains('租'),
-                                orElse: () => caseTimeMachineCases.first,
-                              );
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (__) =>
-                                      CaseDossierDetailPage(book: rentalCase),
-                                ),
-                              );
-                            },
-                          ),
-                          SizedBox(height: 10.h),
-                          HomeV2TopicBentoGrid(
-                            onTopicTap: (__) => _openLearningTopics(),
-                          ),
-                          SizedBox(height: 18.h),
-                          HomeV2SectionHeader(
-                            title: '生活避坑筆記',
-                            action: '更多提醒',
-                            onTap: _openLifeLegalTips,
-                          ),
-                          SizedBox(height: 10.h),
-                          HomeV2NewsletterFocusCarousel(
-                            items: homeNewsletterItems,
-                            onItemTap: _openLifeLegalTip,
-                          ),
-                          SizedBox(height: 18.h),
-                          HomeV2SocialNewsSection(
-                            newsItems: homeNewsItems,
-                            discussionFeed: homeDiscussionFeed,
-                            onMoreNewsTap: () =>
-                                _openOfficialFeed(MojFeedCategory.news),
-                            onMoreDiscussionTap: () =>
-                                widget.onNavigateToTab(3),
-                          ),
-                          SizedBox(height: 132.h),
-                        ],
-                      ),
+                        ),
+                        SizedBox(height: 18.h),
+                        // MAIC Demo 的主線是「快問 → 今日判決 → 法規搜尋」；
+                        // 因此法規資料庫放在工具捷徑前，之後接 Spotlight 深連結時也較自然。
+                        HomeV2LawDatabaseCard(
+                          onTap: _openStatuteDatabase,
+                        ),
+                        SizedBox(height: 18.h),
+                        HomeV2ToolsDrawer(
+                            onNavigateToTab: widget.onNavigateToTab),
+                        SizedBox(height: 20.h),
+                        HomeV2SectionHeader(
+                          title: '焦點議題對決',
+                          action: '進入思辨',
+                          onTap: () {
+                            final rentalCase =
+                                caseTimeMachineCases.firstWhere(
+                              (c) =>
+                                  c.titleZh.contains('租屋') ||
+                                  c.shortTitleZh.contains('租'),
+                              orElse: () => caseTimeMachineCases.first,
+                            );
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (__) =>
+                                    CaseDossierDetailPage(book: rentalCase),
+                              ),
+                            );
+                          },
+                        ),
+                        SizedBox(height: 10.h),
+                        HomeV2TopicBentoGrid(
+                          onTopicTap: (__) => _openLearningTopics(),
+                        ),
+                        SizedBox(height: 18.h),
+                        HomeV2SectionHeader(
+                          title: '生活避坑筆記',
+                          action: '更多提醒',
+                          onTap: _openLifeLegalTips,
+                        ),
+                        SizedBox(height: 10.h),
+                        HomeV2NewsletterFocusCarousel(
+                          items: homeNewsletterItems,
+                          onItemTap: _openLifeLegalTip,
+                        ),
+                        SizedBox(height: 18.h),
+                        HomeV2SocialNewsSection(
+                          newsItems: homeNewsItems,
+                          discussionFeed: homeDiscussionFeed,
+                          onMoreNewsTap: () =>
+                              _openOfficialFeed(MojFeedCategory.news),
+                          onMoreDiscussionTap: () =>
+                              widget.onNavigateToTab(3),
+                        ),
+                        SizedBox(height: 132.h),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
         if (layout.hasLargeTopInset)
           Positioned(

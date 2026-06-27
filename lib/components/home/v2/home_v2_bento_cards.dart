@@ -8,6 +8,7 @@ import 'package:preamble/pages/following/following_page.dart';
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/features/case_time_machine/pages/case_dossier_detail_page.dart';
 import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
+import 'package:preamble/components/shared/liquid_glass_widgets.dart';
 
 /// 1. AI 法律即時快問與 Prompt 推薦標籤
 class HomeV2QuickAskSection extends StatefulWidget {
@@ -226,8 +227,6 @@ class HomeV2WatchlistCard extends StatelessWidget {
   const HomeV2WatchlistCard({super.key});
 
   void _openFollowingUpdates(BuildContext context) {
-    // 首頁「我的關注更新」要導向新版 FollowingPage 的「我的動態」，
-    // 不再推舊版關注更新頁，避免新舊追蹤頁狀態混用造成返回或渲染異常。
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (__) => const FollowingPage(initialTab: 'updates'),
@@ -238,8 +237,6 @@ class HomeV2WatchlistCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final cardBg = isDark ? const Color(0xFF171C22) : Colors.white;
-    final borderColor = isDark ? const Color(0xFF2B3441) : AppColors.border;
     final appState = PreambleScope.of(context);
 
     // 檢查是否有更新
@@ -247,20 +244,9 @@ class HomeV2WatchlistCard extends StatelessWidget {
         appState.followingSummary.followedStatuteIds.isNotEmpty ||
         appState.followingSummary.followedTopicIds.isNotEmpty;
 
-    return Container(
+    return LiquidGlassCard(
       padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: cardBg,
-        borderRadius: BorderRadius.circular(22.r),
-        border: Border.all(color: borderColor),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x06000000),
-            blurRadius: 18,
-            offset: Offset(0, 8),
-          ),
-        ],
-      ),
+      radius: 22,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -536,20 +522,9 @@ class HomeV2AchievementCard extends StatelessWidget {
     final cardBg = isDark ? const Color(0xFF171C22) : Colors.white;
     final borderColor = isDark ? const Color(0xFF2B3441) : AppColors.border;
 
-    return Container(
+    return LiquidGlassCard(
       padding: EdgeInsets.all(14.w),
-      decoration: BoxDecoration(
-        color: cardBg,
-        borderRadius: BorderRadius.circular(22.r),
-        border: Border.all(color: borderColor),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x06000000),
-            blurRadius: 18,
-            offset: Offset(0, 8),
-          ),
-        ],
-      ),
+      radius: 22,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -668,20 +643,9 @@ class HomeV2DailyCaseStoryCard extends StatelessWidget {
     final cardBg = isDark ? const Color(0xFF171C22) : Colors.white;
     final borderColor = isDark ? const Color(0xFF2B3441) : AppColors.border;
 
-    return Container(
+    return LiquidGlassCard(
       padding: EdgeInsets.all(14.w),
-      decoration: BoxDecoration(
-        color: cardBg,
-        borderRadius: BorderRadius.circular(22.r),
-        border: Border.all(color: borderColor),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x06000000),
-            blurRadius: 18,
-            offset: Offset(0, 8),
-          ),
-        ],
-      ),
+      radius: 22,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
