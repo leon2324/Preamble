@@ -23,6 +23,7 @@ import 'package:preamble/features/case_library/pages/case_witness_cross_page.dar
 import 'package:preamble/features/case_library/pages/case_social_graph_page.dart';
 import 'package:preamble/features/case_library/pages/case_opinion_board_page.dart';
 import 'package:preamble/pages/learning/know_law_page.dart';
+import 'package:preamble/features/case_library/pages/case_timeline_detail_page.dart';
 import 'package:preamble/app/app_state.dart';
 
 part 'widgets/case_dossier_tabs.dart';

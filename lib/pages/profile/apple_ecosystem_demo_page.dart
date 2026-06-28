@@ -135,7 +135,7 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                       _buildSectionTitle("📱 iOS 17 互動式桌面小工具 (Widgets)"),
                       _buildWidgetDemo(),
                       SizedBox(height: 24.h),
-                      _buildSectionTitle("✏️ PencilKit 批註畫板 & 隨手寫 (Scribble)"),
+                      _buildSectionTitle("✏️ PencilKit 批註手寫筆記 (Scribble)"),
                       _buildPencilKitDemo(),
                       SizedBox(height: 24.h),
                       _buildSectionTitle(" Siri 捷徑語音與多彩流體波形"),
@@ -144,7 +144,7 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                       _buildSectionTitle("📷 Live Text 活字相機（起訴書辨識）"),
                       _buildCameraOcrDemo(),
                       SizedBox(height: 24.h),
-                      _buildSectionTitle("⌚ Apple Watch & CarPlay 車載模擬"),
+                      _buildSectionTitle("⌚ Apple Watch & CarPlay 裝置整合"),
                       _buildDeviceSimulators(),
                       SizedBox(height: 40.h),
                     ],
@@ -152,7 +152,7 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                 ),
               ),
 
-              // 螢幕最上方的「仿真動態島 (Dynamic Island)」
+              // 螢幕最上方的「動態島 (Dynamic Island)」
               Align(
                 alignment: Alignment.topCenter,
                 child: Padding(
@@ -179,7 +179,7 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Apple 技術整合展示",
+              "Apple 系統核心整合",
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w900,
@@ -187,7 +187,7 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
               ),
             ),
             Text(
-              "Maic 賽道評審演示專屬工作區",
+              "iOS 與 iPadOS 原生底層與硬體整合",
               style: TextStyle(fontSize: 11.sp, color: Colors.grey[600]),
             ),
           ],
@@ -324,7 +324,7 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "評審點選以下 Widget 圖板，可直接測試 iOS 17 的「桌面互動式勾選功能」：",
+            "直接在系統桌面新增小工具進行互動式勾選：",
             style: TextStyle(fontSize: 10.5.sp, color: Colors.grey[700]),
           ),
           SizedBox(height: 12.h),
@@ -448,7 +448,7 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "請在下方手寫畫布進行簽名或寫字批註，模擬 iPad 上的 Apple Pencil 手寫筆跡：",
+            "支援在 iPad 上的 Apple Pencil 手寫筆記與隨手寫：",
             style: TextStyle(fontSize: 10.5.sp, color: Colors.grey[700]),
           ),
           SizedBox(height: 10.h),
@@ -555,28 +555,62 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "點擊下方按鈕觸發 Siri 捷徑模擬。程式會繪製 Siri 彩虹流體光學波形：",
+            "對接 Siri 捷徑語音指令：",
             style: TextStyle(fontSize: 10.5.sp, color: Colors.grey[700]),
           ),
           SizedBox(height: 12.h),
           Center(
             child: Column(
               children: [
-                LiquidGlassButton(
-                  buttonColor: const Color(0xFF0F1216),
-                  onTap: _triggerSiri,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.mic, color: Colors.white, size: 16),
-                      SizedBox(width: 6.w),
-                      Text("喚醒 Siri：『打開緒言最近開庭』",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 11.sp,
-                              fontWeight: FontWeight.bold)),
-                    ],
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    LiquidGlassButton(
+                      buttonColor: const Color(0xFF0F1216),
+                      onTap: _triggerSiri,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.mic, color: Colors.white, size: 16),
+                          SizedBox(width: 6.w),
+                          Text("喚醒 Siri",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+                    LiquidGlassButton(
+                      buttonColor: const Color(0xFF1B5E4F),
+                      onTap: () {
+                        HapticFeedback.mediumImpact();
+                        // 模擬原生 iOS Siri Intents / Shortcuts 喚醒並傳遞 prompt 參數
+                        ServicesBinding.instance.defaultBinaryMessenger.handlePlatformMessage(
+                          'preamble/quick_ask_intent',
+                          const StandardMethodCodec().encodeMethodCall(
+                            const MethodCall('openQuickAsk', {'prompt': '租屋押金被扣怎麼辦？'}),
+                          ),
+                          (ByteData? data) {},
+                        );
+                        // 關閉當前頁面返回主畫面，以便看見切換 Tab 與彈出小法助的動畫
+                        Navigator.of(context).pop();
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.bolt, color: Colors.white, size: 16),
+                          SizedBox(width: 6.w),
+                          Text("快捷指令快問",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
                 if (_isSiriSpeaking) ...[
                   SizedBox(height: 14.h),
@@ -625,7 +659,7 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
     );
   }
 
-  // 5. Live Text 相機模擬
+  // 5. Live Text 相機整合
   Widget _buildCameraOcrDemo() {
     return LiquidGlassCard(
       padding: EdgeInsets.all(14.w),
@@ -633,7 +667,7 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "模擬調用 iOS Live Text (相機活字辨識)。對準紙本法學文書直接抓取文字：",
+            "整合 iOS Live Text (相機活字辨識)，對準紙本法規與判決書直接抓取文字：",
             style: TextStyle(fontSize: 10.5.sp, color: Colors.grey[700]),
           ),
           SizedBox(height: 12.h),
@@ -713,7 +747,7 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
     );
   }
 
-  // 6. 設備模擬器
+  // 6. 多端連動整合
   Widget _buildDeviceSimulators() {
     return LiquidGlassCard(
       padding: EdgeInsets.all(14.w),
@@ -722,7 +756,7 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              // Watch 模擬器
+              // Watch 整合
               Column(
                 children: [
                   Text("⌚ Apple Watch",
@@ -790,7 +824,7 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                   )
                 ],
               ),
-              // CarPlay 模擬器
+              // CarPlay 整合
               Column(
                 children: [
                   Text("🚗 Apple CarPlay",

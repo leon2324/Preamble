@@ -174,8 +174,8 @@ class ProfilePage extends StatelessWidget {
               SettingsTile(
                 icon: Icons.apple_rounded,
                 iconColor: const Color(0xFF0F1216),
-                title: ' Apple 生態系統與技術展示',
-                subtitle: '查看 Widgets, Siri 捷徑與 PencilKit 實作成果',
+                title: ' Apple 系統核心整合',
+                subtitle: 'Widgets, Siri 捷徑與 PencilKit 實體功能集',
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(

@@ -652,9 +652,11 @@ private enum NativeShareBridge {
 
     return renderer.image { context in
       let rect = CGRect(origin: .zero, size: size)
+      // Background Morandi Warm Gray/Beige
       UIColor(red: 0.976, green: 0.957, blue: 0.925, alpha: 1).setFill()
       context.cgContext.fill(rect)
 
+      // Card body white background
       let cardRect = CGRect(x: 86, y: 120, width: 908, height: 1110)
       let cardPath = UIBezierPath(roundedRect: cardRect, cornerRadius: 42)
       UIColor.white.setFill()
@@ -664,33 +666,91 @@ private enum NativeShareBridge {
       cardPath.lineWidth = 3
       cardPath.stroke()
 
+      let ctx = context.cgContext
+
+      // 1. Draw Preamble Stylized Balance Scale Logo Mark (Vector CGPath)
+      let logoColor = UIColor(red: 0.106, green: 0.247, blue: 0.220, alpha: 1)
+      ctx.setStrokeColor(logoColor.cgColor)
+      ctx.setLineWidth(4.0)
+      ctx.setLineCap(.round)
+
+      // Stand column
+      ctx.move(to: CGPoint(x: 160, y: 180))
+      ctx.addLine(to: CGPoint(x: 160, y: 215))
+      // Base
+      ctx.move(to: CGPoint(x: 148, y: 215))
+      ctx.addLine(to: CGPoint(x: 172, y: 215))
+      // Main horizontal beam
+      ctx.move(to: CGPoint(x: 135, y: 190))
+      ctx.addLine(to: CGPoint(x: 185, y: 190))
+      // Left pan hanger strings
+      ctx.move(to: CGPoint(x: 135, y: 190))
+      ctx.addLine(to: CGPoint(x: 135, y: 205))
+      // Left pan
+      ctx.move(to: CGPoint(x: 125, y: 205))
+      ctx.addLine(to: CGPoint(x: 145, y: 205))
+      // Right pan hanger strings
+      ctx.move(to: CGPoint(x: 185, y: 190))
+      ctx.addLine(to: CGPoint(x: 185, y: 205))
+      // Right pan
+      ctx.move(to: CGPoint(x: 175, y: 205))
+      ctx.addLine(to: CGPoint(x: 195, y: 205))
+      ctx.strokePath()
+
+      // Header Preamble text branding
       drawText(
-        "生活避坑筆記",
-        in: CGRect(x: 140, y: 190, width: 800, height: 60),
-        font: UIFont.systemFont(ofSize: 34, weight: .heavy),
-        color: UIColor(red: 0.106, green: 0.247, blue: 0.220, alpha: 1)
+        "緒言 Preamble | 生活避坑指引",
+        in: CGRect(x: 215, y: 178, width: 700, height: 60),
+        font: UIFont.systemFont(ofSize: 32, weight: .heavy),
+        color: logoColor
       )
 
+      // Thin Top Divider line
+      ctx.move(to: CGPoint(x: 140, y: 245))
+      ctx.addLine(to: CGPoint(x: 940, y: 245))
+      ctx.setStrokeColor(UIColor(red: 0.925, green: 0.878, blue: 0.788, alpha: 1).cgColor)
+      ctx.setLineWidth(2.0)
+      ctx.strokePath()
+
+      // 2. Draw Tip Title (large bold)
       drawText(
         title,
-        in: CGRect(x: 140, y: 310, width: 800, height: 220),
+        in: CGRect(x: 140, y: 285, width: 800, height: 220),
         font: UIFont.systemFont(ofSize: 56, weight: .black),
-        color: UIColor(red: 0.067, green: 0.137, blue: 0.122, alpha: 1)
+        color: UIColor(red: 0.067, green: 0.137, blue: 0.122, alpha: 1),
+        lineSpacing: 10
       )
 
+      // 3. Draw Tip Summary (middle paragraph)
       drawText(
         summary,
-        in: CGRect(x: 140, y: 570, width: 800, height: 360),
+        in: CGRect(x: 140, y: 535, width: 800, height: 420),
         font: UIFont.systemFont(ofSize: 36, weight: .semibold),
         color: UIColor(red: 0.294, green: 0.333, blue: 0.392, alpha: 1),
-        lineSpacing: 12
+        lineSpacing: 14
+      )
+
+      // Thin Bottom Divider line
+      ctx.move(to: CGPoint(x: 140, y: 1010))
+      ctx.addLine(to: CGPoint(x: 940, y: 1010))
+      ctx.setStrokeColor(UIColor(red: 0.925, green: 0.878, blue: 0.788, alpha: 1).cgColor)
+      ctx.setLineWidth(2.0)
+      ctx.strokePath()
+
+      // 4. Draw Footer Branding & Source
+      drawText(
+        "蒔光未來 • 普惠法律智慧認知介面",
+        in: CGRect(x: 140, y: 1045, width: 500, height: 50),
+        font: UIFont.systemFont(ofSize: 26, weight: .bold),
+        color: UIColor(red: 0.36, green: 0.43, blue: 0.50, alpha: 1)
       )
 
       drawText(
         source,
-        in: CGRect(x: 140, y: 1068, width: 800, height: 80),
-        font: UIFont.systemFont(ofSize: 28, weight: .bold),
-        color: UIColor(red: 0.106, green: 0.247, blue: 0.220, alpha: 1)
+        in: CGRect(x: 640, y: 1045, width: 300, height: 50),
+        font: UIFont.systemFont(ofSize: 24, weight: .bold),
+        color: logoColor,
+        alignment: .right
       )
     }
   }
@@ -700,11 +760,13 @@ private enum NativeShareBridge {
     in rect: CGRect,
     font: UIFont,
     color: UIColor,
-    lineSpacing: CGFloat = 6
+    lineSpacing: CGFloat = 6,
+    alignment: NSTextAlignment = .left
   ) {
     let paragraph = NSMutableParagraphStyle()
     paragraph.lineSpacing = lineSpacing
     paragraph.lineBreakMode = .byTruncatingTail
+    paragraph.alignment = alignment
 
     let attributes: [NSAttributedString.Key: Any] = [
       .font: font,

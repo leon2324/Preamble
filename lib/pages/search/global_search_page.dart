@@ -129,6 +129,14 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
     // 原生 Siri / Shortcuts 入口只提供「問題文字」；這裡沿用既有小法助狀態機，
     // 讓外部入口、首頁快問、搜尋結果追問都走同一套 UI 與資料流程。
     _openAssistant(prompt);
+
+    // 💡 解決方案：當從系統級捷徑「快問法律」或 Siri 喚醒時，
+    // 直接為主導航自動彈起真實的多輪「小法助」AI 對話視窗，避免卡在 hardcoded 詐欺罪畫面。
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _continueWithAssistant();
+      }
+    });
   }
 
   // 模擬 AI 根據語氣與長度重新生成內容

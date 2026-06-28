@@ -318,33 +318,75 @@ extension _CaseDossierTimelineWidgets on _CaseDossierDetailPageState {
           }),
         ),
 
-        // Expand / Collapse Timeline button
+        // Expand / Collapse Timeline button & Interactive Timeline Page Entry
         if (sortedNodes.length > 3) ...[
           Center(
-            child: GestureDetector(
-              onTap: () {
-                _setTimelineExpanded(!_isTimelineExpanded);
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    _isTimelineExpanded ? '收合時間軸' : '查看更多時間軸',
-                    style: TextStyle(
-                      fontSize: 11.5.sp,
-                      color: CaseLibraryColors.accentGold,
-                      fontWeight: FontWeight.w800,
-                    ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    _setTimelineExpanded(!_isTimelineExpanded);
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        _isTimelineExpanded ? '收合時間軸' : '展開時間軸',
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          color: CaseLibraryColors.accentGold,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      SizedBox(width: 4.w),
+                      CaseLibrarySvgIcon(
+                        _isTimelineExpanded
+                            ? CaseLibrarySvgIcons.chevronUp
+                            : CaseLibrarySvgIcons.chevronDown,
+                        size: 13.sp,
+                        color: CaseLibraryColors.accentGold,
+                      ),
+                    ],
                   ),
-                  CaseLibrarySvgIcon(
-                    _isTimelineExpanded
-                        ? CaseLibrarySvgIcons.chevronUp
-                        : CaseLibrarySvgIcons.chevronRight,
-                    size: 16.sp,
-                    color: CaseLibraryColors.accentGold,
+                ),
+                SizedBox(width: 16.w),
+                Container(
+                  width: 1.w,
+                  height: 12.h,
+                  color: Colors.grey.withValues(alpha: 0.3),
+                ),
+                SizedBox(width: 16.w),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CaseTimelineDetailPage(book: book),
+                      ),
+                    );
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '互動脈絡年表 (行事曆同步)',
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          color: CaseLibraryColors.primaryGreen,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      SizedBox(width: 4.w),
+                      Icon(
+                        Icons.open_in_new_rounded,
+                        size: 13.sp,
+                        color: CaseLibraryColors.primaryGreen,
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           SizedBox(height: 24.h),
@@ -453,33 +495,75 @@ extension _CaseDossierTimelineWidgets on _CaseDossierDetailPageState {
           }),
         ),
 
-        // Expand / Collapse Timeline button
+        // Expand / Collapse Timeline button & Interactive Timeline Page Entry
         if (timelineNodes.length > 3) ...[
           Center(
-            child: GestureDetector(
-              onTap: () {
-                _setTimelineExpanded(!_isTimelineExpanded);
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    _isTimelineExpanded ? '收合時間軸' : '查看更多時間軸',
-                    style: TextStyle(
-                      fontSize: 11.5.sp,
-                      color: CaseLibraryColors.accentGold,
-                      fontWeight: FontWeight.w800,
-                    ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    _setTimelineExpanded(!_isTimelineExpanded);
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        _isTimelineExpanded ? '收合時間軸' : '展開時間軸',
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          color: CaseLibraryColors.accentGold,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      SizedBox(width: 4.w),
+                      CaseLibrarySvgIcon(
+                        _isTimelineExpanded
+                            ? CaseLibrarySvgIcons.chevronUp
+                            : CaseLibrarySvgIcons.chevronDown,
+                        size: 13.sp,
+                        color: CaseLibraryColors.accentGold,
+                      ),
+                    ],
                   ),
-                  CaseLibrarySvgIcon(
-                    _isTimelineExpanded
-                        ? CaseLibrarySvgIcons.chevronUp
-                        : CaseLibrarySvgIcons.chevronRight,
-                    size: 16.sp,
-                    color: CaseLibraryColors.accentGold,
+                ),
+                SizedBox(width: 16.w),
+                Container(
+                  width: 1.w,
+                  height: 12.h,
+                  color: Colors.grey.withValues(alpha: 0.3),
+                ),
+                SizedBox(width: 16.w),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CaseTimelineDetailPage(book: book),
+                      ),
+                    );
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '互動脈絡年表 (行事曆同步)',
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          color: CaseLibraryColors.primaryGreen,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      SizedBox(width: 4.w),
+                      Icon(
+                        Icons.open_in_new_rounded,
+                        size: 13.sp,
+                        color: CaseLibraryColors.primaryGreen,
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           SizedBox(height: 24.h),
