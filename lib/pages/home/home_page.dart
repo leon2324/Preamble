@@ -22,8 +22,6 @@ import 'package:preamble/theme/app_colors.dart';
 import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
 import 'package:preamble/features/case_library/data/case_library_data.dart';
 import 'package:preamble/features/case_library/data/case_library_repository.dart';
-import 'package:preamble/data/journal/discussion_feed_service.dart';
-
 /// 新版首頁。
 ///
 /// 這個版本承接先前 prototype 的方向，已拆成多個 v2 元件檔案，
@@ -45,24 +43,20 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    DiscussionFeedService.instance.addListener(_onFeedChanged);
-    // 啟動每 60 分鐘自動刷新（含 App lifecycle 偵測）
-    DiscussionFeedService.instance.startAutoRefresh();
+    // 參賽版本改用穩定的靜態時事話題，因此不調用自動更新機制，保留在架構中不調用
+    // DiscussionFeedService.instance.startAutoRefresh();
   }
 
   @override
   void dispose() {
-    DiscussionFeedService.instance.removeListener(_onFeedChanged);
-    // 注意：stopAutoRefresh 只在 App 整體銷毀時才呼叫；
-    // HomePage 重建時不停定時器，避免切換 Tab 後停掉排程。
     super.dispose();
   }
 
-  void _onFeedChanged() {
-    if (mounted) {
-      setState(() {});
-    }
-  }
+  // void _onFeedChanged() {
+  //   if (mounted) {
+  //     setState(() {});
+  //   }
+  // }
 
   void _openStatuteDatabase() {
     Navigator.of(context).push(

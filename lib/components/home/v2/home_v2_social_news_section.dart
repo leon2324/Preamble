@@ -172,11 +172,6 @@ class _HomeV2DiscussionPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final service = DiscussionFeedService.instance;
-    if (service.hasError || (!service.isLoaded && feed.topics.isEmpty)) {
-      return const _HomeV2DiscussionOffline();
-    }
-
     final topics = feed.topics.take(3).toList(growable: false);
     if (topics.isEmpty) {
       return _HomeV2DiscussionEmpty(onMoreTap: onMoreTap);

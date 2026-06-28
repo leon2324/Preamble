@@ -1070,18 +1070,21 @@ class _InteractivePollQuizCardState extends State<InteractivePollQuizCard> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              opt.label,
-                              style: TextStyle(
-                                fontSize: 13.sp,
-                                fontWeight: isSelected
-                                    ? FontWeight.w900
-                                    : FontWeight.bold,
-                                color: isSelected
-                                    ? widget.tint
-                                    : widget.palette.primaryText,
+                            Expanded(
+                              child: Text(
+                                opt.label,
+                                style: TextStyle(
+                                  fontSize: 13.sp,
+                                  fontWeight: isSelected
+                                      ? FontWeight.w900
+                                      : FontWeight.bold,
+                                  color: isSelected
+                                      ? widget.tint
+                                      : widget.palette.primaryText,
+                                ),
                               ),
                             ),
+                            SizedBox(width: 12.w),
                             Text(
                               '${(percent * 100).toStringAsFixed(1)}% ($adjustedVotes 票)',
                               style: TextStyle(
@@ -1400,8 +1403,12 @@ class RelatedCasesCarousel extends StatelessWidget {
     final cases = _getRelatedCaseBooks();
     if (cases.isEmpty) return const SizedBox.shrink();
 
+    final baseHeight = 140.h < 140 ? 140.0 : 140.h;
+    final adaptiveHeight =
+        MediaQuery.textScalerOf(context).scale(baseHeight) + 12.h;
+
     return SizedBox(
-      height: 140.h,
+      height: adaptiveHeight,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: cases.length,

@@ -10,7 +10,6 @@ import 'package:preamble/components/shared/share_sheet.dart';
 import 'package:preamble/theme/app_fonts.dart';
 import 'package:preamble/components/shared/liquid_glass_widgets.dart';
 import 'package:preamble/features/case_library/data/case_library_data.dart';
-import 'package:preamble/features/case_library/data/case_library_image_resolver.dart';
 import 'package:preamble/features/case_library/data/case_library_repository.dart';
 import 'package:preamble/features/case_library/models/case_library_models.dart';
 import 'package:preamble/features/case_library/theme/case_library_theme.dart';
@@ -494,7 +493,9 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
     }
 
     final book = _detailedBook ?? widget.book;
-    final displayImages = resolveCaseLibraryImages(book);
+    final displayImages = book.images.isNotEmpty
+        ? book.images
+        : _getDefaultImagesForCase(book);
 
     final backgroundColor = _readingTint == 'cool'
         ? const Color(0xFFEBF3F9)

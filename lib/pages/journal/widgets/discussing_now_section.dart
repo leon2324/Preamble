@@ -11,154 +11,33 @@ import 'package:preamble/pages/journal/widgets/journal_palette.dart';
 import 'package:preamble/pages/journal/widgets/journal_section_header.dart';
 import 'package:preamble/pages/journal/widgets/discussion_detail_page.dart';
 
-import 'package:preamble/data/journal/discussion_feed_service.dart';
 
-class DiscussingNowSection extends StatefulWidget {
+class DiscussingNowSection extends StatelessWidget {
   const DiscussingNowSection({super.key, required this.palette});
 
   final JournalPalette palette;
 
   @override
-  State<DiscussingNowSection> createState() => _DiscussingNowSectionState();
-}
-
-class _DiscussingNowSectionState extends State<DiscussingNowSection> {
-  @override
-  void initState() {
-    super.initState();
-    DiscussionFeedService.instance.addListener(_onFeedChanged);
-  }
-
-  @override
-  void dispose() {
-    DiscussionFeedService.instance.removeListener(_onFeedChanged);
-    super.dispose();
-  }
-
-  void _onFeedChanged() {
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final service = DiscussionFeedService.instance;
-    final topics = service.currentFeed.topics;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         JournalSectionHeader(
           title: '大家都在討論',
           subtitle: '先看排行榜，再從底部展開單一議題的熱度摘要。',
-          palette: widget.palette,
+          palette: palette,
         ),
         SizedBox(height: 10.h),
-        if (service.hasError || (!service.isLoaded && topics.isEmpty)) ...[
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: 40.h, horizontal: 16.w),
-            decoration: BoxDecoration(
-              color: widget.palette.surface,
-              borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(color: widget.palette.border),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.wifi_off_rounded,
-                  color: widget.palette.secondaryText.withValues(alpha: 0.5),
-                  size: 40.sp,
-                ),
-                SizedBox(height: 12.h),
-                Text(
-                  '沒有連線QQ，請連線後再試用一次',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.bold,
-                    color: widget.palette.secondaryText,
-                  ),
-                ),
-                SizedBox(height: 16.h),
-                OutlinedButton.icon(
-                  onPressed: () {
-                    service.refreshFeed();
-                  },
-                  icon: Icon(Icons.refresh_rounded, size: 14.sp),
-                  label: const Text('重新嘗試連線'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: const Color(0xFF1E7B66),
-                    side: const BorderSide(color: Color(0xFF1E7B66)),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ] else if (topics.isEmpty) ...[
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: 40.h, horizontal: 16.w),
-            decoration: BoxDecoration(
-              color: widget.palette.surface,
-              borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(color: widget.palette.border),
-            ),
-            child: Center(
-              child: SizedBox(
-                width: 24.w,
-                height: 24.w,
-                child: const CircularProgressIndicator(
-                  strokeWidth: 2.5,
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF1E7B66)),
+        ...discussionTrendItems.take(5).map(
+              (item) => Padding(
+                padding: EdgeInsets.only(bottom: 8.h),
+                child: _DiscussionTrendCard(
+                  item: item,
+                  palette: palette,
+                  isPrimary: item.rank == 1,
                 ),
               ),
             ),
-          ),
-        ] else ...[
-          ...topics.take(5).map(
-                (item) => Padding(
-                  padding: EdgeInsets.only(bottom: 8.h),
-                  child: _DiscussionTrendCard(
-                    item: DiscussionTrendItem(
-                      rank: item.rank,
-                      title: item.title,
-                      score: item.heatScore.toDouble(),
-                      delta: '24h +${item.dayChangePercent}%',
-                      whyHot: item.overview,
-                      relatedCases: item.tags,
-                      heatCurve: item.trendPoints.map((pt) {
-                        final match = RegExp(r'\d+').firstMatch(pt.volumeLabel);
-                        return match != null
-                            ? double.tryParse(match.group(0)!) ?? 50.0
-                            : 50.0;
-                      }).toList(),
-                      heatLabels:
-                          item.trendPoints.map((pt) => pt.dateLabel).toList(),
-                      fullTopicIndex: item.rank - 1,
-                      tint: item.rank == 1
-                          ? const Color(0xFF1E7B66)
-                          : item.rank == 2
-                              ? const Color(0xFF2F6D99)
-                              : item.rank == 3
-                                  ? const Color(0xFF9F6A26)
-                                  : item.rank == 4
-                                      ? const Color(0xFF7A5D9A)
-                                      : const Color(0xFF355668),
-                    ),
-                    palette: widget.palette,
-                    isPrimary: item.rank == 1,
-                  ),
-                ),
-              ),
-        ],
       ],
     );
   }

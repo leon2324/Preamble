@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/features/case_library/data/case_library_data.dart';
-import 'package:preamble/features/case_library/data/case_library_image_resolver.dart';
 import 'package:preamble/features/case_library/models/case_library_models.dart';
 import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
 import 'package:preamble/features/case_library/pages/case_library_hall_page.dart';
@@ -1023,16 +1022,7 @@ class _ThreeDStackedCarouselState extends State<_ThreeDStackedCarousel> {
     super.dispose();
   }
 
-  String _getCardCoverUrl(String category, String id) {
-    // 案件卡片封面與詳情頁 gallery 共用同一套圖片解析器；
-    // 維護時請優先在 resolver 補官方或授權清楚圖片，不要直接塞搜尋引擎縮圖。
-    final book = caseLibraryCaseById(id);
-    final cover = resolveCaseLibraryCoverImage(book);
-    if (cover != null && cover.url.isNotEmpty) {
-      return cover.url;
-    }
-
-    // Fallback：依類別使用情境示意圖（一般民刑案件適用）。
+  String _getUnsplashImageUrl(String category, String id) {
     const images = {
       '車禍賠償':
           'https://images.unsplash.com/photo-1518364538800-6bcb3f25da49?q=80&w=400&auto=format&fit=crop',
@@ -1051,6 +1041,13 @@ class _ThreeDStackedCarouselState extends State<_ThreeDStackedCarousel> {
       '傷害':
           'https://images.unsplash.com/photo-1505664194779-8beaceb93744?q=80&w=400&auto=format&fit=crop',
     };
+
+    if (id == '318') {
+      return 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=400&auto=format&fit=crop';
+    }
+    if (id == '799') {
+      return 'https://images.unsplash.com/photo-1450133064473-71024230f91b?q=80&w=400&auto=format&fit=crop';
+    }
 
     return images[category] ??
         'https://images.unsplash.com/photo-1447069387593-a5de0862481e?q=80&w=400&auto=format&fit=crop';
@@ -1093,7 +1090,7 @@ class _ThreeDStackedCarouselState extends State<_ThreeDStackedCarousel> {
         book.id == '103' ||
         book.id == '101';
     final accentColor = _getCategoryColor(book.category);
-    final bgImageUrl = _getCardCoverUrl(book.category, book.id);
+    final bgImageUrl = _getUnsplashImageUrl(book.category, book.id);
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: 6.h, horizontal: 4.w),
