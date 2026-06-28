@@ -1,4 +1,3 @@
-
 part of '../following_page.dart';
 
 // 這個 part 檔只收納 Following Page 的各個頁面 view 組裝。
@@ -861,7 +860,6 @@ class _SettingsView extends StatelessWidget {
           value: '32.4 MB',
           onTap: () {
             CustomToast.show(context, '本機暫存狀態已重新整理。');
-
           },
         ),
         _SettingRow(

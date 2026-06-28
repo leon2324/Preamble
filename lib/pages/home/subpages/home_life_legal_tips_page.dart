@@ -11,16 +11,22 @@ import 'package:preamble/pages/home/subpages/home_subpage_primitives.dart';
 import 'package:preamble/pages/learning/know_law_page.dart';
 import 'package:preamble/platform/native_share_bridge.dart';
 import 'package:preamble/theme/app_colors.dart';
-import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
 import 'package:preamble/data/learning/supabase_life_tips_service.dart';
 import 'package:preamble/data/mock_data/home/legacy/home_mock_data_legacy.dart';
 import 'package:preamble/components/shared/liquid_glass_widgets.dart';
 
 String _imageForCategory(String category) {
   return switch (category) {
-    '養狗' || '寵物' || '寵物飼育' => 'assets/images/learning/levels/level_02_article_reader.png',
+    '養狗' ||
+    '寵物' ||
+    '寵物飼育' =>
+      'assets/images/learning/levels/level_02_article_reader.png',
     '租屋' => 'assets/images/learning/rent_course_room.png',
-    '拍照隱私' || '個資' || '個資隱私' => 'assets/images/learning/privacy_course_room.png',
+    '拍照隱私' ||
+    '個資' ||
+    '個資隱私' =>
+      'assets/images/learning/privacy_course_room.png',
     '網購' || '網購消費' => 'assets/images/learning/consumer_course_room.png',
     '交通' => 'assets/images/learning/car_course_room.png',
     _ => 'assets/images/learning/levels/level_01_legal_beginner.png',
@@ -258,8 +264,14 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
               delegate: SliverChildListDelegate(
                 [
                   _LifeTipFeaturedCard(
-                    item: _allTips.isNotEmpty ? _allTips.first : homeNewsletterItems.first,
-                    onTap: () => _openTip(context, _allTips.isNotEmpty ? _allTips.first : homeNewsletterItems.first),
+                    item: _allTips.isNotEmpty
+                        ? _allTips.first
+                        : homeNewsletterItems.first,
+                    onTap: () => _openTip(
+                        context,
+                        _allTips.isNotEmpty
+                            ? _allTips.first
+                            : homeNewsletterItems.first),
                   ),
                   if (_selectedCategory == '租屋') ...[
                     SizedBox(height: 18.h),
@@ -747,7 +759,8 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
     ShareSheet.show(
       context,
       title: title,
-      url: 'https://preamble.vernalcollective.com/tips/${Uri.encodeComponent(title)}',
+      url:
+          'https://preamble.vernalcollective.com/tips/${Uri.encodeComponent(title)}',
     );
   }
 
@@ -1003,8 +1016,8 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
                   borderRadius: BorderRadius.circular(10.r),
                 ),
                 child: Center(
-                  child: CtmSvgIcon(
-                    CtmSvgIcons.sprout,
+                  child: CaseLibrarySvgIcon(
+                    CaseLibrarySvgIcons.sprout,
                     color: aes.primary,
                     size: 18.sp,
                   ),
@@ -1046,7 +1059,9 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
           Row(
             children: [
               _LifeTipInteractionMetric(
-                svgPath: _isLiked ? CtmSvgIcons.heartFilled : CtmSvgIcons.heart,
+                svgPath: _isLiked
+                    ? CaseLibrarySvgIcons.heartFilled
+                    : CaseLibrarySvgIcons.heart,
                 color: const Color(0xFFC9877B),
                 label: _metricText(widget.item.likes, _isLiked ? 1 : 0),
                 onTap: _toggleLike,
@@ -1058,13 +1073,13 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
                 onTap: _shareFromInteraction,
               ),
               _LifeTipInteractionMetric(
-                svgPath: CtmSvgIcons.message,
+                svgPath: CaseLibrarySvgIcons.message,
                 color: const Color(0xFF426E9F),
                 label: _metricText(widget.item.comments, _commentCountDelta),
                 onTap: _showCommentsBottomSheet,
               ),
               _LifeTipInteractionMetric(
-                svgPath: CtmSvgIcons.bookmark,
+                svgPath: CaseLibrarySvgIcons.bookmark,
                 color:
                     _isBookmarked ? ProtoColors.deepGreen : AppColors.textMuted,
                 label: _isBookmarked ? '已儲存' : '儲存',
@@ -1096,7 +1111,7 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
           children: [
             Row(
               children: [
-                CtmSvgIcon(CtmSvgIcons.question,
+                CaseLibrarySvgIcon(CaseLibrarySvgIcons.question,
                     color: aes.primary, size: 18.sp),
                 SizedBox(width: 8.w),
                 Text(
@@ -1161,7 +1176,7 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
           children: [
             Row(
               children: [
-                CtmSvgIcon(CtmSvgIcons.idea,
+                CaseLibrarySvgIcon(CaseLibrarySvgIcons.idea,
                     color: const Color(0xFFC9877B), size: 18.sp),
                 SizedBox(width: 8.w),
                 Text(
@@ -1236,7 +1251,7 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
                 children: [
                   Row(
                     children: [
-                      CtmSvgIcon(CtmSvgIcons.filePen,
+                      CaseLibrarySvgIcon(CaseLibrarySvgIcons.filePen,
                           color: ProtoColors.deepGreen, size: 18.sp),
                       SizedBox(width: 8.w),
                       Text(
@@ -1374,7 +1389,7 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
             children: [
               Row(
                 children: [
-                  CtmSvgIcon(CtmSvgIcons.gavel,
+                  CaseLibrarySvgIcon(CaseLibrarySvgIcons.gavel,
                       color: const Color(0xFF8A7B5C), size: 18.sp),
                   SizedBox(width: 8.w),
                   Text(
@@ -1619,8 +1634,8 @@ class _LifeTrapFrozenHeaderDelegate extends SliverPersistentHeaderDelegate {
   double get minExtent => maxExtent;
 
   @override
-  double get maxExtent => (topPadding + (isSearchOpen ? 226.h : 148.h)).roundToDouble();
-
+  double get maxExtent =>
+      (topPadding + (isSearchOpen ? 226.h : 148.h)).roundToDouble();
 
   @override
   Widget build(
@@ -2114,7 +2129,7 @@ class _LifeTipInteractionMetric extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CtmSvgIcon(svgPath, color: color, size: 18.sp),
+                CaseLibrarySvgIcon(svgPath, color: color, size: 18.sp),
                 SizedBox(width: 5.w),
                 Flexible(
                   child: Text(
@@ -2340,7 +2355,9 @@ class _RentTimelineGuideCard extends StatelessWidget {
       padding: EdgeInsets.all(14.w),
       glassColor: isDark ? const Color(0xFF1E2228) : Colors.white,
       customBorder: Border.all(
-        color: isDark ? const Color(0xFF2D333F) : const Color(0xFFE8DFD1).withValues(alpha: 0.5),
+        color: isDark
+            ? const Color(0xFF2D333F)
+            : const Color(0xFFE8DFD1).withValues(alpha: 0.5),
         width: 0.5.w,
       ),
       child: Row(
@@ -2488,7 +2505,9 @@ class _LifeTipListCardState extends State<_LifeTipListCard> {
       padding: EdgeInsets.zero,
       glassColor: isDark ? const Color(0xFF1E2228) : Colors.white,
       customBorder: Border.all(
-        color: isDark ? const Color(0xFF2D333F) : const Color(0xFFE8DFD1).withValues(alpha: 0.5),
+        color: isDark
+            ? const Color(0xFF2D333F)
+            : const Color(0xFFE8DFD1).withValues(alpha: 0.5),
         width: 0.5.w,
       ),
       child: InkWell(
@@ -2534,8 +2553,7 @@ class _LifeTipListCardState extends State<_LifeTipListCard> {
                     SizedBox(height: 10.h),
                     Row(
                       children: [
-                        _StoryChip(
-                            label: item.category, color: aes.primary),
+                        _StoryChip(label: item.category, color: aes.primary),
                         SizedBox(width: 6.w),
                         _StoryChip(
                           label: _readTimeForTip(item),

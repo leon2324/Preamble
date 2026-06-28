@@ -19,8 +19,10 @@ import 'package:preamble/pages/following/following_page.dart';
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/theme/adaptive_layout.dart';
 import 'package:preamble/theme/app_colors.dart';
-import 'package:preamble/features/case_time_machine/pages/case_dossier_detail_page.dart';
-import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
+import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
+import 'package:preamble/features/case_library/data/case_library_data.dart';
+import 'package:preamble/features/case_library/data/case_library_repository.dart';
+import 'package:preamble/data/journal/discussion_feed_service.dart';
 
 /// 新版首頁。
 ///
@@ -40,6 +42,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    DiscussionFeedService.instance.addListener(_onFeedChanged);
+    // 啟動每 60 分鐘自動刷新（含 App lifecycle 偵測）
+    DiscussionFeedService.instance.startAutoRefresh();
+  }
+
+  @override
+  void dispose() {
+    DiscussionFeedService.instance.removeListener(_onFeedChanged);
+    // 注意：stopAutoRefresh 只在 App 整體銷毀時才呼叫；
+    // HomePage 重建時不停定時器，避免切換 Tab 後停掉排程。
+    super.dispose();
+  }
+
+  void _onFeedChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   void _openStatuteDatabase() {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (__) => const StatuteDatabasePage()),
@@ -557,8 +581,7 @@ class _HomePageState extends State<HomePage> {
                           height: dailyDockHeight,
                           child: Row(
                             children: [
-                              const Expanded(
-                                  child: HomeV2DailyCaseStoryCard()),
+                              const Expanded(child: HomeV2DailyCaseStoryCard()),
                               SizedBox(width: 12.w),
                               const Expanded(child: HomeV2AchievementCard()),
                             ],
@@ -575,15 +598,13 @@ class _HomePageState extends State<HomePage> {
                             onNavigateToTab: widget.onNavigateToTab),
                         SizedBox(height: 20.h),
                         HomeV2SectionHeader(
-                          title: '焦點議題對決',
+                          title: '本日焦點議題對決',
                           action: '進入思辨',
                           onTap: () {
-                            final rentalCase =
-                                caseTimeMachineCases.firstWhere(
-                              (c) =>
-                                  c.titleZh.contains('租屋') ||
-                                  c.shortTitleZh.contains('租'),
-                              orElse: () => caseTimeMachineCases.first,
+                            final rentalCase = caseLibraryCases.firstWhere(
+                              (c) => c.id == 'case-029',
+                              orElse: () => CaseLibraryRepository.instance
+                                  .getCaseById('case-029'),
                             );
                             Navigator.of(context).push(
                               MaterialPageRoute(
@@ -614,8 +635,7 @@ class _HomePageState extends State<HomePage> {
                           discussionFeed: homeDiscussionFeed,
                           onMoreNewsTap: () =>
                               _openOfficialFeed(MojFeedCategory.news),
-                          onMoreDiscussionTap: () =>
-                              widget.onNavigateToTab(3),
+                          onMoreDiscussionTap: () => widget.onNavigateToTab(3),
                         ),
                         SizedBox(height: 132.h),
                       ],

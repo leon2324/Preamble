@@ -6,7 +6,9 @@ import 'package:preamble/app/app_state.dart';
 import 'package:preamble/pages/learning/know_law_page.dart';
 
 void main() {
-  testWidgets('Skeuomorphic toolbox handles car/motorcycle formulas and rent notice templates correctly', (WidgetTester tester) async {
+  testWidgets(
+      'Skeuomorphic toolbox handles car/motorcycle formulas and rent notice templates correctly',
+      (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
 
     tester.view.devicePixelRatio = 3.0;
@@ -53,10 +55,14 @@ void main() {
     expect(find.textContaining('💡 法律小常識'), findsWidgets);
 
     // 4. 輸入汽車折舊試算資料 (使用 hintText 搜尋 TextField)
-    final partsField = find.byWidgetPredicate((w) => w is TextField && w.decoration?.hintText == '例如：12000');
-    final laborField = find.byWidgetPredicate((w) => w is TextField && w.decoration?.hintText == '例如：8000');
-    final yearsField = find.byWidgetPredicate((w) => w is TextField && w.decoration?.hintText == '例如：3');
-    final monthsField = find.byWidgetPredicate((w) => w is TextField && w.decoration?.hintText == '例如：4');
+    final partsField = find.byWidgetPredicate(
+        (w) => w is TextField && w.decoration?.hintText == '例如：12000');
+    final laborField = find.byWidgetPredicate(
+        (w) => w is TextField && w.decoration?.hintText == '例如：8000');
+    final yearsField = find.byWidgetPredicate(
+        (w) => w is TextField && w.decoration?.hintText == '例如：3');
+    final monthsField = find.byWidgetPredicate(
+        (w) => w is TextField && w.decoration?.hintText == '例如：4');
 
     expect(partsField, findsOneWidget);
     expect(laborField, findsOneWidget);
@@ -97,10 +103,14 @@ void main() {
     expect(find.text('租屋存證信函起草器'), findsOneWidget);
 
     // 預設通知類型為「設備損壞修繕」
-    final landlordField = find.byWidgetPredicate((w) => w is TextField && w.decoration?.hintText == '例如：王太太');
-    final addrField = find.byWidgetPredicate((w) => w is TextField && w.decoration?.hintText == '例如：台北市大安區忠孝東路三段XX號');
-    final brokenField = find.byWidgetPredicate((w) => w is TextField && w.decoration?.hintText == '例如：客廳冷氣漏水');
-    final daysField = find.byWidgetPredicate((w) => w is TextField && w.decoration?.hintText == '例如：7');
+    final landlordField = find.byWidgetPredicate(
+        (w) => w is TextField && w.decoration?.hintText == '例如：王太太');
+    final addrField = find.byWidgetPredicate((w) =>
+        w is TextField && w.decoration?.hintText == '例如：台北市大安區忠孝東路三段XX號');
+    final brokenField = find.byWidgetPredicate(
+        (w) => w is TextField && w.decoration?.hintText == '例如：客廳冷氣漏水');
+    final daysField = find.byWidgetPredicate(
+        (w) => w is TextField && w.decoration?.hintText == '例如：7');
 
     expect(landlordField, findsOneWidget);
     expect(addrField, findsOneWidget);
@@ -123,8 +133,10 @@ void main() {
     await tester.tap(find.text('💰 租約期滿退押金'));
     await tester.pumpAndSettle();
 
-    final expiryField = find.byWidgetPredicate((w) => w is TextField && w.decoration?.hintText == '例如：2026年6月1日');
-    final depositField = find.byWidgetPredicate((w) => w is TextField && w.decoration?.hintText == '例如：30000');
+    final expiryField = find.byWidgetPredicate(
+        (w) => w is TextField && w.decoration?.hintText == '例如：2026年6月1日');
+    final depositField = find.byWidgetPredicate(
+        (w) => w is TextField && w.decoration?.hintText == '例如：30000');
 
     expect(expiryField, findsOneWidget);
     expect(depositField, findsOneWidget);
@@ -137,6 +149,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.textContaining('郵局存證信函草稿 (期滿退還押金催告)'), findsOneWidget);
-    expect(find.textContaining('為請求依法儘速返還租賃房屋押租金新台幣 32000 元整事。'), findsOneWidget);
+    expect(
+        find.textContaining('為請求依法儘速返還租賃房屋押租金新台幣 32000 元整事。'), findsOneWidget);
   });
 }

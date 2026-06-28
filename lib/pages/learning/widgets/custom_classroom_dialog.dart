@@ -4,7 +4,7 @@ import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/components/home/v2/home_v2_palette.dart';
-import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
 import 'package:preamble/theme/app_colors.dart';
 
 /// 訂製專屬法學課堂 Dialog。
@@ -96,8 +96,8 @@ class _CustomClassroomDialogState extends State<CustomClassroomDialog> {
                   backgroundColor: Color(0xFFFAF6EE),
                 ),
               ),
-              CtmSvgIcon(
-                CtmSvgIcons.idea,
+              CaseLibrarySvgIcon(
+                CaseLibrarySvgIcons.idea,
                 size: 30.sp,
                 color: const Color(0xFFF57F17),
               ),
@@ -161,8 +161,8 @@ class _CustomClassroomDialogState extends State<CustomClassroomDialog> {
                 color: Color(0xFFFFF176),
                 shape: BoxShape.circle,
               ),
-              child: CtmSvgIcon(
-                CtmSvgIcons.idea,
+              child: CaseLibrarySvgIcon(
+                CaseLibrarySvgIcons.idea,
                 size: 20.sp,
                 color: const Color(0xFFF57F17),
               ),

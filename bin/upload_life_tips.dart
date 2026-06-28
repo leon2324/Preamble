@@ -48,7 +48,8 @@ void main() async {
   int failCount = 0;
 
   for (int i = 0; i < payloads.length; i += batchSize) {
-    final end = (i + batchSize < payloads.length) ? i + batchSize : payloads.length;
+    final end =
+        (i + batchSize < payloads.length) ? i + batchSize : payloads.length;
     final batch = payloads.sublist(i, end);
     final batchNum = (i ~/ batchSize) + 1;
     final totalBatches = (payloads.length + batchSize - 1) ~/ batchSize;

@@ -71,7 +71,8 @@ class SearchRepository {
         type: SearchResultType.caseItem,
         destination: 'case:${item.id}',
         score: 75,
-        source: item.isMockData ? '緒言 Preamble mock data' : '緒言 Preamble case API',
+        source:
+            item.isMockData ? '緒言 Preamble mock data' : '緒言 Preamble case API',
         updatedAt: item.updatedAt,
         sourceUrl: caseSourceUrl,
         officialUrl: caseSourceUrl,

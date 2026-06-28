@@ -357,7 +357,6 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
                         );
                         Navigator.pop(context);
                         CustomToast.show(context, '介面自訂偏好已儲存！');
-
                       },
                       style: FilledButton.styleFrom(
                         backgroundColor: AppColors.primary,

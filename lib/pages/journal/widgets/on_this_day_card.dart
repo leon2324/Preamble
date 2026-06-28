@@ -6,9 +6,9 @@ import 'package:preamble/features/on_this_day/data/on_this_day_mock_data.dart';
 import 'package:preamble/features/on_this_day/pages/on_this_day_home_page.dart';
 import 'package:preamble/pages/journal/data/journal_page_items.dart';
 import 'package:preamble/pages/journal/widgets/journal_palette.dart';
-import 'package:preamble/features/case_time_machine/data/case_time_machine_repository.dart';
-import 'package:preamble/features/case_time_machine/pages/case_dossier_detail_page.dart';
-import 'package:preamble/features/case_time_machine/models/case_time_machine_models.dart';
+import 'package:preamble/features/case_library/data/case_library_repository.dart';
+import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
+import 'package:preamble/features/case_library/models/case_library_models.dart';
 
 const _onThisDayCardRadius = 20.0;
 
@@ -35,7 +35,7 @@ class _OnThisDayCardState extends State<OnThisDayCard> {
 
   Future<void> _checkDossier() async {
     try {
-      final repository = CaseTimeMachineRepository.instance;
+      final repository = CaseLibraryRepository.instance;
       if (repository.cases.isEmpty) {
         await repository.initialize();
       }

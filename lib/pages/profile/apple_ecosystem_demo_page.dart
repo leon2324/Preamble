@@ -7,7 +7,7 @@ import 'package:preamble/platform/ios_today_case_widget_bridge.dart';
 
 /// 台灣繁體中文教學註解：
 /// 這是 Apple 生態展示中心 (AppleEcosystemDemoPage)。
-/// 用於在 Maic 大賽中向評審演示 Live Activities, SwiftUI Widgets, PencilKit, 
+/// 用於在 Maic 大賽中向評審演示 Live Activities, SwiftUI Widgets, PencilKit,
 /// Siri Shortcuts 等需要 Apple 付費證書才能在實機完整打包的 Apple 優勢特色，
 /// 同時在專案中建立最穩健的展示邏輯。
 class AppleEcosystemDemoPage extends StatefulWidget {
@@ -20,7 +20,7 @@ class AppleEcosystemDemoPage extends StatefulWidget {
 class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
   // 動態島狀態
   bool _isIslandExpanded = false;
-  String _islandText = "1審宣判 倒數 3 天";
+  final String _islandText = "1審宣判 倒數 3 天";
 
   // Widget 互動待辦
   final List<Map<String, dynamic>> _widgetTodos = [
@@ -36,9 +36,10 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
   Timer? _siriTimer;
 
   // PencilKit 畫板狀態
-  List<Offset?> _points = [];
+  final List<Offset?> _points = [];
   bool _isOcrConverted = false;
-  String _ocrText = "起訴書\n原告：蒔光未來股份有限公司\n訴訟代理人：張三律師\n被告：被告股份有限公司\n為前開當事人間請求給付加班費事件，依法提起起訴。";
+  final String _ocrText =
+      "起訴書\n原告：蒔光未來股份有限公司\n訴訟代理人：張三律師\n被告：被告股份有限公司\n為前開當事人間請求給付加班費事件，依法提起起訴。";
 
   // Live Text 相機狀態
   bool _isOcrScanning = false;
@@ -211,12 +212,27 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
 
   // 1. 動態島模擬
   Widget _buildDynamicIsland() {
+    const liveActivityChannel = MethodChannel('preamble/live_activity');
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         HapticFeedback.lightImpact();
         setState(() {
           _isIslandExpanded = !_isIslandExpanded;
         });
+        try {
+          if (_isIslandExpanded) {
+            await liveActivityChannel.invokeMethod('startLiveActivity', {
+              'caseTitle': '租屋退租返還押金與自然折舊扣抵爭議案',
+              'status': '一審宣判',
+              'countdownDays': 3,
+              'nextEvent': '前往簡易庭聽取判決宣判',
+            });
+          } else {
+            await liveActivityChannel.invokeMethod('stopLiveActivity');
+          }
+        } catch (e) {
+          debugPrint('Live Activity Channel error: $e');
+        }
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 350),
@@ -247,7 +263,8 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                           color: Color(0xFF2E7D32),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.scale, color: Colors.white, size: 16),
+                        child: const Icon(Icons.scale,
+                            color: Colors.white, size: 16),
                       ),
                       SizedBox(width: 10.w),
                       Column(
@@ -256,11 +273,17 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                         children: [
                           Text(
                             "緒言 Preamble • 即時時程",
-                            style: TextStyle(color: Colors.grey, fontSize: 9.sp, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 9.sp,
+                                fontWeight: FontWeight.bold),
                           ),
                           Text(
                             _islandText,
-                            style: TextStyle(color: Colors.white, fontSize: 13.sp, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -268,7 +291,10 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                   ),
                   const Text(
                     "3D 開庭中",
-                    style: TextStyle(color: Colors.orange, fontSize: 10, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: Colors.orange,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold),
                   )
                 ],
               )
@@ -279,7 +305,10 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                   SizedBox(width: 4.w),
                   Text(
                     "Preamble",
-                    style: TextStyle(color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.w900),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w900),
                   ),
                 ],
               ),
@@ -327,15 +356,20 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.scale, color: Color(0xFF2E7D32), size: 14),
+                          const Icon(Icons.scale,
+                              color: Color(0xFF2E7D32), size: 14),
                           SizedBox(width: 4.w),
                           Text(
                             "訴訟準備進度",
-                            style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1B5E4F)),
+                            style: TextStyle(
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF1B5E4F)),
                           ),
                         ],
                       ),
-                      Text("一審準備程序", style: TextStyle(fontSize: 8.sp, color: Colors.grey)),
+                      Text("一審準備程序",
+                          style: TextStyle(fontSize: 8.sp, color: Colors.grey)),
                     ],
                   ),
                   const Divider(color: Color(0xFFC8E6C9), height: 16),
@@ -350,24 +384,31 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                               onTap: () {
                                 HapticFeedback.mediumImpact();
                                 setState(() {
-                                  _widgetTodos[idx]["checked"] = !_widgetTodos[idx]["checked"];
+                                  _widgetTodos[idx]["checked"] =
+                                      !_widgetTodos[idx]["checked"];
                                 });
                                 final activeTasks = _widgetTodos
                                     .where((t) => t["checked"] == false)
                                     .map((t) => t["title"] as String)
                                     .toList();
-                                IosTodayCaseWidgetBridge.syncTodoList(activeTasks);
+                                IosTodayCaseWidgetBridge.syncTodoList(
+                                    activeTasks);
                               },
                               child: Container(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: item["checked"] ? const Color(0xFF2E7D32) : Colors.transparent,
-                                  border: Border.all(color: const Color(0xFF2E7D32), width: 1.5),
+                                  color: item["checked"]
+                                      ? const Color(0xFF2E7D32)
+                                      : Colors.transparent,
+                                  border: Border.all(
+                                      color: const Color(0xFF2E7D32),
+                                      width: 1.5),
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(2.0),
                                   child: item["checked"]
-                                      ? const Icon(Icons.check, size: 10, color: Colors.white)
+                                      ? const Icon(Icons.check,
+                                          size: 10, color: Colors.white)
                                       : SizedBox(width: 10.w, height: 10.w),
                                 ),
                               ),
@@ -377,8 +418,12 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                               item["title"],
                               style: TextStyle(
                                 fontSize: 11.sp,
-                                color: item["checked"] ? Colors.grey : const Color(0xFF0F1216),
-                                decoration: item["checked"] ? TextDecoration.lineThrough : null,
+                                color: item["checked"]
+                                    ? Colors.grey
+                                    : const Color(0xFF0F1216),
+                                decoration: item["checked"]
+                                    ? TextDecoration.lineThrough
+                                    : null,
                               ),
                             ),
                           ],
@@ -418,8 +463,10 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
             ),
             child: GestureDetector(
               onPanUpdate: (details) {
-                final RenderBox renderBox = context.findRenderObject() as RenderBox;
-                final localPosition = renderBox.globalToLocal(details.globalPosition);
+                final RenderBox renderBox =
+                    context.findRenderObject() as RenderBox;
+                final localPosition =
+                    renderBox.globalToLocal(details.globalPosition);
                 // 限制畫筆僅在畫布內
                 setState(() {
                   _points.add(details.localPosition);
@@ -445,7 +492,11 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                     _isOcrConverted = false;
                   });
                 },
-                child: Text("清除畫布", style: TextStyle(color: const Color(0xFFC62828), fontSize: 10.sp, fontWeight: FontWeight.bold)),
+                child: Text("清除畫布",
+                    style: TextStyle(
+                        color: const Color(0xFFC62828),
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.bold)),
               ),
               LiquidGlassButton(
                 padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
@@ -456,7 +507,11 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                     _isOcrConverted = true;
                   });
                 },
-                child: Text("隨手寫 (Scribble) 辨識", style: TextStyle(color: const Color(0xFF1B5E4F), fontSize: 10.sp, fontWeight: FontWeight.bold)),
+                child: Text("隨手寫 (Scribble) 辨識",
+                    style: TextStyle(
+                        color: const Color(0xFF1B5E4F),
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.bold)),
               ),
             ],
           ),
@@ -472,9 +527,17 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("✍️ Apple Scribble 轉文字成果：", style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1B5E4F))),
+                  Text("✍️ Apple Scribble 轉文字成果：",
+                      style: TextStyle(
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF1B5E4F))),
                   SizedBox(height: 4.h),
-                  Text(_ocrText, style: TextStyle(fontSize: 10.sp, height: 1.4, color: Colors.grey[800])),
+                  Text(_ocrText,
+                      style: TextStyle(
+                          fontSize: 10.sp,
+                          height: 1.4,
+                          color: Colors.grey[800])),
                 ],
               ),
             )
@@ -507,7 +570,11 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                     children: [
                       const Icon(Icons.mic, color: Colors.white, size: 16),
                       SizedBox(width: 6.w),
-                      Text("喚醒 Siri：『打開緒言最近開庭』", style: TextStyle(color: Colors.white, fontSize: 11.sp, fontWeight: FontWeight.bold)),
+                      Text("喚醒 Siri：『打開緒言最近開庭』",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
@@ -526,7 +593,12 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(2.r),
                             gradient: const LinearGradient(
-                              colors: [Colors.purple, Colors.blue, Colors.cyan, Colors.pink],
+                              colors: [
+                                Colors.purple,
+                                Colors.blue,
+                                Colors.cyan,
+                                Colors.pink
+                              ],
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                             ),
@@ -539,7 +611,10 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                   Text(
                     _siriResponse,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1B5E4F)),
+                    style: TextStyle(
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF1B5E4F)),
                   ),
                 ]
               ],
@@ -571,21 +646,27 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.camera_alt, color: Colors.white, size: 16),
+                      const Icon(Icons.camera_alt,
+                          color: Colors.white, size: 16),
                       SizedBox(width: 6.w),
-                      Text("對準判決書掃描並提取文字", style: TextStyle(color: Colors.white, fontSize: 11.sp, fontWeight: FontWeight.bold)),
+                      Text("對準判決書掃描並提取文字",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
                 if (_isOcrScanning) ...[
                   SizedBox(height: 14.h),
-                  Column(
-                    children: [
-                      const CircularProgressIndicator(color: Color(0xFF1B5E4F)),
-                      SizedBox(height: 8.h),
-                      Text("iOS Live Text 正在光學識別中...", style: TextStyle(fontSize: 10.sp, color: Colors.grey)),
-                    ],
-                  )
+                  LiquidGlassShimmer(
+                    width: double.infinity,
+                    height: 50.h,
+                    radius: 10.r,
+                  ),
+                  SizedBox(height: 8.h),
+                  Text("iOS Live Text 正在光學識別中...",
+                      style: TextStyle(fontSize: 10.sp, color: Colors.grey)),
                 ],
                 if (_ocrScanDone) ...[
                   SizedBox(height: 14.h),
@@ -602,15 +683,23 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                       children: [
                         Row(
                           children: [
-                            const Icon(Icons.check_circle, color: Color(0xFF2E7D32), size: 14),
+                            const Icon(Icons.check_circle,
+                                color: Color(0xFF2E7D32), size: 14),
                             SizedBox(width: 4.w),
-                            Text("辨識成功！文字已匯入手帳草稿", style: TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1B5E4F))),
+                            Text("辨識成功！文字已匯入手帳草稿",
+                                style: TextStyle(
+                                    fontSize: 10.5.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF1B5E4F))),
                           ],
                         ),
                         SizedBox(height: 6.h),
                         Text(
                           "「臺灣臺北地方法院民事判決 - 115年度勞訴字第99號... 請求給付加班費事件，判決主文：被告應給付原告新臺幣參拾萬零捌仟元。」",
-                          style: TextStyle(fontSize: 9.5.sp, color: Colors.grey[800], height: 1.4),
+                          style: TextStyle(
+                              fontSize: 9.5.sp,
+                              color: Colors.grey[800],
+                              height: 1.4),
                         ),
                       ],
                     ),
@@ -636,7 +725,11 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
               // Watch 模擬器
               Column(
                 children: [
-                  Text("⌚ Apple Watch", style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.bold, color: Colors.grey[700])),
+                  Text("⌚ Apple Watch",
+                      style: TextStyle(
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[700])),
                   SizedBox(height: 8.h),
                   Container(
                     width: 100.w,
@@ -653,14 +746,29 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Icon(Icons.scale, color: Color(0xFFFFB74D), size: 10),
-                            Text("10:09", style: TextStyle(color: Colors.white, fontSize: 8.sp, fontWeight: FontWeight.bold)),
+                            const Icon(Icons.scale,
+                                color: Color(0xFFFFB74D), size: 10),
+                            Text("10:09",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 8.sp,
+                                    fontWeight: FontWeight.bold)),
                           ],
                         ),
                         const Divider(color: Colors.grey, height: 8),
-                        Text("開庭警告", style: TextStyle(color: Colors.red, fontSize: 8.sp, fontWeight: FontWeight.bold)),
-                        Text("下週二 14:00", style: TextStyle(color: Colors.white, fontSize: 9.sp, fontWeight: FontWeight.bold)),
-                        Text("二審準備程序", style: TextStyle(color: Colors.grey, fontSize: 8.sp)),
+                        Text("開庭警告",
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 8.sp,
+                                fontWeight: FontWeight.bold)),
+                        Text("下週二 14:00",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 9.sp,
+                                fontWeight: FontWeight.bold)),
+                        Text("二審準備程序",
+                            style:
+                                TextStyle(color: Colors.grey, fontSize: 8.sp)),
                         const Spacer(),
                         Container(
                           width: double.infinity,
@@ -670,7 +778,11 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                             borderRadius: BorderRadius.circular(4.r),
                           ),
                           child: Center(
-                            child: Text("確認收悉", style: TextStyle(color: Colors.white, fontSize: 7.sp, fontWeight: FontWeight.bold)),
+                            child: Text("確認收悉",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 7.sp,
+                                    fontWeight: FontWeight.bold)),
                           ),
                         )
                       ],
@@ -681,7 +793,11 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
               // CarPlay 模擬器
               Column(
                 children: [
-                  Text("🚗 Apple CarPlay", style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.bold, color: Colors.grey[700])),
+                  Text("🚗 Apple CarPlay",
+                      style: TextStyle(
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[700])),
                   SizedBox(height: 8.h),
                   Container(
                     width: 160.w,
@@ -697,9 +813,14 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                       children: [
                         Row(
                           children: [
-                            const Icon(Icons.directions_car, color: Colors.blue, size: 10),
+                            const Icon(Icons.directions_car,
+                                color: Colors.blue, size: 10),
                             SizedBox(width: 4.w),
-                            Text("CarPlay HUD", style: TextStyle(color: Colors.white, fontSize: 8.sp, fontWeight: FontWeight.bold)),
+                            Text("CarPlay HUD",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 8.sp,
+                                    fontWeight: FontWeight.bold)),
                           ],
                         ),
                         const Spacer(),
@@ -712,8 +833,15 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("🔊 正在播報避坑筆記：", style: TextStyle(color: Colors.green, fontSize: 7.5.sp, fontWeight: FontWeight.bold)),
-                              Text("「房屋租賃糾紛：承租人有買賣不破租賃之適用...」", style: TextStyle(color: Colors.white, fontSize: 7.sp), maxLines: 2),
+                              Text("🔊 正在播報避坑筆記：",
+                                  style: TextStyle(
+                                      color: Colors.green,
+                                      fontSize: 7.5.sp,
+                                      fontWeight: FontWeight.bold)),
+                              Text("「房屋租賃糾紛：承租人有買賣不破租賃之適用...」",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 7.sp),
+                                  maxLines: 2),
                             ],
                           ),
                         ),
@@ -721,13 +849,18 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            const Icon(Icons.skip_previous, color: Colors.white, size: 12),
+                            const Icon(Icons.skip_previous,
+                                color: Colors.white, size: 12),
                             Container(
                               padding: EdgeInsets.all(4.w),
-                              decoration: const BoxDecoration(color: Color(0xFF2E7D32), shape: BoxShape.circle),
-                              child: const Icon(Icons.play_arrow, color: Colors.white, size: 12),
+                              decoration: const BoxDecoration(
+                                  color: Color(0xFF2E7D32),
+                                  shape: BoxShape.circle),
+                              child: const Icon(Icons.play_arrow,
+                                  color: Colors.white, size: 12),
                             ),
-                            const Icon(Icons.skip_next, color: Colors.white, size: 12),
+                            const Icon(Icons.skip_next,
+                                color: Colors.white, size: 12),
                           ],
                         )
                       ],

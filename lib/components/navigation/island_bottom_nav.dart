@@ -117,7 +117,8 @@ class IslandBottomNav extends StatelessWidget {
                                                 child: Image.asset(
                                                   'assets/images/assistant/law_assistant_home.png',
                                                   fit: BoxFit.cover,
-                                                  alignment: Alignment.topCenter,
+                                                  alignment:
+                                                      Alignment.topCenter,
                                                 ),
                                               ),
                                             ),
@@ -140,8 +141,11 @@ class IslandBottomNav extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize:
                                           11 + context.adaptiveBuffer(1.5),
-                                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w400,
-                                      color: selectedColor.withValues(alpha: isSelected ? 1.0 : 0.7),
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.w400,
+                                      color: selectedColor.withValues(
+                                          alpha: isSelected ? 1.0 : 0.7),
                                     ),
                                   ),
                                 ],

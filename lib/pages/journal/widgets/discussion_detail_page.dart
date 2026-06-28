@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/components/home/home_content.dart';
 import 'package:preamble/data/mock_data/home/home_mock_data.dart';
-import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
-import 'package:preamble/features/case_time_machine/models/case_time_machine_models.dart';
-import 'package:preamble/features/case_time_machine/pages/case_dossier_detail_page.dart';
+import 'package:preamble/features/case_library/data/case_library_data.dart';
+import 'package:preamble/features/case_library/models/case_library_models.dart';
+import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
 import 'package:preamble/pages/journal/data/journal_page_items.dart';
 import 'package:preamble/pages/journal/widgets/journal_palette.dart';
 
@@ -61,7 +61,6 @@ class _DiscussionDetailPageState extends State<DiscussionDetailPage> {
                 _isFollowing = !_isFollowing;
               });
               CustomToast.show(context, _isFollowing ? '已追蹤此議題！' : '已取消追蹤');
-
             },
           ),
         ],
@@ -1332,22 +1331,65 @@ class RelatedCasesCarousel extends StatelessWidget {
   final JournalPalette palette;
 
   List<CaseBook> _getRelatedCaseBooks() {
-    final allCases = caseTimeMachineCases;
+    final allCases = caseLibraryCases;
+
+    String title = '';
+    if (topicIndex >= 0 && topicIndex < homeDiscussionFeed.topics.length) {
+      title = homeDiscussionFeed.topics[topicIndex].title;
+    }
+
+    if (title.contains('國會') ||
+        title.contains('釋憲') ||
+        title.contains('憲法') ||
+        title.contains('違憲') ||
+        title.contains('立院')) {
+      return allCases
+          .where((c) => ['318', '799', '499'].contains(c.id))
+          .toList();
+    }
+    if (title.contains('詐騙') ||
+        title.contains('洗錢') ||
+        title.contains('吸金') ||
+        title.contains('im.B')) {
+      return allCases.where((c) => ['case-006'].contains(c.id)).toList();
+    }
+    if (title.contains('勞基法') ||
+        title.contains('工時') ||
+        title.contains('加班') ||
+        title.contains('勞資') ||
+        title.contains('責任制') ||
+        title.contains('解雇')) {
+      return allCases.where((c) => ['case-031'].contains(c.id)).toList();
+    }
+    if (title.contains('性騷') ||
+        title.contains('騷擾') ||
+        title.contains('拉扯') ||
+        title.contains('毆打') ||
+        title.contains('傷害')) {
+      return allCases.where((c) => ['case-034'].contains(c.id)).toList();
+    }
+    if (title.contains('租屋') ||
+        title.contains('押金') ||
+        title.contains('房東') ||
+        title.contains('租賃') ||
+        title.contains('退租') ||
+        title.contains('扣抵')) {
+      return allCases.where((c) => ['case-029'].contains(c.id)).toList();
+    }
+
     switch (topicIndex) {
       case 0:
         return allCases
-            .where((c) => ['103', '799', '318'].contains(c.id))
+            .where((c) => ['318', '799', '499'].contains(c.id))
             .toList();
       case 1:
-        return allCases
-            .where((c) => ['ding-2015', '104'].contains(c.id))
-            .toList();
+        return allCases.where((c) => ['case-006'].contains(c.id)).toList();
       case 2:
-        return allCases
-            .where((c) => ['106', 'hung-2013'].contains(c.id))
-            .toList();
+        return allCases.where((c) => ['case-031'].contains(c.id)).toList();
       case 3:
-        return allCases.where((c) => ['161', '102'].contains(c.id)).toList();
+        return allCases.where((c) => ['case-034'].contains(c.id)).toList();
+      case 4:
+        return allCases.where((c) => ['case-029'].contains(c.id)).toList();
       default:
         return allCases.take(3).toList();
     }

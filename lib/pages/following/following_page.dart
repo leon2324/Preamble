@@ -7,8 +7,8 @@ import 'package:preamble/app/app_state.dart';
 import 'package:preamble/data/documents/document_models.dart';
 import 'package:preamble/data/following/following_models.dart';
 import 'package:preamble/data/mock_data/home/home_mock_data.dart';
-import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
-import 'package:preamble/features/case_time_machine/pages/case_dossier_detail_page.dart';
+import 'package:preamble/features/case_library/data/case_library_data.dart';
+import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
 import 'package:preamble/pages/learning/statute_database_page.dart';
 import 'package:preamble/pages/learning/widgets/legal_document_export_page.dart';
 import 'package:preamble/components/shared/share_sheet.dart';
@@ -440,7 +440,8 @@ class _FollowingPageState extends State<FollowingPage> {
     });
   }
 
-  Future<void> _trackFollowItem(PreambleState appState, _FollowItem item) async {
+  Future<void> _trackFollowItem(
+      PreambleState appState, _FollowItem item) async {
     final id = _followIdFor(item);
     if (item.kind == _FollowDetailKind.statute) {
       await appState.setStatuteFollowed(id, true);
@@ -449,13 +450,11 @@ class _FollowingPageState extends State<FollowingPage> {
     }
     if (!mounted) return;
     CustomToast.show(context, '已加入我的 緒言 Preamble 追蹤。');
-
   }
 
   void _openTrackSearch() {
     setState(() => _page = _FollowPage.search);
     CustomToast.show(context, '請搜尋案件、法條或主題後加入追蹤。');
-
   }
 
   void _showNoteInsights() {
@@ -527,7 +526,6 @@ class _FollowingPageState extends State<FollowingPage> {
       _selectedNote = note;
     });
     CustomToast.show(context, '已建立一則本機筆記，可點入後編輯。');
-
   }
 
   void _editSelectedNote() {
@@ -578,7 +576,6 @@ class _FollowingPageState extends State<FollowingPage> {
                 });
                 Navigator.of(dialogContext).pop();
                 CustomToast.show(context, '筆記已更新到本機清單。');
-
               },
               child: const Text('儲存'),
             ),
@@ -613,7 +610,6 @@ class _FollowingPageState extends State<FollowingPage> {
                 });
                 Navigator.of(dialogContext).pop();
                 CustomToast.show(context, '筆記已從本機清單移除。');
-
               },
               child: const Text('刪除'),
             ),
@@ -632,7 +628,6 @@ class _FollowingPageState extends State<FollowingPage> {
   void _clearQuestionHistory() {
     setState(() => _questionsCleared = true);
     CustomToast.show(context, '提問紀錄已在本機清除。');
-
   }
 
   Future<void> _showPlanInfo() async {
@@ -649,7 +644,6 @@ class _FollowingPageState extends State<FollowingPage> {
     if (!mounted) return;
     setState(() => _page = _FollowPage.home);
     CustomToast.show(context, '已清除本機使用狀態。');
-
   }
 
   Future<void> _createQuickDraft() async {
@@ -765,7 +759,7 @@ class _FollowingPageState extends State<FollowingPage> {
       caseId = 'hung-2013';
     }
 
-    final book = caseTimeMachineCaseById(caseId);
+    final book = caseLibraryCaseById(caseId);
     Navigator.of(context).push(
       CupertinoPageRoute<void>(
         builder: (__) => CaseDossierDetailPage(book: book),

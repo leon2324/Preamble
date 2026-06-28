@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:preamble/data/mock_data/home/legacy/home_mock_data_legacy.dart';
 
 /// 社會討論趨勢資料。
 ///
@@ -154,68 +155,36 @@ class ArchiveTimelineItem {
   final String description;
 }
 
-const discussionTrendItems = [
-  DiscussionTrendItem(
-    rank: 1,
-    title: '國會擴權釋憲案',
-    score: 98.6,
-    delta: '24h +12%',
-    whyHot: '釋憲庭期逼近後，立法院職權界線、程序正義與權力分立再次成為新聞與社群焦點。',
-    relatedCases: ['憲法法庭程序爭議', '國會改革法案攻防', '程序表決效力案'],
-    heatCurve: [24, 32, 48, 72, 90, 98],
-    heatLabels: ['週一', '週二', '週三', '週四', '週五', '今天'],
-    fullTopicIndex: 0,
-    tint: Color(0xFF1E7B66),
-  ),
-  DiscussionTrendItem(
-    rank: 2,
-    title: 'im.B 吸金詐騙案',
-    score: 87.4,
-    delta: '24h +8%',
-    whyHot: '被害人求償、名人站台責任與平台監管是否失靈，再次被放到社會討論中心。',
-    relatedCases: ['虛擬投資詐欺鏈', '洗錢防制責任', '平台廣告代言爭議'],
-    heatCurve: [18, 28, 42, 55, 73, 87],
-    heatLabels: ['週一', '週二', '週三', '週四', '週五', '今天'],
-    fullTopicIndex: 1,
-    tint: Color(0xFF2F6D99),
-  ),
-  DiscussionTrendItem(
-    rank: 3,
-    title: '勞基法工時修法',
-    score: 76.1,
-    delta: '24h +6%',
-    whyHot: '修法條文通過後，輪班、加班與工時上限怎麼算，成了上班族與企業都在追的題目。',
-    relatedCases: ['加班費計算爭議', '輪班間隔案件', '補休與工時上限解釋'],
-    heatCurve: [16, 21, 34, 51, 64, 76],
-    heatLabels: ['週一', '週二', '週三', '週四', '週五', '今天'],
-    fullTopicIndex: 2,
-    tint: Color(0xFF9F6A26),
-  ),
-  DiscussionTrendItem(
-    rank: 4,
-    title: '職場性騷擾通報案',
-    score: 71.8,
-    delta: '24h +5%',
-    whyHot: '企業內部調查透明度、補救機制與申訴後的二次傷害，讓許多舊案再度被提起。',
-    relatedCases: ['申訴保密義務', '雇主防治責任', '調查程序瑕疵案'],
-    heatCurve: [14, 17, 26, 45, 57, 72],
-    heatLabels: ['週一', '週二', '週三', '週四', '週五', '今天'],
-    fullTopicIndex: 3,
-    tint: Color(0xFF7A5D9A),
-  ),
-  DiscussionTrendItem(
-    rank: 5,
-    title: '租屋押金扣抵糾紛',
-    score: 68.2,
-    delta: '24h +15%',
-    whyHot: '畢業季與租屋潮來臨，房東點交扣押金、折舊計算與房屋還原義務成熱議焦點。',
-    relatedCases: ['民法租賃契約', '租屋點交糾紛', '押金返還調解'],
-    heatCurve: [10, 18, 30, 48, 59, 68],
-    heatLabels: ['週一', '週二', '週三', '週四', '週五', '今天'],
-    fullTopicIndex: 4,
-    tint: Color(0xFF355668),
-  ),
-];
+List<DiscussionTrendItem> get discussionTrendItems {
+  return homeDiscussionFeed.topics.map((t) {
+    return DiscussionTrendItem(
+      rank: t.rank,
+      title: t.title,
+      score: t.heatScore.toDouble(),
+      delta: '24h +${t.dayChangePercent}%',
+      whyHot: t.overview,
+      relatedCases: t.tags,
+      heatCurve: t.trendPoints.map((pt) {
+        final match = RegExp(r'\d+').firstMatch(pt.volumeLabel);
+        if (match != null) {
+          return double.tryParse(match.group(0)!) ?? 50.0;
+        }
+        return 50.0;
+      }).toList(),
+      heatLabels: t.trendPoints.map((pt) => pt.dateLabel).toList(),
+      fullTopicIndex: t.rank - 1,
+      tint: t.rank == 1
+          ? const Color(0xFF1E7B66)
+          : t.rank == 2
+              ? const Color(0xFF2F6D99)
+              : t.rank == 3
+                  ? const Color(0xFF9F6A26)
+                  : t.rank == 4
+                      ? const Color(0xFF7A5D9A)
+                      : const Color(0xFF355668),
+    );
+  }).toList();
+}
 
 const caseAngleItems = [
   CaseAngleItem(

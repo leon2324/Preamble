@@ -6,7 +6,7 @@ import 'package:preamble/theme/app_colors.dart';
 import 'package:preamble/data/learning/learning_game_state.dart';
 import 'package:preamble/components/home/v2/home_v2_palette.dart';
 import 'package:preamble/pages/learning/widgets/notebook_aesthetics.dart';
-import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
 import 'package:preamble/pages/learning/know_law_page.dart'; // To access LawAssistantChatPage
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
@@ -580,8 +580,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                       children: [
                         Row(
                           children: [
-                            CtmSvgIcon(
-                              CtmSvgIcons.filePen,
+                            CaseLibrarySvgIcon(
+                              CaseLibrarySvgIcons.filePen,
                               size: 22.sp,
                               color: HomeV2Palette.trustGreen,
                             ),
@@ -894,7 +894,6 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                 widget.article.title,
               );
               CustomToast.show(context, '已成功將核心大綱摘錄至手帳筆記！📌');
-
             },
           ),
           ListenableBuilder(
@@ -903,7 +902,7 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
               final isBookmarked =
                   gameState.isArticleSaved(widget.article.title);
               return IconButton(
-                icon: CtmSvgIcon(
+                icon: CaseLibrarySvgIcon(
                   isBookmarked ? _svgStarFilledIcon : _svgStarOutlineIcon,
                   size: 22.sp,
                   color: isBookmarked ? const Color(0xFFD6A85F) : Colors.grey,
@@ -911,7 +910,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                 tooltip: isBookmarked ? '取消收藏' : '加入收藏',
                 onPressed: () {
                   gameState.toggleArticleSave(widget.article.title);
-                  final isSaved = gameState.isArticleSaved(widget.article.title);
+                  final isSaved =
+                      gameState.isArticleSaved(widget.article.title);
                   CustomToast.show(context, isSaved ? '已加入收藏' : '已取消收藏');
                 },
               );
@@ -1041,8 +1041,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                       children: [
                         Padding(
                           padding: EdgeInsets.only(top: 2.h),
-                          child: CtmSvgIcon(
-                            CtmSvgIcons.star,
+                          child: CaseLibrarySvgIcon(
+                            CaseLibrarySvgIcons.star,
                             size: 16.sp,
                             color: HomeV2Palette.trustGreen,
                           ),
@@ -1062,8 +1062,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                         IconButton(
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
-                          icon: CtmSvgIcon(
-                            CtmSvgIcons.star,
+                          icon: CaseLibrarySvgIcon(
+                            CaseLibrarySvgIcons.star,
                             size: 18.sp,
                             color: isPointSaved
                                 ? const Color(0xFFE8B85F)
@@ -1073,7 +1073,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                             gameState.toggleQuoteSave(
                                 point, widget.article.title);
                             final isSaved = gameState.isQuoteSaved(point);
-                            CustomToast.show(context, isSaved ? '已儲存字句卡' : '已取消儲存');
+                            CustomToast.show(
+                                context, isSaved ? '已儲存字句卡' : '已取消儲存');
                           },
                         ),
                       ],
@@ -1132,7 +1133,7 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                         if (isStepCompleted) ...[
                           Row(
                             children: [
-                              CtmSvgIcon(CtmSvgIcons.star,
+                              CaseLibrarySvgIcon(CaseLibrarySvgIcons.star,
                                   color: HomeV2Palette.trustGreen, size: 24.sp),
                               SizedBox(width: 8.w),
                               const Text('本單元測驗已通關！',
@@ -1178,14 +1179,20 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                           if (isCorrect ||
                               (isStepCompleted &&
                                   index == quiz['correctIndex'])) {
-                            optionIcon = CtmSvgIcon(CtmSvgIcons.star,
-                                color: Colors.green, size: 18.sp);
+                            optionIcon = CaseLibrarySvgIcon(
+                                CaseLibrarySvgIcons.star,
+                                color: Colors.green,
+                                size: 18.sp);
                           } else if (isWrong) {
-                            optionIcon = CtmSvgIcon(CtmSvgIcons.xCircle,
-                                color: Colors.red, size: 18.sp);
+                            optionIcon = CaseLibrarySvgIcon(
+                                CaseLibrarySvgIcons.xCircle,
+                                color: Colors.red,
+                                size: 18.sp);
                           } else if (isSelected) {
-                            optionIcon = CtmSvgIcon(CtmSvgIcons.star,
-                                color: const Color(0xFFE8B95F), size: 18.sp);
+                            optionIcon = CaseLibrarySvgIcon(
+                                CaseLibrarySvgIcons.star,
+                                color: const Color(0xFFE8B95F),
+                                size: 18.sp);
                           } else {
                             optionIcon = Container(
                               width: 18.w,
@@ -1350,8 +1357,8 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                               children: [
                                 Row(
                                   children: [
-                                    CtmSvgIcon(
-                                      CtmSvgIcons.gavel,
+                                    CaseLibrarySvgIcon(
+                                      CaseLibrarySvgIcons.gavel,
                                       size: 16.sp,
                                       color: const Color(0xFF94610D),
                                     ),
@@ -1401,7 +1408,7 @@ class _LearningMockDetailPageState extends State<LearningMockDetailPage> {
                         if (isStepCompleted) ...[
                           Row(
                             children: [
-                              CtmSvgIcon(CtmSvgIcons.star,
+                              CaseLibrarySvgIcon(CaseLibrarySvgIcons.star,
                                   color: HomeV2Palette.trustGreen, size: 24.sp),
                               SizedBox(width: 8.w),
                               const Text('本單元已學習完成！',
@@ -1826,7 +1833,6 @@ class HighlightedSelectableText extends StatelessWidget {
                   .addHighlight(selectedText, articleTitle);
               editableTextState.hideToolbar();
               CustomToast.show(context, '已成功劃記此重點並儲存至成就室備忘錄！');
-
             },
           ),
         );
@@ -1962,7 +1968,6 @@ void _showShareCardDialog(
                         text: '$highlightText\n\n—— 摘自《$articleTitle》• 小法助'));
                     Navigator.pop(context);
                     CustomToast.show(context, '已複製重點及來源文字！');
-
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
@@ -1985,7 +1990,6 @@ void _showShareCardDialog(
                             '$highlightText\n\n—— 摘自《$articleTitle》• 緒言 Preamble 學習摘錄'));
                     Navigator.pop(context);
                     CustomToast.show(context, '重點內容已複製，可自行截圖或貼到分享工具保存。');
-
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: HomeV2Palette.trustGreen,

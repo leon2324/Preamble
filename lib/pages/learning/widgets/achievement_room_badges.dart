@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:preamble/components/home/v2/home_v2_palette.dart';
 import 'package:preamble/data/learning/learning_game_state.dart';
-import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
 import 'package:preamble/pages/learning/widgets/notebook_aesthetics.dart';
 import 'package:preamble/theme/app_colors.dart';
 
@@ -24,7 +24,7 @@ class AchievementBadgeWall extends StatelessWidget {
     {
       'name': '初學乍練',
       'asset': 'assets/images/learning/badges/badge_beginner.png',
-      'icon': CtmSvgIcons.sprout,
+      'icon': CaseLibrarySvgIcons.sprout,
       'color': const Color(0xFFE2F0D9),
       'iconColor': const Color(0xFF385623),
       'desc': '加入法學學堂並開始學習。',
@@ -32,7 +32,7 @@ class AchievementBadgeWall extends StatelessWidget {
     {
       'name': '租屋達人',
       'asset': 'assets/images/learning/badges/badge_rental_expert.png',
-      'icon': CtmSvgIcons.home,
+      'icon': CaseLibrarySvgIcons.home,
       'color': const Color(0xFFFFF2CC),
       'iconColor': const Color(0xFF7F6000),
       'desc': '通關「租屋糾紛」所有單元即可解鎖。',
@@ -40,7 +40,7 @@ class AchievementBadgeWall extends StatelessWidget {
     {
       'name': '車禍防護',
       'asset': 'assets/images/learning/badges/badge_traffic_protector.png',
-      'icon': CtmSvgIcons.car,
+      'icon': CaseLibrarySvgIcons.car,
       'color': const Color(0xFFFCE4D6),
       'iconColor': const Color(0xFFC65911),
       'desc': '通關「車禍訴訟」課堂並答對測驗解鎖。',
@@ -48,7 +48,7 @@ class AchievementBadgeWall extends StatelessWidget {
     {
       'name': '職場精英',
       'asset': 'assets/images/learning/badges/badge_workplace_rights.png',
-      'icon': CtmSvgIcons.briefcase,
+      'icon': CaseLibrarySvgIcons.briefcase,
       'color': const Color(0xFFE8F0FE),
       'iconColor': const Color(0xFF1F4E79),
       'desc': '通關「職場權益」課堂單元解鎖。',
@@ -56,7 +56,7 @@ class AchievementBadgeWall extends StatelessWidget {
     {
       'name': '網路先鋒',
       'asset': 'assets/images/learning/badges/badge_privacy_guard.png',
-      'icon': CtmSvgIcons.smartphone,
+      'icon': CaseLibrarySvgIcons.smartphone,
       'color': const Color(0xFFEAF0F8),
       'iconColor': const Color(0xFF2F5597),
       'desc': '通關「肖像權與社群發文」課堂解鎖。',
@@ -64,7 +64,7 @@ class AchievementBadgeWall extends StatelessWidget {
     {
       'name': '消費專家',
       'asset': 'assets/images/learning/badges/badge_consumer_protector.png',
-      'icon': CtmSvgIcons.shoppingBag,
+      'icon': CaseLibrarySvgIcons.shoppingBag,
       'color': const Color(0xFFFDE8E8),
       'iconColor': const Color(0xFFC00000),
       'desc': '通關「網購退貨與消保」課堂解鎖。',
@@ -72,7 +72,7 @@ class AchievementBadgeWall extends StatelessWidget {
     {
       'name': '擂台霸主',
       'asset': 'assets/images/learning/badges/badge_court_champion.png',
-      'icon': CtmSvgIcons.trophy,
+      'icon': CaseLibrarySvgIcons.trophy,
       'color': const Color(0xFFFFF0C2),
       'iconColor': const Color(0xFF806000),
       'desc': '在「公民法律小擂台」獲得全對。',
@@ -81,7 +81,7 @@ class AchievementBadgeWall extends StatelessWidget {
       'name': '翻譯大師',
       'asset':
           'assets/images/learning/badges/badge_plain_language_translator.png',
-      'icon': CtmSvgIcons.gavel,
+      'icon': CaseLibrarySvgIcons.gavel,
       'color': const Color(0xFFE1F5FE),
       'iconColor': const Color(0xFF0070C0),
       'desc': '使用過「白話文翻譯機」達 3 次。',
@@ -89,7 +89,7 @@ class AchievementBadgeWall extends StatelessWidget {
     {
       'name': '備忘行家',
       'asset': 'assets/images/learning/badges/badge_evidence_memo.png',
-      'icon': CtmSvgIcons.save,
+      'icon': CaseLibrarySvgIcons.save,
       'color': const Color(0xFFECEFF1),
       'iconColor': const Color(0xFF37474F),
       'desc': '導出或儲存過一份證據準備清單。',
@@ -108,7 +108,7 @@ class AchievementBadgeWall extends StatelessWidget {
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.award,
+              CaseLibrarySvgIcon(CaseLibrarySvgIcons.award,
                   color: const Color(0xFFE8B95F), size: 20.sp),
               SizedBox(width: 8.w),
               Text(

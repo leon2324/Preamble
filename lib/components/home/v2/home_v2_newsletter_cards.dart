@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/components/home/home_content.dart';
 import 'package:preamble/theme/app_colors.dart';
 import 'package:preamble/components/shared/share_sheet.dart';
-import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
 
 const String _svgPets = '''
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -368,7 +368,7 @@ class _HomeV2NewsletterCardState extends State<HomeV2NewsletterCard> {
                               shape: BoxShape.circle,
                             ),
                             child: Center(
-                              child: CtmSvgIcon(
+                              child: CaseLibrarySvgIcon(
                                 _svgPathForItem(item),
                                 size: 18.sp,
                                 color: Colors.white,
@@ -398,8 +398,8 @@ class _HomeV2NewsletterCardState extends State<HomeV2NewsletterCard> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CtmSvgIcon(
-                              CtmSvgIcons.idea,
+                            CaseLibrarySvgIcon(
+                              CaseLibrarySvgIcons.idea,
                               color: isDark
                                   ? const Color(0xFF8BF45F)
                                   : const Color(0xFF2E7D32),
@@ -430,8 +430,8 @@ class _HomeV2NewsletterCardState extends State<HomeV2NewsletterCard> {
                         children: [
                           _NewsletterMetric(
                             svgPath: _isLiked
-                                ? CtmSvgIcons.heartFilled
-                                : CtmSvgIcons.heart,
+                                ? CaseLibrarySvgIcons.heartFilled
+                                : CaseLibrarySvgIcons.heart,
                             color: const Color(0xFFE53935),
                             label: _metricText(item.likes, _isLiked ? 1 : 0),
                             onTap: _toggleLike,
@@ -443,7 +443,7 @@ class _HomeV2NewsletterCardState extends State<HomeV2NewsletterCard> {
                             onTap: _share,
                           ),
                           _NewsletterMetric(
-                            svgPath: CtmSvgIcons.message,
+                            svgPath: CaseLibrarySvgIcons.message,
                             color: const Color(0xFF0F7D4B),
                             label:
                                 _metricText(item.comments, _commentCountDelta),
@@ -472,13 +472,13 @@ class _HomeV2NewsletterCardState extends State<HomeV2NewsletterCard> {
     if (item.category.contains('狗') || item.category.contains('寵物')) {
       return _svgPets;
     }
-    if (item.category.contains('租')) return CtmSvgIcons.home;
+    if (item.category.contains('租')) return CaseLibrarySvgIcons.home;
     if (item.category.contains('拍照') || item.category.contains('隱私')) {
-      return CtmSvgIcons.smartphone;
+      return CaseLibrarySvgIcons.smartphone;
     }
-    if (item.category.contains('網購')) return CtmSvgIcons.shoppingBag;
-    if (item.category.contains('交通')) return CtmSvgIcons.car;
-    return CtmSvgIcons.idea;
+    if (item.category.contains('網購')) return CaseLibrarySvgIcons.shoppingBag;
+    if (item.category.contains('交通')) return CaseLibrarySvgIcons.car;
+    return CaseLibrarySvgIcons.idea;
   }
 }
 
@@ -649,8 +649,8 @@ class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
                               SizedBox(height: 8.h),
                               Row(
                                 children: [
-                                  CtmSvgIcon(
-                                    CtmSvgIcons.idea,
+                                  CaseLibrarySvgIcon(
+                                    CaseLibrarySvgIcons.idea,
                                     color: isDark
                                         ? const Color(0xFF8BF45F)
                                         : const Color(0xFF2E7D32),
@@ -704,8 +704,8 @@ class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
                       children: [
                         _NewsletterFocusMetric(
                           svgPath: _isLiked
-                              ? CtmSvgIcons.heartFilled
-                              : CtmSvgIcons.heart,
+                              ? CaseLibrarySvgIcons.heartFilled
+                              : CaseLibrarySvgIcons.heart,
                           color: const Color(0xFFE53935),
                           label: _metricText(item.likes, _isLiked ? 1 : 0),
                           onTap: _toggleLike,
@@ -717,14 +717,14 @@ class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
                           onTap: _share,
                         ),
                         _NewsletterFocusMetric(
-                          svgPath: CtmSvgIcons.message,
+                          svgPath: CaseLibrarySvgIcons.message,
                           color: const Color(0xFF0F7D4B),
                           label: _metricText(item.comments, _commentCountDelta),
                           onTap: _comment,
                         ),
                         _NewsletterFocusMetric(
                           svgPath: _isBookmarked
-                              ? CtmSvgIcons.bookmark
+                              ? CaseLibrarySvgIcons.bookmark
                               : _svgDownload,
                           color: _isBookmarked
                               ? ProtoColors.deepGreen
@@ -772,7 +772,7 @@ class _HomeV2NewsletterFocusCarouselState
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(viewportFraction: 0.9);
+    _pageController = PageController(viewportFraction: 1.0);
   }
 
   @override
@@ -786,14 +786,16 @@ class _HomeV2NewsletterFocusCarouselState
     final visibleItems = widget.items.take(8).toList(growable: false);
     if (visibleItems.isEmpty) return const SizedBox.shrink();
 
+    final textScale = MediaQuery.maybeTextScalerOf(context)?.scale(1.0) ?? 1.0;
+    final dynamicHeight = 238.h * (textScale > 1.0 ? textScale : 1.0);
+
     return Column(
       children: [
         SizedBox(
-          // 台灣繁體中文教學註解：首頁避坑入口使用 PageView 輪播，固定高度讓直向首頁能穩定配置卡片與下方指示燈。
-          height: 200.h,
+          height: dynamicHeight,
           child: PageView.builder(
             controller: _pageController,
-            padEnds: false,
+            padEnds: true,
             physics: const BouncingScrollPhysics(),
             itemCount: visibleItems.length,
             onPageChanged: (index) {
@@ -802,7 +804,7 @@ class _HomeV2NewsletterFocusCarouselState
             itemBuilder: (context, index) {
               final item = visibleItems[index];
               return Padding(
-                padding: EdgeInsets.only(right: 12.w),
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: HomeV2NewsletterFocusCard(
                   item: item,
                   showDots: false,
@@ -915,7 +917,7 @@ class _NewsletterFocusMetric extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CtmSvgIcon(svgPath, color: color, size: 20.sp),
+              CaseLibrarySvgIcon(svgPath, color: color, size: 20.sp),
               SizedBox(width: 5.w),
               Flexible(
                 child: Text(
@@ -1005,7 +1007,7 @@ class _NewsletterMetric extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CtmSvgIcon(svgPath, color: color, size: 16.sp),
+                CaseLibrarySvgIcon(svgPath, color: color, size: 16.sp),
                 SizedBox(width: 6.w),
                 Text(
                   label,

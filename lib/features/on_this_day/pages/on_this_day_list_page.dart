@@ -238,8 +238,8 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
                                 ? _savedCaseIds.add(c.id)
                                 : _savedCaseIds.remove(c.id);
                           });
-                          CustomToast.show(context, next ? '已加入本機收藏。' : '已從本機收藏移除。');
-
+                          CustomToast.show(
+                              context, next ? '已加入本機收藏。' : '已從本機收藏移除。');
                         },
                       ),
                     ],

@@ -267,7 +267,6 @@ class _FeedbackSheetState extends State<FeedbackSheet> {
     if (mounted) {
       Navigator.pop(context);
       CustomToast.show(context, '感謝回報！我們會盡快處理「$_category」問題。');
-
     }
   }
 }

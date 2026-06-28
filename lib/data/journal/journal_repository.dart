@@ -1,4 +1,4 @@
-import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
+import 'package:preamble/features/case_library/data/case_library_data.dart';
 import 'package:preamble/pages/journal/data/journal_page_items.dart';
 
 enum JournalSearchResultType {
@@ -171,7 +171,7 @@ class JournalRepository {
     List<String> tokens,
     List<JournalSearchResult> results,
   ) {
-    for (final book in caseTimeMachineCases) {
+    for (final book in caseLibraryCases) {
       final fields = [
         book.titleZh,
         book.titleEn,

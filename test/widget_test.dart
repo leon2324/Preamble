@@ -12,16 +12,16 @@ import 'package:preamble/data/search/search_repository.dart';
 import 'package:preamble/data/statutes/statute_api_service.dart';
 import 'package:preamble/data/statutes/statute_item.dart';
 import 'package:preamble/data/statutes/statute_repository.dart';
-import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
-import 'package:preamble/features/case_time_machine/pages/case_dossier_detail_page.dart';
-import 'package:preamble/features/case_time_machine/pages/case_time_machine_entry_page.dart';
+import 'package:preamble/features/case_library/data/case_library_data.dart';
+import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
+import 'package:preamble/features/case_library/pages/case_library_entry_page.dart';
 import 'package:preamble/main.dart';
 import 'package:preamble/pages/home/home_subpages.dart';
 import 'package:preamble/pages/following/following_page.dart';
 import 'package:preamble/pages/journal/legacy/case_story_detail_page.dart';
 import 'package:preamble/pages/journal/legacy/journal_archive_page.dart';
 import 'package:preamble/pages/journal/widgets/archive_activity_section.dart';
-import 'package:preamble/pages/journal/widgets/case_time_machine_card.dart';
+import 'package:preamble/pages/journal/widgets/case_library_card.dart';
 import 'package:preamble/pages/journal/widgets/discussing_now_section.dart';
 import 'package:preamble/pages/journal/widgets/journal_page_header.dart';
 import 'package:preamble/pages/journal/widgets/journal_palette.dart';
@@ -409,7 +409,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('案件解析'), findsOneWidget);
     expect(find.text('一句話結論'), findsOneWidget);
-    expect(find.text('案件時光機'), findsOneWidget);
+    expect(find.text('案件圖書館'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -606,7 +606,7 @@ void main() {
 
     await tester.pumpWidget(
       testFrame(Builder(
-        builder: (context) => CaseTimeMachineCard(
+        builder: (context) => CaseLibraryCard(
           palette: JournalPalette.of(context),
         ),
       )),
@@ -848,11 +848,11 @@ void main() {
     await appState.load();
 
     await tester.pumpWidget(
-      _mvpTestFrame(appState, const CaseTimeMachineEntryPage()),
+      _mvpTestFrame(appState, const CaseLibraryEntryPage()),
     );
     await tester.pumpAndSettle();
 
-    // 案件時光機的核心不是列表，而是「館 → 書架 → 書 → 卷宗」；
+    // 案件圖書館的核心不是列表，而是「館 → 書架 → 書 → 卷宗」；
     // 這個測試守住完整沉浸式路徑，避免未來重構退回普通卡片清單。
     expect(find.text('案件圖書館'), findsOneWidget);
     await tester.tap(find.text('思辨討論'));
@@ -901,12 +901,12 @@ void main() {
     final appState = PreambleState();
     addTearDown(appState.dispose);
     await appState.load();
-    final hall = caseTimeMachineHalls.first;
+    final hall = caseLibraryHalls.first;
     final shelf = hall.shelves.first;
 
     await tester.pumpWidget(
       _mvpTestFrame(
-          appState, CaseDossierDetailPage(book: caseTimeMachineCases.first)),
+          appState, CaseDossierDetailPage(book: caseLibraryCases.first)),
     );
     await tester.pumpAndSettle();
 

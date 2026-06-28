@@ -1,18 +1,19 @@
 import SwiftUI
 import WidgetKit
+import ActivityKit
 
 // ==========================================
 // SHARED UTILITIES & MODIFIERS
 // ==========================================
 
 extension View {
-    func adoptContainerBackground() -> some View {
+    func adoptContainerBackground<B: View>(background: B) -> some View {
         if #available(iOS 17.0, *) {
             return self.containerBackground(for: .widget) {
-                Color.clear
+                background
             }
         } else {
-            return self
+            return self.background(background)
         }
     }
 }
@@ -27,6 +28,9 @@ struct PreambleWidgetBundle: WidgetBundle {
         PreambleTodayCaseWidget()
         PreambleTodoListWidget()
         PreambleShortcutsWidget()
+        if #available(iOSApplicationExtension 16.1, *) {
+            PreambleLiveActivityWidget()
+        }
     }
 }
 
@@ -100,29 +104,26 @@ private struct TodayCaseWidgetView: View {
   let entry: TodayCaseEntry
 
   var body: some View {
-    ZStack {
-      background
-      VStack(alignment: .leading, spacing: family == .systemSmall ? 7 : 10) {
-        header
-        Text(entry.payload.title)
-          .font(.system(size: family == .systemSmall ? 15 : 18, weight: .heavy))
-          .foregroundColor(Color(red: 0.08, green: 0.14, blue: 0.18))
-          .lineLimit(family == .systemSmall ? 2 : 1)
-          .minimumScaleFactor(0.85)
+    VStack(alignment: .leading, spacing: family == .systemSmall ? 7 : 10) {
+      header
+      Text(entry.payload.title)
+        .font(.system(size: family == .systemSmall ? 15 : 18, weight: .heavy))
+        .foregroundColor(Color(red: 0.08, green: 0.14, blue: 0.18))
+        .lineLimit(family == .systemSmall ? 2 : 1)
+        .minimumScaleFactor(0.85)
 
-        Text(entry.payload.summary)
-          .font(.system(size: family == .systemSmall ? 11 : 13, weight: .semibold))
-          .foregroundColor(Color(red: 0.36, green: 0.43, blue: 0.50))
-          .lineLimit(family == .systemSmall ? 3 : 2)
-          .minimumScaleFactor(0.82)
+      Text(entry.payload.summary)
+        .font(.system(size: family == .systemSmall ? 11 : 13, weight: .semibold))
+        .foregroundColor(Color(red: 0.36, green: 0.43, blue: 0.50))
+        .lineLimit(family == .systemSmall ? 3 : 2)
+        .minimumScaleFactor(0.82)
 
-        Spacer(minLength: 0)
-        footer
-      }
-      .padding(family == .systemSmall ? 14 : 18)
+      Spacer(minLength: 0)
+      footer
     }
+    .padding(family == .systemSmall ? 14 : 18)
     .widgetURL(URL(string: "preamble://today-case"))
-    .adoptContainerBackground()
+    .adoptContainerBackground(background: background)
   }
 
   private var background: some View {
@@ -180,7 +181,7 @@ struct PreambleTodayCaseWidget: Widget {
     StaticConfiguration(kind: kind, provider: TodayCaseProvider()) { entry in
       TodayCaseWidgetView(entry: entry)
     }
-    .configurationDisplayName("緒言 Preamble 今日判決")
+    .configurationDisplayName("今日判決故事")
     .description("每天用白話整理一則值得理解的台灣法律故事。")
     .supportedFamilies([.systemSmall, .systemMedium])
   }
@@ -252,39 +253,36 @@ private struct TodoListWidgetView: View {
   let entry: TodoListEntry
 
   var body: some View {
-    ZStack {
-      background
-      VStack(alignment: .leading, spacing: 8) {
-        header
-        
-        VStack(alignment: .leading, spacing: 6) {
-          ForEach(0..<min(entry.payload.tasks.count, 3), id: \.self) { index in
-            HStack(alignment: .top, spacing: 6) {
-              Image(systemName: "square")
-                .font(.system(size: 11, weight: .bold))
-                .foregroundColor(Color(red: 0.13, green: 0.37, blue: 0.28))
-                .padding(.top, 2)
-              Text(entry.payload.tasks[index])
-                .font(.system(size: 12, weight: .semibold))
-                .foregroundColor(Color(red: 0.08, green: 0.14, blue: 0.18))
-                .lineLimit(1)
-            }
-          }
-          if entry.payload.tasks.isEmpty {
-            Text("今日無待辦事項，點擊安排！")
-              .font(.system(size: 12, weight: .medium))
-              .foregroundColor(Color(red: 0.36, green: 0.43, blue: 0.50))
-              .padding(.top, 4)
+    VStack(alignment: .leading, spacing: 8) {
+      header
+
+      VStack(alignment: .leading, spacing: 6) {
+        ForEach(0..<min(entry.payload.tasks.count, 3), id: \.self) { index in
+          HStack(alignment: .top, spacing: 6) {
+            Image(systemName: "square")
+              .font(.system(size: 11, weight: .bold))
+              .foregroundColor(Color(red: 0.13, green: 0.37, blue: 0.28))
+              .padding(.top, 2)
+            Text(entry.payload.tasks[index])
+              .font(.system(size: 12, weight: .semibold))
+              .foregroundColor(Color(red: 0.08, green: 0.14, blue: 0.18))
+              .lineLimit(1)
           }
         }
-        
-        Spacer(minLength: 0)
-        footer
+        if entry.payload.tasks.isEmpty {
+          Text("今日無待辦事項，點擊安排！")
+            .font(.system(size: 12, weight: .medium))
+            .foregroundColor(Color(red: 0.36, green: 0.43, blue: 0.50))
+            .padding(.top, 4)
+        }
       }
-      .padding(14)
+
+      Spacer(minLength: 0)
+      footer
     }
+    .padding(14)
     .widgetURL(URL(string: "preamble://todo-list"))
-    .adoptContainerBackground()
+    .adoptContainerBackground(background: background)
   }
 
   private var background: some View {
@@ -333,7 +331,7 @@ struct PreambleTodoListWidget: Widget {
     StaticConfiguration(kind: kind, provider: TodoListProvider()) { entry in
       TodoListWidgetView(entry: entry)
     }
-    .configurationDisplayName("緒言 Preamble 待辦清單")
+    .configurationDisplayName("待辦清單")
     .description("在桌面上追蹤您的訴訟或法律程序待辦事項。")
     .supportedFamilies([.systemSmall, .systemMedium])
   }
@@ -363,41 +361,38 @@ private struct ShortcutsProvider: TimelineProvider {
 
 private struct ShortcutsWidgetView: View {
   var body: some View {
-    ZStack {
-      background
-      VStack(alignment: .leading, spacing: 8) {
-        HStack {
-          Text("緒言 Preamble 快捷功能")
-            .font(.system(size: 12, weight: .heavy))
-            .foregroundColor(Color(red: 0.13, green: 0.37, blue: 0.28))
-          Spacer()
-          Image(systemName: "bolt.fill")
-            .font(.system(size: 11))
-            .foregroundColor(Color(red: 0.76, green: 0.52, blue: 0.12))
-        }
-        
-        Spacer(minLength: 0)
-        
-        HStack(spacing: 8) {
-          Link(destination: URL(string: "preamble://time-machine")!) {
-            shortcutItem(title: "時光機", icon: "clock.arrow.2.circlepath")
-          }
-          Link(destination: URL(string: "preamble://chat")!) {
-            shortcutItem(title: "AI諮詢", icon: "bubble.left.and.bubble.right.fill")
-          }
-          Link(destination: URL(string: "preamble://tips")!) {
-            shortcutItem(title: "生活避坑", icon: "shield.fill")
-          }
-          Link(destination: URL(string: "preamble://vocabulary")!) {
-            shortcutItem(title: "法律詞彙", icon: "character.book.closed.fill")
-          }
-        }
-        
-        Spacer(minLength: 0)
+    VStack(alignment: .leading, spacing: 8) {
+      HStack {
+        Text("快捷功能")
+          .font(.system(size: 12, weight: .heavy))
+          .foregroundColor(Color(red: 0.13, green: 0.37, blue: 0.28))
+        Spacer()
+        Image(systemName: "bolt.fill")
+          .font(.system(size: 11))
+          .foregroundColor(Color(red: 0.76, green: 0.52, blue: 0.12))
       }
-      .padding(16)
+
+      Spacer(minLength: 0)
+
+      HStack(spacing: 8) {
+        Link(destination: URL(string: "preamble://time-machine")!) {
+          shortcutItem(title: "圖書館", icon: "clock.arrow.2.circlepath")
+        }
+        Link(destination: URL(string: "preamble://chat")!) {
+          shortcutItem(title: "AI諮詢", icon: "bubble.left.and.bubble.right.fill")
+        }
+        Link(destination: URL(string: "preamble://tips")!) {
+          shortcutItem(title: "生活避坑", icon: "shield.fill")
+        }
+        Link(destination: URL(string: "preamble://vocabulary")!) {
+          shortcutItem(title: "法律詞彙", icon: "character.book.closed.fill")
+        }
+      }
+
+      Spacer(minLength: 0)
     }
-    .adoptContainerBackground()
+    .padding(16)
+    .adoptContainerBackground(background: background)
   }
 
   private var background: some View {
@@ -424,10 +419,6 @@ private struct ShortcutsWidgetView: View {
     .padding(.vertical, 10)
     .background(Color.white.opacity(0.85))
     .cornerRadius(10)
-    .overlay(
-      RoundedRectangle(cornerRadius: 10)
-        .stroke(Color(red: 0.13, green: 0.37, blue: 0.28).opacity(0.12), lineWidth: 0.8)
-    )
   }
 }
 
@@ -438,8 +429,117 @@ struct PreambleShortcutsWidget: Widget {
     StaticConfiguration(kind: kind, provider: ShortcutsProvider()) { entry in
       ShortcutsWidgetView()
     }
-    .configurationDisplayName("緒言 Preamble 快捷功能")
-    .description("一鍵快速啟動法律時光機、AI 諮詢等熱門功能。")
+    .configurationDisplayName("快捷功能")
+    .description("一鍵快速啟動法律圖書館、AI 諮詢等熱門功能。")
     .supportedFamilies([.systemMedium])
   }
+}
+
+// ==========================================
+// 5. WIDGET 4: REAL APPLE LIVE ACTIVITY & DYNAMIC ISLAND
+// ==========================================
+
+@available(iOSApplicationExtension 16.1, *)
+struct PreambleAttributes: ActivityAttributes {
+    public struct ContentState: Codable, Hashable {
+        var status: String
+        var countdownDays: Int
+        var nextEvent: String
+    }
+    var caseTitle: String
+}
+
+@available(iOSApplicationExtension 16.1, *)
+struct PreambleLiveActivityWidget: Widget {
+    var body: some WidgetConfiguration {
+        ActivityConfiguration(for: PreambleAttributes.self) { context in
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    HStack(spacing: 4) {
+                        Image(systemName: "scale.3d")
+                            .foregroundColor(Color(red: 0.13, green: 0.37, blue: 0.28))
+                            .font(.system(size: 14, weight: .bold))
+                        Text("緒言 Preamble — 訴訟圖書館")
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundColor(Color(red: 0.13, green: 0.37, blue: 0.28))
+                    }
+                    Spacer()
+                    Text(context.state.status)
+                        .font(.system(size: 11, weight: .heavy))
+                        .foregroundColor(Color(red: 0.76, green: 0.22, blue: 0.20))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 3)
+                        .background(Color(red: 0.98, green: 0.86, blue: 0.84))
+                        .cornerRadius(6)
+                }
+
+                Text(context.attributes.caseTitle)
+                    .font(.system(size: 15, weight: .bold))
+                    .foregroundColor(Color(red: 0.08, green: 0.14, blue: 0.18))
+                    .lineLimit(1)
+
+                HStack {
+                    Label(context.state.nextEvent, systemImage: "calendar.badge.clock")
+                        .font(.system(size: 11.5, weight: .medium))
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Text("宣判倒數 \(context.state.countdownDays) 天")
+                        .font(.system(size: 13, weight: .black))
+                        .foregroundColor(Color(red: 0.13, green: 0.37, blue: 0.28))
+                }
+            }
+            .padding(16)
+            .adoptContainerBackground(background: background)
+        } dynamicIsland: { context in
+            DynamicIsland {
+                DynamicIslandExpandedRegion(.leading) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "scale.3d")
+                            .foregroundColor(Color(red: 0.73, green: 0.97, blue: 0.88))
+                        Text("緒言")
+                            .font(.system(size: 13, weight: .heavy))
+                            .foregroundColor(Color(red: 0.73, green: 0.97, blue: 0.88))
+                    }
+                }
+                DynamicIslandExpandedRegion(.trailing) {
+                    Text(context.state.status)
+                        .font(.system(size: 12, weight: .black))
+                        .foregroundColor(Color(red: 1.0, green: 0.4, blue: 0.4))
+                }
+                DynamicIslandExpandedRegion(.bottom) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(context.attributes.caseTitle)
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundColor(.white)
+                            .lineLimit(1)
+                        Text("\(context.state.nextEvent) · 宣判倒數 \(context.state.countdownDays) 天")
+                            .font(.system(size: 11.5, weight: .medium))
+                            .foregroundColor(Color(red: 0.73, green: 0.97, blue: 0.88))
+                            .lineLimit(1)
+                    }
+                }
+            } compactLeading: {
+                Image(systemName: "scale.3d")
+                    .foregroundColor(Color(red: 0.73, green: 0.97, blue: 0.88))
+            } compactTrailing: {
+                Text("\(context.state.countdownDays)天")
+                    .font(.system(size: 11, weight: .black))
+                    .foregroundColor(Color(red: 0.73, green: 0.97, blue: 0.88))
+            } minimal: {
+                Image(systemName: "scale.3d")
+                    .foregroundColor(Color(red: 0.73, green: 0.97, blue: 0.88))
+            }
+        }
+    }
+
+    private var background: some View {
+      LinearGradient(
+        colors: [
+          Color(red: 0.99, green: 0.99, blue: 0.99),
+          Color(red: 0.94, green: 0.97, blue: 0.95)
+        ],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+      )
+    }
 }

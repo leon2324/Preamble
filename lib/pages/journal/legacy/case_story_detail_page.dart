@@ -50,7 +50,6 @@ class _CaseStoryDetailPageState extends State<CaseStoryDetailPage> {
 
   void _showMessage(String message) {
     CustomToast.show(context, message);
-
   }
 
   String get _caseId => widget.item.storageId;
@@ -733,7 +732,7 @@ class _CaseTimelinePanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _CaseSectionCard(
-      title: '案件時光機',
+      title: '案件圖書館',
       palette: palette,
       child: Column(
         children: [

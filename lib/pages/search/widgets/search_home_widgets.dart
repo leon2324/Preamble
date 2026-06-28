@@ -1,4 +1,3 @@
-
 part of '../global_search_page.dart';
 
 // 本檔集中放全站搜尋首頁的展示型 UI，包括迎賓吉祥物、最近搜尋、靈感卡與快捷入口；
@@ -405,7 +404,6 @@ class _SearchHome extends StatelessWidget {
                 '今日 AI 提問剩餘：${appState.remainingAiQuota} / ${appState.accessTier.defaultDailyAiQuota} 次',
             onTap: () {
               CustomToast.show(context, '目前提問額度以本機使用狀態計算；正式方案開放前不提供付費升級。');
-
             },
           ),
         ),

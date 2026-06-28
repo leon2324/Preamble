@@ -4,40 +4,161 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/components/home/home_content.dart';
 import 'package:preamble/data/mock_data/home/home_mock_data.dart';
-import 'package:preamble/features/case_time_machine/pages/case_time_machine_entry_page.dart';
-import 'package:preamble/features/case_time_machine/theme/case_time_machine_theme.dart';
+import 'package:preamble/features/case_library/pages/case_library_entry_page.dart';
+import 'package:preamble/features/case_library/theme/case_library_theme.dart';
 import 'package:preamble/pages/journal/data/journal_page_items.dart';
 import 'package:preamble/pages/journal/widgets/journal_palette.dart';
 import 'package:preamble/pages/journal/widgets/journal_section_header.dart';
 import 'package:preamble/pages/journal/widgets/discussion_detail_page.dart';
 
-class DiscussingNowSection extends StatelessWidget {
+import 'package:preamble/data/journal/discussion_feed_service.dart';
+
+class DiscussingNowSection extends StatefulWidget {
   const DiscussingNowSection({super.key, required this.palette});
 
   final JournalPalette palette;
 
   @override
+  State<DiscussingNowSection> createState() => _DiscussingNowSectionState();
+}
+
+class _DiscussingNowSectionState extends State<DiscussingNowSection> {
+  @override
+  void initState() {
+    super.initState();
+    DiscussionFeedService.instance.addListener(_onFeedChanged);
+  }
+
+  @override
+  void dispose() {
+    DiscussionFeedService.instance.removeListener(_onFeedChanged);
+    super.dispose();
+  }
+
+  void _onFeedChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final service = DiscussionFeedService.instance;
+    final topics = service.currentFeed.topics;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         JournalSectionHeader(
           title: '大家都在討論',
           subtitle: '先看排行榜，再從底部展開單一議題的熱度摘要。',
-          palette: palette,
-          actionLabel: '查看全部',
+          palette: widget.palette,
         ),
         SizedBox(height: 10.h),
-        ...discussionTrendItems.take(4).map(
-              (item) => Padding(
-                padding: EdgeInsets.only(bottom: 8.h),
-                child: _DiscussionTrendCard(
-                  item: item,
-                  palette: palette,
-                  isPrimary: item.rank == 1,
+        if (service.hasError || (!service.isLoaded && topics.isEmpty)) ...[
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 40.h, horizontal: 16.w),
+            decoration: BoxDecoration(
+              color: widget.palette.surface,
+              borderRadius: BorderRadius.circular(16.r),
+              border: Border.all(color: widget.palette.border),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.wifi_off_rounded,
+                  color: widget.palette.secondaryText.withValues(alpha: 0.5),
+                  size: 40.sp,
+                ),
+                SizedBox(height: 12.h),
+                Text(
+                  '沒有連線QQ，請連線後再試用一次',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.bold,
+                    color: widget.palette.secondaryText,
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                OutlinedButton.icon(
+                  onPressed: () {
+                    service.refreshFeed();
+                  },
+                  icon: Icon(Icons.refresh_rounded, size: 14.sp),
+                  label: const Text('重新嘗試連線'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: const Color(0xFF1E7B66),
+                    side: const BorderSide(color: Color(0xFF1E7B66)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ] else if (topics.isEmpty) ...[
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 40.h, horizontal: 16.w),
+            decoration: BoxDecoration(
+              color: widget.palette.surface,
+              borderRadius: BorderRadius.circular(16.r),
+              border: Border.all(color: widget.palette.border),
+            ),
+            child: Center(
+              child: SizedBox(
+                width: 24.w,
+                height: 24.w,
+                child: const CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF1E7B66)),
                 ),
               ),
             ),
+          ),
+        ] else ...[
+          ...topics.take(5).map(
+                (item) => Padding(
+                  padding: EdgeInsets.only(bottom: 8.h),
+                  child: _DiscussionTrendCard(
+                    item: DiscussionTrendItem(
+                      rank: item.rank,
+                      title: item.title,
+                      score: item.heatScore.toDouble(),
+                      delta: '24h +${item.dayChangePercent}%',
+                      whyHot: item.overview,
+                      relatedCases: item.tags,
+                      heatCurve: item.trendPoints.map((pt) {
+                        final match = RegExp(r'\d+').firstMatch(pt.volumeLabel);
+                        return match != null
+                            ? double.tryParse(match.group(0)!) ?? 50.0
+                            : 50.0;
+                      }).toList(),
+                      heatLabels:
+                          item.trendPoints.map((pt) => pt.dateLabel).toList(),
+                      fullTopicIndex: item.rank - 1,
+                      tint: item.rank == 1
+                          ? const Color(0xFF1E7B66)
+                          : item.rank == 2
+                              ? const Color(0xFF2F6D99)
+                              : item.rank == 3
+                                  ? const Color(0xFF9F6A26)
+                                  : item.rank == 4
+                                      ? const Color(0xFF7A5D9A)
+                                      : const Color(0xFF355668),
+                    ),
+                    palette: widget.palette,
+                    isPrimary: item.rank == 1,
+                  ),
+                ),
+              ),
+        ],
       ],
     );
   }
@@ -56,8 +177,8 @@ class _DiscussionTrendCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final baseHeight = 50.h < 50 ? 50.0 : 50.h;
-    final adaptiveHeight = MediaQuery.textScalerOf(context).scale(baseHeight);
+    // 不綁死安全高度，改用 minHeight 支援特大字體
+    final minH = (50.h < 50 ? 50.0 : 50.h);
 
     return Material(
       color: Colors.transparent,
@@ -75,8 +196,7 @@ class _DiscussionTrendCard extends StatelessWidget {
         },
         onLongPress: () => _openPreviewSheet(context),
         child: Ink(
-          height: adaptiveHeight,
-          padding: EdgeInsets.symmetric(horizontal: 12.w),
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
           decoration: BoxDecoration(
             color: isPrimary ? const Color(0xFFEAF7F2) : palette.surface,
             borderRadius: BorderRadius.circular(16.r),
@@ -93,67 +213,75 @@ class _DiscussionTrendCard extends StatelessWidget {
               ),
             ],
           ),
-          child: Row(
-            children: [
-              Hero(
-                tag: 'discussion-rank-${item.rank}',
-                child: _CompactRankBadge(rank: item.rank, tint: item.tint),
-              ),
-              SizedBox(width: 10.w),
-              Expanded(
-                child: Hero(
-                  tag: 'discussion-title-${item.rank}',
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Text(
-                      item.title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 13.8.sp,
-                        fontWeight: FontWeight.w900,
-                        color: palette.primaryText,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: minH),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Hero(
+                  tag: 'discussion-rank-${item.rank}',
+                  child: _CompactRankBadge(rank: item.rank, tint: item.tint),
+                ),
+                SizedBox(width: 10.w),
+                Expanded(
+                  child: Hero(
+                    tag: 'discussion-title-${item.rank}',
+                    child: Material(
+                      color: Colors.transparent,
+                      child: Text(
+                        item.title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 13.8.sp,
+                          fontWeight: FontWeight.w900,
+                          color: palette.primaryText,
+                          height: 1.3,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(width: 8.w),
-              ConstrainedBox(
-                constraints: BoxConstraints(minWidth: 84.w),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      item.score.toStringAsFixed(1),
-                      style: TextStyle(
-                        fontSize: 15.sp,
-                        height: 1,
-                        fontWeight: FontWeight.w900,
-                        color: const Color(0xFFFF7A1A),
+                SizedBox(width: 8.w),
+                // 熱度分數區場加 maxWidth 防特竿螢幕擠動到左邊
+                ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: 72.w, maxWidth: 100.w),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        item.score.toStringAsFixed(1),
+                        style: TextStyle(
+                          fontSize: 15.sp,
+                          height: 1,
+                          fontWeight: FontWeight.w900,
+                          color: const Color(0xFFFF7A1A),
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      item.delta,
-                      style: TextStyle(
-                        fontSize: 9.8.sp,
-                        height: 1,
-                        fontWeight: FontWeight.w800,
-                        color: const Color(0xFF146B50),
+                      SizedBox(height: 2.h),
+                      Text(
+                        item.delta,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 9.8.sp,
+                          height: 1,
+                          fontWeight: FontWeight.w800,
+                          color: const Color(0xFF146B50),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(width: 6.w),
-              Icon(
-                CupertinoIcons.chevron_right,
-                size: 15.sp,
-                color: palette.primaryText.withValues(alpha: 0.62),
-              ),
-            ],
+                SizedBox(width: 6.w),
+                Icon(
+                  CupertinoIcons.chevron_right,
+                  size: 15.sp,
+                  color: palette.primaryText.withValues(alpha: 0.62),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -652,11 +780,11 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 10.w, vertical: 5.h),
                               decoration: BoxDecoration(
-                                color: CaseTimeMachineColors.primaryGreen
+                                color: CaseLibraryColors.primaryGreen
                                     .withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(20.r),
                                 border: Border.all(
-                                    color: CaseTimeMachineColors.primaryGreen
+                                    color: CaseLibraryColors.primaryGreen
                                         .withValues(alpha: 0.2)),
                               ),
                               child: Text(
@@ -664,7 +792,7 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
                                 style: TextStyle(
                                   fontSize: 11.sp,
                                   fontWeight: FontWeight.bold,
-                                  color: CaseTimeMachineColors.primaryGreen,
+                                  color: CaseLibraryColors.primaryGreen,
                                 ),
                               ),
                             ))
@@ -744,8 +872,8 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
                             setState(() {
                               _isFollowing = !_isFollowing;
                             });
-                            CustomToast.show(context, _isFollowing ? '已追蹤此議題！' : '已取消追蹤');
-
+                            CustomToast.show(
+                                context, _isFollowing ? '已追蹤此議題！' : '已取消追蹤');
                           },
                           icon: Icon(
                             _isFollowing
@@ -756,11 +884,11 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
                           label: Text(_isFollowing ? '追蹤中' : '追蹤議題'),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: _isFollowing
-                                ? CaseTimeMachineColors.primaryGreen
+                                ? CaseLibraryColors.primaryGreen
                                 : palette.primaryText,
                             side: BorderSide(
                               color: _isFollowing
-                                  ? CaseTimeMachineColors.primaryGreen
+                                  ? CaseLibraryColors.primaryGreen
                                   : palette.border,
                               width: 1.5,
                             ),
@@ -778,8 +906,7 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
                             Navigator.of(context).pop();
                             Navigator.of(context).push(
                               CupertinoPageRoute<void>(
-                                builder: (__) =>
-                                    const CaseTimeMachineEntryPage(),
+                                builder: (__) => const CaseLibraryEntryPage(),
                               ),
                             );
                           },
@@ -1074,7 +1201,7 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
               CircleAvatar(
                 radius: 16.r,
                 backgroundColor:
-                    CaseTimeMachineColors.primaryGreen.withValues(alpha: 0.1),
+                    CaseLibraryColors.primaryGreen.withValues(alpha: 0.1),
                 child: Text(
                   comment.userHandle.isNotEmpty
                       ? comment.userHandle.substring(1, 2).toUpperCase()
@@ -1082,7 +1209,7 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
                   style: TextStyle(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.bold,
-                    color: CaseTimeMachineColors.primaryGreen,
+                    color: CaseLibraryColors.primaryGreen,
                   ),
                 ),
               ),

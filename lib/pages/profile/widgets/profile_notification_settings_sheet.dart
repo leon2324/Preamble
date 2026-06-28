@@ -158,7 +158,6 @@ class _NotificationSettingsSheetState extends State<NotificationSettingsSheet> {
                     );
                     Navigator.pop(context);
                     CustomToast.show(context, '提醒偏好已儲存。');
-
                   },
                   style: FilledButton.styleFrom(
                     backgroundColor: AppColors.primary,

@@ -216,7 +216,9 @@ class _AnswerPill extends StatelessWidget {
                 size: 14.sp,
                 color: isSelected
                     ? (showResult
-                        ? (isCorrect ? const Color(0xFF2E7D4D) : const Color(0xFFB24C4C))
+                        ? (isCorrect
+                            ? const Color(0xFF2E7D4D)
+                            : const Color(0xFFB24C4C))
                         : const Color(0xFFE8B95F))
                     : Colors.grey,
               ),

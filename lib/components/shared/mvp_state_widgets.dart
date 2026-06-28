@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/theme/app_colors.dart';
 
+import 'package:preamble/components/shared/liquid_glass_widgets.dart';
+
 const lawAppLegalDisclaimer = '本內容僅供法律知識參考，不構成正式法律意見；具體案件請諮詢律師或專業人士。';
 
 /// 共用載入狀態。
@@ -19,21 +21,54 @@ class AppLoadingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(20.w),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const CircularProgressIndicator.adaptive(),
-            SizedBox(height: 12.h),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: _bodyStyle(context),
-            ),
-          ],
-        ),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 8.w,
+                height: 8.w,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF1B5E4F),
+                  shape: BoxShape.circle,
+                ),
+              ),
+              SizedBox(width: 8.w),
+              Expanded(
+                child: Text(
+                  message,
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w700,
+                    color: const Color(0xFF1B5E4F),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16.h),
+          LiquidGlassShimmer(
+            width: double.infinity,
+            height: 90.h,
+            radius: 12.r,
+          ),
+          SizedBox(height: 12.h),
+          LiquidGlassShimmer(
+            width: double.infinity,
+            height: 70.h,
+            radius: 12.r,
+          ),
+          SizedBox(height: 12.h),
+          LiquidGlassShimmer(
+            width: double.infinity,
+            height: 80.h,
+            radius: 12.r,
+          ),
+        ],
       ),
     );
   }

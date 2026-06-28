@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/data/journal/journal_repository.dart';
 import 'package:preamble/pages/journal/widgets/archive_activity_section.dart';
-import 'package:preamble/pages/journal/widgets/case_time_machine_card.dart';
+import 'package:preamble/pages/journal/widgets/case_library_card.dart';
 import 'package:preamble/pages/journal/widgets/curated_exhibition_shelf.dart';
 import 'package:preamble/pages/journal/widgets/discussing_now_section.dart';
 import 'package:preamble/pages/journal/widgets/journal_page_header.dart';
@@ -126,7 +126,7 @@ class _JournalPageState extends State<JournalPage> {
                 DiscussingNowSection(palette: palette),
                 SizedBox(height: 20.h),
 
-                CaseTimeMachineCard(palette: palette),
+                CaseLibraryCard(palette: palette),
                 SizedBox(height: 20.h),
                 OnThisDayCard(palette: palette),
                 SizedBox(height: 20.h),

@@ -6,7 +6,8 @@ import 'package:preamble/app/app_state.dart';
 import 'package:preamble/pages/learning/know_law_page.dart';
 
 void main() {
-  testWidgets('Custom classroom card renders and generates new topic', (WidgetTester tester) async {
+  testWidgets('Custom classroom card renders and generates new topic',
+      (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
 
     tester.view.devicePixelRatio = 3.0;
@@ -69,7 +70,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 800));
     await tester.pump(const Duration(milliseconds: 800));
     await tester.pump(const Duration(milliseconds: 800));
-    
+
     // Settles the dialog pop and transitions
     await tester.pumpAndSettle();
 

@@ -8,9 +8,10 @@ import 'package:preamble/pages/journal/widgets/journal_palette.dart';
 import 'package:preamble/pages/learning/know_law_page.dart';
 
 void main() {
-  testWidgets('AssistantPromptBubble renders correctly and navigates on tap', (WidgetTester tester) async {
+  testWidgets('AssistantPromptBubble renders correctly and navigates on tap',
+      (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
-    
+
     // Set a phone size so screenutil calculates correctly
     tester.view.devicePixelRatio = 3.0;
     tester.view.physicalSize = const Size(1179, 2556);

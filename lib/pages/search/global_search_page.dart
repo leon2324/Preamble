@@ -1116,7 +1116,6 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
 
   void _showSnack(String message) {
     CustomToast.show(context, message);
-
   }
 
   List<_SearchResult> _resultsOfType(_ResultType type) {

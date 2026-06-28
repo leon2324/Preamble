@@ -27,7 +27,7 @@ import 'package:preamble/pages/learning/widgets/notebook_cover_editor_page.dart'
 import 'package:preamble/pages/learning/widgets/topic_catalog_bottom_sheet.dart';
 import 'package:preamble/pages/learning/widgets/custom_classroom_dialog.dart';
 import 'package:preamble/pages/learning/models/learning_topic_option.dart';
-import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
 import 'package:preamble/data/learning/supabase_learning_service.dart';
 
 import 'dart:async';
@@ -646,7 +646,6 @@ class KnowLawPageState extends State<KnowLawPage> {
             });
             HapticFeedback.heavyImpact();
             CustomToast.show(context, '🎉 成功訂製您的專屬課程「${newTopic.title}」！');
-
           },
         );
       },
@@ -733,12 +732,10 @@ class KnowLawPageState extends State<KnowLawPage> {
     });
 
     CustomToast.show(context, '已為您切換至選修專題：$nextTopicName 📚');
-
   }
 
   void _showTopicComingSoon(String topic) {
     CustomToast.show(context, '$topic 專題正在整理中，之後會加入主修課。');
-
   }
 
   void _openLearningTopicCatalog({String? initialCategory}) {
@@ -980,8 +977,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CtmSvgIcon(
-                      CtmSvgIcons.bookOpen,
+                    CaseLibrarySvgIcon(
+                      CaseLibrarySvgIcons.bookOpen,
                       size: 14.sp,
                       color: _selectedTabIndex == 0
                           ? HomeV2Palette.trustGreen
@@ -1026,8 +1023,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CtmSvgIcon(
-                      CtmSvgIcons.gavel,
+                    CaseLibrarySvgIcon(
+                      CaseLibrarySvgIcons.gavel,
                       size: 14.sp,
                       color: _selectedTabIndex == 1
                           ? HomeV2Palette.trustGreen
@@ -1203,8 +1200,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                     ),
                   ),
                   SizedBox(width: 2.w),
-                  CtmSvgIcon(
-                    CtmSvgIcons.chevronRight,
+                  CaseLibrarySvgIcon(
+                    CaseLibrarySvgIcons.chevronRight,
                     size: 13.sp,
                     color: HomeV2Palette.trustGreen,
                   ),
@@ -1638,8 +1635,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                                     ],
                                   ),
                                 ),
-                                CtmSvgIcon(
-                                  CtmSvgIcons.arrowRight,
+                                CaseLibrarySvgIcon(
+                                  CaseLibrarySvgIcons.arrowRight,
                                   size: 18.sp,
                                   color: Colors.white,
                                 ),
@@ -1778,8 +1775,10 @@ class KnowLawPageState extends State<KnowLawPage> {
                     border: Border.all(color: activeColor, width: 1.4.w),
                   ),
                   child: Center(
-                    child: CtmSvgIcon(
-                      isDone ? CtmSvgIcons.star : CtmSvgIcons.timeline,
+                    child: CaseLibrarySvgIcon(
+                      isDone
+                          ? CaseLibrarySvgIcons.star
+                          : CaseLibrarySvgIcons.timeline,
                       size: 13.sp,
                       color: activeColor,
                     ),
@@ -1844,8 +1843,8 @@ class KnowLawPageState extends State<KnowLawPage> {
                     ),
                   ),
                   SizedBox(width: 8.w),
-                  CtmSvgIcon(
-                    CtmSvgIcons.chevronRight,
+                  CaseLibrarySvgIcon(
+                    CaseLibrarySvgIcons.chevronRight,
                     size: 15.sp,
                     color: activeColor,
                   ),
@@ -2297,7 +2296,7 @@ class KnowLawPageState extends State<KnowLawPage> {
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.gavel,
+              CaseLibrarySvgIcon(CaseLibrarySvgIcons.gavel,
                   color: const Color(0xFF94610D), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
@@ -2432,7 +2431,6 @@ class KnowLawPageState extends State<KnowLawPage> {
                           Clipboard.setData(
                               ClipboardData(text: _translationOutput));
                           CustomToast.show(context, '已複製譯文至剪貼簿！');
-
                         },
                       ),
                       SizedBox(width: 8.w),
@@ -2454,7 +2452,6 @@ class KnowLawPageState extends State<KnowLawPage> {
                             '法律術語白話翻譯',
                           );
                           CustomToast.show(context, '已成功將譯文摘錄至手帳筆記！📌');
-
                         },
                       ),
                     ],
@@ -2478,7 +2475,7 @@ class KnowLawPageState extends State<KnowLawPage> {
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.scale,
+              CaseLibrarySvgIcon(CaseLibrarySvgIcons.scale,
                   color: const Color(0xFF3F7FBF), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
@@ -2664,7 +2661,6 @@ class KnowLawPageState extends State<KnowLawPage> {
                         Clipboard.setData(
                             ClipboardData(text: _depreciationResult));
                         CustomToast.show(context, '已複製折舊計算結果至剪貼簿！');
-
                       },
                     ),
                     noteAction: _buildLearningResultActionButton(
@@ -2677,7 +2673,6 @@ class KnowLawPageState extends State<KnowLawPage> {
                           '車禍折舊理賠計算',
                         );
                         CustomToast.show(context, '已成功將折舊結果摘錄至手帳筆記！📌');
-
                       },
                     ),
                     exportAction: _buildLearningResultActionButton(
@@ -2755,7 +2750,7 @@ class KnowLawPageState extends State<KnowLawPage> {
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.bookOpen,
+              CaseLibrarySvgIcon(CaseLibrarySvgIcons.bookOpen,
                   color: const Color(0xFF2E7D32), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
@@ -2989,7 +2984,6 @@ class KnowLawPageState extends State<KnowLawPage> {
                         Clipboard.setData(
                             ClipboardData(text: _rentNoticeResult));
                         CustomToast.show(context, '已複製催告信函草稿至剪貼簿！');
-
                       },
                     ),
                     noteAction: _buildLearningResultActionButton(
@@ -3002,7 +2996,6 @@ class KnowLawPageState extends State<KnowLawPage> {
                           _rentNoticeType == 0 ? '設備修繕催告存證信函' : '期滿退押金催告存證信函',
                         );
                         CustomToast.show(context, '已成功將草稿摘錄至手帳筆記！📌');
-
                       },
                     ),
                     exportAction: _buildLearningResultActionButton(
@@ -3081,7 +3074,7 @@ class KnowLawPageState extends State<KnowLawPage> {
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.clock,
+              CaseLibrarySvgIcon(CaseLibrarySvgIcons.clock,
                   color: const Color(0xFFD87D32), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
@@ -3191,7 +3184,6 @@ class KnowLawPageState extends State<KnowLawPage> {
                           Clipboard.setData(
                               ClipboardData(text: _overtimeResult));
                           CustomToast.show(context, '已複製加班費試算結果至剪貼簿！');
-
                         },
                       ),
                       SizedBox(width: 8.w),
@@ -3212,7 +3204,6 @@ class KnowLawPageState extends State<KnowLawPage> {
                             '加班費試算結果',
                           );
                           CustomToast.show(context, '已成功將加班費結果摘錄至手帳筆記！📌');
-
                         },
                       ),
                     ],
@@ -3275,7 +3266,7 @@ class KnowLawPageState extends State<KnowLawPage> {
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.filePen,
+              CaseLibrarySvgIcon(CaseLibrarySvgIcons.filePen,
                   color: const Color(0xFFC2185B), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
@@ -3393,7 +3384,6 @@ class KnowLawPageState extends State<KnowLawPage> {
                         Clipboard.setData(
                             ClipboardData(text: _consumerNoticeResult));
                         CustomToast.show(context, '已複製退貨催告信函草稿至剪貼簿！');
-
                       },
                     ),
                     noteAction: _buildLearningResultActionButton(
@@ -3406,7 +3396,6 @@ class KnowLawPageState extends State<KnowLawPage> {
                           '網購退貨存證信函',
                         );
                         CustomToast.show(context, '已成功將草稿摘錄至手帳筆記！📌');
-
                       },
                     ),
                     exportAction: _buildLearningResultActionButton(
@@ -3484,7 +3473,7 @@ class KnowLawPageState extends State<KnowLawPage> {
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.sparkles,
+              CaseLibrarySvgIcon(CaseLibrarySvgIcons.sparkles,
                   color: const Color(0xFF512DA8), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
@@ -3532,7 +3521,6 @@ class KnowLawPageState extends State<KnowLawPage> {
                     _privacySops,
                   );
                   CustomToast.show(context, '已成功儲存自救步驟至小法助的「備忘錄」中！');
-
                 },
                 color: const Color(0xFF512DA8),
               ),
@@ -3553,7 +3541,7 @@ class KnowLawPageState extends State<KnowLawPage> {
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.timeline,
+              CaseLibrarySvgIcon(CaseLibrarySvgIcons.timeline,
                   color: const Color(0xFF00796B), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
@@ -3601,7 +3589,6 @@ class KnowLawPageState extends State<KnowLawPage> {
                     _neighborSops,
                   );
                   CustomToast.show(context, '已將證據蒐證清單儲存至小法助的「備忘錄」中！');
-
                 },
                 color: const Color(0xFF00796B),
               ),
@@ -3622,7 +3609,7 @@ class KnowLawPageState extends State<KnowLawPage> {
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.bookOpen,
+              CaseLibrarySvgIcon(CaseLibrarySvgIcons.bookOpen,
                   color: const Color(0xFF8E24AA), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
@@ -3758,7 +3745,6 @@ class KnowLawPageState extends State<KnowLawPage> {
                           Clipboard.setData(
                               ClipboardData(text: _marriagePropertyResult));
                           CustomToast.show(context, '已複製夫妻財產分配計算結果至剪貼簿！');
-
                         },
                       ),
                       SizedBox(width: 8.w),
@@ -3779,7 +3765,6 @@ class KnowLawPageState extends State<KnowLawPage> {
                             '夫妻財產分配計算結果',
                           );
                           CustomToast.show(context, '已成功將分配結果摘錄至手帳筆記！📌');
-
                         },
                       ),
                     ],
@@ -3803,7 +3788,7 @@ class KnowLawPageState extends State<KnowLawPage> {
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.bookmark,
+              CaseLibrarySvgIcon(CaseLibrarySvgIcons.bookmark,
                   color: const Color(0xFFD32F2F), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
@@ -3851,7 +3836,6 @@ class KnowLawPageState extends State<KnowLawPage> {
                     _antiFraudSops,
                   );
                   CustomToast.show(context, '已將防詐自救步驟儲存至小法助「備忘錄」中！');
-
                 },
                 color: const Color(0xFFD32F2F),
               ),
@@ -3970,7 +3954,7 @@ class KnowLawPageState extends State<KnowLawPage> {
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.search,
+              CaseLibrarySvgIcon(CaseLibrarySvgIcons.search,
                   color: const Color(0xFF3F7FBF), size: 20.sp),
               SizedBox(width: 8.w),
               Text(
@@ -4077,7 +4061,7 @@ class KnowLawPageState extends State<KnowLawPage> {
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.star,
+              CaseLibrarySvgIcon(CaseLibrarySvgIcons.star,
                   color: const Color(0xFFE8B95F), size: 18.sp),
               SizedBox(width: 8.w),
               Text(
@@ -4271,7 +4255,6 @@ class KnowLawPageState extends State<KnowLawPage> {
                       '每日隨堂簽到挑戰',
                     );
                     CustomToast.show(context, '已將解析成功摘錄至手帳筆記！📌');
-
                   },
                   style: OutlinedButton.styleFrom(
                     foregroundColor: HomeV2Palette.trustGreen,
@@ -5483,14 +5466,14 @@ class KnowLawPageState extends State<KnowLawPage> {
                               p.isEmpty ||
                               f.isEmpty ||
                               c.isEmpty) {
-                            CustomToast.show(context, '⚠️ 每個欄位都是必填的喔，才能構成完整的三段論邏輯！');
+                            CustomToast.show(
+                                context, '⚠️ 每個欄位都是必填的喔，才能構成完整的三段論邏輯！');
 
                             return;
                           }
                           gameState.addCornellNote(t, p, f, c);
                           Navigator.pop(sheetContext);
                           CustomToast.show(context, '🎉 三段論筆記建立成功！解鎖公平天平貼紙！');
-
                         },
                         child: const Text('儲存筆記',
                             style: TextStyle(color: Colors.white)),
@@ -5809,8 +5792,8 @@ class _AssistantPromptBubbleState extends State<_AssistantPromptBubble> {
                     ),
                   ),
                   SizedBox(width: 4.w),
-                  CtmSvgIcon(
-                    CtmSvgIcons.chevronRight,
+                  CaseLibrarySvgIcon(
+                    CaseLibrarySvgIcons.chevronRight,
                     size: 12.sp,
                     color: textColor.withValues(alpha: 0.7),
                   ),
@@ -5837,8 +5820,8 @@ class _LawBuddyAvatar extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          CtmSvgIcon(
-            CtmSvgIcons.bot,
+          CaseLibrarySvgIcon(
+            CaseLibrarySvgIcons.bot,
             size: 35.sp,
             color: assistantPalette.accent,
           ),
@@ -5853,8 +5836,8 @@ class _LawBuddyAvatar extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: Center(
-                child: CtmSvgIcon(
-                  CtmSvgIcons.scale,
+                child: CaseLibrarySvgIcon(
+                  CaseLibrarySvgIcons.scale,
                   size: 10.sp,
                   color: assistantPalette.primaryText,
                 ),

@@ -12,10 +12,15 @@ import 'package:preamble/pages/search/global_search_page.dart';
 import 'package:preamble/pages/journal/journal_page.dart';
 import 'package:preamble/theme/adaptive_layout.dart';
 import 'package:preamble/theme/app_theme.dart';
-import 'package:preamble/features/case_time_machine/data/case_time_machine_repository.dart';
+import 'package:preamble/features/case_library/data/case_library_repository.dart';
 import 'package:preamble/platform/ios_quick_ask_intent_bridge.dart';
 import 'package:preamble/platform/ios_statute_spotlight_bridge.dart';
 import 'package:preamble/platform/ios_today_case_widget_bridge.dart';
+import 'package:preamble/platform/ios_deep_link_bridge.dart';
+import 'package:preamble/pages/profile/apple_ecosystem_demo_page.dart';
+import 'package:preamble/features/case_library/pages/case_library_entry_page.dart';
+import 'package:preamble/pages/home/subpages/home_life_legal_tips_page.dart';
+import 'package:preamble/features/case_library/pages/case_legal_vocabulary_page.dart';
 
 /// 應用程式進入點。
 ///
@@ -25,7 +30,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // 初始化本地 SQLite 資料庫與記憶體快取倉庫
-  await CaseTimeMachineRepository.instance.initialize();
+  await CaseLibraryRepository.instance.initialize();
   // iOS WidgetKit 讀不到 Flutter widget tree，因此 App 啟動時先把今日判決故事同步到 App Group；
   // Android、測試環境或原生橋接尚未完成時會安全略過，不影響主流程。
   await IosTodayCaseWidgetBridge.syncDefaultStory();
@@ -99,6 +104,7 @@ class _MylawAppState extends State<MylawApp> {
     IosStatuteSpotlightBridge.registerQueryHandler(
       _openStatuteDatabaseFromNative,
     );
+    IosDeepLinkBridge.registerLinkHandler(_handleDeepLink);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final prompt = await IosQuickAskIntentBridge.consumeInitialPrompt();
       if (!mounted) return;
@@ -110,6 +116,12 @@ class _MylawAppState extends State<MylawApp> {
           await IosStatuteSpotlightBridge.consumeInitialQuery();
       if (!mounted || statuteQuery == null) return;
       _openStatuteDatabaseFromNative(statuteQuery);
+
+      final initialLink = await IosDeepLinkBridge.consumeInitialLink();
+      if (!mounted) return;
+      if (initialLink != null) {
+        _handleDeepLink(initialLink);
+      }
     });
   }
 
@@ -117,6 +129,7 @@ class _MylawAppState extends State<MylawApp> {
   void dispose() {
     IosQuickAskIntentBridge.unregisterPromptHandler();
     IosStatuteSpotlightBridge.unregisterQueryHandler();
+    IosDeepLinkBridge.unregisterLinkHandler();
     _quickAskPromptNotifier.dispose();
     _appState.dispose();
     super.dispose();
@@ -160,6 +173,62 @@ class _MylawAppState extends State<MylawApp> {
         builder: (_) => StatuteDatabasePage(initialQuery: trimmedQuery),
       ),
     );
+  }
+
+  void _handleDeepLink(String urlString) {
+    final uri = Uri.parse(urlString);
+    if (uri.scheme != 'preamble') return;
+
+    final navigator = _navigatorKey.currentState;
+    if (navigator == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _handleDeepLink(urlString);
+      });
+      return;
+    }
+
+    final host = uri.host;
+    switch (host) {
+      case 'todo-list':
+        navigator.push(
+          MaterialPageRoute<void>(
+            builder: (_) => const AppleEcosystemDemoPage(),
+          ),
+        );
+        break;
+      case 'time-machine':
+        navigator.push(
+          MaterialPageRoute<void>(
+            builder: (_) => const CaseLibraryEntryPage(),
+          ),
+        );
+        break;
+      case 'chat':
+        final assistantIndex = _appState.navbarOrder.indexOf(2);
+        if (assistantIndex != -1) {
+          setState(() {
+            _knowLawInitialTabIndex = null;
+            _knowLawInitialToolTab = null;
+            selectedIndex = assistantIndex;
+          });
+        }
+        break;
+      case 'tips':
+        navigator.push(
+          MaterialPageRoute<void>(
+            builder: (_) => const LifeLegalTipsPage(),
+          ),
+        );
+        break;
+      case 'vocabulary':
+        navigator.push(
+          MaterialPageRoute<void>(
+            builder: (_) => const CaseLegalVocabularyPage(),
+          ),
+        );
+        break;
+    }
   }
 
   @override
@@ -269,8 +338,12 @@ class _MylawAppState extends State<MylawApp> {
                                 stops: const [0.0, 0.75, 1.0],
                                 colors: [
                                   Theme.of(context).scaffoldBackgroundColor,
-                                  Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.88),
-                                  Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.0),
+                                  Theme.of(context)
+                                      .scaffoldBackgroundColor
+                                      .withValues(alpha: 0.88),
+                                  Theme.of(context)
+                                      .scaffoldBackgroundColor
+                                      .withValues(alpha: 0.0),
                                 ],
                               ),
                             ),

@@ -7,7 +7,8 @@ import 'package:preamble/features/on_this_day/pages/on_this_day_home_page.dart';
 import 'package:preamble/features/on_this_day/pages/on_this_day_date_discovery_page.dart';
 
 void main() {
-  testWidgets('On This Day flow walks through home, detail, discovery and categories list',
+  testWidgets(
+      'On This Day flow walks through home, detail, discovery and categories list',
       (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
     _setPhoneSize(tester);

@@ -6,8 +6,8 @@ import 'package:preamble/data/mock_data/followed_updates/followed_updates_mock_d
 import 'package:preamble/pages/learning/home_mission_quiz_page.dart';
 import 'package:preamble/pages/following/following_page.dart';
 import 'package:preamble/app/app_state.dart';
-import 'package:preamble/features/case_time_machine/pages/case_dossier_detail_page.dart';
-import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
+import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
+import 'package:preamble/features/case_library/data/case_library_data.dart';
 import 'package:preamble/components/shared/liquid_glass_widgets.dart';
 
 /// 1. AI 法律即時快問與 Prompt 推薦標籤
@@ -483,7 +483,7 @@ class HomeV2WatchlistCard extends StatelessWidget {
                       TextButton(
                         onPressed: () {
                           // 點擊「立即思辨」進入該案卷
-                          final caseBook = caseTimeMachineCases.first;
+                          final caseBook = caseLibraryCases.first;
                           Navigator.of(context).push(
                             MaterialPageRoute(
                                 builder: (__) =>

@@ -6,9 +6,9 @@ import 'package:preamble/features/on_this_day/data/on_this_day_local_bookmarks.d
 import 'package:preamble/features/on_this_day/data/on_this_day_mock_data.dart';
 import 'package:preamble/features/on_this_day/models/on_this_day_models.dart';
 import 'package:preamble/features/on_this_day/theme/on_this_day_theme.dart';
-import 'package:preamble/features/case_time_machine/data/case_time_machine_repository.dart';
-import 'package:preamble/features/case_time_machine/pages/case_dossier_detail_page.dart';
-import 'package:preamble/features/case_time_machine/models/case_time_machine_models.dart';
+import 'package:preamble/features/case_library/data/case_library_repository.dart';
+import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
+import 'package:preamble/features/case_library/models/case_library_models.dart';
 
 class OnThisDayDetailPage extends StatefulWidget {
   const OnThisDayDetailPage({super.key, required this.caseId});
@@ -39,7 +39,7 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
   }
 
   Future<void> _initRepository() async {
-    final repo = CaseTimeMachineRepository.instance;
+    final repo = CaseLibraryRepository.instance;
     if (repo.cases.isEmpty) {
       await repo.initialize();
       if (mounted) {
@@ -55,7 +55,7 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
   }
 
   CaseBook? _findDossierSync(OnThisDayCase mainCase) {
-    final cases = CaseTimeMachineRepository.instance.cases;
+    final cases = CaseLibraryRepository.instance.cases;
     for (final book in cases) {
       if (book.id == mainCase.id ||
           book.titleZh.contains(mainCase.title) ||
@@ -98,7 +98,6 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
       );
     } catch (__) {
       CustomToast.show(context, '相關案卷「$title」暫無細節資料');
-
     }
   }
 
@@ -107,7 +106,6 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
     if (!mounted) return;
     setState(() => _isBookmarked = isSaved);
     CustomToast.show(context, isSaved ? '已加入本機收藏。' : '已從本機收藏移除。');
-
   }
 
   @override
@@ -758,7 +756,6 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
                   ),
                   onTap: () {
                     CustomToast.show(context, '前往外部網頁：${reading.url}');
-
                   },
                 ),
               ),

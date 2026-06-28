@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/components/home/v2/home_v2_palette.dart';
 import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:preamble/theme/app_colors.dart';
-import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -275,8 +275,8 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
                   shape: BoxShape.circle,
                 ),
                 child: Center(
-                  child: CtmSvgIcon(
-                    CtmSvgIcons.star,
+                  child: CaseLibrarySvgIcon(
+                    CaseLibrarySvgIcons.star,
                     size: 24.sp,
                     color: Colors.green,
                   ),
@@ -538,8 +538,8 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
                     // 沒有在這裡保留圖片匯出入口，避免正式版出現尚未實作的格式宣稱。
                     Expanded(
                       child: FilledButton.icon(
-                        icon: CtmSvgIcon(
-                          CtmSvgIcons.chevronRight,
+                        icon: CaseLibrarySvgIcon(
+                          CaseLibrarySvgIcons.chevronRight,
                           size: 14.sp,
                           color: Colors.white,
                         ),

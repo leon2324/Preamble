@@ -4,7 +4,7 @@ import 'package:preamble/data/learning/learning_game_state.dart';
 import 'package:preamble/pages/learning/widgets/notebook_aesthetics.dart';
 import 'package:preamble/theme/app_colors.dart';
 import 'package:preamble/components/home/v2/home_v2_palette.dart';
-import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
 
 class MockCourtChallengePage extends StatefulWidget {
   const MockCourtChallengePage({super.key});
@@ -244,16 +244,16 @@ class _MockCourtChallengePageState extends State<MockCourtChallengePage> {
 
               Widget iconWidget;
               if (isCorrectOpt) {
-                iconWidget = CtmSvgIcon(CtmSvgIcons.star,
+                iconWidget = CaseLibrarySvgIcon(CaseLibrarySvgIcons.star,
                     size: 18.sp, color: Colors.green);
               } else if (isWrongOpt) {
-                iconWidget = CtmSvgIcon(CtmSvgIcons.xCircle,
+                iconWidget = CaseLibrarySvgIcon(CaseLibrarySvgIcons.xCircle,
                     size: 18.sp, color: Colors.red);
               } else if (isSelected) {
-                iconWidget = CtmSvgIcon(CtmSvgIcons.star,
+                iconWidget = CaseLibrarySvgIcon(CaseLibrarySvgIcons.star,
                     size: 18.sp, color: const Color(0xFFE8B95F));
               } else {
-                iconWidget = CtmSvgIcon(CtmSvgIcons.timeline,
+                iconWidget = CaseLibrarySvgIcon(CaseLibrarySvgIcons.timeline,
                     size: 18.sp, color: Colors.grey);
               }
 

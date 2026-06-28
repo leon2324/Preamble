@@ -130,8 +130,8 @@ class ProfilePage extends StatelessWidget {
                       EdgeInsets.symmetric(horizontal: 14.w, vertical: 5.h),
                   decoration: BoxDecoration(
                     color: appState.isSubscriber
-                      ? AppColors.accent.withValues(alpha: 0.12)
-                      : AppColors.primary.withValues(alpha: 0.06),
+                        ? AppColors.accent.withValues(alpha: 0.12)
+                        : AppColors.primary.withValues(alpha: 0.06),
                     borderRadius: BorderRadius.circular(100.r),
                     border: Border.all(
                       color: appState.isSubscriber
@@ -178,7 +178,8 @@ class ProfilePage extends StatelessWidget {
                 subtitle: '查看 Widgets, Siri 捷徑與 PencilKit 實作成果',
                 onTap: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AppleEcosystemDemoPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const AppleEcosystemDemoPage()),
                 ),
               ),
               SettingsTile(
@@ -563,7 +564,6 @@ class ProfilePage extends StatelessWidget {
         appState.updateSettings(fontSizeScale: scale);
         Navigator.pop(context);
         CustomToast.show(context, '閱讀字型大小已更新！');
-
       },
     );
   }

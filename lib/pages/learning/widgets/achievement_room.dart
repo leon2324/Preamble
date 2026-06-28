@@ -7,7 +7,7 @@ import 'package:preamble/pages/learning/widgets/notebook_aesthetics.dart';
 import 'package:preamble/theme/app_colors.dart';
 import 'package:preamble/components/home/v2/home_v2_palette.dart';
 import 'package:preamble/data/mock_data/learning/learning_mock_data.dart';
-import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
 import 'package:intl/intl.dart';
 import 'package:preamble/pages/learning/learning_mock_detail_page.dart';
 import 'package:preamble/data/learning/supabase_learning_service.dart';
@@ -219,36 +219,48 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
-                      decoration: BoxDecoration(
-                        color: HomeV2Palette.aiYellow,
-                        borderRadius: BorderRadius.circular(6.r),
-                        border: Border.all(color: const Color(0xFFE8B95F)),
-                      ),
-                      child: Text(
-                        'Level ${gameState.level} / ${gameState.maxLevel}',
-                        style: TextStyle(
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.w900,
-                          color: HomeV2Palette.ink,
-                        ),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 6.w, vertical: 3.h),
+                            decoration: BoxDecoration(
+                              color: HomeV2Palette.aiYellow,
+                              borderRadius: BorderRadius.circular(6.r),
+                              border:
+                                  Border.all(color: const Color(0xFFE8B95F)),
+                            ),
+                            child: Text(
+                              'Lv.${gameState.level}',
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.w900,
+                                color: HomeV2Palette.ink,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 6.w),
+                          Expanded(
+                            child: Text(
+                              gameState.levelTitle,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 12.5.sp,
+                                fontWeight: FontWeight.w900,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(width: 8.w),
                     Text(
-                      gameState.levelTitle,
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    const Spacer(),
-                    Text(
-                      '經驗值：${gameState.experience} / ${gameState.nextLevelXp} XP',
+                      '${gameState.experience}/${gameState.nextLevelXp} XP',
                       style: TextStyle(
                         fontSize: 11.sp,
                         fontWeight: FontWeight.bold,
@@ -322,7 +334,7 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
         children: [
           Row(
             children: [
-              CtmSvgIcon(CtmSvgIcons.bookmark,
+              CaseLibrarySvgIcon(CaseLibrarySvgIcons.bookmark,
                   color: HomeV2Palette.trustGreen, size: 20.sp),
               SizedBox(width: 8.w),
               Text(
@@ -339,7 +351,7 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
 
           // 錯題本入口
           ListTile(
-            leading: CtmSvgIcon(CtmSvgIcons.bookOpen,
+            leading: CaseLibrarySvgIcon(CaseLibrarySvgIcons.bookOpen,
                 color: const Color(0xFFE88B8B), size: 20.sp),
             title: Text(
               '📕 我的錯題本',
@@ -349,7 +361,7 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
               '目前有 ${gameState.incorrectQuestions.length} 題答錯的題目',
               style: TextStyle(fontSize: 11.sp),
             ),
-            trailing: CtmSvgIcon(CtmSvgIcons.chevronRight,
+            trailing: CaseLibrarySvgIcon(CaseLibrarySvgIcons.chevronRight,
                 size: 16.sp, color: Colors.grey),
             onTap: () => _openIncorrectQuestions(gameState),
           ),
@@ -357,7 +369,7 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
 
           // 證據清單入口
           ListTile(
-            leading: CtmSvgIcon(CtmSvgIcons.filePen,
+            leading: CaseLibrarySvgIcon(CaseLibrarySvgIcons.filePen,
                 color: const Color(0xFF6FA8DC), size: 20.sp),
             title: Text(
               '💾 儲存的證據清單',
@@ -367,7 +379,7 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
               '目前已儲存 ${gameState.savedEvidenceLists.length} 份清單',
               style: TextStyle(fontSize: 11.sp),
             ),
-            trailing: CtmSvgIcon(CtmSvgIcons.chevronRight,
+            trailing: CaseLibrarySvgIcon(CaseLibrarySvgIcons.chevronRight,
                 size: 16.sp, color: Colors.grey),
             onTap: () => _openSavedEvidenceLists(gameState),
           ),
@@ -375,7 +387,7 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
 
           // 收藏的法律金句與筆記入口
           ListTile(
-            leading: CtmSvgIcon(CtmSvgIcons.bookmark,
+            leading: CaseLibrarySvgIcon(CaseLibrarySvgIcons.bookmark,
                 color: const Color(0xFFE8B95F), size: 20.sp),
             title: Text(
               '🏷️ 收藏的法律金句與筆記',
@@ -385,7 +397,7 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
               '目前已儲存 ${gameState.savedQuotes.length + gameState.savedArticles.length + gameState.savedHighlights.length} 項內容',
               style: TextStyle(fontSize: 11.sp),
             ),
-            trailing: CtmSvgIcon(CtmSvgIcons.chevronRight,
+            trailing: CaseLibrarySvgIcon(CaseLibrarySvgIcons.chevronRight,
                 size: 16.sp, color: Colors.grey),
             onTap: () => _openSavedNotesPage(gameState),
           ),
@@ -783,7 +795,6 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
       );
     } else {
       CustomToast.show(context, '找不到對應的學習單元。');
-
     }
   }
 
@@ -832,8 +843,10 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
                               ),
                               const Spacer(),
                               IconButton(
-                                icon: CtmSvgIcon(CtmSvgIcons.xCircle,
-                                    size: 18.sp, color: Colors.grey),
+                                icon: CaseLibrarySvgIcon(
+                                    CaseLibrarySvgIcons.xCircle,
+                                    size: 18.sp,
+                                    color: Colors.grey),
                                 onPressed: () {
                                   setState(() {
                                     gameState.incorrectQuestions
@@ -881,7 +894,7 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
                           ),
                           SizedBox(height: 12.h),
                           ElevatedButton.icon(
-                            icon: CtmSvgIcon(CtmSvgIcons.clock,
+                            icon: CaseLibrarySvgIcon(CaseLibrarySvgIcons.clock,
                                 size: 14.sp, color: HomeV2Palette.trustGreen),
                             label: const Text('重新挑戰'),
                             onPressed: () => _rechallengeQuestion(item),
@@ -1088,8 +1101,10 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
                                 ),
                               ),
                               IconButton(
-                                icon: CtmSvgIcon(CtmSvgIcons.xCircle,
-                                    size: 18.sp, color: Colors.grey),
+                                icon: CaseLibrarySvgIcon(
+                                    CaseLibrarySvgIcons.xCircle,
+                                    size: 18.sp,
+                                    color: Colors.grey),
                                 onPressed: () {
                                   gameState.deleteEvidenceList(index);
                                 },
@@ -1108,10 +1123,10 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
                               padding: EdgeInsets.symmetric(vertical: 2.h),
                               child: Row(
                                 children: [
-                                  CtmSvgIcon(
+                                  CaseLibrarySvgIcon(
                                     isChecked
-                                        ? CtmSvgIcons.star
-                                        : CtmSvgIcons.timeline,
+                                        ? CaseLibrarySvgIcons.star
+                                        : CaseLibrarySvgIcons.timeline,
                                     color: isChecked
                                         ? HomeV2Palette.trustGreen
                                         : Colors.grey,
@@ -1146,8 +1161,10 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
                               ),
                               const Spacer(),
                               ElevatedButton.icon(
-                                icon: CtmSvgIcon(CtmSvgIcons.externalLink,
-                                    size: 14.sp, color: Colors.white),
+                                icon: CaseLibrarySvgIcon(
+                                    CaseLibrarySvgIcons.externalLink,
+                                    size: 14.sp,
+                                    color: Colors.white),
                                 label: const Text('複製清單'),
                                 onPressed: () {
                                   final title =
@@ -1158,8 +1175,8 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
                                   ].join('\n');
                                   Clipboard.setData(
                                       ClipboardData(text: content));
-                                  CustomToast.show(context, '已複製「$title」清單文字，可貼到外部工具保存。');
-
+                                  CustomToast.show(
+                                      context, '已複製「$title」清單文字，可貼到外部工具保存。');
                                 },
                               ),
                             ],

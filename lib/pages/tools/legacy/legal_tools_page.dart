@@ -296,7 +296,6 @@ class _LegalToolsPageState extends State<LegalToolsPage> {
     await Clipboard.setData(ClipboardData(text: text));
     if (!mounted) return;
     CustomToast.show(context, '已複製草稿。');
-
   }
 
   Future<void> _copyShareText(String text) async {
@@ -409,7 +408,6 @@ class _LegalToolsPageState extends State<LegalToolsPage> {
 
   void _showSnack(String message) {
     CustomToast.show(context, message);
-
   }
 
   void _showAccessSheet() {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/components/home/home_content.dart';
 import 'package:preamble/components/home/home_news_section.dart';
+import 'package:preamble/data/journal/discussion_feed_service.dart';
 import 'package:preamble/components/home/v2/home_v2_palette.dart';
 import 'package:preamble/theme/app_colors.dart';
 import 'package:preamble/pages/home/subpages/home_official_feed_pages.dart';
@@ -105,7 +106,8 @@ class _HomeV2SocialNewsSectionState extends State<HomeV2SocialNewsSection> {
                         builder: (__) => OfficialFeedDetailPage(
                           item: MojFeedItem(
                             title: item.title,
-                            url: item.url ?? 'https://www.moj.gov.tw/2204/2795/2796/',
+                            url: item.url ??
+                                'https://www.moj.gov.tw/2204/2795/2796/',
                             category: MojFeedCategory.news,
                             index: 1,
                           ),
@@ -170,6 +172,11 @@ class _HomeV2DiscussionPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final service = DiscussionFeedService.instance;
+    if (service.hasError || (!service.isLoaded && feed.topics.isEmpty)) {
+      return const _HomeV2DiscussionOffline();
+    }
+
     final topics = feed.topics.take(3).toList(growable: false);
     if (topics.isEmpty) {
       return _HomeV2DiscussionEmpty(onMoreTap: onMoreTap);
@@ -210,11 +217,11 @@ class _HomeV2DiscussionPreviewCard extends StatelessWidget {
     final radius = BorderRadius.circular(16.r);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final Color glassColor = isDark 
-        ? const Color(0xFF1E242B).withValues(alpha: 0.75) 
+    final Color glassColor = isDark
+        ? const Color(0xFF1E242B).withValues(alpha: 0.75)
         : const Color(0xFFFAF7F2).withValues(alpha: 0.75);
-    final Color glassBorder = isDark 
-        ? const Color(0xFF2C3845).withValues(alpha: 0.5) 
+    final Color glassBorder = isDark
+        ? const Color(0xFF2C3845).withValues(alpha: 0.5)
         : const Color(0xFFECE6DB).withValues(alpha: 0.5);
 
     return SizedBox(
@@ -241,16 +248,20 @@ class _HomeV2DiscussionPreviewCard extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.w, vertical: 4.h),
                           decoration: BoxDecoration(
-                            color: isDark ? const Color(0xFF2B3A2E) : const Color(0xFFE2EDE5),
+                            color: isDark
+                                ? const Color(0xFF2B3A2E)
+                                : const Color(0xFFE2EDE5),
                             borderRadius: BorderRadius.circular(99.r),
                           ),
                           child: Text(
                             '#${topic.rank}',
                             style: TextStyle(
-                              color: isDark ? const Color(0xFF8CAF96) : const Color(0xFF4E7D5B),
+                              color: isDark
+                                  ? const Color(0xFF8CAF96)
+                                  : const Color(0xFF4E7D5B),
                               fontSize: 11.sp,
                               fontWeight: FontWeight.w900,
                             ),
@@ -307,7 +318,9 @@ class _HomeV2DiscussionPreviewCard extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              color: isDark ? const Color(0xFF8CAF96) : const Color(0xFF4E7D5B),
+                              color: isDark
+                                  ? const Color(0xFF8CAF96)
+                                  : const Color(0xFF4E7D5B),
                               fontSize: 10.sp,
                               fontWeight: FontWeight.w700,
                             ),
@@ -315,7 +328,9 @@ class _HomeV2DiscussionPreviewCard extends StatelessWidget {
                         ),
                         Icon(
                           Icons.arrow_forward_rounded,
-                          color: isDark ? const Color(0xFF8CAF96) : const Color(0xFF4E7D5B),
+                          color: isDark
+                              ? const Color(0xFF8CAF96)
+                              : const Color(0xFF4E7D5B),
                           size: 17.sp,
                         ),
                       ],
@@ -341,11 +356,11 @@ class _HomeV2DiscussionEmpty extends StatelessWidget {
     final radius = BorderRadius.circular(16.r);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final Color glassColor = isDark 
-        ? const Color(0xFF1E242B).withValues(alpha: 0.75) 
+    final Color glassColor = isDark
+        ? const Color(0xFF1E242B).withValues(alpha: 0.75)
         : const Color(0xFFFAF7F2).withValues(alpha: 0.75);
-    final Color glassBorder = isDark 
-        ? const Color(0xFF2C3845).withValues(alpha: 0.5) 
+    final Color glassBorder = isDark
+        ? const Color(0xFF2C3845).withValues(alpha: 0.5)
         : const Color(0xFFECE6DB).withValues(alpha: 0.5);
 
     return ClipRRect(
@@ -368,7 +383,9 @@ class _HomeV2DiscussionEmpty extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.forum_outlined,
-                    color: isDark ? const Color(0xFF8CAF96) : const Color(0xFF4E7D5B),
+                    color: isDark
+                        ? const Color(0xFF8CAF96)
+                        : const Color(0xFF4E7D5B),
                     size: 22.sp,
                   ),
                   SizedBox(width: 10.w),
@@ -385,6 +402,87 @@ class _HomeV2DiscussionEmpty extends StatelessWidget {
                 ],
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _HomeV2DiscussionOffline extends StatelessWidget {
+  const _HomeV2DiscussionOffline();
+
+  @override
+  Widget build(BuildContext context) {
+    final radius = BorderRadius.circular(16.r);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final Color glassColor = isDark
+        ? const Color(0xFF1E242B).withValues(alpha: 0.75)
+        : const Color(0xFFFAF7F2).withValues(alpha: 0.75);
+    final Color glassBorder = isDark
+        ? const Color(0xFF2C3845).withValues(alpha: 0.5)
+        : const Color(0xFFECE6DB).withValues(alpha: 0.5);
+
+    return ClipRRect(
+      borderRadius: radius,
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: glassColor,
+            borderRadius: radius,
+            border: Border.all(color: glassBorder),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.wifi_off_rounded,
+                    color: isDark
+                        ? const Color(0xFF8CAF96)
+                        : const Color(0xFF4E7D5B),
+                    size: 22.sp,
+                  ),
+                  SizedBox(width: 8.w),
+                  Text(
+                    '沒有連線QQ，請連線後再試用一次',
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16.h),
+              GestureDetector(
+                onTap: () {
+                  DiscussionFeedService.instance.refreshFeed();
+                },
+                child: Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                  decoration: BoxDecoration(
+                    color: HomeV2Palette.trustGreen,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: Text(
+                    '重新嘗試連線',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 11.5.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

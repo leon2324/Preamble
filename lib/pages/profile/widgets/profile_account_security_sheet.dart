@@ -189,7 +189,6 @@ class _AccountSecuritySheetState extends State<AccountSecuritySheet> {
 
   void _showSnackBar(String msg) {
     CustomToast.show(context, msg);
-
   }
 
   void _showResetPasswordDialog() {
@@ -262,7 +261,6 @@ class _AccountSecuritySheetState extends State<AccountSecuritySheet> {
                 Navigator.pop(context); // 關閉 Bottom Sheet
                 widget.appState.signOut(); // 執行登出（回復訪客狀態）
                 CustomToast.show(context, '帳號已刪除，已為您回復訪客身分！');
-
               },
               child: const Text('確定刪除',
                   style: TextStyle(

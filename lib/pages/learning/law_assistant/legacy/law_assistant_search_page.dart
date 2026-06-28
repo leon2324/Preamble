@@ -1,5 +1,5 @@
 import 'package:preamble/components/shared/custom_toast.dart';
-part of '../../know_law_page.dart';
+// part of '../../know_law_page.dart';
 
 /// 小法助 Prototype 入口與頁內流程狀態機。
 ///
@@ -206,12 +206,10 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
         _isSendingFollowUp = false;
       });
       CustomToast.show(context, '已送出追問，小法助已更新整理結果。');
-
     } catch (error) {
       if (!mounted) return;
       setState(() => _isSendingFollowUp = false);
       CustomToast.show(context, '追問暫時無法送出：$error');
-
     }
   }
 
@@ -226,7 +224,6 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
     await Clipboard.setData(ClipboardData(text: text));
     if (!mounted) return;
     CustomToast.show(context, '已複製小法助整理結果。');
-
   }
 
   void _saveConversation() {
@@ -262,13 +259,11 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
       _page = _AssistantPrototypePage.saved;
     });
     CustomToast.show(context, exists ? '這個項目已經在收藏 / 追蹤裡。' : message);
-
   }
 
   void _removeSavedItem(_AssistantSavedItem item) {
     setState(() => _savedItems.removeWhere((saved) => saved.id == item.id));
     CustomToast.show(context, '已從收藏 / 追蹤移除。');
-
   }
 
   void _openSavedItem(_AssistantSavedItem item) {
@@ -291,7 +286,6 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
     }
 
     CustomToast.show(context, '已開啟「${item.title}」的本機收藏項目。');
-
   }
 
   Future<void> _submitPrompt() async {
@@ -329,7 +323,6 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
       if (!mounted) return;
       setState(() => _isCreating = false);
       CustomToast.show(context, '小法助暫時無法整理：$error');
-
     }
   }
 
@@ -745,10 +738,8 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
           onTap: canFollowUp
               ? () => _sendFollowUp()
               : () {
-                  CustomToast.show(context, _conversation == null
-                          ? '請先完成一次提問，再繼續追問。'
-                          : '請先輸入追問內容。');
-
+                  CustomToast.show(context,
+                      _conversation == null ? '請先完成一次提問，再繼續追問。' : '請先輸入追問內容。');
                 },
           hint: '還有其他問題嗎？',
         ),
@@ -1201,7 +1192,6 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
       _page = _AssistantPrototypePage.empty;
     });
     CustomToast.show(context, '已在本機隱藏目前對話紀錄。');
-
   }
 
   Future<void> _chooseIssueType() async {
@@ -1384,6 +1374,5 @@ class _LawAssistantSearchPageState extends State<LawAssistantSearchPage> {
 
   void _showVoiceSnack() {
     CustomToast.show(context, '語音輸入開發中；目前請先用文字描述問題。');
-
   }
 }

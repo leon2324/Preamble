@@ -1,4 +1,3 @@
-
 part of '../know_law_page.dart';
 
 // 本機諮詢歷史紀錄條目，只存在 LawAssistantChatPage 的 local state，
@@ -398,7 +397,6 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
   void _showAssistantToast(String message) {
     if (!mounted) return;
     CustomToast.show(context, message);
-
   }
 
   Future<void> _bootstrap() async {
@@ -1067,7 +1065,6 @@ class _LawAssistantReplyBoxState extends State<_LawAssistantReplyBox> {
   void _showAssistantToast(String message) {
     if (!mounted) return;
     CustomToast.show(context, message);
-
   }
 
   // Release 版的「＋」選單只做本機問題脈絡整理與本機附件狀態，

@@ -4,8 +4,10 @@ import 'package:preamble/components/home/v2/home_v2_palette.dart';
 import 'package:preamble/data/learning/learning_game_state.dart';
 import 'package:preamble/data/learning/supabase_learning_service.dart';
 import 'package:preamble/data/mock_data/learning/learning_mock_data.dart';
-import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
 import 'package:preamble/theme/app_colors.dart';
+
+import 'package:preamble/components/shared/liquid_glass_widgets.dart';
 
 /// 全部專題分類庫 BottomSheet。
 ///
@@ -126,8 +128,8 @@ class _LearningTopicCatalogBottomSheetState
                     hintStyle: TextStyle(fontSize: 12.sp, color: Colors.grey),
                     prefixIcon: Padding(
                       padding: EdgeInsets.all(10.w),
-                      child: CtmSvgIcon(
-                        CtmSvgIcons.search,
+                      child: CaseLibrarySvgIcon(
+                        CaseLibrarySvgIcons.search,
                         size: 16.sp,
                         color: Colors.grey,
                       ),
@@ -202,13 +204,18 @@ class _LearningTopicCatalogBottomSheetState
                       physics: const AlwaysScrollableScrollPhysics(),
                       slivers: [
                         if (snapshot.connectionState == ConnectionState.waiting)
-                          SliverFillRemaining(
-                            hasScrollBody: false,
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                    HomeV2Palette.trustGreen),
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) => Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16.w, vertical: 8.h),
+                                child: LiquidGlassShimmer(
+                                  width: double.infinity,
+                                  height: 80.h,
+                                  radius: 12.r,
+                                ),
                               ),
+                              childCount: 4,
                             ),
                           )
                         else if (snapshot.hasError)
@@ -365,8 +372,8 @@ class _LearningTopicCatalogBottomSheetState
                                               if (LearningGameState
                                                   .instance.savedArticles
                                                   .contains(article.title))
-                                                CtmSvgIcon(
-                                                  CtmSvgIcons.bookmark,
+                                                CaseLibrarySvgIcon(
+                                                  CaseLibrarySvgIcons.bookmark,
                                                   size: 11.sp,
                                                   color:
                                                       const Color(0xFFE8B95F),
@@ -401,8 +408,8 @@ class _LearningTopicCatalogBottomSheetState
                                           const Spacer(),
                                           Row(
                                             children: [
-                                              CtmSvgIcon(
-                                                CtmSvgIcons.clock,
+                                              CaseLibrarySvgIcon(
+                                                CaseLibrarySvgIcons.clock,
                                                 size: 11.sp,
                                                 color: widget.isDark
                                                     ? Colors.white38

@@ -6,7 +6,7 @@ import 'package:preamble/components/home/v2/home_v2_palette.dart';
 import 'package:preamble/data/learning/learning_game_state.dart';
 import 'package:preamble/data/learning/supabase_learning_service.dart';
 import 'package:preamble/data/mock_data/learning/learning_mock_data.dart';
-import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
 import 'package:preamble/pages/learning/learning_mock_detail_page.dart';
 import 'package:preamble/pages/learning/widgets/notebook_aesthetics.dart';
 import 'package:preamble/theme/app_colors.dart';
@@ -108,7 +108,6 @@ class _SavedNotesPageState extends State<SavedNotesPage> {
       );
     } else {
       CustomToast.show(context, '找不到對應的學習單元，可能已移除。');
-
     }
   }
 
@@ -200,15 +199,14 @@ class _SavedNotesPageState extends State<SavedNotesPage> {
                     ),
                   ),
                   IconButton(
-                    icon: CtmSvgIcon(
-                      CtmSvgIcons.xCircle,
+                    icon: CaseLibrarySvgIcon(
+                      CaseLibrarySvgIcons.xCircle,
                       size: 18.sp,
                       color: Colors.grey,
                     ),
                     onPressed: () {
                       gameState.toggleQuoteSave(quote, articleTitle);
                       CustomToast.show(context, '已取消收藏該金句！');
-
                     },
                   ),
                 ],
@@ -221,8 +219,8 @@ class _SavedNotesPageState extends State<SavedNotesPage> {
                       onTap: () => _navigateToArticle(articleTitle),
                       child: Row(
                         children: [
-                          CtmSvgIcon(
-                            CtmSvgIcons.bookOpen,
+                          CaseLibrarySvgIcon(
+                            CaseLibrarySvgIcons.bookOpen,
                             size: 14.sp,
                             color: HomeV2Palette.trustGreen,
                           ),
@@ -322,15 +320,14 @@ class _SavedNotesPageState extends State<SavedNotesPage> {
                     IconButton(
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
-                      icon: CtmSvgIcon(
-                        CtmSvgIcons.bookmark,
+                      icon: CaseLibrarySvgIcon(
+                        CaseLibrarySvgIcons.bookmark,
                         size: 18.sp,
                         color: HomeV2Palette.trustGreen,
                       ),
                       onPressed: () {
                         gameState.toggleArticleSave(title);
                         CustomToast.show(context, '已取消收藏本單元！');
-
                       },
                     ),
                   ],
@@ -357,8 +354,8 @@ class _SavedNotesPageState extends State<SavedNotesPage> {
                 SizedBox(height: 8.h),
                 Row(
                   children: [
-                    CtmSvgIcon(
-                      CtmSvgIcons.clock,
+                    CaseLibrarySvgIcon(
+                      CaseLibrarySvgIcons.clock,
                       size: 12.sp,
                       color: Colors.grey,
                     ),
@@ -429,15 +426,14 @@ class _SavedNotesPageState extends State<SavedNotesPage> {
                     ),
                   ),
                   IconButton(
-                    icon: CtmSvgIcon(
-                      CtmSvgIcons.xCircle,
+                    icon: CaseLibrarySvgIcon(
+                      CaseLibrarySvgIcons.xCircle,
                       size: 18.sp,
                       color: Colors.grey,
                     ),
                     onPressed: () {
                       gameState.removeHighlight(index);
                       CustomToast.show(context, '已刪除此劃記重點！');
-
                     },
                   ),
                 ],
@@ -450,8 +446,8 @@ class _SavedNotesPageState extends State<SavedNotesPage> {
                       onTap: () => _navigateToArticle(articleTitle),
                       child: Row(
                         children: [
-                          CtmSvgIcon(
-                            CtmSvgIcons.bookOpen,
+                          CaseLibrarySvgIcon(
+                            CaseLibrarySvgIcons.bookOpen,
                             size: 14.sp,
                             color: HomeV2Palette.trustGreen,
                           ),

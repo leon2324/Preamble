@@ -3,8 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/components/home/v2/home_v2_palette.dart';
 import 'package:preamble/data/mock_data/home/home_v2_mock_data.dart';
 import 'package:preamble/theme/app_colors.dart';
-import 'package:preamble/features/case_time_machine/pages/case_dossier_detail_page.dart';
-import 'package:preamble/features/case_time_machine/data/case_time_machine_mock_data.dart';
+import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
+import 'package:preamble/features/case_library/data/case_library_data.dart';
+import 'package:preamble/features/case_library/data/case_library_repository.dart';
 
 // 首頁 V2 的專題區塊。
 // 只放專題橫向列表與 Bento Grid UI，不放首頁路由與資料載入邏輯。
@@ -123,10 +124,10 @@ class HomeV2TopicBentoGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // 尋找租屋糾紛案件
-    final rentalCase = caseTimeMachineCases.firstWhere(
-      (c) => c.titleZh.contains('租屋') || c.shortTitleZh.contains('租'),
-      orElse: () => caseTimeMachineCases.first,
+    // 尋找退租押金扣除爭議案件 (case-029)
+    final rentalCase = caseLibraryCases.firstWhere(
+      (c) => c.id == 'case-029',
+      orElse: () => CaseLibraryRepository.instance.getCaseById('case-029'),
     );
 
     return Container(
@@ -153,7 +154,7 @@ class HomeV2TopicBentoGrid extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20.r),
                 ),
                 child: Text(
-                  '本周焦點議題對決',
+                  '本日焦點議題對決',
                   style: TextStyle(
                     color: const Color(0xFFD85A53),
                     fontSize: 9.sp,

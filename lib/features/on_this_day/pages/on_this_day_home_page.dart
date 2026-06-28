@@ -11,9 +11,9 @@ import 'package:preamble/features/on_this_day/pages/on_this_day_detail_page.dart
 import 'package:preamble/features/on_this_day/widgets/on_this_day_calendar_sheet.dart';
 import 'package:preamble/features/on_this_day/widgets/on_this_day_postcard_elements.dart';
 import 'package:preamble/features/on_this_day/widgets/retro_date_dial_picker.dart';
-import 'package:preamble/features/case_time_machine/data/case_time_machine_repository.dart';
-import 'package:preamble/features/case_time_machine/pages/case_dossier_detail_page.dart';
-import 'package:preamble/features/case_time_machine/models/case_time_machine_models.dart';
+import 'package:preamble/features/case_library/data/case_library_repository.dart';
+import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
+import 'package:preamble/features/case_library/models/case_library_models.dart';
 
 class OnThisDayHomePage extends StatefulWidget {
   const OnThisDayHomePage({super.key});
@@ -50,7 +50,7 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
   }
 
   Future<void> _initRepository() async {
-    final repo = CaseTimeMachineRepository.instance;
+    final repo = CaseLibraryRepository.instance;
     if (repo.cases.isEmpty) {
       await repo.initialize();
       if (mounted) {
@@ -117,7 +117,7 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
 
   CaseBook? _findDossierSync(OnThisDayCase? mainCase) {
     if (mainCase == null) return null;
-    final cases = CaseTimeMachineRepository.instance.cases;
+    final cases = CaseLibraryRepository.instance.cases;
     for (final book in cases) {
       if (book.id == mainCase.id ||
           book.titleZh.contains(mainCase.title) ||

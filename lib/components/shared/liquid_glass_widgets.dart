@@ -36,26 +36,31 @@ class LiquidGlassCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeColor = glassColor ?? (Theme.of(context).brightness == Brightness.dark
-        ? const Color(0xFF1E222B)
-        : const Color(0xFFFFFFFF));
+    final themeColor = glassColor ??
+        (Theme.of(context).brightness == Brightness.dark
+            ? const Color(0xFF1E222B)
+            : const Color(0xFFFFFFFF));
 
     return Container(
       margin: margin,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(radius.r),
-        boxShadow: customShadows ?? [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: Theme.of(context).brightness == Brightness.dark ? 0.15 : 0.03),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-          BoxShadow(
-            color: themeColor.withValues(alpha: 0.02),
-            blurRadius: 4,
-            offset: const Offset(0, 1),
-          ),
-        ],
+        boxShadow: customShadows ??
+            [
+              BoxShadow(
+                color: Colors.black.withValues(
+                    alpha: Theme.of(context).brightness == Brightness.dark
+                        ? 0.15
+                        : 0.03),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+              ),
+              BoxShadow(
+                color: themeColor.withValues(alpha: 0.02),
+                blurRadius: 4,
+                offset: const Offset(0, 1),
+              ),
+            ],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(radius.r),
@@ -67,10 +72,14 @@ class LiquidGlassCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: themeColor.withValues(alpha: opacity),
               borderRadius: BorderRadius.circular(radius.r),
-              border: customBorder ?? Border.all(
-                color: themeColor.withValues(alpha: Theme.of(context).brightness == Brightness.dark ? 0.12 : 0.40),
-                width: 0.5.w,
-              ),
+              border: customBorder ??
+                  Border.all(
+                    color: themeColor.withValues(
+                        alpha: Theme.of(context).brightness == Brightness.dark
+                            ? 0.12
+                            : 0.40),
+                    width: 0.5.w,
+                  ),
             ),
             child: child,
           ),
@@ -107,7 +116,8 @@ class LiquidGlassButton extends StatefulWidget {
   State<LiquidGlassButton> createState() => _LiquidGlassButtonState();
 }
 
-class _LiquidGlassButtonState extends State<LiquidGlassButton> with SingleTickerProviderStateMixin {
+class _LiquidGlassButtonState extends State<LiquidGlassButton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -162,7 +172,8 @@ class _LiquidGlassButtonState extends State<LiquidGlassButton> with SingleTicker
           blur: widget.blur,
           opacity: widget.opacity,
           radius: widget.radius,
-          padding: widget.padding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          padding: widget.padding ??
+              EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
           glassColor: widget.buttonColor,
           child: widget.child,
         ),
@@ -200,9 +211,13 @@ class LiquidGlassSwitch extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 2.w),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(13.r),
-          color: value ? active.withValues(alpha: 0.25) : Colors.black.withValues(alpha: 0.05),
+          color: value
+              ? active.withValues(alpha: 0.25)
+              : Colors.black.withValues(alpha: 0.05),
           border: Border.all(
-            color: value ? active.withValues(alpha: 0.4) : Colors.black.withValues(alpha: 0.1),
+            color: value
+                ? active.withValues(alpha: 0.4)
+                : Colors.black.withValues(alpha: 0.1),
             width: 0.8,
           ),
         ),
@@ -249,7 +264,8 @@ class LiquidGlassShimmer extends StatefulWidget {
   State<LiquidGlassShimmer> createState() => _LiquidGlassShimmerState();
 }
 
-class _LiquidGlassShimmerState extends State<LiquidGlassShimmer> with SingleTickerProviderStateMixin {
+class _LiquidGlassShimmerState extends State<LiquidGlassShimmer>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -279,7 +295,8 @@ class _LiquidGlassShimmerState extends State<LiquidGlassShimmer> with SingleTick
           height: widget.height,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(widget.radius.r),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.15), width: 0.5.w),
+            border: Border.all(
+                color: Colors.white.withValues(alpha: 0.15), width: 0.5.w),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(widget.radius.r),
@@ -317,7 +334,8 @@ class LiquidGlassBackground extends StatefulWidget {
   State<LiquidGlassBackground> createState() => _LiquidGlassBackgroundState();
 }
 
-class _LiquidGlassBackgroundState extends State<LiquidGlassBackground> with SingleTickerProviderStateMixin {
+class _LiquidGlassBackgroundState extends State<LiquidGlassBackground>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
@@ -354,8 +372,10 @@ class _LiquidGlassBackgroundState extends State<LiquidGlassBackground> with Sing
         final orb2X = screenWidth * 0.80 - (screenWidth * 0.06 * cosT);
         final orb2Y = screenHeight * 0.70 + (screenHeight * 0.08 * sinT);
 
-        final orb3X = screenWidth * 0.45 + (screenWidth * 0.05 * cos(progress * 4 * pi));
-        final orb3Y = screenHeight * 0.50 - (screenHeight * 0.07 * sin(progress * 4 * pi));
+        final orb3X =
+            screenWidth * 0.45 + (screenWidth * 0.05 * cos(progress * 4 * pi));
+        final orb3Y = screenHeight * 0.50 -
+            (screenHeight * 0.07 * sin(progress * 4 * pi));
 
         return Stack(
           children: [

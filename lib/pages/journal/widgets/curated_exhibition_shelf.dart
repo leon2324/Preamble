@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/pages/journal/data/journal_page_items.dart';
 import 'package:preamble/pages/journal/widgets/journal_palette.dart';
 import 'package:preamble/pages/journal/widgets/journal_section_header.dart';
-import 'package:preamble/features/case_time_machine/data/case_time_machine_repository.dart';
-import 'package:preamble/features/case_time_machine/pages/case_dossier_detail_page.dart';
+import 'package:preamble/features/case_library/data/case_library_repository.dart';
+import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
 
 class CuratedExhibitionShelf extends StatelessWidget {
   const CuratedExhibitionShelf({super.key, required this.palette});
@@ -91,7 +91,7 @@ class _ExhibitionFolderCard extends StatelessWidget {
             if (item.caseIds.isEmpty) return;
             final firstCaseId = item.caseIds.first;
             final book =
-                CaseTimeMachineRepository.instance.getCaseById(firstCaseId);
+                CaseLibraryRepository.instance.getCaseById(firstCaseId);
             Navigator.of(context).push(
               CupertinoPageRoute<void>(
                 builder: (_) => CaseDossierDetailPage(
@@ -318,11 +318,11 @@ class _MiniBook extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String displayLabel = '';
-    final book = CaseTimeMachineRepository.instance.getCaseById(bookId);
+    final book = CaseLibraryRepository.instance.getCaseById(bookId);
 
     if (book.displayCode.isNotEmpty) {
       displayLabel =
-          book.displayCode.replaceAll('CTM-', '').replaceAll('JY-', '');
+          book.displayCode.replaceAll('CL-', '').replaceAll('JY-', '');
     } else if (book.shortTitleZh.isNotEmpty) {
       displayLabel = book.shortTitleZh;
     } else {

@@ -8,7 +8,6 @@ import json
 import urllib.request
 import urllib.error
 
-# 台灣繁體中文註解：
 # 這是一個利用內建 urllib 呼叫 Gemini API 自動根據 Git Diff 撰寫 Commit Message 並提交的腳本。
 # 不需要額外安裝 pip 套件，只需在環境變數中設定 GEMINI_API_KEY 即可。
 

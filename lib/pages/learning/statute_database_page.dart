@@ -364,15 +364,36 @@ class StatuteDetailPage extends StatefulWidget {
 
 class _StatuteDetailPageState extends State<StatuteDetailPage> {
   StatuteItem get item => widget.item;
+  late final ScrollController _scrollController;
+  bool _showTitle = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController()
+      ..addListener(() {
+        if (!mounted) return;
+        final offset = _scrollController.offset;
+        final show = offset > 35.h;
+        if (show != _showTitle) {
+          setState(() {
+            _showTitle = show;
+          });
+        }
+      });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   Future<void> _toggleFollow(bool isFollowed) async {
     final appState = PreambleScope.of(context);
-    // 法規頁的追蹤不是本頁自己的暫存 bool，而是寫進 App 共用的 FollowingSummary；
-    // 這樣從全站搜尋追蹤、從法規頁追蹤、到我的 Preamble 查看，都會看到同一份資料。
     await appState.setStatuteFollowed(_statuteInteractionId(item), !isFollowed);
     if (!mounted) return;
     CustomToast.show(context, isFollowed ? '已取消追蹤。' : '已加入追蹤法條。');
-
   }
 
   Future<void> _toggleSaved(bool isSaved) async {
@@ -380,7 +401,6 @@ class _StatuteDetailPageState extends State<StatuteDetailPage> {
     await appState.setStatuteSaved(_statuteInteractionId(item), !isSaved);
     if (!mounted) return;
     CustomToast.show(context, isSaved ? '已取消收藏。' : '已收藏法條。');
-
   }
 
   @override
@@ -393,18 +413,40 @@ class _StatuteDetailPageState extends State<StatuteDetailPage> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F0),
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.fromLTRB(16.w, topPadding + 14.h, 16.w, 32.h),
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: _RoundToolButton(
-              icon: Icons.arrow_back_ios_new_rounded,
-              onTap: () => Navigator.of(context).pop(),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: _showTitle
+            ? const Color(0xFFF7F7F0).withValues(alpha: 0.96)
+            : Colors.transparent,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        leading: Align(
+          alignment: Alignment.center,
+          child: _RoundToolButton(
+            icon: Icons.arrow_back_ios_new_rounded,
+            onTap: () => Navigator.of(context).pop(),
+          ),
+        ),
+        title: AnimatedOpacity(
+          opacity: _showTitle ? 1.0 : 0.0,
+          duration: const Duration(milliseconds: 200),
+          child: Text(
+            item.displayTitle,
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w900,
+              color: AppColors.textPrimary,
             ),
           ),
-          SizedBox(height: 20.h),
+        ),
+        centerTitle: true,
+      ),
+      body: ListView(
+        controller: _scrollController,
+        physics: const BouncingScrollPhysics(),
+        padding: EdgeInsets.fromLTRB(
+            16.w, topPadding + kToolbarHeight + 10.h, 16.w, 32.h),
+        children: [
           Text(
             item.codeName,
             style: TextStyle(

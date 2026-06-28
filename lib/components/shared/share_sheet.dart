@@ -14,8 +14,8 @@ class ShareSheet {
   const ShareSheet._();
 
   static void show(BuildContext context, {required String title, String? url}) {
-    final effectiveUrl =
-        url ?? 'https://preamble.vernalcollective.com/share/${Uri.encodeComponent(title)}';
+    final effectiveUrl = url ??
+        'https://preamble.vernalcollective.com/share/${Uri.encodeComponent(title)}';
     final hostContext = context;
 
     showModalBottomSheet<void>(

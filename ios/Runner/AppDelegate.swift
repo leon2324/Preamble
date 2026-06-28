@@ -2,6 +2,7 @@ import Flutter
 import CoreSpotlight
 import UIKit
 import WidgetKit
+import ActivityKit
 
 private enum TodayCaseWidgetBridge {
   // 台灣繁體中文教學註解：
@@ -53,6 +54,9 @@ private enum NativeShareBridge {
   private var statuteSpotlightChannel: FlutterMethodChannel?
   private var statuteSpotlightBridgeReady = false
   private var pendingStatuteSpotlightQuery: String?
+  private var deepLinkChannel: FlutterMethodChannel?
+  private var deepLinkBridgeReady = false
+  private var pendingDeepLink: String?
 
   override func application(
     _ application: UIApplication,
@@ -62,7 +66,9 @@ private enum NativeShareBridge {
     registerTodayCaseWidgetBridge()
     registerQuickAskAppIntentBridge()
     registerStatuteSpotlightBridge()
+    registerDeepLinkBridge()
     registerNativeShareBridge()
+    registerLiveActivityBridge()
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
@@ -158,6 +164,35 @@ private enum NativeShareBridge {
     }
   }
 
+  private func registerDeepLinkBridge() {
+    guard let controller = window?.rootViewController as? FlutterViewController else {
+      return
+    }
+
+    let channel = FlutterMethodChannel(
+      name: "preamble/deep_link",
+      binaryMessenger: controller.binaryMessenger
+    )
+    deepLinkChannel = channel
+
+    channel.setMethodCallHandler { [weak self] call, result in
+      guard let self else {
+        result(nil)
+        return
+      }
+
+      switch call.method {
+      case "consumeInitialDeepLink":
+        self.deepLinkBridgeReady = true
+        let link = self.pendingDeepLink
+        self.pendingDeepLink = nil
+        result(link.map { ["url": $0] })
+      default:
+        result(FlutterMethodNotImplemented)
+      }
+    }
+  }
+
   private func registerStatuteSpotlightBridge() {
     guard let controller = window?.rootViewController as? FlutterViewController else {
       return
@@ -219,6 +254,69 @@ private enum NativeShareBridge {
     }
   }
 
+  private func registerLiveActivityBridge() {
+    guard let controller = window?.rootViewController as? FlutterViewController else {
+      return
+    }
+
+    let channel = FlutterMethodChannel(
+      name: "preamble/live_activity",
+      binaryMessenger: controller.binaryMessenger
+    )
+
+    channel.setMethodCallHandler { call, result in
+      switch call.method {
+      case "startLiveActivity":
+        if #available(iOS 16.2, *) {
+          guard let args = call.arguments as? [String: Any],
+                let caseTitle = args["caseTitle"] as? String,
+                let status = args["status"] as? String,
+                let countdownDays = args["countdownDays"] as? Int,
+                let nextEvent = args["nextEvent"] as? String else {
+            result(FlutterError(code: "invalid_args", message: "Arguments mismatch", details: nil))
+            return
+          }
+
+          // 啟動前先結束現有的即時動態，避免重複累積
+          for activity in Activity<PreambleAttributes>.activities {
+            Task {
+              await activity.end(dismissalPolicy: .immediate)
+            }
+          }
+
+          let attributes = PreambleAttributes(caseTitle: caseTitle)
+          let initialContentState = PreambleAttributes.ContentState(status: status, countdownDays: countdownDays, nextEvent: nextEvent)
+
+          do {
+            let activity = try Activity<PreambleAttributes>.request(
+              attributes: attributes,
+              content: .init(state: initialContentState, staleDate: nil, relevanceScore: 1.0),
+              pushType: nil
+            )
+            result(activity.id)
+          } catch {
+            result(FlutterError(code: "start_failed", message: error.localizedDescription, details: nil))
+          }
+        } else {
+          result(FlutterError(code: "unsupported", message: "iOS 16.2+ required", details: nil))
+        }
+      case "stopLiveActivity":
+        if #available(iOS 16.2, *) {
+          Task {
+            for activity in Activity<PreambleAttributes>.activities {
+              await activity.end(dismissalPolicy: .immediate)
+            }
+            result(nil)
+          }
+        } else {
+          result(nil)
+        }
+      default:
+        result(FlutterMethodNotImplemented)
+      }
+    }
+  }
+
   private func handlePreambleURL(_ url: URL) -> Bool {
     guard url.scheme == "preamble",
           let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
@@ -235,8 +333,27 @@ private enum NativeShareBridge {
     case QuickAskAppIntentBridge.todayCaseHost:
       deliverQuickAskPrompt(QuickAskAppIntentBridge.todayCasePrompt)
       return true
+    case "todo-list", "time-machine", "chat", "tips", "vocabulary":
+      deliverDeepLink(url.absoluteString)
+      return true
     default:
       return false
+    }
+  }
+
+  private func deliverDeepLink(_ urlString: String) {
+    let normalizedUrl = urlString.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !normalizedUrl.isEmpty else {
+      return
+    }
+
+    if deepLinkBridgeReady, let deepLinkChannel {
+      deepLinkChannel.invokeMethod(
+        "openDeepLink",
+        arguments: ["url": normalizedUrl]
+      )
+    } else {
+      pendingDeepLink = normalizedUrl
     }
   }
 
@@ -669,4 +786,17 @@ private enum NativeShareBridge {
     let text = "\(value)".trimmingCharacters(in: .whitespacesAndNewlines)
     return text.isEmpty ? nil : text
   }
+}
+
+// ==========================================
+// 6. LIVE ACTIVITY ATTRIBUTES
+// ==========================================
+
+struct PreambleAttributes: ActivityAttributes {
+    public struct ContentState: Codable, Hashable {
+        var status: String
+        var countdownDays: Int
+        var nextEvent: String
+    }
+    var caseTitle: String
 }

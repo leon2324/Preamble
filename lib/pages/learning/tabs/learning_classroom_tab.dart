@@ -196,8 +196,8 @@ extension LearningClassroomTabBuilder on KnowLawPageState {
                 shape: BoxShape.circle,
               ),
               child: Center(
-                child: CtmSvgIcon(
-                  CtmSvgIcons.award,
+                child: CaseLibrarySvgIcon(
+                  CaseLibrarySvgIcons.award,
                   size: 20.sp,
                   color: const Color(0xFF6B4B14),
                 ),
@@ -342,8 +342,8 @@ extension LearningClassroomTabBuilder on KnowLawPageState {
           children: [
             Row(
               children: [
-                CtmSvgIcon(
-                  CtmSvgIcons.star,
+                CaseLibrarySvgIcon(
+                  CaseLibrarySvgIcons.star,
                   size: 20.sp,
                   color: const Color(0xFF3F7FBF),
                 ),
@@ -404,7 +404,7 @@ extension LearningClassroomTabBuilder on KnowLawPageState {
             ),
             SizedBox(height: 10.h),
             ElevatedButton.icon(
-              icon: CtmSvgIcon(CtmSvgIcons.chevronRight,
+              icon: CaseLibrarySvgIcon(CaseLibrarySvgIcons.chevronRight,
                   size: 14.sp, color: Colors.white),
               label: const Text('研讀此案例'),
               onPressed: () => _openArticle(illuTargetArticle),
@@ -426,8 +426,8 @@ extension LearningClassroomTabBuilder on KnowLawPageState {
           children: [
             Row(
               children: [
-                CtmSvgIcon(
-                  CtmSvgIcons.message,
+                CaseLibrarySvgIcon(
+                  CaseLibrarySvgIcons.message,
                   size: 16.sp,
                   color: HomeV2Palette.trustGreen,
                 ),
@@ -519,7 +519,7 @@ extension LearningClassroomTabBuilder on KnowLawPageState {
                         color: HomeV2Palette.trustGreen,
                       )),
                   SizedBox(width: 4.w),
-                  CtmSvgIcon(CtmSvgIcons.chevronRight,
+                  CaseLibrarySvgIcon(CaseLibrarySvgIcons.chevronRight,
                       size: 12.sp, color: HomeV2Palette.trustGreen),
                 ],
               ),

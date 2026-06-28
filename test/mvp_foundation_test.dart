@@ -139,7 +139,7 @@ void main() {
     final fraudResults = await repository.searchJournal('詐騙');
     final publicSafetyResults = await repository.searchJournal('公共安全');
 
-    // 記事搜尋同時涵蓋首頁趨勢、資料館動態與案件時光機書籍；
+    // 記事搜尋同時涵蓋首頁趨勢、資料館動態與案件圖書館書籍；
     // 這裡守住資料層索引，避免之後 UI 各自重新實作關鍵字比對。
     expect(fraudResults.map((item) => item.title), contains('詐騙車手與洗錢鏈'));
     expect(

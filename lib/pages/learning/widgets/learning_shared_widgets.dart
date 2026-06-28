@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/components/home/v2/home_v2_palette.dart';
-import 'package:preamble/features/case_time_machine/widgets/case_time_machine_svg_icon.dart';
+import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
 import 'package:preamble/pages/learning/widgets/notebook_aesthetics.dart';
 import 'package:preamble/theme/app_colors.dart';
 
@@ -474,8 +474,8 @@ class _LearningCustomClassroomCardState
                   shape: BoxShape.circle,
                 ),
                 child: Center(
-                  child: CtmSvgIcon(
-                    CtmSvgIcons.idea,
+                  child: CaseLibrarySvgIcon(
+                    CaseLibrarySvgIcons.idea,
                     size: 20.sp,
                     color: iconColor,
                   ),
