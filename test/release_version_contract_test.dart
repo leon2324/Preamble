@@ -28,8 +28,6 @@ void main() {
     expect(
         widgetInfo, contains(r'<string>$(CURRENT_PROJECT_VERSION)</string>'));
     expect(versionConfig, contains('#include "Generated.xcconfig"'));
-    expect(project, isNot(contains('MARKETING_VERSION = 1.0;')));
-    expect(project, isNot(contains('CURRENT_PROJECT_VERSION = 1;')));
     expect(
       RegExp(
         r'PreambleTodayCaseWidget"[\s\S]*?baseConfigurationReference = '
@@ -42,6 +40,36 @@ void main() {
       project,
       contains(r'CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";'),
     );
+    for (final configId in const [
+      '97C147061CF9000F007C117D',
+      '97C147071CF9000F007C117D',
+      '249021D4217E4FDB00AE95B9',
+      'D70000000000000000000060',
+      'D70000000000000000000061',
+      'D70000000000000000000062',
+    ]) {
+      final block = _buildConfigurationBlock(project, configId);
+      expect(block, contains(r'MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";'));
+      expect(
+        block,
+        contains(r'CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";'),
+      );
+    }
+  });
+
+  test('RunnerTests keeps its local generated test bundle version', () {
+    final project =
+        File('ios/Runner.xcodeproj/project.pbxproj').readAsStringSync();
+
+    for (final configId in const [
+      '331C8088294A63A400263BE5',
+      '331C8089294A63A400263BE5',
+      '331C808A294A63A400263BE5',
+    ]) {
+      final block = _buildConfigurationBlock(project, configId);
+      expect(block, contains('CURRENT_PROJECT_VERSION = 1;'));
+      expect(block, contains('MARKETING_VERSION = 1.0;'));
+    }
   });
 
   test('Profile page no longer contains fake release labels', () {
@@ -51,4 +79,12 @@ void main() {
     expect(profile, isNot(contains('Build 42')));
     expect(profile, isNot(contains('v1.0.0')));
   });
+}
+
+String _buildConfigurationBlock(String project, String configId) {
+  final match = RegExp(
+    '$configId /\\* [^*]+ \\*/ = \\{[\\s\\S]*?\\n\\t\\t\\};',
+  ).firstMatch(project);
+  expect(match, isNotNull, reason: 'Missing Xcode build config $configId');
+  return match!.group(0)!;
 }

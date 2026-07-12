@@ -28,15 +28,22 @@ void main() {
     expect(info.displayLabel, '版本 1.1.0（Build 5）');
   });
 
-  test('keeps short git sha when it is shorter than expected', () {
-    final info = BuildInfo.fromValues(
-      version: '1.1.0',
-      buildNumber: '5',
-      gitSha: 'abc12',
-    );
+  test('formats git sha edge lengths consistently', () {
+    BuildInfo infoFor(String gitSha) {
+      return BuildInfo.fromValues(
+        version: '1.1.0',
+        buildNumber: '5',
+        gitSha: gitSha,
+      );
+    }
 
-    expect(info.shortGitSha, 'abc12');
-    expect(info.displayLabel, '版本 1.1.0（Build 5） • abc12');
+    expect(infoFor('abc1234').shortGitSha, 'abc1234');
+    expect(infoFor('abc12345').shortGitSha, 'abc1234');
+    expect(infoFor('abc1234567').shortGitSha, 'abc1234');
+    expect(
+      infoFor('60b898c4bad672dd0547790687339dfec90bbbf0').shortGitSha,
+      '60b898c',
+    );
   });
 
   testWidgets('profile falls back when build info provider fails', (

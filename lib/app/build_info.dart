@@ -42,7 +42,7 @@ class BuildInfo {
 
   String get shortGitSha {
     if (gitSha == 'unknown') return 'unknown';
-    return gitSha.length <= 10 ? gitSha : gitSha.substring(0, 7);
+    return gitSha.length <= 7 ? gitSha : gitSha.substring(0, 7);
   }
 
   bool get hasGitSha => shortGitSha != 'unknown';
