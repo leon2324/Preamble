@@ -1,0 +1,3 @@
+// Flutter 會依 pubspec.yaml 或 --build-name/--build-number 產生 Generated.xcconfig。
+// Widget extension 只需要共用版本號，不應繼承 Runner 的 CocoaPods linker 設定，避免誤連 Flutter Pods。
+#include "Generated.xcconfig"

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/app/app_state.dart';
+import 'package:preamble/app/native_startup_coordinator.dart';
 import 'package:preamble/components/navigation/island_bottom_nav.dart';
 import 'package:preamble/pages/profile/profile_page.dart';
 import 'package:preamble/pages/home/home_page.dart';
@@ -62,6 +63,7 @@ class _MylawAppState extends State<MylawApp> {
   late final GlobalKey<NavigatorState> _navigatorKey;
   late final PreambleState _appState;
   late final ValueNotifier<String?> _quickAskPromptNotifier;
+  late final NativeStartupCoordinator _nativeStartupCoordinator;
   int selectedIndex = 0;
   int? _knowLawInitialTabIndex;
   String? _knowLawInitialToolTab;
@@ -100,28 +102,22 @@ class _MylawAppState extends State<MylawApp> {
     _navigatorKey = GlobalKey<NavigatorState>();
     _appState = PreambleState()..load();
     _quickAskPromptNotifier = ValueNotifier<String?>(null);
+    _nativeStartupCoordinator = NativeStartupCoordinator();
     IosQuickAskIntentBridge.registerPromptHandler(_openQuickAskFromNative);
     IosStatuteSpotlightBridge.registerQueryHandler(
       _openStatuteDatabaseFromNative,
     );
     IosDeepLinkBridge.registerLinkHandler(_handleDeepLink);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final prompt = await IosQuickAskIntentBridge.consumeInitialPrompt();
-      if (!mounted) return;
-      if (prompt != null) {
-        _openQuickAskFromNative(prompt);
-      }
-
-      final statuteQuery =
-          await IosStatuteSpotlightBridge.consumeInitialQuery();
-      if (!mounted || statuteQuery == null) return;
-      _openStatuteDatabaseFromNative(statuteQuery);
-
-      final initialLink = await IosDeepLinkBridge.consumeInitialLink();
-      if (!mounted) return;
-      if (initialLink != null) {
-        _handleDeepLink(initialLink);
-      }
+      await _nativeStartupCoordinator.consumeAndHandleInitialEvents(
+        consumeQuickAskPrompt: IosQuickAskIntentBridge.consumeInitialPrompt,
+        consumeStatuteQuery: IosStatuteSpotlightBridge.consumeInitialQuery,
+        consumeDeepLink: IosDeepLinkBridge.consumeInitialLink,
+        handleQuickAskPrompt: _openQuickAskFromNative,
+        handleStatuteQuery: _openStatuteDatabaseFromNative,
+        handleDeepLink: _handleDeepLink,
+        isMounted: () => mounted,
+      );
     });
   }
 
@@ -130,6 +126,7 @@ class _MylawAppState extends State<MylawApp> {
     IosQuickAskIntentBridge.unregisterPromptHandler();
     IosStatuteSpotlightBridge.unregisterQueryHandler();
     IosDeepLinkBridge.unregisterLinkHandler();
+    _nativeStartupCoordinator.dispose();
     _quickAskPromptNotifier.dispose();
     _appState.dispose();
     super.dispose();
