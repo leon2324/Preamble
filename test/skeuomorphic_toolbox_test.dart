@@ -36,12 +36,12 @@ void main() {
       ),
     );
 
-    await tester.pumpAndSettle();
+    await tester.pumpForVerification();
 
     // 1. 切換至生活工具箱 Tab
     expect(find.text('生活工具箱'), findsOneWidget);
     await tester.tap(find.text('生活工具箱'));
-    await tester.pumpAndSettle();
+    await tester.pumpForVerification();
 
     // 2. 驗證預設呈現的白話文翻譯機
     expect(find.text('法律術語白話翻譯機'), findsOneWidget);
@@ -49,7 +49,7 @@ void main() {
     // 3. 點擊頂部車禍計算標籤
     expect(find.text('車禍計算'), findsOneWidget);
     await tester.tap(find.text('車禍計算'));
-    await tester.pumpAndSettle();
+    await tester.pumpForVerification();
 
     expect(find.text('車禍零件折舊與工資計算機'), findsOneWidget);
     expect(find.textContaining('💡 法律小常識'), findsWidgets);
@@ -77,7 +77,7 @@ void main() {
 
     // 預設為：汽車 (5年) + 定律遞減法
     await tester.tap(find.text('試算理賠額'));
-    await tester.pumpAndSettle();
+    await tester.pumpForVerification();
 
     // 驗證汽車折舊計算結果 (Y=3, M=0, r=0.369, 10000 -> Year 1: residual 6310 -> Year 2: residual 3981.6 -> Year 3: residual 2512.4 -> Claim = 2512 + 5000 = 7512)
     expect(find.textContaining('零件折舊後殘值：\$2512 元'), findsOneWidget);
@@ -85,10 +85,10 @@ void main() {
 
     // 5. 切換車輛種類為「🛵 機車 (耐用3年)」
     await tester.tap(find.text('🛵 機車 (耐用3年)'));
-    await tester.pumpAndSettle();
+    await tester.pumpForVerification();
 
     await tester.tap(find.text('試算理賠額'));
-    await tester.pumpAndSettle();
+    await tester.pumpForVerification();
 
     // 驗證機車折舊結果：耐用年數 3 年，殘值保底下限 1/4 (10000 / 4 = 2500)。
     // 原定律遞減法算 3 年會低於 2500，故會觸發 Floor 殘值，結果應為零件殘值 2500 元。
@@ -98,7 +98,7 @@ void main() {
     // 6. 切換至租屋信函起草器 (使用 '租屋催告')
     expect(find.text('租屋催告'), findsOneWidget);
     await tester.tap(find.text('租屋催告'));
-    await tester.pumpAndSettle();
+    await tester.pumpForVerification();
 
     expect(find.text('租屋存證信函起草器'), findsOneWidget);
 
@@ -124,14 +124,14 @@ void main() {
     await tester.pump();
 
     await tester.tap(find.text('起草催告書'));
-    await tester.pumpAndSettle();
+    await tester.pumpForVerification();
 
     expect(find.textContaining('郵局存證信函草稿 (設備修繕催告)'), findsOneWidget);
     expect(find.textContaining('為請求儘速修繕房屋內「天花板漏水」設備事。'), findsOneWidget);
 
     // 7. 切換通知類型為「💰 租約期滿退押金」
     await tester.tap(find.text('💰 租約期滿退押金'));
-    await tester.pumpAndSettle();
+    await tester.pumpForVerification();
 
     final expiryField = find.byWidgetPredicate(
         (w) => w is TextField && w.decoration?.hintText == '例如：2026年6月1日');
@@ -146,10 +146,22 @@ void main() {
     await tester.pump();
 
     await tester.tap(find.text('起草催告書'));
-    await tester.pumpAndSettle();
+    await tester.pumpForVerification();
 
     expect(find.textContaining('郵局存證信函草稿 (期滿退還押金催告)'), findsOneWidget);
     expect(
         find.textContaining('為請求依法儘速返還租賃房屋押租金新台幣 32000 元整事。'), findsOneWidget);
   });
+}
+
+extension _VerificationPump on WidgetTester {
+  Future<void> pumpForVerification([
+    Duration duration = const Duration(milliseconds: 500),
+  ]) async {
+    // 台灣繁體中文教學註解：
+    // KnowLawPage 內有持續運作的裝飾動畫；測試只需要等待點擊後的 setState 與短動畫完成，
+    // 不能使用無界 pumpAndSettle，否則會一直等到 ticker 停止而逾時。
+    await pump();
+    await pump(duration);
+  }
 }
