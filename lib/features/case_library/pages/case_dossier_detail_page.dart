@@ -494,9 +494,8 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
     }
 
     final book = _detailedBook ?? widget.book;
-    final displayImages = book.images.isNotEmpty
-        ? book.images
-        : _getDefaultImagesForCase(book);
+    final displayImages =
+        book.images.isNotEmpty ? book.images : _getDefaultImagesForCase(book);
 
     final backgroundColor = _readingTint == 'cool'
         ? const Color(0xFFEBF3F9)

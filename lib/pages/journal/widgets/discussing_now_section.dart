@@ -11,7 +11,6 @@ import 'package:preamble/pages/journal/widgets/journal_palette.dart';
 import 'package:preamble/pages/journal/widgets/journal_section_header.dart';
 import 'package:preamble/pages/journal/widgets/discussion_detail_page.dart';
 
-
 class DiscussingNowSection extends StatelessWidget {
   const DiscussingNowSection({super.key, required this.palette});
 

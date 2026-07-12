@@ -587,10 +587,12 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                       onTap: () {
                         HapticFeedback.mediumImpact();
                         // 模擬原生 iOS Siri Intents / Shortcuts 喚醒並傳遞 prompt 參數
-                        ServicesBinding.instance.defaultBinaryMessenger.handlePlatformMessage(
+                        ServicesBinding.instance.defaultBinaryMessenger
+                            .handlePlatformMessage(
                           'preamble/quick_ask_intent',
                           const StandardMethodCodec().encodeMethodCall(
-                            const MethodCall('openQuickAsk', {'prompt': '租屋押金被扣怎麼辦？'}),
+                            const MethodCall(
+                                'openQuickAsk', {'prompt': '租屋押金被扣怎麼辦？'}),
                           ),
                           (ByteData? data) {},
                         );

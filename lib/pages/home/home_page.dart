@@ -22,6 +22,7 @@ import 'package:preamble/theme/app_colors.dart';
 import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
 import 'package:preamble/features/case_library/data/case_library_data.dart';
 import 'package:preamble/features/case_library/data/case_library_repository.dart';
+
 /// 新版首頁。
 ///
 /// 這個版本承接先前 prototype 的方向，已拆成多個 v2 元件檔案，

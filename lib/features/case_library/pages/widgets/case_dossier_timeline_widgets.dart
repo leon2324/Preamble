@@ -362,7 +362,8 @@ extension _CaseDossierTimelineWidgets on _CaseDossierDetailPageState {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CaseTimelineDetailPage(book: book),
+                        builder: (context) =>
+                            CaseTimelineDetailPage(book: book),
                       ),
                     );
                   },
@@ -539,7 +540,8 @@ extension _CaseDossierTimelineWidgets on _CaseDossierDetailPageState {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CaseTimelineDetailPage(book: book),
+                        builder: (context) =>
+                            CaseTimelineDetailPage(book: book),
                       ),
                     );
                   },

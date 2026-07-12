@@ -2,19 +2,54 @@ import 'package:flutter/material.dart';
 import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/app/app_state.dart';
+import 'package:preamble/app/build_info.dart';
 import 'package:preamble/theme/adaptive_layout.dart';
 import 'package:preamble/theme/app_colors.dart';
 import 'package:preamble/pages/profile/widgets/profile_widgets.dart';
 import 'package:preamble/pages/profile/widgets/profile_editor.dart';
 import 'package:preamble/pages/profile/apple_ecosystem_demo_page.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key, this.showBackButton = false});
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({
+    super.key,
+    this.showBackButton = false,
+    this.buildInfoProvider = const PackageBuildInfoProvider(),
+  });
 
   /// 個人頁同時會出現在底部導覽列，也可能被首頁以新路由 push 開啟。
   /// 不能直接用 Navigator.canPop() 判斷是否顯示返回鍵，否則從子功能返回底部 tab 後，
   /// 根 Navigator 仍可能回報可 pop，造成母頁多出返回箭頭並把主畫面 pop 成黑屏。
   final bool showBackButton;
+  final BuildInfoProvider buildInfoProvider;
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  BuildInfo? _buildInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBuildInfo();
+  }
+
+  @override
+  void didUpdateWidget(covariant ProfilePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.buildInfoProvider != widget.buildInfoProvider) {
+      _loadBuildInfo();
+    }
+  }
+
+  Future<void> _loadBuildInfo() async {
+    final buildInfo = await widget.buildInfoProvider.load().catchError(
+          (_) => BuildInfo.unknown(),
+        );
+    if (!mounted) return;
+    setState(() => _buildInfo = buildInfo);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +73,7 @@ class ProfilePage extends StatelessWidget {
         padding: EdgeInsets.fromLTRB(
             16.w, topPadding, 16.w, context.pageContentBottomPadding + 32.h),
         children: [
-          if (showBackButton)
+          if (widget.showBackButton)
             _BackButton(onBack: () => Navigator.of(context).pop()),
 
           // Header: 自訂個人頭像與狀態（大頭像居中排列，偏上方視覺）
@@ -276,12 +311,22 @@ class ProfilePage extends StatelessWidget {
                 icon: Icons.info_outline_rounded,
                 iconColor: Colors.grey,
                 title: '版本資訊',
-                trailing: Text(
-                  'v1.0.0 (Build 42)',
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: textMutedColor,
-                    fontWeight: FontWeight.bold,
+                trailing: Flexible(
+                  fit: FlexFit.loose,
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      _buildInfo?.displayLabel ?? '版本資訊讀取中',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: textMutedColor,
+                        fontWeight: FontWeight.bold,
+                        height: 1.25,
+                      ),
+                    ),
                   ),
                 ),
               ),
