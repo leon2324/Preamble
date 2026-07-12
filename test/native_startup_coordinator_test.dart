@@ -141,6 +141,61 @@ void main() {
     expect(errors.single, isA<StateError>());
     expect(handled, ['link:preamble://tips']);
   });
+
+  test('handler exception is reported without falling through', () async {
+    final coordinator = NativeStartupCoordinator();
+    final handled = <String>[];
+    final errors = <Object>[];
+
+    final result = await coordinator.consumeAndHandleInitialEvents(
+      consumeQuickAskPrompt: () async => '租屋押金',
+      consumeStatuteQuery: () async => '民法 184',
+      consumeDeepLink: () async => 'preamble://tips',
+      handleQuickAskPrompt: (payload) => throw StateError('handler failed'),
+      handleStatuteQuery: (payload) => handled.add('statute:$payload'),
+      handleDeepLink: (payload) => handled.add('link:$payload'),
+      isMounted: () => true,
+      onError: (error, stack) => errors.add(error),
+    );
+
+    expect(result?.type, NativeStartupEventType.quickAsk);
+    expect(errors.single, isA<StateError>());
+    expect(handled, isEmpty);
+  });
+
+  test('failed handler does not mark event as deduped', () async {
+    final coordinator = NativeStartupCoordinator();
+    final handled = <String>[];
+    final errors = <Object>[];
+    var shouldThrow = true;
+
+    Future<NativeStartupEvent?> run() {
+      return coordinator.consumeAndHandleInitialEvents(
+        consumeQuickAskPrompt: () async => '租屋押金',
+        consumeStatuteQuery: () async => null,
+        consumeDeepLink: () async => null,
+        handleQuickAskPrompt: (payload) {
+          if (shouldThrow) {
+            throw StateError('try again later');
+          }
+          handled.add('quick:$payload');
+        },
+        handleStatuteQuery: (payload) => handled.add('statute:$payload'),
+        handleDeepLink: (payload) => handled.add('link:$payload'),
+        isMounted: () => true,
+        onError: (error, stack) => errors.add(error),
+      );
+    }
+
+    final firstResult = await run();
+    shouldThrow = false;
+    final secondResult = await run();
+
+    expect(firstResult?.type, NativeStartupEventType.quickAsk);
+    expect(secondResult?.type, NativeStartupEventType.quickAsk);
+    expect(errors.single, isA<StateError>());
+    expect(handled, ['quick:租屋押金']);
+  });
 }
 
 Future<List<String>> _handleStartup({

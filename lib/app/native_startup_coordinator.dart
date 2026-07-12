@@ -74,13 +74,16 @@ class NativeStartupCoordinator {
       if (_isDisposed || !isMounted()) {
         return event;
       }
-      _handledEventKeys.add(event.dedupeKey);
-      await _handleEvent(
+      final didHandle = await _handleSafely(
         event,
         handleQuickAskPrompt: handleQuickAskPrompt,
         handleStatuteQuery: handleStatuteQuery,
         handleDeepLink: handleDeepLink,
+        onError: onError,
       );
+      if (didHandle) {
+        _handledEventKeys.add(event.dedupeKey);
+      }
       return event;
     }
 
@@ -103,6 +106,27 @@ class NativeStartupCoordinator {
     final payload = value?.trim();
     if (payload == null || payload.isEmpty) return null;
     return NativeStartupEvent(type: type, payload: payload);
+  }
+
+  Future<bool> _handleSafely(
+    NativeStartupEvent event, {
+    required NativeStartupEventHandler handleQuickAskPrompt,
+    required NativeStartupEventHandler handleStatuteQuery,
+    required NativeStartupEventHandler handleDeepLink,
+    NativeStartupErrorHandler? onError,
+  }) async {
+    try {
+      await _handleEvent(
+        event,
+        handleQuickAskPrompt: handleQuickAskPrompt,
+        handleStatuteQuery: handleStatuteQuery,
+        handleDeepLink: handleDeepLink,
+      );
+      return true;
+    } catch (error, stack) {
+      onError?.call(error, stack);
+      return false;
+    }
   }
 
   Future<void> _handleEvent(
