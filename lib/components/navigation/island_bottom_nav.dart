@@ -16,12 +16,14 @@ class IslandBottomNav extends StatelessWidget {
     required this.items,
     required this.onTap,
     required this.showLabels,
+    this.layoutMetrics,
   });
 
   final int selectedIndex;
   final List<BottomNavItemData> items;
   final ValueChanged<int> onTap;
   final bool showLabels;
+  final IslandBottomNavLayoutMetrics? layoutMetrics;
 
   @override
   Widget build(BuildContext context) {
@@ -36,36 +38,20 @@ class IslandBottomNav extends StatelessWidget {
         isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary;
     final unselectedColor = selectedColor.withValues(alpha: 0.42);
 
-    final extraHeight = context.adaptiveBuffer(12);
-    final labelFontSize = 11 + context.adaptiveBuffer(1.5);
-    final iconBoxHeight = 30 + (extraHeight * 0.6);
-    final iconLabelGap = (5 - context.adaptiveBuffer(1)).clamp(4.0, 5.0);
     return LayoutBuilder(
       builder: (context, constraints) {
-        // 台灣繁體中文教學註解：文字實際會被 Expanded 的單一項目寬度換行，
-        // 因此量測時必須使用扣除邊框後的 item 寬度；不能用無限寬、單行的
-        // TextPainter 高度，否則 Dynamic Type 在中文三字標籤上會低估所需高度。
-        final itemWidth = math.max(
-          0.0,
-          (constraints.maxWidth - 2) / math.max(items.length, 1),
-        );
-        final labelHeight = showLabels
-            ? _maxLabelHeight(
-                context,
-                items: items,
-                fontSize: labelFontSize,
-                maxWidth: itemWidth,
-              )
-            : 0.0;
-        final contentHeight = 6 +
-            iconBoxHeight +
-            (showLabels ? iconLabelGap + labelHeight : 0) +
-            4;
-        final navHeight = math.max(
-          (showLabels ? 70 : 56) + extraHeight,
-          contentHeight + 2,
-        );
-        final navShellHeight = navHeight + 6;
+        final metrics = layoutMetrics ??
+            IslandBottomNavLayoutMetrics.compute(
+              context,
+              availableWidth: constraints.maxWidth,
+              items: items,
+              showLabels: showLabels,
+            );
+        final iconBoxHeight = metrics.iconBoxHeight;
+        final iconLabelGap = metrics.iconLabelGap;
+        final labelFontSize = metrics.labelFontSize;
+        final navHeight = metrics.navHeight;
+        final navShellHeight = metrics.navShellHeight;
 
         return SizedBox(
           height: navShellHeight,
@@ -197,32 +183,6 @@ class IslandBottomNav extends StatelessWidget {
       },
     );
   }
-
-  double _maxLabelHeight(
-    BuildContext context, {
-    required List<BottomNavItemData> items,
-    required double fontSize,
-    required double maxWidth,
-  }) {
-    var maxHeight = 0.0;
-    for (final item in items) {
-      final painter = TextPainter(
-        text: TextSpan(
-          text: item.label,
-          style: TextStyle(
-            fontSize: fontSize,
-            height: 1.2,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        textDirection: Directionality.of(context),
-        textScaler: MediaQuery.textScalerOf(context),
-      )..layout(maxWidth: maxWidth);
-      maxHeight = math.max(maxHeight, painter.height);
-      painter.dispose();
-    }
-    return maxHeight;
-  }
 }
 
 class BottomNavItemData {
@@ -235,4 +195,179 @@ class BottomNavItemData {
   final String label;
   final IconData icon;
   final IconData selectedIcon;
+}
+
+/// IslandBottomNav 與 App shell 共用的內容導向尺寸契約。
+///
+/// 台灣繁體中文教學註解：shell 不能自行重算 Nav 高度，否則字型 fallback、
+/// Dynamic Type 換行或 item 寬度改變時，body reservation 就會與實際 Nav 脫節。
+/// 這個物件同時提供目前所需高度與 100% 最小浮島高度，讓 shell 只避讓大字級
+/// 額外長出的部分，不會把五個頁面的既有底部留白再加一次。
+class IslandBottomNavLayoutMetrics {
+  const IslandBottomNavLayoutMetrics._({
+    required this.availableWidth,
+    required this.itemWidth,
+    required this.labelFontSize,
+    required this.labelHeight,
+    required this.iconBoxHeight,
+    required this.iconLabelGap,
+    required this.contentHeight,
+    required this.navHeight,
+    required this.navShellHeight,
+    required this.minimumNavShellHeight,
+    required this.safeBottom,
+    required this.bottomOffset,
+  });
+
+  final double availableWidth;
+  final double itemWidth;
+  final double labelFontSize;
+  final double labelHeight;
+  final double iconBoxHeight;
+  final double iconLabelGap;
+  final double contentHeight;
+  final double navHeight;
+  final double navShellHeight;
+  final double minimumNavShellHeight;
+  final double safeBottom;
+  final double bottomOffset;
+
+  /// 大字級相對於 100% 最小浮島實際增加的高度。
+  double get additionalBodyReservation =>
+      math.max(0.0, navShellHeight - minimumNavShellHeight);
+
+  /// Nav 外框、Home Indicator safe area 與 shell 外距的完整垂直 footprint。
+  double get totalFootprint => navShellHeight + safeBottom + bottomOffset;
+
+  static IslandBottomNavLayoutMetrics compute(
+    BuildContext context, {
+    required double availableWidth,
+    required List<BottomNavItemData> items,
+    required bool showLabels,
+    double bottomOffset = 0,
+  }) {
+    final safeWidth = math.max(0.0, availableWidth);
+    final actual = _calculate(
+      items: items,
+      showLabels: showLabels,
+      availableWidth: safeWidth,
+      textScaler: MediaQuery.textScalerOf(context),
+      textDirection: Directionality.of(context),
+      adaptiveScale: context.adaptiveTextScale,
+    );
+    // 台灣繁體中文教學註解：這是 IslandBottomNav 自己原有的最小高度
+    // 契約（有標籤 70pt、無標籤 56pt，加上外層置中殼 6pt），不是從任何
+    // 頁面的底部 padding 反推的魔術數字。不得用「不縮放」的 TextScaler
+    // 重畫文字取得基準，否則會違反系統 Dynamic Type 的縮放契約。
+    final minimumNavShellHeight = (showLabels ? 70.0 : 56.0) + 6;
+
+    return IslandBottomNavLayoutMetrics._(
+      availableWidth: safeWidth,
+      itemWidth: actual.itemWidth,
+      labelFontSize: actual.labelFontSize,
+      labelHeight: actual.labelHeight,
+      iconBoxHeight: actual.iconBoxHeight,
+      iconLabelGap: actual.iconLabelGap,
+      contentHeight: actual.contentHeight,
+      navHeight: actual.navHeight,
+      navShellHeight: actual.navShellHeight,
+      minimumNavShellHeight: minimumNavShellHeight,
+      safeBottom: MediaQuery.paddingOf(context).bottom,
+      bottomOffset: bottomOffset,
+    );
+  }
+
+  static _IslandBottomNavDimensions _calculate({
+    required List<BottomNavItemData> items,
+    required bool showLabels,
+    required double availableWidth,
+    required TextScaler textScaler,
+    required TextDirection textDirection,
+    required double adaptiveScale,
+  }) {
+    final progress = ((adaptiveScale - 1.15) / 0.25).clamp(0.0, 1.0);
+    final extraHeight = 12 * progress;
+    final labelFontSize = 11 + (1.5 * progress);
+    final iconBoxHeight = 30 + (extraHeight * 0.6);
+    final iconLabelGap = (5 - progress).clamp(4.0, 5.0);
+    final itemWidth = math.max(
+      0.0,
+      (availableWidth - 2) / math.max(items.length, 1),
+    );
+    final labelHeight = showLabels
+        ? _maxLabelHeight(
+            items: items,
+            fontSize: labelFontSize,
+            maxWidth: itemWidth,
+            textScaler: textScaler,
+            textDirection: textDirection,
+          )
+        : 0.0;
+    final contentHeight =
+        6 + iconBoxHeight + (showLabels ? iconLabelGap + labelHeight : 0) + 4;
+    final navHeight = math.max(
+      (showLabels ? 70 : 56) + extraHeight,
+      contentHeight + 2,
+    );
+
+    return _IslandBottomNavDimensions(
+      itemWidth: itemWidth,
+      labelFontSize: labelFontSize,
+      labelHeight: labelHeight,
+      iconBoxHeight: iconBoxHeight,
+      iconLabelGap: iconLabelGap,
+      contentHeight: contentHeight,
+      navHeight: navHeight,
+      navShellHeight: navHeight + 6,
+    );
+  }
+
+  static double _maxLabelHeight({
+    required List<BottomNavItemData> items,
+    required double fontSize,
+    required double maxWidth,
+    required TextScaler textScaler,
+    required TextDirection textDirection,
+  }) {
+    var maxHeight = 0.0;
+    for (final item in items) {
+      final painter = TextPainter(
+        text: TextSpan(
+          text: item.label,
+          style: TextStyle(
+            fontSize: fontSize,
+            height: 1.2,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        textDirection: textDirection,
+        textScaler: textScaler,
+      )..layout(maxWidth: maxWidth);
+      maxHeight = math.max(maxHeight, painter.height);
+      painter.dispose();
+    }
+    return maxHeight;
+  }
+}
+
+class _IslandBottomNavDimensions {
+  const _IslandBottomNavDimensions({
+    required this.itemWidth,
+    required this.labelFontSize,
+    required this.labelHeight,
+    required this.iconBoxHeight,
+    required this.iconLabelGap,
+    required this.contentHeight,
+    required this.navHeight,
+    required this.navShellHeight,
+  });
+
+  final double itemWidth;
+  final double labelFontSize;
+  final double labelHeight;
+  final double iconBoxHeight;
+  final double iconLabelGap;
+  final double contentHeight;
+  final double navHeight;
+  final double navShellHeight;
 }

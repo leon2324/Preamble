@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 // google_fonts is imported in notebook_aesthetics
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/components/home/v2/home_v2_palette.dart';
+import 'package:preamble/components/navigation/app_shell_content_insets.dart';
 import 'package:preamble/components/shared/mvp_state_widgets.dart';
 import 'package:preamble/data/law_assistant/guest_law_assistant_usage.dart';
 import 'package:preamble/data/law_assistant/law_assistant_models.dart';
@@ -759,6 +760,7 @@ class KnowLawPageState extends State<KnowLawPage> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final gameState = LearningGameState.instance;
+    final additionalBottom = AppShellContentInsets.additionalBottomOf(context);
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
@@ -770,7 +772,12 @@ class KnowLawPageState extends State<KnowLawPage> {
             return NotebookBackground(
               child: SafeArea(
                 child: ListView(
-                  padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 80.h),
+                  padding: EdgeInsets.fromLTRB(
+                    16.w,
+                    12.h,
+                    16.w,
+                    80.h + additionalBottom,
+                  ),
                   physics: const AlwaysScrollableScrollPhysics(
                       parent: BouncingScrollPhysics()),
                   keyboardDismissBehavior:

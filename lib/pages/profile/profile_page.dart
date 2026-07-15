@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/app/build_info.dart';
 import 'package:preamble/theme/adaptive_layout.dart';
+import 'package:preamble/components/navigation/app_shell_content_insets.dart';
 import 'package:preamble/theme/app_colors.dart';
 import 'package:preamble/pages/profile/widgets/profile_widgets.dart';
 import 'package:preamble/pages/profile/widgets/profile_editor.dart';
@@ -71,7 +72,13 @@ class _ProfilePageState extends State<ProfilePage> {
       body: ListView(
         physics: const BouncingScrollPhysics(),
         padding: EdgeInsets.fromLTRB(
-            16.w, topPadding, 16.w, context.pageContentBottomPadding + 32.h),
+          16.w,
+          topPadding,
+          16.w,
+          context.pageContentBottomPadding +
+              32.h +
+              AppShellContentInsets.additionalBottomOf(context),
+        ),
         children: [
           if (widget.showBackButton)
             _BackButton(onBack: () => Navigator.of(context).pop()),

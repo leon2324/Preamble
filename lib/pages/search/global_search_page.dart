@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:preamble/app/app_state.dart';
+import 'package:preamble/components/navigation/app_shell_content_insets.dart';
 import 'package:preamble/data/search/search_models.dart';
 import 'package:preamble/data/search/search_repository.dart';
 import 'package:preamble/pages/learning/know_law_page.dart';
@@ -312,8 +313,12 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
           Positioned.fill(
             child: ListView(
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              padding:
-                  EdgeInsets.fromLTRB(16.w, headerHeight + 12.h, 16.w, 112.h),
+              padding: EdgeInsets.fromLTRB(
+                16.w,
+                headerHeight + 12.h,
+                16.w,
+                112.h + AppShellContentInsets.additionalBottomOf(context),
+              ),
               children: [
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 180),
