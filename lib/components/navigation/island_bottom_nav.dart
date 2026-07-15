@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui' show ImageFilter;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,9 +37,23 @@ class IslandBottomNav extends StatelessWidget {
     final unselectedColor = selectedColor.withValues(alpha: 0.42);
 
     final extraHeight = context.adaptiveBuffer(12);
-    final navShellHeight = (showLabels ? 76 : 62) + extraHeight;
-    final navHeight = (showLabels ? 70 : 56) + extraHeight;
+    final labelFontSize = 11 + context.adaptiveBuffer(1.5);
     final iconBoxHeight = 30 + (extraHeight * 0.6);
+    final iconLabelGap = (5 - context.adaptiveBuffer(1)).clamp(4.0, 5.0);
+    final labelHeight = showLabels
+        ? _maxLabelHeight(
+            context,
+            items: items,
+            fontSize: labelFontSize,
+          )
+        : 0.0;
+    final contentHeight =
+        6 + iconBoxHeight + (showLabels ? iconLabelGap + labelHeight : 0) + 4;
+    final navHeight = math.max(
+      (showLabels ? 70 : 56) + extraHeight,
+      contentHeight + 2,
+    );
+    final navShellHeight = navHeight + 6;
 
     return SizedBox(
       height: navShellHeight,
@@ -135,12 +150,12 @@ class IslandBottomNav extends StatelessWidget {
                                   ),
                                 ),
                                 if (showLabels) ...[
-                                  const SizedBox(height: 5),
+                                  SizedBox(height: iconLabelGap),
                                   Text(
                                     item.label,
                                     style: TextStyle(
-                                      fontSize:
-                                          11 + context.adaptiveBuffer(1.5),
+                                      fontSize: labelFontSize,
+                                      height: 1.2,
                                       fontWeight: isSelected
                                           ? FontWeight.bold
                                           : FontWeight.w400,
@@ -163,6 +178,32 @@ class IslandBottomNav extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  double _maxLabelHeight(
+    BuildContext context, {
+    required List<BottomNavItemData> items,
+    required double fontSize,
+  }) {
+    var maxHeight = 0.0;
+    for (final item in items) {
+      final painter = TextPainter(
+        text: TextSpan(
+          text: item.label,
+          style: TextStyle(
+            fontSize: fontSize,
+            height: 1.2,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        textDirection: Directionality.of(context),
+        textScaler: MediaQuery.textScalerOf(context),
+        maxLines: 1,
+      )..layout();
+      maxHeight = math.max(maxHeight, painter.height);
+      painter.dispose();
+    }
+    return maxHeight;
   }
 }
 
