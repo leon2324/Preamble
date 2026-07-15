@@ -84,6 +84,17 @@ void main() {
     }
   }
 
+  Future<void> expectAllItemsUsable(WidgetTester tester) async {
+    for (final item in items) {
+      final label = find.text(item.label);
+      expect(label.hitTestable(), findsOneWidget);
+      final text = tester.widget<Text>(label);
+      expect(text.overflow, isNull);
+      await tester.tap(label);
+      await tester.pump();
+    }
+  }
+
   testWidgets('393pt at normal text keeps every island navigation item visible',
       (tester) async {
     await pumpNav(
@@ -94,6 +105,7 @@ void main() {
     );
 
     expectAllItemsVisible();
+    expect(tester.getSize(find.byType(IslandBottomNav)).height, lessThan(80));
     expect(tester.takeException(), isNull);
   });
 
@@ -125,6 +137,7 @@ void main() {
     );
 
     expectAllItemsVisible();
+    expect(tester.getSize(find.byType(IslandBottomNav)).height, lessThan(96));
     final navBottom = tester.getBottomRight(find.byType(IslandBottomNav)).dy;
     expect(navBottom, lessThanOrEqualTo(852 - 17 - 34));
     expect(tester.takeException(), isNull);
@@ -144,6 +157,58 @@ void main() {
     for (var index = 0; index < items.length; index++) {
       await tester.tap(find.text(items[index].label));
     }
+    expect(tapped, [0, 1, 2, 3, 4]);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('393pt at 200 percent keeps all labels visible and tappable',
+      (tester) async {
+    final tapped = <int>[];
+    await pumpNav(
+      tester,
+      size: const Size(393, 852),
+      textScale: 2,
+      onTap: tapped.add,
+    );
+
+    expectAllItemsVisible();
+    await expectAllItemsUsable(tester);
+    expect(tapped, [0, 1, 2, 3, 4]);
+    expect(
+      tester.getBottomRight(find.byType(IslandBottomNav)).dy,
+      lessThanOrEqualTo(852 - 17 - 34),
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('320pt at 200 percent keeps all navigation items usable',
+      (tester) async {
+    final tapped = <int>[];
+    await pumpNav(
+      tester,
+      size: const Size(320, 568),
+      textScale: 2,
+      onTap: tapped.add,
+    );
+
+    expectAllItemsVisible();
+    await expectAllItemsUsable(tester);
+    expect(tapped, [0, 1, 2, 3, 4]);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('320pt at 300 percent reflows labels without overflow',
+      (tester) async {
+    final tapped = <int>[];
+    await pumpNav(
+      tester,
+      size: const Size(320, 568),
+      textScale: 3,
+      onTap: tapped.add,
+    );
+
+    expectAllItemsVisible();
+    await expectAllItemsUsable(tester);
     expect(tapped, [0, 1, 2, 3, 4]);
     expect(tester.takeException(), isNull);
   });

@@ -40,6 +40,9 @@ exception, missing/unreachable primary action, clipping, or unexpected error.
   `viewInsets.bottom`, and calculate `padding.bottom` from their difference.
 - `IslandBottomNav` and `LearningResultActionBar` are strict gates: any layout
   exception, clipped text, or missing registered action fails their test.
+  `IslandBottomNav` additionally has strict iPhone-safe-area regressions at
+  `393x852 / 2.0`, `320x568 / 2.0`, and `320x568 / 3.0`; the latter may grow
+  vertically from measured label content but must retain every label and action.
 
 ## Registry Policy
 

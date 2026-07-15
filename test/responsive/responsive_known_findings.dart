@@ -104,28 +104,6 @@ const _renderFlexRightAndBottom = <ResponsiveLayoutSignature>[
 /// 不把 P0 情境寫入此表，因為 P0 strict gate 必須無條件通過。
 const responsiveKnownFindings = <ResponsiveKnownFinding>[
   ResponsiveKnownFinding(
-    id: 'RSA-001A',
-    entryId: 'component.island_bottom_nav',
-    testCaseId: 'phone-200',
-    failureKind: ResponsiveFailureKind.layout,
-    requiredSignatures: [_renderFlexBottom],
-    maxOccurrences: 1,
-    maxOverflowPixels: 32,
-    reason: '五項浮島導覽在 200% 字體的垂直內容超出容器。',
-    nextBatch: 'Batch A',
-  ),
-  ResponsiveKnownFinding(
-    id: 'RSA-001B',
-    entryId: 'component.island_bottom_nav',
-    testCaseId: '320-300',
-    failureKind: ResponsiveFailureKind.layout,
-    requiredSignatures: [_renderFlexBottom],
-    maxOccurrences: 1,
-    maxOverflowPixels: 100,
-    reason: '五項浮島導覽在 320pt、300% 字體的壓力情境超出容器。',
-    nextBatch: 'Batch A',
-  ),
-  ResponsiveKnownFinding(
     id: 'RSA-002A',
     entryId: 'screen.app_shell_home',
     testCaseId: 'compact-large',
