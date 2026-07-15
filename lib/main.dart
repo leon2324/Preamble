@@ -353,7 +353,6 @@ class _MylawAppState extends State<MylawApp> {
                         bottom: 17,
                         child: SafeArea(
                           top: false,
-                          bottom: false,
                           child: IslandBottomNav(
                             selectedIndex: selectedIndex,
                             items: displayNavItems,

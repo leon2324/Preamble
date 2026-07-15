@@ -20,6 +20,7 @@ import 'package:preamble/theme/app_colors.dart';
 import 'package:preamble/data/learning/learning_game_state.dart';
 import 'package:preamble/pages/learning/widgets/notebook_aesthetics.dart';
 import 'package:preamble/pages/learning/widgets/learning_shared_widgets.dart';
+import 'package:preamble/pages/learning/widgets/learning_result_action_bar.dart';
 import 'package:preamble/pages/learning/widgets/achievement_room.dart';
 import 'package:preamble/pages/learning/widgets/mock_court_challenge.dart';
 import 'package:preamble/pages/learning/widgets/legal_document_export_page.dart';
@@ -2218,71 +2219,29 @@ class KnowLawPageState extends State<KnowLawPage> {
     });
   }
 
-  Widget _buildLearningResultActionButton({
+  LearningResultActionButton _buildLearningResultActionButton({
     required IconData icon,
     required String label,
     required Color color,
     required VoidCallback onPressed,
   }) {
-    return ElevatedButton.icon(
-      icon: Icon(icon, size: 12.sp, color: Colors.white),
-      label: Text(
-        label,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 10.5.sp, height: 1.15),
-      ),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        foregroundColor: Colors.white,
-        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-        minimumSize: Size(0, 34.h),
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      ),
+    return LearningResultActionButton(
+      icon: icon,
+      label: label,
+      color: color,
       onPressed: onPressed,
     );
   }
 
   Widget _buildLearningResultActionBar({
-    required Widget copyAction,
-    required Widget noteAction,
-    required Widget exportAction,
+    required LearningResultActionButton copyAction,
+    required LearningResultActionButton noteAction,
+    required LearningResultActionButton exportAction,
   }) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final textScale = MediaQuery.textScalerOf(context).scale(1);
-        final shouldStack = constraints.maxWidth < 360 || textScale >= 1.18;
-
-        // 小螢幕或 Dynamic Type 放大時，不把三個工具按鈕硬塞同一列。
-        // 短操作維持同列，較長的 PDF CTA 換到第二列全寬，保留可讀與可點擊性。
-        if (shouldStack) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                children: [
-                  Expanded(child: copyAction),
-                  SizedBox(width: 8.w),
-                  Expanded(child: noteAction),
-                ],
-              ),
-              SizedBox(height: 8.h),
-              SizedBox(width: double.infinity, child: exportAction),
-            ],
-          );
-        }
-
-        return Row(
-          children: [
-            Expanded(child: copyAction),
-            SizedBox(width: 8.w),
-            Expanded(child: noteAction),
-            SizedBox(width: 8.w),
-            Expanded(child: exportAction),
-          ],
-        );
-      },
+    return LearningResultActionBar(
+      copyAction: copyAction,
+      noteAction: noteAction,
+      exportAction: exportAction,
     );
   }
 
