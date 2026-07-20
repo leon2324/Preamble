@@ -53,6 +53,16 @@ Learning's top SafeArea is explicitly protected at a 59pt top inset for 100%,
 160%, and 200%; Batch A2 does not alter its background, header, or status-bar
 treatment.
 
+## Learning top-inset consistency
+
+`KnowLawPage` no longer wraps its complete ListView in `SafeArea`. Its
+`NotebookBackground` therefore reaches the status-bar region, while the ListView
+adds the live `MediaQuery.padding` to its existing 12pt top, 80pt bottom, and
+horizontal design spacing. The focused regression verifies the background Rect,
+the first content Rect, shell-consumed inset behavior, bottom inset, and
+landscape side insets. Bottom-navigation A1/A2 behavior and RSA-003 remain
+unchanged.
+
 ## Runtime Matrix
 
 | Matrix | Executions | Violating executions | Result |

@@ -53,6 +53,11 @@ exception, missing/unreachable primary action, clipping, or unexpected error.
   17pt outer offset. The shell must keep a positive content height and must not
   place final reachable content behind the floating Nav. This rule does not
   change any page's own top SafeArea contract.
+- `KnowLawPage` keeps its notebook background behind the status bar, but its
+  ListView owns the current `MediaQuery.padding` for top, bottom, left, and
+  right safety. If an outer shell has already consumed an inset, the page sees
+  zero for that side and retains only its design spacing; this avoids a double
+  top inset without changing the existing Learning tab-switcher RSA baseline.
 
 ## Registry Policy
 
