@@ -32,6 +32,27 @@ reachability and clipping observations remain visible in the generated report;
 the P0 strict matrix rejects any such primary-action failure. A disappeared
 baseline item is emitted as `stale` for explicit removal review.
 
+## Batch A2: Dynamic bottom-navigation reservation
+
+`MylawApp` keeps the existing floating Stack-based Island navigation, including
+its transparent background, blur, rounded shape, shadow, 17pt outer offset, and
+Home Indicator safe area. The rendered Nav and App shell share one
+content-driven layout-metrics contract. `AppShellContentInsets` distributes only
+the Dynamic Type growth above the Nav's minimum shell height to existing page
+content spacing; it excludes both the Home Indicator safe bottom and 17pt outer
+offset. The IndexedStack remains full-screen, so every Tab background continues
+to paint through the bottom of the display and existing per-page spacers are not
+counted a second time at normal text sizes.
+
+The strict shell regression covers `393x852` at 100%, 140%, 160%, 200%, and
+235%, plus `320x568` at 300%. It records both the legacy Stack overlap and the
+old A2 background-shortening geometry, then verifies that full-screen tab
+backgrounds remain intact while the final-content sentinel no longer intersects
+the Nav.
+Learning's top SafeArea is explicitly protected at a 59pt top inset for 100%,
+160%, and 200%; Batch A2 does not alter its background, header, or status-bar
+treatment.
+
 ## Runtime Matrix
 
 | Matrix | Executions | Violating executions | Result |

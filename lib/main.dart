@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/app/native_startup_coordinator.dart';
 import 'package:preamble/components/navigation/island_bottom_nav.dart';
+import 'package:preamble/components/navigation/app_shell_content_insets.dart';
 import 'package:preamble/pages/profile/profile_page.dart';
 import 'package:preamble/pages/home/home_page.dart';
 import 'package:preamble/pages/learning/know_law_page.dart';
@@ -308,66 +309,88 @@ class _MylawAppState extends State<MylawApp> {
                   // 全域底部 Nav 維持常駐，讓「我的 Preamble」仍能像其他主分頁一樣快速切換。
                   // 個別子頁若需要沉浸式流程，請在 push 新頁時另外處理，而不要從主殼層關掉 Nav。
 
-                  return Stack(
-                    children: [
-                      Positioned.fill(
-                        child: SafeArea(
-                          top: useTopSafeArea,
-                          bottom: false,
-                          child: IndexedStack(
-                            index: selectedIndex,
-                            children: displayPages,
-                          ),
-                        ),
-                      ),
-                      // 全域狀態列霧面遮罩：防止滾動內容與上方時間、狀態列重疊
-                      Positioned(
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        child: IgnorePointer(
-                          child: Container(
-                            height: MediaQuery.paddingOf(context).top + 10,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                stops: const [0.0, 0.75, 1.0],
-                                colors: [
-                                  Theme.of(context).scaffoldBackgroundColor,
-                                  Theme.of(context)
-                                      .scaffoldBackgroundColor
-                                      .withValues(alpha: 0.88),
-                                  Theme.of(context)
-                                      .scaffoldBackgroundColor
-                                      .withValues(alpha: 0.0),
-                                ],
+                  return LayoutBuilder(
+                    builder: (context, constraints) {
+                      final navMetrics = IslandBottomNavLayoutMetrics.compute(
+                        context,
+                        // 導覽列左右各保留 12pt；Nav 與 shell 讀取同一份可用寬度，
+                        // Dynamic Type 換行時才不會各自算出不同高度。
+                        availableWidth: constraints.maxWidth - 24,
+                        items: displayNavItems,
+                        showLabels: _appState.showNavbarLabels,
+                        bottomOffset: 17,
+                      );
+
+                      return Stack(
+                        children: [
+                          Positioned.fill(
+                            child: SafeArea(
+                              top: useTopSafeArea,
+                              bottom: false,
+                              child: AppShellContentInsets(
+                                // 台灣繁體中文教學註解：只傳遞 Nav 大字級的額外
+                                // 成長量；SafeArea 的 Home Indicator 與 17pt 外距
+                                // 仍由 Nav 自己處理，不能在這裡重複加入。
+                                additionalBottom:
+                                    navMetrics.additionalBodyReservation,
+                                child: IndexedStack(
+                                  index: selectedIndex,
+                                  children: displayPages,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                      Positioned(
-                        left: 12,
-                        right: 12,
-                        bottom: 17,
-                        child: SafeArea(
-                          top: false,
-                          child: IslandBottomNav(
-                            selectedIndex: selectedIndex,
-                            items: displayNavItems,
-                            showLabels: _appState.showNavbarLabels,
-                            onTap: (index) {
-                              setState(() {
-                                _knowLawInitialTabIndex = null;
-                                _knowLawInitialToolTab = null;
-                                selectedIndex = index;
-                              });
-                            },
+                          // 全域狀態列霧面遮罩：防止滾動內容與上方時間、狀態列重疊
+                          Positioned(
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            child: IgnorePointer(
+                              child: Container(
+                                height: MediaQuery.paddingOf(context).top + 10,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    stops: const [0.0, 0.75, 1.0],
+                                    colors: [
+                                      Theme.of(context).scaffoldBackgroundColor,
+                                      Theme.of(context)
+                                          .scaffoldBackgroundColor
+                                          .withValues(alpha: 0.88),
+                                      Theme.of(context)
+                                          .scaffoldBackgroundColor
+                                          .withValues(alpha: 0.0),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ],
+                          Positioned(
+                            left: 12,
+                            right: 12,
+                            bottom: 17,
+                            child: SafeArea(
+                              top: false,
+                              child: IslandBottomNav(
+                                selectedIndex: selectedIndex,
+                                items: displayNavItems,
+                                showLabels: _appState.showNavbarLabels,
+                                layoutMetrics: navMetrics,
+                                onTap: (index) {
+                                  setState(() {
+                                    _knowLawInitialTabIndex = null;
+                                    _knowLawInitialToolTab = null;
+                                    selectedIndex = index;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   );
                 },
               ),

@@ -5,6 +5,7 @@ import 'package:preamble/components/home/v2/home_v2_header.dart';
 import 'package:preamble/components/home/v2/home_v2_primitives.dart';
 import 'package:preamble/components/home/v2/home_v2_sections.dart';
 import 'package:preamble/components/home/v2/home_v2_bento_cards.dart';
+import 'package:preamble/components/navigation/app_shell_content_insets.dart';
 import 'package:preamble/components/shared/liquid_glass_widgets.dart';
 import 'package:preamble/data/mock_data/home/home_mock_data.dart';
 import 'package:preamble/data/mock_data/home/home_v2_mock_data.dart';
@@ -536,6 +537,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final layout = context.homeSearchLayout;
+    final additionalBottom = AppShellContentInsets.additionalBottomOf(context);
     final topContentPadding =
         context.hasLargeTopInset ? context.topSafeInset + 10.h : 18.h;
     final isCompactWidth = MediaQuery.sizeOf(context).width < 360;
@@ -632,7 +634,7 @@ class _HomePageState extends State<HomePage> {
                               _openOfficialFeed(MojFeedCategory.news),
                           onMoreDiscussionTap: () => widget.onNavigateToTab(3),
                         ),
-                        SizedBox(height: 132.h),
+                        SizedBox(height: 132.h + additionalBottom),
                       ],
                     ),
                   ),

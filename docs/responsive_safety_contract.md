@@ -43,6 +43,16 @@ exception, missing/unreachable primary action, clipping, or unexpected error.
   `IslandBottomNav` additionally has strict iPhone-safe-area regressions at
   `393x852 / 2.0`, `320x568 / 2.0`, and `320x568 / 3.0`; the latter may grow
   vertically from measured label content but must retain every label and action.
+- The App shell has a separate strict bottom-reservation gate at `393x852 / 1.0`,
+  `1.4`, `1.6`, `2.0`, and `2.35`, plus `320x568 / 3.0`. It measures the same
+  `IslandBottomNav` layout contract used by the rendered Nav and exposes only
+  the Dynamic Type growth beyond its minimum shell footprint through the shared
+  `AppShellContentInsets` contract. Tab backgrounds remain full-screen; only
+  existing scroll or content bottom spacing consumes this extra inset. The
+  shared value excludes the Home Indicator safe bottom and the floating Nav's
+  17pt outer offset. The shell must keep a positive content height and must not
+  place final reachable content behind the floating Nav. This rule does not
+  change any page's own top SafeArea contract.
 
 ## Registry Policy
 

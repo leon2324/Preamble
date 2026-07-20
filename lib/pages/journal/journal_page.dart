@@ -9,6 +9,7 @@ import 'package:preamble/pages/journal/widgets/journal_page_header.dart';
 import 'package:preamble/pages/journal/widgets/journal_palette.dart';
 import 'package:preamble/pages/journal/widgets/on_this_day_card.dart';
 import 'package:preamble/theme/adaptive_layout.dart';
+import 'package:preamble/components/navigation/app_shell_content_insets.dart';
 import 'package:preamble/theme/app_colors.dart';
 
 /// 記事頁。
@@ -90,7 +91,7 @@ class _JournalPageState extends State<JournalPage> {
               16.w,
               topPadding + 16.h,
               16.w,
-              126.h,
+              126.h + AppShellContentInsets.additionalBottomOf(context),
             ),
             children: [
               JournalPageHeader(palette: palette),

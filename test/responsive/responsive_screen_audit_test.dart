@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:preamble/components/navigation/island_bottom_nav.dart';
 
@@ -90,7 +91,44 @@ void main() {
       tester.getBottomRight(find.byType(IslandBottomNav)).dy,
       lessThanOrEqualTo(852 - 17 - 34),
     );
+    final nav = tester.widget<IslandBottomNav>(find.byType(IslandBottomNav));
+    final metrics = nav.layoutMetrics;
+    expect(metrics, isNotNull);
+    expect(metrics!.additionalBodyReservation, greaterThan(0));
+    final shellContentRect = tester.getRect(find.byType(IndexedStack).first);
+    expect(
+      shellContentRect.bottom,
+      closeTo(852, 0.01),
+    );
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets(
+      'learning top SafeArea remains independent from shell reservation',
+      (tester) async {
+    final entry = responsiveScreenEntries.firstWhere(
+      (entry) => entry.id == 'screen.learning_tools',
+    );
+    for (final textScale in const [1.0, 1.6, 2.0]) {
+      await harness.pumpEntry(
+        tester,
+        entry: entry,
+        testCase: ResponsiveTestCase(
+          id: 'learning-safe-top-$textScale',
+          viewport: const Size(393, 852),
+          textScale: textScale,
+          safeArea: ResponsiveSafeArea.iphone,
+        ),
+      );
+
+      // 台灣繁體中文教學註解：A2 只改主殼層的底部 reservation；學習頁
+      // 自己的 SafeArea 必須繼續把第一個主要標題放在 59pt 狀態列之外。
+      expect(
+        tester.getTopLeft(find.text('學堂與工具箱')).dy,
+        greaterThanOrEqualTo(59),
+      );
+      expect(tester.takeException(), isNull);
+    }
   });
 }
 
