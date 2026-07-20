@@ -13,10 +13,21 @@ void main() {
     ...responsiveFastMatrix.where((testCase) => testCase.textScale <= 1.4),
     ...responsiveDeepMatrix.where((testCase) => testCase.textScale <= 1.4),
   ];
+  final islandBottomNavLargeTextStrictMatrix = <ResponsiveTestCase>[
+    // 台灣繁體中文教學註解：RSA-001 修正後，這三組情境不能再由 exploratory
+    // baseline 接受；任何 overflow、裁切或不可點擊都必須直接讓 strict gate 失敗。
+    ...responsiveFastMatrix.where((testCase) => testCase.id == 'phone-200'),
+    ...responsiveExtremeMatrix.where(
+      (testCase) => testCase.id == '320-200' || testCase.id == '320-300',
+    ),
+  ];
 
   for (final entry in responsiveComponentEntries) {
     testWidgets('strict responsive gate: ${entry.id}', (tester) async {
-      for (final testCase in strictMatrix) {
+      final matrix = entry.id == 'component.island_bottom_nav'
+          ? [...strictMatrix, ...islandBottomNavLargeTextStrictMatrix]
+          : strictMatrix;
+      for (final testCase in matrix) {
         final result = await harness.pumpEntry(
           tester,
           entry: entry,

@@ -13,9 +13,12 @@
 ## Contract Result
 
 `IslandBottomNav` and `LearningResultActionBar` pass the strict verified range
-from 80% through 140% text scaling. All automated screens additionally pass a
-P0 strict matrix at normal and 120% text scaling. The extended matrix compares
-unfixed P1/P2 violations against `responsive_known_findings.dart`: an
+from 80% through 140% text scaling. `IslandBottomNav` also passes strict iPhone
+safe-area regressions at 393x852 / 200% and 320x568 / 200% and 300%; it grows
+from the measured, width-constrained label content without hiding a label or
+shrinking Dynamic Type. All automated screens additionally pass a P0 strict
+matrix at normal and 120% text scaling. The extended matrix compares unfixed
+P1/P2 violations against `responsive_known_findings.dart`: an
 unregistered error/observation, a direction or widget-signature change, a
 higher count, or a materially larger overflow fails the test instead of merely
 being printed.
@@ -34,8 +37,8 @@ baseline item is emitted as `stale` for explicit removal review.
 | Matrix | Executions | Violating executions | Result |
 | --- | ---: | ---: | --- |
 | P0 strict screen gate | 36 | 0 | Pass |
-| Strict component gate | 22 | 0 | Pass |
-| Extended component audit | 40 | 2 | Findings recorded |
+| Strict component gate | 25 | 0 | Pass |
+| Extended component audit | 40 | 0 | Pass |
 | Screen fast | 45 | 9 | Findings recorded |
 | Screen deep | 32 | 3 | Findings recorded |
 | Screen extreme | 18 | 6 | Findings recorded |
@@ -45,21 +48,6 @@ at the 120% cases in the automated matrix. P0 scenarios cannot be added to the
 known-findings baseline.
 
 ## P1: 140% to 200% Reproducible Risks
-
-### RSA-001: Island bottom navigation at 200%
-
-- **Widget:** `IslandBottomNav`
-- **File:** `lib/components/navigation/island_bottom_nav.dart:39-59, 111-168`
-- **Matrix:** `393x852 / 2.0 / iPhone safe area`
-- **Evidence:** `RenderFlex overflowed by 30 pixels on the bottom`.
-- **Impact:** the five-item navigation label stack no longer fits its floating
-  shell; this can block a primary navigation target.
-- **Suggested fix:** let the item stack use a Dynamic Type-aware content
-  minimum height or use an accessible alternate item arrangement above the
-  current verified 140% range. Preserve SafeArea and all labels.
-- **Shared fix candidate:** `IslandBottomNav`.
-- **Regression:** keep the existing strict 80%–140% gate and promote the 200%
-  case to strict only after this issue is fixed.
 
 ### RSA-002: Home V2 cards at compact and landscape large text
 
@@ -128,12 +116,12 @@ known-findings baseline.
   records right overflow up to `49px` and repeated bottom overflows of `45px`.
 - **Impact:** expected stress-only reflow is not yet implemented. This is not a
   normal-text release blocker, but it is an accessibility backlog item.
-- **Suggested fix:** resolve RSA-001 through RSA-004 first, then rerun this
+- **Suggested fix:** resolve RSA-002 through RSA-004 first, then rerun this
   composite case to reveal remaining shell-only failures.
 
 ## Static Scan
 
-`dart run tool/responsive_static_risk_scan.dart --summary` found 3,786 review
+`dart run tool/responsive_static_risk_scan.dart --summary` found 3,785 review
 candidates. These are not bugs until confirmed by runtime audit or manual QA.
 
 | Priority | Pattern | Count | Recommended follow-up |
@@ -142,19 +130,19 @@ candidates. These are not bugs until confirmed by runtime audit or manual QA.
 | P1 | `FittedBox` | 19 | Ensure no primary text is compressed. |
 | P1 | `TextOverflow.ellipsis` | 196 | Review primary-action usage first. |
 | P2 | intrinsic layout | 11 | Exercise at 160%+. |
-| P2 | single-line text | 121 | Review localized / Dynamic Type clipping. |
+| P2 | single-line text | 120 | Review localized / Dynamic Type clipping. |
 | P2 | positioned content | 124 | Check SafeArea and keyboard conditions. |
 | P2 | fixed width | 1,086 | Prioritize text-bearing controls. |
 | P2 | fixed height | 2,229 | Prefer content-driven minimum heights. |
 
 The non-summary scanner emits every individual candidate with its file, line,
 pattern ID, source line, severity, and recommendation. Keep this output
-generated rather than committed because the 3,786 entries are mechanical and
+generated rather than committed because the 3,785 entries are mechanical and
 change with normal source edits.
 
 ## Recommended Repair Batches
 
-1. **Batch A - global navigation and home cards:** RSA-001 and RSA-002.
+1. **Batch A - home cards:** RSA-002.
 2. **Batch B - learning tabs and search rows:** RSA-003 and RSA-004.
 3. **Batch C - keyboard and sheets:** profile sheets, search action sheet, and
    saved notes after their presenters gain test seams.

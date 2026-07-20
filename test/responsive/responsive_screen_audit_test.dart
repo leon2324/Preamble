@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:preamble/components/navigation/island_bottom_nav.dart';
 
 import '../support/responsive_audit_registry.dart';
 import '../support/responsive_audit_reporter.dart';
@@ -63,6 +64,33 @@ void main() {
       matrix: responsiveExtremeMatrix,
     );
     _evaluateExploratoryMatrix('extreme', results);
+  });
+
+  testWidgets('app shell keeps large-text bottom navigation reachable',
+      (tester) async {
+    // 台灣繁體中文教學註解：這裡確認真實 App shell 的首頁內容與五個 Nav
+    // 入口同時在 200% 可達；分頁內容本身的既有 RSA-003／004 由各自 audit 管理。
+    final entry = responsiveScreenEntries.firstWhere(
+      (entry) => entry.id == 'screen.app_shell_home',
+    );
+    final testCase = responsiveFastMatrix.firstWhere(
+      (testCase) => testCase.id == 'phone-200',
+    );
+    final result = await harness.pumpEntry(
+      tester,
+      entry: entry,
+      testCase: testCase,
+    );
+
+    expect(result.unreachablePrimaryLabels, isNot(contains('法律即時快問')));
+    for (final label in const ['首頁', '學習', '小法助', '紀事', '我的']) {
+      expect(find.text(label).hitTestable(), findsOneWidget);
+    }
+    expect(
+      tester.getBottomRight(find.byType(IslandBottomNav)).dy,
+      lessThanOrEqualTo(852 - 17 - 34),
+    );
+    expect(tester.takeException(), isNull);
   });
 }
 
