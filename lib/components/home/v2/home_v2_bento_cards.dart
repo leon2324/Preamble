@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/pages/learning/know_law_page.dart';
@@ -425,7 +427,12 @@ class HomeV2WatchlistCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
+                  // 台灣繁體中文教學註解：此列的案卷 badge 與字號都是獨立資訊。
+                  // 以內容寬度換行可在大字時保留兩者，不必以 ellipsis 隱藏其中一項。
+                  Wrap(
+                    spacing: 8.w,
+                    runSpacing: 4.h,
+                    alignment: WrapAlignment.spaceBetween,
                     children: [
                       Container(
                         padding: EdgeInsets.symmetric(
@@ -447,7 +454,6 @@ class HomeV2WatchlistCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const Spacer(),
                       Text(
                         '釋字第 799 號',
                         style: TextStyle(
@@ -528,23 +534,19 @@ class HomeV2AchievementCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          Wrap(
+            spacing: 4.w,
+            runSpacing: 4.h,
             children: [
-              Expanded(
-                child: Text(
-                  '每日任務',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w900,
-                    color: isDark
-                        ? const Color(0xFFF2F4F7)
-                        : AppColors.textPrimary,
-                  ),
+              Text(
+                '每日任務',
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w900,
+                  color:
+                      isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
                 ),
               ),
-              SizedBox(width: 4.w),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 3.h),
                 decoration: BoxDecoration(
@@ -596,7 +598,7 @@ class HomeV2AchievementCard extends StatelessWidget {
               ),
             ),
           ),
-          const Spacer(),
+          SizedBox(height: 12.h),
           SizedBox(
             width: double.infinity,
             height: 32.h,
@@ -649,7 +651,10 @@ class HomeV2DailyCaseStoryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          Wrap(
+            spacing: 4.w,
+            runSpacing: 4.h,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               Icon(
                 Icons.gavel_rounded,
@@ -657,21 +662,15 @@ class HomeV2DailyCaseStoryCard extends StatelessWidget {
                 size: 14.sp,
               ),
               SizedBox(width: 4.w),
-              Expanded(
-                child: Text(
-                  '今天判決故事',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w900,
-                    color: isDark
-                        ? const Color(0xFFF2F4F7)
-                        : AppColors.textPrimary,
-                  ),
+              Text(
+                '今天判決故事',
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w900,
+                  color:
+                      isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
                 ),
               ),
-              SizedBox(width: 4.w),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                 decoration: BoxDecoration(
@@ -701,17 +700,12 @@ class HomeV2DailyCaseStoryCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 3.h),
-          Expanded(
-            child: Text(
-              '法官認定「毒瘤」一詞具有貶損他人名譽之意，且在公開網路平台發表，已達公然侮辱標準，判處罰金五千元。',
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 9.5.sp,
-                height: 1.35,
-                color:
-                    isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary,
-              ),
+          Text(
+            '法官認定「毒瘤」一詞具有貶損他人名譽之意，且在公開網路平台發表，已達公然侮辱標準，判處罰金五千元。',
+            style: TextStyle(
+              fontSize: 9.5.sp,
+              height: 1.35,
+              color: isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary,
             ),
           ),
           SizedBox(height: 4.h),
@@ -810,6 +804,16 @@ class HomeV2ToolsDrawer extends StatelessWidget {
       ),
     ];
 
+    final titleStyle = TextStyle(
+      fontSize: 10.5.sp,
+      fontWeight: FontWeight.bold,
+      color: isDark ? const Color(0xFFE5E9E6) : AppColors.textPrimary,
+    );
+    final subtitleStyle = TextStyle(
+      fontSize: 8.5.sp,
+      color: isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary,
+    );
+    final itemWidth = 145.w;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -832,14 +836,14 @@ class HomeV2ToolsDrawer extends StatelessWidget {
           ],
         ),
         SizedBox(height: 10.h),
-        SizedBox(
-          height: 72.h,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            itemCount: toolItems.length,
-            itemBuilder: (context, index) {
-              final item = toolItems[index];
+        SingleChildScrollView(
+          // 台灣繁體中文教學註解：工具捷徑原本固定 72.h；橫向或大字時，
+          // 圖示與兩行文字的真實高度可能超過它。高度改由最需要空間的工具
+          // 決定，橫向捲動行為則維持原本的工具列互動與卡片節奏。
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          child: Row(
+            children: toolItems.map((item) {
               return Padding(
                 padding: EdgeInsets.only(right: 12.w),
                 child: InkWell(
@@ -849,7 +853,7 @@ class HomeV2ToolsDrawer extends StatelessWidget {
                   },
                   borderRadius: BorderRadius.circular(16.r),
                   child: Container(
-                    width: 145.w,
+                    width: itemWidth,
                     padding: EdgeInsets.all(10.w),
                     decoration: BoxDecoration(
                       color: cardBg,
@@ -863,61 +867,17 @@ class HomeV2ToolsDrawer extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(8.w),
-                          decoration: BoxDecoration(
-                            color: isDark
-                                ? item.iconColor.withValues(alpha: 0.15)
-                                : item.color,
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          child: Icon(
-                            item.icon,
-                            color: item.iconColor,
-                            size: 18.sp,
-                          ),
-                        ),
-                        SizedBox(width: 8.w),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                item.title,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 10.5.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: isDark
-                                      ? const Color(0xFFE5E9E6)
-                                      : AppColors.textPrimary,
-                                ),
-                              ),
-                              SizedBox(height: 2.h),
-                              Text(
-                                item.subtitle,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 8.5.sp,
-                                  color: isDark
-                                      ? const Color(0xFFA3ABB6)
-                                      : AppColors.textSecondary,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                    child: _ToolDrawerItemContent(
+                      item: item,
+                      itemWidth: itemWidth,
+                      isDark: isDark,
+                      titleStyle: titleStyle,
+                      subtitleStyle: subtitleStyle,
                     ),
                   ),
                 ),
               );
-            },
+            }).toList(growable: false),
           ),
         ),
       ],
@@ -941,4 +901,102 @@ class _ToolItemData {
   final Color color;
   final Color iconColor;
   final String toolTab;
+}
+
+Size _measureText(
+  String text, {
+  required TextStyle style,
+  required TextScaler textScaler,
+  double? maxWidth,
+}) {
+  final painter = TextPainter(
+    text: TextSpan(text: text, style: style),
+    textScaler: textScaler,
+    textDirection: TextDirection.ltr,
+  )..layout(maxWidth: maxWidth ?? double.infinity);
+  return painter.size;
+}
+
+class _ToolDrawerItemContent extends StatelessWidget {
+  const _ToolDrawerItemContent({
+    required this.item,
+    required this.itemWidth,
+    required this.isDark,
+    required this.titleStyle,
+    required this.subtitleStyle,
+  });
+
+  final _ToolItemData item;
+  final double itemWidth;
+  final bool isDark;
+  final TextStyle titleStyle;
+  final TextStyle subtitleStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    final iconBox = 18.sp + 16.w;
+    final contentWidth = itemWidth - 20.w;
+    final textScaler = MediaQuery.textScalerOf(context);
+    final title = _measureText(
+      item.title,
+      style: titleStyle,
+      textScaler: textScaler,
+      maxWidth: contentWidth,
+    );
+    final subtitle = _measureText(
+      item.subtitle,
+      style: subtitleStyle,
+      textScaler: textScaler,
+      maxWidth: contentWidth,
+    );
+    final inlineTitleWidth = _measureText(
+      item.title,
+      style: titleStyle,
+      textScaler: textScaler,
+    ).width;
+    final inlineSubtitleWidth = _measureText(
+      item.subtitle,
+      style: subtitleStyle,
+      textScaler: textScaler,
+    ).width;
+    final stacked =
+        iconBox + 8.w + math.max(inlineTitleWidth, inlineSubtitleWidth) >
+            contentWidth;
+    final icon = Container(
+      padding: EdgeInsets.all(8.w),
+      decoration: BoxDecoration(
+        color: isDark ? item.iconColor.withValues(alpha: 0.15) : item.color,
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: Icon(item.icon, color: item.iconColor, size: 18.sp),
+    );
+    final labels = SizedBox(
+      width: stacked ? contentWidth : null,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(item.title, style: titleStyle),
+          SizedBox(height: 2.h),
+          Text(item.subtitle, style: subtitleStyle),
+        ],
+      ),
+    );
+
+    // 台灣繁體中文教學註解：是否改成上下排列只依每張卡片真正需要的
+    // 寬度判斷；不能用「文字倍率 >= 某值」猜測，因為中英文與字型都會改變需求。
+    return stacked
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [icon, SizedBox(height: 8.h), labels],
+          )
+        : Row(
+            children: [
+              icon,
+              SizedBox(width: 8.w),
+              Expanded(child: labels),
+            ],
+          );
+  }
 }

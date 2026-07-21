@@ -27,7 +27,12 @@ class HomeNewsSection extends StatelessWidget {
     final extraSpace = context.adaptiveBuffer(22);
     final cardWidth = 164.w + extraSpace;
     final mediaHeight = 92.h + context.adaptiveBuffer(10);
-    final cardHeight = mediaHeight + 74.h;
+    final cardHeight = _NewsCardLayoutMetrics.compute(
+      context: context,
+      items: items,
+      cardWidth: cardWidth,
+      mediaHeight: mediaHeight,
+    ).height;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,6 +61,47 @@ class HomeNewsSection extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+/// 新聞輪播需要 bounded height，這份純量測契約讓外層 ListView 與卡片文字
+/// 使用同一個內容需求；不依裝置方向或固定文字倍率猜測高度。
+class _NewsCardLayoutMetrics {
+  const _NewsCardLayoutMetrics({required this.height});
+
+  final double height;
+
+  static _NewsCardLayoutMetrics compute({
+    required BuildContext context,
+    required List<HomeNewsItem> items,
+    required double cardWidth,
+    required double mediaHeight,
+  }) {
+    final textWidth = (cardWidth - 14.w - 12.w).clamp(1.0, double.infinity);
+    final textStyle = TextStyle(
+      fontSize: 15.sp,
+      height: 1.05,
+      fontWeight: FontWeight.w500,
+      color: AppColors.textPrimary,
+    );
+    final textScaler = MediaQuery.textScalerOf(context);
+    var tallestTitle = 0.0;
+    for (final item in items) {
+      final painter = TextPainter(
+        text: TextSpan(text: item.title, style: textStyle),
+        textScaler: textScaler,
+        textDirection: Directionality.of(context),
+      )..layout(maxWidth: textWidth);
+      tallestTitle =
+          tallestTitle < painter.height ? painter.height : tallestTitle;
+    }
+
+    // 既有正常字級卡片高度保留為下限；只有真實標題高度超過時才擴張。
+    final contentHeight = mediaHeight + 2.h + 8.w + tallestTitle + 5.h + 13.h;
+    return _NewsCardLayoutMetrics(
+        height: (mediaHeight + 74.h) < contentHeight
+            ? contentHeight
+            : mediaHeight + 74.h);
   }
 }
 
@@ -147,8 +193,6 @@ class _NewsCard extends StatelessWidget {
                     alignment: Alignment.topLeft,
                     child: Text(
                       item.title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 15.sp,
                         height: 1.05,

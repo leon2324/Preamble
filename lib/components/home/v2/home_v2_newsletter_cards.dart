@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -674,18 +675,18 @@ class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
                                 ],
                               ),
                               SizedBox(height: 10.h),
-                              Row(
+                              Wrap(
+                                spacing: 6.w,
+                                runSpacing: 4.h,
                                 children: [
                                   _NewsletterStoryChip(
                                     label: item.category,
                                     color: accentColor,
                                   ),
-                                  SizedBox(width: 6.w),
                                   _NewsletterStoryChip(
                                     label: '民法',
                                     color: const Color(0xFF426E9F),
                                   ),
-                                  SizedBox(width: 6.w),
                                   _NewsletterStoryChip(
                                     label: readTime,
                                     color: const Color(0xFF8A7B5C),
@@ -786,40 +787,166 @@ class _HomeV2NewsletterFocusCarouselState
     final visibleItems = widget.items.take(8).toList(growable: false);
     if (visibleItems.isEmpty) return const SizedBox.shrink();
 
-    final textScale = MediaQuery.maybeTextScalerOf(context)?.scale(1.0) ?? 1.0;
-    final dynamicHeight = 238.h * (textScale > 1.0 ? textScale : 1.0);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final metrics = NewsletterFocusCardLayoutMetrics.compute(
+          context: context,
+          availableWidth: constraints.maxWidth - 32.w,
+          items: visibleItems,
+        );
+        return Column(
+          children: [
+            SizedBox(
+              height: metrics.height,
+              child: PageView.builder(
+                controller: _pageController,
+                padEnds: true,
+                physics: const BouncingScrollPhysics(),
+                itemCount: visibleItems.length,
+                onPageChanged: (index) {
+                  setState(() => _currentIndex = index);
+                },
+                itemBuilder: (context, index) {
+                  final item = visibleItems[index];
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: HomeV2NewsletterFocusCard(
+                      item: item,
+                      showDots: false,
+                      onTap: () => widget.onItemTap?.call(item),
+                    ),
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: 13.h),
+            _NewsletterFocusDots(
+              count: visibleItems.length,
+              currentIndex: _currentIndex,
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
 
-    return Column(
-      children: [
-        SizedBox(
-          height: dynamicHeight,
-          child: PageView.builder(
-            controller: _pageController,
-            padEnds: true,
-            physics: const BouncingScrollPhysics(),
-            itemCount: visibleItems.length,
-            onPageChanged: (index) {
-              setState(() => _currentIndex = index);
-            },
-            itemBuilder: (context, index) {
-              final item = visibleItems[index];
-              return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: HomeV2NewsletterFocusCard(
-                  item: item,
-                  showDots: false,
-                  onTap: () => widget.onItemTap?.call(item),
-                ),
-              );
-            },
-          ),
-        ),
-        SizedBox(height: 13.h),
-        _NewsletterFocusDots(
-          count: visibleItems.length,
-          currentIndex: _currentIndex,
-        ),
-      ],
+/// 焦點輪播的 PageView 必須有界高度。這個同步量測契約以真實卡片寬度、
+/// TextScaler 與資料文字取得所有頁面共同所需高度，避免固定高度在大字級
+/// 壓住內容，也不需要 post-frame callback 或 setState 迴圈。
+class NewsletterFocusCardLayoutMetrics {
+  const NewsletterFocusCardLayoutMetrics({required this.height});
+
+  final double height;
+
+  static NewsletterFocusCardLayoutMetrics compute({
+    required BuildContext context,
+    required double availableWidth,
+    required List<HomeNewsletterItem> items,
+  }) {
+    final width = math.max(1.0, availableWidth);
+    final textScaler = MediaQuery.textScalerOf(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textWidth = math.max(1.0, width - 28.w - 12.w - 100.w);
+    final tipWidth = math.max(1.0, textWidth - 13.sp - 5.w);
+    final titleStyle = TextStyle(
+      color: isDark ? Colors.white : ProtoColors.charcoal,
+      fontSize: 18.sp,
+      fontWeight: FontWeight.w900,
+      height: 1.25,
+      letterSpacing: 0,
+    );
+    final issueStyle = TextStyle(
+      color: isDark ? const Color(0xFF94A3B8) : AppColors.textSecondary,
+      fontSize: 12.sp,
+      fontWeight: FontWeight.w800,
+      height: 1.4,
+      letterSpacing: 0,
+    );
+    final tipStyle = TextStyle(
+      color: isDark ? const Color(0xFF8BF45F) : const Color(0xFF2E7D32),
+      fontSize: 11.5.sp,
+      fontWeight: FontWeight.w800,
+    );
+    final chipStyle = TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w900);
+    final badgeStyle =
+        TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.w900);
+    final metricStyle = TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800);
+
+    double measure(String text, TextStyle style, double maxWidth) {
+      final painter = TextPainter(
+        text: TextSpan(text: text, style: style),
+        textScaler: textScaler,
+        textDirection: Directionality.of(context),
+      )..layout(maxWidth: maxWidth);
+      return painter.height;
+    }
+
+    double chipHeight(HomeNewsletterItem item) {
+      final labels = <String>[item.category, '民法', _readTimeForHomeTip(item)];
+      var runWidth = 0.0;
+      var completedRunsHeight = 0.0;
+      var currentRunHeight = 0.0;
+      for (final label in labels) {
+        final chipWidth = TextPainter(
+          text: TextSpan(text: label, style: chipStyle),
+          textScaler: textScaler,
+          textDirection: Directionality.of(context),
+        )..layout();
+        final nextWidth = chipWidth.width + 18.w;
+        if (runWidth > 0 && runWidth + 6.w + nextWidth > textWidth) {
+          completedRunsHeight += currentRunHeight + 4.h;
+          runWidth = nextWidth;
+          currentRunHeight = chipWidth.height + 8.h;
+        } else {
+          runWidth += runWidth == 0 ? nextWidth : 6.w + nextWidth;
+          currentRunHeight = math.max(currentRunHeight, chipWidth.height + 8.h);
+        }
+      }
+      return completedRunsHeight + currentRunHeight;
+    }
+
+    var requiredHeight = 0.0;
+    for (final item in items) {
+      final badgeHeight = measure('日常小動作', badgeStyle, width) + 8.h;
+      // 卡片本體保留既有一／二／一行的閱讀節奏；量測也套用相同行數，
+      // 避免 bounded PageView 的高度與實際渲染規則不一致。
+      final textColumnHeight = math.min(
+            measure(item.title, titleStyle, textWidth),
+            measure('一', titleStyle, textWidth),
+          ) +
+          8.h +
+          math.min(
+            measure(_issueHintForHomeTip(item), issueStyle, textWidth),
+            measure('一\n二', issueStyle, textWidth),
+          ) +
+          8.h +
+          math.min(
+            measure(_cleanFocusTip(item.tip), tipStyle, tipWidth),
+            measure('一', tipStyle, tipWidth),
+          ) +
+          10.h +
+          chipHeight(item);
+      final middleHeight = math.max(100.w, textColumnHeight);
+      final metricsHeight =
+          math.max(20.sp, measure('999+', metricStyle, width / 4)) + 8.h;
+      // InkWell 的四個互動 metric 會各自建立最小可點擊區；保留一列
+      // content padding，避免文字量測只計字框而低估實際 RenderFlex 高度。
+      final interactionRowInset = 38.h;
+      requiredHeight = math.max(
+        requiredHeight,
+        16.h +
+            badgeHeight +
+            10.h +
+            middleHeight +
+            12.h +
+            metricsHeight +
+            interactionRowInset +
+            13.h,
+      );
+    }
+    return NewsletterFocusCardLayoutMetrics(
+      height: math.max(238.h, requiredHeight),
     );
   }
 }

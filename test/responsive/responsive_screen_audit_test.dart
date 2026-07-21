@@ -37,6 +37,28 @@ void main() {
     _evaluateExploratoryMatrix('fast', results);
   });
 
+  testWidgets('Home V2 large-text strict regression gate', (tester) async {
+    final homeEntry = responsiveScreenEntries.firstWhere(
+      (entry) => entry.id == 'screen.home_page',
+    );
+    final cases = responsiveFastMatrix.where((testCase) {
+      return testCase.id == 'compact-large' ||
+          testCase.id == 'phone-200' ||
+          testCase.id == 'landscape-large';
+    }).toList(growable: false);
+    final results = await _runMatrix(
+      tester,
+      entries: [homeEntry],
+      matrix: cases,
+    );
+    _failForUnexpectedExceptions(results);
+    expect(
+      results.where((result) => result.hasViolation),
+      isEmpty,
+      reason: results.map((result) => result.summary).join('\n'),
+    );
+  });
+
   testWidgets('responsive screen audit deep matrix for high-risk flows',
       (tester) async {
     final entries = responsiveScreenEntries.where((entry) {

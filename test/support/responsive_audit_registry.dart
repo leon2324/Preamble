@@ -138,6 +138,9 @@ final responsiveScreenEntries = <ResponsiveAuditEntry>[
     label: '首頁內容',
     declaredStates: const ['loading', 'normal', 'longest-realistic-content'],
     primaryLabels: const ['法律即時快問'],
+    // 台灣繁體中文教學註解：首頁主內容是長頁面；primary label 初始不在
+    // viewport 不代表不可達，稽核前應先使用既有 ensureVisible 流程捲動。
+    requiresScroll: true,
     builder: () => Scaffold(
       body: HomePage(
         onNavigateToTab: (_, {int? subTabIndex, String? toolTab}) {},

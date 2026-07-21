@@ -572,16 +572,25 @@ class _HomePageState extends State<HomePage> {
                         SizedBox(height: 18.h),
                         const HomeV2WatchlistCard(),
                         SizedBox(height: 18.h),
-                        SizedBox(
-                          // iPhone SE 寬度較窄，雙卡內容容易因字級換算被壓縮；
-                          // 這裡只加一點固定高度，不改 Prototype 的卡片比例與視覺語言。
-                          height: dailyDockHeight,
-                          child: Row(
-                            children: [
-                              const Expanded(child: HomeV2DailyCaseStoryCard()),
-                              SizedBox(width: 12.w),
-                              const Expanded(child: HomeV2AchievementCard()),
-                            ],
+                        ConstrainedBox(
+                          // 台灣繁體中文教學註解：原本固定高度會在橫向或大字時
+                          // 截斷雙卡的 CTA。保留既有最小 Bento 高度，但讓內容需求
+                          // 可以把共同卡片列往下撐開，避免按鈕落在可點擊範圍之外。
+                          constraints:
+                              BoxConstraints(minHeight: dailyDockHeight),
+                          child: IntrinsicHeight(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                const Expanded(
+                                  child: HomeV2DailyCaseStoryCard(),
+                                ),
+                                SizedBox(width: 12.w),
+                                const Expanded(
+                                  child: HomeV2AchievementCard(),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         SizedBox(height: 18.h),

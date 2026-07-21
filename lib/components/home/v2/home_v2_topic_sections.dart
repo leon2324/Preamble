@@ -145,7 +145,12 @@ class HomeV2TopicBentoGrid extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 頂部小標誌
-          Row(
+          // 台灣繁體中文教學註解：焦點 badge 與參與資訊在大字下不能假設一定
+          // 同列放得下；Wrap 會在需要時維持閱讀順序地換行，正常寬度仍是同列。
+          Wrap(
+            spacing: 8.w,
+            runSpacing: 4.h,
+            alignment: WrapAlignment.spaceBetween,
             children: [
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
@@ -162,7 +167,6 @@ class HomeV2TopicBentoGrid extends StatelessWidget {
                   ),
                 ),
               ),
-              const Spacer(),
               Text(
                 '1.2w 人參與思辨',
                 style: TextStyle(

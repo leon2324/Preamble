@@ -42,7 +42,14 @@ class _HomeV2SocialNewsSectionState extends State<HomeV2SocialNewsSection> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 頂部分頁切換 Header
-        Row(
+        // 台灣繁體中文教學註解：分頁與「看全部」在一般寬度維持同列；
+        // 文字實際放不下時才讓語意獨立的操作換到下一列，避免以字級
+        // breakpoint 截斷任一操作。
+        Wrap(
+          spacing: 8.w,
+          runSpacing: 8.h,
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             // Pill Tabs
             Container(
@@ -60,7 +67,6 @@ class _HomeV2SocialNewsSectionState extends State<HomeV2SocialNewsSection> {
                 ],
               ),
             ),
-            const Spacer(),
             // 「看全部」按鈕，對應當前 Tab 的行為
             GestureDetector(
               onTap: _activeTab == 0

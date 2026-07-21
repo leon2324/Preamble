@@ -58,6 +58,11 @@ exception, missing/unreachable primary action, clipping, or unexpected error.
   right safety. If an outer shell has already consumed an inset, the page sees
   zero for that side and retains only its design spacing; this avoids a double
   top inset without changing the existing Learning tab-switcher RSA baseline.
+- Home V2 has a strict large-text regression gate at `320x568 / 1.4`,
+  `393x852 / 2.0`, and `852x393 / 1.4`. Card reflow follows available
+  constraints and measured content, without forced scaling or fixed text-scale
+  breakpoints. `screen.home_page` declares `requiresScroll`, so below-fold
+  labels are inspected after the existing `ensureVisible` flow.
 
 ## Registry Policy
 

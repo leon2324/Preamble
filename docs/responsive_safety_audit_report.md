@@ -80,21 +80,28 @@ known-findings baseline.
 
 ## P1: 140% to 200% Reproducible Risks
 
-### RSA-002: Home V2 cards at compact and landscape large text
+### RSA-002: Home V2 cards at compact and landscape large text — resolved
 
-- **Widget candidates:** `HomeV2QuickAskSection`, `HomeV2WatchlistCard`, and
-  `HomeV2ToolsDrawer`.
-- **Files:** `lib/components/home/v2/home_v2_bento_cards.dart:66-226,
-  253-388, 755-904`.
-- **Matrix:** `320x568 / 1.4` and `852x393 / 1.4`; larger right and bottom
-  overflows also appear at `393x852 / 2.0`.
-- **Evidence:** direct `HomePage` reproduces right overflow `2.2px` and bottom
-  overflow `15px` at compact 140%; landscape reports bottom overflow up to
-  `194px`.
-- **Impact:** the main home flow does not satisfy the large-text contract.
-- **Suggested fix:** audit each compact card row before applying a global
-  layout change; make the text-bearing row flexible or stack its controls.
-- **Regression:** add targeted cases for each confirmed card before fixing.
+- **Confirmed culprits:** ToolsDrawer, Watchlist, daily dual cards, Topic grid,
+  Newsletter metadata/focus carousel, SocialNews header, and HomeNews cards.
+- **Fix:** affected structures reflow from real constraints; bounded newsletter
+  pages share synchronous `NewsletterFocusCardLayoutMetrics` with their render
+  contract. No post-frame measurement, forced scale, primary ellipsis, or
+  orientation-only breakpoint is used.
+- **Quick Ask:** its product layout had no overflow. The prior HomePage
+  landscape observation was a below-fold audit false positive; `requiresScroll`
+  now applies `ensureVisible`, and a separate strict test verifies the real
+  input plus submit action.
+- **Regression:** strict coverage now includes `320x568 / 1.4`,
+  `393x852 / 2.0`, and `852x393 / 1.4`.
+
+### RSA-005 composite shell stress — reduced
+
+- RSA-005A (`320-200`) and RSA-005C (`568x320-200`) are stale after the Home
+  card reflows and are removed exactly.
+- RSA-005B (`320-300`) retains only its reproducible RenderFlex-right
+  signatures (four occurrences, maximum 49px); the former bottom signature is
+  stale and is not replaced with a looser allowance.
 
 ### RSA-003: Learning tab switcher at large text
 
