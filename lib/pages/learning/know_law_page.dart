@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/components/home/v2/home_v2_palette.dart';
 import 'package:preamble/components/navigation/app_shell_content_insets.dart';
+import 'package:preamble/components/shared/inline_citation_parser.dart';
 import 'package:preamble/components/shared/mvp_state_widgets.dart';
 import 'package:preamble/data/law_assistant/guest_law_assistant_usage.dart';
 import 'package:preamble/data/law_assistant/law_assistant_models.dart';

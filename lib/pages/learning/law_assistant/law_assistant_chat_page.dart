@@ -165,6 +165,7 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
   String? _errorMessage;
   var _isLoading = false;
   var _isSending = false;
+  StreamSubscription<LawAssistantStreamChunk>? _streamSubscription;
 
   // 本機諮詢歷史，存在 local state。每次送出新問題時新增一筆。
   // 不寫後端、不寫 SharedPreferences，App 重開後清除。
@@ -179,6 +180,7 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
 
   @override
   void dispose() {
+    _streamSubscription?.cancel();
     _assistantRepository.dispose();
     _replyController.dispose();
     _scrollController.dispose();
@@ -505,34 +507,96 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
     final conversation = _conversation!;
     if (conversation.isGuest) {
       CustomToast.show(context, '登入後可以在同一段對話中繼續追問。');
-
       return;
     }
+
+    _replyController.clear();
+    final now = DateTime.now();
+
+    final userMsg = LawAssistantMessage(
+      id: 'user-${now.microsecondsSinceEpoch}',
+      role: LawAssistantMessageRole.user,
+      content: prompt,
+      createdAt: now,
+    );
+
+    final streamAssistantId = 'assistant-stream-${now.microsecondsSinceEpoch}';
+    final initialAssistantMsg = LawAssistantMessage(
+      id: streamAssistantId,
+      role: LawAssistantMessageRole.assistant,
+      content: '',
+      createdAt: now.add(const Duration(milliseconds: 1)),
+    );
 
     setState(() {
       _isSending = true;
       _errorMessage = null;
-    });
-    _replyController.clear();
-
-    try {
-      final updatedConversation = await _assistantRepository.sendMessage(
-        conversationId: conversation.id,
-        prompt: prompt,
+      _conversation = conversation.copyWith(
+        preview: prompt,
+        updatedAt: now,
+        messages: [...conversation.messages, userMsg, initialAssistantMsg],
       );
-      if (!mounted) return;
-      setState(() {
-        _conversation = updatedConversation;
-        _isSending = false;
-      });
-      _scrollToBottom();
-    } catch (error) {
-      if (!mounted) return;
-      setState(() {
-        _isSending = false;
-        _errorMessage = error.toString();
-      });
-    }
+    });
+    _scrollToBottom();
+
+    await _streamSubscription?.cancel();
+
+    var streamingContent = '';
+    List<LawAssistantCitation> streamingCitations = const [];
+    LawAssistantAnswer? streamingAnswer;
+
+    _streamSubscription = _assistantRepository
+        .sendMessageStream(
+          conversationId: conversation.id,
+          prompt: prompt,
+        )
+        .listen(
+      (chunk) {
+        if (!mounted) return;
+        streamingContent += chunk.textChunk;
+        if (chunk.citations.isNotEmpty) {
+          streamingCitations = chunk.citations;
+        }
+        if (chunk.fullAnswer != null) {
+          streamingAnswer = chunk.fullAnswer;
+        }
+
+        final currentMessages = List<LawAssistantMessage>.from(
+          _conversation?.messages ?? const [],
+        );
+        final index = currentMessages.indexWhere((m) => m.id == streamAssistantId);
+
+        if (index != -1) {
+          currentMessages[index] = LawAssistantMessage(
+            id: streamAssistantId,
+            role: LawAssistantMessageRole.assistant,
+            content: streamingContent,
+            createdAt: now.add(const Duration(milliseconds: 1)),
+            answer: streamingAnswer,
+            citations: streamingCitations,
+          );
+        }
+
+        setState(() {
+          _conversation = _conversation?.copyWith(messages: currentMessages);
+        });
+        _scrollToBottom();
+      },
+      onDone: () {
+        if (!mounted) return;
+        setState(() {
+          _isSending = false;
+        });
+        _scrollToBottom();
+      },
+      onError: (Object error) {
+        if (!mounted) return;
+        setState(() {
+          _isSending = false;
+          _errorMessage = error.toString();
+        });
+      },
+    );
   }
 
   void _scrollToBottom() {
@@ -848,8 +912,8 @@ class _AssistantAnswerContent extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            message.content,
+          InlineCitationText(
+            text: message.content,
             style: TextStyle(
               fontSize: 13.sp,
               height: 1.45,
@@ -935,8 +999,8 @@ class _AssistantAnswerBlock extends StatelessWidget {
             ),
           ),
           SizedBox(height: 4.h),
-          Text(
-            text,
+          InlineCitationText(
+            text: text,
             style: TextStyle(
               fontSize: 12.sp,
               height: 1.45,

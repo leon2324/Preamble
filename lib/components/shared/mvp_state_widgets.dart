@@ -3,7 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/theme/app_colors.dart';
 
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:preamble/components/shared/liquid_glass_widgets.dart';
+import 'package:preamble/data/statutes/statute_item.dart';
+import 'package:preamble/pages/learning/statute_database_page.dart';
 
 const lawAppLegalDisclaimer = '本內容僅供法律知識參考，不構成正式法律意見；具體案件請諮詢律師或專業人士。';
 
@@ -222,36 +225,84 @@ class SourceCitationList extends StatelessWidget {
           ),
           SizedBox(height: 10.h),
           for (final item in items) ...[
-            Text(
-              item.title,
-              style: TextStyle(
-                fontSize: 12.5.sp,
-                fontWeight: FontWeight.w800,
-                color: _primaryTextColor(context),
-              ),
-            ),
-            SizedBox(height: 3.h),
-            Text(
-              [
-                item.sourceType,
-                if (item.publisher.isNotEmpty) item.publisher,
-                if (item.lawName.isNotEmpty) item.lawName,
-                if (item.articleNumber.isNotEmpty) item.articleNumber,
-                if (item.updatedAt != null)
-                  '更新 ${item.updatedAt!.toIso8601String().split('T').first}',
-              ].join('｜'),
-              style: _bodyStyle(context).copyWith(fontSize: 11.sp),
-            ),
-            if (item.url.isNotEmpty) ...[
-              SizedBox(height: 3.h),
-              SelectableText(
-                item.url,
-                style: _bodyStyle(context).copyWith(
-                  fontSize: 10.8.sp,
-                  color: AppColors.primary,
+            InkWell(
+              onTap: () {
+                if (item.lawName.isNotEmpty || item.articleNumber.isNotEmpty) {
+                  final statute = StatuteItem(
+                    codeName: item.lawName.isEmpty ? item.title : item.lawName,
+                    articleNumber: item.articleNumber,
+                    articleText: 'AI 回覆引用之法規與權益資訊。',
+                    lawUrl: item.url.isNotEmpty ? item.url : 'https://law.moj.gov.tw/',
+                    category: '引用法規',
+                    updatedDate: item.updatedAt != null
+                        ? item.updatedAt!.toIso8601String().split('T').first
+                        : '2026-01-01',
+                    isRepealed: false,
+                    tags: [item.lawName],
+                  );
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => StatuteDetailPage(item: statute),
+                    ),
+                  );
+                } else if (item.url.isNotEmpty) {
+                  CustomToast.show(context, '正在開啟資料來源網址：${item.url}');
+                }
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 4.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          item.url.isNotEmpty
+                              ? Icons.open_in_new_rounded
+                              : Icons.gavel_rounded,
+                          size: 13.sp,
+                          color: AppColors.primary,
+                        ),
+                        SizedBox(width: 4.w),
+                        Expanded(
+                          child: Text(
+                            item.title,
+                            style: TextStyle(
+                              fontSize: 12.5.sp,
+                              fontWeight: FontWeight.w800,
+                              color: _primaryTextColor(context),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 3.h),
+                    Text(
+                      [
+                        item.sourceType,
+                        if (item.publisher.isNotEmpty) item.publisher,
+                        if (item.lawName.isNotEmpty) item.lawName,
+                        if (item.articleNumber.isNotEmpty) item.articleNumber,
+                        if (item.updatedAt != null)
+                          '更新 ${item.updatedAt!.toIso8601String().split('T').first}',
+                      ].join('｜'),
+                      style: _bodyStyle(context).copyWith(fontSize: 11.sp),
+                    ),
+                    if (item.url.isNotEmpty) ...[
+                      SizedBox(height: 3.h),
+                      Text(
+                        item.url,
+                        style: _bodyStyle(context).copyWith(
+                          fontSize: 10.8.sp,
+                          color: AppColors.primary,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
-            ],
+            ),
             SizedBox(height: 10.h),
           ],
         ],

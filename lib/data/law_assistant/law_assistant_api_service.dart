@@ -99,6 +99,53 @@ class LawAssistantApiService {
     );
   }
 
+  Stream<LawAssistantStreamChunk> sendMessageStream({
+    required String conversationId,
+    required String prompt,
+  }) async* {
+    _ensureConfigured();
+    final request = http.Request(
+      'POST',
+      _uri('/law-assistant/conversations/$conversationId/messages/stream'),
+    )
+      ..headers.addAll(await _headers())
+      ..body = jsonEncode({'prompt': prompt});
+
+    final streamedResponse = await _client.send(request);
+    if (streamedResponse.statusCode < 200 ||
+        streamedResponse.statusCode >= 300) {
+      throw LawAssistantApiException(
+        '小法助連線失敗（HTTP ${streamedResponse.statusCode}）',
+      );
+    }
+
+    final lineStream = streamedResponse.stream
+        .transform(utf8.decoder)
+        .transform(const LineSplitter());
+
+    await for (final line in lineStream) {
+      final trimmed = line.trim();
+      if (trimmed.isEmpty) continue;
+      if (trimmed.startsWith('data:')) {
+        final data = trimmed.substring(5).trim();
+        if (data == '[DONE]') {
+          yield const LawAssistantStreamChunk(textChunk: '', isFinished: true);
+          break;
+        }
+        try {
+          final decoded = jsonDecode(data);
+          if (decoded is Map<String, dynamic>) {
+            yield LawAssistantStreamChunk.fromJson(decoded);
+          } else if (decoded is String) {
+            yield LawAssistantStreamChunk(textChunk: decoded);
+          }
+        } catch (__) {
+          yield LawAssistantStreamChunk(textChunk: data);
+        }
+      }
+    }
+  }
+
   void dispose() {
     _client.close();
   }

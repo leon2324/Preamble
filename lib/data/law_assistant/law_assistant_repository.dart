@@ -80,6 +80,57 @@ class LawAssistantRepository {
     return updated;
   }
 
+  Stream<LawAssistantStreamChunk> sendMessageStream({
+    required String conversationId,
+    required String prompt,
+  }) async* {
+    if (isBackendConfigured) {
+      yield* _apiService.sendMessageStream(
+        conversationId: conversationId,
+        prompt: prompt,
+      );
+      return;
+    }
+
+    // 離線/Mock 打字機模擬：每 30ms 輸出 2~4 個中文字
+    final now = DateTime.now();
+    final assistantMessage = _mockAssistantMessage(prompt, now);
+    final answer = assistantMessage.answer;
+
+    final fullTextParts = [
+      if (answer != null) ...[
+        '【問題方向】\n${answer.problemDirection}',
+        '【相關內容】\n${answer.relatedContent}',
+        '【可能法律爭點】\n${answer.possibleLegalIssues}',
+        '【先準備的證據】\n${answer.evidenceNeeded}',
+        '【建議行動】\n${answer.recommendedActions}',
+      ] else
+        assistantMessage.content,
+    ];
+
+    final fullText = fullTextParts.join('\n\n');
+    const chunkSize = 3;
+
+    for (var i = 0; i < fullText.length; i += chunkSize) {
+      final end = (i + chunkSize < fullText.length) ? i + chunkSize : fullText.length;
+      final chunk = fullText.substring(i, end);
+      yield LawAssistantStreamChunk(
+        textChunk: chunk,
+        isFinished: false,
+        citations: _mockCitations,
+        fullAnswer: answer,
+      );
+      await Future<void>.delayed(const Duration(milliseconds: 30));
+    }
+
+    yield LawAssistantStreamChunk(
+      textChunk: '',
+      isFinished: true,
+      citations: _mockCitations,
+      fullAnswer: answer,
+    );
+  }
+
   void dispose() {
     _apiService.dispose();
   }

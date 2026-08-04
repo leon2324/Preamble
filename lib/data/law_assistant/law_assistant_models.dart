@@ -301,6 +301,45 @@ class LawAssistantConversation {
   }
 }
 
+/// 小法助 AI 流式打字機傳輸片段。
+class LawAssistantStreamChunk {
+  const LawAssistantStreamChunk({
+    required this.textChunk,
+    this.isFinished = false,
+    this.citations = const [],
+    this.error,
+    this.fullAnswer,
+  });
+
+  final String textChunk;
+  final bool isFinished;
+  final List<LawAssistantCitation> citations;
+  final String? error;
+  final LawAssistantAnswer? fullAnswer;
+
+  factory LawAssistantStreamChunk.fromJson(Map<String, dynamic> json) {
+    final answerJson = json['answer'] ?? json['answerSections'];
+    return LawAssistantStreamChunk(
+      textChunk: _stringValue(json, const ['textChunk', 'chunk', 'text', 'delta']),
+      isFinished: json['isFinished'] == true || json['done'] == true,
+      citations: _citations(json['citations']),
+      error: json['error']?.toString(),
+      fullAnswer: answerJson is Map<String, dynamic>
+          ? LawAssistantAnswer.fromJson(answerJson)
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'textChunk': textChunk,
+        'isFinished': isFinished,
+        if (citations.isNotEmpty)
+          'citations': citations.map((c) => c.toJson()).toList(),
+        if (error != null) 'error': error,
+        if (fullAnswer != null) 'answer': fullAnswer!.toJson(),
+      };
+}
+
 List<LawAssistantCitation> _citations(Object? value) {
   if (value is! List) return const [];
   return value
