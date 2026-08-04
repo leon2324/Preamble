@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/components/shared/mvp_state_widgets.dart';
 import 'package:preamble/data/documents/document_models.dart';
+import 'package:preamble/pages/tools/widgets/document_form_stepper.dart';
 
 enum _ToolPage {
   home,
@@ -808,6 +809,36 @@ class _DetailsPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '填寫表單欄位',
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF2C5E43),
+                ),
+              ),
+              DocumentQuickFillBar(
+                onQuickFill: () {
+                  if (nameController.text.trim().isEmpty) {
+                    nameController.text = '王小明';
+                  }
+                  if (targetController.text.trim().isEmpty) {
+                    targetController.text = '陳房東';
+                  }
+                  if (dateController.text.trim().isEmpty) {
+                    dateController.text = '2026/04/30';
+                  }
+                  if (placeController.text.trim().isEmpty) {
+                    placeController.text = '台北市大安區';
+                  }
+                },
+              ),
+            ],
+          ),
+          SizedBox(height: 10.h),
           _QuestionField(
             label: '對方是誰？',
             hint: '例如：房東、公司、店家',
@@ -1133,10 +1164,11 @@ class _WizardShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentStep = _ToolStep.values.indexOf(step) + 1;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _ProgressDots(step: step),
+        DocumentFormStepper(currentStep: currentStep),
         SizedBox(height: 18.h),
         Text(title, style: _ToolText.section()),
         SizedBox(height: 14.h),

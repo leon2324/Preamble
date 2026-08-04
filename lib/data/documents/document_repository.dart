@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:preamble/components/shared/mvp_state_widgets.dart';
 import 'package:preamble/data/law_assistant/law_assistant_api_service.dart';
 import 'package:preamble/data/documents/document_models.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DocumentTemplateOption {
   const DocumentTemplateOption({
@@ -24,18 +25,24 @@ class DocumentRepository extends ChangeNotifier {
     AuthTokenProvider authTokenProvider = const GuestAuthTokenProvider(),
     String? baseUrl,
     List<DocumentDraft>? initialDrafts,
+    SharedPreferences? prefs,
   })  : _client = client ?? http.Client(),
         _authTokenProvider = authTokenProvider,
         _baseUrl = baseUrl ??
             const String.fromEnvironment('PREAMBLE_API_BASE_URL').trim(),
+        _prefs = prefs,
         _drafts = [
           ...?initialDrafts,
           if (initialDrafts == null) ..._seedDrafts
-        ];
+        ] {
+    loadLocalDraftsFromDisk();
+  }
 
+  static const String _prefsKey = 'preamble_local_document_drafts_v1';
   final http.Client _client;
   final AuthTokenProvider _authTokenProvider;
   final String _baseUrl;
+  SharedPreferences? _prefs;
   final List<DocumentDraft> _drafts;
   String _backendMessage = '';
 
@@ -54,9 +61,43 @@ class DocumentRepository extends ChangeNotifier {
     return '目前使用本機共用草稿來源；設定 PREAMBLE_API_BASE_URL 後會改走文件後端。';
   }
 
+  Future<void> loadLocalDraftsFromDisk() async {
+    try {
+      _prefs ??= await SharedPreferences.getInstance();
+      final rawJson = _prefs?.getString(_prefsKey);
+      if (rawJson != null && rawJson.isNotEmpty) {
+        final decoded = jsonDecode(rawJson);
+        if (decoded is List) {
+          final loadedDrafts = decoded
+              .whereType<Map<String, dynamic>>()
+              .map(DocumentDraft.fromJson)
+              .toList();
+
+          for (final draft in loadedDrafts) {
+            _upsertDraft(draft);
+          }
+          notifyListeners();
+        }
+      }
+    } catch (__) {
+      // 容錯防護，避免本機快取損毀導致崩潰
+    }
+  }
+
+  Future<void> saveLocalDraftsToDisk() async {
+    try {
+      _prefs ??= await SharedPreferences.getInstance();
+      final rawList = _drafts.map((d) => d.toJson()).toList();
+      await _prefs?.setString(_prefsKey, jsonEncode(rawList));
+    } catch (__) {
+      // 容錯防護
+    }
+  }
+
   Future<List<DocumentDraft>> fetchDrafts() async {
     if (!isBackendConfigured) {
       _backendMessage = '本機暫存模式：尚未設定 PREAMBLE_API_BASE_URL。';
+      await loadLocalDraftsFromDisk();
       return drafts;
     }
 
@@ -70,14 +111,54 @@ class DocumentRepository extends ChangeNotifier {
       _drafts
         ..clear()
         ..addAll(remoteDrafts);
-      _backendMessage = '文件後端同步完成：${remoteDrafts.length} 份草稿。';
+
+      // 自動背景同步：若有本機未同步之草稿，嘗試自動上傳
+      await _syncUnsyncedDrafts();
+
+      _backendMessage = '文件後端同步完成：${_drafts.length} 份草稿。';
+      await saveLocalDraftsToDisk();
       notifyListeners();
     } on Object catch (error) {
       _backendMessage = '文件後端暫時無法同步，先保留本機草稿：$error';
+      await loadLocalDraftsFromDisk();
       notifyListeners();
     }
 
     return drafts;
+  }
+
+  Future<void> _syncUnsyncedDrafts() async {
+    final unsynced = _drafts.where((d) => !d.isSyncedToBackend).toList();
+    for (final draft in unsynced) {
+      try {
+        final response = await _client.post(
+          _uri('/documents/drafts'),
+          headers: await _headers(),
+          body: jsonEncode({
+            'templateType': draft.templateType.name,
+            'title': draft.title,
+            'input': {'facts': draft.content},
+            'advanced': false,
+          }),
+        );
+        if (response.statusCode >= 200 && response.statusCode < 300) {
+          final updated = DocumentDraft(
+            id: draft.id,
+            title: draft.title,
+            content: draft.content,
+            templateType: draft.templateType,
+            createdAt: draft.createdAt,
+            isMock: draft.isMock,
+            disclaimer: draft.disclaimer,
+            isSyncedToBackend: true,
+            sourceLabel: '後端同步',
+          );
+          _upsertDraft(updated);
+        }
+      } catch (__) {
+        // 個別草稿同步失敗時保持離線狀態
+      }
+    }
   }
 
   Future<DocumentDraft> createDraft({
@@ -86,9 +167,6 @@ class DocumentRepository extends ChangeNotifier {
     bool advanced = false,
     String? title,
   }) async {
-    // UI 只呼叫 repository 建立草稿；若設定 `PREAMBLE_API_BASE_URL` 就交給
-    // `/documents/drafts` 後端產生並保存，否則落回同一份本機記憶體清單。
-    // AI provider key、prompt 組合與正式資料庫寫入都應放在後端，不放 Flutter 端。
     if (isBackendConfigured) {
       try {
         final draft = await _createBackendDraft(
@@ -98,6 +176,7 @@ class DocumentRepository extends ChangeNotifier {
           title: title,
         );
         _upsertDraft(draft);
+        await saveLocalDraftsToDisk();
         _backendMessage = '文件後端同步完成：已保存「${draft.title}」。';
         notifyListeners();
         return draft;
@@ -115,6 +194,7 @@ class DocumentRepository extends ChangeNotifier {
       title: title,
     );
     _upsertDraft(draft);
+    await saveLocalDraftsToDisk();
     notifyListeners();
     return draft;
   }

@@ -5,9 +5,8 @@ import 'package:preamble/components/home/v2/home_v2_palette.dart';
 import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:preamble/theme/app_colors.dart';
 import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'package:preamble/pages/learning/widgets/pdf_style_builder.dart';
 
 class LegalDocumentExportPage extends StatefulWidget {
   const LegalDocumentExportPage({
@@ -70,92 +69,11 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
   }
 
   Future<Uint8List> _buildPdfBytes() async {
-    final serifData = await rootBundle
-        .load('assets/fonts/open_source/SourceHanSerifTW-VF.ttf');
-    final sansData = await rootBundle
-        .load('assets/fonts/open_source/SourceHanSansTW-VF.ttf');
-    final serifFont = pw.Font.ttf(serifData);
-    final sansFont = pw.Font.ttf(sansData);
-    final document = pw.Document();
-
-    // PDF 套件預設字型不含完整繁中文字，因此明確載入專案內建的思源字型。
-    // 這樣分享出去的書狀 PDF 才能在 iOS 預覽、郵件與列印流程中穩定顯示繁中。
-    document.addPage(
-      pw.MultiPage(
-        pageFormat: PdfPageFormat.a4,
-        margin: const pw.EdgeInsets.fromLTRB(42, 44, 42, 48),
-        theme: pw.ThemeData.withFont(
-          base: serifFont,
-          bold: sansFont,
-        ),
-        header: (context) => pw.Container(
-          alignment: pw.Alignment.center,
-          padding: const pw.EdgeInsets.only(bottom: 12),
-          decoration: const pw.BoxDecoration(
-            border: pw.Border(bottom: pw.BorderSide(width: 0.6)),
-          ),
-          child: pw.Text(
-            widget.title,
-            style: pw.TextStyle(
-              font: sansFont,
-              fontSize: 16,
-              fontWeight: pw.FontWeight.bold,
-            ),
-            textAlign: pw.TextAlign.center,
-          ),
-        ),
-        footer: (context) => pw.Row(
-          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-          children: [
-            pw.Text(
-              '緒言 Preamble 書狀草稿',
-              style: pw.TextStyle(
-                font: sansFont,
-                fontSize: 9,
-                color: PdfColors.grey700,
-              ),
-            ),
-            pw.Text(
-              '${context.pageNumber} / ${context.pagesCount}',
-              style: pw.TextStyle(
-                font: sansFont,
-                fontSize: 9,
-                color: PdfColors.grey700,
-              ),
-            ),
-          ],
-        ),
-        build: (context) => [
-          pw.SizedBox(height: 18),
-          pw.Container(
-            width: double.infinity,
-            padding: const pw.EdgeInsets.all(18),
-            decoration: pw.BoxDecoration(
-              border: pw.Border.all(color: PdfColor.fromHex('#9E4A4A')),
-            ),
-            child: pw.Text(
-              widget.content,
-              style: const pw.TextStyle(
-                fontSize: 12,
-                lineSpacing: 6,
-              ),
-            ),
-          ),
-          pw.SizedBox(height: 18),
-          pw.Text(
-            '法律資訊提醒：本文件為使用者在 緒言 Preamble 中整理之書狀草稿，內容僅供學習與資訊整理參考，不構成法律意見。如涉及實際個案，請諮詢合格律師或相關專業人士。',
-            style: pw.TextStyle(
-              font: sansFont,
-              fontSize: 9.5,
-              lineSpacing: 3,
-              color: PdfColors.grey700,
-            ),
-          ),
-        ],
-      ),
+    return PdfStyleBuilder.buildDocumentPdf(
+      title: widget.title,
+      content: widget.content,
+      themeStyle: PdfThemeStyle.morandiGreen,
     );
-
-    return document.save();
   }
 
   Future<void> _exportPdf() async {
