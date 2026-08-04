@@ -19,6 +19,7 @@ import 'package:preamble/platform/ios_quick_ask_intent_bridge.dart';
 import 'package:preamble/platform/ios_statute_spotlight_bridge.dart';
 import 'package:preamble/platform/ios_today_case_widget_bridge.dart';
 import 'package:preamble/platform/ios_deep_link_bridge.dart';
+import 'package:preamble/platform/ios_intent_router.dart';
 import 'package:preamble/pages/profile/apple_ecosystem_demo_page.dart';
 import 'package:preamble/features/case_library/pages/case_library_entry_page.dart';
 import 'package:preamble/pages/home/subpages/home_life_legal_tips_page.dart';
@@ -110,6 +111,10 @@ class _MylawAppState extends State<MylawApp> {
     );
     IosDeepLinkBridge.registerLinkHandler(_handleDeepLink);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (mounted) {
+        IosIntentRouter.register(context);
+        await IosIntentRouter.checkInitialIntents(context);
+      }
       await _nativeStartupCoordinator.consumeAndHandleInitialEvents(
         consumeQuickAskPrompt: IosQuickAskIntentBridge.consumeInitialPrompt,
         consumeStatuteQuery: IosStatuteSpotlightBridge.consumeInitialQuery,

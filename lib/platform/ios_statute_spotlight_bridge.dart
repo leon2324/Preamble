@@ -33,6 +33,38 @@ class IosStatuteSpotlightBridge {
     }
   }
 
+  /// 動態將特定法條寫入 iOS Core Spotlight 系統索引。
+  static Future<void> indexCustomStatute({
+    required String codeName,
+    required String articleNumber,
+    required String articleText,
+    List<String> tags = const [],
+  }) async {
+    if (!_isSupported) return;
+
+    try {
+      final item = <String, Object>{
+        'id': 'preamble.statute.$codeName.$articleNumber',
+        'title': '$codeName 第 $articleNumber 條',
+        'query': '$codeName $articleNumber',
+        'summary': articleText.length > 100
+            ? '${articleText.substring(0, 100)}...'
+            : articleText,
+        'keywords': [codeName, articleNumber, ...tags],
+      };
+      await _channel.invokeMethod<void>(
+        'indexStatuteSpotlightItems',
+        <String, Object>{
+          'items': [item]
+        },
+      );
+    } on MissingPluginException {
+      // Ignore
+    } on PlatformException {
+      // Ignore
+    }
+  }
+
   static void registerQueryHandler(StatuteSpotlightQueryHandler onQuery) {
     if (!_isSupported) return;
 

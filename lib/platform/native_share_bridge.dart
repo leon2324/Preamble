@@ -42,16 +42,21 @@ class NativeShareBridge {
     required String title,
     required String summary,
     required String source,
+    String? disclaimer,
   }) async {
     if (!_isSupported) return false;
+
+    final disclaimerText = disclaimer ??
+        '法律提醒：本文件與卡片資訊僅供學習與資訊整理參考，不構成法律意見。';
 
     try {
       await _channel.invokeMethod<void>(
         'shareTipCard',
         <String, Object>{
           'title': title,
-          'summary': summary,
+          'summary': '$summary\n\n$disclaimerText',
           'source': source,
+          'badge': '緒言 Preamble 莫蘭迪天平精選卡片',
         },
       );
       return true;

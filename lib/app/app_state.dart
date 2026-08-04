@@ -8,6 +8,7 @@ import 'package:preamble/data/following/following_models.dart';
 import 'package:preamble/data/law_assistant/law_assistant_api_service.dart';
 import 'package:preamble/data/user/law_app_access_tier.dart';
 import 'package:preamble/data/user/law_app_user.dart';
+import 'package:preamble/platform/ios_today_case_widget_bridge.dart';
 import 'package:preamble/theme/app_colors.dart'; // 匯入色票以利動態設定主題色 index
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -157,6 +158,7 @@ class PreambleState extends ChangeNotifier implements AuthTokenProvider {
       AppColors.accentColorIndex =
           _accentColorIndex; // 載入時同步給 AppColors 設定動態主題色
       await documentRepository.fetchDrafts();
+      await IosTodayCaseWidgetBridge.syncDefaultStory();
     } on MissingPluginException {
       // Widget test 或 hot restart 的 plugin 註冊空窗期可能取不到偏好設定；
       // 這裡回退成訪客狀態，讓 App 不會因本機儲存尚未就緒而無法啟動。
