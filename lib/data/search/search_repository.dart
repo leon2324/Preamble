@@ -1,6 +1,7 @@
 import 'package:preamble/data/cases/case_models.dart';
 import 'package:preamble/data/cases/case_repository.dart';
 import 'package:preamble/data/journal/journal_repository.dart';
+import 'package:preamble/data/search/search_api_service.dart';
 import 'package:preamble/data/search/search_models.dart';
 import 'package:preamble/data/statutes/statute_repository.dart';
 
@@ -9,18 +10,30 @@ class SearchRepository {
     CaseRepository? caseRepository,
     JournalRepository? journalRepository,
     StatuteRepository? statuteRepository,
+    SearchApiService? searchApiService,
     List<SearchResultItem>? seedResults,
   })  : _caseRepository = caseRepository ?? CaseRepository(),
         _journalRepository = journalRepository ?? const JournalRepository(),
         _statuteRepository = statuteRepository ?? StatuteRepository(),
+        _searchApiService = searchApiService ?? SearchApiService(),
         _seedResults = seedResults ?? _mockResults;
 
   final CaseRepository _caseRepository;
   final JournalRepository _journalRepository;
   final StatuteRepository _statuteRepository;
+  final SearchApiService _searchApiService;
   final List<SearchResultItem> _seedResults;
 
   Future<List<SearchResultItem>> searchAll(String query) async {
+    if (_searchApiService.hasConfiguredBackend) {
+      try {
+        final remoteResults = await _searchApiService.searchAll(query);
+        if (remoteResults.isNotEmpty) return remoteResults;
+      } catch (__) {
+        // 降級回本機多庫聯合檢索
+      }
+    }
+
     final mixed = <SearchResultItem>[
       ...await searchStatutes(query),
       ...await searchCases(query),
@@ -121,9 +134,8 @@ class SearchRepository {
   }
 
   void dispose() {
-    // SearchRepository 目前只擁有法規資料 repository 的 HTTP client；
-    // 之後若全站搜尋改接獨立後端 API，也把關閉連線的責任集中在這裡。
     _statuteRepository.dispose();
+    _searchApiService.dispose();
   }
 }
 

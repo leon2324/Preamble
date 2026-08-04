@@ -41,6 +41,8 @@ class PreambleUser {
   }
 
   bool get isGuest => accessTier == PreambleAccessTier.guest;
+  bool get isMember => accessTier == PreambleAccessTier.member;
+  bool get isSubscriber => accessTier == PreambleAccessTier.subscriber;
 
   factory PreambleUser.guest() {
     final now = DateTime.now();

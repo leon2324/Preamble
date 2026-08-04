@@ -34,7 +34,12 @@ class PreambleState extends ChangeNotifier implements AuthTokenProvider {
   static const _accentColorIndexKey = 'lawAppAccentColorIndex';
 
   PreambleState({AuthService? authService})
-      : _authService = authService ?? DemoAuthService() {
+      : _authService = authService ??
+            (const String.fromEnvironment('PREAMBLE_API_BASE_URL')
+                    .trim()
+                    .isNotEmpty
+                ? BackendAuthService()
+                : DemoAuthService()) {
     documentRepository = DocumentRepository(authTokenProvider: this);
     documentRepository.addListener(notifyListeners);
   }
@@ -341,7 +346,16 @@ class PreambleState extends ChangeNotifier implements AuthTokenProvider {
   }
 
   @override
-  Future<String?> getAuthToken() async => _authToken;
+  Future<String?> getAuthToken() async {
+    final authService = _authService;
+    if (authService is BackendAuthService) {
+      final backendToken = authService.token;
+      if (backendToken != null && backendToken.isNotEmpty) {
+        return backendToken;
+      }
+    }
+    return _authToken;
+  }
 
   Future<void> _persist() async {
     try {

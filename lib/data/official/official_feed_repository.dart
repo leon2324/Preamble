@@ -1,28 +1,64 @@
 import 'package:preamble/data/moj/moj_feed_item.dart';
 import 'package:preamble/data/moj/moj_feed_service.dart';
+import 'package:preamble/data/official/official_feed_api_service.dart';
 
 class OfficialFeedRepository {
-  OfficialFeedRepository({MojFeedService? mojFeedService})
-      : _mojFeedService = mojFeedService ?? MojFeedService();
+  OfficialFeedRepository({
+    MojFeedService? mojFeedService,
+    OfficialFeedApiService? apiService,
+  })  : _mojFeedService = mojFeedService ?? MojFeedService(),
+        _apiService = apiService ?? OfficialFeedApiService();
 
   final MojFeedService _mojFeedService;
+  final OfficialFeedApiService _apiService;
 
   Future<List<MojFeedItem>> fetchOfficialNews() async {
+    if (_apiService.hasConfiguredBackend) {
+      try {
+        final remote = await _apiService.fetchNews();
+        if (remote.isNotEmpty) return remote;
+      } catch (__) {
+        // 降級回 MojFeedService / 本機示範項
+      }
+    }
     try {
-      return _mojFeedService.fetchItems(MojFeedCategory.news);
+      return await _mojFeedService.fetchItems(MojFeedCategory.news);
     } catch (__) {
       return _mockOfficialItems;
     }
   }
 
-  Future<List<MojFeedItem>> fetchPressReleases() => fetchOfficialNews();
+  Future<List<MojFeedItem>> fetchPressReleases() async {
+    if (_apiService.hasConfiguredBackend) {
+      try {
+        final remote = await _apiService.fetchPressReleases();
+        if (remote.isNotEmpty) return remote;
+      } catch (__) {
+        // 降級回 MojFeedService / 本機示範項
+      }
+    }
+    return fetchOfficialNews();
+  }
 
   Future<List<MojFeedItem>> fetchAnnouncements() async {
+    if (_apiService.hasConfiguredBackend) {
+      try {
+        final remote = await _apiService.fetchAnnouncements();
+        if (remote.isNotEmpty) return remote;
+      } catch (__) {
+        // 降級回 MojFeedService / 本機示範項
+      }
+    }
     try {
-      return _mojFeedService.fetchItems(MojFeedCategory.lawUpdates);
+      return await _mojFeedService.fetchItems(MojFeedCategory.lawUpdates);
     } catch (__) {
       return _mockOfficialItems;
     }
+  }
+
+  void dispose() {
+    _mojFeedService.dispose();
+    _apiService.dispose();
   }
 }
 

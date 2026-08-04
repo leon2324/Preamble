@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/components/home/home_content.dart';
+import 'package:preamble/components/home/v2/home_v2_layout_policy.dart';
 import 'package:preamble/theme/app_colors.dart';
 import 'package:preamble/components/shared/share_sheet.dart';
 import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
@@ -148,6 +149,14 @@ String _readTimeForHomeTip(HomeNewsletterItem item) {
   if (item.category.contains('租')) return '4 分鐘';
   if (item.category.contains('交通')) return '5 分鐘';
   return '3 分鐘';
+}
+
+/// 將首頁既有 DefaultTextStyle 的字型資訊同步帶入量測與渲染樣式。
+///
+/// 台灣繁體中文教學註解：中文 fallback 字型的實際字寬會影響換行；此 helper
+/// 避免 TextPainter 與 Text 各自取得不同字型，導致 paged carousel 少算高度。
+TextStyle _focusTextStyle(BuildContext context, TextStyle overrides) {
+  return DefaultTextStyle.of(context).style.merge(overrides);
 }
 
 class HomeV2NewsletterCard extends StatefulWidget {
@@ -611,94 +620,123 @@ class _HomeV2NewsletterFocusCardState extends State<HomeV2NewsletterFocusCard> {
                       ),
                     ),
                     SizedBox(height: 10.h),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                item.title,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: isDark
-                                      ? Colors.white
-                                      : ProtoColors.charcoal,
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.w900,
-                                  height: 1.25,
-                                  letterSpacing: 0,
-                                ),
-                              ),
-                              SizedBox(height: 8.h),
-                              Text(
-                                issue,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: isDark
-                                      ? const Color(0xFF94A3B8)
-                                      : AppColors.textSecondary,
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w800,
-                                  height: 1.4,
-                                  letterSpacing: 0,
-                                ),
-                              ),
-                              SizedBox(height: 8.h),
-                              Row(
-                                children: [
-                                  CaseLibrarySvgIcon(
-                                    CaseLibrarySvgIcons.idea,
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final titleStyle = _focusTextStyle(
+                            context,
+                            TextStyle(
+                              color:
+                                  isDark ? Colors.white : ProtoColors.charcoal,
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w900,
+                              height: 1.25,
+                              letterSpacing: 0,
+                            ));
+                        final titlePainter = TextPainter(
+                          text: TextSpan(text: item.title, style: titleStyle),
+                          textScaler: MediaQuery.textScalerOf(context),
+                          textDirection: Directionality.of(context),
+                        )..layout();
+                        final inlineImage = constraints.maxWidth >=
+                            math.min(titlePainter.width, 170.w) + 112.w;
+                        final textContent = Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item.title,
+                              style: titleStyle,
+                            ),
+                            SizedBox(height: 8.h),
+                            Text(
+                              issue,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: _focusTextStyle(
+                                  context,
+                                  TextStyle(
                                     color: isDark
-                                        ? const Color(0xFF8BF45F)
-                                        : const Color(0xFF2E7D32),
-                                    size: 13.sp,
+                                        ? const Color(0xFF94A3B8)
+                                        : AppColors.textSecondary,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w800,
+                                    height: 1.4,
+                                    letterSpacing: 0,
+                                  )),
+                            ),
+                            SizedBox(height: 8.h),
+                            Row(
+                              children: [
+                                CaseLibrarySvgIcon(
+                                  CaseLibrarySvgIcons.idea,
+                                  color: isDark
+                                      ? const Color(0xFF8BF45F)
+                                      : const Color(0xFF2E7D32),
+                                  size: 13.sp,
+                                ),
+                                SizedBox(width: 5.w),
+                                Expanded(
+                                  child: Text(
+                                    cleanTip,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: _focusTextStyle(
+                                        context,
+                                        TextStyle(
+                                          color: isDark
+                                              ? const Color(0xFF8BF45F)
+                                              : const Color(0xFF2E7D32),
+                                          fontSize: 11.5.sp,
+                                          fontWeight: FontWeight.w800,
+                                        )),
                                   ),
-                                  SizedBox(width: 5.w),
-                                  Expanded(
-                                    child: Text(
-                                      cleanTip,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: isDark
-                                            ? const Color(0xFF8BF45F)
-                                            : const Color(0xFF2E7D32),
-                                        fontSize: 11.5.sp,
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 10.h),
-                              Wrap(
-                                spacing: 6.w,
-                                runSpacing: 4.h,
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10.h),
+                            Wrap(
+                              spacing: 6.w,
+                              runSpacing: 4.h,
+                              children: [
+                                _NewsletterStoryChip(
+                                  label: item.category,
+                                  color: accentColor,
+                                ),
+                                _NewsletterStoryChip(
+                                  label: '民法',
+                                  color: const Color(0xFF426E9F),
+                                ),
+                                _NewsletterStoryChip(
+                                  label: readTime,
+                                  color: const Color(0xFF8A7B5C),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                        final illustration = _NewsletterEntryIllustration(
+                          category: item.category,
+                        );
+                        return inlineImage
+                            ? Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  _NewsletterStoryChip(
-                                    label: item.category,
-                                    color: accentColor,
-                                  ),
-                                  _NewsletterStoryChip(
-                                    label: '民法',
-                                    color: const Color(0xFF426E9F),
-                                  ),
-                                  _NewsletterStoryChip(
-                                    label: readTime,
-                                    color: const Color(0xFF8A7B5C),
+                                  Expanded(child: textContent),
+                                  SizedBox(width: 12.w),
+                                  illustration,
+                                ],
+                              )
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  textContent,
+                                  SizedBox(height: 12.h),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: illustration,
                                   ),
                                 ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(width: 12.w),
-                        _NewsletterEntryIllustration(category: item.category),
-                      ],
+                              );
+                      },
                     ),
                     SizedBox(height: 12.h),
                     Row(
@@ -767,13 +805,14 @@ class HomeV2NewsletterFocusCarousel extends StatefulWidget {
 
 class _HomeV2NewsletterFocusCarouselState
     extends State<HomeV2NewsletterFocusCarousel> {
-  late final PageController _pageController;
+  late PageController _pageController;
   var _currentIndex = 0;
+  var _viewportFraction = .86;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(viewportFraction: 1.0);
+    _pageController = PageController(viewportFraction: _viewportFraction);
   }
 
   @override
@@ -789,34 +828,82 @@ class _HomeV2NewsletterFocusCarouselState
 
     return LayoutBuilder(
       builder: (context, constraints) {
+        final titleStyle = TextStyle(
+          color: ProtoColors.charcoal,
+          fontSize: 18.sp,
+          fontWeight: FontWeight.w900,
+          height: 1.25,
+        );
+        final longestTitle = visibleItems
+            .map((item) => item.title)
+            .reduce((a, b) => a.length >= b.length ? a : b);
+        final minimumWidth = HomeV2LayoutPolicy.minimumReadableCardWidth(
+          context,
+          primaryTitle: longestTitle,
+          titleStyle: titleStyle,
+          actionLabel: '儲存',
+          actionStyle: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800),
+          horizontalPadding: 28.w,
+          readableCharacters: 8,
+        );
+        final nextFraction = HomeV2LayoutPolicy.carouselViewportFraction(
+          availableWidth: constraints.maxWidth,
+          minimumReadableWidth: minimumWidth,
+        );
+        if ((nextFraction - _viewportFraction).abs() > .001) {
+          final oldController = _pageController;
+          _viewportFraction = nextFraction;
+          _pageController = PageController(
+            initialPage: _currentIndex,
+            viewportFraction: _viewportFraction,
+          );
+          oldController.dispose();
+        }
+        final cardWidth = constraints.maxWidth * _viewportFraction - 12.w;
+        // 台灣繁體中文教學註解：同一個 PageView frame 會同時顯示 active
+        // page 與相鄰預覽；量測只涵蓋這兩者，既避免預覽卡先 overflow，
+        // 也不會讓全部故事共用最長卡片高度。
+        final metricItems = <HomeNewsletterItem>[
+          for (var index = math.max(0, _currentIndex - 1);
+              index <= math.min(visibleItems.length - 1, _currentIndex + 1);
+              index++)
+            visibleItems[index],
+        ];
         final metrics = NewsletterFocusCardLayoutMetrics.compute(
           context: context,
-          availableWidth: constraints.maxWidth - 32.w,
-          items: visibleItems,
+          availableWidth: cardWidth,
+          items: metricItems,
         );
+        // 台灣繁體中文教學註解：生活避坑維持橫向探索；外層只量測目前頁面，
+        // 因此短卡不會保留最長卡的空白，且不需 post-frame 或 GlobalKey 量測。
         return Column(
           children: [
-            SizedBox(
-              height: metrics.height,
-              child: PageView.builder(
-                controller: _pageController,
-                padEnds: true,
-                physics: const BouncingScrollPhysics(),
-                itemCount: visibleItems.length,
-                onPageChanged: (index) {
-                  setState(() => _currentIndex = index);
-                },
-                itemBuilder: (context, index) {
-                  final item = visibleItems[index];
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    child: HomeV2NewsletterFocusCard(
-                      item: item,
-                      showDots: false,
-                      onTap: () => widget.onItemTap?.call(item),
-                    ),
-                  );
-                },
+            AnimatedSize(
+              duration: const Duration(milliseconds: 180),
+              curve: Curves.easeOutCubic,
+              child: SizedBox(
+                height: metrics.height,
+                child: PageView.builder(
+                  key: const ValueKey('newsletter-focus-horizontal-pager'),
+                  controller: _pageController,
+                  padEnds: false,
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: visibleItems.length,
+                  onPageChanged: (index) {
+                    setState(() => _currentIndex = index);
+                  },
+                  itemBuilder: (context, index) {
+                    final item = visibleItems[index];
+                    return Padding(
+                      padding: EdgeInsets.only(right: 12.w),
+                      child: HomeV2NewsletterFocusCard(
+                        item: item,
+                        showDots: false,
+                        onTap: () => widget.onItemTap?.call(item),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
             SizedBox(height: 13.h),
@@ -847,31 +934,43 @@ class NewsletterFocusCardLayoutMetrics {
     final width = math.max(1.0, availableWidth);
     final textScaler = MediaQuery.textScalerOf(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textWidth = math.max(1.0, width - 28.w - 12.w - 100.w);
-    final tipWidth = math.max(1.0, textWidth - 13.sp - 5.w);
-    final titleStyle = TextStyle(
-      color: isDark ? Colors.white : ProtoColors.charcoal,
-      fontSize: 18.sp,
-      fontWeight: FontWeight.w900,
-      height: 1.25,
-      letterSpacing: 0,
+    final titleStyle = _focusTextStyle(
+        context,
+        TextStyle(
+          color: isDark ? Colors.white : ProtoColors.charcoal,
+          fontSize: 18.sp,
+          fontWeight: FontWeight.w900,
+          height: 1.25,
+          letterSpacing: 0,
+        ));
+    final issueStyle = _focusTextStyle(
+        context,
+        TextStyle(
+          color: isDark ? const Color(0xFF94A3B8) : AppColors.textSecondary,
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w800,
+          height: 1.4,
+          letterSpacing: 0,
+        ));
+    final tipStyle = _focusTextStyle(
+        context,
+        TextStyle(
+          color: isDark ? const Color(0xFF8BF45F) : const Color(0xFF2E7D32),
+          fontSize: 11.5.sp,
+          fontWeight: FontWeight.w800,
+        ));
+    final chipStyle = _focusTextStyle(
+      context,
+      TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w900),
     );
-    final issueStyle = TextStyle(
-      color: isDark ? const Color(0xFF94A3B8) : AppColors.textSecondary,
-      fontSize: 12.sp,
-      fontWeight: FontWeight.w800,
-      height: 1.4,
-      letterSpacing: 0,
+    final badgeStyle = _focusTextStyle(
+      context,
+      TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.w900),
     );
-    final tipStyle = TextStyle(
-      color: isDark ? const Color(0xFF8BF45F) : const Color(0xFF2E7D32),
-      fontSize: 11.5.sp,
-      fontWeight: FontWeight.w800,
+    final metricStyle = _focusTextStyle(
+      context,
+      TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800),
     );
-    final chipStyle = TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w900);
-    final badgeStyle =
-        TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.w900);
-    final metricStyle = TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800);
 
     double measure(String text, TextStyle style, double maxWidth) {
       final painter = TextPainter(
@@ -882,7 +981,7 @@ class NewsletterFocusCardLayoutMetrics {
       return painter.height;
     }
 
-    double chipHeight(HomeNewsletterItem item) {
+    double chipHeight(HomeNewsletterItem item, double maxWidth) {
       final labels = <String>[item.category, '民法', _readTimeForHomeTip(item)];
       var runWidth = 0.0;
       var completedRunsHeight = 0.0;
@@ -894,7 +993,7 @@ class NewsletterFocusCardLayoutMetrics {
           textDirection: Directionality.of(context),
         )..layout();
         final nextWidth = chipWidth.width + 18.w;
-        if (runWidth > 0 && runWidth + 6.w + nextWidth > textWidth) {
+        if (runWidth > 0 && runWidth + 6.w + nextWidth > maxWidth) {
           completedRunsHeight += currentRunHeight + 4.h;
           runWidth = nextWidth;
           currentRunHeight = chipWidth.height + 8.h;
@@ -908,13 +1007,22 @@ class NewsletterFocusCardLayoutMetrics {
 
     var requiredHeight = 0.0;
     for (final item in items) {
+      final naturalTitleWidth = TextPainter(
+        text: TextSpan(text: item.title, style: titleStyle),
+        textScaler: textScaler,
+        textDirection: Directionality.of(context),
+      )..layout();
+      // 卡片 render 的 LayoutBuilder 已位於左右 16/12 的內距內；量測端
+      // 也先扣除相同的 28.w，才能和圖片是否改到下一列的判斷完全一致。
+      final stacked =
+          width - 28.w < math.min(naturalTitleWidth.width, 170.w) + 112.w;
+      final textWidth = math.max(
+        1.0,
+        stacked ? width - 28.w : width - 28.w - 12.w - 100.w,
+      );
+      final tipWidth = math.max(1.0, textWidth - 13.sp - 5.w);
       final badgeHeight = measure('日常小動作', badgeStyle, width) + 8.h;
-      // 卡片本體保留既有一／二／一行的閱讀節奏；量測也套用相同行數，
-      // 避免 bounded PageView 的高度與實際渲染規則不一致。
-      final textColumnHeight = math.min(
-            measure(item.title, titleStyle, textWidth),
-            measure('一', titleStyle, textWidth),
-          ) +
+      final textColumnHeight = measure(item.title, titleStyle, textWidth) +
           8.h +
           math.min(
             measure(_issueHintForHomeTip(item), issueStyle, textWidth),
@@ -926,8 +1034,10 @@ class NewsletterFocusCardLayoutMetrics {
             measure('一', tipStyle, tipWidth),
           ) +
           10.h +
-          chipHeight(item);
-      final middleHeight = math.max(100.w, textColumnHeight);
+          chipHeight(item, textWidth);
+      final middleHeight = stacked
+          ? textColumnHeight + 12.h + 100.w
+          : math.max(100.w, textColumnHeight);
       final metricsHeight =
           math.max(20.sp, measure('999+', metricStyle, width / 4)) + 8.h;
       // InkWell 的四個互動 metric 會各自建立最小可點擊區；保留一列

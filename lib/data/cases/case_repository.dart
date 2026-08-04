@@ -1,35 +1,90 @@
+import 'package:preamble/data/cases/case_api_service.dart';
 import 'package:preamble/data/cases/case_models.dart';
 
 class CaseRepository {
-  CaseRepository({List<LawCase>? seedCases}) : _cases = seedCases ?? _mockCases;
+  CaseRepository({
+    List<LawCase>? seedCases,
+    CaseApiService? apiService,
+  })  : _cases = seedCases ?? _mockCases,
+        _apiService = apiService ?? CaseApiService();
 
   final List<LawCase> _cases;
+  final CaseApiService _apiService;
   final Set<String> _followedCaseIds = <String>{};
 
   Future<List<LawCase>> fetchFeaturedCases() async {
+    if (_apiService.hasConfiguredBackend) {
+      try {
+        final remote = await _apiService.fetchFeaturedCases();
+        if (remote.isNotEmpty) return remote;
+      } catch (__) {
+        // 降級回本機 Mock
+      }
+    }
     return _cases.take(3).toList(growable: false);
   }
 
-  Future<List<LawCase>> fetchArchiveCases() async => _cases;
+  Future<List<LawCase>> fetchArchiveCases() async {
+    if (_apiService.hasConfiguredBackend) {
+      try {
+        final remote = await _apiService.fetchArchiveCases();
+        if (remote.isNotEmpty) return remote;
+      } catch (__) {
+        // 降級回本機 Mock
+      }
+    }
+    return _cases;
+  }
 
   Future<List<LawCase>> searchCases(String query) async {
-    if (query.trim().isEmpty) return _cases;
+    if (query.trim().isEmpty) return fetchArchiveCases();
+    if (_apiService.hasConfiguredBackend) {
+      try {
+        final remote = await _apiService.searchCases(query);
+        if (remote.isNotEmpty) return remote;
+      } catch (__) {
+        // 降級回本機 Mock
+      }
+    }
     return _cases.where((item) => item.matches(query)).toList(growable: false);
   }
 
   Future<List<LawCase>> filterByEra(String era) async {
-    if (era.trim().isEmpty || era == '全部') return _cases;
+    if (era.trim().isEmpty || era == '全部') return fetchArchiveCases();
+    if (_apiService.hasConfiguredBackend) {
+      try {
+        final remote = await _apiService.fetchArchiveCases(era: era);
+        if (remote.isNotEmpty) return remote;
+      } catch (__) {
+        // 降級回本機 Mock
+      }
+    }
     return _cases.where((item) => item.era == era).toList(growable: false);
   }
 
   Future<List<LawCase>> filterByCategory(String category) async {
-    if (category.trim().isEmpty || category == '全部') return _cases;
+    if (category.trim().isEmpty || category == '全部') return fetchArchiveCases();
+    if (_apiService.hasConfiguredBackend) {
+      try {
+        final remote = await _apiService.fetchArchiveCases(category: category);
+        if (remote.isNotEmpty) return remote;
+      } catch (__) {
+        // 降級回本機 Mock
+      }
+    }
     return _cases
         .where((item) => item.category.contains(category))
         .toList(growable: false);
   }
 
   Future<LawCase?> getCaseDetail(String id) async {
+    if (_apiService.hasConfiguredBackend) {
+      try {
+        return await _apiService.getCaseDetail(id);
+      } catch (__) {
+        // 降級回本機 Mock
+      }
+    }
     for (final item in _cases) {
       if (item.id == id) return item;
     }
@@ -48,6 +103,10 @@ class CaseRepository {
     return _cases
         .where((item) => _followedCaseIds.contains(item.id))
         .toList(growable: false);
+  }
+
+  void dispose() {
+    _apiService.dispose();
   }
 }
 

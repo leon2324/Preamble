@@ -25,31 +25,25 @@ class HomeV2HeroHeader extends StatefulWidget {
 }
 
 class _HomeV2HeroHeaderState extends State<HomeV2HeroHeader> {
-  late final PageController _tickerController;
   Timer? _tickerTimer;
   var _tickerIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _tickerController = PageController();
     // 頂部法規快訊每 4 秒往上換一則，先使用 mock data；
     // 未來接 API 時只要替換 homeV2TickerItems 的資料來源即可。
     _tickerTimer = Timer.periodic(const Duration(seconds: 4), (__) {
-      if (!_tickerController.hasClients || homeV2TickerItems.isEmpty) return;
-      final nextIndex = (_tickerIndex + 1) % homeV2TickerItems.length;
-      _tickerController.animateToPage(
-        nextIndex,
-        duration: const Duration(milliseconds: 420),
-        curve: Curves.easeOutCubic,
-      );
+      if (!mounted || homeV2TickerItems.isEmpty) return;
+      setState(() {
+        _tickerIndex = (_tickerIndex + 1) % homeV2TickerItems.length;
+      });
     });
   }
 
   @override
   void dispose() {
     _tickerTimer?.cancel();
-    _tickerController.dispose();
     super.dispose();
   }
 
@@ -58,41 +52,39 @@ class _HomeV2HeroHeaderState extends State<HomeV2HeroHeader> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Preamble 緒言',
-                    style: TextStyle(
-                      color: HomeV2Palette.ink,
-                      fontSize: 24.sp,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 0,
-                      height: 1.05,
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    '讓法律更懂你',
-                    style: TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            _HeaderIcon(
-              icon: Icons.notifications_none_rounded,
-              onTap: widget.onNotificationTap,
-            ),
-            SizedBox(width: 10.w),
-            _HeaderAvatar(onTap: widget.onProfileTap),
-          ],
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final actions = Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _HeaderIcon(
+                  icon: Icons.notifications_none_rounded,
+                  onTap: widget.onNotificationTap,
+                ),
+                SizedBox(width: 10.w),
+                _HeaderAvatar(onTap: widget.onProfileTap),
+              ],
+            );
+            final wordmark = const _HomeWordmark();
+            final wordmarkWidth = _measureWordmark(context);
+            final inline = constraints.maxWidth >= wordmarkWidth + 110.w;
+
+            // 台灣繁體中文教學註解：品牌字標維持完整單字；只有操作列真的
+            // 放不下時才換到下一列，標語仍完全依系統 Dynamic Type 顯示。
+            return inline
+                ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [Expanded(child: wordmark), actions],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      wordmark,
+                      SizedBox(height: 8.h),
+                      Align(alignment: Alignment.centerRight, child: actions),
+                    ],
+                  );
+          },
         ),
         SizedBox(height: 16.h),
         Material(
@@ -119,62 +111,155 @@ class _HomeV2HeroHeaderState extends State<HomeV2HeroHeader> {
                   ),
                 ],
               ),
-              child: SizedBox(
-                height: 24.h,
-                child: PageView.builder(
-                  controller: _tickerController,
-                  scrollDirection: Axis.vertical,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: homeV2TickerItems.length,
-                  onPageChanged: (index) =>
-                      setState(() => _tickerIndex = index),
-                  itemBuilder: (context, index) {
-                    final tickerItem = homeV2TickerItems[index];
-                    return Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 8.w, vertical: 5.h),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.16),
-                            borderRadius: BorderRadius.circular(99.r),
-                          ),
-                          child: Text(
-                            tickerItem.badge,
-                            maxLines: 1,
-                            style: TextStyle(
-                              color: const Color(0xFFFFD36D),
-                              fontSize: 10.sp,
-                              fontWeight: FontWeight.w900,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 8.w),
-                        Expanded(
-                          child: Text(
-                            tickerItem.title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w800,
-                              height: 1.15,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 4.w),
-                        Icon(
-                          Icons.chevron_right_rounded,
-                          color: Colors.white.withValues(alpha: 0.9),
-                          size: 20.sp,
-                        ),
-                      ],
-                    );
-                  },
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 220),
+                child: _HomeTickerContent(
+                  key: ValueKey(_tickerIndex),
+                  item: homeV2TickerItems[_tickerIndex],
                 ),
               ),
             ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// 頂部快訊在真實寬度放不下時改為上下排列，保留完整標題與入口。
+class _HomeTickerContent extends StatelessWidget {
+  const _HomeTickerContent({super.key, required this.item});
+
+  final HomeV2TickerItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    final badge = Container(
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.16),
+        borderRadius: BorderRadius.circular(99.r),
+      ),
+      child: Text(
+        item.badge,
+        style: TextStyle(
+          color: const Color(0xFFFFD36D),
+          fontSize: 10.sp,
+          fontWeight: FontWeight.w900,
+        ),
+      ),
+    );
+    final title = Text(
+      item.title,
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 12.sp,
+        fontWeight: FontWeight.w800,
+        height: 1.15,
+      ),
+    );
+    final chevron = Icon(
+      Icons.chevron_right_rounded,
+      color: Colors.white.withValues(alpha: 0.9),
+      size: 20.sp,
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final baseStyle = DefaultTextStyle.of(context).style;
+        final titlePainter = TextPainter(
+          text: TextSpan(
+            text: item.title,
+            style: baseStyle.merge(TextStyle(
+              color: Colors.white,
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w800,
+              height: 1.15,
+            )),
+          ),
+          textScaler: MediaQuery.textScalerOf(context),
+          textDirection: Directionality.of(context),
+        )..layout();
+        final badgePainter = TextPainter(
+          text: TextSpan(
+            text: item.badge,
+            style: baseStyle.merge(TextStyle(fontSize: 10.sp)),
+          ),
+          textScaler: MediaQuery.textScalerOf(context),
+          textDirection: Directionality.of(context),
+        )..layout();
+        final inlineWidth =
+            badgePainter.width + 16.w + 8.w + titlePainter.width + 4.w + 20.sp;
+        if (inlineWidth <= constraints.maxWidth) {
+          return Row(
+            children: [
+              badge,
+              SizedBox(width: 8.w),
+              Expanded(child: title),
+              SizedBox(width: 4.w),
+              chevron,
+            ],
+          );
+        }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(children: [badge, const Spacer(), chevron]),
+            SizedBox(height: 6.h),
+            title,
+          ],
+        );
+      },
+    );
+  }
+}
+
+double _measureWordmark(BuildContext context) {
+  final painter = TextPainter(
+    text: TextSpan(
+      text: 'Preamble 緒言',
+      style: TextStyle(
+        fontSize: 24.sp / MediaQuery.textScalerOf(context).scale(1),
+        fontWeight: FontWeight.w800,
+      ),
+    ),
+    textScaler: MediaQuery.textScalerOf(context),
+    textDirection: Directionality.of(context),
+  )..layout();
+  return painter.width;
+}
+
+class _HomeWordmark extends StatelessWidget {
+  const _HomeWordmark();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Semantics(
+          label: 'Preamble 緒言',
+          child: ExcludeSemantics(
+            child: Text(
+              'Preamble 緒言',
+              softWrap: false,
+              style: TextStyle(
+                color: HomeV2Palette.ink,
+                fontSize: 24.sp / MediaQuery.textScalerOf(context).scale(1),
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0,
+                height: 1.05,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 4.h),
+        Text(
+          '讓法律更懂你',
+          style: TextStyle(
+            color: AppColors.textSecondary,
+            fontSize: 13.sp,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ],
