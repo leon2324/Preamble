@@ -1,6 +1,7 @@
 import 'package:preamble/components/shared/mvp_state_widgets.dart';
 import 'package:preamble/data/law_assistant/law_assistant_api_service.dart';
 import 'package:preamble/data/law_assistant/law_assistant_models.dart';
+import 'package:preamble/utils/pii_data_masker.dart';
 
 /// 小法助資料存取層。
 ///
@@ -28,12 +29,14 @@ class LawAssistantRepository {
     required String prompt,
     bool isGuestSession = false,
   }) async {
+    final maskedPrompt = PiiDataMasker.mask(prompt);
+
     if (isBackendConfigured) {
-      final conversation = await _apiService.createConversation(prompt: prompt);
+      final conversation = await _apiService.createConversation(prompt: maskedPrompt);
       return conversation.copyWith(isGuest: isGuestSession);
     }
 
-    final conversation = _mockConversation(prompt, isGuestSession);
+    final conversation = _mockConversation(maskedPrompt, isGuestSession);
     _mockConversations[conversation.id] = conversation;
     return conversation;
   }
@@ -50,28 +53,30 @@ class LawAssistantRepository {
     required String conversationId,
     required String prompt,
   }) async {
+    final maskedPrompt = PiiDataMasker.mask(prompt);
+
     if (isBackendConfigured) {
       return _apiService.sendMessage(
         conversationId: conversationId,
-        prompt: prompt,
+        prompt: maskedPrompt,
       );
     }
 
     final existing =
-        _mockConversations[conversationId] ?? _mockConversation(prompt, false);
+        _mockConversations[conversationId] ?? _mockConversation(maskedPrompt, false);
     final now = DateTime.now();
     final messages = [
       ...existing.messages,
       LawAssistantMessage(
         id: 'mock-user-${now.microsecondsSinceEpoch}',
         role: LawAssistantMessageRole.user,
-        content: prompt,
+        content: maskedPrompt,
         createdAt: now,
       ),
-      _mockAssistantMessage(prompt, now.add(const Duration(milliseconds: 1))),
+      _mockAssistantMessage(maskedPrompt, now.add(const Duration(milliseconds: 1))),
     ];
     final updated = existing.copyWith(
-      preview: prompt,
+      preview: maskedPrompt,
       updatedAt: now,
       messages: messages,
       isMock: true,
@@ -84,17 +89,19 @@ class LawAssistantRepository {
     required String conversationId,
     required String prompt,
   }) async* {
+    final maskedPrompt = PiiDataMasker.mask(prompt);
+
     if (isBackendConfigured) {
       yield* _apiService.sendMessageStream(
         conversationId: conversationId,
-        prompt: prompt,
+        prompt: maskedPrompt,
       );
       return;
     }
 
     // 離線/Mock 打字機模擬：每 30ms 輸出 2~4 個中文字
     final now = DateTime.now();
-    final assistantMessage = _mockAssistantMessage(prompt, now);
+    final assistantMessage = _mockAssistantMessage(maskedPrompt, now);
     final answer = assistantMessage.answer;
 
     final fullTextParts = [
