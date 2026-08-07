@@ -28,6 +28,7 @@ class DocumentRepository extends ChangeNotifier {
     String? baseUrl,
     List<DocumentDraft>? initialDrafts,
     SharedPreferences? prefs,
+    this.isIncognito = false,
   })  : _client = client ?? http.Client(),
         _authTokenProvider = authTokenProvider,
         _baseUrl = baseUrl ??
@@ -46,6 +47,7 @@ class DocumentRepository extends ChangeNotifier {
   final String _baseUrl;
   SharedPreferences? _prefs;
   final List<DocumentDraft> _drafts;
+  final bool isIncognito;
   String _backendMessage = '';
 
   bool get isBackendConfigured => _baseUrl.trim().isNotEmpty;
@@ -87,6 +89,7 @@ class DocumentRepository extends ChangeNotifier {
   }
 
   Future<void> saveLocalDraftsToDisk() async {
+    if (isIncognito) return;
     try {
       _prefs ??= await SharedPreferences.getInstance();
       final rawList = _drafts.map((d) => d.toJson()).toList();
@@ -175,7 +178,7 @@ class DocumentRepository extends ChangeNotifier {
       throw Exception('重複的請求已被阻擋');
     }
 
-    if (isBackendConfigured) {
+    if (isBackendConfigured && !isIncognito) {
       try {
         final draft = await _createBackendDraft(
           templateType: templateType,
@@ -216,6 +219,42 @@ class DocumentRepository extends ChangeNotifier {
     await saveLocalDraftsToDisk();
     notifyListeners();
     return draft;
+  }
+
+  /// 更新草稿，並將當前狀態存入版本紀錄
+  Future<void> updateDraft(String draftId, {required String newContent, String? newTitle}) async {
+    final index = _drafts.indexWhere((d) => d.id == draftId);
+    if (index == -1) return;
+
+    final currentDraft = _drafts[index];
+    final version = DocumentVersion(
+      content: currentDraft.content,
+      savedAt: DateTime.now(),
+    );
+
+    final updatedDraft = DocumentDraft(
+      id: currentDraft.id,
+      title: newTitle ?? currentDraft.title,
+      content: newContent,
+      templateType: currentDraft.templateType,
+      createdAt: currentDraft.createdAt,
+      isMock: currentDraft.isMock,
+      disclaimer: currentDraft.disclaimer,
+      isSyncedToBackend: currentDraft.isSyncedToBackend,
+      sourceLabel: currentDraft.sourceLabel,
+      versions: [...currentDraft.versions, version],
+    );
+
+    _drafts[index] = updatedDraft;
+    
+    if (!isIncognito) {
+      await saveLocalDraftsToDisk();
+      if (isBackendConfigured) {
+        await _syncUnsyncedDrafts(); // 也可以寫入 queue，簡化處理
+      }
+    }
+    
+    notifyListeners();
   }
 
   DocumentDraft _localDraft(

@@ -39,6 +39,26 @@ class DocumentTemplateInput {
       };
 }
 
+class DocumentVersion {
+  const DocumentVersion({
+    required this.content,
+    required this.savedAt,
+  });
+
+  final String content;
+  final DateTime savedAt;
+
+  Map<String, dynamic> toJson() => {
+        'content': content,
+        'savedAt': savedAt.toIso8601String(),
+      };
+
+  factory DocumentVersion.fromJson(Map<String, dynamic> json) => DocumentVersion(
+        content: json['content'] as String,
+        savedAt: DateTime.parse(json['savedAt'] as String),
+      );
+}
+
 class DocumentDraft {
   const DocumentDraft({
     required this.id,
@@ -50,6 +70,7 @@ class DocumentDraft {
     required this.disclaimer,
     this.isSyncedToBackend = false,
     this.sourceLabel = '本機暫存',
+    this.versions = const [],
   });
 
   final String id;
@@ -61,6 +82,7 @@ class DocumentDraft {
   final String disclaimer;
   final bool isSyncedToBackend;
   final String sourceLabel;
+  final List<DocumentVersion> versions;
 
   factory DocumentDraft.fromJson(Map<String, dynamic> json) {
     return DocumentDraft(
@@ -84,6 +106,10 @@ class DocumentDraft {
       sourceLabel: json['sourceLabel']?.toString() ??
           json['source_label']?.toString() ??
           '後端同步',
+      versions: (json['versions'] as List<dynamic>?)
+              ?.map((e) => DocumentVersion.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
   }
 
@@ -97,5 +123,6 @@ class DocumentDraft {
         'disclaimer': disclaimer,
         'isSyncedToBackend': isSyncedToBackend,
         'sourceLabel': sourceLabel,
+        'versions': versions.map((e) => e.toJson()).toList(),
       };
 }

@@ -3,6 +3,7 @@ import 'package:preamble/data/law_assistant/law_assistant_api_service.dart';
 import 'package:preamble/data/law_assistant/law_assistant_models.dart';
 import 'package:preamble/utils/pii_data_masker.dart';
 import 'package:preamble/utils/quota_manager.dart';
+import 'package:preamble/utils/typing_simulator.dart';
 
 /// 小法助資料存取層。
 ///
@@ -120,18 +121,14 @@ class LawAssistantRepository {
     ];
 
     final fullText = fullTextParts.join('\n\n');
-    const chunkSize = 3;
 
-    for (var i = 0; i < fullText.length; i += chunkSize) {
-      final end = (i + chunkSize < fullText.length) ? i + chunkSize : fullText.length;
-      final chunk = fullText.substring(i, end);
+    await for (final char in TypingSimulator.simulateString(fullText)) {
       yield LawAssistantStreamChunk(
-        textChunk: chunk,
+        textChunk: char,
         isFinished: false,
         citations: _mockCitations,
         fullAnswer: answer,
       );
-      await Future<void>.delayed(const Duration(milliseconds: 30));
     }
 
     yield LawAssistantStreamChunk(
