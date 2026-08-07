@@ -2,6 +2,7 @@ import 'package:preamble/components/shared/mvp_state_widgets.dart';
 import 'package:preamble/data/law_assistant/law_assistant_api_service.dart';
 import 'package:preamble/data/law_assistant/law_assistant_models.dart';
 import 'package:preamble/utils/pii_data_masker.dart';
+import 'package:preamble/utils/quota_manager.dart';
 
 /// 小法助資料存取層。
 ///
@@ -29,6 +30,7 @@ class LawAssistantRepository {
     required String prompt,
     bool isGuestSession = false,
   }) async {
+    QuotaManager.instance.consumeQuota();
     final maskedPrompt = PiiDataMasker.mask(prompt);
 
     if (isBackendConfigured) {
@@ -53,6 +55,7 @@ class LawAssistantRepository {
     required String conversationId,
     required String prompt,
   }) async {
+    QuotaManager.instance.consumeQuota();
     final maskedPrompt = PiiDataMasker.mask(prompt);
 
     if (isBackendConfigured) {
@@ -89,6 +92,7 @@ class LawAssistantRepository {
     required String conversationId,
     required String prompt,
   }) async* {
+    QuotaManager.instance.consumeQuota();
     final maskedPrompt = PiiDataMasker.mask(prompt);
 
     if (isBackendConfigured) {
