@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
@@ -73,7 +74,7 @@ class DocumentRepository extends ChangeNotifier {
       _prefs ??= await SharedPreferences.getInstance();
       final rawJson = _prefs?.getString(_prefsKey);
       if (rawJson != null && rawJson.isNotEmpty) {
-        final decoded = jsonDecode(rawJson);
+        final decoded = await Isolate.run(() => jsonDecode(rawJson));
         if (decoded is List) {
           final loadedDrafts = decoded
               .whereType<Map<String, dynamic>>()
@@ -96,7 +97,8 @@ class DocumentRepository extends ChangeNotifier {
     try {
       _prefs ??= await SharedPreferences.getInstance();
       final rawList = _drafts.map((d) => d.toJson()).toList();
-      await _prefs?.setString(_prefsKey, jsonEncode(rawList));
+      final encodedStr = await Isolate.run(() => jsonEncode(rawList));
+      await _prefs?.setString(_prefsKey, encodedStr);
     } catch (__) {
       // 容錯防護
     }

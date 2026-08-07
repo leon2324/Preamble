@@ -32,14 +32,8 @@ import 'package:preamble/features/case_library/pages/case_legal_vocabulary_page.
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // 初始化本地 SQLite 資料庫與記憶體快取倉庫
-  await CaseLibraryRepository.instance.initialize();
-  // iOS WidgetKit 讀不到 Flutter widget tree，因此 App 啟動時先把今日判決故事同步到 App Group；
-  // Android、測試環境或原生橋接尚未完成時會安全略過，不影響主流程。
-  await IosTodayCaseWidgetBridge.syncDefaultStory();
-  // Core Spotlight 索引是系統層加分入口，不需要阻塞第一屏；先背景同步精選法條，
-  // 使用者之後在 iPhone 搜尋「民法184」「租屋押金」就能回到法規資料庫。
-  unawaited(IosStatuteSpotlightBridge.syncDefaultIndex());
+  // 初始化移至 WidgetTree 掛載後，避免阻塞啟動速度
+  // iOS WidgetKit 同步也改由 _MylawAppState 的 addPostFrameCallback 觸發
 
   runApp(
     ScreenUtilInit(
@@ -111,6 +105,11 @@ class _MylawAppState extends State<MylawApp> {
     );
     IosDeepLinkBridge.registerLinkHandler(_handleDeepLink);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // 延遲載入：第一幀渲染後再初始化資料庫與跨進程 Widget 同步
+      unawaited(CaseLibraryRepository.instance.initialize());
+      unawaited(IosTodayCaseWidgetBridge.syncDefaultStory());
+      unawaited(IosStatuteSpotlightBridge.syncDefaultIndex());
+
       if (mounted) {
         IosIntentRouter.register(context);
         await IosIntentRouter.checkInitialIntents(context);

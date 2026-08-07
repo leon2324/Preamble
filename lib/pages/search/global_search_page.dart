@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:preamble/components/shared/custom_toast.dart';
+import 'package:preamble/utils/safe_text_editing_controller.dart';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
@@ -64,7 +65,7 @@ class GlobalSearchPage extends StatefulWidget {
 }
 
 class _GlobalSearchPageState extends State<GlobalSearchPage> {
-  final _controller = TextEditingController();
+  final _controller = SafeTextEditingController();
   final List<String> _recent = [];
   late final SearchRepository _searchRepository;
   late final bool _ownsSearchRepository;

@@ -14,6 +14,7 @@ import 'package:preamble/features/case_library/pages/case_library_search_page.da
 import 'package:preamble/features/case_library/theme/case_library_theme.dart';
 import 'package:preamble/features/case_library/widgets/case_library_scaffold.dart';
 import 'package:preamble/features/case_library/data/case_library_repository.dart';
+import 'package:preamble/components/shared/shimmer_skeleton.dart';
 
 // 定義導覽圖示的 SVG 字串。
 const String _svgBackIcon = '''
@@ -271,9 +272,16 @@ class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
     if (_heroBooks.isEmpty) {
       return SizedBox(
         height: 240.h,
-        child: const Center(
-          child: CupertinoActivityIndicator(
-            color: CaseLibraryColors.primaryGreen,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          itemCount: 3,
+          separatorBuilder: (_, __) => SizedBox(width: 12.w),
+          itemBuilder: (_, __) => ShimmerSkeleton(
+            width: 300.w,
+            height: 240.h,
+            borderRadius: 24,
           ),
         ),
       );
