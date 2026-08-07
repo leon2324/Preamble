@@ -188,3 +188,56 @@ class DocumentQuickFillBar extends StatelessWidget {
     );
   }
 }
+
+/// 填表完整度計量器。
+class DocumentFormCompletenessBar extends StatelessWidget {
+  const DocumentFormCompletenessBar({
+    super.key,
+    required this.completenessRatio,
+  });
+
+  /// 0.0 ~ 1.0 (例如 0.8 代表 80%)
+  final double completenessRatio;
+
+  @override
+  Widget build(BuildContext context) {
+    const activeColor = Color(0xFF2C5E43);
+    final percentage = (completenessRatio.clamp(0.0, 1.0) * 100).toInt();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '填表完成度',
+              style: TextStyle(
+                fontSize: 11.5.sp,
+                color: const Color(0xFF5A6E63),
+              ),
+            ),
+            Text(
+              '$percentage %',
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.bold,
+                color: activeColor,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 4.h),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4.r),
+          child: LinearProgressIndicator(
+            value: completenessRatio.clamp(0.0, 1.0),
+            backgroundColor: const Color(0xFFE2E8E4),
+            color: activeColor,
+            minHeight: 6.h,
+          ),
+        ),
+      ],
+    );
+  }
+}

@@ -16,6 +16,7 @@ class PdfStyleBuilder {
     required String title,
     required String content,
     PdfThemeStyle themeStyle = PdfThemeStyle.morandiGreen,
+    Uint8List? signaturePngBytes,
   }) async {
     final serifData = await rootBundle.load(
       'assets/fonts/open_source/SourceHanSerifTW-VF.ttf',
@@ -183,15 +184,36 @@ class PdfStyleBuilder {
                 pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
-                    pw.Text(
-                      '立書人 / 發起人簽章：__________________',
-                      style: pw.TextStyle(
-                        font: sansFont,
-                        fontSize: 10,
-                        fontWeight: pw.FontWeight.bold,
-                        color: PdfColor.fromHex('#17231F'),
+                    if (signaturePngBytes != null && signaturePngBytes.isNotEmpty) ...[
+                      pw.Text(
+                        '立書人 / 發起人親筆簽章：',
+                        style: pw.TextStyle(
+                          font: sansFont,
+                          fontSize: 9.5,
+                          fontWeight: pw.FontWeight.bold,
+                          color: PdfColor.fromHex('#17231F'),
+                        ),
                       ),
-                    ),
+                      pw.SizedBox(height: 4),
+                      pw.Container(
+                        width: 120,
+                        height: 40,
+                        child: pw.Image(
+                          pw.MemoryImage(signaturePngBytes),
+                          fit: pw.BoxFit.contain,
+                        ),
+                      ),
+                    ] else ...[
+                      pw.Text(
+                        '立書人 / 發起人簽章：__________________',
+                        style: pw.TextStyle(
+                          font: sansFont,
+                          fontSize: 10,
+                          fontWeight: pw.FontWeight.bold,
+                          color: PdfColor.fromHex('#17231F'),
+                        ),
+                      ),
+                    ],
                     pw.SizedBox(height: 8),
                     pw.Text(
                       '日期：______ 年 ______ 月 ______ 日',

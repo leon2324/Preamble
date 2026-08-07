@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/data/statutes/statute_item.dart';
 import 'package:preamble/data/statutes/statute_repository.dart';
-import 'package:preamble/pages/learning/statute_database_page.dart';
+import 'package:preamble/components/shared/citation_popover_dialog.dart';
 
 /// 自動解析 AI 內文法條標籤（例如 `[民法第 184 條]` 或 `刑法第 339 條`）並渲染為高亮可點擊卡片。
 class InlineCitationText extends StatelessWidget {
@@ -92,30 +92,20 @@ class StatuteTagChip extends StatelessWidget {
 
           if (!context.mounted) return;
 
-          if (result.items.isNotEmpty) {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => StatuteDetailPage(item: result.items.first),
-              ),
-            );
-          } else {
-            // 提供本機 Fallback 頁面
-            final fallbackItem = StatuteItem(
-              codeName: query.contains('第') ? query.split('第').first.trim() : query,
-              articleNumber: query.contains('第') ? '第 ${query.split('第').last}' : '',
-              articleText: '離線快取/動態解析之法條資料，提供詳細條文內容與裁判指引。',
-              lawUrl: 'https://law.moj.gov.tw/',
-              category: _categoryForTitle(query),
-              updatedDate: '2026-01-01',
-              isRepealed: false,
-              tags: [query],
-            );
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => StatuteDetailPage(item: fallbackItem),
-              ),
-            );
-          }
+          final targetItem = result.items.isNotEmpty
+              ? result.items.first
+              : StatuteItem(
+                  codeName: query.contains('第') ? query.split('第').first.trim() : query,
+                  articleNumber: query.contains('第') ? '第 ${query.split('第').last}' : '',
+                  articleText: '離線快取/動態解析之法條資料，提供詳細條文內容與裁判指引。',
+                  lawUrl: 'https://law.moj.gov.tw/',
+                  category: _categoryForTitle(query),
+                  updatedDate: '2026-01-01',
+                  isRepealed: false,
+                  tags: [query],
+                );
+
+          await CitationPopoverDialog.show(context, targetItem);
         },
         borderRadius: BorderRadius.circular(6.r),
         child: Container(
