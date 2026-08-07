@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:preamble/components/shared/mvp_state_widgets.dart';
 import 'package:preamble/data/law_assistant/law_assistant_api_service.dart';
 import 'package:preamble/data/documents/document_models.dart';
@@ -222,7 +225,12 @@ class DocumentRepository extends ChangeNotifier {
   }
 
   /// 更新草稿，並將當前狀態存入版本紀錄
-  Future<void> updateDraft(String draftId, {required String newContent, String? newTitle}) async {
+  Future<void> updateDraft(
+    String draftId, {
+    required String newContent,
+    String? newTitle,
+    Uint8List? newSignatureBytes,
+  }) async {
     final index = _drafts.indexWhere((d) => d.id == draftId);
     if (index == -1) return;
 
@@ -243,6 +251,7 @@ class DocumentRepository extends ChangeNotifier {
       isSyncedToBackend: currentDraft.isSyncedToBackend,
       sourceLabel: currentDraft.sourceLabel,
       versions: [...currentDraft.versions, version],
+      signatureBytes: newSignatureBytes ?? currentDraft.signatureBytes,
     );
 
     _drafts[index] = updatedDraft;
@@ -255,6 +264,70 @@ class DocumentRepository extends ChangeNotifier {
     }
     
     notifyListeners();
+  }
+
+  /// 匯出草稿為 PNG 圖片並儲存至本機，回傳檔案路徑
+  Future<String?> exportDraftAsImage(String draftId) async {
+    final draft = _drafts.firstWhere((d) => d.id == draftId);
+    
+    // 建立畫布
+    final recorder = ui.PictureRecorder();
+    final canvas = ui.Canvas(recorder);
+    const width = 800.0;
+    
+    // 白色背景
+    canvas.drawRect(const ui.Rect.fromLTWH(0, 0, width, 2000), ui.Paint()..color = const ui.Color(0xFFFFFFFF));
+    
+    var yOffset = 40.0;
+    
+    // 繪製標題
+    final titleStyle = ui.TextStyle(color: const ui.Color(0xFF000000), fontSize: 24, fontWeight: ui.FontWeight.bold);
+    final titleParagraphBuilder = ui.ParagraphBuilder(ui.ParagraphStyle(textAlign: ui.TextAlign.center))
+      ..pushStyle(titleStyle)
+      ..addText(draft.title);
+    final titleParagraph = titleParagraphBuilder.build()
+      ..layout(const ui.ParagraphConstraints(width: width - 80));
+    canvas.drawParagraph(titleParagraph, ui.Offset(40, yOffset));
+    yOffset += titleParagraph.height + 40;
+    
+    // 繪製內文
+    final bodyStyle = ui.TextStyle(color: const ui.Color(0xFF000000), fontSize: 18);
+    final bodyParagraphBuilder = ui.ParagraphBuilder(ui.ParagraphStyle())
+      ..pushStyle(bodyStyle)
+      ..addText(draft.content);
+    final bodyParagraph = bodyParagraphBuilder.build()
+      ..layout(const ui.ParagraphConstraints(width: width - 80));
+    canvas.drawParagraph(bodyParagraph, ui.Offset(40, yOffset));
+    yOffset += bodyParagraph.height + 40;
+    
+    // 若有簽名，繪製簽名
+    if (draft.signatureBytes != null) {
+      try {
+        final codec = await ui.instantiateImageCodec(draft.signatureBytes!);
+        final frame = await codec.getNextFrame();
+        final signatureImage = frame.image;
+        
+        final srcRect = ui.Rect.fromLTWH(0, 0, signatureImage.width.toDouble(), signatureImage.height.toDouble());
+        final dstRect = ui.Rect.fromLTWH(40, yOffset, signatureImage.width.toDouble() * 0.5, signatureImage.height.toDouble() * 0.5);
+        canvas.drawImageRect(signatureImage, srcRect, dstRect, ui.Paint());
+        yOffset += dstRect.height + 40;
+      } catch (__) {
+        // ignore signature parsing errors
+      }
+    }
+    
+    // 輸出成圖片
+    final picture = recorder.endRecording();
+    final img = await picture.toImage(width.toInt(), yOffset.toInt());
+    final pngBytes = await img.toByteData(format: ui.ImageByteFormat.png);
+    if (pngBytes == null) return null;
+    
+    // 寫入檔案
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/draft_${draft.id}.png');
+    await file.writeAsBytes(pngBytes.buffer.asUint8List());
+    
+    return file.path;
   }
 
   DocumentDraft _localDraft(

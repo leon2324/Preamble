@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 enum DocumentTemplateType {
   depositDemand,
   rentalDepositNegotiation,
@@ -71,6 +74,7 @@ class DocumentDraft {
     this.isSyncedToBackend = false,
     this.sourceLabel = '本機暫存',
     this.versions = const [],
+    this.signatureBytes,
   });
 
   final String id;
@@ -83,6 +87,7 @@ class DocumentDraft {
   final bool isSyncedToBackend;
   final String sourceLabel;
   final List<DocumentVersion> versions;
+  final Uint8List? signatureBytes;
 
   factory DocumentDraft.fromJson(Map<String, dynamic> json) {
     return DocumentDraft(
@@ -110,6 +115,9 @@ class DocumentDraft {
               ?.map((e) => DocumentVersion.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      signatureBytes: json['signatureBytes'] != null
+          ? base64Decode(json['signatureBytes'] as String)
+          : null,
     );
   }
 
@@ -124,5 +132,6 @@ class DocumentDraft {
         'isSyncedToBackend': isSyncedToBackend,
         'sourceLabel': sourceLabel,
         'versions': versions.map((e) => e.toJson()).toList(),
+        if (signatureBytes != null) 'signatureBytes': base64Encode(signatureBytes!),
       };
 }
