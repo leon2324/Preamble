@@ -6,6 +6,8 @@ import 'package:preamble/components/shared/mvp_state_widgets.dart';
 import 'package:preamble/data/law_assistant/law_assistant_api_service.dart';
 import 'package:preamble/data/documents/document_models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:preamble/utils/offline_request_queue.dart';
+import 'package:preamble/utils/idempotency_manager.dart';
 
 class DocumentTemplateOption {
   const DocumentTemplateOption({
@@ -167,6 +169,12 @@ class DocumentRepository extends ChangeNotifier {
     bool advanced = false,
     String? title,
   }) async {
+    // 產生並檢查防重發 Key
+    final idempotencyKey = IdempotencyManager.instance.generateKey();
+    if (!IdempotencyManager.instance.markAsUsed(idempotencyKey)) {
+      throw Exception('重複的請求已被阻擋');
+    }
+
     if (isBackendConfigured) {
       try {
         final draft = await _createBackendDraft(
@@ -181,7 +189,18 @@ class DocumentRepository extends ChangeNotifier {
         notifyListeners();
         return draft;
       } on Object catch (error) {
-        _backendMessage = '文件後端暫時無法保存，已先寫入本機草稿：$error';
+        // 將請求放入離線佇列
+        OfflineRequestQueue.instance.enqueue(
+          endpoint: '/documents/drafts',
+          payload: {
+            'templateType': templateType.name,
+            'input': input.toJson(),
+            'advanced': advanced,
+            'title': title,
+            'idempotencyKey': idempotencyKey,
+          },
+        );
+        _backendMessage = '文件後端暫時無法保存，已先寫入本機草稿與離線佇列：$error';
       }
     } else {
       _backendMessage = '本機暫存模式：尚未設定 PREAMBLE_API_BASE_URL。';
