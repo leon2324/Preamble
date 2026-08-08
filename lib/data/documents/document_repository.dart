@@ -145,8 +145,8 @@ class DocumentRepository extends ChangeNotifier {
     if (isBackendConfigured) {
       try {
         OfflineRequestQueue.instance.enqueue(
-          method: 'DELETE',
-          url: _uri('/documents/drafts/$id').toString(),
+          endpoint: '/documents/drafts/$id',
+          payload: {'action': 'DELETE'},
         );
       } catch (__) {
         // Ignored

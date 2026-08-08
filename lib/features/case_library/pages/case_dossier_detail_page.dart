@@ -13,7 +13,6 @@ import 'package:preamble/features/case_library/data/case_library_data.dart';
 import 'package:preamble/features/case_library/data/case_library_repository.dart';
 import 'package:preamble/features/case_library/models/case_library_models.dart';
 import 'package:preamble/features/case_library/theme/case_library_theme.dart';
-import 'package:preamble/features/case_library/widgets/case_library_tag.dart';
 import 'package:preamble/components/shared/shimmer_skeleton.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
