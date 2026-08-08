@@ -926,6 +926,7 @@ class _QuestionItem {
 
 class _DraftItem {
   const _DraftItem({
+    required this.id,
     required this.title,
     required this.content,
     required this.time,
@@ -934,6 +935,7 @@ class _DraftItem {
 
   factory _DraftItem.fromDocument(DocumentDraft draft) {
     return _DraftItem(
+      id: draft.id,
       title: draft.title,
       content: draft.content,
       time: _formatDraftTime(draft.createdAt, draft.sourceLabel),
@@ -941,6 +943,7 @@ class _DraftItem {
     );
   }
 
+  final String id;
   final String title;
   final String content;
   final String time;
