@@ -661,6 +661,7 @@ class _DraftsView extends StatelessWidget {
     required this.backendStatus,
     required this.onCreateDraft,
     required this.onOpenDraft,
+    required this.onDeleteDraft,
   });
 
   final int selectedTabIndex;
@@ -669,6 +670,7 @@ class _DraftsView extends StatelessWidget {
   final String backendStatus;
   final VoidCallback onCreateDraft;
   final ValueChanged<_DraftItem> onOpenDraft;
+  final ValueChanged<String> onDeleteDraft;
 
   @override
   Widget build(BuildContext context) {
@@ -688,7 +690,21 @@ class _DraftsView extends StatelessWidget {
           const _EmptyStateCard(message: '這個分類還沒有文件草稿。')
         else
           for (final item in visibleDrafts) ...[
-            _DraftTile(item: item, onTap: () => onOpenDraft(item)),
+            Dismissible(
+              key: Key('draft_${item.id}'),
+              direction: DismissDirection.endToStart,
+              onDismissed: (direction) {
+                HapticFeedback.lightImpact();
+                onDeleteDraft(item.id);
+              },
+              background: Container(
+                alignment: Alignment.centerRight,
+                padding: EdgeInsets.only(right: 20.w),
+                color: Colors.red,
+                child: const Icon(Icons.delete, color: Colors.white),
+              ),
+              child: _DraftTile(item: item, onTap: () => onOpenDraft(item)),
+            ),
             SizedBox(height: 10.h),
           ],
         SizedBox(height: 18.h),

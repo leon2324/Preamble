@@ -1,6 +1,7 @@
 import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:preamble/components/search/search_bar.dart';
 import 'package:preamble/theme/adaptive_layout.dart';
 
@@ -78,8 +79,8 @@ class TrendLegacyState extends State<TrendPageLegacy> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Image.network(
-                      "https://www.appoverride.com/wp-content/uploads/2024/03/floating_action_button-1024x538.png",
+                    CachedNetworkImage(
+                      imageUrl: "https://www.appoverride.com/wp-content/uploads/2024/03/floating_action_button-1024x538.png",
                       height: imageHeight,
                       width: 80,
                     ),

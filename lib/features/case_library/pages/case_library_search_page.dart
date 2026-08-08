@@ -8,6 +8,8 @@ import 'package:preamble/features/case_library/models/case_library_models.dart';
 import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
 import 'package:preamble/features/case_library/theme/case_library_theme.dart';
 import 'package:preamble/features/case_library/widgets/case_library_scaffold.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:preamble/components/shared/shimmer_skeleton.dart';
 import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
 
 class CaseLibrarySearchPage extends StatefulWidget {
@@ -375,12 +377,17 @@ class _CaseLibrarySearchPageState extends State<CaseLibrarySearchPage> {
             ClipRRect(
               borderRadius: BorderRadius.circular(8.r),
               child: book.displayImages.isNotEmpty
-                  ? Image.network(
-                      book.displayImages.first.url ?? '',
+                  ? CachedNetworkImage(
+                      imageUrl: book.displayImages.first.url ?? '',
                       width: 72.w,
                       height: 72.h,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
+                      placeholder: (context, url) => const ShimmerSkeleton(
+                        width: 72,
+                        height: 72,
+                        borderRadius: 0,
+                      ),
+                      errorWidget: (context, url, error) => Container(
                         width: 72.w,
                         height: 72.h,
                         color: CaseLibraryColors.bgCream,

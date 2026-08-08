@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,6 +14,9 @@ import 'package:preamble/features/case_library/data/case_library_data.dart';
 import 'package:preamble/features/case_library/data/case_library_repository.dart';
 import 'package:preamble/features/case_library/models/case_library_models.dart';
 import 'package:preamble/features/case_library/theme/case_library_theme.dart';
+import 'package:preamble/features/case_library/widgets/case_library_tag.dart';
+import 'package:preamble/components/shared/shimmer_skeleton.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
 import 'package:preamble/features/case_library/pages/case_library_search_page.dart';
 import 'package:preamble/features/case_library/pages/case_netizen_chat_room_page.dart';
@@ -462,20 +466,16 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
     );
 
     if (source.startsWith('http')) {
-      return Image.network(
-        source,
+      return CachedNetworkImage(
+        imageUrl: source,
         fit: BoxFit.cover,
         width: double.infinity,
-        errorBuilder: (context, error, stackTrace) => imageError,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) {
-            return child;
-          }
-          return Container(
-            color: CaseLibraryColors.borderLight.withValues(alpha: 0.5),
-            child: const Center(child: CupertinoActivityIndicator()),
-          );
-        },
+        errorWidget: (context, url, error) => imageError,
+        placeholder: (context, url) => const ShimmerSkeleton(
+          width: double.infinity,
+          height: double.infinity,
+          borderRadius: 0,
+        ),
       );
     }
 
@@ -1997,6 +1997,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
         _CaseDossierBottomSheets(this).showNoteBottomSheet(context);
       },
       onFollow: () {
+        HapticFeedback.lightImpact();
         setState(() {
           _isFollowed = !_isFollowed;
         });
@@ -2009,6 +2010,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
         );
       },
       onSave: () {
+        HapticFeedback.lightImpact();
         setState(() {
           _isSaved = !_isSaved;
         });

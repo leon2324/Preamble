@@ -137,6 +137,23 @@ class DocumentRepository extends ChangeNotifier {
     return drafts;
   }
 
+  Future<void> deleteDraft(String id) async {
+    _drafts.removeWhere((d) => d.id == id);
+    await saveLocalDraftsToDisk();
+    notifyListeners();
+
+    if (isBackendConfigured) {
+      try {
+        OfflineRequestQueue.instance.enqueue(
+          method: 'DELETE',
+          url: _uri('/documents/drafts/$id').toString(),
+        );
+      } catch (__) {
+        // Ignored
+      }
+    }
+  }
+
   Future<void> _syncUnsyncedDrafts() async {
     final unsynced = _drafts.where((d) => !d.isSyncedToBackend).toList();
     for (final draft in unsynced) {

@@ -15,6 +15,7 @@ import 'package:preamble/features/case_library/theme/case_library_theme.dart';
 import 'package:preamble/features/case_library/widgets/case_library_scaffold.dart';
 import 'package:preamble/features/case_library/data/case_library_repository.dart';
 import 'package:preamble/components/shared/shimmer_skeleton.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 // 定義導覽圖示的 SVG 字串。
 const String _svgBackIcon = '''
@@ -1113,27 +1114,23 @@ class _ThreeDStackedCarouselState extends State<_ThreeDStackedCarousel> {
           ),
         ],
       ),
-      child: ClipRRect(
+child: ClipRRect(
         borderRadius: BorderRadius.circular(16.r),
         child: Stack(
           children: [
             Positioned.fill(
-              child: Image.network(
-                bgImageUrl,
+              child: CachedNetworkImage(
+                imageUrl: bgImageUrl,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Image.asset(
-                    'assets/images/case_library_v2/case_library_v2_case_book_cover.png',
-                    fit: BoxFit.cover,
-                  );
-                },
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Image.asset(
-                    'assets/images/case_library_v2/case_library_v2_case_book_cover.png',
-                    fit: BoxFit.cover,
-                  );
-                },
+                placeholder: (context, url) => const ShimmerSkeleton(
+                  width: double.infinity,
+                  height: double.infinity,
+                  borderRadius: 0,
+                ),
+                errorWidget: (context, url, error) => Image.asset(
+                  'assets/images/case_library_v2/case_library_v2_case_book_cover.png',
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Positioned.fill(

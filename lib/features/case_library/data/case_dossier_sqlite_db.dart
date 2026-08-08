@@ -22,9 +22,18 @@ class CaseDossierSqliteDb {
 
     return await openDatabase(
       pathString,
-      version: 1,
+      version: 2,
       onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
     );
+  }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute('CREATE INDEX IF NOT EXISTS idx_cases_year ON cases(year)');
+      await db.execute('CREATE INDEX IF NOT EXISTS idx_cases_isFavorite ON cases(isFavorite)');
+      await db.execute('CREATE INDEX IF NOT EXISTS idx_cases_tags ON cases(tags)');
+    }
   }
 
   Future<void> _onCreate(Database db, int version) async {
@@ -74,6 +83,8 @@ class CaseDossierSqliteDb {
     // 建立索引加速搜尋
     await db.execute('CREATE INDEX idx_cases_category ON cases(category)');
     await db.execute('CREATE INDEX idx_cases_year ON cases(year)');
+    await db.execute('CREATE INDEX idx_cases_isFavorite ON cases(isFavorite)');
+    await db.execute('CREATE INDEX idx_cases_tags ON cases(tags)');
 
     // 第一次建庫時自動寫入 15 案高品質真實案件作為種子資料 (Seeding)
     await _seedDatabase(db);

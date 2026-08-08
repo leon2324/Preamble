@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:preamble/app/app_state.dart';
@@ -403,6 +404,7 @@ class _FollowingPageState extends State<FollowingPage> {
           backendStatus: appState.documentRepository.backendStatusLabel,
           onCreateDraft: _createQuickDraft,
           onOpenDraft: _openDraftPreview,
+          onDeleteDraft: appState.documentRepository.deleteDraft,
         );
       case _FollowPage.plan:
         return _PlanView(appState: appState, onUpgrade: _showPlanInfo);

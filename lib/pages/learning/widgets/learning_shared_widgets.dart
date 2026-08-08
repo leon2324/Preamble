@@ -4,6 +4,7 @@ import 'package:preamble/components/home/v2/home_v2_palette.dart';
 import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
 import 'package:preamble/pages/learning/widgets/notebook_aesthetics.dart';
 import 'package:preamble/theme/app_colors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 /// 學習頁共用 hero 圖片。
 ///
@@ -15,29 +16,26 @@ Widget buildLearningHeroImage({
   required BoxFit fit,
 }) {
   if (imageUrl != null && imageUrl.isNotEmpty) {
-    return Image.network(
-      imageUrl,
+    return CachedNetworkImage(
+      imageUrl: imageUrl,
       fit: fit,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-        return Stack(
-          fit: StackFit.expand,
-          children: [
-            Image.asset(localAsset, fit: fit),
-            const Center(
-              child: SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white70),
-                ),
+      placeholder: (context, url) => Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset(localAsset, fit: fit),
+          const Center(
+            child: SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white70),
               ),
             ),
-          ],
-        );
-      },
-      errorBuilder: (context, error, stackTrace) {
+          ),
+        ],
+      ),
+      errorWidget: (context, url, error) {
         return Image.asset(localAsset, fit: fit);
       },
     );

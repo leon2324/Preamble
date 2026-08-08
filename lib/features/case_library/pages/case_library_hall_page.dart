@@ -7,6 +7,8 @@ import 'package:preamble/features/case_library/pages/case_dossier_detail_page.da
 import 'package:preamble/features/case_library/pages/case_library_search_page.dart';
 import 'package:preamble/features/case_library/theme/case_library_theme.dart';
 import 'package:preamble/features/case_library/widgets/case_library_scaffold.dart';
+import 'package:preamble/components/shared/shimmer_skeleton.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
 import 'package:preamble/features/case_library/data/case_library_repository.dart';
 
@@ -757,16 +759,21 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
 
   Widget _buildCaseCover(String coverSource) {
     if (coverSource.startsWith('http')) {
-      return Image.network(
-        coverSource,
+      return SizedBox(
         height: 120.h,
         width: double.infinity,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => Container(
-          height: 120.h,
-          width: double.infinity,
-          color: CaseLibraryColors.bgCream,
-          child: const Center(child: Icon(Icons.broken_image)),
+        child: CachedNetworkImage(
+          imageUrl: coverSource,
+          fit: BoxFit.cover,
+          placeholder: (context, url) => const ShimmerSkeleton(
+            width: double.infinity,
+            height: double.infinity,
+            borderRadius: 0,
+          ),
+          errorWidget: (context, url, error) => Image.asset(
+            'assets/images/case_library_v2/case_library_v2_case_book_cover.png',
+            fit: BoxFit.cover,
+          ),
         ),
       );
     } else {
