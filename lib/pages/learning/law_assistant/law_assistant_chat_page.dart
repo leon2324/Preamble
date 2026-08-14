@@ -699,32 +699,33 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
             ? '${message.answer!.problemDirection}\n${message.answer!.relatedContent}'
             : message.content);
 
-    final title = switch (templateType) {
-      DocumentTemplateType.rentalDepositNegotiation => '租屋押金返還協商函',
-      DocumentTemplateType.carAccidentChecklist => '車禍損害賠償與和解協議草案',
-      DocumentTemplateType.laborDisputeMessage => '勞資爭議給付協商函',
-      DocumentTemplateType.consumerComplaint => '消費爭議瑕疵申訴函',
-      DocumentTemplateType.depositDemand => '郵局存證信函 (催告履行)',
-    };
+    // 🧠 透過後台大腦 100% 自主生成量身打造之動態公文結構
+    final dynamicDoc = DynamicLegalDrafterBrain.generateFromFactDescription(
+      rawFacts: facts,
+    );
+
+    final title = dynamicDoc.title;
+    final formalContent = dynamicDoc.toFormalDocumentText();
 
     try {
       final appState = PreambleScope.of(context);
       final draft = await appState.documentRepository.createDraft(
-        templateType: templateType,
+        templateType: DocumentTemplateType.dynamicCustom,
         title: title,
         input: DocumentTemplateInput(
-          senderName: '本人 (申請人)',
-          receiverName: '相對人 (對方當事人)',
+          senderName: dynamicDoc.senderName,
+          receiverName: dynamicDoc.receiverName,
           facts: facts,
-          evidence: message.insight?.keyEvidences.join('、') ?? '通訊紀錄、相關單據',
+          evidence: dynamicDoc.evidences.join('、'),
+          dynamicDocument: dynamicDoc,
         ),
       );
 
       if (!mounted) return;
       CustomToast.show(
         context,
-        '已為您萃取對話內容並生成草稿！',
-        icon: Icons.check_circle_outline_rounded,
+        '已由 AI 大腦自主編排法律條款並生成草稿！',
+        icon: Icons.auto_awesome_rounded,
       );
 
       await Navigator.of(context).push(
@@ -732,6 +733,7 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
           builder: (_) => LegalDocumentExportPage(
             title: draft.title,
             content: draft.content,
+            dynamicDocument: dynamicDoc,
           ),
         ),
       );
@@ -741,7 +743,8 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
         MaterialPageRoute<void>(
           builder: (_) => LegalDocumentExportPage(
             title: title,
-            content: '【$title】\n\n一、事件事實：\n$facts\n\n二、主張與要求：\n依相關法規請求相對人於文到後盡速處理。',
+            content: formalContent,
+            dynamicDocument: dynamicDoc,
           ),
         ),
       );

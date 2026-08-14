@@ -356,7 +356,28 @@ class DocumentRepository extends ChangeNotifier {
     String? title,
   }) {
     final now = DateTime.now();
-    final template = _templates.firstWhere((item) => item.type == type);
+
+    if (type == DocumentTemplateType.dynamicCustom &&
+        input.dynamicDocument != null) {
+      final dynDoc = input.dynamicDocument!;
+      return DocumentDraft(
+        id: 'local-dynamic-${now.microsecondsSinceEpoch}',
+        title: title ?? dynDoc.title,
+        content: dynDoc.toFormalDocumentText(),
+        templateType: type,
+        createdAt: now,
+        isMock: true,
+        disclaimer: lawAppLegalDisclaimer,
+        isSyncedToBackend: false,
+        sourceLabel: 'AI 智慧大腦生成',
+        dynamicDocument: dynDoc,
+      );
+    }
+
+    final template = _templates.firstWhere(
+      (item) => item.type == type,
+      orElse: () => _templates.first,
+    );
     final sender = input.senderName.trim().isEmpty ? '本人' : input.senderName;
     final receiver =
         input.receiverName.trim().isEmpty ? '相對人' : input.receiverName;

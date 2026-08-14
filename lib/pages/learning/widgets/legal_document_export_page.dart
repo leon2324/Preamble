@@ -13,10 +13,12 @@ class LegalDocumentExportPage extends StatefulWidget {
     super.key,
     required this.title,
     required this.content,
+    this.dynamicDocument,
   });
 
   final String title;
   final String content;
+  final DynamicLegalDocument? dynamicDocument;
 
   @override
   State<LegalDocumentExportPage> createState() =>
@@ -72,6 +74,7 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
     return PdfStyleBuilder.buildDocumentPdf(
       title: widget.title,
       content: widget.content,
+      dynamicDocument: widget.dynamicDocument,
       themeStyle: PdfThemeStyle.morandiGreen,
     );
   }

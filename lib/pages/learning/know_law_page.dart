@@ -35,6 +35,7 @@ import 'package:preamble/data/learning/supabase_learning_service.dart';
 import 'package:preamble/components/assistant/law_assistant_insight_card.dart';
 import 'package:preamble/data/documents/document_models.dart';
 import 'package:preamble/data/documents/document_repository.dart';
+import 'package:preamble/data/documents/dynamic_legal_drafter_brain.dart';
 
 import 'dart:async';
 import 'dart:io';
