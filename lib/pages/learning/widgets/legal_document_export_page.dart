@@ -244,6 +244,9 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    final appState = PreambleScope.of(context);
+    final isPro = appState.subscriptionService.isProOrHigher;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -251,6 +254,17 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
           style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            tooltip: isPro ? 'PRO 專業會員尊享' : '升級 PRO 去除浮水印',
+            icon: Icon(
+              Icons.workspace_premium_rounded,
+              color: isPro ? const Color(0xFFD4AF37) : Colors.white70,
+              size: 22.sp,
+            ),
+            onPressed: () => MorandiPaywallSheet.show(context),
+          ),
+        ],
       ),
       body: Stack(
         children: [

@@ -6,6 +6,7 @@ import 'package:preamble/app/build_info.dart';
 import 'package:preamble/theme/adaptive_layout.dart';
 import 'package:preamble/components/navigation/app_shell_content_insets.dart';
 import 'package:preamble/theme/app_colors.dart';
+import 'package:preamble/components/subscription/morandi_paywall_sheet.dart';
 import 'package:preamble/pages/profile/widgets/profile_widgets.dart';
 import 'package:preamble/pages/profile/widgets/profile_editor.dart';
 import 'package:preamble/pages/profile/apple_ecosystem_demo_page.dart';
@@ -166,30 +167,62 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
                 SizedBox(height: 12.h),
 
-                // 方案與額度膠囊 Badge
-                Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 14.w, vertical: 5.h),
-                  decoration: BoxDecoration(
-                    color: appState.isSubscriber
-                        ? AppColors.accent.withValues(alpha: 0.12)
-                        : AppColors.primary.withValues(alpha: 0.06),
-                    borderRadius: BorderRadius.circular(100.r),
-                    border: Border.all(
-                      color: appState.isSubscriber
-                          ? AppColors.accent
-                          : AppColors.primary.withValues(alpha: 0.15),
-                      width: 1.w,
+                // 方案與額度膠囊 Badge（可點擊直接開啟付費牆）
+                GestureDetector(
+                  onTap: () => MorandiPaywallSheet.show(context),
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+                    decoration: BoxDecoration(
+                      color: appState.subscriptionService.isProOrHigher
+                          ? const Color(0xFFE5C07B).withValues(alpha: 0.15)
+                          : AppColors.primary.withValues(alpha: 0.06),
+                      borderRadius: BorderRadius.circular(100.r),
+                      border: Border.all(
+                        color: appState.subscriptionService.isProOrHigher
+                            ? const Color(0xFFE5C07B)
+                            : AppColors.primary.withValues(alpha: 0.15),
+                        width: 1.w,
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    '${appState.accessTier.label}方案 ｜ 今日 AI 額度：${appState.remainingAiQuota}',
-                    style: TextStyle(
-                      fontSize: 11.sp,
-                      color: appState.isSubscriber
-                          ? AppColors.accent
-                          : AppColors.primary,
-                      fontWeight: FontWeight.bold,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          appState.subscriptionService.isProOrHigher
+                              ? Icons.workspace_premium_rounded
+                              : Icons.bolt_rounded,
+                          size: 14.sp,
+                          color: appState.subscriptionService.isProOrHigher
+                              ? const Color(0xFFD4AF37)
+                              : AppColors.primary,
+                        ),
+                        SizedBox(width: 4.w),
+                        Text(
+                          appState.subscriptionService.isProOrHigher
+                              ? '${appState.subscriptionService.status.tierDisplayName} ｜ 無限次 AI'
+                              : '免費用戶 ｜ 今日 AI 額度：${appState.subscriptionService.remainingAiQuota}',
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            color: appState.subscriptionService.isProOrHigher
+                                ? const Color(0xFFD4AF37)
+                                : AppColors.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        if (!appState.subscriptionService.isProOrHigher) ...[
+                          SizedBox(width: 4.w),
+                          Text(
+                            '升級',
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              color: const Color(0xFF2C5E43),
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   ),
                 ),
@@ -208,6 +241,41 @@ class _ProfilePageState extends State<ProfilePage> {
           LearningProgressBanner(appState: appState),
 
           SizedBox(height: 20.h),
+
+          // 會員尊榮服務 (Grouped List Style)
+          GroupedSettingsList(
+            title: '會員尊榮權益',
+            tiles: [
+              SettingsTile(
+                icon: Icons.workspace_premium_rounded,
+                iconColor: const Color(0xFFD4AF37),
+                title: appState.subscriptionService.isProOrHigher
+                    ? '管理 PRO 會員訂閱'
+                    : '升級 PRO 專業版會員',
+                subtitle: appState.subscriptionService.isProOrHigher
+                    ? '有效期限至 ${appState.subscriptionService.status.expiryDate?.toString().split(' ').first ?? '自動續訂中'}'
+                    : '解鎖 100% 動態公文生成、去浮水印與無限 AI 問診',
+                trailing: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE5C07B),
+                    borderRadius: BorderRadius.circular(6.r),
+                  ),
+                  child: Text(
+                    appState.subscriptionService.isProOrHigher ? '已開通' : '立即解鎖',
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF1E2824),
+                    ),
+                  ),
+                ),
+                onTap: () => MorandiPaywallSheet.show(context),
+              ),
+            ],
+          ),
+
+          SizedBox(height: 16.h),
 
           // 設定與個人化 (Grouped List Style)
           GroupedSettingsList(

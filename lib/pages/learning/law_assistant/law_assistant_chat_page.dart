@@ -510,6 +510,18 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
       return;
     }
 
+    final appState = PreambleScope.of(context);
+    final allowed = await appState.subscriptionService.consumeAiQuota();
+    if (!allowed) {
+      if (!mounted) return;
+      MorandiPaywallSheet.show(
+        context,
+        headline: '今日免費問診次數已達上限',
+        subHeadline: '升級 PRO 專業會員，立即享有無限次 AI 深度法律諮詢與全功能書狀生成！',
+      );
+      return;
+    }
+
     _replyController.clear();
     final now = DateTime.now();
 

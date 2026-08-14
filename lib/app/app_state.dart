@@ -12,7 +12,12 @@ import 'package:preamble/platform/ios_today_case_widget_bridge.dart';
 import 'package:preamble/theme/app_colors.dart'; // 匯入色票以利動態設定主題色 index
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:preamble/data/subscription/subscription_service.dart';
+import 'package:preamble/data/subscription/subscription_models.dart';
+
 export 'package:preamble/data/user/law_app_access_tier.dart';
+export 'package:preamble/data/subscription/subscription_models.dart';
+export 'package:preamble/data/subscription/subscription_service.dart';
 
 /// App 層級狀態：會員層級、深色模式與後端 token 預留點。
 ///
@@ -34,20 +39,23 @@ class PreambleState extends ChangeNotifier implements AuthTokenProvider {
   static const _showNavbarLabelsKey = 'lawAppShowNavbarLabels';
   static const _accentColorIndexKey = 'lawAppAccentColorIndex';
 
-  PreambleState({AuthService? authService})
+  PreambleState({AuthService? authService, SubscriptionService? subscriptionService})
       : _authService = authService ??
             (const String.fromEnvironment('PREAMBLE_API_BASE_URL')
                     .trim()
                     .isNotEmpty
                 ? BackendAuthService()
-                : DemoAuthService()) {
+                : DemoAuthService()),
+        subscriptionService = subscriptionService ?? SubscriptionService() {
     documentRepository = DocumentRepository(authTokenProvider: this);
     documentRepository.addListener(notifyListeners);
+    this.subscriptionService.addListener(notifyListeners);
   }
 
   PreambleAccessTier _accessTier = PreambleAccessTier.guest;
   PreambleUser _currentUser = PreambleUser.guest();
   final AuthService _authService;
+  final SubscriptionService subscriptionService;
   late final DocumentRepository documentRepository;
   bool _isDarkMode = false;
   String? _authToken;

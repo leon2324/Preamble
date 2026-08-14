@@ -36,6 +36,7 @@ import 'package:preamble/components/assistant/law_assistant_insight_card.dart';
 import 'package:preamble/data/documents/document_models.dart';
 import 'package:preamble/data/documents/document_repository.dart';
 import 'package:preamble/data/documents/dynamic_legal_drafter_brain.dart';
+import 'package:preamble/components/subscription/morandi_paywall_sheet.dart';
 
 import 'dart:async';
 import 'dart:io';
