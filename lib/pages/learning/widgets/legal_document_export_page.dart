@@ -445,48 +445,83 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
                     ),
                   ),
                 ),
-                child: Row(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    // 複製按鈕
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        icon: const Icon(Icons.copy_rounded, size: 16),
-                        label: const Text('僅複製本文'),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: isDark
-                              ? Colors.grey.shade300
-                              : AppColors.textPrimary,
-                          side: BorderSide(
-                            color: isDark
-                                ? const Color(0xFF354454)
-                                : const Color(0xFFCCCCCC),
+                    Row(
+                      children: [
+                        // 複製按鈕
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            icon: const Icon(Icons.copy_rounded, size: 16),
+                            label: const Text('僅複製本文'),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: isDark
+                                  ? Colors.grey.shade300
+                                  : AppColors.textPrimary,
+                              side: BorderSide(
+                                color: isDark
+                                    ? const Color(0xFF354454)
+                                    : const Color(0xFFCCCCCC),
+                              ),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.r)),
+                              padding: EdgeInsets.symmetric(vertical: 12.h),
+                            ),
+                            onPressed: _copyToClipboard,
                           ),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.r)),
-                          padding: EdgeInsets.symmetric(vertical: 12.h),
                         ),
-                        onPressed: _copyToClipboard,
-                      ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: FilledButton.icon(
+                            icon: CaseLibrarySvgIcon(
+                              CaseLibrarySvgIcons.chevronRight,
+                              size: 14.sp,
+                              color: Colors.white,
+                            ),
+                            label: const Text('匯出 PDF'),
+                            style: FilledButton.styleFrom(
+                              backgroundColor: HomeV2Palette.trustGreen,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.r)),
+                              padding: EdgeInsets.symmetric(vertical: 12.h),
+                            ),
+                            onPressed: _exportPdf,
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 12.w),
-                    // PDF 匯出由 pdf 產生 bytes，再交給 printing 開啟系統分享。
-                    // 沒有在這裡保留圖片匯出入口，避免正式版出現尚未實作的格式宣稱。
-                    Expanded(
-                      child: FilledButton.icon(
-                        icon: CaseLibrarySvgIcon(
-                          CaseLibrarySvgIcons.chevronRight,
-                          size: 14.sp,
-                          color: Colors.white,
+                    SizedBox(height: 8.h),
+                    // 律師審核交辦入口
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextButton.icon(
+                        onPressed: () {
+                          final brief = widget.dynamicDocument != null
+                              ? CaseBriefPackager.fromDynamicDocument(widget.dynamicDocument!)
+                              : CaseBrief(
+                                  disputeCategory: widget.title,
+                                  factSummary: widget.content,
+                                  demands: const ['委託專業律師審核書狀條款'],
+                                  evidences: const ['相關證據與公文草稿'],
+                                  possibleLegalBasis: const [],
+                                );
+                          LawyerReferralSheet.show(context, caseBrief: brief);
+                        },
+                        icon: Icon(
+                          Icons.gavel_rounded,
+                          size: 15.sp,
+                          color: isDark ? const Color(0xFFE5C07B) : const Color(0xFF9E6800),
                         ),
-                        label: const Text('匯出 PDF'),
-                        style: FilledButton.styleFrom(
-                          backgroundColor: HomeV2Palette.trustGreen,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.r)),
-                          padding: EdgeInsets.symmetric(vertical: 12.h),
+                        label: Text(
+                          '需要更周全保障？交辦專業執業律師審核此份書狀',
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.bold,
+                            color: isDark ? const Color(0xFFE5C07B) : const Color(0xFF9E6800),
+                          ),
                         ),
-                        onPressed: _exportPdf,
                       ),
                     ),
                   ],

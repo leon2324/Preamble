@@ -667,6 +667,10 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
                       message: message,
                       onConvertToDocument: (templateType, facts) =>
                           _handleConvertToDocument(templateType, facts, message),
+                      onConsultLawyer: () {
+                        final brief = CaseBriefPackager.fromAssistantMessage(message);
+                        LawyerReferralSheet.show(context, caseBrief: brief);
+                      },
                     ),
                   if (_isLoading)
                     const _AssistantStatusCard(message: '小法助正在整理方向...'),
@@ -848,10 +852,12 @@ class _LawAssistantChatBubble extends StatelessWidget {
   const _LawAssistantChatBubble({
     required this.message,
     this.onConvertToDocument,
+    this.onConsultLawyer,
   });
 
   final LawAssistantMessage message;
   final void Function(DocumentTemplateType, String)? onConvertToDocument;
+  final VoidCallback? onConsultLawyer;
 
   @override
   Widget build(BuildContext context) {
@@ -1004,6 +1010,7 @@ class _LawAssistantChatBubble extends StatelessWidget {
                   child: _AssistantAnswerContent(
                     message: message,
                     onConvertToDocument: onConvertToDocument,
+                    onConsultLawyer: onConsultLawyer,
                   ),
                 ),
               ],
@@ -1019,10 +1026,12 @@ class _AssistantAnswerContent extends StatelessWidget {
   const _AssistantAnswerContent({
     required this.message,
     this.onConvertToDocument,
+    this.onConsultLawyer,
   });
 
   final LawAssistantMessage message;
   final void Function(DocumentTemplateType, String)? onConvertToDocument;
+  final VoidCallback? onConsultLawyer;
 
   @override
   Widget build(BuildContext context) {
@@ -1046,6 +1055,7 @@ class _AssistantAnswerContent extends StatelessWidget {
             LawAssistantInsightCard(
               insight: insight,
               onConvertToDocument: onConvertToDocument!,
+              onConsultLawyer: onConsultLawyer,
             ),
           ],
           SizedBox(height: 10.h),
@@ -1076,6 +1086,7 @@ class _AssistantAnswerContent extends StatelessWidget {
           LawAssistantInsightCard(
             insight: insight,
             onConvertToDocument: onConvertToDocument!,
+            onConsultLawyer: onConsultLawyer,
           ),
           SizedBox(height: 8.h),
         ],
