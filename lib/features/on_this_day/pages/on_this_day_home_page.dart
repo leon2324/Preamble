@@ -88,8 +88,16 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
     if (casesToUse.isEmpty) return;
 
     final randomCase = casesToUse[random.nextInt(casesToUse.length)];
+    // [審查修復] 閏年安全檢查：若隨機選到 2/29 的案件，但 _anchorDate.year (2026)
+    // 不是閏年，Dart 的 DateTime(2026, 2, 29) 會自動滾入 3/1，導致載入錯誤日期。
+    // 修復方式：遇到 2/29 時改用最近的閏年 (2024) 建構日期。
+    // 教學重點：Dart DateTime 建構子不會拋出例外，而是「自動進位」，
+    // 這種靜默行為很容易造成邏輯錯誤，必須在建構前自行檢查。
+    final year = (randomCase.month == 2 && randomCase.day == 29)
+        ? 2024
+        : _anchorDate.year;
     final targetDate =
-        DateTime(_anchorDate.year, randomCase.month, randomCase.day);
+        DateTime(year, randomCase.month, randomCase.day);
 
     setState(() {
       _selectedDate = targetDate;
@@ -548,8 +556,11 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
         ],
       );
     } else {
-      final index = (date.month * 31 + date.day) % onThisDayLegalQuotes.length;
-      final quoteItem = onThisDayLegalQuotes[index];
+      // [審查修復] 原本這裡重複計算了 index 與 quoteItem，
+      // 但 _loadCasesForSelectedDate() 已經將結果存入 _selectedQuote。
+      // 直接使用 _selectedQuote 即可，避免兩處計算不一致的風險。
+      final quoteItem = _selectedQuote ?? onThisDayLegalQuotes[
+          (date.month * 31 + date.day) % onThisDayLegalQuotes.length];
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

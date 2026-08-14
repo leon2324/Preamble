@@ -1,13 +1,30 @@
 import 'package:flutter/material.dart';
 
-/// Preamble 色彩主題輪廓
+// =============================================================================
+// [審查標記] 此檔案為設計階段遺留的死碼。
+// =============================================================================
+// PreambleTheme 從未被專案中任何檔案使用。main.dart 的 MaterialApp 使用的是
+// lib/theme/app_theme.dart 中的 AppTheme.light() / AppTheme.dark()。
+//
+// 保留此檔案供日後參考（例如需要回顧最初的色彩規劃），
+// 但請勿在新程式碼中引用這個類別。若需要調整主題，請修改 AppTheme。
+//
+// 教學重點：在專案演進過程中，早期的原型程式碼很容易變成死碼。
+// 建議定期執行 `flutter analyze` 搭配 unused_element 規則來偵測此類問題。
+// =============================================================================
+
+/// [已棄用] 設計階段的色彩主題原型，已被 AppTheme 取代。
+/// 請使用 lib/theme/app_theme.dart 中的 AppTheme 類別。
+@Deprecated('Use AppTheme from lib/theme/app_theme.dart instead. '
+    'This class was an early design prototype and is not referenced anywhere in the codebase.')
 enum PreambleThemeAccent {
   morandiGreen, // 莫蘭迪綠 (預設)
   charcoalDark, // 典雅黑炭
   navyBlue,     // 海軍藍
 }
 
-/// 集中管理 App 深淺色主題與客製化色彩
+/// [已棄用] 設計階段的主題管理原型，已被 AppTheme 取代。
+@Deprecated('Use AppTheme from lib/theme/app_theme.dart instead.')
 class PreambleTheme {
   static ThemeData getLightTheme({
     PreambleThemeAccent accent = PreambleThemeAccent.morandiGreen,

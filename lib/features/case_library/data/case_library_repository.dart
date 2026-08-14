@@ -240,48 +240,16 @@ class CaseLibraryRepository {
     }
   }
 
+  // [審查修復] toggleFavorite / toggleFollowing 原本手動逐一複製 CaseBook 的 30+ 個屬性，
+  // 這種寫法非常脆弱：只要 CaseBook model 新增欄位，這裡忘記加就會造成資料遺失。
+  // 同一個檔案的 getCaseDetail() 已經正確使用 copyWith()，這裡也統一改用。
+  // 教學重點：永遠優先使用 copyWith() 做不可變物件的部分更新，避免手動屬性複製。
   Future<void> toggleFavorite(String id, bool isFavorite) async {
     await CaseDossierSqliteDb.instance.updateFavorite(id, isFavorite);
     // 同步更新記憶體快取
     final index = _casesCache.indexWhere((c) => c.id == id);
     if (index != -1) {
-      final old = _casesCache[index];
-      _casesCache[index] = CaseBook(
-        id: old.id,
-        titleZh: old.titleZh,
-        titleEn: old.titleEn,
-        shortTitleZh: old.shortTitleZh,
-        shortTitleEn: old.shortTitleEn,
-        displayCode: old.displayCode,
-        year: old.year,
-        location: old.location,
-        status: old.status,
-        category: old.category,
-        tags: old.tags,
-        memoryLine: old.memoryLine,
-        shortDescription: old.shortDescription,
-        oneSentenceSummary: old.oneSentenceSummary,
-        background: old.background,
-        fullStory: old.fullStory,
-        timeline: old.timeline,
-        people: old.people,
-        legalIssues: old.legalIssues,
-        investigationAndTrial: old.investigationAndTrial,
-        courtReasoning: old.courtReasoning,
-        judgmentResult: old.judgmentResult,
-        relatedLaws: old.relatedLaws,
-        socialImpact: old.socialImpact,
-        relatedCases: old.relatedCases,
-        sources: old.sources,
-        isFavorite: isFavorite,
-        isFollowing: old.isFollowing,
-        concurringDissentingOpinions: old.concurringDissentingOpinions,
-        courtArguments: old.courtArguments,
-        expertOpinions: old.expertOpinions,
-        mediaReferences: old.mediaReferences,
-        images: old.images,
-        basicInfo: old.basicInfo,
-      );
+      _casesCache[index] = _casesCache[index].copyWith(isFavorite: isFavorite);
     }
   }
 
@@ -290,43 +258,7 @@ class CaseLibraryRepository {
     // 同步更新記憶體快取
     final index = _casesCache.indexWhere((c) => c.id == id);
     if (index != -1) {
-      final old = _casesCache[index];
-      _casesCache[index] = CaseBook(
-        id: old.id,
-        titleZh: old.titleZh,
-        titleEn: old.titleEn,
-        shortTitleZh: old.shortTitleZh,
-        shortTitleEn: old.shortTitleEn,
-        displayCode: old.displayCode,
-        year: old.year,
-        location: old.location,
-        status: old.status,
-        category: old.category,
-        tags: old.tags,
-        memoryLine: old.memoryLine,
-        shortDescription: old.shortDescription,
-        oneSentenceSummary: old.oneSentenceSummary,
-        background: old.background,
-        fullStory: old.fullStory,
-        timeline: old.timeline,
-        people: old.people,
-        legalIssues: old.legalIssues,
-        investigationAndTrial: old.investigationAndTrial,
-        courtReasoning: old.courtReasoning,
-        judgmentResult: old.judgmentResult,
-        relatedLaws: old.relatedLaws,
-        socialImpact: old.socialImpact,
-        relatedCases: old.relatedCases,
-        sources: old.sources,
-        isFavorite: old.isFavorite,
-        isFollowing: isFollowing,
-        concurringDissentingOpinions: old.concurringDissentingOpinions,
-        courtArguments: old.courtArguments,
-        expertOpinions: old.expertOpinions,
-        mediaReferences: old.mediaReferences,
-        images: old.images,
-        basicInfo: old.basicInfo,
-      );
+      _casesCache[index] = _casesCache[index].copyWith(isFollowing: isFollowing);
     }
   }
 }

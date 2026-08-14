@@ -6,7 +6,31 @@ import 'package:preamble/platform/ios_deep_link_bridge.dart';
 import 'package:preamble/platform/ios_quick_ask_intent_bridge.dart';
 import 'package:preamble/platform/ios_statute_spotlight_bridge.dart';
 
-/// iOS 生態系意圖與深層連結統一路由中樞。
+// =============================================================================
+// [審查標記] 此檔案的功能已被 NativeStartupCoordinator + main.dart 取代。
+// =============================================================================
+// IosIntentRouter 與 NativeStartupCoordinator 存在嚴重的競態條件：
+// 兩者都會呼叫 consumeInitialPrompt / consumeInitialQuery / consumeInitialLink，
+// 而 Platform Channel 的 consume 行為是「讀取即銷毀」。
+// 若兩者同時註冊監聽，會導致：
+//   1. 其中一方讀到 null（intent 已被另一方消費）
+//   2. 兩方各自處理不同事件，觸發矛盾導航
+//      （IosIntentRouter 用 Navigator.push，main.dart 改 selectedIndex）
+//
+// 此外，_handleDeepLink 中對 today_case 做 Navigator.push(KnowLawPage())，
+// 但 KnowLawPage 是 IndexedStack 中的主分頁。
+// Push 後使用者會看到一個沒有底部導覽的重複頁面。
+//
+// 教學重點：當有多個元件競爭消費同一個 one-shot 事件時，
+// 必須指定唯一的「消費者」，而非讓多個模組各自嘗試消費。
+// =============================================================================
+
+/// [已棄用] iOS 生態系意圖與深層連結統一路由中樞。
+/// 此類別的功能已由 [NativeStartupCoordinator] + main.dart 的事件處理取代。
+/// 請勿在新程式碼中使用此類別。
+@Deprecated('Use NativeStartupCoordinator instead. '
+    'IosIntentRouter has a race condition with NativeStartupCoordinator '
+    'when consuming platform channel intents. See code_audit_report_2026-08-14.md for details.')
 class IosIntentRouter {
   const IosIntentRouter._();
 

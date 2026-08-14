@@ -67,7 +67,10 @@ class CalendarSyncService {
     }
   }
 
-  /// 同步訴訟待辦至 iOS 系統級提醒事項 (利用 URL Scheme 模擬並提供手感震動)
+  /// 同步訴訟待辦至 iOS 系統級提醒事項 (利用 URL Scheme 模擬並提供手感震動)。
+  /// 教學註解：iOS 原生提醒事項 (Reminders) 無法直接透過公開 URL Scheme 傳入複雜參數，
+  /// 因此目前的實作僅喚起系統提醒 App 並提供觸覺回饋。
+  /// 未來若需要真正新增提醒事項，應改用 EventKit (Swift) 透過 MethodChannel 實作。
   static Future<void> syncToReminders({
     required String taskName,
     required DateTime dueDate,
@@ -75,11 +78,8 @@ class CalendarSyncService {
     // 觸發 Apple Taptic Engine 的警示雙震動 (Selection Click)
     await HapticFeedback.selectionClick();
 
-    // 技術說明：iOS 原生提醒事項 (Reminders) 無法直接透過公開 URL Scheme 傳入複雜參數建立任務，
-    // 但在實體層面，我們會引導調用 iOS 提醒事項的 App ID：x-apple-reminderkit://
-    // 或者以彈出確認通知卡片引導使用者，此處我們成功橋接到系統級的提醒通知並觸發震動反饋。
-    final String formattedDate =
-        '${dueDate.year}/${dueDate.month}/${dueDate.day}';
+    // [審查修復] 移除了未使用的 formattedDate 變數（死碼）。
+    // 原本建構了 '${dueDate.year}/${dueDate.month}/${dueDate.day}' 但從未使用。
     final Uri reminderUri = Uri.parse('x-apple-reminder://');
     if (await canLaunchUrl(reminderUri)) {
       await launchUrl(reminderUri);
