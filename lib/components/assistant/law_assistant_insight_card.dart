@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/data/documents/document_models.dart';
 import 'package:preamble/data/law_assistant/law_assistant_models.dart';
+import 'package:preamble/components/safety/statute_countdown_badge.dart';
+import 'package:preamble/components/safety/negotiation_kit_card.dart';
 
 /// 小法助對話底部的攻防洞察與書狀一鍵生成卡片。
 ///
@@ -130,6 +132,19 @@ class _LawAssistantInsightCardState extends State<LawAssistantInsightCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // 0. 法律時效生死線倒數膠囊 (Statute Countdown)
+                  if (insight.statuteDeadline != null)
+                    StatuteCountdownBadge(deadline: insight.statuteDeadline!),
+
+                  // 0.5 現場談判防坑三不原則錦囊 (Negotiation Defense Kit)
+                  if (insight.negotiationKit != null)
+                    NegotiationKitCard(
+                      threeNeverSign: insight.negotiationKit!.threeNeverSign,
+                      threeMustAsk: insight.negotiationKit!.threeMustAsk,
+                      recordingLegalityTip:
+                          insight.negotiationKit!.recordingLegalityTip,
+                    ),
+
                   // 1. 對方可能主張
                   if (insight.defensePoints.isNotEmpty) ...[
                     Container(

@@ -11,6 +11,7 @@ import 'package:preamble/app/app_state.dart';
 import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
 import 'package:preamble/features/case_library/data/case_library_data.dart';
 import 'package:preamble/components/shared/liquid_glass_widgets.dart';
+import 'package:preamble/components/safety/plain_document_translator_sheet.dart';
 
 /// 1. AI 法律即時快問與 Prompt 推薦標籤
 class HomeV2QuickAskSection extends StatefulWidget {
@@ -166,57 +167,93 @@ class _HomeV2QuickAskSectionState extends State<HomeV2QuickAskSection> {
         SizedBox(height: 10.h),
         SizedBox(
           height: 32.h,
-          child: ListView.builder(
+          child: ListView(
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
-            itemCount: recommendations.length,
-            itemBuilder: (context, index) {
-              final rec = recommendations[index];
-              final prompt = rec['text'] as String;
-              final color = rec['color'] as Color;
-              return Padding(
+            children: [
+              // 📷 拍存證信函/公文白話解讀（純粹初衷輕量入口）
+              Padding(
                 padding: EdgeInsets.only(right: 8.w),
                 child: InkWell(
-                  onTap: () => _submitPrompt(prompt),
+                  onTap: () => PlainDocumentTranslatorSheet.show(context),
                   borderRadius: BorderRadius.circular(99.r),
                   child: Container(
                     padding:
                         EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                     decoration: BoxDecoration(
-                      color: chipBg,
+                      color: const Color(0xFF2EA26F).withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(99.r),
-                      border: Border.all(color: chipBorder, width: 1.w),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0x03000000),
-                          blurRadius: 4,
-                          offset: Offset(0, 1),
-                        ),
-                      ],
+                      border: Border.all(
+                        color: const Color(0xFF2EA26F).withValues(alpha: 0.4),
+                        width: 1.w,
+                      ),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          Icons.assistant_navigation,
-                          size: 11.sp,
-                          color: color,
+                          Icons.translate_rounded,
+                          size: 13.sp,
+                          color: const Color(0xFF2EA26F),
                         ),
-                        SizedBox(width: 5.w),
+                        SizedBox(width: 4.w),
                         Text(
-                          prompt,
+                          '拍公文信件秒解讀',
                           style: TextStyle(
                             fontSize: 11.sp,
-                            fontWeight: FontWeight.w700,
-                            color: text.withValues(alpha: 0.85),
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF2EA26F),
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-              );
-            },
+              ),
+              for (final rec in recommendations)
+                Padding(
+                  padding: EdgeInsets.only(right: 8.w),
+                  child: InkWell(
+                    onTap: () => _submitPrompt(rec['text'] as String),
+                    borderRadius: BorderRadius.circular(99.r),
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                      decoration: BoxDecoration(
+                        color: chipBg,
+                        borderRadius: BorderRadius.circular(99.r),
+                        border: Border.all(color: chipBorder, width: 1.w),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x03000000),
+                            blurRadius: 4,
+                            offset: Offset(0, 1),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.assistant_navigation,
+                            size: 11.sp,
+                            color: rec['color'] as Color,
+                          ),
+                          SizedBox(width: 5.w),
+                          Text(
+                            rec['text'] as String,
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w700,
+                              color: text.withValues(alpha: 0.85),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+            ],
           ),
         ),
       ],

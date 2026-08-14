@@ -79,17 +79,28 @@ class _LearningSearchTopBar extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.centerRight,
-            child: SizedBox(
-              width: 42.w,
-              height: 42.w,
-              child: InkWell(
-                onTap: onShowHistory,
-                child: Icon(
-                  Icons.history,
-                  size: 24.sp,
-                  color: const Color(0xFF2C5E43),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  tooltip: '對造公文白話翻譯',
+                  icon: Icon(
+                    Icons.translate_rounded,
+                    size: 20.sp,
+                    color: const Color(0xFF2C5E43),
+                  ),
+                  onPressed: () => PlainDocumentTranslatorSheet.show(context),
                 ),
-              ),
+                IconButton(
+                  tooltip: '諮詢歷史紀錄',
+                  icon: Icon(
+                    Icons.history,
+                    size: 22.sp,
+                    color: const Color(0xFF2C5E43),
+                  ),
+                  onPressed: onShowHistory,
+                ),
+              ],
             ),
           ),
         ],
@@ -633,10 +644,11 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
       // 台灣繁體中文教學註解：本頁輸入框已用 viewInsets 手動避開鍵盤，這裡關閉 Scaffold 自動縮高，避免鍵盤高度被重複計算造成底部 overflow。
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFFFAF8F5), // 暖米色背景
-      body: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: Column(
+      body: PrivacyShieldWrapper(
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: Column(
           children: [
             SafeArea(
               bottom: false,
@@ -700,6 +712,7 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

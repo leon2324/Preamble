@@ -40,6 +40,8 @@ import 'package:preamble/components/subscription/morandi_paywall_sheet.dart';
 import 'package:preamble/data/lawyer/lawyer_models.dart';
 import 'package:preamble/data/lawyer/lawyer_repository.dart';
 import 'package:preamble/components/lawyer/lawyer_referral_sheet.dart';
+import 'package:preamble/components/safety/plain_document_translator_sheet.dart';
+import 'package:preamble/components/safety/privacy_shield_wrapper.dart';
 
 import 'dart:async';
 import 'dart:io';
