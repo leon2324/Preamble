@@ -32,6 +32,9 @@ import 'package:preamble/pages/learning/widgets/custom_classroom_dialog.dart';
 import 'package:preamble/pages/learning/models/learning_topic_option.dart';
 import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
 import 'package:preamble/data/learning/supabase_learning_service.dart';
+import 'package:preamble/components/assistant/law_assistant_insight_card.dart';
+import 'package:preamble/data/documents/document_models.dart';
+import 'package:preamble/data/documents/document_repository.dart';
 
 import 'dart:async';
 import 'dart:io';

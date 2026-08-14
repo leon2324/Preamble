@@ -651,7 +651,11 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
                       },
                     ),
                   for (final message in messages)
-                    _LawAssistantChatBubble(message: message),
+                    _LawAssistantChatBubble(
+                      message: message,
+                      onConvertToDocument: (templateType, facts) =>
+                          _handleConvertToDocument(templateType, facts, message),
+                    ),
                   if (_isLoading)
                     const _AssistantStatusCard(message: '小法助正在整理方向...'),
                   if (_errorMessage != null)
@@ -669,7 +673,7 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
                 ],
               ),
             ),
-            _buildSuggestionPills(),
+            _buildSuggestionPills(messages),
             _LawAssistantReplyBox(
               controller: _replyController,
               bottomInset: bottomInset,
@@ -684,12 +688,84 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
     );
   }
 
-  Widget _buildSuggestionPills() {
-    final suggestions = const [
+  Future<void> _handleConvertToDocument(
+    DocumentTemplateType templateType,
+    String suggestedFacts,
+    LawAssistantMessage message,
+  ) async {
+    final facts = suggestedFacts.isNotEmpty
+        ? suggestedFacts
+        : (message.answer?.problemDirection.isNotEmpty == true
+            ? '${message.answer!.problemDirection}\n${message.answer!.relatedContent}'
+            : message.content);
+
+    final title = switch (templateType) {
+      DocumentTemplateType.rentalDepositNegotiation => '租屋押金返還協商函',
+      DocumentTemplateType.carAccidentChecklist => '車禍損害賠償與和解協議草案',
+      DocumentTemplateType.laborDisputeMessage => '勞資爭議給付協商函',
+      DocumentTemplateType.consumerComplaint => '消費爭議瑕疵申訴函',
+      DocumentTemplateType.depositDemand => '郵局存證信函 (催告履行)',
+    };
+
+    try {
+      final appState = PreambleScope.of(context);
+      final draft = await appState.documentRepository.createDraft(
+        templateType: templateType,
+        title: title,
+        input: DocumentTemplateInput(
+          senderName: '本人 (申請人)',
+          receiverName: '相對人 (對方當事人)',
+          facts: facts,
+          evidence: message.insight?.keyEvidences.join('、') ?? '通訊紀錄、相關單據',
+        ),
+      );
+
+      if (!mounted) return;
+      CustomToast.show(
+        context,
+        '已為您萃取對話內容並生成草稿！',
+        icon: Icons.check_circle_outline_rounded,
+      );
+
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => LegalDocumentExportPage(
+            title: draft.title,
+            content: draft.content,
+          ),
+        ),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => LegalDocumentExportPage(
+            title: title,
+            content: '【$title】\n\n一、事件事實：\n$facts\n\n二、主張與要求：\n依相關法規請求相對人於文到後盡速處理。',
+          ),
+        ),
+      );
+    }
+  }
+
+  Widget _buildSuggestionPills(List<LawAssistantMessage> messages) {
+    // 優先使用最後一則 Assistant 訊息的智慧追問，若無則展示通用建議
+    List<String> suggestions = const [
       '房東違約會怎麼算？',
       '押金不退還怎麼辦？',
       '寄存證信函範本',
     ];
+
+    if (messages.isNotEmpty) {
+      final lastAssistant = messages.lastWhere(
+        (m) => m.role == LawAssistantMessageRole.assistant,
+        orElse: () => messages.last,
+      );
+      if (lastAssistant.insight?.suggestedFollowUps.isNotEmpty == true) {
+        suggestions = lastAssistant.insight!.suggestedFollowUps;
+      }
+    }
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
       child: SingleChildScrollView(
@@ -709,14 +785,32 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(100.r),
                   border: Border.all(color: const Color(0xFFEDE4D8)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.02),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
-                child: Text(
-                  text,
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    color: const Color(0xFF2C5E43),
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.help_outline_rounded,
+                      size: 13.sp,
+                      color: const Color(0xFF2C5E43),
+                    ),
+                    SizedBox(width: 4.w),
+                    Text(
+                      text,
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        color: const Color(0xFF2C5E43),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             );
@@ -736,9 +830,13 @@ const String _svgSparkles = '''
 ''';
 
 class _LawAssistantChatBubble extends StatelessWidget {
-  const _LawAssistantChatBubble({required this.message});
+  const _LawAssistantChatBubble({
+    required this.message,
+    this.onConvertToDocument,
+  });
 
   final LawAssistantMessage message;
+  final void Function(DocumentTemplateType, String)? onConvertToDocument;
 
   @override
   Widget build(BuildContext context) {
@@ -869,7 +967,7 @@ class _LawAssistantChatBubble extends StatelessWidget {
                 ),
                 SizedBox(height: 6.h),
                 Container(
-                  constraints: BoxConstraints(maxWidth: 280.w),
+                  constraints: BoxConstraints(maxWidth: 290.w),
                   padding: EdgeInsets.all(14.w),
                   decoration: BoxDecoration(
                     color: assistantPalette.cardSurface,
@@ -888,7 +986,10 @@ class _LawAssistantChatBubble extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: _AssistantAnswerContent(message: message),
+                  child: _AssistantAnswerContent(
+                    message: message,
+                    onConvertToDocument: onConvertToDocument,
+                  ),
                 ),
               ],
             ),
@@ -900,14 +1001,20 @@ class _LawAssistantChatBubble extends StatelessWidget {
 }
 
 class _AssistantAnswerContent extends StatelessWidget {
-  const _AssistantAnswerContent({required this.message});
+  const _AssistantAnswerContent({
+    required this.message,
+    this.onConvertToDocument,
+  });
 
   final LawAssistantMessage message;
+  final void Function(DocumentTemplateType, String)? onConvertToDocument;
 
   @override
   Widget build(BuildContext context) {
     final assistantPalette = _LawAssistantPalette.of(context);
     final answer = message.answer;
+    final insight = message.insight;
+
     if (answer == null || answer.isEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -920,6 +1027,12 @@ class _AssistantAnswerContent extends StatelessWidget {
               color: assistantPalette.primaryText,
             ),
           ),
+          if (insight != null && onConvertToDocument != null) ...[
+            LawAssistantInsightCard(
+              insight: insight,
+              onConvertToDocument: onConvertToDocument!,
+            ),
+          ],
           SizedBox(height: 10.h),
           const _AssistantLegalDisclaimer(),
         ],
@@ -943,6 +1056,13 @@ class _AssistantAnswerContent extends StatelessWidget {
                 .toList(growable: false),
           ),
           SizedBox(height: 10.h),
+        ],
+        if (insight != null && onConvertToDocument != null) ...[
+          LawAssistantInsightCard(
+            insight: insight,
+            onConvertToDocument: onConvertToDocument!,
+          ),
+          SizedBox(height: 8.h),
         ],
         _AssistantLegalDisclaimer(message: answer.disclaimer),
       ],
