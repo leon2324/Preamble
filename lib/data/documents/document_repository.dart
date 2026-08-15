@@ -553,6 +553,8 @@ class DocumentRepository extends ChangeNotifier {
         return '請說明商品或服務處理方案、退款或補償方式，以及預計回覆時間。';
       case DocumentTemplateType.laborDisputeMessage:
         return '請協助確認工時、薪資、加班費或離職相關爭議的公司認定依據。';
+      case DocumentTemplateType.dynamicCustom:
+        return '依 AI 分析建議，確認具體請求與相應附件。';
     }
   }
 
@@ -567,6 +569,8 @@ class DocumentRepository extends ChangeNotifier {
         return '訂單、發票、商品照片、客服對話、退貨紀錄、付款紀錄。';
       case DocumentTemplateType.laborDisputeMessage:
         return '班表、打卡紀錄、薪資單、通訊軟體指派工作紀錄、補休紀錄。';
+      case DocumentTemplateType.dynamicCustom:
+        return '依具體爭議情境提出之佐證。';
     }
   }
 }

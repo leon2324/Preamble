@@ -494,6 +494,7 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
       updatedAt: now,
       categoryLabel: '臨時',
       isGuest: widget.isGuestSession,
+      isMock: true,
       messages: [
         LawAssistantMessage(
           id: 'guest-user-message',
@@ -577,8 +578,8 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
       (chunk) {
         if (!mounted) return;
         streamingContent += chunk.textChunk;
-        if (chunk.citations.isNotEmpty) {
-          streamingCitations = chunk.citations;
+        if (chunk.citations?.isNotEmpty == true) {
+          streamingCitations = chunk.citations ?? [];
         }
         if (chunk.fullAnswer != null) {
           streamingAnswer = chunk.fullAnswer;
@@ -1052,7 +1053,7 @@ class _AssistantAnswerContent extends StatelessWidget {
     final answer = message.answer;
     final insight = message.insight;
 
-    if (answer == null || answer.isEmpty) {
+    if (answer == null) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1087,9 +1088,9 @@ class _AssistantAnswerContent extends StatelessWidget {
         _AssistantAnswerBlock(title: '先準備的證據', text: answer.evidenceNeeded),
         _AssistantAnswerBlock(title: '下一步可以補充什麼', text: answer.nextStep),
         _AssistantAnswerBlock(title: '建議行動', text: answer.recommendedActions),
-        if (message.citations.isNotEmpty) ...[
+        if (message.citations?.isNotEmpty == true) ...[
           SourceCitationList(
-            items: message.citations
+            items: message.citations!
                 .map((citation) => citation.toViewData())
                 .toList(growable: false),
           ),

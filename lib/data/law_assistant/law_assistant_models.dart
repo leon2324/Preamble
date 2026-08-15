@@ -360,3 +360,169 @@ class LawAssistantDefenseInsight {
     );
   }
 }
+
+/// 小法助訊息角色 (教學型註解：定義訊息發送者)
+enum LawAssistantMessageRole {
+  user,
+  assistant,
+}
+
+/// 來源類型 (教學型註解：定義引用的來源為官方或其他)
+enum LawAssistantCitationSourceType {
+  official,
+  other,
+}
+
+/// 小法助引用來源 (教學型註解：儲存引用的標題與網址等資訊)
+class LawAssistantCitation {
+  const LawAssistantCitation({
+    required this.title,
+    required this.sourceType,
+    this.url,
+    this.updatedAt,
+  });
+
+  final String title;
+  final LawAssistantCitationSourceType sourceType;
+  final String? url;
+  final DateTime? updatedAt;
+
+  SourceCitationViewData toViewData() {
+    return SourceCitationViewData(
+      title: title,
+      sourceType: sourceType.name == 'official' ? '官方資料' : '其他資料',
+      url: url ?? '',
+      updatedAt: updatedAt,
+    );
+  }
+}
+
+/// 結構化法律建議與解答 (教學型註解：儲存小法助結構化的分析結果)
+class LawAssistantAnswer {
+  const LawAssistantAnswer({
+    required this.problemDirection,
+    required this.relatedContent,
+    required this.nextStep,
+    required this.evidenceNeeded,
+    required this.possibleLegalIssues,
+    required this.recommendedActions,
+    required this.disclaimer,
+  });
+
+  final String problemDirection;
+  final String relatedContent;
+  final String nextStep;
+  final String evidenceNeeded;
+  final String possibleLegalIssues;
+  final String recommendedActions;
+  final String disclaimer;
+}
+
+/// 小法助聊天訊息 (教學型註解：儲存單則聊天記錄)
+class LawAssistantMessage {
+  const LawAssistantMessage({
+    required this.id,
+    required this.role,
+    required this.content,
+    required this.createdAt,
+    this.answer,
+    this.citations,
+    this.warningText,
+    this.insight,
+  });
+
+  final String id;
+  final LawAssistantMessageRole role;
+  final String content;
+  final DateTime createdAt;
+  final LawAssistantAnswer? answer;
+  final List<LawAssistantCitation>? citations;
+  final String? warningText;
+  final LawAssistantDefenseInsight? insight;
+}
+
+/// 小法助對話工作階段 (教學型註解：儲存完整對話串資訊)
+class LawAssistantConversation {
+  const LawAssistantConversation({
+    required this.id,
+    required this.title,
+    required this.preview,
+    required this.updatedAt,
+    this.categoryLabel,
+    required this.isGuest,
+    required this.isMock,
+    this.sourceCitations,
+    required this.messages,
+  });
+
+  final String id;
+  final String title;
+  final String preview;
+  final DateTime updatedAt;
+  final String? categoryLabel;
+  final bool isGuest;
+  final bool isMock;
+  final List<LawAssistantCitation>? sourceCitations;
+  final List<LawAssistantMessage> messages;
+
+  LawAssistantConversation copyWith({
+    String? id,
+    String? title,
+    String? preview,
+    DateTime? updatedAt,
+    String? categoryLabel,
+    bool? isGuest,
+    bool? isMock,
+    List<LawAssistantCitation>? sourceCitations,
+    List<LawAssistantMessage>? messages,
+  }) {
+    return LawAssistantConversation(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      preview: preview ?? this.preview,
+      updatedAt: updatedAt ?? this.updatedAt,
+      categoryLabel: categoryLabel ?? this.categoryLabel,
+      isGuest: isGuest ?? this.isGuest,
+      isMock: isMock ?? this.isMock,
+      sourceCitations: sourceCitations ?? this.sourceCitations,
+      messages: messages ?? this.messages,
+    );
+  }
+
+  factory LawAssistantConversation.fromJson(Map<String, dynamic> json) {
+    return LawAssistantConversation(
+      id: json['id'] as String? ?? '',
+      title: json['title'] as String? ?? '',
+      preview: json['preview'] as String? ?? '',
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.tryParse(json['updatedAt'].toString()) ?? DateTime.now()
+          : DateTime.now(),
+      categoryLabel: json['categoryLabel'] as String?,
+      isGuest: json['isGuest'] as bool? ?? false,
+      isMock: json['isMock'] as bool? ?? false,
+      messages: const [],
+    );
+  }
+}
+
+/// 小法助串流對話區塊 (教學型註解：用於串流接收對話的內容)
+class LawAssistantStreamChunk {
+  const LawAssistantStreamChunk({
+    required this.textChunk,
+    this.isFinished = false,
+    this.citations,
+    this.fullAnswer,
+  });
+
+  final String textChunk;
+  final bool? isFinished;
+  final List<LawAssistantCitation>? citations;
+  final LawAssistantAnswer? fullAnswer;
+
+  factory LawAssistantStreamChunk.fromJson(Map<String, dynamic> json) {
+    return LawAssistantStreamChunk(
+      textChunk: json['textChunk'] as String? ?? '',
+      isFinished: json['isFinished'] as bool? ?? false,
+    );
+  }
+}

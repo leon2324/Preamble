@@ -2256,6 +2256,8 @@ IconData _iconForTemplate(DocumentTemplateType type) {
       return Icons.local_mall_outlined;
     case DocumentTemplateType.laborDisputeMessage:
       return Icons.balance_outlined;
+    case DocumentTemplateType.dynamicCustom:
+      return Icons.auto_awesome_outlined;
   }
 }
 

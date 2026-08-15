@@ -83,7 +83,9 @@ void main() {
 
     testWidgets('NegotiationKitCard toggles expansion',
         (WidgetTester tester) async {
-      const kit = NegotiationDefenseKit(
+      // [審查修復] NegotiationDefenseKit 的 List 欄位無法在 const 上下文中被存取，
+      // 因此移除 const 宣告，改為 final。
+      final kit = NegotiationDefenseKit(
         threeNeverSign: ['❌ 絕不簽署放棄押金切結書'],
         threeMustAsk: ['❓ 請問折舊核算基準為何？'],
         recordingLegalityTip: '💡 錄音自保提示',
@@ -92,7 +94,7 @@ void main() {
       await tester.pumpWidget(
         ScreenUtilInit(
           designSize: const Size(375, 812),
-          builder: (context, child) => const MaterialApp(
+          builder: (context, child) => MaterialApp(
             home: Scaffold(
               body: NegotiationKitCard(
                 threeNeverSign: kit.threeNeverSign,

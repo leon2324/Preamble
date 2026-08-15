@@ -7,6 +7,12 @@ import 'package:preamble/theme/app_colors.dart';
 import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
 import 'package:printing/printing.dart';
 import 'package:preamble/pages/learning/widgets/pdf_style_builder.dart';
+import 'package:preamble/app/app_state.dart';
+import 'package:preamble/data/documents/document_models.dart';
+import 'package:preamble/components/subscription/morandi_paywall_sheet.dart';
+import 'package:preamble/components/lawyer/lawyer_referral_sheet.dart';
+import 'package:preamble/data/lawyer/lawyer_repository.dart';
+import 'package:preamble/data/lawyer/lawyer_models.dart';
 
 class LegalDocumentExportPage extends StatefulWidget {
   const LegalDocumentExportPage({

@@ -24,7 +24,7 @@ class CaseBriefPackager {
           (message.answer?.evidenceNeeded.isNotEmpty == true
               ? [message.answer!.evidenceNeeded]
               : const ['相關通訊對話紀錄與單據']),
-      possibleLegalBasis: message.citations.map((c) => c.title).toList(),
+      possibleLegalBasis: message.citations?.map((c) => c.title).toList() ?? [],
       opponentProfile: '相對人',
     );
   }

@@ -29,8 +29,8 @@ void main() {
       final chunk = LawAssistantStreamChunk.fromJson(json);
       expect(chunk.textChunk, '民法第 184 條：');
       expect(chunk.isFinished, false);
-      expect(chunk.citations.length, 1);
-      expect(chunk.citations.first.title, '全國法規資料庫');
+      expect(chunk.citations!.length, 1);
+      expect(chunk.citations!.first.title, '全國法規資料庫');
     });
   });
 

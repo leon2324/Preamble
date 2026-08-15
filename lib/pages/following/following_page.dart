@@ -960,6 +960,8 @@ String _tagForTemplate(DocumentTemplateType type) {
     case DocumentTemplateType.carAccidentChecklist:
     case DocumentTemplateType.consumerComplaint:
       return '其他';
+    case DocumentTemplateType.dynamicCustom:
+      return 'AI 專屬';
   }
 }
 

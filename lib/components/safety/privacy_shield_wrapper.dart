@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter/gestures.dart';
 
 /// 全域緊急防窺與偽裝模式包裹層 (Privacy Shield Wrapper)。
 ///
@@ -121,7 +122,7 @@ class _PrivacyShieldWrapperState extends State<PrivacyShieldWrapper> {
 }
 
 /// 自定義雙指雙擊手勢識別器
-class _TwoFingerDoubleTapGestureRecognizer extends RawGestureRecognizer {
+class _TwoFingerDoubleTapGestureRecognizer extends GestureRecognizer {
   VoidCallback? onTwoFingerDoubleTap;
   int _pointersCount = 0;
   DateTime? _lastTapTime;
@@ -142,7 +143,6 @@ class _TwoFingerDoubleTapGestureRecognizer extends RawGestureRecognizer {
     super.addAllowedPointer(event);
   }
 
-  @override
   void handleEvent(PointerEvent event) {
     if (event is PointerUpEvent || event is PointerCancelEvent) {
       _pointersCount = 0;
@@ -150,9 +150,14 @@ class _TwoFingerDoubleTapGestureRecognizer extends RawGestureRecognizer {
   }
 
   @override
-  String get debugDescription => 'twoFingerDoubleTap';
+  void acceptGesture(int pointer) {}
 
   @override
+  void rejectGesture(int pointer) {}
+
+  @override
+  String get debugDescription => 'twoFingerDoubleTap';
+
   void didStopTrackingLastPointer(int pointer) {
     _pointersCount = 0;
   }
