@@ -7,7 +7,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// 使用者個人自救案件記事數據倉庫 (User Case Journal Repository)
 class UserCaseJournalRepository extends ChangeNotifier {
-  UserCaseJournalRepository({SharedPreferences? prefs}) : _prefs = prefs {
+  static UserCaseJournalRepository? _instance;
+
+  factory UserCaseJournalRepository({SharedPreferences? prefs}) {
+    if (prefs != null) {
+      return UserCaseJournalRepository._internal(prefs: prefs);
+    }
+    return _instance ??= UserCaseJournalRepository._internal();
+  }
+
+  @visibleForTesting
+  static void resetInstanceForTesting() {
+    _instance = null;
+  }
+
+  UserCaseJournalRepository._internal({SharedPreferences? prefs}) : _prefs = prefs {
     _loadFromDisk();
   }
 

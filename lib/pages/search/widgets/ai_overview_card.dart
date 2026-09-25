@@ -80,6 +80,8 @@ class _TypewriterTextState extends State<TypewriterText> {
   int _currentIndex = 0;
   bool _isTyping = false;
 
+  Timer? _typeTimer;
+
   @override
   void initState() {
     super.initState();
@@ -95,6 +97,7 @@ class _TypewriterTextState extends State<TypewriterText> {
   }
 
   void _startTyping() {
+    _typeTimer?.cancel();
     setState(() {
       _displayedText = '';
       _currentIndex = 0;
@@ -110,7 +113,7 @@ class _TypewriterTextState extends State<TypewriterText> {
         _currentIndex++;
         _displayedText = widget.text.substring(0, _currentIndex);
       });
-      Future.delayed(widget.speed, _type);
+      _typeTimer = Timer(widget.speed, _type);
     } else {
       setState(() {
         _isTyping = false;
@@ -121,6 +124,7 @@ class _TypewriterTextState extends State<TypewriterText> {
   @override
   void dispose() {
     _isTyping = false;
+    _typeTimer?.cancel();
     super.dispose();
   }
 
@@ -330,6 +334,8 @@ class _AssistantOverviewCard extends StatelessWidget {
     required this.onLengthChanged,
     required this.onNotebookSave,
     required this.onContinueChat,
+    this.defenseInsight,
+    this.onSaveToJournal,
   });
 
   final String query;
@@ -341,6 +347,8 @@ class _AssistantOverviewCard extends StatelessWidget {
   final ValueChanged<String> onLengthChanged;
   final VoidCallback onNotebookSave;
   final VoidCallback onContinueChat;
+  final LawAssistantDefenseInsight? defenseInsight;
+  final VoidCallback? onSaveToJournal;
 
   @override
   Widget build(BuildContext context) {
@@ -426,6 +434,214 @@ class _AssistantOverviewCard extends StatelessWidget {
             ),
             SizedBox(height: 16.h),
             TypewriterText(text: summary),
+
+            // 💡 小法助即時解方與維權防禦模組
+            if (defenseInsight != null) ...[
+              SizedBox(height: 14.h),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(12.w),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(
+                    color: _SearchColors.primary.withValues(alpha: 0.25),
+                    width: 1.2.w,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _SearchColors.primary.withValues(alpha: 0.04),
+                      blurRadius: 6,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 2.5.h),
+                          decoration: BoxDecoration(
+                            color: _SearchColors.primary.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(6.r),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.auto_awesome,
+                                size: 11.sp,
+                                color: _SearchColors.primary,
+                              ),
+                              SizedBox(width: 4.w),
+                              Text(
+                                '小法助即時解方',
+                                style: TextStyle(
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w800,
+                                  color: _SearchColors.primary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        Expanded(
+                          child: Text(
+                            defenseInsight!.disputeCategory,
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.bold,
+                              color: _SearchColors.text,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (defenseInsight!.statuteDeadline != null) ...[
+                      SizedBox(height: 8.h),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFFF7ED),
+                          borderRadius: BorderRadius.circular(6.r),
+                          border: Border.all(color: const Color(0xFFFDBA74)),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.access_time_filled_rounded,
+                              size: 11.sp,
+                              color: const Color(0xFFC2410C),
+                            ),
+                            SizedBox(width: 5.w),
+                            Expanded(
+                              child: Text(
+                                '時效提醒：${defenseInsight!.statuteDeadline!.title} (${defenseInsight!.statuteDeadline!.durationDays}天) | ${defenseInsight!.statuteDeadline!.legalBasis}',
+                                style: TextStyle(
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: const Color(0xFF9A3412),
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                    SizedBox(height: 10.h),
+                    // 談判交涉金句框
+                    Container(
+                      padding: EdgeInsets.all(10.w),
+                      decoration: BoxDecoration(
+                        color: _SearchColors.softMint.withValues(alpha: 0.55),
+                        borderRadius: BorderRadius.circular(8.r),
+                        border: Border.all(
+                          color: _SearchColors.border.withValues(alpha: 0.6),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.format_quote_rounded,
+                                size: 13.sp,
+                                color: _SearchColors.primary,
+                              ),
+                              SizedBox(width: 4.w),
+                              Text(
+                                '談判自保防禦金句',
+                                style: TextStyle(
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: _SearchColors.primary,
+                                ),
+                              ),
+                              const Spacer(),
+                              InkWell(
+                                onTap: () {
+                                  Clipboard.setData(ClipboardData(
+                                    text: defenseInsight!.tacticalGoldenPhrase,
+                                  ));
+                                  CustomToast.show(context, '已複製談判自保金句！');
+                                },
+                                borderRadius: BorderRadius.circular(4.r),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.copy_rounded,
+                                        size: 10.sp,
+                                        color: _SearchColors.primary,
+                                      ),
+                                      SizedBox(width: 2.w),
+                                      Text(
+                                        '複製',
+                                        style: TextStyle(
+                                          fontSize: 9.5.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: _SearchColors.primary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 5.h),
+                          Text(
+                            defenseInsight!.tacticalGoldenPhrase,
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              color: _SearchColors.text,
+                              height: 1.4,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (onSaveToJournal != null) ...[
+                      SizedBox(height: 10.h),
+                      SizedBox(
+                        width: double.infinity,
+                        child: FilledButton.icon(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: _SearchColors.primary,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.r),
+                            ),
+                            padding: EdgeInsets.symmetric(vertical: 8.h),
+                          ),
+                          icon: Icon(Icons.folder_special_rounded, size: 14.sp),
+                          label: Text(
+                            '📁 建立「自救記事」進度追蹤',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 11.5.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          onPressed: onSaveToJournal,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+
             SizedBox(height: 14.h),
             _AssistantCitationsRow(query: query),
             SizedBox(height: 16.h),
@@ -503,7 +719,7 @@ class _AssistantOverviewCard extends StatelessWidget {
                       width: 14.w,
                       height: 14.w,
                     ),
-                    label: Text('💬 繼續聊聊',
+                    label: Text('💬 深入問診',
                         style: _SearchText.captionStrong()
                             .copyWith(color: Colors.white)),
                     onPressed: onContinueChat,
@@ -527,28 +743,24 @@ class _AssistantCitationsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     // 依據搜尋詞動態決定引用來源
     final List<Map<String, String>> citations = [];
-    if (query.contains('詐欺')) {
-      citations.addAll([
-        {'id': '[1]', 'title': '刑法第 339 條 (普通詐欺罪)', 'tag': '法規'},
-        {'id': '[2]', 'title': '最高法院 109 年台上字第 123 號判決', 'tag': '判例'},
-        {'id': '[3]', 'title': '警政署 165 全民防騙網', 'tag': '官方'},
-      ]);
-    } else if (query.contains('瑕疵') ||
-        query.contains('退貨') ||
-        query.contains('消費') ||
-        query.contains('鑑賞期') ||
-        query.contains('7天')) {
-      citations.addAll([
-        {'id': '[1]', 'title': '消保法第 19 條 (鑑賞期退貨)', 'tag': '法規'},
-        {'id': '[2]', 'title': '民法第 354 條 (物之瑕疵擔保)', 'tag': '法規'},
-        {'id': '[3]', 'title': '行政院消保處 消費申訴指南', 'tag': '官方'},
-      ]);
-    } else {
-      citations.addAll([
-        {'id': '[1]', 'title': '民法第 184 條 (獨立侵權責任)', 'tag': '法規'},
-        {'id': '[2]', 'title': '司法院法規檢索系統', 'tag': '官方'},
-      ]);
+    final matchingStatutes = TaiwanStatuteCanon.findBestMatchingStatutes(query, limit: 2);
+    for (int i = 0; i < matchingStatutes.length; i++) {
+      final s = matchingStatutes[i];
+      final category = s.disputeCategories.isNotEmpty ? s.disputeCategories.first : '規範要旨';
+      final title = '${s.fullCitation} ($category)';
+      citations.add({'id': '[${i + 1}]', 'title': title, 'tag': '法規'});
     }
+
+    final domain = TaiwanStatuteCanon.detectDisputeDomain(query);
+    final officialSource = switch (domain) {
+      TaiwanDisputeDomain.rentalAndHousing => {'id': '[${citations.length + 1}]', 'title': '內政部地政司 租賃住宅專區', 'tag': '官方'},
+      TaiwanDisputeDomain.laborAndEmployment => {'id': '[${citations.length + 1}]', 'title': '勞動部 勞工權益保障指南', 'tag': '官方'},
+      TaiwanDisputeDomain.trafficAndTort => {'id': '[${citations.length + 1}]', 'title': '警政署 道路交通事故處理規範', 'tag': '官方'},
+      TaiwanDisputeDomain.consumerProtection => {'id': '[${citations.length + 1}]', 'title': '行政院消保處 消費申訴網', 'tag': '官方'},
+      TaiwanDisputeDomain.fraudAndCybercrime => {'id': '[${citations.length + 1}]', 'title': '警政署 165 全民防騙網', 'tag': '官方'},
+      _ => {'id': '[${citations.length + 1}]', 'title': '司法院法規檢索系統', 'tag': '官方'},
+    };
+    citations.add(officialSource);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

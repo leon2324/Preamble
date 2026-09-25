@@ -18,6 +18,10 @@ import 'package:preamble/data/cases/case_repository.dart';
 import 'package:preamble/data/statutes/statute_item.dart';
 import 'package:preamble/data/statutes/statute_repository.dart';
 import 'package:preamble/pages/journal/data/journal_page_items.dart';
+import 'package:preamble/data/journal/user_case_journal_repository.dart';
+import 'package:preamble/data/law_assistant/law_assistant_models.dart';
+import 'package:preamble/data/legal_brain/legal_syllogism_engine.dart';
+import 'package:preamble/data/legal_brain/taiwan_statute_canon.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 part 'widgets/ai_overview_card.dart';
@@ -84,6 +88,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
   String _aiTone = '白話'; // '白話' or '專業'
   String _aiLength = '精簡'; // '精簡' or '詳細'
   String _aiGeneratedSummary = '';
+  LawAssistantDefenseInsight? _currentDefenseInsight;
 
   @override
   void initState() {
@@ -141,55 +146,55 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
     });
   }
 
-  // 模擬 AI 根據語氣與長度重新生成內容
+  // 啟動 AI 根據爭議事實、三段論與自救防禦模型生成內容
   void _triggerAiOverviewGeneration(String query) {
-    if (query.isEmpty) return;
+    final trimmed = query.trim();
+    if (trimmed.isEmpty) return;
     setState(() {
       _aiIsThinking = true;
     });
 
-    // 模擬網路延遲與 AI 思考過程
-    Future.delayed(const Duration(milliseconds: 1200), () {
-      if (!mounted || _query != query) return;
+    // 模擬 AI 思考與全領域三段論分析
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (!mounted || _query != trimmed) return;
+
+      final insight = LawAssistantDefenseInsight.fromContext(text: trimmed);
+      final analysis = LegalSyllogismEngine.analyzeDispute(rawDisputeFacts: trimmed);
 
       String summaryBase = '';
-      if (query.contains('詐欺')) {
-        if (_aiTone == '白話') {
-          summaryBase = _aiLength == '精簡'
-              ? '「詐欺罪」就是用騙人的手段，讓對方做出錯誤決定而把財物交出來，導致對方受損。不履行合約如果一開始沒有騙人的意思，通常只是民事問題，不一定構成犯罪喔！'
-              : '「詐欺罪」是指用欺騙的手段，使他人陷入錯誤判斷，因而處分財產並造成損害。主要成立條件包括：\n1. 行為人有欺罔行為（說謊或刻意隱瞞）。\n2. 被害人因此產生錯誤認知。\n3. 被害人因為錯誤而交付財產。\n4. 造成財產上的損害。\n5. 行為人主觀上有故意及不法所有意圖。如果只是事後不履行契約，但一開始沒有騙人意圖，通常屬民事債務糾紛，不構成刑事詐欺罪。';
+      if (_aiTone == '白話') {
+        if (_aiLength == '精簡') {
+          summaryBase = analysis.conclusionRemedy;
+          if (insight.statuteDeadline != null) {
+            summaryBase += '\n\n⏰【法定時效提醒】${insight.statuteDeadline!.title}（${insight.statuteDeadline!.durationDays}天）依${insight.statuteDeadline!.legalBasis}。';
+          }
         } else {
-          summaryBase = _aiLength == '精簡'
-              ? '依刑法第339條，本罪構成要件需具備施用詐術、被害人陷於錯誤、處分財產、財產損害及因果關係。契約不履行若欠缺主觀不法所有意圖，則屬民事不法而非刑事詐欺。'
-              : '刑事詐欺取財罪（刑法第339條）之成立，客觀要件須行為人施用詐術（欺罔手段），使相對人陷於錯誤，並因而為財產處分，致相對人或第三人受有財產上之損害，且各要件間具有相當因果關係；主觀要件則須具備詐欺故意及「意圖為自己或第三人不法之所有」。若係單純契約不履行，而無法證明行為人於締約之初即有詐欺故意及不法所有意圖，即屬民事債務不履行範疇，應循民事程序救濟。';
-        }
-      } else if (query.contains('瑕疵') ||
-          query.contains('退貨') ||
-          query.contains('消費') ||
-          query.contains('鑑賞期') ||
-          query.contains('7天')) {
-        if (_aiTone == '白話') {
-          summaryBase = _aiLength == '精簡'
-              ? '買到瑕疵商品，如果是網購可在7天內無條件退貨退款。若是一般實體店面，則需符合民法瑕疵擔保，要求退款或換貨，但要儘快通知賣家喔！'
-              : '買到瑕疵商品的權利依購買管道而定：\n1. 網路購物（郵購買賣）：享有消費者保護法第19條規定，7天鑑賞期內無條件退貨解約，不需說明理由或負擔任何費用。\n2. 實體店面購物：不適用7天鑑賞期。但如果商品有物理或價值上的瑕疵，可主張民法第354條瑕疵擔保責任，要求減少價金（打折）或解除契約（退款），若屬重大瑕疵甚至可請求損害賠償。提醒：收到貨後應立刻檢查，發現瑕疵須即時通知賣家。';
-        } else {
-          summaryBase = _aiLength == '精簡'
-              ? '消保法第19條賦予通訊交易消費者7日解約權。實體買賣則依民法第359條，買受人得主張物之瑕疵擔保，請求解除契約或減少價金；若受有損害且可歸責於出賣人，得依同法第360條請求不履行之損害賠償。'
-              : '就買受人物之瑕疵擔保權利分析如下：\n1. 特殊交易型態：若屬消費者保護法第2條之通訊交易（如網路購物），消費者得依同法第19條，於收受商品後7日內無條件解除契約，退回商品並請求返還價金。\n2. 一般買賣契約：依民法第354條規定，出賣人應負物之瑕疵擔保責任。買受人得依同法第359條，請求解除契約（退貨退款）或減少價金（折讓）。惟若瑕疵程度輕微，解除契約顯失公平者，買受人僅得請求減少價金。若商品欠缺出賣人所保證之品質，或出賣人故意不告知瑕疵者，買受人得依同法第360條，不請求減少價金或解除契約，而逕行請求不履行之損害賠償。買受人應依民法第356條負即時檢查與通知義務，以免喪失權利。';
+          final issues = analysis.identifiedIssues.take(2).map((i) => '• $i').join('\n');
+          final steps = analysis.escalationPath.take(3).map((e) => '• $e').join('\n');
+          final statutes = analysis.majorPremiseStatutes.map((s) => '• ${s.fullCitation}：${s.plainSummary}').join('\n');
+          summaryBase = '【案情與爭點透視】\n$issues\n\n'
+              '【核心法律依據】\n$statutes\n\n'
+              '【自保維權行動路徑】\n$steps\n\n'
+              '【救濟結論與建議】\n${analysis.conclusionRemedy}';
         }
       } else {
-        if (_aiTone == '白話') {
-          summaryBase = _aiLength == '精簡'
-              ? '針對「$query」，建議您詳查相關民刑事責任。如有具體爭議，可善用我的法律摘錄本記錄重點，或進一步與小法助聊聊！'
-              : '針對您查詢的「$query」：\n我們已為您彙整了相關法規與裁判案例。法律問題的判定高度依賴個案具體事實與證據。建議您可以將有用的資訊「📌 摘錄」到您的筆記本中，或者點擊下方按鈕開啟與小法助的多輪深入對話，以獲得更精確的分析與解答。';
+        if (_aiLength == '精簡') {
+          final statuteRef = analysis.majorPremiseStatutes.isNotEmpty
+              ? '依${analysis.majorPremiseStatutes.first.fullCitation}規定，'
+              : '';
+          summaryBase = '$statuteRef${analysis.conclusionRemedy} 建議保全相關書證依法進行權利主張。';
         } else {
-          summaryBase = _aiLength == '精簡'
-              ? '關於「$query」之法律爭議，須視具體客觀構成要件與因果關係而定。建議保存實體證據並依法主張瑕疵擔保或侵權損害賠償責任。'
-              : '關於「$query」之研析：\n本件法律關係之釐清，端視具體事實是否符合特定法規之構成要件。建議關係人應預先整理並留存相關契約、對話紀錄或匯款憑證等書證。您可藉由「📌 摘錄」功能彙整檢索所得之法規與判決要旨，或點選「繼續與小法助聊聊」開啟完整問答介面進行法律實務與救濟途徑之深入剖析。';
+          final statutesText = analysis.majorPremiseStatutes.take(2).map((s) => '• ${s.fullCitation}：${s.officialText}').join('\n');
+          final subsumptions = analysis.subsumptionFindings.take(3).map((f) => '• ${f.elementName}：${f.factualBasis} (舉證建議：${f.evidentiaryAdvice})').join('\n');
+          summaryBase = '【大前提（規範基礎）】\n$statutesText\n\n'
+              '【小前提（事實要件涵攝）】\n$subsumptions\n\n'
+              '【裁判結論與法律效果】\n${analysis.conclusionRemedy}\n\n'
+              '【訴訟與實務攻防策略】\n${analysis.escalationPath.join(' → ')}';
         }
       }
 
       setState(() {
+        _currentDefenseInsight = insight;
         _aiGeneratedSummary = summaryBase;
         _aiIsThinking = false;
       });
@@ -251,8 +256,26 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
       _searchError = null;
       _aiGeneratedSummary = '';
       _aiIsThinking = false;
+      _currentDefenseInsight = null;
     });
     FocusManager.instance.primaryFocus?.unfocus();
+  }
+
+  Future<void> _saveAssistantToJournal() async {
+    final keyword = _query.trim().isEmpty ? '生活法律自救案件' : _query.trim();
+    final insight = _currentDefenseInsight ??
+        LawAssistantDefenseInsight.fromContext(text: keyword);
+    final entry = UserCaseJournalRepository.fromAssistantInsight(
+      insight: insight,
+      rawFacts: keyword,
+    );
+    final repo = UserCaseJournalRepository();
+    await repo.addEntry(entry);
+    if (!mounted) return;
+    CustomToast.show(
+      context,
+      '🎉 已在「紀事」建立「${entry.title}」自救案卷！包含證據清單與時效追蹤。',
+    );
   }
 
   void _clearRecent() {
@@ -499,12 +522,16 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
           },
           onNotebookSave: _saveAssistantSummaryToNotebook,
           onContinueChat: _continueWithAssistant,
+          defenseInsight: _currentDefenseInsight,
+          onSaveToJournal: _saveAssistantToJournal,
         );
       case _SearchPage.assistant:
         return _AssistantDetail(
           query: _query,
           onOpen: _openList,
           onContinue: _continueWithAssistant,
+          defenseInsight: _currentDefenseInsight,
+          onSaveToJournal: _saveAssistantToJournal,
         );
       case _SearchPage.statutes:
         if (_isSearching) {
@@ -1156,6 +1183,8 @@ class _MixedResults extends StatelessWidget {
     required this.onLengthChanged,
     required this.onNotebookSave,
     required this.onContinueChat,
+    this.defenseInsight,
+    this.onSaveToJournal,
   });
 
   final String query;
@@ -1176,6 +1205,8 @@ class _MixedResults extends StatelessWidget {
   final ValueChanged<String> onLengthChanged;
   final VoidCallback onNotebookSave;
   final VoidCallback onContinueChat;
+  final LawAssistantDefenseInsight? defenseInsight;
+  final VoidCallback? onSaveToJournal;
 
   @override
   Widget build(BuildContext context) {
@@ -1201,6 +1232,8 @@ class _MixedResults extends StatelessWidget {
             onLengthChanged: onLengthChanged,
             onNotebookSave: onNotebookSave,
             onContinueChat: onContinueChat,
+            defenseInsight: defenseInsight,
+            onSaveToJournal: onSaveToJournal,
           ),
           SizedBox(height: 14.h),
           _ResultSection(
@@ -1255,6 +1288,8 @@ class _MixedResults extends StatelessWidget {
             onLengthChanged: onLengthChanged,
             onNotebookSave: onNotebookSave,
             onContinueChat: onContinueChat,
+            defenseInsight: defenseInsight,
+            onSaveToJournal: onSaveToJournal,
           ),
           SizedBox(height: 14.h),
         ],
@@ -1306,15 +1341,20 @@ class _AssistantDetail extends StatelessWidget {
     required this.query,
     required this.onOpen,
     required this.onContinue,
+    this.defenseInsight,
+    this.onSaveToJournal,
   });
 
   final String query;
   final ValueChanged<_SearchPage> onOpen;
   final VoidCallback onContinue;
+  final LawAssistantDefenseInsight? defenseInsight;
+  final VoidCallback? onSaveToJournal;
 
   @override
   Widget build(BuildContext context) {
-    final keyword = query.trim().isEmpty ? '詐欺罪' : query.trim();
+    final keyword = query.trim().isEmpty ? '生活法律爭議' : query.trim();
+    final insight = defenseInsight;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1336,20 +1376,39 @@ class _AssistantDetail extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('小法助重點回答', style: _SearchText.section()),
+              Text(
+                insight != null ? '💡 小法助即時解方：${insight.disputeCategory}' : '小法助重點回答',
+                style: _SearchText.section(),
+              ),
               SizedBox(height: 10.h),
-              Text('詐欺罪是指以欺罔方式，使他人陷入錯誤而處分財產，並造成財產損害。',
-                  style: _SearchText.bodyStrong()),
+              Text(
+                insight != null
+                    ? insight.tacticalGoldenPhrase
+                    : '針對本項爭議，建議先釐清雙方權利義務與關鍵書證。',
+                style: _SearchText.bodyStrong(),
+              ),
               SizedBox(height: 12.h),
-              const _CheckLine(text: '以不實之表示或隱匿重要事實'),
-              const _CheckLine(text: '使對方陷於錯誤'),
-              const _CheckLine(text: '因錯誤而為財產處分'),
-              const _CheckLine(text: '發生財產損害'),
-              SizedBox(height: 12.h),
-              Text('不構成詐欺的情形（例）', style: _SearchText.section()),
-              SizedBox(height: 8.h),
-              Text('契約不履行若沒有一開始的欺罔意圖，可能是民事債務不履行，不一定構成刑事詐欺。',
-                  style: _SearchText.body()),
+              if (insight != null) ...[
+                Text('關鍵自保與證據清單', style: _SearchText.captionStrong()),
+                SizedBox(height: 6.h),
+                for (final ev in insight.keyEvidences) ...[
+                  _CheckLine(text: ev),
+                ],
+              ] else ...[
+                const _CheckLine(text: '以不實之表示或隱匿重要事實'),
+                const _CheckLine(text: '使對方陷於錯誤'),
+                const _CheckLine(text: '因錯誤而為財產處分'),
+                const _CheckLine(text: '發生財產損害'),
+              ],
+              if (insight?.statuteDeadline != null) ...[
+                SizedBox(height: 12.h),
+                Text('法定時效提醒', style: _SearchText.section()),
+                SizedBox(height: 6.h),
+                Text(
+                  '${insight!.statuteDeadline!.title}（${insight.statuteDeadline!.durationDays}天）依據：${insight.statuteDeadline!.legalBasis}',
+                  style: _SearchText.body(),
+                ),
+              ],
             ],
           ),
         ),
@@ -1359,6 +1418,13 @@ class _AssistantDetail extends StatelessWidget {
         _NextStep(
             label: '查看生活避坑筆記', onTap: () => onOpen(_SearchPage.lifeNotes)),
         SizedBox(height: 14.h),
+        if (onSaveToJournal != null) ...[
+          _PrimaryButton(
+            label: '📁 建立「自救記事」進度追蹤',
+            onPressed: onSaveToJournal!,
+          ),
+          SizedBox(height: 10.h),
+        ],
         _PrimaryButton(label: '繼續向小法助提問', onPressed: onContinue),
       ],
     );

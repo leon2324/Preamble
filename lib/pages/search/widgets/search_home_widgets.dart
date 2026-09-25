@@ -232,6 +232,13 @@ class _InspirationCarousel extends StatelessWidget {
         Icons.home_work_outlined,
       ),
       _InspirationItem(
+        '公司無預警資遣',
+        '被雇主終止契約，爭取預告工資與資遣費。',
+        const [Color(0xFFF3EDF7), Color(0xFFE4DAEC)],
+        const Color(0xFF5A3E76),
+        Icons.badge_outlined,
+      ),
+      _InspirationItem(
         '車禍折舊估算',
         '車損維修零件折舊的法律計算公式？',
         const [Color(0xFFF7EFE5), Color(0xFFECDDC5)],
@@ -244,6 +251,13 @@ class _InspirationCarousel extends StatelessWidget {
         const [Color(0xFFECF0F7), Color(0xFFD3DFEF)],
         const Color(0xFF38527A),
         Icons.shopping_bag_outlined,
+      ),
+      _InspirationItem(
+        '借錢不還本票追討',
+        '親友欠款逾期，如何聲請法院支付命令？',
+        const [Color(0xFFFBF2EA), Color(0xFFF3DFD1)],
+        const Color(0xFF8A512A),
+        Icons.account_balance_wallet_outlined,
       ),
     ];
 
