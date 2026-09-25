@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 /// 會員方案層級
 enum SubscriptionTier {
   free,

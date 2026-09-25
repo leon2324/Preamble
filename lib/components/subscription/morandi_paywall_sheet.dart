@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/components/shared/custom_toast.dart';
-import 'package:preamble/data/subscription/subscription_models.dart';
 
 /// 緒言莫蘭迪黑金尊榮付費牆 (Morandi Premium Paywall Sheet)。
 ///
@@ -399,7 +398,9 @@ class _MorandiPaywallSheetState extends State<MorandiPaywallSheet> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 6.w,
                     children: [
                       Text(
                         plan.title,
@@ -409,8 +410,7 @@ class _MorandiPaywallSheetState extends State<MorandiPaywallSheet> {
                           color: Colors.white,
                         ),
                       ),
-                      if (plan.badge.isNotEmpty) ...[
-                        SizedBox(width: 8.w),
+                      if (plan.badge.isNotEmpty)
                         Container(
                           padding: EdgeInsets.symmetric(
                             horizontal: 6.w,
@@ -429,7 +429,6 @@ class _MorandiPaywallSheetState extends State<MorandiPaywallSheet> {
                             ),
                           ),
                         ),
-                      ],
                     ],
                   ),
                   SizedBox(height: 2.h),

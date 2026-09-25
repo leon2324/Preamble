@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:preamble/components/shared/custom_toast.dart';
 
 /// 對造公文白話文翻譯結果結構
 class PlainDocumentTranslation {

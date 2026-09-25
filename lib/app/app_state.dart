@@ -13,7 +13,6 @@ import 'package:preamble/theme/app_colors.dart'; // 匯入色票以利動態設�
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:preamble/data/subscription/subscription_service.dart';
-import 'package:preamble/data/subscription/subscription_models.dart';
 
 export 'package:preamble/data/user/law_app_access_tier.dart';
 export 'package:preamble/data/subscription/subscription_models.dart';

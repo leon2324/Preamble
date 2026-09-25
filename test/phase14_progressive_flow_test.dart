@@ -69,12 +69,14 @@ void main() {
           designSize: const Size(375, 812),
           builder: (context, child) => MaterialApp(
             home: Scaffold(
-              body: LawAssistantInsightCard(
-                insight: testInsight,
-                onConvertToDocument: (type, facts) {
-                  convertedType = type;
-                  convertedFacts = facts;
-                },
+              body: SingleChildScrollView(
+                child: LawAssistantInsightCard(
+                  insight: testInsight,
+                  onConvertToDocument: (type, facts) {
+                    convertedType = type;
+                    convertedFacts = facts;
+                  },
+                ),
               ),
             ),
           ),
@@ -90,6 +92,7 @@ void main() {
       final button = find.text(testInsight.suggestedActionLabel);
       expect(button, findsOneWidget);
 
+      await tester.ensureVisible(button);
       await tester.tap(button);
       await tester.pumpAndSettle();
 

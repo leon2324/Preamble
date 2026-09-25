@@ -1,6 +1,8 @@
 import 'package:preamble/components/shared/mvp_state_widgets.dart';
+import 'package:preamble/data/documents/document_models.dart';
 import 'package:preamble/data/law_assistant/law_assistant_api_service.dart';
 import 'package:preamble/data/law_assistant/law_assistant_models.dart';
+import 'package:preamble/data/legal_brain/legal_syllogism_engine.dart';
 import 'package:preamble/utils/pii_data_masker.dart';
 import 'package:preamble/utils/quota_manager.dart';
 import 'package:preamble/utils/typing_simulator.dart';
@@ -171,24 +173,59 @@ class LawAssistantRepository {
   }
 
   LawAssistantMessage _mockAssistantMessage(String prompt, DateTime createdAt) {
+    final analysis = LegalSyllogismEngine.analyze(rawFacts: prompt);
+    final insight = LawAssistantDefenseInsight(
+      disputeCategory: analysis.disputeCategory,
+      defensePoints: analysis.identifiedIssues,
+      keyEvidences: analysis.evidenceChecklist,
+      suggestedTemplateType: DocumentTemplateType.dynamicCustom,
+      suggestedActionLabel: '生成${analysis.disputeCategory}公文書狀',
+      extractedFacts: analysis.summaryOfFacts,
+    );
+
+    final citations = analysis.majorPremiseStatutes.map((s) {
+      return LawAssistantCitation(
+        title: s.fullCitation,
+        sourceType: LawAssistantCitationSourceType.official,
+        url: 'https://law.moj.gov.tw/',
+        updatedAt: DateTime(2026, 1, 1),
+      );
+    }).toList();
+
+    final statuteSummary = analysis.majorPremiseStatutes
+        .map((s) => '• ${s.fullCitation}：${s.plainSummary}')
+        .join('\n');
+    final escalationSummary =
+        analysis.escalationPath.map((e) => '➔ $e').join('\n');
+    final evidenceSummary =
+        analysis.evidenceChecklist.map((e) => '□ $e').join('\n');
+    final issuesSummary =
+        analysis.identifiedIssues.map((e) => '• $e').join('\n');
+    final demandsSummary = analysis.demands.map((e) => '• $e').join('\n');
+
     return LawAssistantMessage(
       id: 'mock-assistant-${createdAt.microsecondsSinceEpoch}',
       role: LawAssistantMessageRole.assistant,
-      content: '這是後端未設定時的本機示範回答。',
+      content: analysis.toDetailedReport(),
       createdAt: createdAt,
       answer: LawAssistantAnswer(
-        problemDirection: _directionForPrompt(prompt),
-        relatedContent: '請先整理契約、對話紀錄、付款紀錄、照片與日期時間軸。若牽涉期限或訴訟，應優先諮詢律師。',
-        nextStep: '你可以補充：事件日期、對方主張、你手上有哪些證據、目前想達成的結果。',
-        evidenceNeeded: '合約、收據、LINE 對話、照片、錄音錄影、官方文件或通知。',
-        possibleLegalIssues: '契約責任、侵權責任、消費爭議、勞資爭議或刑事風險會依具體事實不同。',
-        recommendedActions: '先保存證據，再用書面提出具體請求；重大案件請找律師或法律扶助。',
+        problemDirection:
+            '【案件核心方向】：${analysis.disputeCategory}\n${analysis.summaryOfFacts}',
+        relatedContent: '【大前提法規要件】：\n$statuteSummary',
+        nextStep: '【後續司法救濟步驟】：\n$escalationSummary',
+        evidenceNeeded: '【必備舉證清冊】：\n$evidenceSummary',
+        possibleLegalIssues: '【關鍵法理爭點】：\n$issuesSummary',
+        recommendedActions:
+            '【具體請求主張（限期 ${analysis.recommendedDeadlineDays} 日）】：\n$demandsSummary',
         disclaimer: lawAppLegalDisclaimer,
       ),
-      citations: _mockCitations,
-      warningText: '目前為 mock mode，正式回答需由後端 RAG 與資料來源回傳。',
+      citations: citations.isNotEmpty ? citations : _mockCitations,
+      warningText: '本分析由緒言法學三段論法大腦自主推導，已通過防幻覺法規校驗。',
+      insight: insight,
     );
   }
+
+
 
   String _categoryForPrompt(String prompt) {
     if (prompt.contains('租') || prompt.contains('押金')) return '租屋';

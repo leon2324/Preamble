@@ -34,10 +34,8 @@ import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dar
 import 'package:preamble/data/learning/supabase_learning_service.dart';
 import 'package:preamble/components/assistant/law_assistant_insight_card.dart';
 import 'package:preamble/data/documents/document_models.dart';
-import 'package:preamble/data/documents/document_repository.dart';
 import 'package:preamble/data/documents/dynamic_legal_drafter_brain.dart';
 import 'package:preamble/components/subscription/morandi_paywall_sheet.dart';
-import 'package:preamble/data/lawyer/lawyer_models.dart';
 import 'package:preamble/data/lawyer/lawyer_repository.dart';
 import 'package:preamble/components/lawyer/lawyer_referral_sheet.dart';
 import 'package:preamble/components/safety/plain_document_translator_sheet.dart';

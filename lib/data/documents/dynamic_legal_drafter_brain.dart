@@ -1,15 +1,18 @@
 import 'package:preamble/data/documents/document_models.dart';
+import 'package:preamble/data/legal_brain/legal_statute_validator.dart';
+import 'package:preamble/data/legal_brain/legal_syllogism_engine.dart';
+import 'package:preamble/data/legal_brain/structured_legal_document_schemas.dart';
 
 /// 緒言 AI 自主法律書狀生成大腦。
 ///
 /// 核心理念：
-/// 不使用預先寫好的制式模板，而是完全依據使用者輸入的自然語言案情事實（無論是合夥拆夥、
-/// 借貸欠款、工程尾款、侵權賠償、租賃修繕、噪音擾鄰、著作權侵權或勞資爭議），
+/// 結合臺灣法學三段論法大腦 (LegalSyllogismEngine) 與防幻覺法條驗證器 (LegalStatuteValidator)，
+/// 不使用預先寫好的制式模板，完全依據使用者輸入的自然語言案情事實，
 /// 智能解析關係人、提煉法律請求權基礎、自主編排專業條款章節並產出具備律師事務所水準的法律公文。
 class DynamicLegalDrafterBrain {
   const DynamicLegalDrafterBrain._();
 
-  /// 根據使用者任意口語描述，自主生成完整的動態法律公文結構
+  /// 根據使用者任意口語描述，自主生成完整的動態法律公文結構（含防幻覺審計）
   static DynamicLegalDocument generateFromFactDescription({
     required String rawFacts,
     String? customSender,
@@ -27,26 +30,153 @@ class DynamicLegalDrafterBrain {
         : _inferReceiver(lower);
 
     // 2. 智慧案由分類與專門條款大腦自主生成
+    DynamicLegalDocument doc;
     if (_matchesPartnershipDispute(lower)) {
-      return _generatePartnershipDissolution(text, sender, receiver);
+      doc = _generatePartnershipDissolution(text, sender, receiver);
     } else if (_matchesConstructionDispute(lower)) {
-      return _generateConstructionDispute(text, sender, receiver);
+      doc = _generateConstructionDispute(text, sender, receiver);
     } else if (_matchesLoanDispute(lower)) {
-      return _generateLoanRecovery(text, sender, receiver);
+      doc = _generateLoanRecovery(text, sender, receiver);
     } else if (_matchesNoiseOrNuisance(lower)) {
-      return _generateNuisanceDemand(text, sender, receiver);
+      doc = _generateNuisanceDemand(text, sender, receiver);
     } else if (_matchesCopyrightOrIP(lower)) {
-      return _generateIPInfringementDemand(text, sender, receiver);
+      doc = _generateIPInfringementDemand(text, sender, receiver);
     } else if (_matchesRentalDispute(lower)) {
-      return _generateRentalDemand(text, sender, receiver);
+      doc = _generateRentalDemand(text, sender, receiver);
     } else if (_matchesCarAccident(lower)) {
-      return _generateCarAccidentSettlement(text, sender, receiver);
+      doc = _generateCarAccidentSettlement(text, sender, receiver);
     } else if (_matchesLaborDispute(lower)) {
-      return _generateLaborDisputeDemand(text, sender, receiver);
+      doc = _generateLaborDisputeDemand(text, sender, receiver);
     } else {
-      return _generateGeneralCivilDemand(text, sender, receiver);
+      doc = _generateGeneralCivilDemand(text, sender, receiver);
     }
+
+    // 3. 防幻覺法規校驗
+    final validatedBasis = doc.legalBasis
+        .map(LegalStatuteValidator.sanitizeAndCorrectText)
+        .toList();
+
+    return DynamicLegalDocument(
+      title: doc.title,
+      subtitle: doc.subtitle,
+      senderName: doc.senderName,
+      receiverName: doc.receiverName,
+      sections: doc.sections,
+      demands: doc.demands,
+      evidences: doc.evidences,
+      legalBasis: validatedBasis,
+      warningClause: doc.warningClause,
+      deadlineDays: doc.deadlineDays,
+    );
   }
+
+  /// 執行完整法學三段論法推導分析（大前提、小前提涵攝、結論）
+  static LegalSyllogismAnalysis analyzeDispute({
+    required String rawFacts,
+    String? customSender,
+    String? customReceiver,
+  }) {
+    return LegalSyllogismEngine.analyze(
+      rawFacts: rawFacts,
+      customClaimant: customSender,
+      customOpponent: customReceiver,
+    );
+  }
+
+  /// 自主生成中華郵政標準存證信函結構（可轉 20x20 400字格或標準公文）
+  static AttestedDemandLetter generateAttestedDemandLetter({
+    required String rawFacts,
+    String senderName = '本人',
+    String senderAddress = '台北市大安區新生南路一段100號',
+    String receiverName = '相對人',
+    String receiverAddress = '台北市中山區南京東路二段200號',
+    int deadlineDays = 7,
+  }) {
+    final analysis = LegalSyllogismEngine.analyze(
+      rawFacts: rawFacts,
+      customClaimant: senderName,
+      customOpponent: receiverName,
+    );
+
+    final factsAndReasons = <String>[
+      '緣雙方前因${analysis.disputeCategory}涉有爭端，具體案件事實經過如下：$rawFacts',
+      '查依${analysis.majorPremiseStatutes.map((s) => s.fullCitation).join("、")}等規定，${analysis.conclusionRemedy}',
+      '為此，特依民事法律相關規定函知 台端，請務必恪遵誠信原則如期履行，以免訟累。',
+    ];
+
+    return AttestedDemandLetter(
+      senderName: senderName,
+      senderAddress: senderAddress,
+      receiverName: receiverName,
+      receiverAddress: receiverAddress,
+      subject: '為${analysis.disputeCategory}事，特依法限期催告履行，請查照。',
+      factsAndReasons: factsAndReasons,
+      demands: analysis.demands,
+      legalBasis: analysis.majorPremiseStatutes.map((s) => s.fullCitation).toList(),
+      deadlineDays: deadlineDays,
+      attachments: analysis.evidenceChecklist,
+    );
+  }
+
+  /// 自主生成民事調解 / 和解協議書
+  static SettlementAgreement generateSettlementAgreement({
+    required String rawFacts,
+    required SettlementParty partyA,
+    required SettlementParty partyB,
+    int settlementAmount = 50000,
+    String paymentTerms = '於本協議書簽署之日以現金一次交付或匯入受款人指定帳戶',
+  }) {
+    final analysis = LegalSyllogismEngine.analyze(
+      rawFacts: rawFacts,
+      customClaimant: partyA.name,
+      customOpponent: partyB.name,
+    );
+
+    return SettlementAgreement(
+      title: '民事和解協議書（${analysis.disputeCategory}）',
+      partyA: partyA,
+      partyB: partyB,
+      incidentBackground:
+          '甲乙雙方前於中華民國 115 年間，因${analysis.disputeCategory}事件（案件事實：$rawFacts）致生民事損害賠償爭議。',
+      settlementAmount: settlementAmount,
+      paymentTerms: paymentTerms,
+    );
+  }
+
+  /// 自主生成督促程序支付命令聲請狀
+  static PaymentOrderPetition generatePaymentOrderPetition({
+    required String rawFacts,
+    required String petitionerName,
+    required String petitionerId,
+    required String petitionerAddress,
+    required String respondentName,
+    required String respondentId,
+    required String respondentAddress,
+    int claimAmount = 100000,
+    String courtName = '臺灣臺北地方法院民事庭',
+  }) {
+    final analysis = LegalSyllogismEngine.analyze(
+      rawFacts: rawFacts,
+      customClaimant: petitionerName,
+      customOpponent: respondentName,
+    );
+
+    return PaymentOrderPetition(
+      courtName: courtName,
+      petitionerName: petitionerName,
+      petitionerId: petitionerId,
+      petitionerAddress: petitionerAddress,
+      respondentName: respondentName,
+      respondentId: respondentId,
+      respondentAddress: respondentAddress,
+      claimAmount: claimAmount,
+      interestStartDateDescription: '支付命令送達翌日',
+      causeAndFacts:
+          '一、${analysis.summaryOfFacts}\n二、經聲請人多次催告，相對人迄未清償，依${analysis.majorPremiseStatutes.map((s) => s.fullCitation).join("及")}規定，相對人應負返還及清償之責。為此依法聲請核發支付命令。',
+      evidenceList: analysis.evidenceChecklist,
+    );
+  }
+
 
   // --- 意圖辨識啟發式 ---
   static bool _matchesPartnershipDispute(String text) =>

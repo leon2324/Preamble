@@ -395,6 +395,28 @@ class LawAssistantCitation {
       updatedAt: updatedAt,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'title': title,
+        'sourceType': sourceType.name,
+        if (url != null) 'url': url,
+        if (updatedAt != null) 'updatedAt': updatedAt!.toIso8601String(),
+      };
+
+  factory LawAssistantCitation.fromJson(Map<String, dynamic> json) {
+    final rawSourceType = json['sourceType']?.toString().toLowerCase();
+    final sourceType = (rawSourceType == 'official' || rawSourceType == 'statute')
+        ? LawAssistantCitationSourceType.official
+        : LawAssistantCitationSourceType.other;
+    return LawAssistantCitation(
+      title: json['title'] as String? ?? '',
+      sourceType: sourceType,
+      url: json['url'] as String?,
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.tryParse(json['updatedAt'].toString())
+          : null,
+    );
+  }
 }
 
 /// 結構化法律建議與解答 (教學型註解：儲存小法助結構化的分析結果)
@@ -416,6 +438,28 @@ class LawAssistantAnswer {
   final String possibleLegalIssues;
   final String recommendedActions;
   final String disclaimer;
+
+  Map<String, dynamic> toJson() => {
+        'problemDirection': problemDirection,
+        'relatedContent': relatedContent,
+        'nextStep': nextStep,
+        'evidenceNeeded': evidenceNeeded,
+        'possibleLegalIssues': possibleLegalIssues,
+        'recommendedActions': recommendedActions,
+        'disclaimer': disclaimer,
+      };
+
+  factory LawAssistantAnswer.fromJson(Map<String, dynamic> json) {
+    return LawAssistantAnswer(
+      problemDirection: json['problemDirection'] as String? ?? '',
+      relatedContent: json['relatedContent'] as String? ?? '',
+      nextStep: json['nextStep'] as String? ?? '',
+      evidenceNeeded: json['evidenceNeeded'] as String? ?? '',
+      possibleLegalIssues: json['possibleLegalIssues'] as String? ?? '',
+      recommendedActions: json['recommendedActions'] as String? ?? '',
+      disclaimer: json['disclaimer'] as String? ?? '',
+    );
+  }
 }
 
 /// 小法助聊天訊息 (教學型註解：儲存單則聊天記錄)
@@ -439,6 +483,42 @@ class LawAssistantMessage {
   final List<LawAssistantCitation>? citations;
   final String? warningText;
   final LawAssistantDefenseInsight? insight;
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'role': role.name,
+        'content': content,
+        'createdAt': createdAt.toIso8601String(),
+        if (answer != null) 'answer': answer!.toJson(),
+        if (citations != null)
+          'citations': citations!.map((c) => c.toJson()).toList(),
+        if (warningText != null) 'warningText': warningText,
+        if (insight != null) 'insight': insight!.toJson(),
+      };
+
+  factory LawAssistantMessage.fromJson(Map<String, dynamic> json) {
+    return LawAssistantMessage(
+      id: json['id'] as String? ?? '',
+      role: json['role'] == 'user'
+          ? LawAssistantMessageRole.user
+          : LawAssistantMessageRole.assistant,
+      content: json['content'] as String? ?? '',
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt'].toString()) ?? DateTime.now()
+          : DateTime.now(),
+      answer: json['answer'] is Map<String, dynamic>
+          ? LawAssistantAnswer.fromJson(json['answer'] as Map<String, dynamic>)
+          : null,
+      citations: (json['citations'] as List<dynamic>?)
+          ?.map((c) => LawAssistantCitation.fromJson(c as Map<String, dynamic>))
+          .toList(),
+      warningText: json['warningText'] as String?,
+      insight: json['insight'] is Map<String, dynamic>
+          ? LawAssistantDefenseInsight.fromJson(
+              json['insight'] as Map<String, dynamic>)
+          : null,
+    );
+  }
 }
 
 /// 小法助對話工作階段 (教學型註解：儲存完整對話串資訊)
@@ -500,7 +580,14 @@ class LawAssistantConversation {
       categoryLabel: json['categoryLabel'] as String?,
       isGuest: json['isGuest'] as bool? ?? false,
       isMock: json['isMock'] as bool? ?? false,
-      messages: const [],
+      sourceCitations: (json['sourceCitations'] as List<dynamic>?)
+          ?.map((c) => LawAssistantCitation.fromJson(c as Map<String, dynamic>))
+          .toList(),
+      messages: (json['messages'] as List<dynamic>?)
+              ?.map((m) =>
+                  LawAssistantMessage.fromJson(m as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
   }
 }
@@ -523,6 +610,13 @@ class LawAssistantStreamChunk {
     return LawAssistantStreamChunk(
       textChunk: json['textChunk'] as String? ?? '',
       isFinished: json['isFinished'] as bool? ?? false,
+      citations: (json['citations'] as List<dynamic>?)
+          ?.map((c) => LawAssistantCitation.fromJson(c as Map<String, dynamic>))
+          .toList(),
+      fullAnswer: json['fullAnswer'] is Map<String, dynamic>
+          ? LawAssistantAnswer.fromJson(
+              json['fullAnswer'] as Map<String, dynamic>)
+          : null,
     );
   }
 }

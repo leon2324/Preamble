@@ -185,44 +185,47 @@ class _ProfilePageState extends State<ProfilePage> {
                         width: 1.w,
                       ),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          appState.subscriptionService.isProOrHigher
-                              ? Icons.workspace_premium_rounded
-                              : Icons.bolt_rounded,
-                          size: 14.sp,
-                          color: appState.subscriptionService.isProOrHigher
-                              ? const Color(0xFFD4AF37)
-                              : AppColors.primary,
-                        ),
-                        SizedBox(width: 4.w),
-                        Text(
-                          appState.subscriptionService.isProOrHigher
-                              ? '${appState.subscriptionService.status.tierDisplayName} ｜ 無限次 AI'
-                              : '免費用戶 ｜ 今日 AI 額度：${appState.subscriptionService.remainingAiQuota}',
-                          style: TextStyle(
-                            fontSize: 11.sp,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            appState.subscriptionService.isProOrHigher
+                                ? Icons.workspace_premium_rounded
+                                : Icons.bolt_rounded,
+                            size: 14.sp,
                             color: appState.subscriptionService.isProOrHigher
                                 ? const Color(0xFFD4AF37)
                                 : AppColors.primary,
-                            fontWeight: FontWeight.bold,
                           ),
-                        ),
-                        if (!appState.subscriptionService.isProOrHigher) ...[
                           SizedBox(width: 4.w),
                           Text(
-                            '升級',
+                            appState.subscriptionService.isProOrHigher
+                                ? '${appState.subscriptionService.status.tierDisplayName} ｜ 無限次 AI'
+                                : '免費用戶 ｜ 今日 AI 額度：${appState.subscriptionService.remainingAiQuota}',
                             style: TextStyle(
-                              fontSize: 10.sp,
-                              color: const Color(0xFF2C5E43),
+                              fontSize: 11.sp,
+                              color: appState.subscriptionService.isProOrHigher
+                                  ? const Color(0xFFD4AF37)
+                                  : AppColors.primary,
                               fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline,
                             ),
                           ),
+                          if (!appState.subscriptionService.isProOrHigher) ...[
+                            SizedBox(width: 4.w),
+                            Text(
+                              '升級',
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                color: const Color(0xFF2C5E43),
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
                   ),
                 ),

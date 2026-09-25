@@ -422,11 +422,14 @@ class _LawyerReferralSheetState extends State<LawyerReferralSheet> {
                         ),
                       ),
                       SizedBox(width: 6.w),
-                      Text(
-                        '• ${lawyer.firmName}',
-                        style: TextStyle(
-                          fontSize: 10.sp,
-                          color: isDark ? Colors.white60 : Colors.black54,
+                      Expanded(
+                        child: Text(
+                          '• ${lawyer.firmName}',
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            color: isDark ? Colors.white60 : Colors.black54,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
@@ -436,11 +439,15 @@ class _LawyerReferralSheetState extends State<LawyerReferralSheet> {
                     children: [
                       Icon(Icons.star_rounded, size: 14.sp, color: goldAccent),
                       SizedBox(width: 2.w),
-                      Text(
-                        '${lawyer.rating} (${lawyer.reviewsCount}則評價) ｜ 執業 ${lawyer.yearsOfExperience} 年 ｜ 勝訴 ${lawyer.successfulCasesCount}+ 件',
-                        style: TextStyle(
-                          fontSize: 9.5.sp,
-                          color: isDark ? Colors.white70 : Colors.black87,
+                      Expanded(
+                        child: Text(
+                          '${lawyer.rating} (${lawyer.reviewsCount}則評價) ｜ 執業 ${lawyer.yearsOfExperience} 年 ｜ 勝訴 ${lawyer.successfulCasesCount}+ 件',
+                          style: TextStyle(
+                            fontSize: 9.5.sp,
+                            color: isDark ? Colors.white70 : Colors.black87,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],

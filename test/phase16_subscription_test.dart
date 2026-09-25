@@ -3,8 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/components/subscription/morandi_paywall_sheet.dart';
-import 'package:preamble/data/subscription/subscription_models.dart';
-import 'package:preamble/data/subscription/subscription_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {

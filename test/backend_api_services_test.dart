@@ -10,6 +10,8 @@ import 'package:preamble/data/official/official_feed_api_service.dart';
 import 'package:preamble/data/official/official_feed_repository.dart';
 import 'package:preamble/data/search/search_api_service.dart';
 import 'package:preamble/data/search/search_repository.dart';
+import 'package:preamble/data/statutes/statute_api_service.dart';
+import 'package:preamble/data/statutes/statute_repository.dart';
 import 'package:preamble/data/user/quota_api_service.dart';
 
 void main() {
@@ -206,7 +208,15 @@ void main() {
         client: client,
         baseUrl: 'https://api.preamble.local',
       );
-      final repository = SearchRepository(searchApiService: apiService);
+      final repository = SearchRepository(
+        searchApiService: apiService,
+        caseRepository: CaseRepository(
+          apiService: CaseApiService(client: client),
+        ),
+        statuteRepository: StatuteRepository(
+          apiService: StatuteApiService(client: client),
+        ),
+      );
 
       final results = await repository.searchAll('押金');
       expect(results.isNotEmpty, true);

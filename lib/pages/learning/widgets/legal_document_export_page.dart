@@ -9,6 +9,7 @@ import 'package:printing/printing.dart';
 import 'package:preamble/pages/learning/widgets/pdf_style_builder.dart';
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/data/documents/document_models.dart';
+import 'package:preamble/data/legal_brain/structured_legal_document_schemas.dart';
 import 'package:preamble/components/subscription/morandi_paywall_sheet.dart';
 import 'package:preamble/components/lawyer/lawyer_referral_sheet.dart';
 import 'package:preamble/data/lawyer/lawyer_repository.dart';
@@ -67,6 +68,38 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
       icon: Icons.copy_rounded,
     );
   }
+
+  void _copyPostOfficeGrid() {
+    String text;
+    if (widget.dynamicDocument != null) {
+      final doc = widget.dynamicDocument!;
+      final letter = AttestedDemandLetter(
+        senderName: doc.senderName,
+        senderAddress: '寄件人地址（請依郵局格式補填）',
+        receiverName: doc.receiverName,
+        receiverAddress: '相對人地址（請依郵局格式補填）',
+        subject: doc.subtitle.isNotEmpty ? doc.subtitle : doc.title,
+        factsAndReasons:
+            doc.sections.map((s) => '${s.heading}：${s.body}').toList(),
+        demands: doc.demands,
+        legalBasis: doc.legalBasis,
+        deadlineDays: doc.deadlineDays,
+        attachments: doc.evidences,
+      );
+      text = letter.toPostOfficeGridText();
+    } else {
+      text = widget.content;
+    }
+
+    Clipboard.setData(ClipboardData(text: text));
+    HapticFeedback.lightImpact();
+    CustomToast.show(
+      context,
+      '郵局 20×20 存證信函格式已複製！',
+      icon: Icons.mark_email_read_rounded,
+    );
+  }
+
 
   String _pdfFileName() {
     final now = DateTime.now();
@@ -456,11 +489,11 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
                   children: [
                     Row(
                       children: [
-                        // 複製按鈕
+                        // 複製普通本文
                         Expanded(
                           child: OutlinedButton.icon(
-                            icon: const Icon(Icons.copy_rounded, size: 16),
-                            label: const Text('僅複製本文'),
+                            icon: const Icon(Icons.copy_rounded, size: 14),
+                            label: const Text('複製本文'),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: isDark
                                   ? Colors.grey.shade300
@@ -472,17 +505,40 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
                               ),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.r)),
-                              padding: EdgeInsets.symmetric(vertical: 12.h),
+                              padding: EdgeInsets.symmetric(vertical: 11.h),
                             ),
                             onPressed: _copyToClipboard,
                           ),
                         ),
-                        SizedBox(width: 12.w),
+                        SizedBox(width: 8.w),
+                        // 郵局 20x20 格線格式
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            icon: const Icon(Icons.grid_on_rounded, size: 14),
+                            label: const Text('郵局20×20格'),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: isDark
+                                  ? const Color(0xFFE2C2C2)
+                                  : const Color(0xFF9E4A4A),
+                              side: BorderSide(
+                                color: isDark
+                                    ? const Color(0xFF6C3E3E)
+                                    : const Color(0xFFE2C2C2),
+                              ),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.r)),
+                              padding: EdgeInsets.symmetric(vertical: 11.h),
+                            ),
+                            onPressed: _copyPostOfficeGrid,
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        // 匯出 PDF
                         Expanded(
                           child: FilledButton.icon(
                             icon: CaseLibrarySvgIcon(
                               CaseLibrarySvgIcons.chevronRight,
-                              size: 14.sp,
+                              size: 13.sp,
                               color: Colors.white,
                             ),
                             label: const Text('匯出 PDF'),
@@ -491,13 +547,14 @@ class _LegalDocumentExportPageState extends State<LegalDocumentExportPage>
                               foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.r)),
-                              padding: EdgeInsets.symmetric(vertical: 12.h),
+                              padding: EdgeInsets.symmetric(vertical: 11.h),
                             ),
                             onPressed: _exportPdf,
                           ),
                         ),
                       ],
                     ),
+
                     SizedBox(height: 8.h),
                     // 律師審核交辦入口
                     SizedBox(

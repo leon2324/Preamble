@@ -881,7 +881,7 @@ void main() {
       _mvpTestFrame(
           appState, CaseDossierDetailPage(book: caseLibraryCases.first)),
     );
-    await tester.pumpAndSettle();
+    await tester.pumpForVerification();
 
     // 橫向模式下，先驗證首頁核心摘要資訊有正確渲染出來。
     expect(find.text('事件摘要'), findsOneWidget);
@@ -892,7 +892,7 @@ void main() {
         .first;
     for (int i = 0; i < 5; i++) {
       await tester.drag(verticalScrollable, const Offset(0, -250));
-      await tester.pumpAndSettle();
+      await tester.pumpForVerification();
     }
     expect(tester.takeException(), isNull);
   });
