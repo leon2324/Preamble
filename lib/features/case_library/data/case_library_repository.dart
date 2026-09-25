@@ -43,6 +43,12 @@ class CaseLibraryRepository {
       return _casesCache[foundIndex];
     }
 
+    // 當本機 SQLite 快取尚未載入時，從案件種子資料庫中檢索
+    final seedIndex = caseLibraryCasesSeed.indexWhere((c) => c.id == id);
+    if (seedIndex != -1) {
+      return caseLibraryCasesSeed[seedIndex];
+    }
+
     // 找不到時，不應隨便回傳第一個 Legacy 元素。
     // 建立一個 Placeholder CaseBook，使 UI 在跳轉詳情頁時能正確透過該 ID 向 Supabase 獲取真實資料。
     return CaseBook(

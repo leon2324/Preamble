@@ -52,6 +52,7 @@ class _HallIcon extends StatelessWidget {
       CaseLibraryHallType.theme => caseLibraryV2ThemeEmblemAsset,
       CaseLibraryHallType.classic => caseLibraryV2ClassicEmblemAsset,
       CaseLibraryHallType.status => caseLibraryV2ClassicEmblemAsset,
+      CaseLibraryHallType.portal => caseLibraryV2ThemeEmblemAsset,
     };
     return Container(
       width: 78.w,

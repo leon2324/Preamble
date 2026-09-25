@@ -425,20 +425,149 @@ class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
     );
   }
 
-  // 專題場館區塊
+  // 專題場館與維基專題門戶區塊
   Widget _buildSpecialPavilions(BuildContext context) {
+    final portals = caseLibraryHalls
+        .where((h) => h.type == CaseLibraryHallType.portal)
+        .toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '專題場館',
-          style: TextStyle(
-            fontSize: 17.sp,
-            fontWeight: FontWeight.w800,
-            color: const Color(0xFF1C3A27),
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '🏛️ 維基主題門戶',
+              style: TextStyle(
+                fontSize: 17.sp,
+                fontWeight: FontWeight.w800,
+                color: const Color(0xFF1C3A27),
+              ),
+            ),
+            GestureDetector(
+              onTap: () => _openSelection(context),
+              child: Row(
+                children: [
+                  Text(
+                    '全部門戶 (${portals.length})',
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.bold,
+                      color: CaseLibraryColors.accentGold,
+                    ),
+                  ),
+                  SizedBox(width: 2.w),
+                  Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 10.sp,
+                    color: CaseLibraryColors.accentGold,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
         SizedBox(height: 12.h),
+
+        // 1. 維基專題門戶橫向滑動卡片
+        SizedBox(
+          height: 118.h,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            itemCount: portals.length,
+            separatorBuilder: (_, __) => SizedBox(width: 10.w),
+            itemBuilder: (context, index) {
+              final portal = portals[index];
+              final color = portal.accentColorValue != null
+                  ? Color(portal.accentColorValue!)
+                  : const Color(0xFF2E5E4E);
+
+              return GestureDetector(
+                onTap: () => _openHall(context, portal.id),
+                child: Container(
+                  width: 200.w,
+                  padding: EdgeInsets.all(12.w),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(14.r),
+                    border: Border.all(
+                      color: color.withValues(alpha: 0.22),
+                      width: 1.2,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.04),
+                        blurRadius: 6,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 6.w, vertical: 2.h),
+                            decoration: BoxDecoration(
+                              color: color.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(4.r),
+                            ),
+                            child: Text(
+                              portal.badge ?? '維基門戶',
+                              style: TextStyle(
+                                fontSize: 9.sp,
+                                fontWeight: FontWeight.bold,
+                                color: color,
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            '${portal.shelves.length} 書架',
+                            style: TextStyle(
+                              fontSize: 9.5.sp,
+                              color: CaseLibraryColors.textMuted,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        portal.name,
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF17231F),
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        portal.description,
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: const Color(0xFF5A615C),
+                          height: 1.3,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+
+        SizedBox(height: 14.h),
+
+        // 2. 年代、狀態、經典 3 大檢索維度
         Row(
           children: [
             Expanded(
@@ -446,7 +575,7 @@ class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
                 context,
                 title: '年代館',
                 gradientColors: const [Color(0xFF5E8B75), Color(0xFF7FA893)],
-                icon: Icons.edit_note_rounded,
+                icon: Icons.timeline_rounded,
                 onTap: () => _openHall(context, 'timeline'),
               ),
             ),
@@ -454,17 +583,17 @@ class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
             Expanded(
               child: _buildPavilionCard(
                 context,
-                title: '主題館',
+                title: '審判進程館',
                 gradientColors: const [Color(0xFF5E738B), Color(0xFF7E92A8)],
-                icon: Icons.account_balance_rounded,
-                onTap: () => _openHall(context, 'theme'),
+                icon: Icons.gavel_rounded,
+                onTap: () => _openHall(context, 'status'),
               ),
             ),
             SizedBox(width: 8.w),
             Expanded(
               child: _buildPavilionCard(
                 context,
-                title: '經典館',
+                title: '經典指標館',
                 gradientColors: const [Color(0xFF8B5E63), Color(0xFFA87E83)],
                 icon: Icons.auto_awesome_rounded,
                 onTap: () => _openHall(context, 'classic'),

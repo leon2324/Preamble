@@ -28,6 +28,9 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
   // Theme State
   String _selectedThemeTab = '車禍賠償';
 
+  // Portal State
+  String _selectedPortalShelfId = 'all';
+
   // 動態加載真實案件 State
   List<CaseBook> _allCases = [];
   bool _isLoading = true;
@@ -48,6 +51,26 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
         // 年代、經典、審判狀態館：從倉庫/Supabase 異步拉取較多真實裁判筆數進行過濾展示
         final books =
             await CaseLibraryRepository.instance.getCasesPaginated(60, 0);
+        if (mounted) {
+          setState(() {
+            _allCases = books;
+            _isLoading = false;
+          });
+        }
+      } else if (widget.hall.type == CaseLibraryHallType.portal) {
+        // 維基專題門戶：從該門戶的所有子書架與精選案中動態收集全部實體指標案件
+        final portalCaseIds = <String>{};
+        for (final shelf in widget.hall.shelves) {
+          portalCaseIds.addAll(shelf.caseIds);
+        }
+        if (widget.hall.featuredCaseId != null) {
+          portalCaseIds.add(widget.hall.featuredCaseId!);
+        }
+
+        final List<CaseBook> books = [];
+        for (final id in portalCaseIds) {
+          books.add(CaseLibraryRepository.instance.getCaseById(id));
+        }
         if (mounted) {
           setState(() {
             _allCases = books;
@@ -144,6 +167,9 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
       case CaseLibraryHallType.status:
         content = _buildStatusView(context);
         break;
+      case CaseLibraryHallType.portal:
+        content = _buildPortalView(context);
+        break;
     }
 
     return CaseLibraryScaffold(
@@ -226,6 +252,7 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
       CaseLibraryHallType.theme => CaseLibraryScene.theme,
       CaseLibraryHallType.classic => CaseLibraryScene.classic,
       CaseLibraryHallType.status => CaseLibraryScene.classic,
+      CaseLibraryHallType.portal => CaseLibraryScene.classic,
     };
   }
 
@@ -647,6 +674,368 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
           ],
         );
       },
+    );
+  }
+
+  // --- 5. WIKIPEDIA PORTAL VIEW (維基專題門戶) ---
+  Widget _buildPortalView(BuildContext context) {
+    final hall = widget.hall;
+    final accentColor = hall.accentColorValue != null
+        ? Color(hall.accentColorValue!)
+        : CaseLibraryColors.primaryGreen;
+
+    // Featured case
+    CaseBook? featuredBook;
+    if (hall.featuredCaseId != null) {
+      final found =
+          _allCases.where((c) => c.id == hall.featuredCaseId).toList();
+      featuredBook = found.isNotEmpty
+          ? found.first
+          : CaseLibraryRepository.instance.getCaseById(hall.featuredCaseId!);
+    }
+
+    // Active shelf
+    final isAll = _selectedPortalShelfId == 'all';
+    final activeShelf = isAll
+        ? null
+        : hall.shelves.firstWhere(
+            (s) => s.id == _selectedPortalShelfId,
+            orElse: () => hall.shelves.first,
+          );
+
+    final displayCases = isAll
+        ? _allCases
+        : _allCases.where((c) => activeShelf!.caseIds.contains(c.id)).toList();
+
+    return ListView(
+      padding: EdgeInsets.fromLTRB(18.w, 4.h, 18.w, 24.h),
+      children: [
+        // 1. 維基專題門戶導讀卡（Wikipedia Portal Lead Card）
+        Container(
+          padding: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(
+              color: accentColor.withValues(alpha: 0.25),
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: accentColor.withValues(alpha: 0.06),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                    decoration: BoxDecoration(
+                      color: accentColor.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(6.r),
+                    ),
+                    child: Text(
+                      hall.badge ?? '維基專題門戶',
+                      style: TextStyle(
+                        fontSize: 10.5.sp,
+                        fontWeight: FontWeight.w900,
+                        color: accentColor,
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    '收錄 ${hall.shelves.fold<int>(0, (sum, s) => sum + s.caseIds.length)} 案・${hall.shelves.length} 大分類',
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      color: CaseLibraryColors.textMuted,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10.h),
+              Text(
+                hall.name,
+                style: TextStyle(
+                  fontSize: 17.sp,
+                  fontWeight: FontWeight.w900,
+                  color: const Color(0xFF17231F),
+                ),
+              ),
+              if (hall.leadMission != null && hall.leadMission!.isNotEmpty) ...[
+                SizedBox(height: 6.h),
+                Text(
+                  hall.leadMission!,
+                  style: TextStyle(
+                    fontSize: 11.5.sp,
+                    color: const Color(0xFF4A5568),
+                    height: 1.5,
+                  ),
+                ),
+              ],
+              if (hall.portalTags.isNotEmpty) ...[
+                SizedBox(height: 10.h),
+                Wrap(
+                  spacing: 6.w,
+                  runSpacing: 4.h,
+                  children: hall.portalTags.map((tag) {
+                    return Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF0F4F2),
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
+                      child: Text(
+                        '#$tag',
+                        style: TextStyle(
+                          fontSize: 9.5.sp,
+                          color: const Color(0xFF2E5E4E),
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ],
+          ),
+        ),
+        SizedBox(height: 16.h),
+
+        // 2. 維基子分類書架標籤切換列（Sub-shelves Taxonomy Tabs）
+        SizedBox(
+          height: 36.h,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            children: [
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedPortalShelfId = 'all';
+                  });
+                },
+                child: Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+                  margin: EdgeInsets.only(right: 8.w),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: isAll ? accentColor : Colors.white,
+                    borderRadius: BorderRadius.circular(18.r),
+                    border: Border.all(
+                      color: isAll ? accentColor : CaseLibraryColors.borderLight,
+                    ),
+                  ),
+                  child: Text(
+                    '全部典藏 (${_allCases.length})',
+                    style: TextStyle(
+                      fontSize: 11.5.sp,
+                      fontWeight: FontWeight.w800,
+                      color: isAll ? Colors.white : CaseLibraryColors.textSecondary,
+                    ),
+                  ),
+                ),
+              ),
+              ...hall.shelves.map((shelf) {
+                final isSelected = shelf.id == _selectedPortalShelfId;
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedPortalShelfId = shelf.id;
+                    });
+                  },
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+                    margin: EdgeInsets.only(right: 8.w),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: isSelected ? accentColor : Colors.white,
+                      borderRadius: BorderRadius.circular(18.r),
+                      border: Border.all(
+                        color: isSelected
+                            ? accentColor
+                            : CaseLibraryColors.borderLight,
+                      ),
+                    ),
+                    child: Text(
+                      '${shelf.name} (${shelf.caseIds.length})',
+                      style: TextStyle(
+                        fontSize: 11.5.sp,
+                        fontWeight: FontWeight.w800,
+                        color: isSelected
+                            ? Colors.white
+                            : CaseLibraryColors.textSecondary,
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            ],
+          ),
+        ),
+        SizedBox(height: 16.h),
+
+        // 3. 維基精選指標代表條目（當在全部標籤且有精選案時）
+        if (isAll && featuredBook != null) ...[
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [accentColor, accentColor.withValues(alpha: 0.85)],
+              ),
+              borderRadius:
+                  BorderRadius.circular(CaseLibraryRadii.radiusLarge.r),
+              boxShadow: [CaseLibraryShadows.cardShadow],
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 8.w, vertical: 3.h),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFD4AF37),
+                          borderRadius: BorderRadius.circular(4.r),
+                        ),
+                        child: Text(
+                          '⭐ 維基指標大案精選',
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      Text(
+                        '${featuredBook.year} 年裁判',
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          color: Colors.white.withValues(alpha: 0.85),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10.h),
+                  Text(
+                    featuredBook.titleZh,
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      height: 1.3,
+                    ),
+                  ),
+                  SizedBox(height: 6.h),
+                  Text(
+                    featuredBook.shortDescription.isNotEmpty
+                        ? featuredBook.shortDescription
+                        : featuredBook.oneSentenceSummary,
+                    style: TextStyle(
+                      fontSize: 11.5.sp,
+                      color: Colors.white.withValues(alpha: 0.9),
+                      height: 1.45,
+                    ),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 14.h),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: accentColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 8.h),
+                      ),
+                      icon: Icon(Icons.menu_book_rounded, size: 16.sp),
+                      label: const Text(
+                        '研讀維基條目詳情 ➔',
+                        style: TextStyle(fontWeight: FontWeight.w900),
+                      ),
+                      onPressed: () => _openCaseDetail(context, featuredBook!),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 20.h),
+        ],
+
+        // 4. 書架標題（若在特定子書架下）
+        if (!isAll && activeShelf != null) ...[
+          Row(
+            children: [
+              Container(
+                width: 4.w,
+                height: 16.h,
+                decoration: BoxDecoration(
+                  color: accentColor,
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              ),
+              SizedBox(width: 8.w),
+              Text(
+                activeShelf.name,
+                style: CaseLibraryTextStyles.sectionTitle(context).copyWith(
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w900,
+                  color: CaseLibraryColors.primaryGreen,
+                ),
+              ),
+              SizedBox(width: 8.w),
+              Expanded(
+                child: Text(
+                  activeShelf.description,
+                  style: TextStyle(
+                    fontSize: 10.5.sp,
+                    color: CaseLibraryColors.textMuted,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 12.h),
+        ] else if (isAll) ...[
+          Text(
+            '本門戶收錄條目典藏',
+            style: CaseLibraryTextStyles.sectionTitle(context).copyWith(
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w900,
+              color: CaseLibraryColors.primaryGreen,
+            ),
+          ),
+          SizedBox(height: 12.h),
+        ],
+
+        // 5. 案件條目列表
+        for (int i = 0; i < displayCases.length; i++) ...[
+          _buildAlignedCaseCard(context, displayCases[i], i),
+          SizedBox(height: 12.h),
+        ],
+      ],
     );
   }
 

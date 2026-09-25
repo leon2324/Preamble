@@ -1,9 +1,9 @@
-enum CaseLibraryHallType { timeline, theme, classic, status }
+enum CaseLibraryHallType { timeline, theme, classic, status, portal }
 
-/// 案件圖書館第一層：館別。
+/// 案件圖書館第一層：館別 / 維基專題門戶（Wikipedia Legal Portals）。
 ///
-/// 這個 feature 的資訊架構不是「案件列表」，而是三層館藏：館 → 書架 → 案件之書。
-/// 所以 Hall/Shelf/Book 都要有獨立模型，未來接後端時也能維持同一個資料語意。
+/// 這個 feature 的資訊架構不是「平鋪案件列表」，而是三層館藏：館/門戶（Hall/Portal） → 書架/子分類（Shelf/Taxonomy） → 案件之書（CaseBook）。
+/// 支援維基式門戶導讀、子議題書架與核心法條標籤。
 class CaseLibraryHall {
   const CaseLibraryHall({
     required this.id,
@@ -11,6 +11,12 @@ class CaseLibraryHall {
     required this.description,
     required this.type,
     required this.shelves,
+    this.badge,
+    this.iconName,
+    this.accentColorValue,
+    this.leadMission,
+    this.portalTags = const [],
+    this.featuredCaseId,
   });
 
   final String id;
@@ -18,6 +24,12 @@ class CaseLibraryHall {
   final String description;
   final CaseLibraryHallType type;
   final List<CaseShelf> shelves;
+  final String? badge;
+  final String? iconName;
+  final int? accentColorValue; // e.g. 0xFF2E5E4E
+  final String? leadMission;
+  final List<String> portalTags;
+  final String? featuredCaseId;
 }
 
 class CaseShelf {
