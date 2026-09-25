@@ -40,7 +40,7 @@ class CaseLibraryInteractiveGrid extends StatelessWidget {
             _FeatureShortcut(
               iconSvg: CaseLibrarySvgIcons.scale,
               title: '如果你是法官',
-              subtitle: '模擬司法天平裁判',
+              subtitle: '體驗法官裁判心證',
               backgroundColor: const Color(0xFFEAF6EF), // 莫蘭迪綠
               foregroundColor: const Color(0xFF357A53),
               onTap: () {

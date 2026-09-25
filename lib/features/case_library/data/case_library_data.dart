@@ -40,10 +40,16 @@ final caseLibraryCasesSeed = <CaseBook>[
     memoryLine: '關於集會自由與公共秩序的界線，以及國會權限的行使。',
     shortDescription: '2014年3月，學生與公民團體為反對《兩岸服務貿易協議》，發起佔領立法院行動，後續引發警力驅離與多起訴訟。',
     basicInfo: const CaseBasicInfo(
-      caseType: '刑事案件',
-      procedureStage: '已結案',
-      courtLevel: '最高法院 / 台北地方法院',
-      updatedAt: '2018/03/22',
+      caseType: '刑事矚目訴訟',
+      procedureStage: '二審判決無罪確定',
+      courtLevel: '臺灣高等法院 / 臺灣臺北地方法院',
+      updatedAt: '2018/03/13',
+      caseNumber: '臺灣高等法院 106 年度矚上訴字第 1 號刑事判決',
+      judgmentDate: '2018年3月13日（民國107年3月13日）',
+      bench: '審判長法官 張惠立、受命法官 柯姿佐、陪席法官 郭豫珍',
+      partiesOrPetitioner: '被告：黃國昌、林飛帆、陳為廷等22人、上訴人：台灣高等法院檢察署檢察官',
+      cause: '煽惑他人犯罪、妨害公務罪嫌案',
+      subsequentAction: '檢察官未上訴最高法院，二審判決無罪全案定讞；法院肯認公民不服從之阻卻違法性。',
     ),
     oneSentenceSummary: '一場學生與公民的集會行動，關於集會自由與公共秩序界線的經典案例。',
     background: '2014年3月，學生與公民團體為反對《兩岸服務貿易協議》，發起佔領立法院行動，後續引發警力驅離與多起訴訟。',
@@ -627,6 +633,12 @@ final caseLibraryCasesSeed = <CaseBook>[
       procedureStage: '解釋公布',
       courtLevel: '司法院大法官會議',
       updatedAt: '2017/05/24',
+      caseNumber: '司法院釋字第 748 號解釋',
+      judgmentDate: '2017年5月24日（民國106年5月24日）',
+      bench: '審判長 許宗力 大法官',
+      partiesOrPetitioner: '聲請人：祁家威、台北市政府',
+      cause: '民法第4編親屬第2章婚姻規定未使相同性別二人成立婚姻關係違憲審查',
+      subsequentAction: '立法院於2019年5月17日三讀通過《司法院釋字第七四八號解釋施行法》，使台灣成為亞洲首個同性婚姻合法化國家。',
     ),
     oneSentenceSummary: '同性婚姻未保障案，宣告民法違憲並限期立法。',
     background:
@@ -716,9 +728,15 @@ final caseLibraryCasesSeed = <CaseBook>[
     shortDescription: '審查社會秩序維護法第89條第2款處罰無正當理由跟追他人之規定是否合憲，釐清新聞自由與個人隱私之界線。',
     basicInfo: const CaseBasicInfo(
       caseType: '憲法解釋',
-      procedureStage: '判決確定',
+      procedureStage: '解釋公布確定',
       courtLevel: '司法院大法官會議',
       updatedAt: '2011/07/29',
+      caseNumber: '司法院釋字第 689 號解釋',
+      judgmentDate: '2011年7月29日（民國100年7月29日）',
+      bench: '審判長 賴浩敏 大法官',
+      partiesOrPetitioner: '聲請人：蘋果日報記者',
+      cause: '社會秩序維護法第89條第2款無正當理由跟追他人裁罰合憲性審查',
+      subsequentAction: '宣告法規合憲但要求建立及時救濟程序；促成後續制定《跟蹤騷擾防制法》。',
     ),
     oneSentenceSummary: '跟拍限制合憲案，劃分隱私與新聞自由邊界。',
     background:
@@ -788,10 +806,16 @@ final caseLibraryCasesSeed = <CaseBook>[
     shortDescription:
         '憲法法庭針對37名死囚共同聲請之死刑制度違憲審查，宣告故意殺人罪處以死刑合憲，但判決與執行程序須實施最嚴密保障。',
     basicInfo: const CaseBasicInfo(
-      caseType: '憲法判決',
-      procedureStage: '判決宣示',
-      courtLevel: '憲法法庭',
+      caseType: '憲法法庭判決',
+      procedureStage: '判決宣示確定',
+      courtLevel: '司法院憲法法庭',
       updatedAt: '2024/09/20',
+      caseNumber: '憲法法庭 113 年憲判字第 8 號判決',
+      judgmentDate: '2024年9月20日（民國113年9月20日）',
+      bench: '審判長 許宗力、主筆大法官 黃昭元（合議庭大法官全體）',
+      partiesOrPetitioner: '聲請人：王信福等37位死刑定讞受刑人',
+      cause: '刑法第271條第1項等故意殺人罪死刑規定合憲性審查',
+      subsequentAction: '要求主管機關自宣判日起2年內修正刑法、刑事訴訟法，嚴格落實第三審言詞辯論與合議庭一致決。',
     ),
     oneSentenceSummary: '死刑合憲但程序從嚴案，憲法法庭限縮適用要件。',
     background:
@@ -863,9 +887,15 @@ final caseLibraryCasesSeed = <CaseBook>[
     shortDescription: '空軍上兵江國慶遭軍方認定姦殺女童，於1997年迅速槍決，後證實為刑求逼供之冤案，2011年獲法院平反。',
     basicInfo: const CaseBasicInfo(
       caseType: '刑事再審與國賠',
-      procedureStage: '判決確定',
-      courtLevel: '北部軍事法院 / 台北地院',
-      updatedAt: '2011/10/27',
+      procedureStage: '再審無罪判決定讞',
+      courtLevel: '國防部北部地方軍事法院',
+      updatedAt: '2011/09/13',
+      caseNumber: '國防部北部地方軍事法院 100 年度再字第 001 號刑事判決',
+      judgmentDate: '2011年9月13日（民國100年9月13日）',
+      bench: '國防部北部地方軍事法院 再審合議庭',
+      partiesOrPetitioner: '聲請人：王彩蓮（江國慶之母）、被告：江國慶（已故平反）',
+      cause: '空軍作戰司令部謝姓女童強姦殺人再審案',
+      subsequentAction: '裁定補償江家1億318萬5千元確定，國防部並對違法刑求失職軍官陳肇敏等人求償判賠5,957萬元定讞。',
     ),
     oneSentenceSummary: '軍審女童案刑求槍決，後獲無罪再審與國賠平反。',
     background:
@@ -940,10 +970,16 @@ final caseLibraryCasesSeed = <CaseBook>[
     memoryLine: '涉強盜殺人遭判死刑，歷經21年司法拉鋸最終無罪確定。',
     shortDescription: '蘇建和等三人被指控參與汐止吳銘漢夫婦命案判處死刑，歷經多次非常上訴與再審，於2012年無罪確定。',
     basicInfo: const CaseBasicInfo(
-      caseType: '刑事再審',
-      procedureStage: '再審宣判',
-      courtLevel: '台灣高等法院',
+      caseType: '刑事再審與速審法確定',
+      procedureStage: '再審無罪判決定讞',
+      courtLevel: '臺灣高等法院',
       updatedAt: '2012/08/31',
+      caseNumber: '臺灣高等法院 100 年度矚再更(二)字第 1 號刑事判決',
+      judgmentDate: '2012年8月31日（民國101年8月31日）',
+      bench: '審判長法官 鄭水銓、受命法官 賴邦元等合議庭',
+      partiesOrPetitioner: '被告：蘇建和、劉秉郎、莊林勳（辯護人：蘇友辰律師等）',
+      cause: '強盜故意殺人再審案',
+      subsequentAction: '依刑事妥速審判法無罪定讞，檢方不得再上訴；推動台灣刑事司法證據法則與無罪推定實務徹底革新。',
     ),
     oneSentenceSummary: '汐止夫婦命案死刑定讞，再審無罪確定平反。',
     background:
@@ -1019,10 +1055,16 @@ final caseLibraryCasesSeed = <CaseBook>[
     memoryLine: '美商長期傾倒有機化學溶劑致數百員工罹癌，職災集體求償指標案。',
     shortDescription: '美商RCA桃園廠長期挖井傾倒有毒化學溶劑，導致大量員工飲用地下水罹癌。受害者組織自救會提起集體訴訟獲判賠償。',
     basicInfo: const CaseBasicInfo(
-      caseType: '民事訴訟',
-      procedureStage: '三審定讞',
-      courtLevel: '最高法院',
-      updatedAt: '2022/03/11',
+      caseType: '民事公害集體訴訟',
+      procedureStage: '最高法院三審定讞',
+      courtLevel: '最高法院民事庭',
+      updatedAt: '2018/08/16',
+      caseNumber: '最高法院 107 年度台上字第 1358 號民事判決',
+      judgmentDate: '2018年8月16日（民國107年8月16日）',
+      bench: '審判長法官 劉福來、受命法官 梁玉芬等合議庭',
+      partiesOrPetitioner: '原告：桃園縣原台灣美國無線電公司員工關懷協會、被告：RCA、Technicolor、GE奇異公司',
+      cause: '職業性重大公害侵權行為損害賠償事件',
+      subsequentAction: '判決RCA等控股公司賠償262人共5億多元定讞，確立揭穿公司面紗與公害舉證責任倒置原則。',
     ),
     oneSentenceSummary: 'RCA長期污染環境致癌案，民事集體求償判決確定。',
     background:
@@ -1229,6 +1271,825 @@ final caseLibraryCasesSeed = <CaseBook>[
         title: '司法院公開法學檢索系統與裁判書彙編',
         sourceType: 'official',
         updatedAt: '2024/08/16',
+      ),
+    ],
+    concurringDissentingOpinions: const [],
+    courtArguments: const [],
+    expertOpinions: const [],
+    mediaReferences: const [],
+    images: const [],
+  ),
+
+  CaseBook(
+    id: 'case-adultery-791',
+    titleZh: '司法院釋字第 791 號解釋',
+    titleEn: 'Judicial Yuan Interpretation No. 791',
+    shortTitleZh: '釋字 791',
+    shortTitleEn: 'No. 791',
+    displayCode: 'JY-791',
+    year: 2020,
+    location: '台北市',
+    status: '違憲宣告立即失效',
+    category: '司法解釋',
+    tags: const ['通姦除罪化', '性自主權', '隱私權', '婚姻自由', '平等原則'],
+    memoryLine: '宣告刑法第239條通姦罪違憲立即失效，婚姻忠誠不應由國家刑罰干預。',
+    shortDescription: '大法官認定刑法第239條通姦罪限制性自主權違反憲法第23條比例原則，宣告自公布日起立即失效；刑事訴訟法第239條但書亦違反平等權失效。',
+    basicInfo: const CaseBasicInfo(
+      caseType: '憲法解釋',
+      procedureStage: '解釋公布立即除罪',
+      courtLevel: '司法院大法官會議',
+      updatedAt: '2020/05/29',
+      caseNumber: '司法院釋字第 791 號解釋',
+      judgmentDate: '2020年5月29日（民國109年5月29日）',
+      bench: '審判長 許宗力 大法官',
+      partiesOrPetitioner: '聲請人：臺灣臺北地方法院等各級法院法官及受裁判人民',
+      cause: '刑法第239條通姦罪及刑事訴訟法第239條但書合憲性審查',
+      subsequentAction: '通姦罪自公布日起除罪化，全台通姦案不起訴或免訴；婚姻背叛回歸民事侵害配偶權侵權賠償。',
+    ),
+    oneSentenceSummary: '通姦罪侵害性自主權違憲，宣告立即除罪化。',
+    background:
+        '多年來台灣民間與司法界就刑法第239條通姦罪存廢爭議不斷。多位承審通姦案之地方法院法官認為，刑法以刑罰干預人民私領域性自主與感情關係，且訴訟中常導致隱私受嚴重侵害，並造成實質上性別差別處罰，遂裁定停止訴訟聲請釋憲。',
+    fullStory:
+        '司法院大法官於2020年5月24日在憲法法庭公布釋字第791號解釋，明確指出性自主權為憲法第22條保障之核心基本權。婚姻忠誠固為婚姻制度之重要內涵，但透過刑罰手段維護婚姻，不僅難以達到挽回婚姻之目的，反而對個人性自主與隱私權造成重大侵害，手段與目的顯失均衡，違反憲法第23條比例原則，宣告刑法第239條立即失效。同時變更釋字第554號合憲解釋。',
+    timeline: const [
+      CaseTimelineItem(
+          dateLabel: '2002/12/27',
+          title: '釋字第554號解釋',
+          description: '大法官曾作成釋字554號，認定通姦罪為維護婚姻家庭制度合憲。'),
+      CaseTimelineItem(
+          dateLabel: '2020/03/31',
+          title: '憲法法庭言詞辯論',
+          description: '大法官針對刑法239條通姦罪及刑訴但書召開全日言詞辯論。'),
+      CaseTimelineItem(
+          dateLabel: '2020/05/29',
+          title: '公布釋字第791號',
+          description: '大法官宣告刑法通姦罪違憲立即失效，台灣正式通姦除罪化。')
+    ],
+    people: const [
+      CasePersonRole(role: '聲請人', description: '台北地院法官林孟皇等承審法官及受刑罰判決人民。'),
+      CasePersonRole(role: '關係機關', description: '法務部（原主張維持通姦罪有社會防衛功能）。')
+    ],
+    legalIssues: const [
+      LegalIssue(
+          title: '刑罰干預婚姻私領域是否符合比例原則？',
+          plainExplanation:
+              '婚姻關係之維繫主要奠基於雙方感情與互信，以國家刑事偵查甚至監聽拘捕調查性生活，手段過度侵害隱私權與性自主權，不符最小侵害原則。',
+          relationToCase: '本案核心違憲審查基準。',
+          relatedLawIds: ['constitution-22', 'constitution-23'])
+    ],
+    investigationAndTrial:
+        '大法官審理中詳細檢視比較法各國除罪趨勢，並評估刑事偵查通姦對家庭隱私造成之毀滅性衝擊，最終採取保障個人人格自主之憲法立場。',
+    courtReasoning:
+        '大法官指出，國家刑罰權之動用應具備最後手段性。婚姻忠誠之維護屬於私法民事契約範疇，得透過離婚及民事侵權損害賠償解決，不應動用刑罰處罰。',
+    judgmentResult: '宣告刑法第239條通姦罪自本解釋公布之日起失其效力；刑事訴訟法第239條但書亦違反憲法第7條平等權失其效力。',
+    relatedLaws: const [
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 22 條',
+          plainSummary: '凡人民之其他自由及權利，不妨害社會秩序公共利益者，均受憲法之保障。',
+          relationToCase: '本案確立性自主權與私生活隱私權為受憲法第22條保障之基本權利。'),
+      RelatedLaw(
+          lawName: '中華民國憲法',
+          articleNumber: '第 23 條',
+          plainSummary: '除為維持社會秩序或公共利益所必要者外，不得以法律限制之。',
+          relationToCase: '本案認定通姦罪限制性自主權手段過當，違反比例原則。')
+    ],
+    socialImpact:
+        '此解釋是台灣性別平權與人權法治之里程碑，終結了數十年來偵訊通姦抓姦蒐證之爭議，使婚姻衝突全面回歸民事司法途徑解決。',
+    relatedCases: const [],
+    sources: const [
+      CaseSource(
+        title: '司法院憲法法庭官方公布之釋字第791號解釋文及理由書',
+        sourceType: 'official',
+        updatedAt: '2020/05/29',
+      ),
+    ],
+    concurringDissentingOpinions: const [],
+    courtArguments: const [],
+    expertOpinions: const [],
+    mediaReferences: const [],
+    images: const [],
+  ),
+
+  CaseBook(
+    id: 'case-indigenous-hunt-803',
+    titleZh: '司法院釋字第 803 號解釋',
+    titleEn: 'Judicial Yuan Interpretation No. 803',
+    shortTitleZh: '釋字 803',
+    shortTitleEn: 'No. 803',
+    displayCode: 'JY-803',
+    year: 2021,
+    location: '台東縣',
+    status: '部分違憲限期修正',
+    category: '司法解釋',
+    tags: const ['原住民狩獵權', '文化自主權', '野生動物保育', '槍砲管制', '王光祿'],
+    memoryLine: '布農族王光祿打獵案，大法官首度肯認原住民傳統狩獵為憲法保障之文化權。',
+    shortDescription: '布農族獵人王光祿因年邁母親想吃傳統野味持獵槍打獵遭判刑。大法官認定原住民狩獵為憲法文化權重要內涵，槍砲辦法限制自製獵槍規格違憲限期修正。',
+    basicInfo: const CaseBasicInfo(
+      caseType: '憲法解釋',
+      procedureStage: '解釋公布 / 當事人改判無罪',
+      courtLevel: '司法院大法官會議',
+      updatedAt: '2021/05/07',
+      caseNumber: '司法院釋字第 803 號解釋',
+      judgmentDate: '2021年5月7日（民國110年5月7日）',
+      bench: '審判長 許宗力 大法官',
+      partiesOrPetitioner: '聲請人：布農族族人王光祿（Talum Suqluman）、各級法院合議庭法官',
+      cause: '野生動物保育法及槍砲彈藥刀械許可及管理辦法狩獵管制合憲性審查',
+      subsequentAction: '內政部修正自製獵槍管理辦法；總統對王光祿行使特赦免刑，最高法院於2024年撤銷原判決改判王光祿無罪確定。',
+    ),
+    oneSentenceSummary: '肯認原住民狩獵文化權，宣告自製獵槍管制辦法部分違憲。',
+    background:
+        '2013年台東布農族獵人王光祿因94歲年邁母親習慣吃山產，持土造長槍上山獵捕台灣長鬃山羊與山羌，遭警方以違反槍砲彈藥刀械管制條例及野生動物保育法逮捕起訴，判處有期徒刑3年6月確定。此判決引發原住民族群與社會對傳統文化受國家司法壓迫之強烈不滿。',
+    fullStory:
+        '最高法院檢察署檢察總長為王光祿提起非常上訴，最高法院合議庭裁定停止審理並聲請釋憲。大法官於2021年5月7日作成釋字第803號解釋，首度確立原住民基於傳統文化從事狩獵活動，屬憲法增修條文第10條保障之文化權核心內涵。大法官宣告主管機關對「自製獵槍」之安全規範不足侵害原住民生命身體安全違憲，非定期狩獵申請程序過苛違憲。2021年總統對王光祿特赦，2024年最高法院改判王光祿無罪定讞。',
+    timeline: const [
+      CaseTimelineItem(
+          dateLabel: '2013/08/24',
+          title: '王光祿狩獵遭查扣',
+          description: '王光祿於台東山區狩獵遭警查緝，扣押獵槍與獵物。'),
+      CaseTimelineItem(
+          dateLabel: '2015/11/03',
+          title: '判刑三年半定讞',
+          description: '最高法院駁回上訴，判處王光祿有期徒刑3年6月定讞。'),
+      CaseTimelineItem(
+          dateLabel: '2021/05/07',
+          title: '釋字803號公布',
+          description: '大法官肯認原民狩獵文化權，宣告獵槍安全規範不足違憲。'),
+      CaseTimelineItem(
+          dateLabel: '2024/03/14',
+          title: '最高法院改判無罪',
+          description: '最高法院非常上訴庭撤銷原有罪判決，改判王光祿無罪確定。')
+    ],
+    people: const [
+      CasePersonRole(role: '聲請人', description: '王光祿（布農族族人）、潘志強等族人及聲請法官。'),
+      CasePersonRole(role: '關係機關', description: '內政部警政署、農業部林業及自然保育署。')
+    ],
+    legalIssues: const [
+      LegalIssue(
+          title: '原住民狩獵活動是否屬憲法保障之文化權？',
+          plainExplanation: '憲法增修條文第10條明定國家肯定多元文化，原住民族依傳統生活方式狩獵，為文化傳承之實踐，應受制度性保障。',
+          relationToCase: '本案核心憲法法理確立。',
+          relatedLawIds: ['constitution-add-10'])
+    ],
+    investigationAndTrial:
+        '言詞辯論首度邀請原住民耆老與文化學者擔任法庭之友，在法庭上以族語陳述狩獵對布農族男子成人、敬天與分享祭儀之不可分割性。',
+    courtReasoning:
+        '大法官指出，原住民文化權受憲法保障，現行法令強迫原住民使用結構不安全之原始火藥前膛槍，反而危害其生命權與身體權，主管機關應建立符合現代安全標準之合法自製獵槍規範。',
+    judgmentResult: '肯認狩獵文化權受憲法保障；槍砲彈藥許可辦法關於自製獵槍之規範不足違憲，限期2年內修正；野保法非定期狩獵申請程序不合理部分立即失效。',
+    relatedLaws: const [
+      RelatedLaw(
+          lawName: '中華民國憲法增修條文',
+          articleNumber: '第 10 條',
+          plainSummary: '國家肯定多元文化，並應依民族意願，保障原住民族之地位及政治參與。',
+          relationToCase: '保障原住民傳統文化傳承與狩獵權之根本法源。'),
+      RelatedLaw(
+          lawName: '野生動物保育法',
+          articleNumber: '第 21 條之 1',
+          plainSummary: '台灣原住民族基於傳統文化、祭儀，得在各級主管機關核准下獵捕野生動物。',
+          relationToCase: '原住民合法從事傳統祭儀狩獵之實體法規。')
+    ],
+    socialImpact:
+        '促使台灣社會重新省思漢族中心主義法制對原住民族文化之壓迫，推進了原住民自製獵槍合法換裝與自主治理機制的建立。',
+    relatedCases: const [],
+    sources: const [
+      CaseSource(
+        title: '司法院公開法學檢索系統與憲法法庭釋字第803號解釋彙編',
+        sourceType: 'official',
+        updatedAt: '2021/05/07',
+      ),
+    ],
+    concurringDissentingOpinions: const [],
+    courtArguments: const [],
+    expertOpinions: const [],
+    mediaReferences: const [],
+    images: const [],
+  ),
+
+  CaseBook(
+    id: 'case-delivery-labor-2152',
+    titleZh: '最高法院 113 年度台上字第 2152 號民事判決',
+    titleEn: 'Supreme Court Civil Judgment 113-Tai-Shang-2152',
+    shortTitleZh: '外送員勞動契約案',
+    shortTitleEn: 'Delivery Labor 2152',
+    displayCode: '113台上2152',
+    year: 2024,
+    location: '台北市',
+    status: '判決發回更審',
+    category: '民事案件',
+    tags: const ['平台外送員', '實質從屬性', '勞動契約', '假承攬真僱傭', '勞動基準法'],
+    memoryLine: '外送平台外送員爭議，最高法院確立不拘泥契約名稱，依三從屬性實質檢驗僱傭關係。',
+    shortDescription: '外送員主張與foodpanda平台存在僱傭關係訴請確認勞動契約。最高法院確立現代數位平台勞工判斷應實質審查演算法派遣、評分考核與經濟從屬性，為平台非典型勞動指標案。',
+    basicInfo: const CaseBasicInfo(
+      caseType: '民事勞動訴訟',
+      procedureStage: '最高法院判決發回更審',
+      courtLevel: '最高法院民事第四庭',
+      updatedAt: '2024/07/18',
+      caseNumber: '最高法院 113 年度台上字第 2152 號民事判決',
+      judgmentDate: '2024年7月18日（民國113年7月18日）',
+      bench: '審判長法官 周舒雁、受命法官 賴秀蘭等合議庭',
+      partiesOrPetitioner: '上訴人：外送平台業者（富胖達股份有限公司 / foodpanda）、被上訴人：外送員',
+      cause: '請求確認僱傭關係存在事件',
+      subsequentAction: '勞動部加速研擬《外送員權益保障及外送平臺管理法》專法，並強化外送職災保險強制納保機制。',
+    ),
+    oneSentenceSummary: '確立平台外送員依實質從屬性檢驗勞動契約，不拘泥於合約名稱。',
+    background:
+        '外送平台業者普遍要求外送員簽署「承攬服務合約」，主張外送員自主決定接單時間與工作地點，不具備僱傭關係，因而未投保勞健保與提繳勞工退休金。外送員因平台片面終止派單，向法院提起訴訟確認雙方為勞動基準法之勞動契約（僱傭關係）。',
+    fullStory:
+        '台北地院一審原採信平台抗辯判決外送員敗訴。高等法院二審逆轉改判外送員勝訴，認定平台透過APP演算法指派訂單、要求配戴特定裝備保溫箱、設定取單率考核與停權機制，已具備高度人格從屬性與組織從屬性，實質上為僱傭關係。最高法院於2024年作成113年度台上字第2152號判決，肯定實質從屬性之審查架構，同時要求原審就具體契約終止防禦事由進一步查明，發回高等法院更審。',
+    timeline: const [
+      CaseTimelineItem(
+          dateLabel: '2021',
+          title: '外送員提起勞動訴訟',
+          description: '外送員向台北地方法院提起確認僱傭關係訴訟。'),
+      CaseTimelineItem(
+          dateLabel: '2023',
+          title: '高等法院逆轉判決僱傭',
+          description: '高院認定平台演算法控制具高度從屬性，認定為勞動基準法之勞工。'),
+      CaseTimelineItem(
+          dateLabel: '2024/07/18',
+          title: '最高法院廢棄發回',
+          description: '最高法院確認實質從屬性檢驗原則，並命更審釐清防禦調查細節。')
+    ],
+    people: const [
+      CasePersonRole(role: '上訴人', description: '富胖達股份有限公司（foodpanda，主張承攬關係）。'),
+      CasePersonRole(role: '被上訴人', description: '外送員（全國外送產業工會協助訴訟）。')
+    ],
+    legalIssues: const [
+      LegalIssue(
+          title: '數位平台演算法管理是否構成「人格從屬性」？',
+          plainExplanation: '平台雖無主管現場盯梢，但透過演算法指派訂單、時限倒數、拒單懲戒與評價停權，實質上構成隱蔽而嚴格的指揮監督。',
+          relationToCase: '認定勞動契約性質之核心關鍵。',
+          relatedLawIds: ['labor-standards-2'])
+    ],
+    investigationAndTrial:
+        '法院逐一勘驗外送員端APP系統介面、取單獎勵公式、制服配戴要求與接單取消率罰則，解構平台業者以數位演算法包裝之勞動監督。',
+    courtReasoning:
+        '最高法院揭示：判斷契約性質應觀察個案客觀事實，綜合考量勞務專屬性、人格從屬性（服從指揮）、經濟從屬性（非為自己營業）與組織從屬性（納入平台體系），不可僅憑契約定名為「承攬」即排除勞基法適用。',
+    judgmentResult: '最高法院確立實質從屬性檢驗法則，將原判決廢棄發回臺灣高等法院更為審理。',
+    relatedLaws: const [
+      RelatedLaw(
+          lawName: '勞動基準法',
+          articleNumber: '第 2 條',
+          plainSummary: '定義勞工為受雇主僱用從事工作獲致工資者，勞動契約指約定勞雇關係之契約。',
+          relationToCase: '本案認定平台外送員是否受勞基法保障之核心依據。'),
+      RelatedLaw(
+          lawName: '民法',
+          articleNumber: '第 482 條',
+          plainSummary: '稱僱傭者，謂當事人約定，一方於一定或不定之期限內為他方服勞務，他方給付報酬之契約。',
+          relationToCase: '區分承攬與僱傭本質之民法基礎規範。')
+    ],
+    socialImpact:
+        '本判決為全台數十萬外送員權益爭取提供堅實的終審法理基礎，推動政府正式啟動外送產業專法草案立法，防止零工經濟淪為勞動法外的法外之地。',
+    relatedCases: const [],
+    sources: const [
+      CaseSource(
+        title: '司法院公開法學檢索系統最高法院113年度台上字第2152號民事判決',
+        sourceType: 'official',
+        updatedAt: '2024/07/18',
+      ),
+    ],
+    concurringDissentingOpinions: const [],
+    courtArguments: const [],
+    expertOpinions: const [],
+    mediaReferences: const [],
+    images: const [],
+  ),
+
+  CaseBook(
+    id: 'case-hsu-tzu-chiang-582',
+    titleZh: '最高法院 105 年度台上字第 2570 號刑事判決',
+    titleEn: 'Supreme Court Criminal Judgment 105-Tai-Shang-2570',
+    shortTitleZh: '徐自強案平反',
+    shortTitleEn: 'Hsu Tzu-chiang 2570',
+    displayCode: '105台上2570',
+    year: 2016,
+    location: '新北市',
+    status: '判決無罪確定',
+    category: '刑事案件',
+    tags: const ['冤獄平反', '自白法則', '對質詰問權', '釋字582號', '無罪推定'],
+    memoryLine: '被判死刑九次定讞，促成釋字第582號解釋排除未經詰問共犯自白，纏訟21年獲判無罪確定。',
+    shortDescription: '徐自強因共同被告刑求自白指控涉入黃春樹勒贖撕票案遭判死刑定讞。司法院釋字第582號宣告共犯未經詰問自白違憲，台灣高等法院更九審排除非任意性自白改判無罪，最高法院駁回檢方上訴無罪定讞。',
+    basicInfo: const CaseBasicInfo(
+      caseType: '刑事非常上訴與更審',
+      procedureStage: '最高法院駁回檢方上訴無罪定讞',
+      courtLevel: '最高法院刑事第六庭',
+      updatedAt: '2016/10/13',
+      caseNumber: '最高法院 105 年度台上字第 2570 號刑事判決',
+      judgmentDate: '2016年10月13日（民國105年10月13日）',
+      bench: '審判長法官 郭毓洲、受命法官 張祺祥等合議庭',
+      partiesOrPetitioner: '上訴人：臺灣高等法院檢察署檢察官、被告：徐自強（辯護人：林永頌律師、尤伯祥律師等）',
+      cause: '強盜擄人勒贖殺人案',
+      subsequentAction: '刑事訴訟法全面落實第156條第2項補強證據法則與交互詰問程序，徐自強獲刑事補償2,812萬元。',
+    ),
+    oneSentenceSummary: '促成釋字582號落實共犯詰問權，纏訟21年無罪確定平反。',
+    background:
+        '1995年建商黃春樹遭綁架勒贖殺害，警方逮捕嫌犯黃春棋與陳憶隆。兩人在警局訊問中咬定徐自強亦為同夥策劃者。徐自強案發當日具有不在場證明，但仍遭檢方依共同被告之口供起訴。法院歷審均僅憑共犯未經詰問之警詢筆錄，八度判處徐自強死刑定讞。',
+    fullStory:
+        '民間司改會等義務律師團接手救援，為徐自強聲請釋憲。大法官於2004年作成里程碑式的「釋字第582號解釋」，宣告最高法院採納共犯自白免經詰問之舊判例違憲，確立共同被告亦具證人身分，必須在法庭具結並接受交互詰問。最高法院據此撤銷死刑判決開啟更審。臺灣高等法院更九審全面勘驗，確認共犯不利自白存有刑求逼供瑕疵且無任何補強證據，於2015年改判徐自強無罪。2016年10月13日最高法院駁回檢方上訴，徐自強無罪確定。',
+    timeline: const [
+      CaseTimelineItem(
+          dateLabel: '1995/09/01',
+          title: '黃春樹命案案發',
+          description: '被害人遭綁架殺害，警方循線逮捕黃春棋等人。'),
+      CaseTimelineItem(
+          dateLabel: '2000/04/27',
+          title: '死刑判決定讞',
+          description: '最高法院維持死刑判決，徐自強被收押於死牢隨時面臨執行。'),
+      CaseTimelineItem(
+          dateLabel: '2004/07/23',
+          title: '司法院釋字582號解釋',
+          description: '大法官宣告舊判例違憲，共犯陳述必須具結並經交互詰問。'),
+      CaseTimelineItem(
+          dateLabel: '2016/10/13',
+          title: '最高法院宣判無罪確定',
+          description: '最高法院駁回檢方上訴，徐自強歷經21年無罪平反定讞。')
+    ],
+    people: const [
+      CasePersonRole(role: '被告', description: '徐自強（冤獄平反當事人，長達21年司法折磨）。'),
+      CasePersonRole(role: '義務律師團', description: '林永頌、尤伯祥、顧立雄等民間司改會律師。')
+    ],
+    legalIssues: const [
+      LegalIssue(
+          title: '共同被告之自白能否作為判定有罪之唯一證據？',
+          plainExplanation: '刑事訴訟法第156條第2項規定，被告或共犯之自白不得作為有罪判決之唯一證據，仍應調查其他客觀必要之證據以確保其真實性。',
+          relationToCase: '全案翻盤平反之根本證據法則依據。',
+          relatedLawIds: ['criminal-procedure-156'])
+    ],
+    investigationAndTrial:
+        '更審程序嚴格落實對質詰問，共犯黃春棋當庭坦承當年係遭警方刑求逼供才不實拖徐自強下水，原起訴事實瓦解。',
+    courtReasoning:
+        '最高法院裁判理由明確指出：檢察官未能提出任何積極客觀之補強證據證明徐自強參與犯罪，共同被告先後矛盾之自白不具備證據能力與證明力，基於罪疑唯輕與無罪推定原則，應為無罪之宣告。',
+    judgmentResult: '最高法院判決駁回檢察官第三審上訴，臺灣高等法院更九審無罪判決全案確定。',
+    relatedLaws: const [
+      RelatedLaw(
+          lawName: '刑事訴訟法',
+          articleNumber: '第 156 條',
+          plainSummary: '被告或共犯之自白，不得作為有罪判決之唯一證據，仍應調查其他必要之證據。',
+          relationToCase: '本案確立共同被告自白必須經具結交互詰問與嚴格補強證據。'),
+      RelatedLaw(
+          lawName: '刑事訴訟法',
+          articleNumber: '第 154 條',
+          plainSummary: '被告未經審判證明有罪確定前，推定其為無罪。犯罪事實應依證據認定之。',
+          relationToCase: '刑事審判最核心之無罪推定原則。')
+    ],
+    socialImpact:
+        '徐自強案徹底變革了台灣刑事審判程序，催生了詰問權保障、錄音錄影全程錄影制度，被譽為台灣近代法治人權最重要的里程碑判決之一。',
+    relatedCases: const [],
+    sources: const [
+      CaseSource(
+        title: '司法院公開法學檢索系統最高法院105年度台上字第2570號刑事判決',
+        sourceType: 'official',
+        updatedAt: '2016/10/13',
+      ),
+    ],
+    concurringDissentingOpinions: const [],
+    courtArguments: const [],
+    expertOpinions: const [],
+    mediaReferences: const [],
+    images: const [],
+  ),
+
+  CaseBook(
+    id: 'case-taikai-insider-1342',
+    titleZh: '最高法院 110 年度台上字第 1342 號刑事判決',
+    titleEn: 'Supreme Court Criminal Judgment 110-Tai-Shang-1342',
+    shortTitleZh: '台開內線交易案',
+    shortTitleEn: 'Taikai Insider 1342',
+    displayCode: '110台上1342',
+    year: 2021,
+    location: '台北市',
+    status: '有罪判決定讞',
+    category: '刑事案件',
+    tags: const ['內線交易', '重大消息時點', '證券交易法', '妥速審判法', '趙建銘'],
+    memoryLine: '纏訟16年歷經五次更審定讞，確立證交法內線交易重大消息明確成立時點與犯罪所得計算標準。',
+    shortDescription: '趙建銘於三井日本料理餐會獲悉台開聯貸案獲准重大利多消息，低價大量買入股票獲利。最高法院判決趙建銘處有期徒刑3年8月定讞，為證交法指標判決。',
+    basicInfo: const CaseBasicInfo(
+      caseType: '刑事證券金融訴訟',
+      procedureStage: '最高法院駁回上訴定讞',
+      courtLevel: '最高法院刑事第五庭',
+      updatedAt: '2021/10/14',
+      caseNumber: '最高法院 110 年度台上字第 1342 號刑事判決',
+      judgmentDate: '2021年10月14日（民國110年10月14日）',
+      bench: '審判長法官 徐昌錦、受命法官 林孟宜等合議庭',
+      partiesOrPetitioner: '上訴人：趙建銘、趙玉柱、游世一、蘇德建等被告',
+      cause: '違反證券交易法第157條之1內線交易禁止罪',
+      subsequentAction: '最高法院隨後就犯罪所得不扣除成本見解作成刑事大法庭裁定，統一證券金融審判實務。',
+    ),
+    oneSentenceSummary: '獲悉聯貸重大消息買股獲利，證券交易法內線交易罪判判定讞。',
+    background:
+        '2005年間，台開公司面臨巨額資金週轉危機，積極向銀行團爭取聯貸。同年7月14日，台開董事長蘇德建、趙建銘（時任總統女婿）、其父趙玉柱與游世一等人在台北三井日本料理餐敘。蘇德建在席間透露銀行團已同意台開165億元聯貸案及信託不良資產獲利之重大未公開利多消息。',
+    fullStory:
+        '餐會後，趙建銘等人以趙玉柱及家人帳戶大量以每股2至3元之低價購入台開股票上千張。消息公布後台開股價暴漲至18元，獲取鉅額價差。全案自2006年起訴後，因「重大消息明確時點」認定及「犯罪所得是否達1億元以上加重處罰門檻」之爭議，在最高法院與高等法院間來回發回五次更審。更五審適用刑事妥速審判法減刑後，判處趙建銘有期徒刑3年8月、趙玉柱4年。最高法院於2021年10月14日駁回上訴，全案歷經16年定讞。',
+    timeline: const [
+      CaseTimelineItem(
+          dateLabel: '2005/07/14',
+          title: '三井日本料理餐會',
+          description: '席間獲悉台開聯貸案重大未公開利多消息。'),
+      CaseTimelineItem(
+          dateLabel: '2006/07/10',
+          title: '台北地檢署提起公訴',
+          description: '檢方依違反證券交易法內線交易罪起訴趙建銘等人。'),
+      CaseTimelineItem(
+          dateLabel: '2021/10/14',
+          title: '最高法院終審定讞',
+          description: '最高法院駁回上訴，趙建銘判刑3年8月入監服刑定讞。')
+    ],
+    people: const [
+      CasePersonRole(role: '被告', description: '趙建銘（前總統女婿、骨科醫師）、趙玉柱、蘇德建。'),
+      CasePersonRole(role: '公訴機關', description: '臺灣臺北地方檢察署。')
+    ],
+    legalIssues: const [
+      LegalIssue(
+          title: '重大消息於何時點始告「明確」？',
+          plainExplanation: '內線交易禁止之時點，只要依一般理性投資人之判斷，該消息在客觀上已有相當之實現可能性即可，不以契約最終正式簽署生效為必要。',
+          relationToCase: '本案核心爭點與法律定性依據。',
+          relatedLawIds: ['securities-157-1'])
+    ],
+    investigationAndTrial:
+        '法院逐筆比對餐會時間戳記、證人通聯記錄與券商下單時間，認定被告買進行為與重大未公開消息之獲悉具有直接時序關聯性。',
+    courtReasoning:
+        '最高法院裁判指出：被告內部人明知發行公司足以影響股價之重大聯貸消息尚未公開，利用資訊不對稱在市場進場交易，嚴重破壞資本市場交易公平性與投資人信賴，構成證券交易法內線交易罪。',
+    judgmentResult: '駁回全體被告上訴，維持臺灣高等法院更五審有罪判決定讞，趙建銘處有期徒刑3年8月。',
+    relatedLaws: const [
+      RelatedLaw(
+          lawName: '證券交易法',
+          articleNumber: '第 157 條之 1',
+          plainSummary: '獲悉發行股票公司有重大影響股票價格之消息時，在該消息未公開前不得買入或賣出該公司股票。',
+          relationToCase: '本案刑事追訴之核心違法構成要件。'),
+      RelatedLaw(
+          lawName: '證券交易法',
+          articleNumber: '第 171 條',
+          plainSummary: '違反內線交易禁止者處三年以上十年以下有期徒刑；犯罪所得達一億元以上者加重處罰。',
+          relationToCase: '內線交易罪刑事處罰與犯罪所得門檻規定。')
+    ],
+    socialImpact:
+        '台開案促使立法院修訂證券交易法明確化重大消息範圍與公開方式之認定辦法，並確立資本市場反內線交易之嚴格執法界線。',
+    relatedCases: const [],
+    sources: const [
+      CaseSource(
+        title: '司法院公開法學檢索系統最高法院110年度台上字第1342號刑事判決',
+        sourceType: 'official',
+        updatedAt: '2021/10/14',
+      ),
+    ],
+    concurringDissentingOpinions: const [],
+    courtArguments: const [],
+    expertOpinions: const [],
+    mediaReferences: const [],
+    images: const [],
+  ),
+
+  CaseBook(
+    id: 'case-chang-will-1764',
+    titleZh: '最高法院 112 年度台上字第 1764 號民事判決',
+    titleEn: 'Supreme Court Civil Judgment 112-Tai-Shang-1764',
+    shortTitleZh: '張榮發遺囑效力案',
+    shortTitleEn: 'Chang Will 1764',
+    displayCode: '112台上1764',
+    year: 2024,
+    location: '台北市',
+    status: '遺囑有效判決定讞',
+    category: '民事案件',
+    tags: const ['密封遺囑', '遺囑能力', '特留分扣減', '長榮集團', '張國煒'],
+    memoryLine: '長榮張榮發密封遺囑指定遺產全給張國煒，最高法院認定符合法定要件定讞，其餘繼承人仍得行使特留分。',
+    shortDescription: '長榮集團創辦人張榮發立下密封遺囑，指定全數存款股票由四子張國煒繼承。大房二子張國政主張立遺囑時無行為能力提起無效之訴。最高法院審查認定符合民法第1192條密封遺囑要件，遺囑有效定讞。',
+    basicInfo: const CaseBasicInfo(
+      caseType: '民事家事繼承訴訟',
+      procedureStage: '最高法院駁回上訴定讞',
+      courtLevel: '最高法院民事第六庭',
+      updatedAt: '2024/08/14',
+      caseNumber: '最高法院 112 年度台上字第 1764 號民事判決',
+      judgmentDate: '2024年8月14日（民國113年8月14日）',
+      bench: '審判長法官 魏大喨、受命法官 李寶堂等合議庭',
+      partiesOrPetitioner: '上訴人：張國政、被上訴人：張國煒',
+      cause: '確認遺囑真正與有效性事件',
+      subsequentAction: '判決確立民法第1192條密封遺囑見證與公證程序嚴格要件，並由各繼承人依法行使民法第1225條特留分扣減權。',
+    ),
+    oneSentenceSummary: '張榮發密封遺囑指定遺產給張國煒，最高法院判決遺囑完全有效定讞。',
+    background:
+        '長榮集團創辦人張榮發於2014年12月16日立下密封遺囑，載明身故後所有名下存款、股票及不動產全歸四子張國煒一人單獨繼承，並指定張國煒接任長榮集團總裁。2016年張榮發辭世後，大房三子張國政主張父親立遺囑時已處於失智昏迷狀態，無遺囑能力，且遺囑簽名涉嫌偽造，向台北地方法院提起確認遺囑無效訴訟。',
+    fullStory:
+        '法院審理過程中調取台大醫院完整病歷紀錄，鑑定顯示張榮發於作成遺囑當天意識清楚，具備完整遺囑能力。此外，公證人楊昭國及老臣柯麗卿、吳界源等見證人出庭作證，證實張榮發在眾人面前親自啟封、指認簽名並口述「這是我自己寫的遺囑」。調查局法醫筆跡鑑定亦確認簽名與其生前字跡相符。一審台北地院、二審臺灣高等法院均判決遺囑有效。最高法院於2024年8月駁回張國政上訴，確認遺囑有效全案定讞。張國煒可依法繼承百億遺產，其餘繼承人則依法行使民法特留分扣減。',
+    timeline: const [
+      CaseTimelineItem(
+          dateLabel: '2014/12/16',
+          title: '張榮發立下密封遺囑',
+          description: '張榮發在見證人與公證人面前作成密封遺囑。'),
+      CaseTimelineItem(
+          dateLabel: '2016/01/20',
+          title: '張榮發辭世',
+          description: '遺囑公開引發繼承人爭奪遺產與經營權大戰。'),
+      CaseTimelineItem(
+          dateLabel: '2024/08/14',
+          title: '最高法院三審定讞',
+          description: '最高法院駁回上訴，確認張榮發遺囑真實有效定讞。')
+    ],
+    people: const [
+      CasePersonRole(role: '上訴人', description: '張國政（張榮發大房次子，主張遺囑無效）。'),
+      CasePersonRole(role: '被上訴人', description: '張國煒（張榮發二房獨子、星宇航空創辦人）。')
+    ],
+    legalIssues: const [
+      LegalIssue(
+          title: '密封遺囑之法定要式要件是否完備？',
+          plainExplanation: '民法第1192條規定，密封遺囑必須由遺囑人簽名密封後，向公證人提出並指定二人以上見證人，陳述為其遺囑，並由公證人記明年月日始生效力。',
+          relationToCase: '本案遺囑效力認定之法定標準。',
+          relatedLawIds: ['civil-1192'])
+    ],
+    investigationAndTrial:
+        '法院傳喚公證人與見證人到庭具結作證，比對公證筆錄與公證卷宗錄音，確認程序完全符合民法密封遺囑法定要件。',
+    courtReasoning:
+        '最高法院裁判指出：依據醫療專業紀錄及當日簽署行為，張榮發在作成遺囑時精神狀態正常，未達喪失遺囑能力之程度；且遺囑密封公證程序符合法定程式，自屬合法有效。',
+    judgmentResult: '最高法院判決駁回上訴人張國政之上訴，確認張榮發密封遺囑有效定讞。',
+    relatedLaws: const [
+      RelatedLaw(
+          lawName: '民法',
+          articleNumber: '第 1192 條',
+          plainSummary: '密封遺囑，應於遺囑上簽名後密封之，在公證人前提出，陳述其為自己之遺囑。',
+          relationToCase: '本案爭訟遺囑形式之法定構成要件依據。'),
+      RelatedLaw(
+          lawName: '民法',
+          articleNumber: '第 1225 條',
+          plainSummary: '應得特留分之人，因被繼承人所為之遺贈致其應得之數不足者，得按其不足之數扣減之。',
+          relationToCase: '其餘合法繼承人主張權利救濟之特留分扣減法源。')
+    ],
+    socialImpact:
+        '本判決成為台灣家族企業傳承、生前財產規劃與遺囑公證法定程序最受矚目之教科書級判決，引起社會對特留分保障與生前意願尊重的廣泛探討。',
+    relatedCases: const [],
+    sources: const [
+      CaseSource(
+        title: '司法院公開法學檢索系統最高法院112年度台上字第1764號民事判決',
+        sourceType: 'official',
+        updatedAt: '2024/08/14',
+      ),
+    ],
+    concurringDissentingOpinions: const [],
+    courtArguments: const [],
+    expertOpinions: const [],
+    mediaReferences: const [],
+    images: const [],
+  ),
+
+  CaseBook(
+    id: 'case-support-exemption-1118',
+    titleZh: '臺灣臺中地方法院 109 年度家親聲字第 382 號民事裁定',
+    titleEn: 'Taichung District Court Family Ruling 109-Chia-Chin-Sheng-382',
+    shortTitleZh: '免除失職父母扶養義務案',
+    shortTitleEn: 'Support Exemption 382',
+    displayCode: '109家親聲382',
+    year: 2020,
+    location: '台中市',
+    status: '裁定免除確定',
+    category: '家事事件',
+    tags: const ['免除扶養義務', '民法第1118條之1', '棄養子女', '老人福利法', '公平正義'],
+    memoryLine: '生父自幼離家未盡扶養義務，年老社會局追討安置費，法院裁定情節重大依法完全免除子女扶養義務。',
+    shortDescription: '生父在子女幼年即離家拋棄未曾支付生活費。年老病倒後地方社會局向子女請求支付高額保護安置費用。子女聲請免除扶養義務，家事法院裁定情節重大依法完全免除。',
+    basicInfo: const CaseBasicInfo(
+      caseType: '家事非訟事件',
+      procedureStage: '地方法院裁定確定',
+      courtLevel: '臺灣臺中地方法院家事法庭',
+      updatedAt: '2020/09/15',
+      caseNumber: '臺灣臺中地方法院 109 年度家親聲字第 382 號民事裁定',
+      judgmentDate: '2020年9月15日（民國109年9月15日）',
+      bench: '家事法庭法官 審查認定',
+      partiesOrPetitioner: '聲請人：成年子女、相對人：生父',
+      cause: '聲請免除扶養義務事件（民法第1118條之1第2項）',
+      subsequentAction: '裁定確定後子女無須負擔生父晚年扶養費及社會局安置追償費用，落實家庭倫理互惠與實質公平。',
+    ),
+    oneSentenceSummary: '父母失職遺棄子女情節重大，法院裁定免除子女扶養義務確定。',
+    background:
+        '子女年幼時，父親因沈迷賭博離家出走，完全未負擔任何生活教育費，全靠母親一人兼差撫養成年。30年後父親年老無依病倒路邊，由地方政府社會局依老人福利法緊急安置於長照機構，並發函向子女追討每月數萬元之安置費用。子女深感不公，向法院家事法庭聲請免除扶養義務。',
+    fullStory:
+        '我國傳統民法原本規定「天下無不是的父母」，子女對父母負有絕對扶養義務，即便遭受虐待棄養仍須撫養父母，長年被批評顯失公平。立法院於2010年增訂民法第1118條之1。本案法院傳喚母親及親友作證，並查核戶籍與稅務資料，確認父親自聲請人年幼時即惡意遺棄、無正當理由未盡扶養責任長達近30年，情節確屬重大。法院裁定：若強令長期受忽視遺棄之子女負擔扶養義務，顯失公平，依法完全免除子女對生父之扶養義務。',
+    timeline: const [
+      CaseTimelineItem(
+          dateLabel: '1990',
+          title: '生父離家棄養',
+          description: '生父無正當理由離家，未曾給付子女生活學費。'),
+      CaseTimelineItem(
+          dateLabel: '2020/03',
+          title: '社會局追討安置費',
+          description: '生父病倒長照機構，社會局向子女發公文追索安置費用。'),
+      CaseTimelineItem(
+          dateLabel: '2020/09/15',
+          title: '法院裁定完全免除',
+          description: '臺中地院家事法庭裁定完全免除子女之扶養義務確定。')
+    ],
+    people: const [
+      CasePersonRole(role: '聲請人', description: '自幼遭生父棄養之成年子女。'),
+      CasePersonRole(role: '相對人', description: '長期失聯無正當理由未盡撫育義務之生父。')
+    ],
+    legalIssues: const [
+      LegalIssue(
+          title: '未盡扶養責任何種情形構成「情節重大」？',
+          plainExplanation: '父母在子女完全欠缺自立能力之幼年時期，無正當理由完全不顧其生活安危、未負擔基本生存開銷且歷時多年，實務認定即屬情節重大。',
+          relationToCase: '本案免除扶養義務之法定要件。',
+          relatedLawIds: ['civil-1118-1'])
+    ],
+    investigationAndTrial:
+        '家事法庭家事調查官訪視聲請人家庭與調查歷史學費匯款單據，查明生父確未曾付出絲毫關愛或財力扶助。',
+    courtReasoning:
+        '法院裁定指出：扶養義務為雙向互惠之倫理法理。相對人對子女無正當理由未盡扶養義務情節重大，若仍課予聲請人扶養責任顯失公平，合於民法第1118條之1第2項規定，准予完全免除扶養義務。',
+    judgmentResult: '裁定聲請人對於相對人之扶養義務應予完全免除確定。',
+    relatedLaws: const [
+      RelatedLaw(
+          lawName: '民法',
+          articleNumber: '第 1118 條之 1',
+          plainSummary: '受扶養權利者曾對負扶養義務者無正當理由未盡扶養義務且情節重大者，法院得免除其扶養義務。',
+          relationToCase: '免除成年子女對失職失格父母扶養義務之實體法律依據。'),
+      RelatedLaw(
+          lawName: '老人福利法',
+          articleNumber: '第 41 條',
+          plainSummary: '老人因生命身體處於危難直轄市縣市主管機關得予保護安置；其費用得向扶養義務人追償。',
+          relationToCase: '公法安置費用追討與民法扶養義務免除之程序交會。')
+    ],
+    socialImpact:
+        '此類判決大幅扭轉了社會對於「盲目孝道」之刻板束縛，使受家暴、受棄養之子女得以依循法律途徑卸下沉重的長照經濟枷鎖，落實個案公平正義。',
+    relatedCases: const [],
+    sources: const [
+      CaseSource(
+        title: '司法院公開法學檢索系統臺灣臺中地方法院109年度家親聲字第382號民事裁定',
+        sourceType: 'official',
+        updatedAt: '2020/09/15',
+      ),
+    ],
+    concurringDissentingOpinions: const [],
+    courtArguments: const [],
+    expertOpinions: const [],
+    mediaReferences: const [],
+    images: const [],
+  ),
+
+  CaseBook(
+    id: 'case-cross-border-111',
+    titleZh: '憲法法庭 111 年憲判字第 8 號判決',
+    titleEn: 'Constitutional Court Judgment 111-Hsien-Pan-8',
+    shortTitleZh: '跨國爭女憲法判決',
+    shortTitleEn: '111-HP-8 Cross-Border',
+    displayCode: '111憲判8',
+    year: 2022,
+    location: '台北市',
+    status: '憲法判決確定',
+    category: '憲法法庭裁判',
+    tags: const ['未成年子女最佳利益', '跨國親權', '暫時處分', '聽取子女陳述', '正當法律程序'],
+    memoryLine: '義大利籍父親與台灣母親爭女案，憲法法庭廢棄強制交付裁定，確立聽取未成年子女意願之憲法原則。',
+    shortDescription: '義大利籍父親依法院暫時處分聲請強制執行引渡8歲女兒回義大利。生母提起裁判憲法審查。憲法法庭判決廢棄最高法院裁定，確立法院處理跨國交付子女應落實聽取未成年子女陳述及貫徹子女最佳利益。',
+    basicInfo: const CaseBasicInfo(
+      caseType: '憲法法庭裁判',
+      procedureStage: '判決廢棄發回最高法院',
+      courtLevel: '司法院憲法法庭',
+      updatedAt: '2022/05/27',
+      caseNumber: '憲法法庭 111 年憲判字第 8 號判決',
+      judgmentDate: '2022年5月27日（民國111年5月27日）',
+      bench: '審判長 許宗力 大法官（合議庭大法官全體）',
+      partiesOrPetitioner: '聲請人：生母（訴訟代理人：賴芳玉律師等）、關係人：義大利籍生父',
+      cause: '最高法院111年度台簡抗字第13號民事裁定裁判憲法審查案',
+      subsequentAction: '最高法院重新審理撤銷強制執行引渡裁定，家事法院後續判決雙方共同監護，尊重女童在台就學生活現狀。',
+    ),
+    oneSentenceSummary: '廢棄強制交付子女裁定，貫徹未成年子女最佳利益與法庭表意權。',
+    background:
+        '台灣母親與義大利籍父親未婚生女，後因感情破裂，母親於2019年帶8歲女兒自義大利返台。義大利父親向台北地院聲請改定監護權並聲請暫時處分，法院裁定在判決確定前母親應暫時交付女兒給父親帶回義大利。母親抗告至最高法院遭駁回，執行法官前往學校強制執行帶人引發女童激烈哭喊抗拒，引發社會震撼。生母向憲法法庭聲請裁判憲法審查。',
+    fullStory:
+        '憲法法庭於2022年5月27日作成111年憲判字第8號判決，宣示未成年子女為憲法保障之獨立基本權主體，而非父母爭奪之客體。法院在作成涉及跨國遷移或交付子女之裁定前，必須指派程序監理人，並親自或由社工實質聽取未成年子女之陳述，審酌子女在當地的生活慣性與人格健全發展，貫徹未成年子女最佳利益。最高法院原裁定未給予女童適當陳述意見之機會，逕行命跨國交付，牴觸憲法，判決廢棄發回。',
+    timeline: const [
+      CaseTimelineItem(
+          dateLabel: '2019',
+          title: '母親帶女返台',
+          description: '母親帶8歲女兒回台定居就學，父親跨海爭取親權。'),
+      CaseTimelineItem(
+          dateLabel: '2022/03',
+          title: '學校強制執行引渡爆爭端',
+          description: '法院執行官至學校執行交付暫時處分，引發女童抗拒哭求。'),
+      CaseTimelineItem(
+          dateLabel: '2022/05/27',
+          title: '憲法法庭判決宣示',
+          description: '宣告最高法院裁定違憲廢棄，確立子女最佳利益法理。')
+    ],
+    people: const [
+      CasePersonRole(role: '聲請人', description: '台灣籍生母（由賴芳玉等家事律師代理）。'),
+      CasePersonRole(role: '關係人', description: '義大利籍生父（主張依海牙公約反跨國拐帶原則應遣返）。')
+    ],
+    legalIssues: const [
+      LegalIssue(
+          title: '跨國交付子女裁定是否應保障未成年子女之法庭陳述權？',
+          plainExplanation: '未成年子女亦為獨立之憲法權利主體，具有人性尊嚴與人格權。法院未聽取子女意見逕行強制移送跨國境，侵害其受正當法律程序保障之權益。',
+          relationToCase: '本案裁判憲法審查核心論據。',
+          relatedLawIds: ['constitution-22'])
+    ],
+    investigationAndTrial:
+        '憲法法庭審理中全面檢視聯合國兒童權利公約（CRC）第12條保障兒童表意權之國際法規範，確認其具有國內法效力。',
+    courtReasoning:
+        '憲法法庭指出：家事法院審理涉及跨國交付子女事件時，未成年子女之最佳利益為最高指導原則。法院不得僅將未成年子女視為父母財產或管轄權之客體，必須實質傾聽其意願與身心健全發展需求。',
+    judgmentResult: '宣告最高法院111年度台簡抗字第13號民事裁定牴觸憲法，應予廢棄，發回最高法院重新審理。',
+    relatedLaws: const [
+      RelatedLaw(
+          lawName: '家事事件法',
+          articleNumber: '第 107 條',
+          plainSummary: '法院就未成年子女權利義務行使之裁判，應依子女之最佳利益，審酌一切情狀。',
+          relationToCase: '家事裁判認定未成年子女最佳利益之法規基準。'),
+      RelatedLaw(
+          lawName: '兒童權利公約施行法',
+          articleNumber: '第 2 條',
+          plainSummary: '公約所揭示兒童權利之保障，具有國內法律之效力。',
+          relationToCase: '國際公約保障未成年人表意權與人權之國內法依據。')
+    ],
+    socialImpact:
+        '此判決深刻改革了台灣家事法院處理跨國婚姻搶子案件之執法模式，阻絕了將未成年子女當作行李包裹式強制引渡的粗暴手段，樹立兒少人權典範。',
+    relatedCases: const [],
+    sources: const [
+      CaseSource(
+        title: '司法院公開法學檢索系統憲法法庭111年憲判字第8號判決全文',
+        sourceType: 'official',
+        updatedAt: '2022/05/27',
+      ),
+    ],
+    concurringDissentingOpinions: const [],
+    courtArguments: const [],
+    expertOpinions: const [],
+    mediaReferences: const [],
+    images: const [],
+  ),
+
+  CaseBook(
+    id: 'case-tsmc-secret-1589',
+    titleZh: '最高法院 104 年度台上字第 1589 號民事判決',
+    titleEn: 'Supreme Court Civil Judgment 104-Tai-Shang-1589',
+    shortTitleZh: '台積電控梁孟松案',
+    shortTitleEn: 'TSMC v. Liang 1589',
+    displayCode: '104台上1589',
+    year: 2015,
+    location: '新竹市',
+    status: '判決定讞',
+    category: '民事案件',
+    tags: const ['營業秘密', '不可避免揭露原則', '競業禁止', '半導體', '台積電'],
+    memoryLine: '台積電控告研發大將梁孟松跳槽三星，法院判決競業禁止期滿後仍禁止任職對手定讞。',
+    shortDescription: '台積電前資深研發處長梁孟松離職後轉赴三星電子任職。台積電訴請禁止其洩漏營業秘密並命競業禁止。最高法院認定其任職三星極可能洩漏極機密製程技術，創先例判決禁止任職定讞。',
+    basicInfo: const CaseBasicInfo(
+      caseType: '民事智財與營業秘密訴訟',
+      procedureStage: '最高法院駁回上訴定讞',
+      courtLevel: '最高法院民事第四庭',
+      updatedAt: '2015/08/24',
+      caseNumber: '最高法院 104 年度台上字第 1589 號民事判決',
+      judgmentDate: '2015年8月24日（民國104年8月24日）',
+      bench: '智慧財產法院合議庭、最高法院合議庭',
+      partiesOrPetitioner: '上訴人：梁孟松、被上訴人：台灣積體電路製造股份有限公司（台積電）',
+      cause: '侵害營業秘密與競業禁止損害防阻事件',
+      subsequentAction: '判決梁孟松於原定競業禁止期滿後仍禁止任職三星定讞，確立半導體核心技術不可避免揭露法理。',
+    ),
+    oneSentenceSummary: '引進不可避免揭露法理，判決離職研發高層期滿後仍禁止任職競業對手。',
+    background:
+        '梁孟松為台積電前研發大將，曾主導台積電0.13微米銅製程關鍵研發，掌握先進奈米製程及極紫外光（EUV）等極機密技術。2009年梁孟松離職後，台積電依約給付高額股票補償並約定兩年競業禁止。然而競業禁止期滿前，梁孟松赴南韓成均館大學任教，實質上受聘於三星電子擔任執行副總裁，協助三星在晶圓代工製程突飛猛進。台積電遂提起民事訴訟，請求禁止其任職三星及洩漏營業秘密。',
+    fullStory:
+        '本案法律爭點在於：合約規定的兩年競業禁止期間已於2011年底屆滿，法院是否能在合約期滿後，仍判令禁止被告前往對手公司任職？智慧財產法院二審打破傳統合約限制，引進美國法「不可避免揭露原則」（Inevitable Disclosure Doctrine），認定梁孟松所掌握之營業秘密與三星所指派之研發業務高度重疊，梁在日常工作中必然會運用台積電營業秘密。為防止不可回復之重大損害，法院依營業秘密法第11條之侵害排除請求權，判命梁孟松在2015年底前均不得任職三星或為其提供服務。最高法院於2015年8月24日裁定駁回梁孟松上訴定讞。',
+    timeline: const [
+      CaseTimelineItem(
+          dateLabel: '2009/02',
+          title: '梁孟松離職台積電',
+          description: '簽署保密及兩年競業禁止協議後離開台積電。'),
+      CaseTimelineItem(
+          dateLabel: '2011/07',
+          title: '台積電提起民事訴訟',
+          description: '台積電掌握梁孟松任職三星事證，向智財法院起訴請求禁止侵權。'),
+      CaseTimelineItem(
+          dateLabel: '2015/08/24',
+          title: '最高法院終審定讞',
+          description: '最高法院駁回上訴，判決梁孟松不得為三星服務定讞。')
+    ],
+    people: const [
+      CasePersonRole(role: '上訴人', description: '梁孟松（國際半導體晶圓研發專家）。'),
+      CasePersonRole(role: '被上訴人', description: '台灣積體電路製造股份有限公司（台積電）。')
+    ],
+    legalIssues: const [
+      LegalIssue(
+          title: '競業禁止約定期滿後，能否再依營業秘密法請求禁止任職？',
+          plainExplanation: '營業秘密法第11條賦予權利人預防性禁令之權限。若離職員工任職競業對手高度必然導致營業秘密洩漏，縱使約定契約期滿，法院仍得命其禁止任職。',
+          relationToCase: '本案創設不可避免揭露法理之核心依據。',
+          relatedLawIds: ['trade-secret-11'])
+    ],
+    investigationAndTrial:
+        '智財法院秘密開庭並委託專家比對台積電與三星在16/14奈米FinFET製程之技術特徵結構，發現三星晶片之材料與結構出現顯著台積電技術痕跡。',
+    courtReasoning:
+        '最高法院裁判指出：營業秘密之保護首重事前防範。被告所知悉之機密既屬原告核心競爭優勢，且與被告於競爭對手處從事之研發職務重疊，客觀上已達不可避免揭露之重大危險，原告請求防止侵害自屬有據。',
+    judgmentResult: '最高法院駁回上訴人梁孟松上訴，判決其在2015年12月31日前不得為三星電子提供服務或任職定讞。',
+    relatedLaws: const [
+      RelatedLaw(
+          lawName: '營業秘密法',
+          articleNumber: '第 11 條',
+          plainSummary: '營業秘密受侵害時，得請求排除之；有受侵害之虞者，得請求防止之。',
+          relationToCase: '核發預防性不作為禁令之實體法依據。'),
+      RelatedLaw(
+          lawName: '民法',
+          articleNumber: '第 148 條',
+          plainSummary: '權利之行使，不得違反公共利益，或以損害他人為主要目的。行使權利，應依誠實及信用方法。',
+          relationToCase: '離職員工忠實義務與誠信原則之檢驗。')
+    ],
+    socialImpact:
+        '本判決成為台灣科技產業保護高階核心技術營業秘密之標竿案例，促成政府後續修正《營業秘密法》增列意圖在境外使用之刑罰加重處罰規定，並建立國家核心關鍵技術保護機制。',
+    relatedCases: const [],
+    sources: const [
+      CaseSource(
+        title: '司法院公開法學檢索系統智慧財產法院102年度民營上字第3號及最高法院104年度台上字第1589號判決要旨',
+        sourceType: 'official',
+        updatedAt: '2015/08/24',
       ),
     ],
     concurringDissentingOpinions: const [],
@@ -15936,7 +16797,14 @@ final caseLibraryHalls = <CaseLibraryHall>[
           'case-163',
           'case-167',
           'case-174',
-          'case-178'
+          'case-178',
+          'case-adultery-791',
+          'case-indigenous-hunt-803',
+          'case-delivery-labor-2152',
+          'case-taikai-insider-1342',
+          'case-chang-will-1764',
+          'case-support-exemption-1118',
+          'case-cross-border-111',
         ],
       ),
       CaseShelf(
@@ -15951,6 +16819,8 @@ final caseLibraryHalls = <CaseLibraryHall>[
           'ding-2015',
           '102',
           '101',
+          'case-hsu-tzu-chiang-582',
+          'case-tsmc-secret-1589',
           'case-001',
           'case-002',
           'case-003',
@@ -16423,7 +17293,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '平等原則與少數權益保障',
         description: '婚姻平權、性別平等、弱勢族群身分認同保障',
         coverStyle: 'gold',
-        caseIds: const ['101', 'case-018', 'case-022', 'case-024'],
+        caseIds: const ['101', 'case-018', 'case-022', 'case-024', 'case-adultery-791'],
       ),
       CaseShelf(
         id: 'shelf-const-power',
@@ -16431,7 +17301,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '權力分立與民主憲政防線',
         description: '國會調查權、重大預算停建與公務員救濟保障',
         coverStyle: 'navy',
-        caseIds: const ['499', '520', '102', 'case-023', 'case-025'],
+        caseIds: const ['499', '520', '102', 'case-023', 'case-025', 'case-indigenous-hunt-803'],
       ),
     ],
   ),
@@ -16454,7 +17324,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '死刑非常上訴與無罪定讞',
         description: '死刑判決定讞後經新事證開啟再審平反之重大歷史案件',
         coverStyle: 'navy',
-        caseIds: const ['104', '105', 'cheng-2021'],
+        caseIds: const ['104', '105', 'cheng-2021', 'case-hsu-tzu-chiang-582'],
       ),
       CaseShelf(
         id: 'shelf-inno-confession',
@@ -16462,7 +17332,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '不正訊問與自白補強法則',
         description: '偵查機關取得自白之適法性與共同被告陳述審查',
         coverStyle: 'forest',
-        caseIds: const ['105', 'case-014'],
+        caseIds: const ['105', 'case-014', 'case-hsu-tzu-chiang-582'],
       ),
       CaseShelf(
         id: 'shelf-inno-military',
@@ -16501,7 +17371,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '平台經濟與僱傭身分實質認定',
         description: '外送平台與數位新經濟下勞工身分之法律歸屬',
         coverStyle: 'forest',
-        caseIds: const ['case-029'],
+        caseIds: const ['case-029', 'case-delivery-labor-2152'],
       ),
       CaseShelf(
         id: 'shelf-lab-safety',
@@ -16548,7 +17418,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '組織犯罪、跨國詐欺與洗錢防制',
         description: '跨境詐欺、非法吸金洗錢與重大經濟刑事裁判',
         coverStyle: 'navy',
-        caseIds: const ['case-006', 'case-011', 'case-013'],
+        caseIds: const ['case-006', 'case-011', 'case-013', 'case-taikai-insider-1342'],
       ),
     ],
   ),
@@ -16571,7 +17441,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '高科技營業秘密與跳槽競業禁止',
         description: '商業秘密三要件、定暫時狀態處分與保密協議爭訟',
         coverStyle: 'navy',
-        caseIds: const ['case-009'],
+        caseIds: const ['case-009', 'case-tsmc-secret-1589'],
       ),
       CaseShelf(
         id: 'shelf-tech-copy',
@@ -16610,7 +17480,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '子女最佳利益與跨國親權行使',
         description: '跨國父母監護權爭訟、探視權裁判與略誘罪界線',
         coverStyle: 'forest',
-        caseIds: const ['case-021', 'case-035', 'case-040'],
+        caseIds: const ['case-021', 'case-035', 'case-040', 'case-cross-border-111'],
       ),
       CaseShelf(
         id: 'shelf-fam-estate',
@@ -16618,7 +17488,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '自書遺囑、特留分與遺產分割',
         description: '大額財產繼承、遺囑要式性審查與特留分扣減權',
         coverStyle: 'gold',
-        caseIds: const ['case-037', 'case-038'],
+        caseIds: const ['case-037', 'case-038', 'case-chang-will-1764'],
       ),
       CaseShelf(
         id: 'shelf-fam-vulnerable',
@@ -16626,7 +17496,14 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '免除扶養責任與兒少身心保護',
         description: '民法第 1118 條之 1 免除扶養及托嬰機構兒少保護法制',
         coverStyle: 'crimson',
-        caseIds: const ['case-039', '161', 'case-033', 'case-034', 'case-036'],
+        caseIds: const [
+          'case-039',
+          '161',
+          'case-033',
+          'case-034',
+          'case-036',
+          'case-support-exemption-1118',
+        ],
       ),
     ],
   ),

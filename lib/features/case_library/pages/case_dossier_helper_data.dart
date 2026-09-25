@@ -39,29 +39,41 @@ extension _CaseDossierDetailPageStateMockData on _CaseDossierDetailPageState {
     }
 
     // Fallbacks for other cases to ensure UI completeness
+    final officialNumber = book.basicInfo.caseNumber?.isNotEmpty == true
+        ? book.basicInfo.caseNumber!
+        : (book.displayCode.isNotEmpty
+            ? book.displayCode
+            : '${book.year} 年度重大字號');
+
     return [
       _TrialStep(
-        stage: '第一審',
+        stage: '審理程序',
         courtName: book.basicInfo.courtLevel.contains('/')
             ? book.basicInfo.courtLevel.split('/').last.trim()
             : book.basicInfo.courtLevel,
-        caseNumber: '【模擬案號】${book.year} 年度矚訴字第 999 號',
+        caseNumber: officialNumber,
         outcome: '裁判結果：${book.status}',
-        date: book.basicInfo.updatedAt,
+        date: book.basicInfo.judgmentDate?.isNotEmpty == true
+            ? book.basicInfo.judgmentDate!
+            : book.basicInfo.updatedAt,
         holdingDetail:
-            '【判決概要】\n本案為 ${book.category}，經第一審法院審判，考量相關法條事證與社會大眾爭點後做成決議。\n\n【核心判決意旨】\n詳細判決內容請參考司法院裁判書公開查詢系統。本系統已收錄該案件之核心法律關係與爭點。',
+            '【判決概要】\n本案為 ${book.category}，經司法機關依法審判，考量相關法條事證與社會大眾爭點後作成決議。\n\n【核心判決意旨】\n詳細判決內容請參考司法院裁判書公開查詢系統。本系統已收錄該案件之核心法律關係與爭點。',
       ),
-      if (book.status == '判決確定' || book.status == '已結案')
+      if (book.status == '判決確定' || book.status == '已結案' || book.status == '已公布')
         _TrialStep(
-          stage: '終審確定',
+          stage: '確定終審',
           courtName: book.basicInfo.courtLevel.contains('/')
               ? book.basicInfo.courtLevel.split('/').first.trim()
               : book.basicInfo.courtLevel,
-          caseNumber: '【模擬案號】${book.year + 1} 年度台上字第 888 號',
-          outcome: '上訴駁回，維持原判決確定',
-          date: book.basicInfo.updatedAt,
+          caseNumber: officialNumber,
+          outcome: book.judgmentResult.isNotEmpty
+              ? book.judgmentResult
+              : '上訴駁回，維持原判決確定',
+          date: book.basicInfo.judgmentDate?.isNotEmpty == true
+              ? book.basicInfo.judgmentDate!
+              : book.basicInfo.updatedAt,
           holdingDetail:
-              '【終審裁判概要】\n本案上訴至終審法院，認原審判決認事用法尚無違誤，裁定駁回上訴或宣判確定。\n\n【判決效力】\n全案定讞，對當事人具有實質確定力。',
+              '【終審裁判概要】\n本案經合法審理終結，宣告裁判主文，全案確定。\n\n【判決效力】\n全案定讞，對當事人具有實質確定力。',
         ),
     ];
   }

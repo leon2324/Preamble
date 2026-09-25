@@ -842,8 +842,8 @@ void main() {
     final verticalScrollable = find
         .byWidgetPredicate((w) => w is Scrollable && w.axis == Axis.vertical)
         .first;
-    for (int i = 0; i < 3; i++) {
-      await tester.drag(verticalScrollable, const Offset(0, -250));
+    for (int i = 0; i < 7; i++) {
+      await tester.drag(verticalScrollable, const Offset(0, -300));
       await tester.pumpForVerification();
     }
 

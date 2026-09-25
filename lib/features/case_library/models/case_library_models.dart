@@ -210,12 +210,24 @@ class CaseBasicInfo {
     required this.procedureStage,
     required this.courtLevel,
     required this.updatedAt,
+    this.caseNumber,
+    this.judgmentDate,
+    this.bench,
+    this.partiesOrPetitioner,
+    this.cause,
+    this.subsequentAction,
   });
 
   final String caseType;
   final String procedureStage;
   final String courtLevel;
   final String updatedAt;
+  final String? caseNumber;
+  final String? judgmentDate;
+  final String? bench;
+  final String? partiesOrPetitioner;
+  final String? cause;
+  final String? subsequentAction;
 }
 
 class CaseTimelineItem {

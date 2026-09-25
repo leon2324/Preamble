@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:preamble/components/shared/custom_toast.dart';
@@ -26,6 +25,9 @@ import 'package:preamble/features/case_library/pages/case_social_graph_page.dart
 import 'package:preamble/features/case_library/pages/case_opinion_board_page.dart';
 import 'package:preamble/pages/learning/know_law_page.dart';
 import 'package:preamble/features/case_library/pages/case_timeline_detail_page.dart';
+import 'package:preamble/features/case_library/widgets/wikipedia_infobox_card.dart';
+import 'package:preamble/features/case_library/widgets/wikipedia_table_of_contents.dart';
+import 'package:preamble/features/case_library/widgets/wikipedia_wikilink_text.dart';
 import 'package:preamble/app/app_state.dart';
 
 part 'widgets/case_dossier_tabs.dart';
@@ -893,7 +895,23 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 20.h),
+                                SizedBox(height: 14.h),
+
+                                // 維基百科式條目資訊框 (Wikipedia Legal Infobox)
+                                WikipediaInfoboxCard(book: book),
+
+                                // 維基百科條目目錄 (Wikipedia Table of Contents)
+                                WikipediaTableOfContents(
+                                  activeTab: _selectedTab,
+                                  onSelectTab: (tab) {
+                                    if (_availableTabs.contains(tab)) {
+                                      setState(() {
+                                        _selectedTab = tab;
+                                      });
+                                    }
+                                  },
+                                ),
+                                SizedBox(height: 16.h),
 
                                 // 事件摘要 Section
                                 Text(
@@ -977,7 +995,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                           child: _ExploreShortcutTile(
                                             iconSvg: CaseLibrarySvgIcons.scale,
                                             title: '如果你是法官',
-                                            subtitle: '模擬司法天平裁判',
+                                            subtitle: '體驗法官裁判心證',
                                             backgroundColor:
                                                 const Color(0xFFEAF6EF),
                                             foregroundColor:
@@ -2033,63 +2051,9 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
 
   Widget _buildRichTextWithGlossary(
       BuildContext context, String text, TextStyle baseStyle) {
-    final glossaries = _getGlossaries(book.id);
-    if (glossaries.isEmpty) {
-      return Text(text, style: baseStyle);
-    }
-
-    final sortedGlossaries = List<_GlossaryItem>.from(glossaries)
-      ..sort((a, b) => b.term.length.compareTo(a.term.length));
-
-    final terms = sortedGlossaries.map((g) => RegExp.escape(g.term)).join('|');
-    final regex = RegExp('($terms)');
-    final matches = regex.allMatches(text);
-
-    if (matches.isEmpty) {
-      return Text(text, style: baseStyle);
-    }
-
-    final List<InlineSpan> spans = [];
-    int lastMatchEnd = 0;
-
-    for (final match in matches) {
-      if (match.start > lastMatchEnd) {
-        spans.add(TextSpan(
-          text: text.substring(lastMatchEnd, match.start),
-          style: baseStyle,
-        ));
-      }
-
-      final matchedTerm = match.group(0)!;
-      final glossaryItem =
-          sortedGlossaries.firstWhere((g) => g.term == matchedTerm);
-
-      spans.add(TextSpan(
-        text: matchedTerm,
-        style: baseStyle.copyWith(
-          color: const Color(0xFF2E7D32),
-          fontWeight: FontWeight.bold,
-          decoration: TextDecoration.underline,
-          decorationColor: const Color(0xFF2E7D32),
-        ),
-        recognizer: TapGestureRecognizer()
-          ..onTap = () {
-            _showGlossaryBottomSheet(context, glossaryItem);
-          },
-      ));
-
-      lastMatchEnd = match.end;
-    }
-
-    if (lastMatchEnd < text.length) {
-      spans.add(TextSpan(
-        text: text.substring(lastMatchEnd),
-        style: baseStyle,
-      ));
-    }
-
-    return RichText(
-      text: TextSpan(children: spans),
+    return WikipediaWikilinkText(
+      text: text,
+      baseStyle: baseStyle,
     );
   }
 
@@ -2111,11 +2075,34 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
 
     final minguoYearLabel = book.year - 1911;
 
+    final officialCaseNo = book.basicInfo.caseNumber?.isNotEmpty == true
+        ? book.basicInfo.caseNumber!
+        : (book.displayCode.isNotEmpty
+            ? book.displayCode
+            : '${book.basicInfo.courtLevel} $minguoYearLabel 年度字第 ${book.id} 號');
+
+    final officialDate = book.basicInfo.judgmentDate?.isNotEmpty == true
+        ? book.basicInfo.judgmentDate!
+        : formattedDate;
+
+    final officialCause = book.basicInfo.cause?.isNotEmpty == true
+        ? book.basicInfo.cause!
+        : '${book.category}（${book.titleZh}）';
+
+    final benchText = book.basicInfo.bench?.isNotEmpty == true
+        ? book.basicInfo.bench!
+        : (book.people.any((p) => p.role.contains('審判') || p.role.contains('法官'))
+            ? book.people
+                .firstWhere(
+                    (p) => p.role.contains('審判') || p.role.contains('法官'))
+                .description
+            : '司法院合議庭');
+
     // Build the parts of the judgment
     final metadataText = '【裁判機關】${book.basicInfo.courtLevel}\n'
-        '【裁判字號】中華民國 $minguoYearLabel 年度特字第 ${book.id} 號\n'
-        '【裁判日期】$formattedDate\n'
-        '【裁判案由】${book.category}（${book.titleZh}）';
+        '【裁判字號】$officialCaseNo\n'
+        '【裁判日期】$officialDate\n'
+        '【裁判案由】$officialCause';
 
     final mainVerdictText =
         book.judgmentResult.isNotEmpty ? book.judgmentResult : "上訴駁回。";
@@ -2163,7 +2150,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              '判決書全文（模擬書卷）',
+              '司法院裁判書官方全文與理由要旨',
               style: LightTextStyles.sectionTitle(context).copyWith(
                 fontWeight: FontWeight.w900,
               ),
@@ -2180,10 +2167,8 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                 for (final line in lawLines) {
                   fullTextBuffer.writeln(line);
                 }
-                fullTextBuffer.writeln('\n\n中華民國法院刑事/民事法庭\n'
-                    '審判長法官  黃國法\n'
-                    '      法官  林憲法\n'
-                    '      法官  陳民法\n'
+                fullTextBuffer.writeln('\n\n【審判合議庭】\n'
+                    '$benchText\n'
                     '\n以上正本證明與原本無異。');
 
                 Clipboard.setData(
@@ -2366,10 +2351,9 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
 
                   // Footer block
                   Text(
-                    '中華民國法院刑事/民事法庭\n'
-                    '審判長法官  黃國法\n'
-                    '      法官  林憲法\n'
-                    '      法官  陳民法\n\n'
+                    '${book.basicInfo.courtLevel}\n'
+                    '【合議庭審理法官】\n'
+                    '$benchText\n\n'
                     '以上正本證明與原本無異。',
                     style: baseTextStyle.copyWith(
                       color: const Color(0xFF666666),
