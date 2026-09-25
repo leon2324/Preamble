@@ -9,6 +9,8 @@ import 'package:preamble/features/case_library/models/case_library_models.dart';
 import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
 import 'package:preamble/pages/journal/data/journal_page_items.dart';
 import 'package:preamble/pages/journal/widgets/journal_palette.dart';
+import 'package:preamble/data/legal_brain/legal_syllogism_engine.dart';
+import 'package:preamble/pages/learning/know_law_page.dart';
 
 class DiscussionDetailPage extends StatefulWidget {
   const DiscussionDetailPage({
@@ -220,6 +222,10 @@ class _DiscussionDetailPageState extends State<DiscussionDetailPage> {
                   ],
                 ),
               ),
+              SizedBox(height: 18.h),
+
+              // 小法助 AI 法律焦點透視卡
+              _buildAiLegalInsightCard(topic),
               SizedBox(height: 20.h),
 
               // Collapsible progressive timeline
@@ -366,6 +372,257 @@ class _DiscussionDetailPageState extends State<DiscussionDetailPage> {
               fontSize: 13.sp,
               height: 1.45,
               color: palette.primaryText,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAiLegalInsightCard(HomeDiscussionTopic topic) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryGreen =
+        isDark ? const Color(0xFF68B28B) : const Color(0xFF2C5E43);
+    final cardBg =
+        isDark ? const Color(0xFF1E2822) : const Color(0xFFF2F8F5);
+    final borderColor =
+        isDark ? const Color(0xFF2D3E35) : const Color(0xFFD0E4DC);
+
+    // 透過台灣法學三段論大腦對該時事議題進行即時法理涵攝
+    final facts = '${topic.title}。${topic.overview}。${widget.item.whyHot}';
+    final analysis = LegalSyllogismEngine.analyze(rawFacts: facts);
+
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(14.w),
+      decoration: BoxDecoration(
+        color: cardBg,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: borderColor, width: 1.2.w),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.12 : 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 頂部吉祥物與標題
+          Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color:
+                          Colors.black.withValues(alpha: isDark ? 0.2 : 0.06),
+                      blurRadius: 6,
+                    ),
+                  ],
+                ),
+                child: Image.asset(
+                  'assets/images/assistant/law_assistant_home.png',
+                  width: 32.w,
+                  height: 32.w,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              SizedBox(width: 8.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          '小法助法律焦點透視',
+                          style: TextStyle(
+                            fontSize: 13.5.sp,
+                            fontWeight: FontWeight.w900,
+                            color: widget.palette.primaryText,
+                          ),
+                        ),
+                        SizedBox(width: 6.w),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 6.w, vertical: 1.5.h),
+                          decoration: BoxDecoration(
+                            color: primaryGreen.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(4.r),
+                          ),
+                          child: Text(
+                            'AI 即時法理涵攝',
+                            style: TextStyle(
+                              fontSize: 9.sp,
+                              fontWeight: FontWeight.bold,
+                              color: primaryGreen,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      '爭議領域：${analysis.disputeCategory}',
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        color: widget.palette.secondaryText,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10.h),
+
+          // 核心法條依據
+          if (analysis.majorPremiseStatutes.isNotEmpty) ...[
+            Text(
+              '⚖️ 涉及核心法條依據：',
+              style: TextStyle(
+                fontSize: 11.sp,
+                fontWeight: FontWeight.bold,
+                color: widget.palette.primaryText,
+              ),
+            ),
+            SizedBox(height: 5.h),
+            Wrap(
+              spacing: 6.w,
+              runSpacing: 4.h,
+              children: analysis.majorPremiseStatutes.take(3).map((statute) {
+                return Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                  decoration: BoxDecoration(
+                    color: primaryGreen.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(6.r),
+                    border: Border.all(
+                      color: primaryGreen.withValues(alpha: 0.2),
+                    ),
+                  ),
+                  child: Text(
+                    '${statute.lawName} 第 ${statute.articleNumber} 條',
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      fontWeight: FontWeight.w800,
+                      color: primaryGreen,
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+            SizedBox(height: 10.h),
+          ],
+
+          // 法律爭點本質
+          Text(
+            '💡 本案法律爭點白話解讀：',
+            style: TextStyle(
+              fontSize: 11.sp,
+              fontWeight: FontWeight.bold,
+              color: widget.palette.primaryText,
+            ),
+          ),
+          SizedBox(height: 4.h),
+          ...analysis.identifiedIssues.take(2).map(
+                (issue) => Padding(
+                  padding: EdgeInsets.only(bottom: 3.h),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('• ',
+                          style: TextStyle(
+                              color: primaryGreen,
+                              fontWeight: FontWeight.bold)),
+                      Expanded(
+                        child: Text(
+                          issue,
+                          style: TextStyle(
+                            fontSize: 11.5.sp,
+                            height: 1.35,
+                            color: widget.palette.primaryText,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          SizedBox(height: 10.h),
+
+          // 民眾生活自保建議
+          Text(
+            '🛡️ 若一般民眾遇到類似情況之自保提醒：',
+            style: TextStyle(
+              fontSize: 11.sp,
+              fontWeight: FontWeight.bold,
+              color: widget.palette.primaryText,
+            ),
+          ),
+          SizedBox(height: 4.h),
+          ...analysis.demands.take(2).map(
+                (demand) => Padding(
+                  padding: EdgeInsets.only(bottom: 3.h),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('✓ ',
+                          style: TextStyle(
+                              color: primaryGreen,
+                              fontWeight: FontWeight.bold)),
+                      Expanded(
+                        child: Text(
+                          demand,
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            height: 1.35,
+                            color: widget.palette.secondaryText,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          SizedBox(height: 12.h),
+
+          // 互動引導按鈕
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                final prompt =
+                    '我想請教關於「${topic.title}」的法律問題：一般民眾如果面臨類似爭議，在法律上該如何主張權益與自保？';
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        LawAssistantChatPage(initialPrompt: prompt),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                elevation: 0,
+                backgroundColor: isDark
+                    ? const Color(0xFF2C4438)
+                    : const Color(0xFF2C5E43),
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(vertical: 10.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+              ),
+              icon: Icon(Icons.chat_bubble_outline_rounded, size: 14.sp),
+              label: Text(
+                '向小法助詢問此議題 / 若我遇到如何自保？',
+                style: TextStyle(
+                  fontSize: 11.5.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
         ],

@@ -40,6 +40,7 @@ import 'package:preamble/data/lawyer/lawyer_repository.dart';
 import 'package:preamble/components/lawyer/lawyer_referral_sheet.dart';
 import 'package:preamble/components/safety/plain_document_translator_sheet.dart';
 import 'package:preamble/components/safety/privacy_shield_wrapper.dart';
+import 'package:preamble/data/journal/user_case_journal_repository.dart';
 
 import 'dart:async';
 import 'dart:io';

@@ -8,15 +8,18 @@ import 'package:preamble/pages/journal/widgets/discussing_now_section.dart';
 import 'package:preamble/pages/journal/widgets/journal_page_header.dart';
 import 'package:preamble/pages/journal/widgets/journal_palette.dart';
 import 'package:preamble/pages/journal/widgets/on_this_day_card.dart';
+import 'package:preamble/pages/journal/widgets/assistant_prompt_bubble.dart';
+import 'package:preamble/pages/journal/widgets/user_case_journal_section.dart';
+import 'package:preamble/data/journal/user_case_journal_repository.dart';
 import 'package:preamble/theme/adaptive_layout.dart';
 import 'package:preamble/components/navigation/app_shell_content_insets.dart';
 import 'package:preamble/theme/app_colors.dart';
 
 /// 記事頁。
 ///
-/// 這一版先把記事定位成「社會事件到案件資料館」的入口，
-/// 主頁只負責展示趨勢、策展角度與資料館動態；子頁與搜尋流程之後再接。
-/// 版型刻意承襲首頁的柔和卡片語言，但用案件圖書館做出記事頁自己的記憶感。
+/// 這一版升級為雙軌架構：
+/// 1. 「時事與案件館」：展示社會熱門討論、策展角度與案件資料館動態，搭配頂部小法助熱問輪播。
+/// 2. 「我的自救記事」：記錄使用者進行中之法律糾紛、法定時效倒數警報、證據清冊與交涉日誌。
 class JournalPage extends StatefulWidget {
   const JournalPage({
     super.key,
@@ -35,6 +38,9 @@ class _JournalPageState extends State<JournalPage> {
   late final TextEditingController _searchController;
   Future<List<JournalSearchResult>>? _searchFuture;
   String _query = '';
+  int _selectedJournalTab = 0; // 0: 社會時事與案件館, 1: 我的自救記事
+  final UserCaseJournalRepository _userCaseRepository =
+      UserCaseJournalRepository();
 
   @override
   void initState() {
@@ -95,7 +101,11 @@ class _JournalPageState extends State<JournalPage> {
             ),
             children: [
               JournalPageHeader(palette: palette),
+              SizedBox(height: 12.h),
+              AssistantPromptBubble(palette: palette),
               SizedBox(height: 14.h),
+              _buildJournalModeSelector(palette),
+              SizedBox(height: 16.h),
               if (hasQuery)
                 FutureBuilder<List<JournalSearchResult>>(
                   future: _searchFuture,
@@ -120,6 +130,11 @@ class _JournalPageState extends State<JournalPage> {
                       palette: palette,
                     );
                   },
+                )
+              else if (_selectedJournalTab == 1)
+                UserCaseJournalSection(
+                  palette: palette,
+                  repository: _userCaseRepository,
                 )
               else ...[
                 // 沒有搜尋字時仍維持原本策展首頁；一旦從全站搜尋帶 query 進來，
@@ -162,6 +177,103 @@ class _JournalPageState extends State<JournalPage> {
                 ),
               ),
             ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildJournalModeSelector(JournalPalette palette) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final activeBg = isDark ? const Color(0xFF2C4438) : const Color(0xFF2C5E43);
+    final activeText = Colors.white;
+    final inactiveText = palette.secondaryText;
+
+    return Container(
+      padding: EdgeInsets.all(4.w),
+      decoration: BoxDecoration(
+        color: palette.surface,
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: palette.border),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: () => setState(() => _selectedJournalTab = 0),
+              borderRadius: BorderRadius.circular(9.r),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: EdgeInsets.symmetric(vertical: 8.h),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: _selectedJournalTab == 0 ? activeBg : Colors.transparent,
+                  borderRadius: BorderRadius.circular(9.r),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.newspaper_rounded,
+                      size: 14.sp,
+                      color: _selectedJournalTab == 0 ? activeText : inactiveText,
+                    ),
+                    SizedBox(width: 5.w),
+                    Flexible(
+                      child: Text(
+                        '時事與案件館',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.bold,
+                          color: _selectedJournalTab == 0 ? activeText : inactiveText,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 4.w),
+          Expanded(
+            child: InkWell(
+              onTap: () => setState(() => _selectedJournalTab = 1),
+              borderRadius: BorderRadius.circular(9.r),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: EdgeInsets.symmetric(vertical: 8.h),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: _selectedJournalTab == 1 ? activeBg : Colors.transparent,
+                  borderRadius: BorderRadius.circular(9.r),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.folder_shared_rounded,
+                      size: 14.sp,
+                      color: _selectedJournalTab == 1 ? activeText : inactiveText,
+                    ),
+                    SizedBox(width: 5.w),
+                    Flexible(
+                      child: Text(
+                        '我的自救記事',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.bold,
+                          color: _selectedJournalTab == 1 ? activeText : inactiveText,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

@@ -15,12 +15,14 @@ class LawAssistantInsightCard extends StatefulWidget {
     required this.insight,
     required this.onConvertToDocument,
     this.onConsultLawyer,
+    this.onSaveToJournal,
   });
 
   final LawAssistantDefenseInsight insight;
   final void Function(DocumentTemplateType templateType, String suggestedFacts)
       onConvertToDocument;
   final VoidCallback? onConsultLawyer;
+  final VoidCallback? onSaveToJournal;
 
   @override
   State<LawAssistantInsightCard> createState() =>
@@ -302,7 +304,44 @@ class _LawAssistantInsightCardState extends State<LawAssistantInsightCard> {
                     ),
                   ),
 
-                  // 4. 尋求專長執業律師按鈕
+                  // 4. 存入自救記事按鈕
+                  if (widget.onSaveToJournal != null) ...[
+                    SizedBox(height: 6.h),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          HapticFeedback.lightImpact();
+                          widget.onSaveToJournal!();
+                        },
+                        icon: Icon(
+                          Icons.bookmark_add_outlined,
+                          size: 14.sp,
+                          color: accentGreen,
+                        ),
+                        label: Text(
+                          '📥 存入「紀事」自救進度追蹤',
+                          style: TextStyle(
+                            fontSize: 11.5.sp,
+                            fontWeight: FontWeight.bold,
+                            color: accentGreen,
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(
+                            color: accentGreen.withValues(alpha: 0.5),
+                            width: 1.w,
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 8.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+
+                  // 5. 尋求專長執業律師按鈕
                   if (widget.onConsultLawyer != null) ...[
                     SizedBox(height: 6.h),
                     SizedBox(

@@ -684,6 +684,26 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
                         final brief = CaseBriefPackager.fromAssistantMessage(message);
                         LawyerReferralSheet.show(context, caseBrief: brief);
                       },
+                      onSaveToJournal: () async {
+                        final insight = message.insight;
+                        if (insight == null) return;
+                        final facts = message.answer?.problemDirection.isNotEmpty == true
+                            ? '${message.answer!.problemDirection}\n${message.answer!.relatedContent}'
+                            : message.content;
+                        final entry = UserCaseJournalRepository.fromAssistantInsight(
+                          insight: insight,
+                          rawFacts: facts,
+                        );
+                        final repo = UserCaseJournalRepository();
+                        await repo.addEntry(entry);
+                        if (context.mounted) {
+                          CustomToast.show(
+                            context,
+                            '已將本案收錄至「紀事」自救進度追蹤！',
+                            icon: Icons.check_circle_rounded,
+                          );
+                        }
+                      },
                     ),
                   if (_isLoading)
                     const _AssistantStatusCard(message: '小法助正在整理方向...'),
@@ -867,11 +887,13 @@ class _LawAssistantChatBubble extends StatelessWidget {
     required this.message,
     this.onConvertToDocument,
     this.onConsultLawyer,
+    this.onSaveToJournal,
   });
 
   final LawAssistantMessage message;
   final void Function(DocumentTemplateType, String)? onConvertToDocument;
   final VoidCallback? onConsultLawyer;
+  final VoidCallback? onSaveToJournal;
 
   @override
   Widget build(BuildContext context) {
@@ -1025,6 +1047,7 @@ class _LawAssistantChatBubble extends StatelessWidget {
                     message: message,
                     onConvertToDocument: onConvertToDocument,
                     onConsultLawyer: onConsultLawyer,
+                    onSaveToJournal: onSaveToJournal,
                   ),
                 ),
               ],
@@ -1041,11 +1064,13 @@ class _AssistantAnswerContent extends StatelessWidget {
     required this.message,
     this.onConvertToDocument,
     this.onConsultLawyer,
+    this.onSaveToJournal,
   });
 
   final LawAssistantMessage message;
   final void Function(DocumentTemplateType, String)? onConvertToDocument;
   final VoidCallback? onConsultLawyer;
+  final VoidCallback? onSaveToJournal;
 
   @override
   Widget build(BuildContext context) {
@@ -1070,6 +1095,7 @@ class _AssistantAnswerContent extends StatelessWidget {
               insight: insight,
               onConvertToDocument: onConvertToDocument!,
               onConsultLawyer: onConsultLawyer,
+              onSaveToJournal: onSaveToJournal,
             ),
           ],
           SizedBox(height: 10.h),
@@ -1101,6 +1127,7 @@ class _AssistantAnswerContent extends StatelessWidget {
             insight: insight,
             onConvertToDocument: onConvertToDocument!,
             onConsultLawyer: onConsultLawyer,
+            onSaveToJournal: onSaveToJournal,
           ),
           SizedBox(height: 8.h),
         ],
