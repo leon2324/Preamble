@@ -8,6 +8,7 @@ import 'package:preamble/components/shared/law_app_story_action_bar.dart';
 import 'package:preamble/components/shared/share_sheet.dart';
 import 'package:preamble/theme/app_fonts.dart';
 import 'package:preamble/components/shared/liquid_glass_widgets.dart';
+import 'package:preamble/features/case_library/data/case_interactive_profiles.dart';
 import 'package:preamble/features/case_library/data/case_library_data.dart';
 import 'package:preamble/features/case_library/data/case_library_repository.dart';
 import 'package:preamble/features/case_library/models/case_library_models.dart';
@@ -1369,7 +1370,8 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
   // 2. 發表觀點欄：使用者可撰寫意見並挑選立場 (合理派/不合理派/中立派)，發言後即時以 setState 動態插入留言板首位。
   // 3. 鄉民留言板 (Salon Comments)：展示多方不同立場的思辨留言，並可點擊愛心進行按讚/取消讚。
   Widget _buildDiscussionsTab(BuildContext context) {
-    final votes = _caseVotes[book.id] ?? [50, 50];
+    final votes =
+        _caseVotes[book.id] ?? CaseInteractiveProfiles.getPollVotes(book);
     final agreeCount = votes[0];
     final disagreeCount = votes[1];
     final totalVotes = agreeCount + disagreeCount;
@@ -1379,43 +1381,15 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
     final hasVoted = _myVotes.containsKey(book.id);
     final myChoice = _myVotes[book.id];
 
-    // 初始化該案件留言列表，若無則提供預設留言
+    // 初始化該案件量身打造之獨立鄉民思辨留言列表
     if (!_netizenComments.containsKey(book.id)) {
-      _netizenComments[book.id] = [
-        {
-          'avatar': '理',
-          'name': '理性旁觀者',
-          'time': '1 小時前',
-          'stance': '合理派',
-          'stanceColor': const Color(0xFF2E7D32),
-          'content':
-              '司法裁判的核心是程序正義與證據裁判。雖然有些罪責在情感上讓大家不能接受，但依照既有法規裁決，是確保民主法治不倒退的重要防線。',
-          'likes': 15,
-          'liked': false,
-        },
-        {
-          'avatar': '正',
-          'name': '社會公平維護',
-          'time': '2 小時前',
-          'stance': '不合理派',
-          'stanceColor': const Color(0xFFC62828),
-          'content': '我覺得這個案件的處罰或防範機制太過形式化，沒有真正解決核心的社會痛點，相關主管機關的疏失也應該被一併放大檢討！',
-          'likes': 9,
-          'liked': false,
-        },
-      ];
+      _netizenComments[book.id] =
+          CaseInteractiveProfiles.getNetizenComments(book);
     }
     final comments = _netizenComments[book.id]!;
 
     // 依據案件設定思辨投開票所題目
-    String pollQuestion = '對於本案定讞裁定與後續處理，你覺得合理嗎？';
-    if (book.id == '318') {
-      pollQuestion = '法院認同本案抗爭符合「公民不服從」而宣判黃國昌等 22 人無罪，你覺得合理嗎？';
-    } else if (book.id == '161') {
-      pollQuestion = '涉案幼兒園與教保員性侵幼童之刑事判決刑度與行政處罰，你覺得合理嗎？';
-    } else if (book.id == '124') {
-      pollQuestion = '台鐵事故案中，對於事故主因與第一線人員及行政主管責任歸屬判決，你覺得合理嗎？';
-    }
+    final pollQuestion = CaseInteractiveProfiles.getPollQuestion(book);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

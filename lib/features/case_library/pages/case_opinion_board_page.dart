@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:preamble/features/case_library/data/case_interactive_profiles.dart';
 import 'package:preamble/features/case_library/models/case_library_models.dart';
 import 'package:preamble/features/case_library/theme/case_library_theme.dart';
 
@@ -20,33 +21,8 @@ class _CaseOpinionBoardPageState extends State<CaseOpinionBoardPage> {
   @override
   void initState() {
     super.initState();
-    // 初始化一些莫蘭迪色便利貼，展示溫和、有理性的感性共鳴話語
-    _opinions.addAll([
-      {
-        'id': '1',
-        'text': '期待本案能促成更完備的食品溯源與原料稽查制度，保護消費大眾的餐桌安全。',
-        'resonanceCount': 128,
-        'color': const Color(0xFFEAF6EF), // 莫蘭迪綠
-        'textColor': const Color(0xFF357A53),
-        'rotation': -2.0, // 傾斜度增加擬真感
-      },
-      {
-        'id': '2',
-        'text': '司法裁判在實踐法規的同時，也應該與社會大眾的素樸法感進行更深度的對話。',
-        'resonanceCount': 94,
-        'color': const Color(0xFFF0EEF9), // 莫蘭迪紫
-        'textColor': const Color(0xFF6D649A),
-        'rotation': 1.5,
-      },
-      {
-        'id': '3',
-        'text': '此案讓我理解到，程序正義不只是冷冰冰的條文，更是守護人民人身自由的底線。',
-        'resonanceCount': 205,
-        'color': const Color(0xFFEAF4F7), // 莫蘭迪藍
-        'textColor': const Color(0xFF4A7C8C),
-        'rotation': -1.2,
-      },
-    ]);
+    // 取得該案件 100% 獨立量身打造之莫蘭迪色便利貼
+    _opinions.addAll(CaseInteractiveProfiles.getOpinionStickers(widget.book));
   }
 
   @override
@@ -77,15 +53,9 @@ class _CaseOpinionBoardPageState extends State<CaseOpinionBoardPage> {
 
   // 顯示男生小法助吉祥物溫柔引導的 AI 潤飾視窗，避免情緒出氣筒，轉化為有溫度的理性見解。
   void _showAiGroomingDialog(String rawText) {
-    // 根據原情緒字眼進行 Mock 潤飾
-    String polishedText =
-        '本案的裁判標準與社會期待似乎存在一定落差，期許未來司法體系在重大法理裁決上能提供更多親民說明，深化司法公信力。';
-    if (rawText.contains('油') || rawText.contains('頂新')) {
-      polishedText = '對於民生食安案件，期待司法審判能在法條適用上落實源頭原料安全審查，建立企業在法律與誠信上的雙重防火牆。';
-    } else if (rawText.contains('死刑')) {
-      polishedText =
-          '死刑制度之存廢涉及生命權、平等原則與重大社會秩序防衛之拉鋸，期盼司法程序能在程序嚴密性與被害人權益保障間，尋求更理性的對話空間。';
-    }
+    // 根據該案件之法理核心進行量身打造的理性思辨潤飾引導
+    final polishedText =
+        CaseInteractiveProfiles.getAiGroomingSuggestion(widget.book, rawText);
 
     showDialog<void>(
       context: context,

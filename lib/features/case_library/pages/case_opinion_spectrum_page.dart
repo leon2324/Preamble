@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:preamble/features/case_library/data/case_interactive_profiles.dart';
 import 'package:preamble/features/case_library/models/case_library_models.dart';
 import 'package:preamble/features/case_library/theme/case_library_theme.dart';
 import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
@@ -48,61 +49,9 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
     super.dispose();
   }
 
-  // 定義案件在光譜上的三個關鍵點：左側（反對/嚴懲/程序派）、中間（中立/折衷/衡平派）、右側（支持/保護/實質派）。
+  // 取得該案件 100% 獨立量身打造之法學爭點觀點光譜節點
   List<Map<String, dynamic>> _getNodes() {
-    if (widget.book.id == '318') {
-      return [
-        {
-          'value': 15.0,
-          'label': '法治安定派',
-          'shortTitle': '法安定性優先',
-          'fullText':
-              '佔領國會、入侵行政機關本質上已逾越集會遊行紅線，造成重大秩序混亂。若不予追究，將嚴重損害法律尊嚴，誘發日後更多法治失序。',
-          'color': const Color(0xFFC62828),
-        },
-        {
-          'value': 50.0,
-          'label': '理性法規派',
-          'shortTitle': '手段利益衡平',
-          'fullText':
-              '佔領立法院表達政治訴求或可理解，但後續衝撞行政院等劇烈手段，已超出合理集會保障。司法應區分不同主嫌手段，做衡平裁判而非全盤豁免。',
-          'color': const Color(0xFFEF6C00),
-        },
-        {
-          'value': 85.0,
-          'label': '抵抗權保護派',
-          'shortTitle': '公民不服從防線',
-          'fullText':
-              '兩岸服貿審查出現國會程序重大瑕疵，人民在窮盡救濟管道後，佔領議場是阻卻違法的最後手段。司法理當肯定「公民不服從」對民主秩序的防禦功能。',
-          'color': const Color(0xFF2E7D32),
-        },
-      ];
-    }
-
-    // 泛用案件光譜節點
-    return [
-      {
-        'value': 20.0,
-        'label': '實質法條派',
-        'shortTitle': '條文嚴格適用',
-        'fullText': '法律裁決應本於條文的明確字義與客觀構成要件，不應因社會輿論或個人處境而為法外開恩，以此確保法律安定。',
-        'color': const Color(0xFF1B5E55),
-      },
-      {
-        'value': 50.0,
-        'label': '中立審查派',
-        'shortTitle': '法益綜合權衡',
-        'fullText': '法官應扮演中立天平，綜合考量公共利益與個人基本權益的損害比例，實踐個案中的實質正義。',
-        'color': const Color(0xFFEF6C00),
-      },
-      {
-        'value': 80.0,
-        'label': '溫暖司法派',
-        'shortTitle': '兼顧人情衡平',
-        'fullText': '司法裁決除了適用規則，更應深入理解當事人在社會底層或意外事件中的無奈與情境，作出符合一般大眾法感的判決。',
-        'color': const Color(0xFF357A53),
-      },
-    ];
+    return CaseInteractiveProfiles.getSpectrumNodes(widget.book);
   }
 
   void _onVote() {

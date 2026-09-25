@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:preamble/features/case_library/data/case_interactive_profiles.dart';
 import 'package:preamble/features/case_library/models/case_library_models.dart';
 import 'package:preamble/features/case_library/pages/widgets/case_netizen_opinion_card.dart';
 import 'package:preamble/features/case_library/pages/widgets/case_netizen_perspective_spectrum_card.dart';
@@ -107,44 +108,13 @@ class _CaseNetizenChatRoomPageState extends State<CaseNetizenChatRoomPage> {
   void _ensureDiscussionSeed() {
     if (widget.netizenComments.containsKey(widget.book.id)) return;
 
-    widget.netizenComments[widget.book.id] = [
-      {
-        'avatar': '理',
-        'name': '理性旁觀者',
-        'time': '1 小時前',
-        'stance': '合理派',
-        'content': '司法裁判的核心是程序正義與證據裁判。即使結果在情感上不容易接受，仍要回到既有法規與證據標準。',
-        'likes': 15,
-        'liked': false,
-        'hasCitation': true,
-        'source': '證據裁判原則',
-      },
-      {
-        'avatar': '正',
-        'name': '社會公平維護',
-        'time': '2 小時前',
-        'stance': '不合理派',
-        'content': '法官量刑也應該回應一般社會通念。當判決與民眾法感落差太大，司法公信力就會被消耗。',
-        'likes': 22,
-        'liked': false,
-        'hasCitation': false,
-      },
-      {
-        'avatar': '衡',
-        'name': '中線觀察',
-        'time': '3 小時前',
-        'stance': '中立派',
-        'content': '我會想先看判決理由怎麼處理比例原則。如果法院有交代理由，討論就不該只停在結果重不重。',
-        'likes': 9,
-        'liked': false,
-        'hasCitation': true,
-        'source': '比例原則',
-      },
-    ];
+    widget.netizenComments[widget.book.id] =
+        CaseInteractiveProfiles.getNetizenComments(widget.book);
   }
 
   List<int> _normalizedVotes(List<Map<String, dynamic>> comments) {
-    final storedVotes = widget.caseVotes[widget.book.id] ?? [50, 50];
+    final storedVotes = widget.caseVotes[widget.book.id] ??
+        CaseInteractiveProfiles.getPollVotes(widget.book);
     if (storedVotes.length >= 3) return storedVotes;
 
     final neutralSeed = comments

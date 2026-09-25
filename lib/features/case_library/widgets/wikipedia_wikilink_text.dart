@@ -152,6 +152,87 @@ class WikipediaWikilinkService {
           '創下競業禁止期限屆滿後仍受禁止任職之先例，引進不可避免揭露原則（Inevitable Disclosure），保護半導體核心營業秘密。',
       targetCaseId: 'case-tsmc-secret-1589',
     ),
+    const WikilinkEntry(
+      term: '蘇建和案',
+      type: WikilinkType.caseItem,
+      title: '蘇建和三人強盜殺人再審無罪判決定讞案',
+      citation: '最高法院 101 年度台上字第 4500 號刑事判決（2012/08/31定讞）',
+      summary:
+          '歷經21年纏訟、非常上訴與再審，排除不正訊問自白，嚴格貫徹無罪推定原則與李昌鈺博士鑑識意見，依速審法判決無罪確定。',
+      targetCaseId: 'case-su-chien-ho',
+    ),
+    const WikilinkEntry(
+      term: '最高法院101年度台上字第4500號',
+      type: WikilinkType.caseItem,
+      title: '最高法院 101 年度台上字第 4500 號刑事判決（蘇建和案無罪確定）',
+      citation: '最高法院 101 年度台上字第 4500 號刑事判決（審判長石木欽）',
+      summary:
+          '駁回檢察官上訴，確立偵查機關取得自白必須具有任意性與真實補強，宣告蘇建和、劉秉 dried、莊林勳無罪定讞。',
+      targetCaseId: 'case-su-chien-ho',
+    ),
+    const WikilinkEntry(
+      term: 'RCA公害案',
+      type: WikilinkType.caseItem,
+      title: '台灣美國無線電公司 RCA 毒物公害集體訴訟',
+      citation: '最高法院 107 年度台上字第 267 號民事判決（2018/08/16宣判）',
+      summary:
+          '確立揭穿公司面紗原則，認定被告時效抗辯為權利濫用，創立流行病學因果關係倒置舉證標準，判賠上億元確定。',
+      targetCaseId: 'case-rca-pollution',
+    ),
+    const WikilinkEntry(
+      term: '最高法院107年度台上字第267號',
+      type: WikilinkType.caseItem,
+      title: '最高法院 107 年度台上字第 267 號民事判決（RCA集體求償定讞判決）',
+      citation: '最高法院 107 年度台上字第 267 號民事判決（審判長林大洋）',
+      summary:
+          '肯認公害集體訴訟因果關係得採疫學因果關係，凡接觸達一定劑量罹病即推定因果關係，並命跨國母公司負連帶賠償責任。',
+      targetCaseId: 'case-rca-pollution',
+    ),
+    const WikilinkEntry(
+      term: '湯英伸案',
+      type: WikilinkType.caseItem,
+      title: '曹族青年湯英伸洗衣店命案與死刑法理思辨',
+      citation: '最高法院 75 年度台上字第 5006 號刑事判決（1986/10/24定讞）',
+      summary:
+          '鄒族青年求職遭扣押身分證與高壓勞動，失控殺害雇主一家。判處死刑定讞執行，促成原住民族權益覺醒與洗刷吳鳳神話運動。',
+      targetCaseId: 'case-tang-ying-shen',
+    ),
+    const WikilinkEntry(
+      term: '最高法院75年度台上字第5006號',
+      type: WikilinkType.caseItem,
+      title: '最高法院 75 年度台上字第 5006 號刑事判決（湯英伸案死刑定讞判決）',
+      citation: '最高法院 75 年度台上字第 5006 號刑事判決（審判長王德雲）',
+      summary:
+          '認定湯英伸殺害雇主一家三人手段殘酷，駁回上訴維持死刑判決。引發法界對於刑法第57條審酌生活狀況與弱勢困境之長遠思辨。',
+      targetCaseId: 'case-tang-ying-shen',
+    ),
+    const WikilinkEntry(
+      term: '跨國同婚首例勝訴',
+      type: WikilinkType.caseItem,
+      title: '祁家威跨國同性婚姻登記撤銷行政訴訟案',
+      citation: '臺北高等行政法院 109 年度訴字第 1445 號判決（2021/03/04宣判）',
+      summary:
+          '引用涉外民事法律適用法反致原則與消極公序良俗，認定外國不承認同婚牴觸我國憲法保障婚姻自由，命戶政事務所准予結婚登記。',
+      targetCaseId: 'case-cross-marriage-1445',
+    ),
+    const WikilinkEntry(
+      term: '臺北高等行政法院109年度訴字第1445號',
+      type: WikilinkType.caseItem,
+      title: '臺北高等行政法院 109 年度訴字第 1445 號判決（跨國同婚首例准予登記）',
+      citation: '臺北高等行政法院 109 年度訴字第 1445 號判決（審判長陳金圍）',
+      summary:
+          '開創跨國同性伴侶得依我國公序良俗排除不承認同婚母國法之先河，內政部後續亦全面鬆綁跨國同性婚姻登記規範。',
+      targetCaseId: 'case-cross-marriage-1445',
+    ),
+    const WikilinkEntry(
+      term: '112年憲判字第13號',
+      type: WikilinkType.caseItem,
+      title: '憲法法庭 112 年憲判字第 13 號判決（外役監條例受刑人平等權案）',
+      citation: '112年憲判字第13號（2023/07/28宣判，審判長許宗力，主筆謝銘洋）',
+      summary:
+          '宣告外役監條例第4條第1項但書第1款一律排除受過有期徒刑執行之累犯遴選外役監，違反憲法第7條平等原則，二年內失效。',
+      targetCaseId: 'case-prison-selection-13',
+    ),
 
     // --- 核心法規條文 ---
     const WikilinkEntry(
@@ -345,6 +426,47 @@ class WikipediaWikilinkService {
       citation: '營業秘密法 司法裁判法理',
       summary:
           '高階研發人員轉任競爭對手從事高度相同職務時，若客觀上無法避免運用前雇主營業秘密，法院得核發預防性禁令禁止其就任。',
+    ),
+    const WikilinkEntry(
+      term: '外役監條例第4條',
+      type: WikilinkType.lawArticle,
+      title: '外役監條例 第 4 條（受刑人遴選外役監之積極與消極資格）',
+      citation: '外役監條例 第 4 條（112年憲判字第13號判決違憲宣告）',
+      summary:
+          '規範受刑人參加外役監遴選之條件。原規定累犯一律不得遴選，憲法法庭判決違反平等權定期失效，立法院後續修法改採個案實質審查。',
+      targetLawArticle: '外役監條例第4條',
+    ),
+    const WikilinkEntry(
+      term: '疫學因果關係',
+      type: WikilinkType.legalConcept,
+      title: '疫學因果關係理論（Epidemiological Causation）',
+      citation: '民事公害侵權行為法理',
+      summary:
+          '在公害集體訴訟中，被害人難以就微觀毒理機制完全證明時，得依流行病學調查證明暴露與罹病存在高度統計關聯，進而倒置因果關係舉證責任。',
+    ),
+    const WikilinkEntry(
+      term: '消極公序良俗',
+      type: WikilinkType.legalConcept,
+      title: '消極公序良俗（Negative Public Policy Clause）',
+      citation: '涉外民事法律適用法 第 8 條',
+      summary:
+          '適用外國法若違反我國公共秩序或善良風俗時，不予適用。跨國同婚案以此排除外國不承認同婚之法律，保障婚姻自由憲法價值。',
+    ),
+    const WikilinkEntry(
+      term: '反致原則',
+      type: WikilinkType.legalConcept,
+      title: '反致原則（Doctrine of Renvoi）',
+      citation: '涉外民事法律適用法 第 6 條',
+      summary:
+          '依我國法應適用外國法時，若依該外國法之國際私法規定應適用我國法者，應適用中華民國法，以達成涉外案件法律適用之衡平。',
+    ),
+    const WikilinkEntry(
+      term: '自白補強法則',
+      type: WikilinkType.legalConcept,
+      title: '自白補強法則（Corroboration Rule for Confession）',
+      citation: '刑事訴訟法 第 156 條第 2 項',
+      summary:
+          '被告雖經自白，仍應調查其他必要之證據，以察其是否與事實相符。蘇建和案與徐自強案均重申不得以唯一自白作為有罪判決之基礎。',
     ),
   ];
 

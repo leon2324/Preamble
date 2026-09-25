@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:preamble/features/case_library/data/case_interactive_profiles.dart';
 import 'package:preamble/features/case_library/models/case_library_models.dart';
 import 'package:preamble/features/case_library/theme/case_library_theme.dart';
 
@@ -28,110 +29,7 @@ class _CaseSocialGraphPageState extends State<CaseSocialGraphPage> {
   }
 
   List<Map<String, dynamic>> _getSocialEffects() {
-    final caseTitle = widget.book.shortTitleZh.isNotEmpty
-        ? widget.book.shortTitleZh
-        : widget.book.titleZh;
-
-    if (widget.book.id == '318') {
-      // 太陽花學運案件的特定效應樹
-      return [
-        {
-          'id': 'root',
-          'title': caseTitle,
-          'type': 'core',
-          'description': '2014年3月爆發的公民不服從運動，對台灣民主、立法、行政與司法產生全面性連鎖變革。',
-        },
-        {
-          'id': 'law',
-          'title': '司法變革：阻卻違法',
-          'type': 'effect',
-          'description':
-              '最高法院判決定讞，肯認「公民不服從」在民主社會中的憲法地位。只要符合「超法規阻卻違法」要件，即可阻卻刑事違法性。這開創了台灣抗爭運動司法審判的新紀元。',
-        },
-        {
-          'id': 'legislative',
-          'title': '立法影響：兩岸條例',
-          'type': 'effect',
-          'description':
-              '學運直接中斷了服貿審查，並迫使國會起草《兩岸協議監督條例》，將兩岸締結協議的行政權力納入立法院的實質監督程序中，改變了兩岸談判的權力架構。',
-        },
-        {
-          'id': 'politics',
-          'title': '政治格局：青年參政',
-          'type': 'effect',
-          'description':
-              '學運促成了台灣「第三勢力」政黨（如時代力量等）的興起，大批青年從街頭抗爭轉向代議政壇，顯著拉低了地方民代與國會議員的平均參政年齡。',
-        },
-        {
-          'id': 'society',
-          'title': '社會動員：程序正義',
-          'type': 'effect',
-          'description':
-              '極大深化了台灣公民社會對「程序正義」的普遍共識。讓公眾意識到，行政機關在推動重大政策時，若缺乏公開透明的程序，將面臨巨大的合法性危機。',
-        },
-      ];
-    } else if (widget.book.id == 'hung-2013') {
-      // 洪仲丘案的特定效應樹
-      return [
-        {
-          'id': 'root',
-          'title': caseTitle,
-          'type': 'core',
-          'description': '義務役下士因不當懲罰致死，引發「白衫軍運動」，徹底瓦解了台灣行之有年的軍事司法獨立體制。',
-        },
-        {
-          'id': 'law',
-          'title': '軍審法改革：普通審判',
-          'type': 'effect',
-          'description':
-              '立法院在社會巨大壓力下火速修訂《軍事審判法》，規定非戰爭時期軍人犯罪案件，全面移送普通法院與地檢署偵審，徹底廢除戰時以外的軍事檢察署與軍事法院。',
-        },
-        {
-          'id': 'rights',
-          'title': '軍中人權：禁閉制變革',
-          'type': 'effect',
-          'description':
-              '國防部全面廢除舊制的陸軍「禁閉室 / 悔過室」，大幅修改國軍懲罰與管教辦法，限制軍官對士兵體能操練的最高上限，落實軍中基本人權與醫療安全保障。',
-        },
-        {
-          'id': 'society',
-          'title': '公民運動：白衫軍席捲',
-          'type': 'effect',
-          'description':
-              '二十萬人自發身穿白衣齊聚凱達格蘭大道，開創了沒有傳統政黨動員、完全由公民透過網路發起、高度自律且理性的新型社會運動模式。',
-        },
-      ];
-    } else {
-      // 通用版效應樹
-      return [
-        {
-          'id': 'root',
-          'title': caseTitle,
-          'type': 'core',
-          'description': widget.book.oneSentenceSummary.isNotEmpty
-              ? widget.book.oneSentenceSummary
-              : '本案作為重大法律事件，對台灣司法與社會體制具有重要指標性意義。',
-        },
-        {
-          'id': 'law',
-          'title': '法律適用與解釋',
-          'type': 'effect',
-          'description': '本案確立了該法條在實務上的嚴格裁判標準，為後續同類型訴訟提供重要的判例與解釋參考，防止行政裁量權之濫用。',
-        },
-        {
-          'id': 'politics',
-          'title': '制度與行政變革',
-          'type': 'effect',
-          'description': '促使相關主管機關檢討行政程序瑕疵，重新研擬並修正施行細則，保障人民在程序上的參與權與司法救濟權。',
-        },
-        {
-          'id': 'society',
-          'title': '社會法治教育意義',
-          'type': 'effect',
-          'description': '引發社會各界對該法權爭議的熱烈討論，提升了公眾對民生、平權或正當程序等基本憲政人權的思辨素養。',
-        },
-      ];
-    }
+    return CaseInteractiveProfiles.getSocialEffects(widget.book);
   }
 
   @override

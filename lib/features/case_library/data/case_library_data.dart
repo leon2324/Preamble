@@ -2099,7 +2099,480 @@ final caseLibraryCasesSeed = <CaseBook>[
     images: const [],
   ),
 
-  // --- Generated 185 Prominent Cases ---
+  CaseBook(
+    id: 'case-su-chien-ho',
+    titleZh: '最高法院 101 年度台上字第 4500 號刑事判決',
+    titleEn: 'Supreme Court Criminal Judgment 101-Tai-Shang-4500',
+    shortTitleZh: '蘇建和案無罪判決',
+    shortTitleEn: 'Su Chien-ho Case 4500',
+    displayCode: '101台上4500',
+    year: 2012,
+    location: '新北市汐止區',
+    status: '無罪判決定讞',
+    category: '刑事案件',
+    tags: const ['蘇建和案', '自白法則', '無罪推定', '冤案平反', '刑事妥速審判法', '李昌鈺鑑識'],
+    memoryLine: '歷經21年審理、非常上訴與再審，最高法院駁回上訴，蘇建和、劉秉 dried、莊林勳無罪定讞。',
+    shortDescription: '1991年汐止吳銘漢夫婦命案，蘇建和等三人遭王文孝指認同謀強盜殺人被判死刑。後經民間司改會救援、檢察總長多次提起非常上訴、聲請再審，合議庭嚴格檢驗排除不正訊問自白，於2012年依刑事妥速審判法判決無罪定讞。',
+    basicInfo: const CaseBasicInfo(
+      caseType: '刑事再審重大案件',
+      procedureStage: '最高法院判決駁回上訴無罪定讞',
+      courtLevel: '最高法院刑事第十庭',
+      updatedAt: '2012/08/31',
+      caseNumber: '最高法院 101 年度台上字第 4500 號刑事判決',
+      judgmentDate: '2012年8月31日（民國101年8月31日）',
+      bench: '審判長法官 石木欽、受命法官 段景榕、合議庭法官 洪佳濱、郭豫珍、陳晴慶',
+      partiesOrPetitioner: '上訴人：臺灣高等法院檢察署檢察官、被告：蘇建和、劉秉 dried、莊林勳',
+      cause: '強盜殺人等罪無罪判決上訴事件',
+      subsequentAction: '合議庭適用《刑事妥速審判法》第8條駁回檢察官上訴，三人無罪確定並獲刑事補償金；促成刑事訴訟法自白法則與鑑識制度全面改革。',
+    ),
+    oneSentenceSummary: '嚴格排除刑求自白與無佐證之共犯陳述，確立無罪推定與迅速審判防線。',
+    background:
+        '1991年3月24日凌晨，台北縣汐止鎮發生吳銘漢、葉益芊夫婦遭砍殺共79刀命案。警方先逮捕現役軍人王文孝，王文孝於警訊中供稱係其一人所為，但軍法偵訊及警方刑訊後，改稱夥同其弟王文忠及蘇建和、劉秉 dried、莊林勳共同犯案。王文孝於1992年經軍法槍決伏法前，多次向法官與監察院陳情供稱三人未參與。蘇建和等三人自始堅決否認犯罪，指控警方強灌水、電擊下體刑求逼供。1995年最高法院判處三人死刑定讞，其後引發民間司法改革基金會及人權團體長達十餘年的救援與再審纏訟。',
+    fullStory:
+        '本案歷經檢察總長3度提起非常上訴、4度聲請再審，高等法院數度在死刑與無罪之間反覆擺盪。2010年臺灣高等法院依旅美刑事鑑識專家李昌鈺博士重建現場報告，認定本案現場極可能為王文孝一人單獨犯案；且警方扣案之開山刀並無被害人血跡，現場指紋、毛髮與血腳印均查無三人跡證。高院判決三人無罪後，檢察官提起上訴。最高法院刑事第十庭於2012年8月31日作成101年度台上字第4500號終局判決，認定原審本於嚴格證據法則排除欠缺補強證據之自白，並適用《刑事妥速審判法》第8條之限制上訴規定，判決駁回檢察官上訴，全案無罪定讞。',
+    timeline: const [
+      CaseTimelineItem(
+          dateLabel: '1991/03/24',
+          title: '汐止吳銘漢夫婦命案發生',
+          description: '汐止夫婦慘遭殺害，警方展開大規模偵查。'),
+      CaseTimelineItem(
+          dateLabel: '1995/02/09',
+          title: '最高法院判處死刑定讞',
+          description: '合議庭依共同被告自白判處蘇建和等三人死刑定讞。'),
+      CaseTimelineItem(
+          dateLabel: '2000/11/01',
+          title: '高院裁定開啟再審',
+          description: '高院首度裁定開啟再審程序並暫停死刑執行。'),
+      CaseTimelineItem(
+          dateLabel: '2012/08/31',
+          title: '最高法院駁回上訴無罪定讞',
+          description: '最高法院駁回檢方上訴，全案纏訟21年後無罪確定。')
+    ],
+    people: const [
+      CasePersonRole(role: '被告', description: '蘇建和、劉秉 dried、莊林勳（蒙冤受審21年獲平反）。'),
+      CasePersonRole(role: '被害人家屬', description: '吳銘漢之子吳東亮（長年臥病由家屬照料）。'),
+      CasePersonRole(role: '鑑識證人', description: '李昌鈺博士（出具現場重建鑑識報告）。'),
+      CasePersonRole(role: '辯護律師', description: '蘇友辰、顧立雄等民間司改會義務律師團。')
+    ],
+    legalIssues: const [
+      LegalIssue(
+          title: '共同被告未經對質具結之自白能否作為唯一死刑依據？',
+          plainExplanation: '刑事訴訟法第156條第2項規定，被告自白不得作為有罪判決之唯一證據，仍應調查其他必要之補強證據，以察其是否與事實相符。',
+          relationToCase: '本案直接催生司法院釋字第582號解釋，確認共同被告之自白需經具結與交互詰問始具證據能力。',
+          relatedLawIds: ['crim-proc-156', 'crim-proc-154'])
+    ],
+    investigationAndTrial:
+        '李昌鈺博士現場鑑識重建顯示，主臥室空間狹窄僅約1.7坪，床鋪走道極度狹小，不可能容納四名持刀成年男子同時揮刀砍殺，現場噴濺血跡亦符合一人行兇動線。',
+    courtReasoning:
+        '最高法院終審裁判要旨明確指出：檢察官所舉之王文孝自白前後矛盾反覆，且扣案兇刀鑑驗結果並無被害人DNA跡證，現場所有微物證據均與三名被告無關。依罪疑唯輕與無罪推定原則，原審判決三人無罪於法並無不合；且本案符合妥速審判法第8條不得再上訴最高法院之規定，依法駁回上訴。',
+    judgmentResult: '上訴駁回。蘇建和、劉秉 dried、莊林勳無罪定讞。',
+    relatedLaws: const [
+      RelatedLaw(
+          lawName: '刑事訴訟法',
+          articleNumber: '第 154 條',
+          plainSummary: '被告未經審判證明有罪確定前，推定其為無罪。犯罪事實應依證據認定之，無證據不得認定犯罪事實。',
+          relationToCase: '無罪推定原則之根本依據。'),
+      RelatedLaw(
+          lawName: '刑事妥速審判法',
+          articleNumber: '第 8 條',
+          plainSummary: '案件自第一審繫屬日起已逾六年，經最高法院第三次以上發回後，更審無罪者，檢察官對更審無罪判決之上訴權受嚴格限制。',
+          relationToCase: '終止二十一年訴訟循環之程序法定裁定條文。')
+    ],
+    socialImpact:
+        '蘇建和案為台灣戰後司法史上最著名的死刑非常救濟案，徹底改變了台灣刑事自白裁判制度，催生《刑事妥速審判法》、《刑事補償法》以及警察偵訊全程錄音錄影之強制規定。',
+    relatedCases: const [],
+    sources: const [
+      CaseSource(
+        title: '司法院公開裁判書最高法院101年度台上字第4500號刑事判決',
+        sourceType: 'official',
+        updatedAt: '2012/08/31',
+      ),
+    ],
+    concurringDissentingOpinions: const [],
+    courtArguments: const [],
+    expertOpinions: const [],
+    mediaReferences: const [],
+    images: const [],
+  ),
+
+  CaseBook(
+    id: 'case-rca-pollution',
+    titleZh: '最高法院 107 年度台上字第 267 號民事判決',
+    titleEn: 'Supreme Court Civil Judgment 107-Tai-Shang-267',
+    shortTitleZh: 'RCA公害集體求償案',
+    shortTitleEn: 'RCA Toxic Tort 267',
+    displayCode: '107台上267',
+    year: 2018,
+    location: '桃園市',
+    status: '首波確定判賠5億元',
+    category: '民事案件',
+    tags: const ['RCA公害', '流行病學因果關係', '舉證責任倒置', '揭穿公司面紗', '時效抗辯權利濫用'],
+    memoryLine: '台灣史上最大工害集體訴訟，最高法院確立公害疫學因果關係舉證倒置與揭穿公司面紗原則。',
+    shortDescription: '美商台灣美國無線電公司（RCA）在桃園廠長期違法傾倒三氯乙烯等有機毒溶劑污染地下水，致上千名員工罹癌死亡。自救會集體求償，最高法院首波判賠5億餘元定讞，確立公害舉證責任倒置與穿透母公司資產求償法理。',
+    basicInfo: const CaseBasicInfo(
+      caseType: '民事重大公害侵權集體訴訟',
+      procedureStage: '最高法院民事判決首波定讞',
+      courtLevel: '最高法院民事第四庭',
+      updatedAt: '2018/08/16',
+      caseNumber: '最高法院 107 年度台上字第 267 號民事判決',
+      judgmentDate: '2018年8月16日（民國107年8月16日）',
+      bench: '審判長法官 沈方維、受命法官 陳靜芬、合議庭法官 魏大喨、李寶堂、鍾任賜',
+      partiesOrPetitioner: '上訴人：同聯興業股份有限公司（RCA）、法國Technicolor、百慕達Thomson、美商GE奇異公司；被上訴人：桃園縣原台灣美國無線電公司員工關懷協會',
+      cause: '侵權行為損害賠償事件',
+      subsequentAction: '首波判決確定命賠償 262 名被害勞工共 5 億 1667 萬元；確立跨國母公司惡意脫產構成時效抗辯之權利濫用，開創台灣公害因果關係疫學證明法理。',
+    ),
+    oneSentenceSummary: '確立公害流行病學因果關係舉證倒置，並穿透外國母公司面紗命連帶清償。',
+    background:
+        '美商RCA公司於1969年在桃園設立工廠生產電視零組件，僱用數萬名年輕女工。廠方為清洗印刷電路板，大量使用三氯乙烯、四氯乙烯等有機溶劑，並秘密挖掘地井將劇毒溶劑直接灌注地下水層，導致廠區地下水劇毒致癌物超標千百倍。員工不知情長期飲用洗浴，數十年後罹患乳癌、鼻咽癌、子宮頸癌死亡者達數百人。1992年RCA關廠並轉手法國湯姆笙（Thomson）公司，隨後違法匯出鉅款掏空資產。受害勞工於2001年成立關懷協會向台北地院提起台灣史上最大集體公害侵權訴訟。',
+    fullStory:
+        '本訴訟歷時近二十年，面臨三大傳統法理高牆：第一、受害人罹癌與數十年前地下水有機溶劑之個別因果關係如何證明；第二、原告提起訴訟距侵害行為已逾十年、侵權請求權是否已罹於時效；第三、RCA在台資產已脫產殆盡，能否追討跨國母公司法國Technicolor與美商GE。最高法院合議庭作出劃時代突破判決：採納公害法學之「疫學因果關係（流行病學因果）」理論，只要原告證明暴露毒物具統計學重大關聯，即推定因果關係，舉證責任倒置由被告舉證無關；並認定RCA母公司明知毒害仍惡意掏空台灣資產，其主張消滅時效抗辯違反誠信原則，屬權利濫用無效；更創先例援引「揭穿公司面紗原則」，判定外國控制母公司應負連帶賠償責任。',
+    timeline: const [
+      CaseTimelineItem(
+          dateLabel: '1970-1992',
+          title: 'RCA長期違法排毒注地',
+          description: '廠區非法挖井排放致癌有機溶劑，員工長期飲用致毒水。'),
+      CaseTimelineItem(
+          dateLabel: '1994/06',
+          title: '環境毒害曝光',
+          description: '環保署證實RCA廠區土壤與地下水遭受嚴重污染。'),
+      CaseTimelineItem(
+          dateLabel: '2004/04',
+          title: '受害勞工自救會提起集體訴訟',
+          description: '五百多名罹癌勞工委由法律扶助律師團正式起訴。'),
+      CaseTimelineItem(
+          dateLabel: '2018/08/16',
+          title: '最高法院首波判賠5億元定讞',
+          description: '最高法院判命RCA及母公司連帶賠償262人共5.16億元定讞。')
+    ],
+    people: const [
+      CasePersonRole(role: '原告代表', description: '杜天來、秦秀蓮等原台美工廠女工與關懷協會。'),
+      CasePersonRole(role: '被告企業', description: 'RCA公司、法國Technicolor、美商GE奇異。'),
+      CasePersonRole(role: '公害公衛專家', description: '王榮德教授、陳保中教授（出具流行病學鑑定報告）。'),
+      CasePersonRole(role: '義務律師團', description: '林永頌、周漢威、施淑貞等法扶集體訴訟律師。')
+    ],
+    legalIssues: const [
+      LegalIssue(
+          title: '公害複合毒物曝露之因果關係應如何舉證？',
+          plainExplanation: '因化學毒物侵入人體潛伏期長達數十年，要求受害者直接證明每一分子與罹癌之必然連結屬客觀不能，法院應依民事訴訟法第277條但書減輕或倒置舉證責任，採納流行病學因果判斷。',
+          relationToCase: '最高法院採認流行病學因果關係並實施舉證責任轉換之指標裁決。',
+          relatedLawIds: ['civ-proc-277', 'civ-184'])
+    ],
+    investigationAndTrial:
+        '公衛流行病學研究明確證明，RCA女性作業員相較於一般女性族群，罹患乳癌與卵巢癌之標準化發生比（SIR）具統計顯著倍數增高，地下水三氯乙烯超標數千倍具高度致病相關。',
+    courtReasoning:
+        '最高法院裁判理由指出：加害企業既掌握生產原料及有害廢棄物處置資訊，其危險製造者應負高度安全保護義務。當受害人已證明化學物具有毒性且曾受相當暴露，法院即得依疫學因果關係認定其關聯性。被告明知毒水害人卻秘密匯走上億美金規避賠償，再於法庭主張時效消滅抗辯，係屬權利濫用，法院不予採納；外國母公司實質支配操控脫產，亦應負連帶賠償責任。',
+    judgmentResult: '首波262名死傷勞工獲賠5億1667萬元本息確定；未發病但有身心損害之其餘員工發回更審。',
+    relatedLaws: const [
+      RelatedLaw(
+          lawName: '民法',
+          articleNumber: '第 184 條',
+          plainSummary: '因故意或過失，不法侵害他人之權利者，負損害賠償責任。違反保護他人之法律，致生損害於他人者，負賠償責任。',
+          relationToCase: '本案公害侵權行為損害賠償之實體請求權基礎。'),
+      RelatedLaw(
+          lawName: '民法',
+          articleNumber: '第 148 條',
+          plainSummary: '權利之行使，不得違反公共利益，或以損害他人為主要目的。行使權利，應依誠實及信用方法。',
+          relationToCase: '判定被告母公司惡意脫產後主張時效消滅構成權利濫用之法律依據。')
+    ],
+    socialImpact:
+        'RCA案是台灣公害集體訴訟史上最重大的判決，為後續多氯聯苯、中石化安順廠、石化園區等重大環境職業病求償開創了疫學舉證倒置、揭穿公司面紗與時效濫用排除三大司法里程碑。',
+    relatedCases: const [],
+    sources: const [
+      CaseSource(
+        title: '司法院公開裁判書最高法院107年度台上字第267號民事判決',
+        sourceType: 'official',
+        updatedAt: '2018/08/16',
+      ),
+    ],
+    concurringDissentingOpinions: const [],
+    courtArguments: const [],
+    expertOpinions: const [],
+    mediaReferences: const [],
+    images: const [],
+  ),
+
+  CaseBook(
+    id: 'case-tang-ying-shen',
+    titleZh: '最高法院 75 年度台上字第 5006 號刑事判決',
+    titleEn: 'Supreme Court Criminal Judgment 75-Tai-Shang-5006',
+    shortTitleZh: '湯英伸案',
+    shortTitleEn: 'Tang Ying-shen Case',
+    displayCode: '75台上5006',
+    year: 1986,
+    location: '台北市',
+    status: '判決死刑定讞執行',
+    category: '刑事案件',
+    tags: const ['湯英伸', '原住民人權', '勞動剝削', '扣留身分證', '死刑爭議', '就業服務法'],
+    memoryLine: '鄒族青年湯英伸受雇主高利貸扣證超時剝削引發血案，促成原住民族權益覺醒與就業服務法立法。',
+    shortDescription: '18歲鄒族青年湯英伸赴台北謀生，遭求職地下仲介誘騙並遭洗衣店雇主扣留身分證，每日強迫超時勞動17小時且遭受族群歧視。在借款遭扣押索討無門之深夜衝突中殺害雇主一家。最高法院判處死刑定讞執行，引發各界對原住民處境與勞動剝削制度之空前省思。',
+    basicInfo: const CaseBasicInfo(
+      caseType: '刑事普通殺人案件',
+      procedureStage: '最高法院駁回上訴判處死刑定讞',
+      courtLevel: '最高法院刑事第四庭',
+      updatedAt: '1986/09/11',
+      caseNumber: '最高法院 75 年度台上字第 5006 號刑事判決',
+      judgmentDate: '1986年9月11日（民國75年9月11日）',
+      bench: '最高法院刑事合議庭',
+      partiesOrPetitioner: '上訴人：湯英伸、起訴機關：臺灣臺北地方法院檢察署檢察官',
+      cause: '殺人等罪案件',
+      subsequentAction: '1987年執行槍決（年僅19歲）。全案震撼社會各界，促成行政院成立原住民族委員會、立法通過《就業服務法》嚴禁扣留證件與嚴懲非法職介，成為台灣原住民權利運動重要起點。',
+    ),
+    oneSentenceSummary: '原住民青年遭地下仲介與扣證超時剝削致殺害雇主，震撼推動原住民族基本保障法制。',
+    background:
+        '1986年，嘉義阿里山鄒族青年湯英伸自嘉義師專輟學後隻身前往台北謀職。因涉世未深，遭火車站附近非法職業介紹所巧立名目敲詐高額仲介費與手續費，並強迫向其借貸。隨後湯英伸被送往新生南路一家洗衣店工作，雇主不僅扣留其身分證件作為借貸擔保，且強迫其自凌晨開始每日連續工作長達17至18小時。湯英伸不堪重度過勞與雇主辱罵侮蔑其原住民身分，於工作第九天深夜向雇主辭職並索回身分證。雇主拒絕返還身分證並動手拉扯辱罵，雙方在酒後激烈扭打中，湯英伸持拔釘鐵器殺害雇主夫妻及其年幼女兒。',
+    fullStory:
+        '湯英伸於案發後主動向警方投案自首。一審及二審臺灣高等法院均依刑法第271條第1項殺人罪判處湯英伸死刑。案件上訴至最高法院期間，社會民間包含蔣勳、李勝雄律師、胡德夫、天主教樞機主教單國璽等各界知識分子與宗教人士發起空前的人道救援運動，懇請總統特赦減刑，指出湯英伸係台灣長期結構性城鄉不平等、非法黑心人力仲介與族群偏見下的犧牲者，其行為固然罪大惡極，但犯罪背後存在嚴重的被害人勞動剝削與違法扣證情狀。最高法院合議庭於1986年9月11日認定其連殺三人手法殘酷，駁回上訴維持死刑定讞。法務部於1987年5月15日執行槍決，湯英伸臨刑前拒絕施打麻醉，從容就義，年僅19歲。',
+    timeline: const [
+      CaseTimelineItem(
+          dateLabel: '1986/01/25',
+          title: '湯英伸深夜與雇主衝突案發',
+          description: '辭職索討遭扣押身分證未果，激烈扭打中殺害雇主一家。'),
+      CaseTimelineItem(
+          dateLabel: '1986/09/11',
+          title: '最高法院駁回上訴判死刑定讞',
+          description: '合議庭認定罪行重大，駁回上訴維持死刑判決。'),
+      CaseTimelineItem(
+          dateLabel: '1986/11-1987/05',
+          title: '各界人道救援與槍決執行',
+          description: '社會各界為湯英伸請願槍下留人未果，1987年5月執行槍決。')
+    ],
+    people: const [
+      CasePersonRole(role: '被告', description: '湯英伸（18歲鄒族阿里山青年）。'),
+      CasePersonRole(role: '雇主家庭', description: '洗衣店彭姓雇主夫妻及幼女。'),
+      CasePersonRole(role: '辯護與救援律師', description: '李勝雄律師（義務為其辯護並奔走特赦）。'),
+      CasePersonRole(role: '社會請願人士', description: '單國璽樞機主教、作家蔣勳、胡德夫。')
+    ],
+    legalIssues: const [
+      LegalIssue(
+          title: '刑法第59條情堪憫恕之酌減其刑要件於原住民族犯罪之適用',
+          plainExplanation: '刑法第59條規定犯罪情狀顯可憫恕，認科以最低度刑仍嫌過重者，得酌量減輕其刑。法院是否應將行為人遭受長期非法拘禁扣證、超時剝削與族群弱勢納入考量。',
+          relationToCase: '本案引發司法是否考量社會結構性正義與量刑動機之法學重大辯論。',
+          relatedLawIds: ['crim-59', 'crim-271'])
+    ],
+    investigationAndTrial:
+        '偵查筆錄載明湯英伸受非法介紹所扣薪借貸，雇主確實違法扣押其身分證且每日超時工作17小時，案發時雙方均有飲酒並發生肢體衝突。',
+    courtReasoning:
+        '最高法院合議庭裁判理由認為：被告於被害人一家熟睡之際行兇，連奪三條人命，包括年幼無辜女童，手段至為殘忍，其惡性重大，即便被害人雇主在僱用管理與扣留證件上有不當之處，亦不足以阻卻或減輕其連續殺害三命之罪責，因而維持死刑判決。',
+    judgmentResult: '上訴駁回。判處湯英伸死刑，褫奪公權終身確定。',
+    relatedLaws: const [
+      RelatedLaw(
+          lawName: '刑法',
+          articleNumber: '第 271 條',
+          plainSummary: '殺人者，處死刑、無期徒刑或十年以上有期徒刑。',
+          relationToCase: '起訴與判處死刑之罪名法條。'),
+      RelatedLaw(
+          lawName: '就業服務法',
+          articleNumber: '第 5 條',
+          plainSummary: '雇主招募或僱用員工，不得扣留求職人或員工之身分證明文件，不得強迫勞動與索取不當費用。',
+          relationToCase: '本案催生之最關鍵勞動人身自由防護條文。')
+    ],
+    socialImpact:
+        '湯英伸案促成了台灣原住民權利促進會的蓬勃發展，喚起漢人社會對原住民族政策與城鄉移工剝削的深度反省；促成了《就業服務法》對於地下職介與扣押證件的全面刑罰管制，並奠定日後原住民族委員會成立的社會基礎。',
+    relatedCases: const [],
+    sources: const [
+      CaseSource(
+        title: '司法院裁判書最高法院75年度台上字第5006號刑事判決',
+        sourceType: 'official',
+        updatedAt: '1986/09/11',
+      ),
+    ],
+    concurringDissentingOpinions: const [],
+    courtArguments: const [],
+    expertOpinions: const [],
+    mediaReferences: const [],
+    images: const [],
+  ),
+
+  CaseBook(
+    id: 'case-cross-marriage-1445',
+    titleZh: '臺北高等行政法院 109 年度訴字第 1445 號判決',
+    titleEn: 'Taipei High Administrative Court Judgment 109-Su-1445',
+    shortTitleZh: '首例跨國同婚勝訴案',
+    shortTitleEn: 'Cross-Border Marriage 1445',
+    displayCode: '109訴1445',
+    year: 2021,
+    location: '台北市',
+    status: '判決勝訴定讞',
+    category: '行政訴訟',
+    tags: const ['跨國同婚', '涉外民事法律適用法', '公序良俗', '反致', '婚姻平權', '戶政登記'],
+    memoryLine: '台灣首例跨國同性伴侶勝訴判決，法院認定排除同婚之外國法違反我國公共秩序應予排除。',
+    shortDescription: '台灣男子信奇與澳門男子阿古依司法院釋字第748號解釋施行法向戶政事務所申請結婚登記，遭戶政機關以涉民法第46條澳門法律不承認同婚為由拒絕。臺北高等行政法院判決撤銷原處分，命戶政機關准予登記，成為台灣跨國同婚指標首例勝訴案。',
+    basicInfo: const CaseBasicInfo(
+      caseType: '行政訴訟戶政登記事件',
+      procedureStage: '臺北高等行政法院判決原告勝訴確定',
+      courtLevel: '臺北高等行政法院第二庭',
+      updatedAt: '2021/05/06',
+      caseNumber: '臺北高等行政法院 109 年度訴字第 1445 號判決',
+      judgmentDate: '2021年5月6日（民國110年5月6日）',
+      bench: '審判長法官 陳心弘、法官 林淑婷、受命法官 郭銘禮',
+      partiesOrPetitioner: '原告：丁則言（信奇）、梁展輝（阿古）；被告：臺北市中正區戶政事務所',
+      cause: '戶政登記事件',
+      subsequentAction: '被告戶政事務所未上訴定讞，兩人順利登記；促使內政部於2023年1月19日正式發布函釋，除兩岸關係條例另有規定外，全面准許跨國同性伴侶在台登記結婚。',
+    ),
+    oneSentenceSummary: '排除同性婚姻的外國法因違反我國公序良俗不予適用，判命准予跨國同婚登記。',
+    background:
+        '2019年5月台灣立法院通過《司法院釋字第七四八號解釋施行法》，成為亞洲首個同性婚姻合法化國家。然而內政部依《涉外民事法律適用法》第46條前段「婚姻之成立，依各該當事人之本國法」之規定，發布函釋要求若外籍一方之本國法律尚未合法化同性婚姻（如同婚未合法化國家），台灣戶政機關不得受理跨國同婚登記。台灣公民丁則言（信奇）與澳門居民梁展輝（阿古）共同在台生活經營家庭多年，於2019年向台北市中正區戶政事務所申請結婚登記遭拒，依法提起訴願遭駁回後，向臺北高等行政法院提起行政訴訟。',
+    fullStory:
+        '本案的核心爭點在於：涉民法第46條規定婚姻實質成立要件採「各該當事人本國法」原則，當外籍一方所屬國家法律禁止或未規定同性婚姻時，我國戶政事務所是否得直接拒絕登記？臺北高等行政法院第二庭審理後作出重大突破性判決：首先，澳門《民法典》對於涉外婚姻關係有「反致」規定，依澳門法之衝突規範，應適用結婚舉行地法即台灣法；其次更關鍵的是，依《涉外民事法律適用法》第8條規定，消極排除「適用外國法違反中華民國公共秩序或善良風俗者」。釋字第748號解釋已確認保障同性婚姻為憲法第22條及第7條所賦予人民之基本權利與核心憲政秩序價值，若外國法一律不承認同性婚姻，該外國法顯已牴觸我國憲政公序良俗，依法應予排除適用，而回歸適用我國法律。戶政事務所未為准許登記之行政處分違法，判命被告應作成准予登記處分。',
+    timeline: const [
+      CaseTimelineItem(
+          dateLabel: '2019/10/01',
+          title: '戶政事務所拒絕結婚登記',
+          description: '中正戶政依內政部函釋以澳門法不承認同婚拒絕登記。'),
+      CaseTimelineItem(
+          dateLabel: '2020/05/22',
+          title: '原告提起行政訴訟',
+          description: '丁則言、梁展輝委任律師團向北高行起訴捍衛婚姻權。'),
+      CaseTimelineItem(
+          dateLabel: '2021/05/06',
+          title: '臺北高等行政法院判決勝訴',
+          description: '北高行宣判原告勝訴，命戶政機關准予登記結婚。'),
+      CaseTimelineItem(
+          dateLabel: '2023/01/19',
+          title: '內政部通函全國全面放寬跨國同婚',
+          description: '內政部發函各戶政事務所，跨國同婚不再受外國法限制。')
+    ],
+    people: const [
+      CasePersonRole(role: '原告', description: '丁則言（台灣伴侶）、梁展輝（澳門伴侶）。'),
+      CasePersonRole(role: '被告機關', description: '臺北市中正區戶政事務所。'),
+      CasePersonRole(role: '訴訟代理人', description: '許秀雯、潘天慶等台灣伴侶權益推動聯盟義務律師團。')
+    ],
+    legalIssues: const [
+      LegalIssue(
+          title: '外國法不承認同婚是否構成涉外民事法第8條違反我國公序良俗？',
+          plainExplanation: '涉外民事法律適用法第8條規定，依本法適用外國法時，若其適用結果有背於中華民國公共秩序或善良風俗者，不適用之。婚姻自由與平等權為我國憲法保障之公序良俗核心。',
+          relationToCase: '本案法院首度適用涉外公序良俗條款排除外國同婚歧視法規之判決。',
+          relatedLawIds: ['conflict-laws-8', 'conflict-laws-46', 'const-22'])
+    ],
+    investigationAndTrial:
+        '行政法院調閱澳門民法典第24條至第30條規定，並函請法務部及外事專家鑑定，確認澳門涉外法規採居住地及婚姻舉行地反致法理，且外國法否定同婚牴觸台灣憲法秩序。',
+    courtReasoning:
+        '判決理由指出：司法院釋字第748號解釋肯認婚姻自由為憲法維護人格健全發展與人性尊嚴之核心基本權。涉外婚姻適用外國法若導致同性伴侶無法成立合法婚姻，該外國法顯已侵害我國憲法價值體系之公共秩序，依法應排除適用，直接准予適用釋字第748號解釋施行法成立婚姻。',
+    judgmentResult: '原告勝訴。訴願決定及原處分均撤銷，命被告中正戶政事務所作成准予原告二人結婚登記之處分。',
+    relatedLaws: const [
+      RelatedLaw(
+          lawName: '涉外民事法律適用法',
+          articleNumber: '第 8 條',
+          plainSummary: '依本法適用外國法時，其適用之結果有背於中華民國公共秩序或善良風俗者，不適用之。',
+          relationToCase: '排除不承認同婚外國法之消極公序良俗條款。'),
+      RelatedLaw(
+          lawName: '涉外民事法律適用法',
+          articleNumber: '第 46 條',
+          plainSummary: '婚姻之成立，依各該當事人之本國法。但結婚之方式依當事人一方之本國法或依舉行地法者，亦為有效。',
+          relationToCase: '涉外婚姻準據法之核心衝突規範。')
+    ],
+    socialImpact:
+        '本勝訴判決帶動了祁家威等其他跨國伴侶後續一系列訴訟連環全勝，最終迫使行政院與內政部於2023年春節前夕全面通函解套，宣告除中港澳地區因特殊國安兩岸條例規範外，全球外籍伴侶皆可在台灣自由登記同婚。',
+    relatedCases: const [],
+    sources: const [
+      CaseSource(
+        title: '司法院裁判書臺北高等行政法院109年度訴字第1445號判決',
+        sourceType: 'official',
+        updatedAt: '2021/05/06',
+      ),
+    ],
+    concurringDissentingOpinions: const [],
+    courtArguments: const [],
+    expertOpinions: const [],
+    mediaReferences: const [],
+    images: const [],
+  ),
+
+  CaseBook(
+    id: 'case-prison-selection-13',
+    titleZh: '憲法法庭 112 年憲判字第 13 號判決',
+    titleEn: 'Constitutional Court Judgment 112-Hsien-Pan-13',
+    shortTitleZh: '外役監遴選資格平等權案',
+    shortTitleEn: 'Prison Selection 13',
+    displayCode: '112憲判13',
+    year: 2023,
+    location: '台北市',
+    status: '判決宣告違憲定期失效',
+    category: '憲法訴訟',
+    tags: const ['外役監條例', '受刑人處遇', '平等原則', '比例原則', '再社會化', '毒品危害防制條例'],
+    memoryLine: '外役監條例一律排除毒品罪受刑人遴選資格，憲法法庭判決違反平等原則違憲定期失效。',
+    shortDescription: '外役監條例第4條第1項第3款規定，凡觸犯毒品危害防制條例之罪者，一律不得遴選外役監。受刑人主張此項一刀切排除未考量施用毒品成癮病患特質與再社會化需求，違反憲法平等原則。憲法法庭判決該限制與立法目的欠缺實質關聯性，宣告違憲定期失效。',
+    basicInfo: const CaseBasicInfo(
+      caseType: '憲法法庭法規範憲法審查',
+      procedureStage: '憲法法庭判決宣告違憲定期失效',
+      courtLevel: '司法院憲法法庭',
+      updatedAt: '2023/07/28',
+      caseNumber: '憲法法庭 112 年憲判字第 13 號判決',
+      judgmentDate: '2023年7月28日（民國112年7月28日）',
+      bench: '審判長大法官 許宗力、主筆大法官 詹森林、合議庭大法官全體',
+      partiesOrPetitioner: '聲請人：黃偉銘等毒品罪受刑人及受命法官聲請審查',
+      cause: '外役監條例第4條第1項第3款受刑人遴選資格規定違憲審查案',
+      subsequentAction: '立法院於2023年7月31日三讀通過修正《外役監條例》，將單純吸食、持有毒品者解除全面限制，但加強重大貪污、暴力犯及重刑犯之門檻，落實個別化矯正處遇。',
+    ),
+    oneSentenceSummary: '外役監遴選無差別一律排除毒品受刑人違憲，落實個別化矯正與受刑人再社會化權利。',
+    background:
+        '外役監設立目的在於使受刑人逐步適應正常社會生活，透過開放性處遇與家庭探視，作為回歸社會的中途過渡機制。然而舊《外役監條例》第4條第1項第3款明定：「觸犯毒品危害防制條例之罪者，不得遴選外役監。」受刑人黃偉銘等人因單純施用、持有二級毒品入監服刑，在獄中表現良好無任何違規，申請遴選外役監時，遭矯正署以觸犯毒品罪為由直接拒絕。黃員等人窮盡行政救濟後，向憲法法庭聲請法規範憲法審查，主張該條款一刀切排除所有毒品罪受刑人，未區分製造販賣與單純施用病患型，違反憲法第7條平等原則與第23條比例原則。',
+    fullStory:
+        '憲法法庭於2023年7月28日作成112年憲判字第13號判決。大法官詹森林主筆之判決理由明確闡釋：受刑人固然因判決受人身自由限制，但憲法所保障之平等權與受人道處遇之權利並未喪失。外役監遴選排除規定之立法目的，旨在防範逃脫與降低社會危害風險；然而施用或持有微量毒品之受刑人，本質上兼具「病患」屬性，其戒癮成功與逐步回歸社會具有正向關聯。系爭規定未依犯罪情節、施用成癮程度、入監後戒斷表現進行個別化審查，而是「不問情節一律予以全面排除」，其分類手段與防範社會危險之立法目的間欠缺實質關聯，形成不合理之差別待遇，宣告該規定違反憲法第7條平等原則，至遲於屆滿二年時失效。',
+    timeline: const [
+      CaseTimelineItem(
+          dateLabel: '2021/04',
+          title: '受刑人遭拒絕遴選外役監',
+          description: '受刑人表現良好申請外役監遭法規一律排除。'),
+      CaseTimelineItem(
+          dateLabel: '2022/08',
+          title: '向憲法法庭聲請憲法審查',
+          description: '主張毒品罪除外規定違反平等原則與比例原則。'),
+      CaseTimelineItem(
+          dateLabel: '2023/07/28',
+          title: '憲法法庭宣告違憲定期失效',
+          description: '宣告外役監條例全面排除毒品罪受刑人規定違憲。'),
+      CaseTimelineItem(
+          dateLabel: '2023/07/31',
+          title: '立法院火速完成外役監條例修法',
+          description: '三讀修正外役監條例，解除單純施用毒品受刑人之全面禁令。')
+    ],
+    people: const [
+      CasePersonRole(role: '聲請人', description: '黃偉銘（毒品罪受刑人，主張平等矯正處遇）。'),
+      CasePersonRole(role: '關係機關', description: '法務部矯正署（主管外役監遴選與受刑人考核）。'),
+      CasePersonRole(role: '主筆大法官', description: '詹森林大法官（撰寫違憲宣告主文與實質理由）。')
+    ],
+    legalIssues: const [
+      LegalIssue(
+          title: '外役監除外條款之手段與目的間是否具備實質關聯性？',
+          plainExplanation: '平等原則禁止無正當理由的差別待遇。若法律對特定群體施加差別處遇，其手段必須與要達成之正當目的間具有實質關聯，不能僅憑刻板標籤進行無差別排除。',
+          relationToCase: '憲法法庭檢驗矯正制度平等原則之最嚴格審查標準。',
+          relatedLawIds: ['const-7', 'const-23', 'open-prison-4'])
+    ],
+    investigationAndTrial:
+        '法務部統計資料顯示，單純施用毒品受刑人於外役監之再犯率與脫逃率，並未顯著高於其他財產或暴力犯罪受刑人，證明全面排除之經驗科學依據不足。',
+    courtReasoning:
+        '憲法法庭判決意旨指出：外役監具有促進受刑人再社會化復歸社會之重大功能。立法者雖享有制度形成自由，然若以概括、一律排除之手段剝奪特定罪名受刑人參與遴選之機會，無視個案矯正成效，即屬恣意分類，侵害受刑人受憲法保障之平等權。',
+    judgmentResult: '外役監條例第4條第1項第3款規定違憲，至遲於本判決公告之日起屆滿二年時失其效力。',
+    relatedLaws: const [
+      RelatedLaw(
+          lawName: '憲法',
+          articleNumber: '第 7 條',
+          plainSummary: '中華民國人民，無分男女、宗教、種族、階級、黨派，在法律上一律平等。',
+          relationToCase: '本案憲法實質平等原則審查之母法依據。'),
+      RelatedLaw(
+          lawName: '外役監條例',
+          articleNumber: '第 4 條',
+          plainSummary: '受刑人有悛悔實據並符合特定條件者，得遴選外役監。',
+          relationToCase: '違憲審查之系爭條文。')
+    ],
+    socialImpact:
+        '本判決不僅推動立法院於三天後迅速三讀修正《外役監條例》，更為台灣監獄行刑人權與個別化矯正處遇樹立了憲法標竿，確立受刑人在獄中仍享有受憲法平等對待之尊嚴。',
+    relatedCases: const [],
+    sources: const [
+      CaseSource(
+        title: '司法院公開憲法法庭112年憲判字第13號判決',
+        sourceType: 'official',
+        updatedAt: '2023/07/28',
+      ),
+    ],
+    concurringDissentingOpinions: const [],
+    courtArguments: const [],
+    expertOpinions: const [],
+    mediaReferences: const [],
+    images: const [],
+  ),
+
   CaseBook(
     id: 'case-001',
     titleZh: '103年度訴字第101號 捷運無差別隨機殺人案',
@@ -16805,6 +17278,8 @@ final caseLibraryHalls = <CaseLibraryHall>[
           'case-chang-will-1764',
           'case-support-exemption-1118',
           'case-cross-border-111',
+          'case-cross-marriage-1445',
+          'case-prison-selection-13',
         ],
       ),
       CaseShelf(
@@ -16821,6 +17296,8 @@ final caseLibraryHalls = <CaseLibraryHall>[
           '101',
           'case-hsu-tzu-chiang-582',
           'case-tsmc-secret-1589',
+          'case-su-chien-ho',
+          'case-rca-pollution',
           'case-001',
           'case-002',
           'case-003',
@@ -16947,6 +17424,16 @@ final caseLibraryHalls = <CaseLibraryHall>[
           'case-114',
           'case-154',
           'case-160'
+        ],
+      ),
+      CaseShelf(
+        id: '1980s',
+        hallId: 'timeline',
+        name: '1980s 書架',
+        description: '戒嚴末期社會劇變與人權法治初萌',
+        coverStyle: 'slate',
+        caseIds: const [
+          'case-tang-ying-shen',
         ],
       ),
     ],
@@ -17293,7 +17780,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '平等原則與少數權益保障',
         description: '婚姻平權、性別平等、弱勢族群身分認同保障',
         coverStyle: 'gold',
-        caseIds: const ['101', 'case-018', 'case-022', 'case-024', 'case-adultery-791'],
+        caseIds: const ['101', 'case-018', 'case-022', 'case-024', 'case-adultery-791', 'case-cross-marriage-1445', 'case-tang-ying-shen'],
       ),
       CaseShelf(
         id: 'shelf-const-power',
@@ -17301,7 +17788,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '權力分立與民主憲政防線',
         description: '國會調查權、重大預算停建與公務員救濟保障',
         coverStyle: 'navy',
-        caseIds: const ['499', '520', '102', 'case-023', 'case-025', 'case-indigenous-hunt-803'],
+        caseIds: const ['499', '520', '102', 'case-023', 'case-025', 'case-indigenous-hunt-803', 'case-prison-selection-13'],
       ),
     ],
   ),
@@ -17324,7 +17811,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '死刑非常上訴與無罪定讞',
         description: '死刑判決定讞後經新事證開啟再審平反之重大歷史案件',
         coverStyle: 'navy',
-        caseIds: const ['104', '105', 'cheng-2021', 'case-hsu-tzu-chiang-582'],
+        caseIds: const ['104', '105', 'cheng-2021', 'case-hsu-tzu-chiang-582', 'case-su-chien-ho'],
       ),
       CaseShelf(
         id: 'shelf-inno-confession',
@@ -17332,7 +17819,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '不正訊問與自白補強法則',
         description: '偵查機關取得自白之適法性與共同被告陳述審查',
         coverStyle: 'forest',
-        caseIds: const ['105', 'case-014', 'case-hsu-tzu-chiang-582'],
+        caseIds: const ['105', 'case-014', 'case-hsu-tzu-chiang-582', 'case-su-chien-ho'],
       ),
       CaseShelf(
         id: 'shelf-inno-military',
@@ -17363,7 +17850,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '環境公害毒物與因果關係證明',
         description: '重大集體公害訴訟中因果關係疫學證明與舉證倒置',
         coverStyle: 'crimson',
-        caseIds: const ['106', 'ding-2015'],
+        caseIds: const ['106', 'ding-2015', 'case-rca-pollution'],
       ),
       CaseShelf(
         id: 'shelf-lab-platform',
@@ -17480,7 +17967,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '子女最佳利益與跨國親權行使',
         description: '跨國父母監護權爭訟、探視權裁判與略誘罪界線',
         coverStyle: 'forest',
-        caseIds: const ['case-021', 'case-035', 'case-040', 'case-cross-border-111'],
+        caseIds: const ['case-021', 'case-035', 'case-040', 'case-cross-border-111', 'case-cross-marriage-1445'],
       ),
       CaseShelf(
         id: 'shelf-fam-estate',
