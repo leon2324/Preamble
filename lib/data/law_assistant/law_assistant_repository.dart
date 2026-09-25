@@ -1,5 +1,4 @@
 import 'package:preamble/components/shared/mvp_state_widgets.dart';
-import 'package:preamble/data/documents/document_models.dart';
 import 'package:preamble/data/law_assistant/law_assistant_api_service.dart';
 import 'package:preamble/data/law_assistant/law_assistant_models.dart';
 import 'package:preamble/data/legal_brain/legal_syllogism_engine.dart';
@@ -174,14 +173,7 @@ class LawAssistantRepository {
 
   LawAssistantMessage _mockAssistantMessage(String prompt, DateTime createdAt) {
     final analysis = LegalSyllogismEngine.analyze(rawFacts: prompt);
-    final insight = LawAssistantDefenseInsight(
-      disputeCategory: analysis.disputeCategory,
-      defensePoints: analysis.identifiedIssues,
-      keyEvidences: analysis.evidenceChecklist,
-      suggestedTemplateType: DocumentTemplateType.dynamicCustom,
-      suggestedActionLabel: '生成${analysis.disputeCategory}公文書狀',
-      extractedFacts: analysis.summaryOfFacts,
-    );
+    final insight = LawAssistantDefenseInsight.fromContext(text: prompt);
 
     final citations = analysis.majorPremiseStatutes.map((s) {
       return LawAssistantCitation(
@@ -203,10 +195,18 @@ class LawAssistantRepository {
         analysis.identifiedIssues.map((e) => '• $e').join('\n');
     final demandsSummary = analysis.demands.map((e) => '• $e').join('\n');
 
+    final reassurancePrefix = insight.immediateReassurance.isNotEmpty
+        ? '【💡 即時定心丸】：\n${insight.immediateReassurance}\n\n'
+        : '';
+    final goldenPhrasePrefix = insight.tacticalGoldenPhrase.isNotEmpty
+        ? '【💬 現場 / LINE 應對金句（可直接複製發送或照著唸）】：\n${insight.tacticalGoldenPhrase}\n\n'
+        : '';
+    final fullReport = '$reassurancePrefix$goldenPhrasePrefix${analysis.toDetailedReport()}';
+
     return LawAssistantMessage(
       id: 'mock-assistant-${createdAt.microsecondsSinceEpoch}',
       role: LawAssistantMessageRole.assistant,
-      content: analysis.toDetailedReport(),
+      content: fullReport,
       createdAt: createdAt,
       answer: LawAssistantAnswer(
         problemDirection:

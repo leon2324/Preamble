@@ -132,7 +132,20 @@ class _LawAssistantInsightCardState extends State<LawAssistantInsightCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 0. 法律時效生死線倒數膠囊 (Statute Countdown)
+                  // 0. 現場 / LINE 應對金句與即時定心丸 (Tactical Golden Phrase)
+                  if (insight.tacticalGoldenPhrase.isNotEmpty) ...[
+                    _buildTacticalGoldenPhraseBox(
+                      context: context,
+                      reassurance: insight.immediateReassurance,
+                      goldenPhrase: insight.tacticalGoldenPhrase,
+                      isDark: isDark,
+                      accentGreen: accentGreen,
+                      headerColor: headerColor,
+                    ),
+                    SizedBox(height: 10.h),
+                  ],
+
+                  // 0.2 法律時效生死線倒數膠囊 (Statute Countdown)
                   if (insight.statuteDeadline != null)
                     StatuteCountdownBadge(deadline: insight.statuteDeadline!),
 
@@ -329,6 +342,148 @@ class _LawAssistantInsightCardState extends State<LawAssistantInsightCard> {
               ),
             ),
           ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTacticalGoldenPhraseBox({
+    required BuildContext context,
+    required String reassurance,
+    required String goldenPhrase,
+    required bool isDark,
+    required Color accentGreen,
+    required Color headerColor,
+  }) {
+    final boxBg = isDark ? const Color(0xFF1B2B23) : const Color(0xFFEBF5F0);
+    final boxBorder = isDark ? const Color(0xFF325443) : const Color(0xFFC3DEC8);
+
+    return Container(
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: boxBg,
+        borderRadius: BorderRadius.circular(10.r),
+        border: Border.all(color: boxBorder, width: 1.w),
+        boxShadow: [
+          BoxShadow(
+            color: accentGreen.withValues(alpha: 0.06),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(4.w),
+                decoration: BoxDecoration(
+                  color: accentGreen.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(6.r),
+                ),
+                child: Icon(
+                  Icons.chat_bubble_outline_rounded,
+                  size: 14.sp,
+                  color: accentGreen,
+                ),
+              ),
+              SizedBox(width: 8.w),
+              Expanded(
+                child: Text(
+                  '現場 / LINE 應對金句（可直接複製發送）',
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.bold,
+                    color: accentGreen,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if (reassurance.isNotEmpty) ...[
+            SizedBox(height: 6.h),
+            Text(
+              reassurance,
+              style: TextStyle(
+                fontSize: 10.5.sp,
+                height: 1.4,
+                color: isDark ? const Color(0xFFD0E2D8) : const Color(0xFF2C4C3B),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+          SizedBox(height: 8.h),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF14201A) : Colors.white,
+              borderRadius: BorderRadius.circular(6.r),
+              border: Border.all(
+                color: isDark ? const Color(0xFF2E483A) : const Color(0xFFD6E8DC),
+                width: 0.8.w,
+              ),
+            ),
+            child: Text(
+              goldenPhrase,
+              style: TextStyle(
+                fontSize: 11.5.sp,
+                height: 1.45,
+                color: headerColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Align(
+            alignment: Alignment.centerRight,
+            child: InkWell(
+              onTap: () {
+                Clipboard.setData(ClipboardData(text: goldenPhrase));
+                HapticFeedback.mediumImpact();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      '📋 應對金句已複製到剪貼簿！可直接貼至 LINE 或在現場照著唸。',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    backgroundColor: Color(0xFF2C5E43),
+                    duration: Duration(seconds: 2),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              },
+              borderRadius: BorderRadius.circular(6.r),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                decoration: BoxDecoration(
+                  color: accentGreen,
+                  borderRadius: BorderRadius.circular(6.r),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.copy_rounded,
+                      size: 12.sp,
+                      color: Colors.white,
+                    ),
+                    SizedBox(width: 4.w),
+                    Text(
+                      '一鍵複製金句',
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

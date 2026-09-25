@@ -392,6 +392,49 @@ void main() {
       }
     });
 
+    // -------------------------------------------------------------
+    // 8. 動態事實實體感知與即時金句插值測試 (Dynamic Entity Extraction)
+    // -------------------------------------------------------------
+    test('LawAssistantDefenseInsight dynamically extracts entities and customizes tactical golden phrase', () {
+      // 租賃案例：房東、32,000元
+      final rentalInsight = LawAssistantDefenseInsight.fromContext(
+        text: '房東不退我 32,000元 押金，說有壁癌要扣錢',
+      );
+      expect(rentalInsight.detectedAmount, '32,000元');
+      expect(rentalInsight.detectedCounterparty, '房東');
+      expect(rentalInsight.tacticalGoldenPhrase, contains('房東您好'));
+      expect(rentalInsight.tacticalGoldenPhrase, contains('新台幣 32,000元'));
+      expect(rentalInsight.immediateReassurance, contains('32,000元'));
+      expect(rentalInsight.suggestedFollowUps.first, contains('32,000元'));
+
+      // 交通事故案例：對方駕駛、初估50萬
+      final trafficInsight = LawAssistantDefenseInsight.fromContext(
+        text: '被對方駕駛撞到，修車初估要 50萬元，對方不賠',
+      );
+      expect(trafficInsight.detectedAmount, '50萬元');
+      expect(trafficInsight.detectedCounterparty, '對方駕駛');
+      expect(trafficInsight.tacticalGoldenPhrase, contains('對方駕駛您好'));
+      expect(trafficInsight.tacticalGoldenPhrase, contains('50萬元'));
+      expect(trafficInsight.immediateReassurance, contains('50萬元'));
+
+      // 裝潢工程案例：統包工程/設計師、80萬
+      final constructionInsight = LawAssistantDefenseInsight.fromContext(
+        text: '設計師裝潢工程延宕且有重大瑕疵，尾款 80萬元 該付嗎',
+      );
+      expect(constructionInsight.detectedAmount, '80萬元');
+      expect(constructionInsight.detectedCounterparty, '統包工程/設計師');
+      expect(constructionInsight.tacticalGoldenPhrase, contains('統包工程/設計師您好'));
+
+      // 勞資爭議案例：公司主管/人資、65,000元
+      final laborInsight = LawAssistantDefenseInsight.fromContext(
+        text: '老闆突然口頭開除我，還欠我 65,000元 加班費不給',
+      );
+      expect(laborInsight.detectedAmount, '65,000元');
+      expect(laborInsight.detectedCounterparty, '公司主管/人資');
+      expect(laborInsight.tacticalGoldenPhrase, contains('公司主管/人資您好'));
+      expect(laborInsight.tacticalGoldenPhrase, contains('65,000元'));
+    });
+
   });
 }
 
