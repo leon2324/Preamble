@@ -2574,6 +2574,536 @@ final caseLibraryCasesSeed = <CaseBook>[
   ),
 
   CaseBook(
+    id: 'case-chiang-kuo-ching',
+    titleZh: '國防部北部地方軍事法院 100 年度再字第 001 號刑事判決',
+    titleEn: 'Northern Military Court Criminal Retrial Judgment 100-Zai-001',
+    shortTitleZh: '江國慶案',
+    shortTitleEn: 'Chiang Kuo-ching Case',
+    displayCode: '100軍再1',
+    year: 1996,
+    location: '台北市',
+    status: '再審判決無罪確定國賠求償確定',
+    category: '刑事軍法案件',
+    tags: const ['江國慶', '冤獄平反', '私刑刑求', '自白任意性', '刑事補償法', '反情報隊', '軍法審判修法'],
+    memoryLine: '空軍上兵遭反情報隊私刑刑求槍決，十五年後再審逆轉無罪，創下國家賠償向違失高官追償破億紀錄。',
+    shortDescription: '空軍作戰司令部五歲女童命案，軍方反情報隊將上兵江國慶私自禁閉刑求37小時，以強光體罰迫寫自白並火速槍決。江父江母長年奔走陳情，監察院糾正特偵組重啟偵查逮獲真兇，軍事法院再審宣告無罪，國家賠償1億318萬元並向陳肇敏等軍官追償。',
+    basicInfo: const CaseBasicInfo(
+      caseType: '刑事軍事審判再審宣告無罪案件',
+      procedureStage: '國防部北部地方軍事法院再審判決無罪確定',
+      courtLevel: '國防部北部地方軍事法院',
+      updatedAt: '2011/09/13',
+      caseNumber: '國防部北部地方軍事法院 100 年度再字第 001 號判決',
+      judgmentDate: '2011年9月13日（民國100年9月13日）',
+      bench: '審判長軍法官上校何震寰、軍法官中校王國棟、少校周志達',
+      partiesOrPetitioner: '聲請人：王彩蓮（江國慶之母）、國防部北部地方軍事法院檢察署軍事檢察官；被告：江國慶（已故）',
+      cause: '強姦殺人等罪再審案件',
+      subsequentAction: '全案核准刑事補償金1億318萬5000元。國防部依法對時任空軍作戰司令陳肇敏等五人提起民事求償訴訟，最高法院判決陳肇敏等人應賠償國防部5957萬元確定。立法院隨即修訂《刑事補償法》增訂國家追償規範，並為廢除平時軍法審判開啟契機。',
+    ),
+    oneSentenceSummary: '空軍上兵遭反情報隊刑訊逼供冤殺，再審翻案無罪並創下公務員重大違法國賠追償首例。',
+    background:
+        '1996年9月12日，台北市空軍作戰司令部營區福利社廁所發生五歲女童遭殘忍性侵殺害案件，震驚各界。軍方高層下令限期破案，作戰司令部將無偵查權限之空軍反情報隊介入調查。反情報隊鎖定役男江國慶，將其帶往禁閉室施以長達37小時疲勞訊問，期間施以強光近距離照射雙眼、罰跪、體罰、威脅冰存女童解剖屍體等手段進行殘酷心理威嚇與肉體折磨，迫使江國慶在神智不清下寫下自白書坦承犯案。',
+    fullStory:
+        '空軍軍法室在命案現場採集之血液、精液與指紋DNA均無法證明與江國慶相符之極度薄弱證據下，僅憑反情報隊取得之自白，短短七個月內火速判處死刑，於1997年8月13日將年僅21歲的江國慶執行槍決。江國慶父親江日燿為子洗冤陳情十四年，直至病逝前仍在家中設靈堂掛滿陳情卷宗。2010年監察院公布調查報告糾正國防部，檢察總長黃世銘下令特偵組重啟調查，於台中逮捕現場掌紋完全相符之許榮洲。北部地方軍事法院檢察署隨後主動為江國慶提起再審，軍事法院合議庭於2011年9月13日認定江國慶自白係遭不法刑求取得，依法排除證據能力，正式宣判江國慶無罪確定。',
+    timeline: const [
+      CaseTimelineItem(
+          dateLabel: '1996/09/12',
+          title: '空軍作戰司令部女童命案發生',
+          description: '軍方反情報隊私刑刑求江國慶37小時逼寫自白。'),
+      CaseTimelineItem(
+          dateLabel: '1997/08/13',
+          title: '軍法室判處死刑火速槍決執行',
+          description: '物證不足下憑自白判處死刑，江國慶年僅21歲被槍決。'),
+      CaseTimelineItem(
+          dateLabel: '2010/05/12',
+          title: '監察院公布調查報告糾正軍方',
+          description: '特偵組重啟調查逮捕掌紋相符之許榮洲。'),
+      CaseTimelineItem(
+          dateLabel: '2011/09/13',
+          title: '北部地方軍事法院再審判決無罪',
+          description: '排除不法自白證據能力，正式宣判江國慶無罪確定。'),
+      CaseTimelineItem(
+          dateLabel: '2019/02/14',
+          title: '最高法院判命陳肇敏等賠償定讞',
+          description: '最高法院判決時任司令陳肇敏等軍官連帶賠償國賠5957萬元。')
+    ],
+    people: const [
+      CasePersonRole(role: '被害被告', description: '江國慶（空軍上兵，遭刑求槍決後平反）。'),
+      CasePersonRole(role: '平反家屬', description: '王彩蓮（江母，堅定奔走終獲清白）。'),
+      CasePersonRole(role: '軍方司令', description: '陳肇敏（時任空軍作戰司令部中將司令）。'),
+      CasePersonRole(role: '反情報隊軍官', description: '柯仲慶（反情報隊少校，主導禁閉私訊）。'),
+      CasePersonRole(role: '命案真兇', description: '許榮洲（現場留有血掌紋之同營區士兵）。')
+    ],
+    legalIssues: const [
+      LegalIssue(
+          title: '無司法警察身分之反情報隊私刑取供自白之絕對排除',
+          plainExplanation: '刑事訴訟法第156條第1項規定自白非出於任意性者不得作為證據。反情報隊非法拘禁刑訊逼供取得之供詞，無論形式如何完備均應絕對排除證據能力。',
+          relationToCase: '本案確立違法偵查自白無效與人權保障防線。',
+          relatedLawIds: ['crim-156', 'crim-98', 'mil-125'])
+    ],
+    investigationAndTrial:
+        '特偵組重啟調查發現，命案廁所窗條上之關鍵血掌紋經刑事警察局重新比對，與許榮洲掌紋特徵點完全吻合，而江國慶之DNA與指紋在命案現場完全不存在。',
+    courtReasoning:
+        '軍事法院再審判決理由指出：江國慶於警訊及軍偵之自白，係在反情報隊非法禁閉、強光照射及疲勞訊問之重大心理強制下所為，欠缺任意性，依法應排除證據能力；現場客觀微量跡證無一與江國慶相符，不能證明被告犯罪，依法宣告無罪。',
+    judgmentResult: '原判決撤銷。江國慶無罪確定。',
+    relatedLaws: const [
+      RelatedLaw(
+          lawName: '刑事訴訟法',
+          articleNumber: '第 156 條',
+          plainSummary: '被告之自白，非出於強暴、脅迫、利誘、詐欺、疲勞訊問、違法羈押或其他不正之方法，且與事實相符者，得為證據。',
+          relationToCase: '排除刑求不正自白證據能力之法條依據。'),
+      RelatedLaw(
+          lawName: '刑事補償法',
+          articleNumber: '第 34 條',
+          plainSummary: '補償金之支付，因公務員執行職務有故意或重大過失侵害人民權利者，國家於支付補償金後，得向該公務員求償。',
+          relationToCase: '江國慶案催生之國家對違法失職公務員求償條款。')
+    ],
+    socialImpact:
+        '江國慶案成為台灣司法史上最震撼之冤獄平反案，推動了《刑事補償法》之全面大修，確立公務員重大違法國家求償權；同時重創軍事審判威信，直接促成後續2013年洪仲丘案全面廢除平時軍法審判、案件全數回歸普通法院審理之司法大改革。',
+    relatedCases: const [],
+    sources: const [
+      CaseSource(
+        title: '國防部北部地方軍事法院100年度再字第001號刑事判決',
+        sourceType: 'official',
+        updatedAt: '2011/09/13',
+      ),
+      CaseSource(
+        title: '臺灣臺北地方法院100年度國字第22號民事判決',
+        sourceType: 'official',
+        updatedAt: '2014/05/27',
+      ),
+    ],
+    concurringDissentingOpinions: const [],
+    courtArguments: const [],
+    expertOpinions: const [],
+    mediaReferences: const [],
+    images: const [],
+  ),
+
+  CaseBook(
+    id: 'case-formosa-incident',
+    titleZh: '國防部軍事法庭 69 年度裁字第 001 號軍法判決',
+    titleEn: 'Ministry of National Defense Military Court Judgment 69-Cai-001',
+    shortTitleZh: '美麗島事件軍法大審',
+    shortTitleEn: 'Formosa Incident Trial',
+    displayCode: '69軍裁1',
+    year: 1980,
+    location: '高雄市、台北市',
+    status: '判決叛亂罪定讞，促轉會撤銷罪刑宣告',
+    category: '憲政政治審判案件',
+    tags: const ['美麗島事件', '高雄事件', '懲治叛亂條例', '唯一死刑二條一', '言論自由', '抵抗權', '美麗島律師團', '轉型正義'],
+    memoryLine: '戒嚴時期最大政治審判，公開審判激發公民民主法治意識，辯護律師團催生台灣民主化轉型。',
+    shortDescription: '1979年世界人權日美麗島雜誌社於高雄集會引發衝突，當局依懲治叛亂條例唯一死刑起訴黨外核心。在國際人權壓力下，景美看守所展開公開軍法大審，辯護律師團力爭言論自由非叛亂，喚醒全台法治民主思潮，促轉會於2018年依法撤銷全體有罪判決。',
+    basicInfo: const CaseBasicInfo(
+      caseType: '戒嚴時期政治反叛軍事審判案件',
+      procedureStage: '國防部軍事法庭合議庭判決確定，促轉會撤銷罪刑宣告',
+      courtLevel: '國防部軍事法庭',
+      updatedAt: '1980/04/18',
+      caseNumber: '國防部軍事法庭 69 年度裁字第 001 號裁決書',
+      judgmentDate: '1980年4月18日（民國69年4月18日）',
+      bench: '審判長少校王雲駿、軍法官中校許金聲、軍法官中校劉連金',
+      partiesOrPetitioner: '公訴機關：國防部軍事檢察官；被告：施明德、黃信介、姚嘉文、張俊宏、林義雄、呂秀蓮、陳菊、林弘宣',
+      cause: '懲治叛亂條例第2條第1項叛亂案件',
+      subsequentAction: '施明德判處無期徒刑，黃信介判處有期徒刑14年，姚嘉文等6人判處12年。審判過程公開見報，成為台灣社會爭取民主憲政的空前啟蒙。美麗島辯護律師團（江鵬堅、尤清、謝長廷、蘇貞昌、陳水扁等）隨後投身法治民主運動，推動解嚴與國會全面改選。2018年促轉會撤銷全體被告之刑事判決。',
+    ),
+    oneSentenceSummary: '戒嚴軍法大審以言論入罪判處叛亂，法庭公開論辯開啟台灣民主法治憲政轉型。',
+    background:
+        '1979年12月10日國際人權日，《美麗島雜誌社》高雄服務處於新興分局旁扶輪公園舉辦「人權日紀念大會」，訴求政治自由、解除黨禁報禁、落實憲政保障。憲警以未獲許可為由嚴密封鎖現場並施放催淚瓦斯，群眾與鎮暴部隊爆發嚴重肢體衝突，多人受傷。隨後警備總部展開全島搜捕，將黨外運動核心人士全數逮捕羈押，軍事檢察官依《懲治叛亂條例》第2條第1項「意圖破壞國體、顛覆政府而著手實行」罪嫌提起公訴，法定刑為唯一死刑。',
+    fullStory:
+        '面對國際特赦組織、美國國會及國際輿論空前壓力，國民黨當局決定於1980年3月在台北景美軍法看守所第一法庭進行公開審理，破例准許家屬、國內外記者及各國使節旁聽。被告施明德在法庭上微笑面對唯一死刑指控，慷慨陳詞表明主張和平民主改革絕非顛覆政府；年輕的民間義務律師團在法庭上依據憲法公民權利嚴詞駁斥檢方以言論入罪之荒謬。大審過程每日刊登於各大報紙頭版，徹底打破戒嚴政治禁忌。最終軍事法庭未判處死刑，改判施明德無期徒刑，其餘被告12至14年徒刑。美麗島大審奠定了台灣民間社會追求民主法治的共同記憶，並孕育了後續台灣民主轉型最重要的政治與法律骨幹。',
+    timeline: const [
+      CaseTimelineItem(
+          dateLabel: '1979/12/10',
+          title: '高雄世界人權日集會衝突',
+          description: '美麗島雜誌社舉辦人權紀念會，引爆憲警與群眾衝突。'),
+      CaseTimelineItem(
+          dateLabel: '1979/12/13',
+          title: '警總發動全台大逮捕',
+          description: '施明德、黃信介等數十位黨外運動人士遭逮捕羈押。'),
+      CaseTimelineItem(
+          dateLabel: '1980/03/18',
+          title: '景美軍法看守所展開公開大審',
+          description: '國內外媒體旁聽，律師團與被告法庭論辯震撼全台。'),
+      CaseTimelineItem(
+          dateLabel: '1980/04/18',
+          title: '軍事法庭宣判叛亂罪定讞',
+          description: '施明德判無期徒刑，黃信介等七人判處12至14年徒刑。'),
+      CaseTimelineItem(
+          dateLabel: '2018/10/05',
+          title: '促轉會公告撤銷全體有罪判決',
+          description: '依促進轉型正義條例依法撤銷威權統治下不法刑事判決。')
+    ],
+    people: const [
+      CasePersonRole(role: '被告領袖', description: '施明德（美麗島雜誌社總經理，判處無期徒刑）。'),
+      CasePersonRole(role: '被告民代', description: '黃信介（立法委員、雜誌社發行人，判處14年）。'),
+      CasePersonRole(role: '同案被告', description: '姚嘉文、張俊宏、林義雄、呂秀蓮、陳菊、林弘宣。'),
+      CasePersonRole(role: '辯護律師團', description: '尤清、謝長廷、蘇貞昌、陳水扁、江鵬堅等義務律師。'),
+      CasePersonRole(role: '軍事檢察官', description: '國防部警備總部公訴軍事檢察官。')
+    ],
+    legalIssues: const [
+      LegalIssue(
+          title: '言論自由、和平集會訴求與刑法顛覆政府「著手實行」之界限',
+          plainExplanation: '刑法第100條及懲治叛亂條例第2條第1項規定顛覆政府罪須以強暴脅迫「著手實行」為要件。和平發表政見、創辦雜誌與舉辦人權集會，屬憲法保障之言論與集會自由，不應逕論以叛亂重罪。',
+          relationToCase: '本案直接促成1992年刑法第100條刪除和平言論叛亂罪之重大修正。',
+          relatedLawIds: ['crim-100', 'const-11', 'const-14'])
+    ],
+    investigationAndTrial:
+        '軍事審判審理期間，被告等多番控訴在調查局及警總偵訊期間遭到嚴重疲勞夜訊、恐嚇威脅及刑求逼供，軍事法庭雖未採信被告刑求抗辯，但公開辯論過程使自白任意性爭端完全攤在陽光下。',
+    courtReasoning:
+        '國防部軍事法庭裁決理由認為：被告等創立雜誌社並設立各地分社，假藉人權集會名義聚眾滋事攻擊軍警，已具備推翻現行政體之組織與實行行為，合致懲治叛亂條例第2條第1項之罪，考量各被告未達流血奪權之極端程度，依刑法第59條酌量減輕其刑，分別判處無期徒刑與有期徒刑。',
+    judgmentResult: '施明德判處無期徒刑、褫奪公權終身；黃信介判處有期徒刑14年；其餘被告分別判處有期徒刑12年。',
+    relatedLaws: const [
+      RelatedLaw(
+          lawName: '懲治叛亂條例',
+          articleNumber: '第 2 條第 1 項',
+          plainSummary: '犯刑法第一百條第一項、第一百零一條第一項、第一百零三條第一項、第一百零四條第一項之罪者，處死刑。',
+          relationToCase: '戒嚴時期惡名昭彰之唯一死刑法條（已於1991年全法廢止）。'),
+      RelatedLaw(
+          lawName: '憲法',
+          articleNumber: '第 11 條',
+          plainSummary: '人民有言論、講學、著作及出版之自由。',
+          relationToCase: '辯護律師團主張公民政治批評受憲法絕對保障之母法依據。')
+    ],
+    socialImpact:
+        '美麗島事件軍法大審是台灣戰後民主化與憲政轉型的最重要分水嶺。大審激勵了台灣知識分子與基層民眾，促成黨外勢力大團結成立民主進步黨，促成1987年解除戒嚴、1991年廢止《懲治叛亂條例》與1992年修正《刑法第100條》，確立台灣人民不再因政治言論遭受國家叛亂罪追訴。',
+    relatedCases: const [],
+    sources: const [
+      CaseSource(
+        title: '國防部軍事法庭69年度裁字第001號判決書',
+        sourceType: 'official',
+        updatedAt: '1980/04/18',
+      ),
+      CaseSource(
+        title: '促進轉型正義委員會促轉三字第1075300110A號撤銷刑事有罪判決公告',
+        sourceType: 'official',
+        updatedAt: '2018/10/05',
+      ),
+    ],
+    concurringDissentingOpinions: const [],
+    courtArguments: const [],
+    expertOpinions: const [],
+    mediaReferences: const [],
+    images: const [],
+  ),
+
+  CaseBook(
+    id: 'case-ting-hsin-oil',
+    titleZh: '最高法院 108 年度台上字第 3324 號刑事判決',
+    titleEn: 'Supreme Court Criminal Judgment 108-Tai-Shang-3324',
+    shortTitleZh: '頂新黑心劣質油案',
+    shortTitleEn: 'Ting Hsin Oil Case',
+    displayCode: '108台上3324',
+    year: 2014,
+    location: '彰化縣、台中市',
+    status: '判決有罪定讞入監執行，沒收不法利得',
+    category: '食品安全與重大經濟刑事案件',
+    tags: const ['頂新黑心油', '魏應充', '食品安全衛生管理法', '抽象危險犯', '摻偽假冒', '沒收新制', '滅頂行動'],
+    memoryLine: '以飼料油精煉混充食用油引爆全民食安怒火，一審無罪後三審逆轉確立食安法摻偽假冒為抽象危險犯。',
+    shortDescription: '頂新公司進口越南非食用飼料級動植物油脂，精煉後混入食用豬油銷往全台。彰化地院一審以精煉後未驗出重金屬判決無罪，引發全台滅頂抗議。台中高分院二審與最高法院三審逆轉判決魏應充判刑定讞入監，確立食安法摻偽假冒屬抽象危險犯，不容以精煉成品合格抗辯。',
+    basicInfo: const CaseBasicInfo(
+      caseType: '刑事違反食品安全衛生管理法與詐欺取財案件',
+      procedureStage: '最高法院判決駁回上訴判處有期徒刑定讞',
+      courtLevel: '最高法院刑事第四庭',
+      updatedAt: '2019/11/06',
+      caseNumber: '最高法院 108 年度台上字第 3324 號刑事判決',
+      judgmentDate: '2019年11月6日（民國108年11月6日）',
+      bench: '審判長法官林立華、法官林瑞斌、法官李麗珠、法官楊真明、法官黃斯偉',
+      partiesOrPetitioner: '上訴人即被告：魏應充、常梅峰、陳茂嘉、頂新製油實業股份有限公司；起訴機關：臺灣彰化地方檢察署檢察官',
+      cause: '違反食品安全衛生管理法等罪案件',
+      subsequentAction: '魏應充判處有期徒刑5年9月定讞入監執行，頂新公司判處罰金逾億元並沒收犯罪所得逾億元。此案促成立法院多次修訂《食品安全衛生管理法》大幅提高罰金與刑責，催生「食品雲」追溯追蹤體系，並推動刑法第38條之1法人沒收新制全面上路。',
+    ),
+    oneSentenceSummary: '以飼料油精煉混充食用油，最高法院確立食安法摻偽假冒屬抽象危險犯之嚴格標準。',
+    background:
+        '2014年秋季，檢調單位接獲檢舉，查獲頂新製油實業公司長期透過越南大幸福公司，大量進口欠缺食用安全衛生證明、主要供作牲畜飼料用途之不可食用動植物油脂。頂新公司明知該批原料油脂酸價偏高、來源混雜且未符合食用規格，仍利用現代脫酸、脫色、脫臭等高溫真空精煉技術處理，將其偽充為食用豬油及牛油，販售予味全公司及下游各大食品廠、連鎖餐飲及通路，製成大量民生加工食品銷往全台，引發全民食安恐慌。',
+    fullStory:
+        '彰化地檢署檢察官依食品安全衛生管理法摻偽假冒罪及刑法詐欺取財罪起訴頂新前董事長魏應充等人。2015年11月，彰化地院一審合議庭作成震撼判決，認定檢方提出之檢驗報告無法證明精煉後油脂含有對人體有害之重金屬或毒素，且無法證明來源全屬斃死豬，判決魏應充等全體被告無罪。判決一出引爆全台輿論沸騰，民間發起長達數年的「滅頂抵制行動」。檢察官提起上訴後，二審台中高分院全面逆轉改判魏應充有罪；最高法院於2019年作成指標判決，駁回魏應充等人上訴，明確宣示：食安法第49條第1項之摻偽假冒罪屬於「舉動犯」與「抽象危險犯」，立法重在防範非供食用原料混入食物鏈之系統性風險，只要原料欠缺食用規格即構成犯罪，絕不以精煉後檢驗合格為免責藉口，魏應充判刑定讞入監服刑。',
+    timeline: const [
+      CaseTimelineItem(
+          dateLabel: '2014/10/08',
+          title: '檢調搜索頂新查扣越南飼料油',
+          description: '查獲透過大幸福進口非食用油脂混入食用油。'),
+      CaseTimelineItem(
+          dateLabel: '2015/11/27',
+          title: '彰化地院一審判決全體被告無罪',
+          description: '合議庭以未驗出有毒成分為由判無罪，引發滅頂行動。'),
+      CaseTimelineItem(
+          dateLabel: '2018/04/27',
+          title: '台中高分院二審逆轉改判有罪',
+          description: '認定飼料油本質不可食用，改判魏應充有期徒刑15年。'),
+      CaseTimelineItem(
+          dateLabel: '2019/11/06',
+          title: '最高法院判決魏應充定讞入監',
+          description: '確立摻偽假冒為抽象危險犯，駁回上訴發監執行。'),
+      CaseTimelineItem(
+          dateLabel: '2022/07/28',
+          title: '最高法院更審部分全案確定',
+          description: '發回更審部分駁回上訴，刑期合併執行全案終結。')
+    ],
+    people: const [
+      CasePersonRole(role: '被告負責人', description: '魏應充（頂新製油前董事長）。'),
+      CasePersonRole(role: '被告經營主管', description: '常梅峰、陳茂嘉（頂新製油前後任總經理）。'),
+      CasePersonRole(role: '起訴檢察官', description: '臺灣彰化地方檢察署公訴檢察官團隊。'),
+      CasePersonRole(role: '供貨商負責人', description: '楊振豐（越南大幸福公司負責人）。'),
+      CasePersonRole(role: '消費者團體', description: '消基會與全台提請集體訴訟之消費大眾。')
+    ],
+    legalIssues: const [
+      LegalIssue(
+          title: '食品安全衛生管理法第49條第1項摻偽假冒罪之抽象危險犯性質',
+          plainExplanation: '摻偽假冒罪是否以「致生危害人體健康之具體危險」為要件？司法實務確立其為抽象危險犯，只要將非食用級原料混入食品，無論加工精煉是否合乎國家檢驗數值，即直接該當犯罪。',
+          relationToCase: '本案確立台灣食品刑法對不合食用規格原料零容忍之劃時代標竿。',
+          relatedLawIds: ['food-safety-49', 'crim-339', 'crim-38-1'])
+    ],
+    investigationAndTrial:
+        '檢警透過外交部取得越南司法互助，越南農業農村發展廳明確回函證實大幸福公司僅領有飼料生產執照，其出口之油脂全數為「非供人食用之飼料油」，打破辯方主張越南原料具備食用級之說詞。',
+    courtReasoning:
+        '最高法院判決理由闡明：食品安全衛生管理法重在保障國民生命健康與消費者對食品安全之信賴。第49條第1項所稱「摻偽或假冒」，係指以未經主管機關核准食用、欠缺衛生規格之原料混入食品，本質上即具侵害健康之潛在危險性，屬於抽象危險犯。被告以精煉技術將飼料油中之酸價與雜質降低，僅屬事後掩飾手段，無從阻卻違法。',
+    judgmentResult: '上訴駁回。魏應充判處有期徒刑5年9月定讞入監；頂新公司科處罰金新台幣1億2000萬元確定。',
+    relatedLaws: const [
+      RelatedLaw(
+          lawName: '食品安全衛生管理法',
+          articleNumber: '第 49 條',
+          plainSummary: '有第十五條第一項第七款摻偽或假冒、第十款添加未經中央主管機關許可之添加物之情形者，處七年以下有期徒刑，得併科新臺幣八千萬元以下罰金。',
+          relationToCase: '論罪科刑最核心之食品安全刑法條文。'),
+      RelatedLaw(
+          lawName: '刑法',
+          articleNumber: '第 38 條之 1',
+          plainSummary: '犯罪所得，屬於犯罪行為人者，沒收之。法人、非法人團體或自然人非屬犯罪行為人，取得犯罪所得者，亦得沒收。',
+          relationToCase: '本案催生之追繳企業黑心不法利得獨立沒收法條。')
+    ],
+    socialImpact:
+        '頂新油品案徹底重塑了台灣食品安全防護網。立法院連續修訂《食安法》提高法人罰金上限至二億元，建立食品業者登錄與電子發票強制申報之「食品雲」制度；並促成刑法沒收專章之歷史性大修，使司法機關得澈底沒收企業脫產或違法獲取之數億元不法利得。',
+    relatedCases: const [],
+    sources: const [
+      CaseSource(
+        title: '最高法院108年度台上字第3324號刑事判決',
+        sourceType: 'official',
+        updatedAt: '2019/11/06',
+      ),
+      CaseSource(
+        title: '臺灣高等法院臺中分院105年度矚上訴字第1號刑事判決',
+        sourceType: 'official',
+        updatedAt: '2018/04/27',
+      ),
+    ],
+    concurringDissentingOpinions: const [],
+    courtArguments: const [],
+    expertOpinions: const [],
+    mediaReferences: const [],
+    images: const [],
+  ),
+
+  CaseBook(
+    id: 'case-dapu-expropriation',
+    titleZh: '臺中高等行政法院 101 年度訴更一字第 47 號判決',
+    titleEn: 'Taichung High Administrative Court Judgment 101-Su-Geng-Yi-47',
+    shortTitleZh: '苗栗大埔徵收事件',
+    shortTitleEn: 'Dapu Expropriation Case',
+    displayCode: '101訴更一47',
+    year: 2010,
+    location: '苗栗縣竹南鎮',
+    status: '判決內政部違法撤銷徵收處分確定，原址重建',
+    category: '土地徵收行政訴訟案件',
+    tags: const ['大埔事件', '張藥房', '土地徵收條例', '公益性與必要性', '居住權', '比例原則', '行政訴訟勝訴', '原址重建'],
+    memoryLine: '怪手強鏟農田與突襲強拆張藥房引發全國怒火，行政法院逆轉判決徵收違法，確立土地徵收公益性與必要性之最高審查標竿。',
+    shortDescription: '苗栗縣府以園區擴建為由推動大埔區段徵收，怪手鏟毀即將收成稻田並趁隙突襲強拆張藥房，引爆全台拆政府抗議。台中高等行政法院更一審認定徵收缺乏實質公益性與最後手段性，判決撤銷內政部徵收處分確定，促成土地徵收條例全面大修與張藥房原址原地重建。',
+    basicInfo: const CaseBasicInfo(
+      caseType: '行政訴訟撤銷違法土地徵收處分案件',
+      procedureStage: '臺中高等行政法院更一審判決撤銷徵收處分，最高行政法院駁回上訴確定',
+      courtLevel: '臺中高等行政法院第一庭',
+      updatedAt: '2014/01/03',
+      caseNumber: '臺中高等行政法院 101 年度訴更一字第 47 號判決',
+      judgmentDate: '2014年1月3日（民國103年1月3日）',
+      bench: '審判長法官陳文燦、法官林秋華、法官莊金昌',
+      partiesOrPetitioner: '原告：彭秀春（張藥房負責人張森文之妻）、朱樹、黃福記、柯成福；被告：內政部；參加人：苗栗縣政府',
+      cause: '土地徵收案件',
+      subsequentAction: '最高行政法院駁回內政部上訴確定。2018年內政部與苗栗縣政府與原告彭秀春達成和解，內政部協助張藥房原地重建，於2020年取得使照完工。本案迫使立法院修正《土地徵收條例》，引進「公益性及必要性評估機制」、提高區段徵收門檻、嚴禁半夜強拆農地，成為台灣土地人權最重要的指標判決。',
+    ),
+    oneSentenceSummary: '苗栗縣府強拆張藥房引發全國震動，行政法院逆轉判決徵收違法，確立土地公益性與必要性司法審查標竿。',
+    background:
+        '2010年，苗栗縣政府以引進群創光電進駐竹南科學園區為由，推動「新竹科學園區竹南基地周邊地區特定區」區段徵收案。縣府在稻米即將收成之際動員怪手開入大埔農田鏟毀農作物，引發農民激烈抗爭與社會譁然。時任行政院長吳敦義曾親口承諾「原屋原地保留」，但2013年7月18日苗栗縣長劉政鴻趁自救會北上總統府陳情抗議之際，動員數百名優勢警力突襲強拆大埔自救會張藥房等四戶住宅。張藥房老闆張森文於同年9月抑鬱落水身亡，悲劇徹底引爆全國公民憤怒與「拆政府」運動。',
+    fullStory:
+        '張藥房遺孀彭秀春等四戶拆遷戶在詹順貴律師等義務律師團協助下，不屈不撓提起行政救濟。案件經最高行政法院發回後，臺中高等行政法院更一審合議庭於2014年1月3日作成歷史性逆轉判決。法院調查發現，竹南科學園區周邊尚有高達數十公頃事業專用區土地長期處於閒置未開發狀態，苗栗縣政府宣稱之科技擴廠需求完全不存在迫切性；且張藥房僅佔地6坪，位於道路截角，維持現狀完全不影響交通安全。合議庭認定內政部核准區段徵收欠缺實質「公益性」與「必要性」，違反憲法第23條比例原則，判決內政部之徵收處分違法並予以撤銷。最高行政法院駁回內政部上訴確定，創下人民對抗國家區段徵收獲得實質勝訴之最高里程碑。',
+    timeline: const [
+      CaseTimelineItem(
+          dateLabel: '2010/06/09',
+          title: '苗栗縣府怪手突襲鏟平大埔稻田',
+          description: '大埔農地在即將收割前遭怪手強鏟，引發全國農運聲援。'),
+      CaseTimelineItem(
+          dateLabel: '2013/07/18',
+          title: '趁自救會北上抗爭突襲強拆張藥房',
+          description: '苗栗縣政府調派數百警力趁隙強拆張藥房等四戶。'),
+      CaseTimelineItem(
+          dateLabel: '2013/09/18',
+          title: '張藥房老闆張森文不幸落水身亡',
+          description: '家破人亡悲劇引爆萬人包圍內政部發動拆政府行動。'),
+      CaseTimelineItem(
+          dateLabel: '2014/01/03',
+          title: '臺中高等行政法院逆轉判決徵收違法',
+          description: '判決認定徵收欠缺公益性與必要性，撤銷徵收處分確定。'),
+      CaseTimelineItem(
+          dateLabel: '2018/06/30',
+          title: '張藥房原址重建動土完工落成',
+          description: '內政部長出席動土致歉，張藥房於原址正式重建恢復。')
+    ],
+    people: const [
+      CasePersonRole(role: '原告家屬', description: '彭秀春（張藥房遺孀，堅持十年行政訴訟平反）。'),
+      CasePersonRole(role: '被害居民', description: '張森文（張藥房老闆，遭強拆後抑鬱落水身亡）。'),
+      CasePersonRole(role: '被告機關', description: '內政部（土地徵收審議委員會核准機關）。'),
+      CasePersonRole(role: '強拆地方首長', description: '劉政鴻（時任苗栗縣縣長，下令強拆張藥房）。'),
+      CasePersonRole(role: '義務辯護律師', description: '詹順貴律師（台灣農村陣線義務律師團召集人）。')
+    ],
+    legalIssues: const [
+      LegalIssue(
+          title: '土地徵收「公益性」與「必要性」之司法實質審查界限',
+          plainExplanation: '行政機關土地徵收裁量權是否受司法實質審查？行政法院確立徵收必須具備不可替代之重大公共利益，若既有閒置土地足敷使用，強制徵收即違反比例原則而屬違法。',
+          relationToCase: '本案打破行政法院過往全面尊重行政徵收裁量之傳統，建立實質司法審查標竿。',
+          relatedLawIds: ['land-expro-3', 'land-expro-3-2', 'const-15', 'const-23'])
+    ],
+    investigationAndTrial:
+        '法院調取竹南科學園區歷年土地使用清冊，證實特定區內原規劃之廠房用地已有大面積長年荒廢未售出，苗栗縣府以擴充產業為由強徵住宅用地，其徵收必要性之經驗事實完全遭客觀數據推翻。',
+    courtReasoning:
+        '台中高等行政法院判決理由指出：憲法第15條保障人民之財產權與居住權，國家公權力剝奪人民安身立命之住宅，必須符合極嚴格之比例原則。系爭徵收案園區用地尚有大量閒置，欠缺徵收之最後手段性；而張藥房所處路口經交通動線實測，保留現狀亦無礙行車安全，內政部未為詳實審查即准予徵收，裁量顯具重大瑕疵，依法應撤銷徵收處分。',
+    judgmentResult: '原告彭秀春、朱樹、黃福記、柯成福之訴有理由。內政部核准徵收處分違法，予以撤銷確定。',
+    relatedLaws: const [
+      RelatedLaw(
+          lawName: '土地徵收條例',
+          articleNumber: '第 3 條之 2',
+          plainSummary: '需用土地人申請徵收土地前，應按徵收計畫之目的及事業性質，審酌公益性及必要性，並進行完整評估。',
+          relationToCase: '本案迫使立法院立法明定土地徵收公益性與必要性實質審查要件。'),
+      RelatedLaw(
+          lawName: '憲法',
+          articleNumber: '第 15 條',
+          plainSummary: '人民之生存權、工作權及財產權，應予保障。',
+          relationToCase: '憲法保障人民居住人權與土地財產權不受恣意徵收之核心母法。')
+    ],
+    socialImpact:
+        '大埔徵收事件引發台灣戰後最大規模的土地正義運動，催生了《土地徵收條例》之歷史性大修，強制各級徵收案必須召開公聽會並完成嚴謹之公益性評估；本案並促成內政部與苗栗縣政府以公帑協助張藥房原地重建，確立行政機關違法侵害人民居住權應負回復原狀與實質賠償責任之典範。',
+    relatedCases: const [],
+    sources: const [
+      CaseSource(
+        title: '臺中高等行政法院101年度訴更一字第47號判決',
+        sourceType: 'official',
+        updatedAt: '2014/01/03',
+      ),
+      CaseSource(
+        title: '最高行政法院103年度判字第121號判決',
+        sourceType: 'official',
+        updatedAt: '2014/03/13',
+      ),
+    ],
+    concurringDissentingOpinions: const [],
+    courtArguments: const [],
+    expertOpinions: const [],
+    mediaReferences: const [],
+    images: const [],
+  ),
+
+  CaseBook(
+    id: 'case-chiu-ho-shun',
+    titleZh: '最高法院 100 年度台上字第 4177 號刑事判決',
+    titleEn: 'Supreme Court Criminal Judgment 100-Tai-Shang-4177',
+    shortTitleZh: '陸正撕票邱和順案',
+    shortTitleEn: 'Chiu Ho-shun Case',
+    displayCode: '100台上4177',
+    year: 1988,
+    location: '新竹市、台北市',
+    status: '判決死刑定讞，被羈押逾36年聲請特赦爭議中',
+    category: '刑事重大命案正當程序爭端案件',
+    tags: const ['邱和順案', '陸正案', '刑訊逼供', '員警判刑確定', '證物遺失', '死刑爭議', '自白補強法則', '冤獄平反'],
+    memoryLine: '台灣司法史上羈押最久之死刑犯，全案無直接物證且承辦員警刑求遭判刑確定，成為死刑自白補強與正當程序世紀爭端。',
+    shortDescription: '新竹學童陸正遭綁架撕票，警方逮捕邱和順等十餘人，在毫無直接客觀物證下僅憑矛盾自白起訴。審理期間證實員警以灌水電擊殘酷刑求逼供，承辦員警遭判刑確定，且扣案錄音帶及指紋證物離奇遺失。歷經11次更審仍判死刑定讞，邱和順遭羈押逾36年，成為人權與司法人道之重大難題。',
+    basicInfo: const CaseBasicInfo(
+      caseType: '刑事強盜勒贖殺人死刑確定案件',
+      procedureStage: '最高法院判處死刑定讞，民間律師團長期聲請再審與特赦',
+      courtLevel: '最高法院刑事第六庭',
+      updatedAt: '2011/07/28',
+      caseNumber: '最高法院 100 年度台上字第 4177 號刑事判決',
+      judgmentDate: '2011年7月28日（民國100年7月28日）',
+      bench: '審判長法官石木欽、法官洪佳濱、法官韓金秀、法官段景榕、法官周政達',
+      partiesOrPetitioner: '上訴人即被告：邱和順、林坤明、吳志文；起訴機關：臺灣新竹地方檢察署檢察官',
+      cause: '強盜殺人等罪案件',
+      subsequentAction: '判處邱和順死刑定讞至今未執行。邱和順自1988年被捕入獄迄今已被羈押超過36年，創台灣司法史上最長羈押紀錄。國際特赦組織、民間司改會等長期奔走救援，監察院多次公布調查報告指出全案證物遺失且缺乏補強證據，歷任大法官、法律學者及義務律師團持續爭取開啟再審並向總統陳請特赦。',
+    ),
+    oneSentenceSummary: '承辦警員刑求遭判刑且關鍵物證全數遺失，邱和順羈押逾36年成台灣死刑正當程序最大難題。',
+    background:
+        '1987年12月21日傍晚，新竹市東門國小四年級學童陸正於下課後遭歹徒綁架勒贖一百萬元，家屬依指示交付贖金後陸正未被釋放，下落不明。次年警方又將苗栗女保險員柯洪玉蘭遭殺害棄屍案與此案併案偵辦。1988年9月，台北市刑警大隊根據秘密證人檢舉，在新竹逮捕邱和順、林坤明等十餘名年輕人，宣布兩起重大刑案同時偵破，震驚社會。',
+    fullStory:
+        '邱和順等人遭逮捕後，檢警在現場毫無任何毛髮、指紋、DNA或兇器等客觀跡證之情況下，依據被告等人在看守所之288份自白錄音起訴。然而被告等人在法庭上痛哭控訴遭到台北市刑大員警以蒙眼痛毆、辣椒水強灌鼻腔、電擊生殖器等極端手段連續刑求逼供。1994年，臺灣高等法院法官親自勘驗錄音帶，證實錄音中有淒厲哀嚎與員警暴力逼供聲音，四名承辦員警隨後遭司法依公務員假借職務妨害自由、凌虐等罪名判刑定讞。令人震驚的是，案發當初歹徒勒贖字條上採集到之13枚清晰歹徒指紋膠片，以及關鍵錄音母帶，竟在法院與調查局保管期間全數離奇遺失。全案歷經長達23年、11次更審，更十一審法院仍以被告自白部分情節相符為由，於2011年判處邱和順死刑定讞。本案至今已成為國際人權界與台灣法界最關注之正當法律程序極限考驗。',
+    timeline: const [
+      CaseTimelineItem(
+          dateLabel: '1987/12/21',
+          title: '新竹學童陸正遭綁架勒贖撕票',
+          description: '學童遭歹徒勒贖一百萬元後失蹤，震驚全台社會。'),
+      CaseTimelineItem(
+          dateLabel: '1988/09/29',
+          title: '台北市刑大逮捕邱和順等十餘人',
+          description: '警方宣告破案，被告等人控訴遭到殘酷刑求取供。'),
+      CaseTimelineItem(
+          dateLabel: '1994/12/28',
+          title: '法院勘驗證實刑求，員警判刑定讞',
+          description: '勘驗錄音帶證實刑求逼供，四名辦案員警遭判刑確定。'),
+      CaseTimelineItem(
+          dateLabel: '2011/07/28',
+          title: '最高法院判處邱和順死刑定讞',
+          description: '更十一審維持死刑判決，最高法院駁回上訴確定。'),
+      CaseTimelineItem(
+          dateLabel: '2020/05/13',
+          title: '律師團與各界人士赴總統府陳請特赦',
+          description: '各界代表遞交特赦請願書，指出本案缺乏客觀物證。')
+    ],
+    people: const [
+      CasePersonRole(role: '死刑被告', description: '邱和順（遭羈押逾36年，堅稱未涉案）。'),
+      CasePersonRole(role: '被害學童家屬', description: '陸晉德（陸正之父，痛失愛子堅持司法公道）。'),
+      CasePersonRole(role: '同案被告', description: '林坤明（遭判處有期徒刑17年確定）。'),
+      CasePersonRole(role: '義務辯護律師', description: '尤伯祥、林俊宏、顧立雄等民間司改會律師團。'),
+      CasePersonRole(role: '偵辦起訴檢察官', description: '臺灣新竹地方檢察署偵查公訴檢察官。')
+    ],
+    legalIssues: const [
+      LegalIssue(
+          title: '承辦員警刑求遭判刑定讞下自白之證明力與證據能力',
+          plainExplanation: '辦案員警已因刑求逼供遭判刑確定，被告在持續強制環境下作成之多份自白是否具有任意性？在關鍵客觀證物遭國家保管遺失之情形下，能否僅憑同案共犯互相矛盾之自白判處死刑？',
+          relationToCase: '本案引發死刑自白補強法則與毒樹果實理論之極致爭辯。',
+          relatedLawIds: ['crim-156', 'crim-154', 'const-8', 'const-16'])
+    ],
+    investigationAndTrial:
+        '監察院歷次調查報告均指出：全案最關鍵之勒贖電話錄音母帶、歹徒書寫之勒贖信指紋膠片，在司法機關保管中全部遺失，無法進行現代聲紋比對或新型DNA與指紋鑑識，舉證不利益不應由被告承擔。',
+    courtReasoning:
+        '最高法院維持死刑理由認為：被告等人於台北市刑大所受之刑求瑕疵，不能當然擴及於檢察官相隔數日後之偵訊筆錄及審理自白；且自白中有關棄屍、勒贖等諸多關鍵細節彼此互核相符，足以補強其犯案心證，因認原判決認事用法無違誤，駁回上訴。',
+    judgmentResult: '上訴駁回。判處邱和順死刑，褫奪公權終身確定。',
+    relatedLaws: const [
+      RelatedLaw(
+          lawName: '刑事訴訟法',
+          articleNumber: '第 154 條第 2 項',
+          plainSummary: '犯罪事實應依證據認定之，無證據不得認定犯罪事實。',
+          relationToCase: '證據裁判主義之最高指導法條。'),
+      RelatedLaw(
+          lawName: '刑事訴訟法',
+          articleNumber: '第 156 條第 2 項',
+          plainSummary: '被告或共犯之自白，不得作為有罪判決之唯一證據，仍應調查其他必要之證據，以察其是否與事實相符。',
+          relationToCase: '自白補強法則之法定核心條文。')
+    ],
+    socialImpact:
+        '邱和順案創下了台灣司法史上被告遭羈押逾36年未決與未執行死刑的最長歷史紀錄。本案引發國內外人權組織對台灣刑事鑑識保管制度、偵訊錄音錄影規範及死刑再審門檻的深切反思，成為推動刑事訴訟證物監管鏈（Chain of Custody）法制化與死刑審查極致謹慎原則的最重要試金石。',
+    relatedCases: const [],
+    sources: const [
+      CaseSource(
+        title: '最高法院100年度台上字第4177號刑事判決',
+        sourceType: 'official',
+        updatedAt: '2011/07/28',
+      ),
+      CaseSource(
+        title: '監察院102司調0041號邱和順案調查報告',
+        sourceType: 'official',
+        updatedAt: '2013/06/19',
+      ),
+    ],
+    concurringDissentingOpinions: const [],
+    courtArguments: const [],
+    expertOpinions: const [],
+    mediaReferences: const [],
+    images: const [],
+  ),
+
+  CaseBook(
     id: 'case-001',
     titleZh: '103年度訴字第101號 捷運無差別隨機殺人案',
     titleEn: 'Landmark Case CASE-001',
@@ -17379,7 +17909,9 @@ final caseLibraryHalls = <CaseLibraryHall>[
           'case-182',
           'case-183',
           'case-184',
-          'case-185'
+          'case-185',
+          'case-ting-hsin-oil',
+          'case-dapu-expropriation',
         ],
       ),
       CaseShelf(
@@ -17423,7 +17955,8 @@ final caseLibraryHalls = <CaseLibraryHall>[
           'case-108',
           'case-114',
           'case-154',
-          'case-160'
+          'case-160',
+          'case-chiang-kuo-ching',
         ],
       ),
       CaseShelf(
@@ -17434,6 +17967,8 @@ final caseLibraryHalls = <CaseLibraryHall>[
         coverStyle: 'slate',
         caseIds: const [
           'case-tang-ying-shen',
+          'case-formosa-incident',
+          'case-chiu-ho-shun',
         ],
       ),
     ],
@@ -17788,7 +18323,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '權力分立與民主憲政防線',
         description: '國會調查權、重大預算停建與公務員救濟保障',
         coverStyle: 'navy',
-        caseIds: const ['499', '520', '102', 'case-023', 'case-025', 'case-indigenous-hunt-803', 'case-prison-selection-13'],
+        caseIds: const ['499', '520', '102', 'case-023', 'case-025', 'case-indigenous-hunt-803', 'case-prison-selection-13', 'case-formosa-incident', 'case-dapu-expropriation'],
       ),
     ],
   ),
@@ -17811,7 +18346,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '死刑非常上訴與無罪定讞',
         description: '死刑判決定讞後經新事證開啟再審平反之重大歷史案件',
         coverStyle: 'navy',
-        caseIds: const ['104', '105', 'cheng-2021', 'case-hsu-tzu-chiang-582', 'case-su-chien-ho'],
+        caseIds: const ['104', '105', 'cheng-2021', 'case-hsu-tzu-chiang-582', 'case-su-chien-ho', 'case-chiang-kuo-ching', 'case-chiu-ho-shun'],
       ),
       CaseShelf(
         id: 'shelf-inno-confession',
@@ -17819,7 +18354,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '不正訊問與自白補強法則',
         description: '偵查機關取得自白之適法性與共同被告陳述審查',
         coverStyle: 'forest',
-        caseIds: const ['105', 'case-014', 'case-hsu-tzu-chiang-582', 'case-su-chien-ho'],
+        caseIds: const ['105', 'case-014', 'case-hsu-tzu-chiang-582', 'case-su-chien-ho', 'case-chiang-kuo-ching', 'case-chiu-ho-shun'],
       ),
       CaseShelf(
         id: 'shelf-inno-military',
@@ -17827,7 +18362,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '軍事審判改革與人權監督',
         description: '促成軍審回歸普通司法與正當法律程序之里程碑案件',
         coverStyle: 'gold',
-        caseIds: const ['hung-2013', '104'],
+        caseIds: const ['hung-2013', '104', 'case-chiang-kuo-ching', 'case-formosa-incident'],
       ),
     ],
   ),
@@ -17866,7 +18401,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '職業安全、勞工過勞與重大工安',
         description: '重大公共運輸事故與公共場所意外之業務過失求償',
         coverStyle: 'navy',
-        caseIds: const ['case-003', '124', 'case-004'],
+        caseIds: const ['case-003', '124', 'case-004', 'case-ting-hsin-oil'],
       ),
     ],
   ),
@@ -17889,7 +18424,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '公民不服從與集會遊行界線',
         description: '佔領立法院事件中民主防禦與阻卻違法之憲法辯論',
         coverStyle: 'gold',
-        caseIds: const ['318'],
+        caseIds: const ['318', 'case-formosa-incident', 'case-dapu-expropriation'],
       ),
       CaseShelf(
         id: 'shelf-crim-mental',
@@ -17905,7 +18440,7 @@ final caseLibraryHalls = <CaseLibraryHall>[
         name: '組織犯罪、跨國詐欺與洗錢防制',
         description: '跨境詐欺、非法吸金洗錢與重大經濟刑事裁判',
         coverStyle: 'navy',
-        caseIds: const ['case-006', 'case-011', 'case-013', 'case-taikai-insider-1342'],
+        caseIds: const ['case-006', 'case-011', 'case-013', 'case-taikai-insider-1342', 'case-ting-hsin-oil'],
       ),
     ],
   ),

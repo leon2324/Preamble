@@ -51,11 +51,11 @@ void main() {
         final caseBook = caseLibraryCaseById(id);
         expect(caseBook.id, id);
         expect(caseBook.basicInfo, isNotNull);
-        expect(caseBook.basicInfo!.caseNumber, isNotEmpty);
-        expect(caseBook.basicInfo!.bench, isNotEmpty);
-        expect(caseBook.basicInfo!.partiesOrPetitioner, isNotEmpty);
-        expect(caseBook.basicInfo!.cause, isNotEmpty);
-        expect(caseBook.basicInfo!.subsequentAction, isNotEmpty);
+        expect(caseBook.basicInfo.caseNumber, isNotEmpty);
+        expect(caseBook.basicInfo.bench, isNotEmpty);
+        expect(caseBook.basicInfo.partiesOrPetitioner, isNotEmpty);
+        expect(caseBook.basicInfo.cause, isNotEmpty);
+        expect(caseBook.basicInfo.subsequentAction, isNotEmpty);
         expect(caseBook.background, isNot(contains('模擬')));
         expect(caseBook.background, isNot(contains('大概')));
         expect(caseBook.fullStory, isNot(contains('模擬')));

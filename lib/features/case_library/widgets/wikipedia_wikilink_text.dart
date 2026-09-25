@@ -233,6 +233,138 @@ class WikipediaWikilinkService {
           '宣告外役監條例第4條第1項但書第1款一律排除受過有期徒刑執行之累犯遴選外役監，違反憲法第7條平等原則，二年內失效。',
       targetCaseId: 'case-prison-selection-13',
     ),
+    const WikilinkEntry(
+      term: '江國慶案',
+      type: WikilinkType.caseItem,
+      title: '空軍作戰司令部女童命案與江國慶再審無罪平反案',
+      citation: '國防部北部地方軍事法院 100 年度再字第 001 號刑事判決（2011/09/13宣判）',
+      summary:
+          '反情報隊私刑刑求空軍上兵江國慶槍決，再審排除不法自白判決無罪確定，國家賠償逾億元並向陳肇敏等軍官求償判決定讞。',
+      targetCaseId: 'case-chiang-kuo-ching',
+    ),
+    const WikilinkEntry(
+      term: '國防部北部地方軍事法院100年度再字第001號',
+      type: WikilinkType.caseItem,
+      title: '國防部北部地方軍事法院 100 年度再字第 001 號判決（江國慶無罪定讞判決）',
+      citation: '國防部北部地方軍事法院 100 年度再字第 001 號判決（審判長何震寰）',
+      summary:
+          '認定反情報隊以強光疲勞夜訊取得之自白絕對無任意性與證據能力，改判江國慶無罪確定，為台灣軍事審判平反最重大判決。',
+      targetCaseId: 'case-chiang-kuo-ching',
+    ),
+    const WikilinkEntry(
+      term: '美麗島事件',
+      type: WikilinkType.caseItem,
+      title: '高雄世界人權日大衝突與景美軍法看守所大審判',
+      citation: '國防部軍事法庭 69 年度裁字第 001 號判決（1980/04/18宣判）',
+      summary:
+          '戒嚴時期最大政治審判，當局以懲治叛亂條例二條一唯一死刑起訴黨外人士，公開大審激發全民法治意識，促轉會撤銷罪刑宣告。',
+      targetCaseId: 'case-formosa-incident',
+    ),
+    const WikilinkEntry(
+      term: '國防部軍事法庭69年度裁字第001號',
+      type: WikilinkType.caseItem,
+      title: '國防部軍事法庭 69 年度裁字第 001 號裁決書（美麗島軍法大審裁決）',
+      citation: '國防部軍事法庭 69 年度裁字第 001 號裁決書（審判長王雲駿）',
+      summary:
+          '判處施明德無期徒刑，黃信介等七人12至14年徒刑。辯護律師團法庭論辯震撼海內外，成為台灣民主轉型最重要的司法歷史起點。',
+      targetCaseId: 'case-formosa-incident',
+    ),
+    const WikilinkEntry(
+      term: '頂新黑心油案',
+      type: WikilinkType.caseItem,
+      title: '頂新製油進口飼料油混充食用油重大食安詐欺案',
+      citation: '最高法院 108 年度台上字第 3324 號刑事判決（2019/11/06定讞）',
+      summary:
+          '進口飼料油精煉混入食用油銷往全台，三審確立食安法摻偽假冒罪屬抽象危險犯，不容以精煉成品合格抗辯，魏應充判刑入監定讞。',
+      targetCaseId: 'case-ting-hsin-oil',
+    ),
+    const WikilinkEntry(
+      term: '最高法院108年度台上字第3324號',
+      type: WikilinkType.caseItem,
+      title: '最高法院 108 年度台上字第 3324 號刑事判決（頂新油品案定讞判決）',
+      citation: '最高法院 108 年度台上字第 3324 號判決（審判長林立華）',
+      summary:
+          '駁回魏應充上訴判刑定讞，確立食品安全法規維護食品純淨之絕對標準，並連鎖催生刑法法人不法利得獨立沒收新制。',
+      targetCaseId: 'case-ting-hsin-oil',
+    ),
+    const WikilinkEntry(
+      term: '大埔徵收事件',
+      type: WikilinkType.caseItem,
+      title: '苗栗竹南大埔特定區段徵收與張藥房拆遷行政訴訟',
+      citation: '臺中高等行政法院 101 年度訴更一字第 47 號判決（2014/01/03宣判）',
+      summary:
+          '苗栗縣府怪手鏟毀農田並趁隙突襲強拆張藥房，行政法院判決徵收處分缺乏實質公益性與必要性予以撤銷確定，張藥房原地重建。',
+      targetCaseId: 'case-dapu-expropriation',
+    ),
+    const WikilinkEntry(
+      term: '臺中高等行政法院101年度訴更一字第47號',
+      type: WikilinkType.caseItem,
+      title: '臺中高等行政法院 101 年度訴更一字第 47 號判決（大埔案撤銷徵收處分）',
+      citation: '臺中高等行政法院 101 年度訴更一字第 47 號判決（審判長陳文燦）',
+      summary:
+          '打破行政法院對土地徵收裁量權全盤退讓之陋習，確立徵收必須接受比例原則與公益性必要性之嚴格司法審查標竿。',
+      targetCaseId: 'case-dapu-expropriation',
+    ),
+    const WikilinkEntry(
+      term: '邱和順案',
+      type: WikilinkType.caseItem,
+      title: '新竹學童陸正遭綁架撕票與邱和順死刑正當程序爭端',
+      citation: '最高法院 100 年度台上字第 4177 號刑事判決（2011/07/28定讞）',
+      summary:
+          '台灣司法史上羈押最久之死刑犯，承辦警員刑求遭判刑確定且關鍵物證全數遺失，引發自白補強法則與死刑程序極限之空前爭議。',
+      targetCaseId: 'case-chiu-ho-shun',
+    ),
+    const WikilinkEntry(
+      term: '最高法院100年度台上字第4177號',
+      type: WikilinkType.caseItem,
+      title: '最高法院 100 年度台上字第 4177 號刑事判決（邱和順死刑定讞判決）',
+      citation: '最高法院 100 年度台上字第 4177 號刑事判決（審判長石木欽）',
+      summary:
+          '維持更十一審死刑判決駁回上訴，邱和順羈押至今超過36年，國內外人權團體與法界學者長年推動再審與特赦平反。',
+      targetCaseId: 'case-chiu-ho-shun',
+    ),
+    const WikilinkEntry(
+      term: '抽象危險犯',
+      type: WikilinkType.legalConcept,
+      title: '刑法抽象危險犯（Abstract Danger Crime）',
+      citation: '最高法院 108 年度台上字第 3324 號判決所採見解',
+      summary:
+          '立法者立法擬制特定行為一旦實行即具典型危險，不以發生具體危險或損害實害為成立要件。如食安法摻偽假冒罪只要原料非供食用即成立。',
+    ),
+    const WikilinkEntry(
+      term: '土地徵收條例第3條之2',
+      type: WikilinkType.lawArticle,
+      title: '土地徵收條例 第 3 條之 2（公益性及必要性評估要件）',
+      citation: '土地徵收條例 第 3 條之 2（大埔事件後修正通過）',
+      summary:
+          '需用土地人申請徵收前，必須審酌社會、經濟、文化及生態之公益性，並提出不侵害人民權利之必要性替代方案與興辦計畫。',
+      targetLawArticle: '土地徵收條例第3條之2',
+    ),
+    const WikilinkEntry(
+      term: '唯一死刑二條一',
+      type: WikilinkType.legalConcept,
+      title: '懲治叛亂條例第2條第1項（唯一死刑條款）',
+      citation: '戒嚴時期懲治叛亂條例（已於1991年全法廢止）',
+      summary:
+          '戒嚴時期將刑法意圖顛覆政府著手實行之罪，以特別法一律定為唯一死刑，為白色恐怖與美麗島軍法大審時期政治威嚇人民之惡法工具。',
+    ),
+    const WikilinkEntry(
+      term: '毒樹果實法則',
+      type: WikilinkType.legalConcept,
+      title: '毒樹果實法則（Fruit of the Poisonous Tree Doctrine）',
+      citation: '刑事訴訟法第 158 條之 4 權衡法則源起理論',
+      summary:
+          '違法搜索、不正訊問或刑求取得之最初違法證據（毒樹），其後續衍生之所有次生證據（毒果），原則上亦不得作為有罪判決之依據。',
+    ),
+    const WikilinkEntry(
+      term: '刑事補償法',
+      type: WikilinkType.lawArticle,
+      title: '刑事補償法（原冤獄賠償法）',
+      citation: '刑事補償法（2011年因江國慶案大幅修訂）',
+      summary:
+          '依刑事訴訟法遭拘禁、羈押或執行死刑而判決無罪確定者，得向國家請求人身自由及生命損害之金錢補償，並明定公務員重大違法國家求償權。',
+      targetLawArticle: '刑事補償法',
+    ),
 
     // --- 核心法規條文 ---
     const WikilinkEntry(
