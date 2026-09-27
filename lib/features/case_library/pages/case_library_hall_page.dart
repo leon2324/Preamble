@@ -1121,10 +1121,10 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
                         SizedBox(width: 6.w),
                         _buildInfoChip(locationChip),
                         SizedBox(width: 6.w),
-                        Expanded(
+                        Flexible(
                           child: _buildInfoChip(statusChip),
                         ),
-                        SizedBox(width: 6.w),
+                        const Spacer(),
                         CaseLibrarySvgIcon(
                           CaseLibrarySvgIcons.bookmark,
                           size: 18.sp,

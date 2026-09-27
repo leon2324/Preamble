@@ -444,11 +444,8 @@ class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
                                     SizedBox(width: 6.w),
                                     _buildInfoChip(locationChip),
                                     SizedBox(width: 6.w),
-                                    Expanded(
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: _buildInfoChip(statusChip),
-                                      ),
+                                    Flexible(
+                                      child: _buildInfoChip(statusChip),
                                     ),
                                   ],
                                 ),
