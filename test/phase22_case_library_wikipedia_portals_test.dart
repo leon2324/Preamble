@@ -78,9 +78,9 @@ void main() {
       await tester.pumpAndSettle();
 
       // Verify Page Title and Wikipedia Portals Section Header
-      expect(find.text('維基專題門戶與分類目錄'), findsOneWidget);
-      expect(find.text('🏛️ 維基百科主題門戶'), findsOneWidget);
-      expect(find.text('6 大核心門戶'), findsOneWidget);
+      expect(find.text('司法專題館藏與分類目錄'), findsOneWidget);
+      expect(find.text('🏛️ 司法領域專題館藏'), findsOneWidget);
+      expect(find.text('6 大核心專題'), findsOneWidget);
 
       // Verify Portals are listed (on screen)
       expect(find.text('憲政審查與基本人權門戶'), findsOneWidget);
@@ -102,14 +102,8 @@ void main() {
       await tester.scrollUntilVisible(find.text('年代大事紀館'), 300);
       expect(find.text('年代大事紀館'), findsOneWidget);
 
-      await tester.scrollUntilVisible(find.text('審級進程狀態館'), 300);
-      expect(find.text('審級進程狀態館'), findsOneWidget);
-
-      await tester.scrollUntilVisible(find.text('經典法理指標館'), 300);
-      expect(find.text('經典法理指標館'), findsOneWidget);
-
-      await tester.scrollUntilVisible(find.text('生活爭端專題館'), 300);
-      expect(find.text('生活爭端專題館'), findsOneWidget);
+      await tester.scrollUntilVisible(find.text('生活爭端實務館'), 300);
+      expect(find.text('生活爭端實務館'), findsOneWidget);
     });
 
     testWidgets('CaseLibraryHallPage renders portal view with lead card, tabs, and featured case',
@@ -138,9 +132,9 @@ void main() {
       expect(find.textContaining('人身自由與正當法律程序'), findsOneWidget);
 
       // Verify Featured Landmark Case Card
-      expect(find.text('⭐ 維基指標大案精選'), findsOneWidget);
+      expect(find.text('⭐ 焦點指標大案'), findsOneWidget);
       expect(find.text('司法院釋字第 748 號解釋'), findsOneWidget);
-      expect(find.text('研讀維基條目詳情 ➔'), findsOneWidget);
+      expect(find.text('研讀判決檔案詳情 ➔'), findsOneWidget);
 
       // Tap on specific sub-shelf: "人身自由與正當法律程序"
       final libertyShelfTab = find.textContaining('人身自由與正當法律程序');
@@ -183,17 +177,17 @@ void main() {
       await tester.pumpAndSettle();
 
       // Verify Section Header
-      expect(find.text('🏛️ 維基主題門戶'), findsOneWidget);
-      expect(find.text('全部門戶 (6)'), findsOneWidget);
+      expect(find.text('🏛️ 司法專題館藏'), findsOneWidget);
+      expect(find.text('全部專題 (6)'), findsOneWidget);
 
       // Verify Wikipedia Portal Cards in Carousel
       expect(find.text('憲政審查與基本人權門戶'), findsOneWidget);
       expect(find.text('司法冤案平反與程序防線門戶'), findsOneWidget);
 
       // Verify Taxonomy Dimension Action Buttons
-      expect(find.text('年代館'), findsOneWidget);
-      expect(find.text('審判進程館'), findsOneWidget);
-      expect(find.text('經典指標館'), findsOneWidget);
+      expect(find.text('年代大事紀'), findsOneWidget);
+      expect(find.text('重大刑案館'), findsOneWidget);
+      expect(find.text('憲政人權館'), findsOneWidget);
     });
   });
 }

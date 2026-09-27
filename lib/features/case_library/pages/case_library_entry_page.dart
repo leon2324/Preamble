@@ -14,6 +14,7 @@ import 'package:preamble/features/case_library/pages/case_library_search_page.da
 import 'package:preamble/features/case_library/theme/case_library_theme.dart';
 import 'package:preamble/features/case_library/widgets/case_library_scaffold.dart';
 import 'package:preamble/features/case_library/data/case_library_repository.dart';
+import 'package:preamble/features/case_library/data/case_library_image_resolver.dart';
 import 'package:preamble/components/shared/shimmer_skeleton.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -63,9 +64,17 @@ class CaseLibraryEntryPage extends StatefulWidget {
 }
 
 class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
-  // 書架精選案件清單，由原本的寫死 ID 改為動態拉取 Supabase。
+  // 書架精選案件清單，由原本的寫死 ID 改為動態智慧推薦。
   List<CaseBook> _heroBooks = [];
   bool _heroLoading = true;
+  String _selectedTopicTag = '🔥 社會矚目';
+  static const List<String> _topicFilterChips = [
+    '🔥 社會矚目',
+    '🔍 世紀疑案',
+    '⚖️ 逆轉平反',
+    '📜 憲政地標',
+    '💼 生活裁判',
+  ];
 
   // 討論室數據，跨頁面共享
   final Map<String, List<int>> _caseVotes = {
@@ -84,11 +93,13 @@ class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
     _loadHeroCases();
   }
 
-  Future<void> _loadHeroCases() async {
+  Future<void> _loadHeroCases({String? tag}) async {
     try {
-      // 動態載入前 6 筆真實案件（以對接 Supabase 10,000 筆真實資料）
-      final books =
-          await CaseLibraryRepository.instance.getCasesPaginated(6, 0);
+      final activeTag = tag ?? _selectedTopicTag;
+      final books = CaseLibraryRepository.instance.getRecommendedCases(
+        topicTag: activeTag,
+        limit: 6,
+      );
       if (mounted) {
         setState(() {
           final initId = widget.initialCaseId;
@@ -108,7 +119,7 @@ class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
         });
       }
     } catch (e) {
-      print('Error loading hero cases dynamically: $e');
+      print('Error loading hero cases: $e');
       if (mounted) {
         setState(() {
           _heroLoading = false;
@@ -200,28 +211,34 @@ class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
                           onPressed: () => Navigator.of(context).pop(),
                         ),
                       ),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '案件圖書館',
-                            style: TextStyle(
-                              fontFamily: 'Songti TC',
-                              fontSize: 20.sp,
-                              fontWeight: FontWeight.normal, // 主標不要粗體字
-                              color: const Color(0xFF17231F),
-                            ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 48.w),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                '案件圖書館',
+                                style: TextStyle(
+                                  fontFamily: 'Songti TC',
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.normal, // 主標不要粗體字
+                                  color: const Color(0xFF17231F),
+                                ),
+                              ),
+                              SizedBox(height: 2.h),
+                              Text(
+                                '閱讀・討論・思辨臺灣重大案件',
+                                style: TextStyle(
+                                  fontSize: 9.5.sp,
+                                  color: CaseLibraryColors.textMuted,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(height: 2.h),
-                          Text(
-                            '閱讀・討論・思辨臺灣重大案件',
-                            style: TextStyle(
-                              fontSize: 9.5.sp,
-                              color: CaseLibraryColors.textMuted,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                       Positioned(
                         right: 0,
@@ -268,134 +285,90 @@ class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
     );
   }
 
-  // 每日精選輪播區塊
+  // 焦點案件推薦輪播區塊
   Widget _buildDailySelectionCarousel(BuildContext context) {
-    if (_heroBooks.isEmpty) {
-      return SizedBox(
-        height: 240.h,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          physics: const NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          itemCount: 3,
-          separatorBuilder: (_, __) => SizedBox(width: 12.w),
-          itemBuilder: (_, __) => ShimmerSkeleton(
-            width: 300.w,
-            height: 240.h,
-            borderRadius: 24,
-          ),
-        ),
-      );
-    }
-
-    final carouselBooks = _heroBooks.take(4).toList();
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '每日精選',
-          style: TextStyle(
-            fontSize: 17.sp,
-            fontWeight: FontWeight.w800,
-            color: const Color(0xFF1C3A27),
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '焦點案件探索',
+              style: TextStyle(
+                fontSize: 17.sp,
+                fontWeight: FontWeight.w800,
+                color: const Color(0xFF1C3A27),
+              ),
+            ),
+            Text(
+              '共 ${_heroBooks.length} 案精選',
+              style: TextStyle(
+                fontSize: 11.sp,
+                color: CaseLibraryColors.textMuted,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
-        SizedBox(height: 12.h),
+        SizedBox(height: 10.h),
+
+        // 焦點探索 Filter Chips
         SizedBox(
-          height: 250.h,
-          child: PageView.builder(
-            controller: PageController(viewportFraction: 0.85),
-            physics: const BouncingScrollPhysics(),
-            itemCount: carouselBooks.length,
+          height: 34.h,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: _topicFilterChips.length,
+            separatorBuilder: (_, __) => SizedBox(width: 8.w),
             itemBuilder: (context, index) {
-              final book = carouselBooks[index];
-
-              String imageAsset =
-                  'assets/images/case_library_v2/case_library_v2_case_book_cover.png';
-              if (index == 0) {
-                imageAsset = 'assets/images/case_library_v2/daily_hunting.png';
-              } else if (index == 1) {
-                imageAsset =
-                    'assets/images/case_library_v2/daily_remote_work.png';
-              } else if (index == 2) {
-                imageAsset =
-                    'assets/images/case_library_v2/daily_rent_subsidy.png';
-              } else if (index == 3) {
-                imageAsset =
-                    'assets/images/case_library_v2/daily_gig_platform.png';
-              }
-
-              String yearChip = '${book.year}年';
-              String locationChip = index % 2 == 0 ? '台北' : '高雄';
-              String statusChip = index % 2 == 0 ? '已定讞' : '審理中';
-
+              final tag = _topicFilterChips[index];
+              final isSelected = tag == _selectedTopicTag;
               return GestureDetector(
-                onTap: () => _openCaseDetail(context, book),
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                onTap: () {
+                  if (_selectedTopicTag != tag) {
+                    setState(() {
+                      _selectedTopicTag = tag;
+                    });
+                    _loadHeroCases(tag: tag);
+                  }
+                },
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
+                    color: isSelected
+                        ? const Color(0xFF1B3F38)
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(20.r),
+                    border: Border.all(
+                      color: isSelected
+                          ? const Color(0xFF1B3F38)
+                          : const Color(0xFFE2E8E4),
+                      width: 1.2,
+                    ),
+                    boxShadow: isSelected
+                        ? [
+                            BoxShadow(
+                              color: const Color(0xFF1B3F38)
+                                  .withValues(alpha: 0.18),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            )
+                          ]
+                        : null,
                   ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16.r),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Image.asset(
-                          imageAsset,
-                          height: 120.h,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(12.w),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  _buildInfoChip(yearChip),
-                                  SizedBox(width: 6.w),
-                                  _buildInfoChip(locationChip),
-                                  SizedBox(width: 6.w),
-                                  _buildInfoChip(statusChip),
-                                ],
-                              ),
-                              SizedBox(height: 8.h),
-                              Text(
-                                book.titleZh,
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF17231F),
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              SizedBox(height: 4.h),
-                              Text(
-                                book.shortDescription,
-                                style: TextStyle(
-                                  fontSize: 10.5.sp,
-                                  color: const Color(0xFF5A615C),
-                                  height: 1.4,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                  child: Center(
+                    child: Text(
+                      tag,
+                      style: TextStyle(
+                        fontSize: 11.5.sp,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.w600,
+                        color: isSelected
+                            ? Colors.white
+                            : const Color(0xFF2C3E35),
+                      ),
                     ),
                   ),
                 ),
@@ -403,6 +376,117 @@ class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
             },
           ),
         ),
+        SizedBox(height: 12.h),
+
+        if (_heroBooks.isEmpty)
+          SizedBox(
+            height: 240.h,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              itemCount: 3,
+              separatorBuilder: (_, __) => SizedBox(width: 12.w),
+              itemBuilder: (_, __) => ShimmerSkeleton(
+                width: 300.w,
+                height: 240.h,
+                borderRadius: 24,
+              ),
+            ),
+          )
+        else
+          SizedBox(
+            height: 250.h,
+            child: PageView.builder(
+              controller: PageController(viewportFraction: 0.85),
+              physics: const BouncingScrollPhysics(),
+              itemCount: _heroBooks.length,
+              itemBuilder: (context, index) {
+                final book = _heroBooks[index];
+                final coverSource = _getCaseCoverImage(book, index);
+
+                final yearChip = '${book.year}年';
+                final locationChip =
+                    book.location.isNotEmpty ? book.location : '臺灣';
+                final statusChip =
+                    book.status.isNotEmpty ? book.status : '已審結';
+
+                return GestureDetector(
+                  onTap: () => _openCaseDetail(context, book),
+                  child: Container(
+                    margin:
+                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16.r),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16.r),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildCaseCover(coverSource),
+                          Padding(
+                            padding: EdgeInsets.all(12.w),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    _buildInfoChip(yearChip),
+                                    SizedBox(width: 6.w),
+                                    _buildInfoChip(locationChip),
+                                    SizedBox(width: 6.w),
+                                    Expanded(
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: _buildInfoChip(statusChip),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 8.h),
+                                Text(
+                                  book.titleZh,
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF17231F),
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 4.h),
+                                Text(
+                                  book.shortDescription.isNotEmpty
+                                      ? book.shortDescription
+                                      : book.oneSentenceSummary,
+                                  style: TextStyle(
+                                    fontSize: 10.5.sp,
+                                    color: const Color(0xFF5A615C),
+                                    height: 1.4,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
       ],
     );
   }
@@ -416,16 +500,64 @@ class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
       ),
       child: Text(
         label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: TextStyle(
           fontSize: 9.5.sp,
           fontWeight: FontWeight.bold,
-          color: const Color(0xFF5A615C),
+          color: const Color(0xFF334A42),
         ),
       ),
     );
   }
 
-  // 專題場館與維基專題門戶區塊
+  String _getCaseCoverImage(CaseBook book, int index) {
+    final cover = resolveCaseLibraryCoverImage(book);
+    if (cover != null && cover.url.isNotEmpty) {
+      return cover.url;
+    }
+
+    final assets = [
+      'assets/images/case_library_v2/daily_hunting.png',
+      'assets/images/case_library_v2/daily_remote_work.png',
+      'assets/images/case_library_v2/daily_rent_subsidy.png',
+      'assets/images/case_library_v2/daily_gig_platform.png',
+      'assets/images/case_library_v2/recent_housing.png',
+      'assets/images/case_library_v2/recent_labor.png',
+    ];
+    return assets[(index + book.id.hashCode).abs() % assets.length];
+  }
+
+  Widget _buildCaseCover(String coverSource) {
+    if (coverSource.startsWith('http')) {
+      return SizedBox(
+        height: 120.h,
+        width: double.infinity,
+        child: CachedNetworkImage(
+          imageUrl: coverSource,
+          fit: BoxFit.cover,
+          placeholder: (context, url) => const ShimmerSkeleton(
+            width: double.infinity,
+            height: double.infinity,
+            borderRadius: 0,
+          ),
+          errorWidget: (context, url, error) => Image.asset(
+            'assets/images/case_library_v2/case_library_v2_case_book_cover.png',
+            fit: BoxFit.cover,
+          ),
+        ),
+      );
+    } else {
+      return Image.asset(
+        coverSource,
+        height: 120.h,
+        width: double.infinity,
+        fit: BoxFit.cover,
+      );
+    }
+  }
+
+  // 專題場館與司法專題館藏區塊
   Widget _buildSpecialPavilions(BuildContext context) {
     final portals = caseLibraryHalls
         .where((h) => h.type == CaseLibraryHallType.portal)
@@ -438,7 +570,7 @@ class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              '🏛️ 維基主題門戶',
+              '🏛️ 司法專題館藏',
               style: TextStyle(
                 fontSize: 17.sp,
                 fontWeight: FontWeight.w800,
@@ -450,7 +582,7 @@ class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
               child: Row(
                 children: [
                   Text(
-                    '全部門戶 (${portals.length})',
+                    '全部專題 (${portals.length})',
                     style: TextStyle(
                       fontSize: 11.sp,
                       fontWeight: FontWeight.bold,
@@ -470,7 +602,7 @@ class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
         ),
         SizedBox(height: 12.h),
 
-        // 1. 維基專題門戶橫向滑動卡片
+        // 1. 司法專題館藏橫向滑動卡片
         SizedBox(
           height: 118.h,
           child: ListView.separated(
@@ -517,7 +649,7 @@ class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
                               borderRadius: BorderRadius.circular(4.r),
                             ),
                             child: Text(
-                              portal.badge ?? '維基門戶',
+                              portal.badge ?? '專題館藏',
                               style: TextStyle(
                                 fontSize: 9.sp,
                                 fontWeight: FontWeight.bold,
@@ -567,13 +699,13 @@ class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
 
         SizedBox(height: 14.h),
 
-        // 2. 年代、狀態、經典 3 大檢索維度
+        // 2. 年代大事紀、重大刑案、憲政人權 3 大核心維度
         Row(
           children: [
             Expanded(
               child: _buildPavilionCard(
                 context,
-                title: '年代館',
+                title: '年代大事紀',
                 gradientColors: const [Color(0xFF5E8B75), Color(0xFF7FA893)],
                 icon: Icons.timeline_rounded,
                 onTap: () => _openHall(context, 'timeline'),
@@ -583,20 +715,20 @@ class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
             Expanded(
               child: _buildPavilionCard(
                 context,
-                title: '審判進程館',
-                gradientColors: const [Color(0xFF5E738B), Color(0xFF7E92A8)],
-                icon: Icons.gavel_rounded,
-                onTap: () => _openHall(context, 'status'),
+                title: '重大刑案館',
+                gradientColors: const [Color(0xFF8B5E63), Color(0xFFA87E83)],
+                icon: Icons.shield_rounded,
+                onTap: () => _openHall(context, 'portal-criminal-safety'),
               ),
             ),
             SizedBox(width: 8.w),
             Expanded(
               child: _buildPavilionCard(
                 context,
-                title: '經典指標館',
-                gradientColors: const [Color(0xFF8B5E63), Color(0xFFA87E83)],
-                icon: Icons.auto_awesome_rounded,
-                onTap: () => _openHall(context, 'classic'),
+                title: '憲政人權館',
+                gradientColors: const [Color(0xFF5E738B), Color(0xFF7E92A8)],
+                icon: Icons.account_balance_rounded,
+                onTap: () => _openHall(context, 'portal-constitutional'),
               ),
             ),
           ],

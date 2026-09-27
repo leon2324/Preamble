@@ -142,7 +142,7 @@ class _WikipediaInfoboxCardState extends State<WikipediaInfoboxCard> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        _isExpanded ? '收合維基速覽' : '展開維基速覽',
+                        _isExpanded ? '收合案件速覽' : '展開案件速覽',
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.bold,

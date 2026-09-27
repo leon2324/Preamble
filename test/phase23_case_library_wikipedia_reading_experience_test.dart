@@ -193,16 +193,16 @@ void main() {
       expect(find.text('後續修法與司法效應'), findsOneWidget);
 
       // Verify toggle button
-      expect(find.text('收合維基速覽'), findsOneWidget);
-      await tester.tap(find.text('收合維基速覽'));
+      expect(find.text('收合案件速覽'), findsOneWidget);
+      await tester.tap(find.text('收合案件速覽'));
       await tester.pumpAndSettle();
 
       // Now collapsed
-      expect(find.text('展開維基速覽'), findsOneWidget);
+      expect(find.text('展開案件速覽'), findsOneWidget);
       expect(find.text('審理法院／機關'), findsNothing);
 
       // Tap expand again
-      await tester.tap(find.text('展開維基速覽'));
+      await tester.tap(find.text('展開案件速覽'));
       await tester.pumpAndSettle();
       expect(find.text('審理法院／機關'), findsOneWidget);
     });

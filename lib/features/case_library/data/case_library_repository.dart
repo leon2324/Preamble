@@ -8,7 +8,7 @@ class CaseLibraryRepository {
   static final CaseLibraryRepository instance =
       CaseLibraryRepository._privateConstructor();
 
-  final List<CaseBook> _casesCache = [];
+  final List<CaseBook> _casesCache = List.from(caseLibraryCasesSeed);
   bool _initialized = false;
 
   List<CaseBook> get cases => _casesCache;
@@ -27,6 +27,9 @@ class CaseLibraryRepository {
       final all = await db.getAllCases();
       _casesCache.clear();
       _casesCache.addAll(all);
+      if (_casesCache.isEmpty) {
+        _casesCache.addAll(caseLibraryCasesSeed);
+      }
     } catch (e) {
       // 在單元測試或不支援 sqflite 的平台上，捕獲異常並降級使用記憶體 Mock Seed
       print('SQLite initialization bypassed (expected in unit tests): $e');
@@ -87,7 +90,91 @@ class CaseLibraryRepository {
     );
   }
 
-  // 異步分頁查詢以支援 10 萬案高階搜尋與目錄
+  // 智慧推薦引擎：依矚目度、話題懸疑標籤與客群喜好進行推薦
+  List<CaseBook> getRecommendedCases({
+    String? topicTag,
+    int limit = 6,
+  }) {
+    if (_casesCache.isEmpty) {
+      _casesCache.addAll(caseLibraryCasesSeed);
+    }
+
+    final tag = topicTag ?? '🔥 社會矚目';
+    List<String> targetIds = [];
+
+    if (tag.contains('疑案') || tag.contains('懸案')) {
+      targetIds = [
+        'case-chiu-ho-shun',
+        'case-chiang-kuo-ching',
+        'case-su-chien-ho',
+        'case-hsu-tzu-chiang-582',
+        'hung-2013',
+        'cheng-2021',
+      ];
+    } else if (tag.contains('平反') || tag.contains('翻案')) {
+      targetIds = [
+        'case-su-chien-ho',
+        'case-chiang-kuo-ching',
+        'case-formosa-incident',
+        'case-dapu-expropriation',
+        'case-hsu-tzu-chiang-582',
+        'case-chiu-ho-shun',
+      ];
+    } else if (tag.contains('憲政') || tag.contains('地標')) {
+      targetIds = [
+        'case-formosa-incident',
+        '318',
+        '799',
+        '499',
+        'case-cross-marriage-1445',
+        'case-adultery-791',
+        'case-dapu-expropriation',
+      ];
+    } else if (tag.contains('生活') || tag.contains('裁判')) {
+      targetIds = [
+        '101',
+        '102',
+        '103',
+        '104',
+        'case-delivery-labor-2152',
+        'case-ting-hsin-oil',
+      ];
+    } else {
+      // 預設：🔥 社會矚目焦點大案
+      targetIds = [
+        'case-chiang-kuo-ching',
+        'case-formosa-incident',
+        'case-ting-hsin-oil',
+        'case-dapu-expropriation',
+        'case-chiu-ho-shun',
+        '318',
+        '799',
+        'case-su-chien-ho',
+        'case-rca-pollution',
+      ];
+    }
+
+    final results = <CaseBook>[];
+    for (final id in targetIds) {
+      final b = getCaseById(id);
+      if (b.titleZh != '案件載入中...' && !results.any((x) => x.id == b.id)) {
+        results.add(b);
+      }
+    }
+
+    if (results.length < limit) {
+      for (final b in _casesCache) {
+        if (!results.any((x) => x.id == b.id) && b.titleZh != '案件載入中...') {
+          results.add(b);
+          if (results.length >= limit) break;
+        }
+      }
+    }
+
+    return results.take(limit).toList();
+  }
+
+  // 異步分頁查詢以支援高階搜尋與目錄
   Future<List<CaseBook>> getCasesPaginated(
     int limit,
     int offset, {
@@ -107,36 +194,36 @@ class CaseLibraryRepository {
           query: query,
         );
 
-        final List<CaseBook> merged = [];
-        for (final c in cloudCases) {
-          // 查詢本地 SQLite 是否有追蹤/收藏標記，並進行合併
-          try {
-            final local = await CaseDossierSqliteDb.instance.getCaseById(c.id);
-            if (local != null) {
-              final mergedCase = c.copyWith(
-                isFavorite: local.isFavorite,
-                isFollowing: local.isFollowing,
-              );
-              merged.add(mergedCase);
-              // 同步寫入本地 SQLite 快取中繼資料
-              await CaseDossierSqliteDb.instance.insertCase(mergedCase);
-            } else {
+        if (cloudCases.isNotEmpty) {
+          final List<CaseBook> merged = [];
+          for (final c in cloudCases) {
+            try {
+              final local = await CaseDossierSqliteDb.instance.getCaseById(c.id);
+              if (local != null) {
+                final mergedCase = c.copyWith(
+                  isFavorite: local.isFavorite,
+                  isFollowing: local.isFollowing,
+                );
+                merged.add(mergedCase);
+                await CaseDossierSqliteDb.instance.insertCase(mergedCase);
+              } else {
+                merged.add(c);
+                await CaseDossierSqliteDb.instance.insertCase(c);
+              }
+            } catch (__) {
               merged.add(c);
-              await CaseDossierSqliteDb.instance.insertCase(c);
             }
-          } catch (__) {
-            merged.add(c);
           }
+          if (query != null && query.trim().isNotEmpty) {
+            final q = query.trim().toLowerCase();
+            merged.sort((a, b) {
+              if (a.id.toLowerCase() == q && b.id.toLowerCase() != q) return -1;
+              if (b.id.toLowerCase() == q && a.id.toLowerCase() != q) return 1;
+              return 0;
+            });
+          }
+          return merged;
         }
-        if (query != null && query.trim().isNotEmpty) {
-          final q = query.trim().toLowerCase();
-          merged.sort((a, b) {
-            if (a.id.toLowerCase() == q && b.id.toLowerCase() != q) return -1;
-            if (b.id.toLowerCase() == q && a.id.toLowerCase() != q) return 1;
-            return 0;
-          });
-        }
-        return merged;
       } catch (e) {
         print('Supabase fetch query failed, fallback to local: $e');
       }
@@ -149,45 +236,48 @@ class CaseLibraryRepository {
         category: category,
         query: query,
       );
-      if (query != null && query.trim().isNotEmpty) {
-        final q = query.trim().toLowerCase();
-        localResults.sort((a, b) {
-          if (a.id.toLowerCase() == q && b.id.toLowerCase() != q) return -1;
-          if (b.id.toLowerCase() == q && a.id.toLowerCase() != q) return 1;
-          return 0;
-        });
+      if (localResults.isNotEmpty) {
+        if (query != null && query.trim().isNotEmpty) {
+          final q = query.trim().toLowerCase();
+          localResults.sort((a, b) {
+            if (a.id.toLowerCase() == q && b.id.toLowerCase() != q) return -1;
+            if (b.id.toLowerCase() == q && a.id.toLowerCase() != q) return 1;
+            return 0;
+          });
+        }
+        return localResults;
       }
-      return localResults;
     } catch (e) {
-      // 若在不支援 SQLite 的測試環境中，降級由記憶體快取進行過濾與分頁切片
       print('SQLite query failed, falling back to cache: $e');
-      Iterable<CaseBook> filtered = _casesCache;
-
-      if (category != null && category != '全部') {
-        filtered = filtered.where((c) => c.category == category);
-      }
-
-      if (query != null && query.trim().isNotEmpty) {
-        final lowerQuery = query.toLowerCase();
-        filtered = filtered.where((c) =>
-            c.titleZh.toLowerCase().contains(lowerQuery) ||
-            c.category.toLowerCase().contains(lowerQuery) ||
-            c.shortDescription.toLowerCase().contains(lowerQuery) ||
-            c.background.toLowerCase().contains(lowerQuery));
-      }
-
-      final sorted = filtered.toList()
-        ..sort((a, b) {
-          final yearCompare = b.year.compareTo(a.year);
-          if (yearCompare != 0) return yearCompare;
-          return b.id.compareTo(a.id);
-        });
-
-      if (offset >= sorted.length) return [];
-      final end =
-          (offset + limit) < sorted.length ? (offset + limit) : sorted.length;
-      return sorted.sublist(offset, end);
     }
+
+    // 若本地 SQLite 為空或查詢失敗，使用記憶體內建種子庫進行過濾與分頁切片，保證永不回傳空白
+    Iterable<CaseBook> filtered = _casesCache.isNotEmpty ? _casesCache : caseLibraryCasesSeed;
+
+    if (category != null && category != '全部') {
+      filtered = filtered.where((c) => c.category == category);
+    }
+
+    if (query != null && query.trim().isNotEmpty) {
+      final lowerQuery = query.toLowerCase();
+      filtered = filtered.where((c) =>
+          c.titleZh.toLowerCase().contains(lowerQuery) ||
+          c.category.toLowerCase().contains(lowerQuery) ||
+          c.shortDescription.toLowerCase().contains(lowerQuery) ||
+          c.background.toLowerCase().contains(lowerQuery));
+    }
+
+    final sorted = filtered.toList()
+      ..sort((a, b) {
+        final yearCompare = b.year.compareTo(a.year);
+        if (yearCompare != 0) return yearCompare;
+        return b.id.compareTo(a.id);
+      });
+
+    if (offset >= sorted.length) return [];
+    final end =
+        (offset + limit) < sorted.length ? (offset + limit) : sorted.length;
+    return sorted.sublist(offset, end);
   }
 
   // 異步載入完整案件詳情，支援本地快取同步（Phase 2 核心）

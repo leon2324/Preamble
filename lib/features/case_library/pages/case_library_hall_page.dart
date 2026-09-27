@@ -48,9 +48,19 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
       if (widget.hall.type == CaseLibraryHallType.timeline ||
           widget.hall.type == CaseLibraryHallType.classic ||
           widget.hall.type == CaseLibraryHallType.status) {
-        // 年代、經典、審判狀態館：從倉庫/Supabase 異步拉取較多真實裁判筆數進行過濾展示
+        // 年代、經典、審判狀態館：從倉庫與書架定義收集真實裁判筆數進行展示
         final books =
             await CaseLibraryRepository.instance.getCasesPaginated(60, 0);
+        final shelfCaseIds = <String>{};
+        for (final shelf in widget.hall.shelves) {
+          shelfCaseIds.addAll(shelf.caseIds);
+        }
+        for (final id in shelfCaseIds) {
+          final b = CaseLibraryRepository.instance.getCaseById(id);
+          if (b.titleZh != '案件載入中...' && !books.any((x) => x.id == b.id)) {
+            books.add(b);
+          }
+        }
         if (mounted) {
           setState(() {
             _allCases = books;
@@ -58,7 +68,7 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
           });
         }
       } else if (widget.hall.type == CaseLibraryHallType.portal) {
-        // 維基專題門戶：從該門戶的所有子書架與精選案中動態收集全部實體指標案件
+        // 司法專題館：從該專題的所有子書架與精選案中動態收集全部實體指標案件
         final portalCaseIds = <String>{};
         for (final shelf in widget.hall.shelves) {
           portalCaseIds.addAll(shelf.caseIds);
@@ -183,11 +193,10 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
           child: Column(
             children: [
               // Top App Bar
-              // 為了在各種尺寸螢幕上保持標題置中，此處將 Row 佈局重構為 Stack。
-              // 使用 Positioned 定位返回按鈕與搜尋按鈕，以確保中間的標題文字不偏斜。
-              // 滿版寬度能避免 Stack 依標題縮小，讓左右操作鍵真正靠近 AppBar 邊界。
+              // 為了在各種尺寸螢幕上保持標題置中且絕不溢出，
+              // 左右保留按鈕安全內距，並以 FittedBox 搭配單行縮放自適應長標題。
               Padding(
-                padding: EdgeInsets.fromLTRB(6.w, 12.h, 18.w, 8.h),
+                padding: EdgeInsets.fromLTRB(6.w, 8.h, 18.w, 8.h),
                 child: SizedBox(
                   width: double.infinity,
                   height: 48.h,
@@ -205,14 +214,22 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
                           onPressed: () => Navigator.of(context).pop(),
                         ),
                       ),
-                      Text(
-                        widget.hall.type == CaseLibraryHallType.theme
-                            ? '依議題探索'
-                            : widget.hall.name,
-                        style:
-                            CaseLibraryTextStyles.pageTitle(context).copyWith(
-                          fontSize: 20.sp,
-                          color: CaseLibraryColors.primaryGreen,
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 48.w),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            widget.hall.type == CaseLibraryHallType.theme
+                                ? '依議題探索'
+                                : widget.hall.name,
+                            maxLines: 1,
+                            style:
+                                CaseLibraryTextStyles.pageTitle(context).copyWith(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w900,
+                              color: CaseLibraryColors.primaryGreen,
+                            ),
+                          ),
                         ),
                       ),
                       if (widget.hall.type == CaseLibraryHallType.theme)
@@ -458,11 +475,12 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
     // Featured Case dynamically selected
     final featuredBook = _allCases.isNotEmpty
         ? _allCases.first
-        : CaseLibraryRepository.instance.getCaseById('featured');
+        : CaseLibraryRepository.instance.getCaseById('499');
 
     // Representative list cases (others)
-    final representativeCases =
-        _allCases.isNotEmpty ? _allCases.skip(1).toList() : <CaseBook>[];
+    final representativeCases = _allCases.length > 1
+        ? _allCases.skip(1).toList()
+        : CaseLibraryRepository.instance.getRecommendedCases(limit: 6).skip(1).toList();
 
     return ListView(
       padding: EdgeInsets.fromLTRB(18.w, 4.h, 18.w, 24.h),
@@ -568,14 +586,25 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
       separatorBuilder: (_, __) => SizedBox(height: 24.h),
       itemBuilder: (context, shelfIndex) {
         final shelf = widget.hall.shelves[shelfIndex];
-        // 真實案件動態比對或降級切片分發
-        final lowerName = shelf.name.toLowerCase();
-        var shelfCases = _allCases.where((c) {
-          return c.status.toLowerCase().contains(lowerName) ||
-              c.category.toLowerCase().contains(lowerName) ||
-              c.basicInfo.procedureStage.toLowerCase().contains(lowerName) ||
-              c.basicInfo.courtLevel.toLowerCase().contains(lowerName);
-        }).toList();
+        // 優先從該書架已註冊的真實案例提取，確保不空置
+        final shelfCaseBooks = <CaseBook>[];
+        for (final id in shelf.caseIds) {
+          final b = CaseLibraryRepository.instance.getCaseById(id);
+          if (b.titleZh != '案件載入中...' && !shelfCaseBooks.any((x) => x.id == b.id)) {
+            shelfCaseBooks.add(b);
+          }
+        }
+
+        var shelfCases = shelfCaseBooks;
+        if (shelfCases.isEmpty) {
+          final lowerName = shelf.name.toLowerCase();
+          shelfCases = _allCases.where((c) {
+            return c.status.toLowerCase().contains(lowerName) ||
+                c.category.toLowerCase().contains(lowerName) ||
+                c.basicInfo.procedureStage.toLowerCase().contains(lowerName) ||
+                c.basicInfo.courtLevel.toLowerCase().contains(lowerName);
+          }).toList();
+        }
 
         if (shelfCases.isEmpty && _allCases.isNotEmpty) {
           shelfCases = _allCases.skip(shelfIndex * 3).take(3).toList();
@@ -626,18 +655,22 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
                   ),
                 ),
                 SizedBox(width: 8.w),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-                  decoration: BoxDecoration(
-                    color: bgColor,
-                    borderRadius: BorderRadius.circular(4.r),
-                  ),
-                  child: Text(
-                    shelf.description,
-                    style: TextStyle(
-                      fontSize: 9.5.sp,
-                      color: accentColor,
-                      fontWeight: FontWeight.w800,
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                    decoration: BoxDecoration(
+                      color: bgColor,
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
+                    child: Text(
+                      shelf.description,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 9.5.sp,
+                        color: accentColor,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                 ),
@@ -741,7 +774,7 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
                       borderRadius: BorderRadius.circular(6.r),
                     ),
                     child: Text(
-                      hall.badge ?? '維基專題門戶',
+                      hall.badge ?? '司法專題館',
                       style: TextStyle(
                         fontSize: 10.5.sp,
                         fontWeight: FontWeight.w900,
@@ -810,7 +843,7 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
         ),
         SizedBox(height: 16.h),
 
-        // 2. 維基子分類書架標籤切換列（Sub-shelves Taxonomy Tabs）
+        // 2. 專題子分類書架標籤切換列（Sub-shelves Taxonomy Tabs）
         SizedBox(
           height: 36.h,
           child: ListView(
@@ -885,7 +918,7 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
         ),
         SizedBox(height: 16.h),
 
-        // 3. 維基精選指標代表條目（當在全部標籤且有精選案時）
+        // 3. 專題精選指標代表條目（當在全部標籤且有精選案時）
         if (isAll && featuredBook != null) ...[
           Container(
             decoration: BoxDecoration(
@@ -913,11 +946,11 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
                           borderRadius: BorderRadius.circular(4.r),
                         ),
                         child: Text(
-                          '⭐ 維基指標大案精選',
+                          '⭐ 焦點指標大案',
                           style: TextStyle(
                             fontSize: 10.sp,
                             fontWeight: FontWeight.w900,
-                            color: Colors.white,
+                            color: const Color(0xFF261D00),
                           ),
                         ),
                       ),
@@ -969,7 +1002,7 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
                       ),
                       icon: Icon(Icons.menu_book_rounded, size: 16.sp),
                       label: const Text(
-                        '研讀維基條目詳情 ➔',
+                        '研讀判決檔案詳情 ➔',
                         style: TextStyle(fontWeight: FontWeight.w900),
                       ),
                       onPressed: () => _openCaseDetail(context, featuredBook!),
@@ -1088,8 +1121,10 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
                         SizedBox(width: 6.w),
                         _buildInfoChip(locationChip),
                         SizedBox(width: 6.w),
-                        _buildInfoChip(statusChip),
-                        const Spacer(),
+                        Expanded(
+                          child: _buildInfoChip(statusChip),
+                        ),
+                        SizedBox(width: 6.w),
                         CaseLibrarySvgIcon(
                           CaseLibrarySvgIcons.bookmark,
                           size: 18.sp,
@@ -1177,13 +1212,15 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
 
   Widget _buildInfoChip(String label) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.5.h),
       decoration: BoxDecoration(
         color: const Color(0xFFF2F4F3),
-        borderRadius: BorderRadius.circular(6.r),
+        borderRadius: BorderRadius.circular(4.r),
       ),
       child: Text(
         label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: TextStyle(
           fontSize: 9.5.sp,
           fontWeight: FontWeight.bold,

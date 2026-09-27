@@ -31,28 +31,14 @@ class CaseLibraryHallSelectionPage extends StatelessWidget {
         iconSvg: CaseLibrarySvgIcons.clock,
         title: '年代大事紀館',
         desc: '依歷史時間軸梳理變遷',
-        detail: '自 1990 年代至今，看台灣法律與人權關鍵演進',
-      ),
-      (
-        id: 'status',
-        iconSvg: CaseLibrarySvgIcons.scale,
-        title: '審級進程狀態館',
-        desc: '依司法進程切入思辨',
-        detail: '判決確定、違憲宣告生效、審理中大案對照',
-      ),
-      (
-        id: 'classic',
-        iconSvg: CaseLibrarySvgIcons.star,
-        title: '經典法理指標館',
-        desc: '先看最具代表性的案件',
-        detail: '精選法學指標大案，掌握核心法理基準',
+        detail: '自 1990 年代至今，梳理台灣法律與人權關鍵演進',
       ),
       (
         id: 'theme',
         iconSvg: CaseLibrarySvgIcons.grid,
-        title: '生活爭端專題館',
+        title: '生活爭端實務館',
         desc: '依常見民刑事爭端切入',
-        detail: '車禍賠償、借款返還、租屋扣款等爭議案件',
+        detail: '車禍賠償、借款返還、租屋糾紛等日常生活爭議裁判',
       ),
     ];
 
@@ -85,39 +71,45 @@ class CaseLibraryHallSelectionPage extends StatelessWidget {
                         onPressed: () => Navigator.of(context).pop(),
                       ),
                     ),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          '維基專題門戶與分類目錄',
-                          style:
-                              CaseLibraryTextStyles.pageTitle(context).copyWith(
-                            fontSize: 19.sp,
-                            fontWeight: FontWeight.w900,
-                          ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 48.w),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '司法專題館藏與分類目錄',
+                              style:
+                                  CaseLibraryTextStyles.pageTitle(context).copyWith(
+                                fontSize: 19.sp,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                            SizedBox(height: 3.h),
+                            Text(
+                              '依重大刑案、憲政人權、平反紀實等專題深度查閱',
+                              style:
+                                  CaseLibraryTextStyles.bodySmall(context).copyWith(
+                                fontSize: 11.sp,
+                                color: CaseLibraryColors.textMuted,
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 3.h),
-                        Text(
-                          '依憲政人權、司法平反、公害勞動等專題深度閱讀',
-                          style:
-                              CaseLibraryTextStyles.bodySmall(context).copyWith(
-                            fontSize: 11.sp,
-                            color: CaseLibraryColors.textMuted,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
               ),
               SizedBox(height: 18.h),
 
-              // SECTION 1: 維基法律主題門戶（Wikipedia Portals）
+              // SECTION 1: 法律專題館藏（Legal Portals）
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '🏛️ 維基百科主題門戶',
+                    '🏛️ 司法領域專題館藏',
                     style: CaseLibraryTextStyles.sectionTitle(context).copyWith(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w900,
@@ -125,7 +117,7 @@ class CaseLibraryHallSelectionPage extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '${portals.length} 大核心門戶',
+                    '${portals.length} 大核心專題',
                     style: TextStyle(
                       fontSize: 11.sp,
                       fontWeight: FontWeight.bold,
@@ -329,7 +321,7 @@ class _PortalSelectionCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(6.r),
                     ),
                     child: Text(
-                      hall.badge ?? '維基專題門戶',
+                      hall.badge ?? '專題館藏',
                       style: TextStyle(
                         fontSize: 10.5.sp,
                         fontWeight: FontWeight.w900,

@@ -822,7 +822,7 @@ class WikipediaWikilinkText extends StatelessWidget {
                               size: 16, color: Colors.white),
                           SizedBox(width: 8.w),
                           Text(
-                            '深入閱讀該案維基條目',
+                            '深入查閱案件檔案詳情',
                             style: TextStyle(
                               fontSize: 13.sp,
                               fontWeight: FontWeight.bold,
