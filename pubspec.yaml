@@ -96,7 +96,14 @@ flutter:
     
 
   fonts:
-    # Inter 用來承接英文與數字 UI；CJK 字型則放在 fallback，
+    # 圓潤親切字體主軸：Nunito（英文／數字）+ 粉圓體 OpenHuninn（繁中圓體）
+    - family: Nunito
+      fonts:
+        - asset: assets/fonts/open_source/Nunito-VF.ttf
+    - family: OpenHuninn
+      fonts:
+        - asset: assets/fonts/open_source/jf-openhuninn-2.1.ttf
+    # Inter 用來承接英文與數字備援；CJK 字型則放在 fallback，
     # 讓同一段文字混用 English / 繁中 / 簡中 / 日本語 時不會掉成系統預設字。
     - family: Inter
       fonts:

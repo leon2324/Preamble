@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/components/home/home_news_section.dart';
 import 'package:preamble/components/home/v2/home_v2_bento_cards.dart';
+import 'package:preamble/components/home/v2/home_v2_dashboard_dock.dart';
 import 'package:preamble/components/home/v2/home_v2_newsletter_cards.dart';
 import 'package:preamble/components/home/v2/home_v2_social_news_section.dart';
 import 'package:preamble/data/mock_data/home/legacy/home_mock_data_legacy.dart';
@@ -239,28 +240,24 @@ void main() {
         ),
         wrapInScrollView: false,
       );
-      final section = find.byType(HomeV2QuickAskSection);
+      final section = find.byType(HomeDashboardDock);
       await tester.ensureVisible(section);
       await tester.pump();
       final input =
           find.descendant(of: section, matching: find.byType(TextField));
-      final submit = find.ancestor(
-        of: find.descendant(
-          of: section,
-          matching: find.byIcon(Icons.arrow_upward_rounded),
-        ),
-        matching: find.byType(IconButton),
-      );
       expect(input, findsOneWidget);
-      expect(submit, findsOneWidget);
       await tester.enterText(input, '測試法律問題');
       await tester.pump();
+      final submit = find.descendant(
+        of: section,
+        matching: find.text('問診'),
+      );
+      expect(submit, findsOneWidget);
       expect(tester.getRect(input).overlaps(Offset.zero & landscapeLarge.size),
           isTrue);
       expect(tester.getRect(submit).overlaps(Offset.zero & landscapeLarge.size),
           isTrue);
       expect(submit.hitTestable(), findsOneWidget);
-      expect(tester.widget<IconButton>(submit).onPressed, isNotNull);
     });
   });
 }

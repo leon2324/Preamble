@@ -80,6 +80,7 @@ void main() {
             home: Scaffold(
               body: Builder(
                 builder: (context) {
+                  // ignore: deprecated_member_use_from_same_package
                   IosIntentRouter.register(context);
                   return const Text('Intent Router Ready');
                 },
@@ -92,7 +93,9 @@ void main() {
       expect(find.text('Intent Router Ready'), findsOneWidget);
 
       final BuildContext context = tester.element(find.text('Intent Router Ready'));
+      // ignore: deprecated_member_use_from_same_package
       await IosIntentRouter.checkInitialIntents(context);
+      // ignore: deprecated_member_use_from_same_package
       IosIntentRouter.unregister();
     });
   });

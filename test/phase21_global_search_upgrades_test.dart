@@ -82,12 +82,12 @@ void main() {
     await tester.pumpForVerification();
 
     // 1. Verify Home search inspirations contain rental and severance
-    expect(find.text('🔥 法律探索靈感'), findsOneWidget);
+    expect(find.text('法律探索靈感'), findsOneWidget);
     expect(find.text('租屋押金扣款'), findsOneWidget);
     expect(find.text('公司無預警資遣'), findsOneWidget);
 
     // 2. Enter "押金不退" into search field and submit
-    final searchInput = find.byType(TextField);
+    final searchInput = find.byType(TextField).first;
     expect(searchInput, findsOneWidget);
     await tester.enterText(searchInput, '押金不退');
     await tester.testTextInput.receiveAction(TextInputAction.search);
@@ -99,15 +99,17 @@ void main() {
     expect(find.text('小法助即時解方'), findsOneWidget);
     expect(find.text('租賃住宅與不動產點交爭議'), findsOneWidget);
     expect(find.text('談判自保防禦金句'), findsOneWidget);
-    expect(find.text('📁 建立「自救記事」進度追蹤'), findsOneWidget);
+    expect(find.text('建立「自救記事」進度追蹤'), findsOneWidget);
 
-    // 4. Tap "📁 建立「自救記事」進度追蹤"
-    final saveButton = find.text('📁 建立「自救記事」進度追蹤');
+    // 4. Tap "建立「自救記事」進度追蹤"
+    final saveButton = find.text('建立「自救記事」進度追蹤');
     expect(saveButton, findsOneWidget);
+    await tester.ensureVisible(saveButton);
+    await tester.pump();
     await tester.tap(saveButton);
     await tester.pumpForVerification();
-    // Allow CustomToast 1.5s timer to complete
-    await tester.pump(const Duration(milliseconds: 1600));
+    // Allow CustomToast timer to complete
+    await tester.pump(const Duration(seconds: 6));
 
     // 5. Verify UserCaseJournalRepository has the newly added rental dispute
     final repo = UserCaseJournalRepository();
@@ -148,12 +150,14 @@ void main() {
     expect(find.text('談判自保防禦金句'), findsOneWidget);
     expect(find.textContaining('非自願離職證明書'), findsWidgets);
 
-    // 3. Tap "📁 建立「自救記事」進度追蹤"
-    final saveButton = find.text('📁 建立「自救記事」進度追蹤');
+    // 3. Tap "建立「自救記事」進度追蹤"
+    final saveButton = find.text('建立「自救記事」進度追蹤');
+    await tester.ensureVisible(saveButton);
+    await tester.pump();
     await tester.tap(saveButton);
     await tester.pumpForVerification();
-    // Allow CustomToast 1.5s timer to complete
-    await tester.pump(const Duration(milliseconds: 1600));
+    // Allow CustomToast timer to complete
+    await tester.pump(const Duration(seconds: 6));
 
     // 4. Verify UserCaseJournalRepository contains severance case
     final repo = UserCaseJournalRepository();

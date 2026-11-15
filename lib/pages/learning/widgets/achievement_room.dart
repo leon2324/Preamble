@@ -733,23 +733,7 @@ class _AchievementRoomPageState extends State<AchievementRoomPage>
     }
 
     if (topic == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Row(
-            children: [
-              SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(
-                    strokeWidth: 2, color: Colors.white),
-              ),
-              SizedBox(width: 12),
-              Text('正在從雲端載入專題內容...'),
-            ],
-          ),
-          duration: Duration(seconds: 1),
-        ),
-      );
+      CustomToast.show(context, '正在從雲端載入專題內容...');
       topic =
           await SupabaseLearningService.instance.fetchTopicByTitle(category);
       if (!mounted) return;

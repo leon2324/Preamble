@@ -1,27 +1,38 @@
 part of '../global_search_page.dart';
 
-// 這裡放搜尋頁的狀態卡、Tab 與篩選外觀元件；
-// filter state 仍由父層管理，本檔只保留既有展示與按鈕 callback。
+// 狀態卡、分類 Tab 與「真實生效」的檢索篩選／排序控制器。
+// 所有篩選晶片、排序切換與篩選面板皆綁定 GlobalSearchPage 狀態，徹底消除空殼按鈕。
 
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.title, this.action, this.onAction});
+  const _SectionHeader({
+    required this.title,
+    this.icon,
+    this.action,
+    this.onAction,
+  });
 
   final String title;
+  final IconData? icon;
   final String? action;
   final VoidCallback? onAction;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Row(
       children: [
-        Expanded(child: Text(title, style: _SearchText.section())),
+        if (icon != null) ...[
+          Icon(icon, size: 16.sp, color: t.accentBrass),
+          SizedBox(width: 6.w),
+        ],
+        Expanded(child: Text(title, style: _SearchText.section(context))),
         if (action != null)
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
+          InkWell(
             onTap: onAction,
+            borderRadius: BorderRadius.circular(6.r),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 4.h),
-              child: Text(action!, style: _SearchText.action()),
+              padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
+              child: Text(action!, style: _SearchText.action(context)),
             ),
           ),
       ],
@@ -29,117 +40,71 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-class _PrototypeChipGrid extends StatelessWidget {
-  const _PrototypeChipGrid({required this.labels, required this.onTap});
-
-  final List<String> labels;
-  final ValueChanged<String> onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 6.w,
-      runSpacing: 7.h,
-      children: labels
-          .map((label) => _Pill(label: label, onTap: () => onTap(label)))
-          .toList(growable: false),
-    );
-  }
-}
-
 class _SearchStateCard extends StatelessWidget {
-  const _SearchStateCard({required this.message, this.showMascot = true});
+  const _SearchStateCard({
+    required this.message,
+    this.icon,
+    this.actionLabel,
+    this.onAction,
+  });
 
   final String message;
-  final bool showMascot;
+  final IconData? icon;
+  final String? actionLabel;
+  final VoidCallback? onAction;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return _ProtoCard(
-      background: _SearchColors.softPaper,
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
+      background: t.surfaceSubtle,
+      elevated: false,
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 26.h),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (showMascot) ...[
-            Container(
-              width: 80.w,
-              height: 80.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                    color: _SearchColors.border.withValues(alpha: 0.5),
-                    width: 1.8.w),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
-                    blurRadius: 7,
-                    offset: const Offset(0, 3.5),
-                  ),
-                ],
+          Container(
+            width: 48.r,
+            height: 48.r,
+            decoration: BoxDecoration(
+              color: t.brandContainer,
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: t.brandPrimary.withValues(alpha: 0.2),
               ),
-              child: ClipOval(
-                child: Image.asset(
-                  'assets/images/assistant/law_assistant_empty.png',
-                  fit: BoxFit.cover,
+            ),
+            child: Icon(
+              icon ?? PhosphorIconsRegular.magnifyingGlass,
+              color: t.brandPrimary,
+              size: 22.sp,
+            ),
+          ),
+          SizedBox(height: 12.h),
+          Text(
+            message,
+            style: _SearchText.bodyStrong(context),
+            textAlign: TextAlign.center,
+          ),
+          if (actionLabel != null && onAction != null) ...[
+            SizedBox(height: 14.h),
+            OutlinedButton.icon(
+              onPressed: onAction,
+              style: OutlinedButton.styleFrom(
+                foregroundColor: t.brandPrimary,
+                side: BorderSide(color: t.borderStrong),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(999.r),
+                ),
+              ),
+              icon: Icon(PhosphorIconsRegular.arrowCounterClockwise, size: 14.sp),
+              label: Text(
+                actionLabel!,
+                style: _SearchText.captionStrong(context).copyWith(
+                  color: t.brandPrimary,
                 ),
               ),
             ),
-            SizedBox(height: 16.h),
           ],
-          Text(
-            message,
-            style: _SearchText.bodyStrong().copyWith(
-              color: _SearchColors.text,
-              fontSize: 13.sp,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _FilterPanel extends StatelessWidget {
-  const _FilterPanel({required this.onApply});
-
-  final VoidCallback onApply;
-
-  @override
-  Widget build(BuildContext context) {
-    return _ProtoCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(child: Text('篩選條件', style: _SearchText.section())),
-              Text('重設', style: _SearchText.action()),
-            ],
-          ),
-          SizedBox(height: 16.h),
-          Text('資料來源', style: _SearchText.captionStrong()),
-          SizedBox(height: 8.h),
-          const _CheckLine(text: '小法助'),
-          const _CheckLine(text: '法規'),
-          const _CheckLine(text: '案件'),
-          const _CheckLine(text: '生活避坑'),
-          const _CheckLine(text: '官方資料'),
-          SizedBox(height: 14.h),
-          Text('時間範圍', style: _SearchText.captionStrong()),
-          SizedBox(height: 8.h),
-          const _RadioLine(text: '不限時間', selected: true),
-          const _RadioLine(text: '近一年'),
-          const _RadioLine(text: '近三年'),
-          const _RadioLine(text: '自訂區間'),
-          SizedBox(height: 14.h),
-          Text('排序方式', style: _SearchText.captionStrong()),
-          SizedBox(height: 8.h),
-          const _RadioLine(text: '相關性', selected: true),
-          const _RadioLine(text: '最新'),
-          SizedBox(height: 16.h),
-          _PrimaryButton(label: '套用篩選', onPressed: onApply),
         ],
       ),
     );
@@ -147,51 +112,228 @@ class _FilterPanel extends StatelessWidget {
 }
 
 class _SearchTabs extends StatelessWidget {
-  const _SearchTabs({required this.tab, required this.onTab});
+  const _SearchTabs({
+    required this.tab,
+    required this.onTab,
+  });
 
   final _SearchTab tab;
   final ValueChanged<_SearchTab> onTab;
 
   @override
   Widget build(BuildContext context) {
-    final labels = {
+    final t = context.tokens;
+    const labels = <_SearchTab, String>{
       _SearchTab.all: '全部',
       _SearchTab.assistant: '小法助',
       _SearchTab.statutes: '法規',
       _SearchTab.cases: '案件',
-      _SearchTab.lifeNotes: '生活避坑',
-      _SearchTab.official: '官方資料',
+      _SearchTab.lifeNotes: '避坑實務',
+      _SearchTab.official: '法務動態',
     };
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: labels.entries.map((entry) {
-          final active = entry.key == tab;
-          return GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () => onTab(entry.key),
-            child: Padding(
-              padding: EdgeInsets.only(right: 19.w, top: 8.h),
-              child: Container(
-                padding: EdgeInsets.only(bottom: 9.h),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color:
-                          active ? _SearchColors.primary : Colors.transparent,
-                      width: 2,
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: t.border, width: 1)),
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        child: Row(
+          children: labels.entries.map((entry) {
+            final active = entry.key == tab;
+            return GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => onTab(entry.key),
+              child: Padding(
+                padding: EdgeInsets.only(right: 20.w, top: 4.h),
+                child: Container(
+                  padding: EdgeInsets.only(bottom: 9.h),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: active ? t.brandPrimary : Colors.transparent,
+                        width: 2.2,
+                      ),
+                    ),
+                  ),
+                  child: Text(
+                    entry.value,
+                    style: _SearchText.tab(context).copyWith(
+                      color: active ? t.brandPrimary : t.textMuted,
                     ),
                   ),
                 ),
-                child: Text(
-                  entry.value,
-                  style: _SearchText.tab().copyWith(
-                    color: active
-                        ? _SearchColors.primary
-                        : _SearchColors.mutedText,
+              ),
+            );
+          }).toList(growable: false),
+        ),
+      ),
+    );
+  }
+}
+
+class _InteractiveFilterBar extends StatelessWidget {
+  const _InteractiveFilterBar({
+    required this.sortMode,
+    required this.domainFilter,
+    required this.activeFilterCount,
+    required this.onSortChanged,
+    required this.onDomainChanged,
+    required this.onOpenFilterPanel,
+  });
+
+  final _SearchSortMode sortMode;
+  final _SearchDomainFilter domainFilter;
+  final int activeFilterCount;
+  final ValueChanged<_SearchSortMode> onSortChanged;
+  final ValueChanged<_SearchDomainFilter> onDomainChanged;
+  final VoidCallback onOpenFilterPanel;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          child: Row(
+            children: [
+              // 排序切換晶片：相關度優先 ⇄ 最新年度
+              for (final mode in _SearchSortMode.values)
+                Padding(
+                  padding: EdgeInsets.only(right: 6.w),
+                  child: _FilterChipItem(
+                    label: mode.label,
+                    icon: mode == _SearchSortMode.relevance
+                        ? PhosphorIconsRegular.sparkle
+                        : PhosphorIconsRegular.calendarBlank,
+                    selected: sortMode == mode,
+                    onTap: () => onSortChanged(mode),
                   ),
                 ),
+              Container(
+                width: 1,
+                height: 18.h,
+                margin: EdgeInsets.symmetric(horizontal: 6.w),
+                color: t.borderStrong,
               ),
+              // 爭議領域篩選晶片：全部領域／民事／刑事／勞動／租屋
+              for (final domain in _SearchDomainFilter.values)
+                Padding(
+                  padding: EdgeInsets.only(right: 6.w),
+                  child: _FilterChipItem(
+                    label: domain.label,
+                    selected: domainFilter == domain,
+                    accentWhenSelected: domain != _SearchDomainFilter.all,
+                    onTap: () => onDomainChanged(domain),
+                  ),
+                ),
+              // 進階篩選面板入口
+              _FilterChipItem(
+                label: activeFilterCount > 0
+                    ? '篩選 ($activeFilterCount)'
+                    : '進階篩選',
+                icon: PhosphorIconsRegular.slidersHorizontal,
+                selected: activeFilterCount > 0,
+                accentWhenSelected: true,
+                onTap: onOpenFilterPanel,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _FilterChipItem extends StatelessWidget {
+  const _FilterChipItem({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+    this.icon,
+    this.accentWhenSelected = false,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+  final IconData? icon;
+  final bool accentWhenSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    final bg = selected
+        ? (accentWhenSelected ? t.accentBrassContainer : t.brandContainer)
+        : t.surface;
+    final fg = selected
+        ? (accentWhenSelected ? t.accentOnBrassContainer : t.brandOnContainer)
+        : t.textSecondary;
+    final borderCol = selected
+        ? (accentWhenSelected
+            ? t.accentBrass.withValues(alpha: 0.45)
+            : t.brandPrimary.withValues(alpha: 0.4))
+        : t.border;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(999.r),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 11.w, vertical: 6.h),
+          decoration: BoxDecoration(
+            color: bg,
+            borderRadius: BorderRadius.circular(999.r),
+            border: Border.all(color: borderCol, width: 1),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null) ...[
+                Icon(icon, size: 13.sp, color: fg),
+                SizedBox(width: 4.w),
+              ],
+              Text(
+                label,
+                style: _SearchText.captionStrong(context).copyWith(
+                  color: fg,
+                  fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SubListFilterStrip extends StatelessWidget {
+  const _SubListFilterStrip({
+    required this.selected,
+    required this.onChanged,
+  });
+
+  final _SubListFilter selected;
+  final ValueChanged<_SubListFilter> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
+      child: Row(
+        children: _SubListFilter.values.map((filter) {
+          return Padding(
+            padding: EdgeInsets.only(right: 8.w),
+            child: _Pill(
+              label: filter.label,
+              selected: selected == filter,
+              onTap: () => onChanged(filter),
             ),
           );
         }).toList(growable: false),
@@ -200,111 +342,170 @@ class _SearchTabs extends StatelessWidget {
   }
 }
 
-class _TabStrip extends StatelessWidget {
-  const _TabStrip({required this.labels});
+class _DetailSectionSwitch extends StatelessWidget {
+  const _DetailSectionSwitch({
+    required this.labels,
+    required this.selectedIndex,
+    required this.onSelected,
+  });
 
   final List<String> labels;
+  final int selectedIndex;
+  final ValueChanged<int> onSelected;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final activeColor =
-        isDark ? const Color(0xFF33A88D) : _SearchColors.primary;
-    final inactiveColor =
-        isDark ? const Color(0xFFA4B2AB) : _SearchColors.mutedText;
-
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+    final t = context.tokens;
+    return Container(
+      padding: EdgeInsets.all(4.w),
+      decoration: t.subtleBoxDecoration(radius: 12.r),
       child: Row(
-        children: [
-          for (var i = 0; i < labels.length; i++)
-            Container(
-              margin: EdgeInsets.only(right: 18.w),
-              padding: EdgeInsets.only(bottom: 8.h),
-              decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(
-                        color: i == 0 ? activeColor : Colors.transparent,
-                        width: 1.5)),
+        children: List.generate(labels.length, (index) {
+          final active = index == selectedIndex;
+          return Expanded(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => onSelected(index),
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 6.w),
+                decoration: BoxDecoration(
+                  color: active ? t.surface : Colors.transparent,
+                  borderRadius: BorderRadius.circular(9.r),
+                  border: active ? Border.all(color: t.borderStrong) : null,
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  labels[index],
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: _SearchText.captionStrong(context).copyWith(
+                    color: active ? t.brandPrimary : t.textMuted,
+                  ),
+                ),
               ),
-              child: Text(labels[i],
-                  style: _SearchText.captionStrong(context)
-                      .copyWith(color: i == 0 ? activeColor : inactiveColor)),
             ),
-        ],
+          );
+        }),
       ),
     );
   }
 }
 
-class _FilterRow extends StatelessWidget {
+class _FilterPanel extends StatelessWidget {
+  const _FilterPanel({
+    required this.enabledTypes,
+    required this.domainFilter,
+    required this.recentYearsFilter,
+    required this.sortMode,
+    required this.onToggleType,
+    required this.onDomainChanged,
+    required this.onRecentYearsChanged,
+    required this.onSortChanged,
+    required this.onReset,
+    required this.onApply,
+  });
+
+  final Set<_ResultType> enabledTypes;
+  final _SearchDomainFilter domainFilter;
+  final int? recentYearsFilter;
+  final _SearchSortMode sortMode;
+  final ValueChanged<_ResultType> onToggleType;
+  final ValueChanged<_SearchDomainFilter> onDomainChanged;
+  final ValueChanged<int?> onRecentYearsChanged;
+  final ValueChanged<_SearchSortMode> onSortChanged;
+  final VoidCallback onReset;
+  final VoidCallback onApply;
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        _MiniFilter(label: '排序：相關性'),
-        SizedBox(width: 8.w),
-        _MiniFilter(label: '時間：全部'),
-        const Spacer(),
-        _MiniFilter(label: '篩選'),
-      ],
-    );
-  }
-}
+    final t = context.tokens;
+    const sourceOptions = <(_ResultType, String)>[
+      (_ResultType.statute, '法規條文（民刑法・勞基・消保）'),
+      (_ResultType.caseItem, '裁判案卷（各級法院實務見解）'),
+      (_ResultType.lifeNote, '避坑實務（蒐證與自保指南）'),
+      (_ResultType.official, '法務動態（司法院・法務部・165）'),
+    ];
+    const yearOptions = <(int?, String)>[
+      (null, '不限時間（完整資料庫）'),
+      (1, '近一年內更新／裁判'),
+      (3, '近三年內更新／裁判'),
+    ];
 
-class _MiniFilter extends StatelessWidget {
-  const _MiniFilter({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bg =
-        isDark ? const Color(0xFF1E2530) : Colors.white.withValues(alpha: 0.85);
-    final border = isDark ? const Color(0xFF2C3545) : const Color(0xFFE2E8F0);
-    final textColor = isDark ? const Color(0xFFE2E8F0) : _SearchColors.text;
-
-    return GestureDetector(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-        decoration: BoxDecoration(
-          color: bg,
-          border: Border.all(color: border, width: 0.8.w),
-          borderRadius: BorderRadius.circular(18.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            )
-          ],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (label == '篩選') ...[
-              Icon(Icons.tune_rounded, size: 12.sp, color: textColor),
-              SizedBox(width: 4.w),
-            ],
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 11.sp,
-                fontWeight: FontWeight.w600,
-                color: textColor,
-              ),
-            ),
-            if (label != '篩選') ...[
-              SizedBox(width: 4.w),
+    return _ProtoCard(
+      padding: EdgeInsets.all(18.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
               Icon(
-                Icons.keyboard_arrow_down_rounded,
-                size: 13.sp,
-                color: textColor.withValues(alpha: 0.7),
+                PhosphorIconsRegular.slidersHorizontal,
+                size: 18.sp,
+                color: t.brandPrimary,
+              ),
+              SizedBox(width: 8.w),
+              Expanded(
+                child: Text('精準檢索篩選條件', style: _SearchText.section(context)),
+              ),
+              TextButton.icon(
+                onPressed: onReset,
+                icon: Icon(
+                  PhosphorIconsRegular.arrowCounterClockwise,
+                  size: 14.sp,
+                  color: t.brandPrimary,
+                ),
+                label: Text('重設條件', style: _SearchText.action(context)),
               ),
             ],
-          ],
-        ),
+          ),
+          Divider(color: t.border, height: 22.h),
+          Text('爭議法學領域', style: _SearchText.captionStrong(context)),
+          SizedBox(height: 8.h),
+          Wrap(
+            spacing: 8.w,
+            runSpacing: 8.h,
+            children: _SearchDomainFilter.values.map((domain) {
+              return _Pill(
+                label: domain.label,
+                selected: domainFilter == domain,
+                onTap: () => onDomainChanged(domain),
+              );
+            }).toList(growable: false),
+          ),
+          SizedBox(height: 18.h),
+          Text('檢索資料來源', style: _SearchText.captionStrong(context)),
+          SizedBox(height: 6.h),
+          for (final (type, label) in sourceOptions)
+            _CheckLine(
+              text: label,
+              checked: enabledTypes.contains(type),
+              onTap: () => onToggleType(type),
+            ),
+          SizedBox(height: 16.h),
+          Text('年度與時效範圍', style: _SearchText.captionStrong(context)),
+          SizedBox(height: 6.h),
+          for (final (years, label) in yearOptions)
+            _RadioLine(
+              text: label,
+              selected: recentYearsFilter == years,
+              onTap: () => onRecentYearsChanged(years),
+            ),
+          SizedBox(height: 16.h),
+          Text('結果排序依據', style: _SearchText.captionStrong(context)),
+          SizedBox(height: 6.h),
+          for (final mode in _SearchSortMode.values)
+            _RadioLine(
+              text: mode.label,
+              selected: sortMode == mode,
+              onTap: () => onSortChanged(mode),
+            ),
+          SizedBox(height: 20.h),
+          _PrimaryButton(
+            label: '套用篩選並檢視結果',
+            icon: PhosphorIconsRegular.check,
+            onPressed: onApply,
+          ),
+        ],
       ),
     );
   }

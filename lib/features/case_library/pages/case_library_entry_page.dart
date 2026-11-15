@@ -825,11 +825,10 @@ class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
           title: '居住正義：租屋補貼法源探索',
           snippet: '內政部最新修正草案解析，針對租賃市場透明化與補貼機制之法律效力進行深度評估...',
           imageAsset: 'assets/images/case_library_v2/recent_housing.png',
-          onTap: () {
-            if (_heroBooks.isNotEmpty) {
-              _openCaseDetail(context, _heroBooks.first);
-            }
-          },
+          onTap: () => _openCaseDetail(
+            context,
+            CaseLibraryRepository.instance.getCaseById('case-029'),
+          ),
         ),
         SizedBox(height: 12.h),
         _buildRecentDiscussionCard(
@@ -840,11 +839,12 @@ class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
           title: '數位平台與勞動契約爭議',
           snippet: '外送平台夥伴之法律見解，探討承攬與雇傭關係在數位經濟下的新型態法律界定...',
           imageAsset: 'assets/images/case_library_v2/recent_labor.png',
-          onTap: () {
-            if (_heroBooks.length > 1) {
-              _openCaseDetail(context, _heroBooks[1]);
-            }
-          },
+          onTap: () => _openCaseDetail(
+            context,
+            CaseLibraryRepository.instance.getCaseById(
+              'case-delivery-labor-2152',
+            ),
+          ),
         ),
       ],
     );

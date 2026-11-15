@@ -98,7 +98,7 @@ class _CaseJudgePracticePageState extends State<CaseJudgePracticePage>
                           '如果你是法官',
                           style: LightTextStyles.pageTitle(context).copyWith(
                             fontSize: 17.sp,
-                            fontWeight: FontWeight.w900,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),

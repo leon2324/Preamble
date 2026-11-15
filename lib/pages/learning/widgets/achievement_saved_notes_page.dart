@@ -68,23 +68,7 @@ class _SavedNotesPageState extends State<SavedNotesPage> {
     }
 
     if (matchedArticle == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Row(
-            children: [
-              SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(
-                    strokeWidth: 2, color: Colors.white),
-              ),
-              SizedBox(width: 12),
-              Text('正在從雲端載入文章內容...'),
-            ],
-          ),
-          duration: Duration(seconds: 1),
-        ),
-      );
+      CustomToast.show(context, '正在從雲端載入文章內容...');
       matchedArticle = await SupabaseLearningService.instance
           .fetchArticleByTitle(articleTitle);
       if (!mounted) return;

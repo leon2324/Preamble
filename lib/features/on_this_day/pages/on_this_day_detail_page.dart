@@ -1,14 +1,15 @@
 import 'package:flutter/cupertino.dart';
-import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
+import 'package:preamble/features/case_library/data/case_library_repository.dart';
+import 'package:preamble/features/case_library/models/case_library_models.dart';
+import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
 import 'package:preamble/features/on_this_day/data/on_this_day_local_bookmarks.dart';
 import 'package:preamble/features/on_this_day/data/on_this_day_mock_data.dart';
 import 'package:preamble/features/on_this_day/models/on_this_day_models.dart';
-import 'package:preamble/features/on_this_day/theme/on_this_day_theme.dart';
-import 'package:preamble/features/case_library/data/case_library_repository.dart';
-import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
-import 'package:preamble/features/case_library/models/case_library_models.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 
 class OnThisDayDetailPage extends StatefulWidget {
   const OnThisDayDetailPage({super.key, required this.caseId});
@@ -20,20 +21,22 @@ class OnThisDayDetailPage extends StatefulWidget {
 }
 
 class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
-  int _activeTab = 0; // 0: 案件簡略, 1: 時間線, 2: 歷史照片, 3: 時代背景, 4: 延伸影響, 5: 資料來源
-  late OnThisDayCase _case;
-  late List<String> _tabs;
+  static const List<String> _tabs = [
+    '案件簡略',
+    '時間線',
+    '時代背景',
+    '延伸影響',
+    '資料來源',
+  ];
 
-  late PageController _mediaController;
-  int _mediaIndex = 0;
+  int _activeTab = 0;
+  late OnThisDayCase _case;
   bool _isBookmarked = false;
 
   @override
   void initState() {
     super.initState();
     _case = onThisDayCaseById(widget.caseId) ?? onThisDayCases.first;
-    _tabs = ['案件簡略', '時間線', '歷史照片', '時代背景', '延伸影響', '資料來源'];
-    _mediaController = PageController();
     _initRepository();
     _loadBookmarkState();
   }
@@ -75,17 +78,10 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
     if (oldWidget.caseId != widget.caseId) {
       setState(() {
         _case = onThisDayCaseById(widget.caseId) ?? onThisDayCases.first;
-        _mediaIndex = 0;
-        _mediaController.jumpToPage(0);
+        _activeTab = 0;
       });
       _loadBookmarkState();
     }
-  }
-
-  @override
-  void dispose() {
-    _mediaController.dispose();
-    super.dispose();
   }
 
   void _openRelatedCase(String title) {
@@ -110,19 +106,23 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
+
     return Scaffold(
-      backgroundColor: OnThisDayColors.paperBeige,
+      backgroundColor: t.canvas,
       body: SafeArea(
         child: Column(
           children: [
-            // Top App Bar
             Padding(
-              padding: EdgeInsets.fromLTRB(6.w, 4.h, 18.w, 2.h),
+              padding: EdgeInsets.fromLTRB(6.w, 4.h, 12.w, 4.h),
               child: Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded,
-                        color: OnThisDayColors.primaryGreen),
+                    icon: Icon(
+                      PhosphorIconsRegular.caretLeft,
+                      color: t.textPrimary,
+                      size: 20.sp,
+                    ),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   Expanded(
@@ -133,19 +133,20 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
                           _case.title,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style:
-                              OnThisDayTextStyles.titleSerif(context).copyWith(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w900,
+                          style: t.serifTitle(
+                            size: 16.5.sp,
+                            weight: FontWeight.w800,
                           ),
                         ),
                         SizedBox(height: 1.h),
                         Text(
-                          '${_case.year} 年 · ${_case.category}',
+                          '${_case.year} 年 · ${_case.category} · ${_case.location}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: OnThisDayTextStyles.caption(context)
-                              .copyWith(fontSize: 10.sp),
+                          style: t.sansBody(
+                            size: 11.sp,
+                            color: t.textMuted,
+                          ),
                         ),
                       ],
                     ),
@@ -153,161 +154,132 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
                   IconButton(
                     icon: Icon(
                       _isBookmarked
-                          ? Icons.bookmark_rounded
-                          : Icons.bookmark_border_rounded,
-                      color: OnThisDayColors.accentGold,
+                          ? PhosphorIconsFill.bookmarkSimple
+                          : PhosphorIconsRegular.bookmarkSimple,
+                      color: _isBookmarked ? t.accentBrass : t.textSecondary,
+                      size: 20.sp,
                     ),
                     onPressed: _toggleBookmark,
                   ),
                 ],
               ),
             ),
-
             Expanded(
               child: ListView(
                 physics: const BouncingScrollPhysics(),
-                padding: EdgeInsets.zero,
+                padding: EdgeInsets.only(bottom: 28.h),
                 children: [
-                  // 1. Swipable historical media photos
-                  _buildMediaCarousel(),
-                  SizedBox(height: 12.h),
-
-                  // 2. Pill Tabs Selector
-                  _buildTabBar(),
+                  _buildEditorialHeroCard(t),
+                  SizedBox(height: 14.h),
+                  _buildTabBar(t),
                   SizedBox(height: 16.h),
-
-                  // 3. Tab contents
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      // Calculate a minimum height so that the page height is guaranteed to be large enough to scroll properly if needed,
-                      // or just to provide a clean, spacious Morandi/beige background flow without clipping.
-                      // Screen height minus media carousel (160.h), tab bar (40.h), spacing, appbar, bottom action bar, etc.
-                      final screenHeight = MediaQuery.of(context).size.height;
-                      final minHeight = screenHeight - 160.h - 40.h - 150.h;
-                      return ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minHeight: minHeight > 200 ? minHeight : 200,
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 18.w),
-                          child: _buildActiveTabContent(),
-                        ),
-                      );
-                    },
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 18.w),
+                    child: _buildActiveTabContent(t),
                   ),
-                  SizedBox(height: 32.h),
                 ],
               ),
             ),
-
-            // Sticky Bottom CTA Redirection
-            _buildBottomActionBar(),
+            _buildBottomActionBar(t),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildMediaCarousel() {
+  Widget _buildEditorialHeroCard(PreambleTokens t) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 18.w),
-      height: 160.h,
+      padding: EdgeInsets.all(18.w),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16.r),
+        color: t.brandPrimaryStrong,
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(
+          color: t.accentBrass.withValues(alpha: 0.35),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 12,
+            color: t.shadowAmbient,
+            blurRadius: 16,
             offset: const Offset(0, 6),
           ),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16.r),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            PageView.builder(
-              controller: _mediaController,
-              itemCount: _case.photos.length,
-              onPageChanged: (index) {
-                setState(() {
-                  _mediaIndex = index;
-                });
-              },
-              itemBuilder: (context, index) {
-                final photo = _case.photos[index];
-                return Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    // Styled Abstract Vintage Graphic Box instead of local image files
-                    Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Color(0xFF2C3E50), Color(0xFF1E2A38)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                      ),
-                      child: Center(
-                        child: Opacity(
-                          opacity: 0.12,
-                          child: Icon(
-                            Icons.history_edu_rounded,
-                            size: 100.sp,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      left: 14.w,
-                      bottom: 14.h,
-                      right: 14.w,
-                      child: Text(
-                        photo.caption,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.w700,
-                          color: OnThisDayColors.bgPaperLight,
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-            // Indicator
-            Positioned(
-              right: 14.w,
-              top: 14.h,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 3.h),
                 decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.6),
-                  borderRadius: BorderRadius.circular(12.r),
+                  color: const Color(0x26D4AC6E),
+                  borderRadius: BorderRadius.circular(999.r),
+                  border: Border.all(color: const Color(0x66D4AC6E)),
                 ),
                 child: Text(
-                  '${_mediaIndex + 1}/${_case.photos.length}',
-                  style: TextStyle(
-                    fontSize: 9.sp,
-                    fontWeight: FontWeight.w900,
-                    color: OnThisDayColors.bgPaperLight,
+                  _case.fullDateLabel,
+                  style: t.tabularMetric(
+                    size: 11.sp,
+                    weight: FontWeight.w700,
+                    color: const Color(0xFFEED3A5),
                   ),
                 ),
               ),
+              SizedBox(width: 8.w),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 3.h),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(999.r),
+                ),
+                child: Text(
+                  _case.status,
+                  style: t.sansBody(
+                    size: 10.5.sp,
+                    weight: FontWeight.w600,
+                    color: const Color(0xFFD6EAE2),
+                    height: 1.2,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 12.h),
+          Text(
+            _case.title,
+            style: t.serifTitle(
+              size: 21.sp,
+              weight: FontWeight.w800,
+              color: const Color(0xFFFAF8F4),
             ),
-          ],
-        ),
+          ),
+          SizedBox(height: 8.h),
+          Container(
+            padding: EdgeInsets.only(left: 10.w),
+            decoration: const BoxDecoration(
+              border: Border(
+                left: BorderSide(color: Color(0xFFD4AC6E), width: 2.5),
+              ),
+            ),
+            child: Text(
+              '「${_case.quote}」',
+              style: t.serifBody(
+                size: 13.sp,
+                color: const Color(0xFFE5EFEA),
+                height: 1.55,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildTabBar() {
+  Widget _buildTabBar(PreambleTokens t) {
     return SizedBox(
-      height: 40.h,
+      height: 38.h,
       child: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 18.w),
         scrollDirection: Axis.horizontal,
@@ -316,38 +288,33 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
           children: List.generate(_tabs.length, (index) {
             final isSelected = index == _activeTab;
             return Padding(
-              padding:
-                  EdgeInsets.only(right: index == _tabs.length - 1 ? 0 : 8.w),
+              padding: EdgeInsets.only(
+                right: index == _tabs.length - 1 ? 0 : 8.w,
+              ),
               child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _activeTab = index;
-                  });
-                },
+                onTap: () => setState(() => _activeTab = index),
                 child: Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 15.w,
+                    vertical: 6.h,
+                  ),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: isSelected
-                        ? OnThisDayColors.primaryGreen
-                        : OnThisDayColors.bgCream.withValues(alpha: 0.25),
-                    borderRadius: BorderRadius.circular(18.r),
+                    color: isSelected ? t.brandPrimaryStrong : t.surface,
+                    borderRadius: BorderRadius.circular(999.r),
                     border: Border.all(
-                      color: isSelected
-                          ? OnThisDayColors.primaryGreen
-                          : OnThisDayColors.borderLight,
+                      color: isSelected ? t.brandPrimaryStrong : t.border,
                     ),
                   ),
                   child: Text(
                     _tabs[index],
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight:
-                          isSelected ? FontWeight.w900 : FontWeight.w700,
+                    style: t.sansBody(
+                      size: 12.sp,
+                      weight: isSelected ? FontWeight.w700 : FontWeight.w600,
                       color: isSelected
-                          ? OnThisDayColors.bgPaperLight
-                          : OnThisDayColors.textSecondary,
+                          ? const Color(0xFFFAF8F4)
+                          : t.textSecondary,
+                      height: 1.2,
                     ),
                   ),
                 ),
@@ -359,32 +326,23 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
     );
   }
 
-  Widget _buildContentCard({
+  Widget _buildContentCard(
+    PreambleTokens t, {
     required Widget child,
-    Color accentColor = OnThisDayColors.accentGold,
+    Color? accentColor,
     EdgeInsetsGeometry? padding,
   }) {
+    final barColor = accentColor ?? t.accentBrass;
     return Container(
       width: double.infinity,
-      decoration: BoxDecoration(
-        color: OnThisDayColors.bgPaperLight,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: OnThisDayColors.borderLight),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+      decoration: t.cardDecoration(radius: 16.r, elevated: false),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(15.r),
         child: IntrinsicHeight(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(width: 4.w, color: accentColor),
+              Container(width: 4.w, color: barColor),
               Expanded(
                 child: Padding(
                   padding: padding ?? EdgeInsets.all(16.w),
@@ -398,103 +356,195 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
     );
   }
 
-  Widget _buildActiveTabContent() {
+  Widget _buildActiveTabContent(PreambleTokens t) {
     switch (_activeTab) {
       case 0:
-        return _buildIntroTab();
+        return _buildIntroTab(t);
       case 1:
-        return _buildTimelineTab();
+        return _buildTimelineTab(t);
       case 2:
-        return _buildPhotosTab();
+        return _buildBackgroundTab(t);
       case 3:
-        return _buildBackgroundTab();
+        return _buildImpactTab(t);
       case 4:
-        return _buildImpactTab();
-      case 5:
-        return _buildSourcesTab();
+        return _buildSourcesTab(t);
       default:
         return const SizedBox.shrink();
     }
   }
 
-  // Tab 0: 案件簡略
-  Widget _buildIntroTab() {
+  Widget _buildIntroTab(PreambleTokens t) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('事件簡介',
-            style: OnThisDayTextStyles.cardTitle(context)
-                .copyWith(fontSize: 14.sp)),
+        Text(
+          '事件簡介',
+          style: t.sansTitle(size: 14.5.sp, weight: FontWeight.w700),
+        ),
         SizedBox(height: 8.h),
         _buildContentCard(
-          accentColor: OnThisDayColors.primaryGreen,
-          child:
-              Text(_case.background, style: OnThisDayTextStyles.body(context)),
+          t,
+          accentColor: t.brandPrimary,
+          child: Text(
+            _case.background,
+            style: t.serifBody(size: 14.sp, color: t.textPrimary),
+          ),
         ),
         SizedBox(height: 20.h),
-        Text('要旨速覽',
-            style: OnThisDayTextStyles.cardTitle(context)
-                .copyWith(fontSize: 14.sp)),
+        Text(
+          '要旨速覽',
+          style: t.sansTitle(size: 14.5.sp, weight: FontWeight.w700),
+        ),
         SizedBox(height: 8.h),
         _buildContentCard(
-          accentColor: OnThisDayColors.accentGold,
+          t,
+          accentColor: t.accentBrass,
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
           child: Column(
             children: [
-              _buildFactRow('發生日期', _case.fullDateLabel),
-              const Divider(color: OnThisDayColors.borderLight),
-              _buildFactRow('事件地點', _case.location),
-              const Divider(color: OnThisDayColors.borderLight),
-              _buildFactRow('要旨分類', _case.category),
-              const Divider(color: OnThisDayColors.borderLight),
-              _buildFactRow('關聯標籤', _case.tags.join('、')),
+              _buildFactRow(t, '發生日期', _case.fullDateLabel, tabular: true),
+              Divider(color: t.border, height: 16.h),
+              _buildFactRow(t, '事件地點', _case.location),
+              Divider(color: t.border, height: 16.h),
+              _buildFactRow(t, '要旨分類', _case.category),
+              Divider(color: t.border, height: 16.h),
+              _buildFactRow(t, '關聯標籤', _case.tags.join(' · ')),
             ],
+          ),
+        ),
+        if (_case.photos.isNotEmpty) ...[
+          SizedBox(height: 20.h),
+          Text(
+            '歷史影像與現場實景',
+            style: t.sansTitle(size: 14.5.sp, weight: FontWeight.w700),
+          ),
+          SizedBox(height: 8.h),
+          ..._case.photos.map(
+            (photo) => Padding(
+              padding: EdgeInsets.only(bottom: 12.h),
+              child: Container(
+                width: double.infinity,
+                decoration: t.cardDecoration(radius: 16.r, elevated: false),
+                clipBehavior: Clip.antiAlias,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: photo.photoUrl.startsWith('http')
+                          ? Image.network(
+                              photo.photoUrl,
+                              fit: BoxFit.cover,
+                              loadingBuilder: (context, child, progress) {
+                                if (progress == null) return child;
+                                return Container(
+                                  color: t.surface,
+                                  alignment: Alignment.center,
+                                  child: const CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  color: t.surface,
+                                  alignment: Alignment.center,
+                                  child: Icon(
+                                    PhosphorIconsRegular.imageSquare,
+                                    color: t.textMuted,
+                                    size: 28.sp,
+                                  ),
+                                );
+                              },
+                            )
+                          : Image.asset(
+                              photo.photoUrl,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  color: t.surface,
+                                  alignment: Alignment.center,
+                                  child: Icon(
+                                    PhosphorIconsRegular.imageSquare,
+                                    color: t.textMuted,
+                                    size: 28.sp,
+                                  ),
+                                );
+                              },
+                            ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 14.w,
+                        vertical: 10.h,
+                      ),
+                      child: Text(
+                        photo.caption,
+                        style: t.sansBody(
+                          size: 12.sp,
+                          color: t.textSecondary,
+                          height: 1.45,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildFactRow(
+    PreambleTokens t,
+    String label,
+    String value, {
+    bool tabular = false,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 82.w,
+          child: Text(
+            label,
+            style: t.sansBody(
+              size: 12.sp,
+              weight: FontWeight.w600,
+              color: t.textMuted,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Text(
+            value,
+            style: tabular
+                ? t.tabularMetric(
+                    size: 12.5.sp,
+                    weight: FontWeight.w700,
+                    color: t.textPrimary,
+                  )
+                : t.sansBody(
+                    size: 12.5.sp,
+                    weight: FontWeight.w600,
+                    color: t.textPrimary,
+                  ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildFactRow(String label, String value) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 80.w,
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 11.5.sp,
-                fontWeight: FontWeight.w800,
-                color: OnThisDayColors.textMuted,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: TextStyle(
-                fontSize: 11.5.sp,
-                fontWeight: FontWeight.w700,
-                color: OnThisDayColors.textPrimary,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Tab 1: 時間線
-  Widget _buildTimelineTab() {
+  Widget _buildTimelineTab(PreambleTokens t) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('事件發展脈絡',
-            style: OnThisDayTextStyles.cardTitle(context)
-                .copyWith(fontSize: 14.sp)),
+        Text(
+          '事件發展脈絡',
+          style: t.sansTitle(size: 14.5.sp, weight: FontWeight.w700),
+        ),
         SizedBox(height: 12.h),
         ListView.builder(
           shrinkWrap: true,
@@ -508,15 +558,15 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    width: 72.w,
+                    width: 78.w,
                     child: Padding(
                       padding: EdgeInsets.only(top: 2.h),
                       child: Text(
                         node.dateLabel,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w900,
-                          color: OnThisDayColors.accentGold,
+                        style: t.tabularMetric(
+                          size: 12.sp,
+                          weight: FontWeight.w700,
+                          color: t.accentBrass,
                         ),
                       ),
                     ),
@@ -526,16 +576,17 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
                       Container(
                         width: 10.w,
                         height: 10.w,
-                        decoration: const BoxDecoration(
-                          color: OnThisDayColors.primaryGreen,
+                        margin: EdgeInsets.only(top: 4.h),
+                        decoration: BoxDecoration(
+                          color: t.brandPrimary,
                           shape: BoxShape.circle,
                         ),
                       ),
                       if (!isLast)
                         Expanded(
                           child: Container(
-                            width: 1.5.w,
-                            color: OnThisDayColors.borderLight,
+                            width: 1.5,
+                            color: t.border,
                           ),
                         ),
                     ],
@@ -543,24 +594,31 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
                   SizedBox(width: 14.w),
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsets.only(bottom: 20.h),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            node.title,
-                            style: OnThisDayTextStyles.cardTitle(context)
-                                .copyWith(fontSize: 13.sp),
-                          ),
-                          SizedBox(height: 4.h),
-                          Text(
-                            node.description,
-                            style: OnThisDayTextStyles.body(context).copyWith(
-                              fontSize: 11.sp,
-                              color: OnThisDayColors.textSecondary,
+                      padding: EdgeInsets.only(bottom: 18.h),
+                      child: Container(
+                        padding: EdgeInsets.all(13.w),
+                        decoration:
+                            t.cardDecoration(radius: 14.r, elevated: false),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              node.title,
+                              style: t.sansTitle(
+                                size: 13.5.sp,
+                                weight: FontWeight.w700,
+                              ),
                             ),
-                          ),
-                        ],
+                            SizedBox(height: 4.h),
+                            Text(
+                              node.description,
+                              style: t.sansBody(
+                                size: 12.sp,
+                                color: t.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -573,248 +631,211 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
     );
   }
 
-  // Tab 2: 歷史照片
-  Widget _buildPhotosTab() {
+  Widget _buildBackgroundTab(PreambleTokens t) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('現場與歷史見證',
-            style: OnThisDayTextStyles.cardTitle(context)
-                .copyWith(fontSize: 14.sp)),
-        SizedBox(height: 12.h),
-        Wrap(
-          spacing: 12.w,
-          runSpacing: 12.h,
-          children: [
-            for (final photo in _case.photos)
-              SizedBox(
-                width: 163
-                    .w, // Half-width container for two columns on typical 375.w design size
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: OnThisDayColors.bgPaperLight,
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(color: OnThisDayColors.borderLight),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Vintage styled photo placeholder container
-                      Container(
-                        height: 95.h,
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Color(0xFF4A3E3D), Color(0xFF2C2424)],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(12)),
-                        ),
-                        child: Center(
-                          child: Opacity(
-                            opacity: 0.15,
-                            child: Icon(
-                              Icons.image_outlined,
-                              size: 24.sp,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(8.w),
-                        child: Text(
-                          photo.caption,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.w800,
-                            color: OnThisDayColors.textPrimary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-          ],
+        Text(
+          '時代背景脈絡',
+          style: t.sansTitle(size: 14.5.sp, weight: FontWeight.w700),
+        ),
+        SizedBox(height: 8.h),
+        _buildContentCard(
+          t,
+          accentColor: t.semanticInfo,
+          child: Text(
+            _case.backgroundDetails,
+            style: t.serifBody(size: 14.sp, color: t.textPrimary),
+          ),
         ),
       ],
     );
   }
 
-  // Tab 3: 時代背景
-  Widget _buildBackgroundTab() {
+  Widget _buildImpactTab(PreambleTokens t) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('時代背景脈絡',
-            style: OnThisDayTextStyles.cardTitle(context)
-                .copyWith(fontSize: 14.sp)),
+        Text(
+          '社會與憲政影響',
+          style: t.sansTitle(size: 14.5.sp, weight: FontWeight.w700),
+        ),
         SizedBox(height: 8.h),
         _buildContentCard(
-          accentColor: OnThisDayColors.secondaryGreen,
-          child: Text(_case.backgroundDetails,
-              style: OnThisDayTextStyles.body(context)),
+          t,
+          accentColor: t.accentBrass,
+          child: Text(
+            _case.socialImpact,
+            style: t.serifBody(size: 14.sp, color: t.textPrimary),
+          ),
         ),
-      ],
-    );
-  }
-
-  // Tab 4: 延伸影響
-  Widget _buildImpactTab() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('社會影響效應',
-            style: OnThisDayTextStyles.cardTitle(context)
-                .copyWith(fontSize: 14.sp)),
-        SizedBox(height: 8.h),
-        _buildContentCard(
-          accentColor: const Color(0xFFD35400),
-          child: Text(_case.socialImpact,
-              style: OnThisDayTextStyles.body(context)),
-        ),
-        SizedBox(height: 20.h),
-        Text('相關延伸案件',
-            style: OnThisDayTextStyles.cardTitle(context)
-                .copyWith(fontSize: 14.sp)),
-        SizedBox(height: 8.h),
-        Wrap(
-          spacing: 8.w,
-          runSpacing: 8.h,
-          children: [
-            for (final title in _case.relatedCaseTitles)
-              GestureDetector(
-                onTap: () => _openRelatedCase(title),
-                child: Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-                  decoration: BoxDecoration(
-                    color: OnThisDayColors.paperBeige.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(16.r),
-                    border: Border.all(color: OnThisDayColors.borderLight),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        title,
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          fontWeight: FontWeight.w800,
-                          color: OnThisDayColors.primaryGreen,
+        if (_case.relatedCaseTitles.isNotEmpty) ...[
+          SizedBox(height: 20.h),
+          Text(
+            '相關延伸案件',
+            style: t.sansTitle(size: 14.5.sp, weight: FontWeight.w700),
+          ),
+          SizedBox(height: 8.h),
+          Wrap(
+            spacing: 8.w,
+            runSpacing: 8.h,
+            children: [
+              for (final title in _case.relatedCaseTitles)
+                GestureDetector(
+                  onTap: () => _openRelatedCase(title),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 7.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: t.surface,
+                      borderRadius: BorderRadius.circular(999.r),
+                      border: Border.all(color: t.border),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          title,
+                          style: t.sansBody(
+                            size: 12.sp,
+                            weight: FontWeight.w700,
+                            color: t.brandPrimary,
+                            height: 1.2,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 4.w),
-                      Icon(Icons.arrow_forward_ios_rounded,
-                          size: 8.sp, color: OnThisDayColors.primaryGreen),
-                    ],
-                  ),
-                ),
-              ),
-          ],
-        ),
-        SizedBox(height: 20.h),
-        Text('延伸閱讀與資料庫',
-            style: OnThisDayTextStyles.cardTitle(context)
-                .copyWith(fontSize: 14.sp)),
-        SizedBox(height: 8.h),
-        Column(
-          children: [
-            for (final reading in _case.relatedReadings)
-              Container(
-                margin: EdgeInsets.only(bottom: 8.h),
-                decoration: BoxDecoration(
-                  color: OnThisDayColors.bgPaperLight,
-                  borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(color: OnThisDayColors.borderLight),
-                ),
-                child: ListTile(
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
-                  leading: CircleAvatar(
-                    backgroundColor:
-                        OnThisDayColors.accentGold.withValues(alpha: 0.1),
-                    child: const Icon(Icons.link_rounded,
-                        color: OnThisDayColors.accentGold),
-                  ),
-                  title: Text(
-                    reading.title,
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w800,
-                      color: OnThisDayColors.textPrimary,
+                        SizedBox(width: 4.w),
+                        Icon(
+                          PhosphorIconsRegular.arrowUpRight,
+                          size: 13.sp,
+                          color: t.brandPrimary,
+                        ),
+                      ],
                     ),
                   ),
-                  trailing: Icon(
-                    Icons.open_in_new_rounded,
-                    size: 16.sp,
-                    color: OnThisDayColors.accentGold,
-                  ),
-                  onTap: () {
-                    CustomToast.show(context, '前往外部網頁：${reading.url}');
-                  },
                 ),
-              ),
-          ],
-        ),
+            ],
+          ),
+        ],
+        if (_case.relatedReadings.isNotEmpty) ...[
+          SizedBox(height: 20.h),
+          Text(
+            '延伸閱讀與官方檔案',
+            style: t.sansTitle(size: 14.5.sp, weight: FontWeight.w700),
+          ),
+          SizedBox(height: 8.h),
+          Column(
+            children: [
+              for (final reading in _case.relatedReadings)
+                Container(
+                  margin: EdgeInsets.only(bottom: 8.h),
+                  decoration: t.cardDecoration(radius: 14.r, elevated: false),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 14.w,
+                      vertical: 2.h,
+                    ),
+                    leading: Container(
+                      width: 34.w,
+                      height: 34.w,
+                      decoration: BoxDecoration(
+                        color: t.accentBrassContainer,
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: Icon(
+                        PhosphorIconsRegular.bookOpenText,
+                        color: t.accentOnBrassContainer,
+                        size: 18.sp,
+                      ),
+                    ),
+                    title: Text(
+                      reading.title,
+                      style: t.sansBody(
+                        size: 12.5.sp,
+                        weight: FontWeight.w700,
+                        color: t.textPrimary,
+                      ),
+                    ),
+                    trailing: Icon(
+                      PhosphorIconsRegular.arrowSquareOut,
+                      size: 16.sp,
+                      color: t.accentBrass,
+                    ),
+                    onTap: () {
+                      CustomToast.show(context, '檔案來源：${reading.url}');
+                    },
+                  ),
+                ),
+            ],
+          ),
+        ],
       ],
     );
   }
 
-  // Tab 5: 資料來源
-  Widget _buildSourcesTab() {
+  Widget _buildSourcesTab(PreambleTokens t) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('資料來源與修訂',
-            style: OnThisDayTextStyles.cardTitle(context)
-                .copyWith(fontSize: 14.sp)),
+        Text(
+          '資料來源與修訂紀錄',
+          style: t.sansTitle(size: 14.5.sp, weight: FontWeight.w700),
+        ),
         SizedBox(height: 8.h),
         _buildContentCard(
-          accentColor: OnThisDayColors.textMuted,
+          t,
+          accentColor: t.borderStrong,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              for (final source in _case.sources) ...[
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 4.h),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.import_contacts_rounded,
-                          color: OnThisDayColors.accentGold, size: 16),
-                      SizedBox(width: 8.w),
-                      Expanded(
-                        child: Text(
-                          source.title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 11.5.sp,
-                            fontWeight: FontWeight.w700,
-                            color: OnThisDayColors.textPrimary,
-                          ),
+              for (int i = 0; i < _case.sources.length; i++) ...[
+                Row(
+                  children: [
+                    Icon(
+                      PhosphorIconsRegular.archive,
+                      color: t.accentBrass,
+                      size: 16.sp,
+                    ),
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Text(
+                        _case.sources[i].title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: t.sansBody(
+                          size: 12.5.sp,
+                          weight: FontWeight.w600,
+                          color: t.textPrimary,
                         ),
                       ),
-                      SizedBox(width: 8.w),
-                      Text(
-                        source.updatedAt,
-                        style: OnThisDayTextStyles.caption(context)
-                            .copyWith(fontSize: 10.sp),
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      _case.sources[i].updatedAt,
+                      style: t.tabularMetric(
+                        size: 11.sp,
+                        weight: FontWeight.w600,
+                        color: t.textMuted,
                       ),
-                    ],
+                    ),
+                  ],
+                ),
+                if (i < _case.sources.length - 1)
+                  Divider(color: t.border, height: 18.h),
+              ],
+              SizedBox(height: 12.h),
+              Container(
+                padding: EdgeInsets.all(10.w),
+                decoration: t.subtleBoxDecoration(radius: 10.r),
+                child: Text(
+                  '編纂聲明：本單元內容取材自國家檔案館、司法院公開裁判與法制史研究文獻，旨在提供客觀之法治與人權歷史教育參考。',
+                  style: t.sansBody(
+                    size: 11.sp,
+                    color: t.textMuted,
+                    height: 1.45,
                   ),
                 ),
-                const Divider(color: OnThisDayColors.borderLight),
-              ],
-              SizedBox(height: 8.h),
-              Text(
-                '免責聲明：\n本單元內容皆取材自官方文獻檔案與學術歷史記錄進行客觀編寫，旨在提供正當法治歷史與人權教育參考。不代表任何現存主觀政治立場。',
-                style: OnThisDayTextStyles.caption(context)
-                    .copyWith(height: 1.4, fontSize: 9.5.sp),
               ),
             ],
           ),
@@ -823,25 +844,24 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
     );
   }
 
-  Widget _buildBottomActionBar() {
+  Widget _buildBottomActionBar(PreambleTokens t) {
     final matchedBook = _findDossierSync(_case);
     final hasDossier = matchedBook != null;
 
     return Container(
-      padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 20.h),
+      padding: EdgeInsets.fromLTRB(18.w, 10.h, 18.w, 16.h),
       decoration: BoxDecoration(
-        color: OnThisDayColors.paperBeige,
-        border:
-            const Border(top: BorderSide(color: OnThisDayColors.borderLight)),
+        color: t.surface,
+        border: Border(top: BorderSide(color: t.border)),
       ),
       child: SizedBox(
         width: double.infinity,
-        height: 44.h,
+        height: 46.h,
         child: TextButton(
           style: TextButton.styleFrom(
-            backgroundColor: OnThisDayColors.primaryGreen,
+            backgroundColor: t.brandPrimaryStrong,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(22.r),
+              borderRadius: BorderRadius.circular(14.r),
             ),
           ),
           onPressed: () {
@@ -852,24 +872,28 @@ class _OnThisDayDetailPageState extends State<OnThisDayDetailPage> {
                 ),
               );
             } else {
-              // Pop back to OnThisDayHomePage (or list page)
-              Navigator.of(context).popUntil((route) => route.isFirst);
+              Navigator.of(context).pop();
             }
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Icon(
+                hasDossier
+                    ? PhosphorIconsRegular.scales
+                    : PhosphorIconsRegular.books,
+                size: 16.sp,
+                color: const Color(0xFFFAF8F4),
+              ),
+              SizedBox(width: 8.w),
               Text(
-                hasDossier ? '調閱法治卷宗' : '查看更多歷史案件',
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w900,
-                  color: OnThisDayColors.bgPaperLight,
+                hasDossier ? '開啟重大案件完整卷宗' : '返回歷史上的今日',
+                style: t.sansTitle(
+                  size: 13.5.sp,
+                  weight: FontWeight.w700,
+                  color: const Color(0xFFFAF8F4),
                 ),
               ),
-              SizedBox(width: 6.w),
-              Icon(Icons.arrow_forward_rounded,
-                  size: 14.sp, color: OnThisDayColors.bgPaperLight),
             ],
           ),
         ),

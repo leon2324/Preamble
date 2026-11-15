@@ -103,29 +103,29 @@ void main() {
 
       // 1. Verify AssistantPromptBubble is present
       expect(find.byType(AssistantPromptBubble), findsOneWidget);
-      expect(find.text('小法助熱問問診'), findsOneWidget);
+      expect(find.text('小法助實務熱問'), findsOneWidget);
 
       // 2. Verify Tab Selector is present
-      expect(find.text('時事與案件館'), findsOneWidget);
-      expect(find.text('我的自救記事'), findsOneWidget);
+      expect(find.text('公共法治策展'), findsOneWidget);
+      expect(find.text('個人自救案件夾'), findsOneWidget);
 
-      // Default tab (0: 時事與案件館) shows discussions
+      // Default tab (0: 公共法治策展) shows discussions
       expect(find.text('大家都在討論'), findsOneWidget);
 
-      // 3. Switch to Tab 1: 我的自救記事
-      await tester.tap(find.text('我的自救記事'));
+      // 3. Switch to Tab 1: 個人自救案件夾
+      await tester.tap(find.text('個人自救案件夾'));
       await tester.pumpAndSettle();
 
       // Verify UserCaseJournalSection is shown
       expect(find.byType(UserCaseJournalSection), findsOneWidget);
-      expect(find.text('進行中自救案件'), findsOneWidget);
+      expect(find.text('問診建檔'), findsOneWidget);
       expect(find.text('租賃住宅退租押金返還請求案'), findsOneWidget);
-      expect(find.text('對造：房東'), findsOneWidget);
-      expect(find.text('• 涉案 32,000元'), findsOneWidget);
-      expect(find.text('最新應對金句（可直接複製照唸/發送）'), findsOneWidget);
+      expect(find.text('相對人：房東'), findsOneWidget);
+      expect(find.text('32,000元'), findsOneWidget);
+      expect(find.text('建議交涉應對金句'), findsOneWidget);
 
-      // 4. Switch back to Tab 0: 時事與案件館
-      await tester.tap(find.text('時事與案件館'));
+      // 4. Switch back to Tab 0: 公共法治策展
+      await tester.tap(find.text('公共法治策展'));
       await tester.pumpAndSettle();
       expect(find.text('大家都在討論'), findsOneWidget);
     });

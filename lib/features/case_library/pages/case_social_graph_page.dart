@@ -57,7 +57,7 @@ class _CaseSocialGraphPageState extends State<CaseSocialGraphPage> {
             fontFamily: 'Songti TC',
             fontFamilyFallback: const ['Songti SC', 'STSong', 'PingFang TC'],
             fontSize: 16.sp,
-            fontWeight: FontWeight.w800,
+            fontWeight: FontWeight.w600,
             color: CaseLibraryColors.primaryGreen,
           ),
         ),

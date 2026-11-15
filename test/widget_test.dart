@@ -54,37 +54,28 @@ void main() {
     // smoke test 只需要確認首頁主路徑可渲染，所以使用固定時間推進。
     await tester.pump(const Duration(milliseconds: 500));
 
-    expect(find.text('法律即時快問'), findsOneWidget);
-    expect(find.text('法規資料庫搜尋'), findsOneWidget);
+    expect(find.text('公文解讀'), findsOneWidget);
+    expect(find.text('今日頭條導讀'), findsOneWidget);
 
     await tester.drag(find.byType(CustomScrollView), const Offset(0, -900));
     await tester.pump(const Duration(milliseconds: 500));
 
-    expect(find.text('今天判決故事'), findsOneWidget);
-    expect(find.text('生活避坑筆記'), findsAtLeastNWidgets(1));
+    expect(find.text('法務精選動態'), findsOneWidget);
 
-    await tester.drag(find.byType(CustomScrollView), const Offset(0, -900));
-    await tester.pump(const Duration(milliseconds: 500));
-
-    expect(find.text('社群熱議'), findsOneWidget);
-    expect(find.text('看全部'), findsOneWidget);
-
-    // 底部 Nav 的中間分頁已從單純「搜尋」升級為「小法助」；
-    // 目前會直接進入小法助搜尋首頁，因此用搜尋框送出一次查詢守住核心能力。
-    await tester.tap(find.text('小法助'));
+    // 底部 Nav 的中間分頁為「問診」雙模中樞（AI 法律問診 ⇄ 法規・裁判檢索）。
+    await tester.tap(find.text('問診'));
     await tester.pump(const Duration(milliseconds: 500));
 
     expect(find.textContaining('嗨！我是小法助'), findsOneWidget);
-    expect(find.text('搜尋法條、案件、生活筆記、官方資料'), findsOneWidget);
-    expect(find.text('🔥 法律探索靈感'), findsOneWidget);
-    expect(find.text('🧭 快捷助理導航'), findsOneWidget);
+    expect(find.text('AI 法律問診'), findsOneWidget);
+    expect(find.text('法規・裁判檢索'), findsOneWidget);
 
-    // 原本底部 Nav 的「案例」已改為「紀事」，這裡同時守住 label 與入口內容。
+    // 紀事分頁：雙透鏡策展架構。
     await tester.tap(find.text('紀事'));
     await tester.pump(const Duration(milliseconds: 500));
 
-    expect(find.text('大家都在討論'), findsOneWidget);
-    expect(find.text('案件圖書館'), findsOneWidget);
+    expect(find.text('公共法治策展'), findsOneWidget);
+    expect(find.text('個人自救案件夾'), findsOneWidget);
   });
 
   testWidgets('Learning page shows redesigned sections', (
@@ -107,7 +98,7 @@ void main() {
     );
     await tester.pumpForVerification();
 
-    await tester.tap(find.byIcon(Icons.menu_book_outlined));
+    await tester.tap(find.text('學習'));
     await tester.pumpForVerification();
 
     expect(find.text('學堂與工具箱'), findsOneWidget);
@@ -160,14 +151,13 @@ void main() {
     await tester.pumpForVerification();
 
     // 這個測試鎖住小法助真入口，避免日後重構時只剩假輸入框。
-    await tester.tap(find.text('小法助'));
+    await tester.tap(find.text('問診'));
     await tester.pumpForVerification();
 
-    // 小法助入口目前是全站搜尋首頁狀態，這裡守住可提問與快捷入口。
+    // 問診入口為雙模中樞，這裡守住可提問與兩種模式入口。
     expect(find.textContaining('嗨！我是小法助'), findsOneWidget);
-    expect(find.text('搜尋法條、案件、生活筆記、官方資料'), findsOneWidget);
-    expect(find.text('🔥 法律探索靈感'), findsOneWidget);
-    expect(find.text('🧭 快捷助理導航'), findsOneWidget);
+    expect(find.text('AI 法律問診'), findsOneWidget);
+    expect(find.text('法規・裁判檢索'), findsOneWidget);
   });
 
   testWidgets('Learning page opens mock detail page', (
@@ -190,7 +180,7 @@ void main() {
     );
     await tester.pumpForVerification();
 
-    await tester.tap(find.byIcon(Icons.menu_book_outlined));
+    await tester.tap(find.text('學習'));
     await tester.pumpForVerification();
 
     final firstUnit = find.text('STEP 1：押金的法律角色是什麼？');
@@ -261,9 +251,8 @@ void main() {
     // 首頁法規快訊會定時輪播，小螢幕穩定性測試只需固定推進一幀確認沒有 overflow。
     await tester.pump(const Duration(milliseconds: 500));
 
-    expect(find.text('法律即時快問'), findsOneWidget);
-    expect(find.text('今天判決故事'), findsOneWidget);
-    expect(find.text('法規資料庫搜尋'), findsOneWidget);
+    expect(find.text('公文解讀'), findsOneWidget);
+    expect(find.text('今日頭條導讀'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -359,28 +348,32 @@ void main() {
     // 左右兩張參考圖對應法規資料庫與案件解析，這裡鎖住初始入口與詳細頁不爆版。
     await tester.pumpWidget(testFrame(const StatuteDatabasePage()));
     await tester.pumpAndSettle();
-    expect(find.text('熱門查詢'), findsOneWidget);
-    expect(find.text('最近瀏覽'), findsOneWidget);
+    expect(find.text('常備核心條文索引'), findsOneWidget);
+    expect(find.text('最近檢索紀錄'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
     await tester.pumpWidget(testFrame(const JournalPage()));
     await tester.pumpAndSettle();
     expect(find.byType(JournalPageHeader), findsOneWidget);
-    expect(find.text('大家都在討論'), findsOneWidget);
     await tester.scrollUntilVisible(
-      find.text('案件圖書館'),
+      find.text('重大案件館'),
       180,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    expect(find.text('案件圖書館'), findsOneWidget);
     await tester.scrollUntilVisible(
-      find.text('圖書館動態'),
+      find.text('大家都在討論'),
       180,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    expect(find.text('圖書館動態'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('卷宗編纂動態'),
+      180,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('卷宗編纂動態'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
     await tester.pumpWidget(
@@ -425,6 +418,14 @@ void main() {
     expect(tester.takeException(), isNull);
 
     await tester.scrollUntilVisible(
+      find.text('重大案件館'),
+      180,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+
+    await tester.scrollUntilVisible(
       find.text('大家都在討論'),
       180,
       scrollable: find.byType(Scrollable).first,
@@ -433,15 +434,7 @@ void main() {
     expect(tester.takeException(), isNull);
 
     await tester.scrollUntilVisible(
-      find.text('案件圖書館'),
-      180,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.pumpAndSettle();
-    expect(tester.takeException(), isNull);
-
-    await tester.scrollUntilVisible(
-      find.text('圖書館動態'),
+      find.text('卷宗編纂動態'),
       180,
       scrollable: find.byType(Scrollable).first,
     );
@@ -466,7 +459,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('「詐騙」的前端資料結果'), findsOneWidget);
+    expect(find.text('「詐騙」檢索結果'), findsOneWidget);
     expect(find.text('詐騙車手與洗錢鏈'), findsWidgets);
   });
 
@@ -628,23 +621,17 @@ void main() {
     await tester.pumpWidget(_mvpTestFrame(appState, const FollowingPage()));
     await tester.pumpAndSettle();
 
-    // 「追蹤」與「我的」已整合成個人中心，測試從首頁進追蹤中心，再打開案件詳情。
-    expect(find.text('我的 緒言 Preamble'), findsOneWidget);
-    expect(find.text('今天的重點動態'), findsOneWidget);
-    expect(find.text('我的追蹤總覽'), findsOneWidget);
-    expect(find.textContaining('詐欺與洗錢'), findsWidgets);
+    // 追蹤頁改為真實 PreambleState 資料：初始為空狀態，載入範例後與個人中心統計同步。
+    expect(find.text('尚無典藏案卷或常用法規'), findsOneWidget);
 
-    await tester.tap(find.text('12').first);
+    await tester.tap(find.text('載入範例收藏體驗'));
     await tester.pumpAndSettle();
 
-    expect(find.text('追蹤案件'), findsOneWidget);
-    expect(find.text('追蹤的案件 4 個'), findsOneWidget);
+    expect(find.text('尚無典藏案卷或常用法規'), findsNothing);
+    expect(appState.followingSummary.savedCaseIds, isNotEmpty);
 
-    await tester.tap(find.text('詐欺與洗錢案件整理'));
-    await tester.pumpAndSettle();
-
-    expect(find.text('最新更新'), findsOneWidget);
-    expect(find.text('追蹤設定'), findsOneWidget);
+    // 讓載入範例後的 Toast 計時器跑完，避免殘留 pending timer。
+    await tester.pump(const Duration(seconds: 6));
   });
 
   testWidgets('Profile page shows data center sections', (
@@ -766,15 +753,15 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('勞動基準法 第 24 條'), findsOneWidget);
-    expect(find.text('民法 第 184 條'), findsNothing);
+    expect(find.text('第 24 條'), findsOneWidget);
+    expect(find.text('第 184 條'), findsNothing);
 
     await tester.enterText(find.byType(TextField).first, '民法 184');
     await tester.testTextInput.receiveAction(TextInputAction.search);
     await tester.pumpAndSettle();
 
-    expect(find.text('民法 第 184 條'), findsOneWidget);
-    expect(find.text('勞動基準法 第 24 條'), findsNothing);
+    expect(find.text('第 184 條'), findsOneWidget);
+    expect(find.text('第 24 條'), findsNothing);
   });
 
   testWidgets('Statute detail shows life example and assistant CTA', (
@@ -805,9 +792,9 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('生活例子'), findsOneWidget);
-    expect(find.text('可能相關情境'), findsOneWidget);
-    expect(find.text('用這條法規問小法助'), findsOneWidget);
+    expect(find.text('日常實務情境舉隅'), findsOneWidget);
+    expect(find.text('常見關聯生活爭點'), findsOneWidget);
+    expect(find.text('帶入這條法規向小法助諮詢個案'), findsOneWidget);
   });
 
   testWidgets('Case time machine walks through halls shelves book and dossier',
@@ -829,7 +816,7 @@ void main() {
     // 這個測試守住完整沉浸式路徑，避免未來重構退回普通卡片清單。
     expect(find.text('案件圖書館'), findsOneWidget);
 
-    expect(find.text('年代館'), findsWidgets);
+    expect(find.text('重大刑案館'), findsWidgets);
 
     await tester.pumpWidget(
       _mvpTestFrame(

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +12,7 @@ import 'package:preamble/theme/app_fonts.dart';
 import 'package:preamble/components/shared/liquid_glass_widgets.dart';
 import 'package:preamble/features/case_library/data/case_interactive_profiles.dart';
 import 'package:preamble/features/case_library/data/case_library_data.dart';
+import 'package:preamble/features/case_library/data/case_library_image_resolver.dart';
 import 'package:preamble/features/case_library/data/case_library_repository.dart';
 import 'package:preamble/features/case_library/models/case_library_models.dart';
 import 'package:preamble/features/case_library/theme/case_library_theme.dart';
@@ -127,15 +130,24 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
   bool _isSaved = false;
   bool _isFollowed = false;
   bool _isTimelineExpanded = false;
+  String _timelineFilter = 'all'; // 'all', 'event', 'trial'
 
   // Apple 閱讀偏好設定
   double _fontSizeMultiplier = 1.0;
   String _readingTint = 'none'; // 'none' (cream), 'cool' (blue), 'warm' (amber)
 
   late final PageController _galleryController;
+  final ScrollController _nestedScrollController = ScrollController();
   int _galleryIndex = 0;
 
-  // 完整判決書分頁錨點滾動所使用的 GlobalKey，維持跨 Build 的狀態一致性。
+  // 思辨與探索進度、重點爭點收藏、重新整理狀態
+  final Set<String> _exploredTools = <String>{};
+  final Set<int> _focusedIssueIndices = <int>{};
+  DateTime? _lastRefreshedAt;
+  bool _isRefreshing = false;
+
+  // 完整判決書與頁籤錨點滾動所使用的 GlobalKey，維持跨 Build 的狀態一致性。
+  final GlobalKey _tabSectionKey = GlobalKey();
   final GlobalKey _mainVerdictKey = GlobalKey();
   final GlobalKey _proceduralKey = GlobalKey();
   final GlobalKey _reasoningKey = GlobalKey();
@@ -283,6 +295,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
   @override
   void initState() {
     super.initState();
+    LightTextStyles.multiplier = 1.0;
     _galleryController = PageController();
 
     _isFollowed = book.isFollowing;
@@ -309,7 +322,10 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
           _isLoading = false;
           // 重新計算 Tab，防 Placeholder 空欄位導致 Tab 被隱藏
           final tabs = _availableTabs;
-          if (widget.initialTab != null && tabs.contains(widget.initialTab)) {
+          if (tabs.contains(_selectedTab)) {
+            // 保留使用者已切換或正在檢視的分頁
+          } else if (widget.initialTab != null &&
+              tabs.contains(widget.initialTab)) {
             _selectedTab = widget.initialTab!;
           } else {
             _selectedTab = tabs.isNotEmpty ? tabs.first : '事件背景';
@@ -325,6 +341,55 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
     }
   }
 
+  Future<void> _refreshDossier() async {
+    if (_isRefreshing) return;
+    setState(() => _isRefreshing = true);
+    HapticFeedback.mediumImpact();
+    try {
+      await _loadDetails();
+      if (mounted) {
+        setState(() {
+          _lastRefreshedAt = DateTime.now();
+        });
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isRefreshing = false);
+      }
+    }
+  }
+
+  void _selectTabAndScroll(String tab) {
+    if (!_availableTabs.contains(tab)) return;
+    HapticFeedback.selectionClick();
+    setState(() {
+      _selectedTab = tab;
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final tabContext = _tabSectionKey.currentContext;
+      if (tabContext != null) {
+        Scrollable.ensureVisible(
+          tabContext,
+          duration: const Duration(milliseconds: 360),
+          curve: Curves.easeOutCubic,
+          alignment: 0.0,
+        );
+      }
+    });
+  }
+
+  void _scrollToTop() {
+    HapticFeedback.selectionClick();
+    if (_nestedScrollController.hasClients) {
+      _nestedScrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 380),
+        curve: Curves.easeOutCubic,
+      );
+    }
+  }
+
   CaseBook get book => _detailedBook ?? widget.book;
 
   void _setTimelineExpanded(bool isExpanded) {
@@ -333,9 +398,16 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
     });
   }
 
+  void _setTimelineFilter(String filter) {
+    setState(() {
+      _timelineFilter = filter;
+    });
+  }
+
   @override
   void dispose() {
     _galleryController.dispose();
+    _nestedScrollController.dispose();
     _commentController.dispose();
     super.dispose();
   }
@@ -495,8 +567,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
     }
 
     final book = _detailedBook ?? widget.book;
-    final displayImages =
-        book.images.isNotEmpty ? book.images : _getDefaultImagesForCase(book);
+    final displayImages = _getDefaultImagesForCase(book);
 
     final backgroundColor = _readingTint == 'cool'
         ? const Color(0xFFEBF3F9)
@@ -604,13 +675,92 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
             ),
 
             Expanded(
-              child: NestedScrollView(
-                physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics(),
+              child: MediaQuery(
+                data: MediaQuery.of(context).copyWith(
+                  textScaler: TextScaler.linear(_fontSizeMultiplier),
                 ),
-                headerSliverBuilder: (context, innerBoxIsScrolled) {
-                  return [
-                    SliverToBoxAdapter(
+                child: NestedScrollView(
+                  controller: _nestedScrollController,
+                  physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics(),
+                  ),
+                  headerSliverBuilder: (context, innerBoxIsScrolled) {
+                    return [
+                      CupertinoSliverRefreshControl(
+                        refreshTriggerPullDistance: 100.0,
+                        refreshIndicatorExtent: 64.0,
+                        onRefresh: _refreshDossier,
+                        builder: (
+                          context,
+                          refreshState,
+                          pulledExtent,
+                          refreshTriggerPullDistance,
+                          refreshIndicatorExtent,
+                        ) {
+                          final progress = (pulledExtent /
+                                  refreshTriggerPullDistance)
+                              .clamp(0.0, 1.0);
+                          return Center(
+                            child: Opacity(
+                              opacity: progress,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 14.w,
+                                  vertical: 8.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(999),
+                                  border: Border.all(
+                                    color: CaseLibraryColors.borderLight,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color:
+                                          Colors.black.withValues(alpha: 0.08),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    if (refreshState ==
+                                            RefreshIndicatorMode.refresh ||
+                                        refreshState ==
+                                            RefreshIndicatorMode.armed)
+                                      const CupertinoActivityIndicator(
+                                        radius: 9,
+                                      )
+                                    else
+                                      CupertinoActivityIndicator.partiallyRevealed(
+                                        radius: 9,
+                                        progress: progress,
+                                      ),
+                                    SizedBox(width: 8.w),
+                                    Text(
+                                      refreshState ==
+                                              RefreshIndicatorMode.refresh
+                                          ? '重新整理中...'
+                                          : (refreshState ==
+                                                  RefreshIndicatorMode.armed
+                                              ? '放開即可重新整理'
+                                              : '下拉重新整理'),
+                                      style: TextStyle(
+                                        fontSize: 11.sp,
+                                        fontWeight: FontWeight.w700,
+                                        color: CaseLibraryColors.primaryGreen,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      SliverToBoxAdapter(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -706,12 +856,16 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                       ),
                                     ),
                                     SizedBox(width: 8.w),
-                                    Text(
-                                      '|  ${book.location}  |  ${book.status}',
-                                      style: TextStyle(
-                                        fontSize: 11.sp,
-                                        fontWeight: FontWeight.bold,
-                                        color: CaseLibraryColors.textMuted,
+                                    Expanded(
+                                      child: Text(
+                                        '|  ${book.location}  |  ${book.status}',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 11.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: CaseLibraryColors.textMuted,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -904,13 +1058,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                 // 維基百科條目目錄 (Wikipedia Table of Contents)
                                 WikipediaTableOfContents(
                                   activeTab: _selectedTab,
-                                  onSelectTab: (tab) {
-                                    if (_availableTabs.contains(tab)) {
-                                      setState(() {
-                                        _selectedTab = tab;
-                                      });
-                                    }
-                                  },
+                                  onSelectTab: _selectTabAndScroll,
                                 ),
                                 SizedBox(height: 16.h),
 
@@ -932,201 +1080,12 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                 ),
                                 SizedBox(height: 20.h),
 
-                                // 主要爭點 Section
-                                Text(
-                                  '主要爭點',
-                                  style: LightTextStyles.sectionTitle(context)
-                                      .copyWith(
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                ),
-                                SizedBox(height: 8.h),
-                                Column(
-                                  children: book.legalIssues.map((issue) {
-                                    return Padding(
-                                      padding: EdgeInsets.only(bottom: 10.h),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.only(top: 2.h),
-                                            child: CaseLibrarySvgIcon(
-                                              CaseLibrarySvgIcons.question,
-                                              size: 16.sp,
-                                              color: CaseLibraryColors
-                                                  .primaryGreen,
-                                            ),
-                                          ),
-                                          SizedBox(width: 8.w),
-                                          Expanded(
-                                            child: Text(
-                                              issue.title,
-                                              style: TextStyle(
-                                                fontSize: 13.sp,
-                                                height: 1.45,
-                                                fontWeight: FontWeight.w800,
-                                                color: CaseLibraryColors
-                                                    .primaryGreen,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                                SizedBox(height: 20.h),
+                                // 主要爭點 Section（雙重編碼攻防重點卡）
+                                _buildLegalIssuesSection(context, book),
+                                SizedBox(height: 22.h),
 
-                                // 「思辨與探索」快捷方格 — 移自圖書館首頁，放在案件詳情頁更符合脈絡。
-                                // 使用者已在瀏覽特定案件時，才最需要這些分析工具。
-                                Text(
-                                  '思辨與探索',
-                                  style: LightTextStyles.sectionTitle(context)
-                                      .copyWith(
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                ),
-                                SizedBox(height: 10.h),
-                                Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: _ExploreShortcutTile(
-                                            iconSvg: CaseLibrarySvgIcons.scale,
-                                            title: '如果你是法官',
-                                            subtitle: '體驗法官裁判心證',
-                                            backgroundColor:
-                                                const Color(0xFFEAF6EF),
-                                            foregroundColor:
-                                                const Color(0xFF357A53),
-                                            onTap: () =>
-                                                Navigator.of(context).push(
-                                              CupertinoPageRoute<void>(
-                                                builder: (_) =>
-                                                    CaseJudgePracticePage(
-                                                        book: book),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(width: 8.w),
-                                        Expanded(
-                                          child: _ExploreShortcutTile(
-                                            iconSvg:
-                                                CaseLibrarySvgIcons.sparkles,
-                                            title: '觀點光譜',
-                                            subtitle: '透視各界爭議光譜',
-                                            backgroundColor:
-                                                const Color(0xFFF0EEF9),
-                                            foregroundColor:
-                                                const Color(0xFF6D649A),
-                                            onTap: () =>
-                                                Navigator.of(context).push(
-                                              CupertinoPageRoute<void>(
-                                                builder: (_) =>
-                                                    CaseOpinionSpectrumPage(
-                                                        book: book),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 8.h),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: _ExploreShortcutTile(
-                                            iconSvg:
-                                                CaseLibrarySvgIcons.message,
-                                            title: '虛擬詰問室',
-                                            subtitle: 'AI詰問關係人證詞',
-                                            backgroundColor:
-                                                const Color(0xFFEAF4F7),
-                                            foregroundColor:
-                                                const Color(0xFF4A7C8C),
-                                            onTap: () =>
-                                                Navigator.of(context).push(
-                                              CupertinoPageRoute<void>(
-                                                builder: (_) =>
-                                                    CaseWitnessCrossPage(
-                                                        book: book),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(width: 8.w),
-                                        Expanded(
-                                          child: _ExploreShortcutTile(
-                                            iconSvg:
-                                                CaseLibrarySvgIcons.bookOpen,
-                                            title: '法律詞卡',
-                                            subtitle: '翻閱基礎法律釋義',
-                                            backgroundColor:
-                                                const Color(0xFFFFF2CF),
-                                            foregroundColor:
-                                                const Color(0xFF9E7B2D),
-                                            onTap: () =>
-                                                Navigator.of(context).push(
-                                              CupertinoPageRoute<void>(
-                                                builder: (_) =>
-                                                    CaseLegalVocabularyPage(
-                                                        book: book),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 8.h),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: _ExploreShortcutTile(
-                                            iconSvg: CaseLibrarySvgIcons.brain,
-                                            title: '社會效應圖譜',
-                                            subtitle: '探索本案社會變革',
-                                            backgroundColor:
-                                                const Color(0xFFFAF7F0),
-                                            foregroundColor:
-                                                const Color(0xFF8B928D),
-                                            onTap: () =>
-                                                Navigator.of(context).push(
-                                              CupertinoPageRoute<void>(
-                                                builder: (_) =>
-                                                    CaseSocialGraphPage(
-                                                        book: book),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(width: 8.w),
-                                        Expanded(
-                                          child: _ExploreShortcutTile(
-                                            iconSvg:
-                                                CaseLibrarySvgIcons.filePen,
-                                            title: '意見塗鴉牆',
-                                            subtitle: '發表你的理性見解',
-                                            backgroundColor:
-                                                const Color(0xFFFDECEE),
-                                            foregroundColor:
-                                                const Color(0xFFCD5C5C),
-                                            onTap: () =>
-                                                Navigator.of(context).push(
-                                              CupertinoPageRoute<void>(
-                                                builder: (_) =>
-                                                    CaseOpinionBoardPage(
-                                                        book: book),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                // 「思辨與探索」引導式三步思辨旅程 + 進度追蹤
+                                _buildDeliberationJourneySection(context, book),
                                 SizedBox(height: 24.h),
                               ],
                             ),
@@ -1137,7 +1096,11 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                     SliverPersistentHeader(
                       pinned: true,
                       delegate: _SliverTabBarDelegate(
-                        child: _buildDossierTabBar(context, pinned: true),
+                        child: _buildDossierTabBar(
+                          context,
+                          key: _tabSectionKey,
+                          pinned: true,
+                        ),
                       ),
                     ),
                   ];
@@ -1249,11 +1212,14 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                               ),
                             ),
                           ),
+                          SizedBox(height: 14.h),
+                          _buildDossierFooterActions(context),
                         ]),
                       ),
                     ),
                   ],
                 ),
+              ),
               ),
             ),
 
@@ -2508,8 +2474,6 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                   if (_fontSizeMultiplier < 0.8) {
                                     _fontSizeMultiplier = 0.8;
                                   }
-                                  LightTextStyles.multiplier =
-                                      _fontSizeMultiplier;
                                 });
                                 setSheetState(() {});
                               },
@@ -2524,7 +2488,6 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                             HapticFeedback.selectionClick();
                             setState(() {
                               _fontSizeMultiplier = val;
-                              LightTextStyles.multiplier = val;
                             });
                             setSheetState(() {});
                           },
@@ -2541,8 +2504,6 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                                   if (_fontSizeMultiplier > 1.8) {
                                     _fontSizeMultiplier = 1.8;
                                   }
-                                  LightTextStyles.multiplier =
-                                      _fontSizeMultiplier;
                                 });
                                 setSheetState(() {});
                               },
@@ -2584,6 +2545,820 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
               color: isSelected ? Colors.white : Colors.black87,
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLegalIssuesSection(BuildContext context, CaseBook book) {
+    final issues = book.legalIssues;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                '主要爭點',
+                style: LightTextStyles.sectionTitle(context).copyWith(
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
+            if (issues.isNotEmpty)
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: CaseLibraryColors.primaryGreen.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  '雙重編碼拆解 · 共 ${issues.length} 項',
+                  style: TextStyle(
+                    fontSize: 10.5.sp,
+                    fontWeight: FontWeight.w700,
+                    color: CaseLibraryColors.primaryGreen,
+                  ),
+                ),
+              ),
+          ],
+        ),
+        SizedBox(height: 10.h),
+        if (issues.isEmpty)
+          Text(
+            '本案核心爭點整理中，可點選下方「思辨與探索」或詢問 AI 小法助。',
+            style: LightTextStyles.bodySmall(context),
+          )
+        else
+          ...List.generate(issues.length, (idx) {
+            final issue = issues[idx];
+            final matchedLaws = book.relatedLaws.where((law) {
+              if (issue.relatedLawIds.isEmpty) return false;
+              final label = '${law.lawName} ${law.articleNumber}';
+              return issue.relatedLawIds.any(
+                (id) =>
+                    label.contains(id) ||
+                    id.contains(law.articleNumber) ||
+                    id.contains(law.lawName),
+              );
+            }).toList();
+            final lawLabels = matchedLaws.isNotEmpty
+                ? matchedLaws
+                    .map((l) => '${l.lawName} ${l.articleNumber}'.trim())
+                    .toList()
+                : (issue.relatedLawIds.isNotEmpty
+                    ? issue.relatedLawIds
+                    : book.relatedLaws
+                        .take(2)
+                        .map((l) => '${l.lawName} ${l.articleNumber}'.trim())
+                        .toList());
+
+            return Padding(
+              padding: EdgeInsets.only(bottom: 12.h),
+              child: _DualCodingIssueCard(
+                index: idx,
+                issue: issue,
+                lawLabels: lawLabels,
+                isFocused: _focusedIssueIndices.contains(idx),
+                hasLawTab: _availableTabs.contains('相關法條'),
+                onToggleFocus: () {
+                  HapticFeedback.selectionClick();
+                  setState(() {
+                    if (_focusedIssueIndices.contains(idx)) {
+                      _focusedIssueIndices.remove(idx);
+                    } else {
+                      _focusedIssueIndices.add(idx);
+                    }
+                  });
+                },
+                onTapLawChip: () => _selectTabAndScroll('相關法條'),
+                onAskAssistant: () {
+                  HapticFeedback.selectionClick();
+                  Navigator.of(context).push(
+                    CupertinoPageRoute<void>(
+                      builder: (_) => LawAssistantChatPage(
+                        initialPrompt:
+                            '請幫我用白話拆解「${book.shortTitleZh}」的爭點：「${issue.title}」。核心爭點說明：${issue.plainExplanation}',
+                      ),
+                    ),
+                  );
+                },
+                onOpenJudgePractice: () => _openDeliberationTool(
+                  'judge',
+                  () => CaseJudgePracticePage(book: book),
+                ),
+              ),
+            );
+          }),
+      ],
+    );
+  }
+
+  void _openDeliberationTool(
+    String toolId,
+    Widget Function() pageBuilder,
+  ) {
+    HapticFeedback.selectionClick();
+    setState(() {
+      _exploredTools.add(toolId);
+    });
+    Navigator.of(context).push(
+      CupertinoPageRoute<void>(
+        builder: (_) => pageBuilder(),
+      ),
+    );
+  }
+
+  Widget _buildDeliberationJourneySection(BuildContext context, CaseBook book) {
+    final exploredCount = _exploredTools.length;
+    final progress = (exploredCount / 6).clamp(0.0, 1.0);
+
+    final vocabPreview = book.tags.isNotEmpty
+        ? '收錄關鍵概念，例如「${book.tags.first}」等詞彙與白話釋義'
+        : '快速掌握本案核心法學名詞與白話釋義';
+    final spectrumPreview = book.legalIssues.isNotEmpty
+        ? '透視「${book.legalIssues.first.title}」的多方立場'
+        : '透視控辯、學界與社會各界爭議光譜';
+    final judgePreview = '親自權衡「${book.shortTitleZh}」的爭點與量刑心證';
+    final witnessPreview = '模擬詰問關鍵證人與檢辯攻防破綻';
+    final socialPreview = book.socialImpact.trim().isNotEmpty
+        ? book.socialImpact.trim()
+        : '追蹤本案引發的修法與制度變革';
+    final opinionPreview = '看看大家對「${book.shortTitleZh}」怎麼看，留下你的觀點';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                '思辨與探索',
+                style: LightTextStyles.sectionTitle(context).copyWith(
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+              decoration: BoxDecoration(
+                color: CaseLibraryColors.primaryGreen.withValues(alpha: 0.10),
+                borderRadius: BorderRadius.circular(999),
+                border: Border.all(
+                  color:
+                      CaseLibraryColors.primaryGreen.withValues(alpha: 0.25),
+                ),
+              ),
+              child: Text(
+                '已探索 $exploredCount / 6',
+                style: TextStyle(
+                  fontSize: 11.sp,
+                  fontWeight: FontWeight.w800,
+                  color: CaseLibraryColors.primaryGreen,
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 6.h),
+        Text(
+          '依序從「法理拆解」走向「沉浸攻防」與「公民回響」，完整參與本案思辨旅程。',
+          style: LightTextStyles.bodySmall(context),
+        ),
+        SizedBox(height: 8.h),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(999),
+          child: LinearProgressIndicator(
+            value: progress,
+            minHeight: 6.h,
+            backgroundColor: CaseLibraryColors.borderLight,
+            valueColor: const AlwaysStoppedAnimation<Color>(
+              CaseLibraryColors.primaryGreen,
+            ),
+          ),
+        ),
+        SizedBox(height: 14.h),
+
+        // Step 1 · 法理拆解
+        const _DeliberationStepHeader(
+          stepNumber: 'STEP 1',
+          title: '法理拆解',
+          subtitle: '先弄懂關鍵詞彙與各方立場',
+          accentColor: Color(0xFF6D649A),
+        ),
+        SizedBox(height: 8.h),
+        _DeliberationStepCard(
+          iconSvg: CaseLibrarySvgIcons.bookOpen,
+          title: '法律詞卡',
+          preview: vocabPreview,
+          isExplored: _exploredTools.contains('vocab'),
+          backgroundColor: const Color(0xFFFFF8E6),
+          accentColor: const Color(0xFF9E7B2D),
+          onTap: () => _openDeliberationTool(
+            'vocab',
+            () => CaseLegalVocabularyPage(book: book),
+          ),
+        ),
+        SizedBox(height: 8.h),
+        _DeliberationStepCard(
+          iconSvg: CaseLibrarySvgIcons.sparkles,
+          title: '觀點光譜',
+          preview: spectrumPreview,
+          isExplored: _exploredTools.contains('spectrum'),
+          backgroundColor: const Color(0xFFF3F1FA),
+          accentColor: const Color(0xFF6D649A),
+          onTap: () => _openDeliberationTool(
+            'spectrum',
+            () => CaseOpinionSpectrumPage(book: book),
+          ),
+        ),
+        SizedBox(height: 14.h),
+
+        // Step 2 · 沉浸攻防
+        const _DeliberationStepHeader(
+          stepNumber: 'STEP 2',
+          title: '沉浸攻防',
+          subtitle: '進入法庭角色做出判斷與詰問',
+          accentColor: Color(0xFF357A53),
+        ),
+        SizedBox(height: 8.h),
+        _DeliberationStepCard(
+          iconSvg: CaseLibrarySvgIcons.scale,
+          title: '如果你是法官',
+          preview: judgePreview,
+          isExplored: _exploredTools.contains('judge'),
+          backgroundColor: const Color(0xFFEAF6EF),
+          accentColor: const Color(0xFF357A53),
+          onTap: () => _openDeliberationTool(
+            'judge',
+            () => CaseJudgePracticePage(book: book),
+          ),
+        ),
+        SizedBox(height: 8.h),
+        _DeliberationStepCard(
+          iconSvg: CaseLibrarySvgIcons.message,
+          title: '虛擬詰問室',
+          preview: witnessPreview,
+          isExplored: _exploredTools.contains('witness'),
+          backgroundColor: const Color(0xFFEAF4F7),
+          accentColor: const Color(0xFF4A7C8C),
+          onTap: () => _openDeliberationTool(
+            'witness',
+            () => CaseWitnessCrossPage(book: book),
+          ),
+        ),
+        SizedBox(height: 14.h),
+
+        // Step 3 · 公民回響
+        const _DeliberationStepHeader(
+          stepNumber: 'STEP 3',
+          title: '公民回響',
+          subtitle: '看見判決後的社會效應與公共討論',
+          accentColor: Color(0xFFCD5C5C),
+        ),
+        SizedBox(height: 8.h),
+        _DeliberationStepCard(
+          iconSvg: CaseLibrarySvgIcons.brain,
+          title: '社會效應圖譜',
+          preview: socialPreview,
+          isExplored: _exploredTools.contains('social'),
+          backgroundColor: const Color(0xFFF7F4EC),
+          accentColor: const Color(0xFF6A706C),
+          onTap: () => _openDeliberationTool(
+            'social',
+            () => CaseSocialGraphPage(book: book),
+          ),
+        ),
+        SizedBox(height: 8.h),
+        _DeliberationStepCard(
+          iconSvg: CaseLibrarySvgIcons.filePen,
+          title: '意見塗鴉牆',
+          preview: opinionPreview,
+          isExplored: _exploredTools.contains('opinion'),
+          backgroundColor: const Color(0xFFFDECEE),
+          accentColor: const Color(0xFFCD5C5C),
+          onTap: () => _openDeliberationTool(
+            'opinion',
+            () => CaseOpinionBoardPage(book: book),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDossierFooterActions(BuildContext context) {
+    final refreshedLabel = _lastRefreshedAt == null
+        ? '下拉或點擊右側按鈕可重新整理卷宗'
+        : '最近更新：${_lastRefreshedAt!.hour.toString().padLeft(2, '0')}:${_lastRefreshedAt!.minute.toString().padLeft(2, '0')}';
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(color: CaseLibraryColors.borderLight),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              refreshedLabel,
+              style: TextStyle(
+                fontSize: 11.sp,
+                color: CaseLibraryColors.textSecondary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          SizedBox(width: 8.w),
+          TextButton(
+            onPressed: _isRefreshing ? null : _refreshDossier,
+            style: TextButton.styleFrom(
+              foregroundColor: CaseLibraryColors.primaryGreen,
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: Text(
+              _isRefreshing ? '整理中...' : '重新整理',
+              style: TextStyle(
+                fontSize: 11.5.sp,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ),
+          SizedBox(width: 4.w),
+          OutlinedButton(
+            onPressed: _scrollToTop,
+            style: OutlinedButton.styleFrom(
+              foregroundColor: CaseLibraryColors.primaryGreen,
+              side: BorderSide(
+                color: CaseLibraryColors.primaryGreen.withValues(alpha: 0.35),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(999),
+              ),
+            ),
+            child: Text(
+              '回到頂部',
+              style: TextStyle(
+                fontSize: 11.5.sp,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DualCodingIssueCard extends StatelessWidget {
+  const _DualCodingIssueCard({
+    required this.index,
+    required this.issue,
+    required this.lawLabels,
+    required this.isFocused,
+    required this.hasLawTab,
+    required this.onToggleFocus,
+    required this.onTapLawChip,
+    required this.onAskAssistant,
+    required this.onOpenJudgePractice,
+  });
+
+  final int index;
+  final LegalIssue issue;
+  final List<String> lawLabels;
+  final bool isFocused;
+  final bool hasLawTab;
+  final VoidCallback onToggleFocus;
+  final VoidCallback onTapLawChip;
+  final VoidCallback onAskAssistant;
+  final VoidCallback onOpenJudgePractice;
+
+  @override
+  Widget build(BuildContext context) {
+    final issueNumber = '爭點 ${(index + 1).toString().padLeft(2, '0')}';
+
+    return Container(
+      padding: EdgeInsets.all(14.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(
+          color: isFocused
+              ? CaseLibraryColors.primaryGreen.withValues(alpha: 0.45)
+              : CaseLibraryColors.borderLight,
+          width: isFocused ? 1.4 : 1.0,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                decoration: BoxDecoration(
+                  color: CaseLibraryColors.primaryGreen,
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Text(
+                  issueNumber,
+                  style: TextStyle(
+                    fontSize: 10.5.sp,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(width: 8.w),
+              Expanded(
+                child: Text(
+                  issue.title,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    height: 1.4,
+                    fontWeight: FontWeight.w900,
+                    color: CaseLibraryColors.primaryGreen,
+                  ),
+                ),
+              ),
+              SizedBox(width: 6.w),
+              InkWell(
+                onTap: onToggleFocus,
+                borderRadius: BorderRadius.circular(999),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: isFocused
+                        ? const Color(0xFFFFF4D6)
+                        : CaseLibraryColors.bgCream,
+                    borderRadius: BorderRadius.circular(999),
+                    border: Border.all(
+                      color: isFocused
+                          ? CaseLibraryColors.accentGold
+                          : CaseLibraryColors.borderLight,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        isFocused
+                            ? Icons.bookmark_rounded
+                            : Icons.bookmark_border_rounded,
+                        size: 14.sp,
+                        color: isFocused
+                            ? const Color(0xFF9E7B2D)
+                            : CaseLibraryColors.textSecondary,
+                      ),
+                      SizedBox(width: 3.w),
+                      Text(
+                        isFocused ? '已標記' : '標記',
+                        style: TextStyle(
+                          fontSize: 10.5.sp,
+                          fontWeight: FontWeight.w700,
+                          color: isFocused
+                              ? const Color(0xFF9E7B2D)
+                              : CaseLibraryColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if (issue.plainExplanation.trim().isNotEmpty) ...[
+            SizedBox(height: 10.h),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(10.w),
+              decoration: BoxDecoration(
+                color: CaseLibraryColors.bgCream,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '白話核心重點',
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w800,
+                      color: CaseLibraryColors.primaryGreen,
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    issue.plainExplanation,
+                    style: TextStyle(
+                      fontSize: 12.5.sp,
+                      height: 1.55,
+                      color: CaseLibraryColors.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+          if (issue.relationToCase.trim().isNotEmpty) ...[
+            SizedBox(height: 8.h),
+            Text(
+              '本案關鍵關聯：${issue.relationToCase}',
+              style: TextStyle(
+                fontSize: 12.sp,
+                height: 1.5,
+                fontWeight: FontWeight.w600,
+                color: CaseLibraryColors.textSecondary,
+              ),
+            ),
+          ],
+          if (lawLabels.isNotEmpty) ...[
+            SizedBox(height: 10.h),
+            Wrap(
+              spacing: 6.w,
+              runSpacing: 6.h,
+              children: lawLabels.map((lawLabel) {
+                return InkWell(
+                  onTap: hasLawTab ? onTapLawChip : null,
+                  borderRadius: BorderRadius.circular(999),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 5.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEEF4F1),
+                      borderRadius: BorderRadius.circular(999),
+                      border: Border.all(
+                        color: CaseLibraryColors.primaryGreen
+                            .withValues(alpha: 0.22),
+                      ),
+                    ),
+                    child: Text(
+                      '$lawLabel →',
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.w700,
+                        color: CaseLibraryColors.primaryGreen,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+          SizedBox(height: 12.h),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: onAskAssistant,
+                  icon: CaseLibrarySvgIcon(
+                    CaseLibrarySvgIcons.sparkles,
+                    size: 14.sp,
+                    color: CaseLibraryColors.primaryGreen,
+                  ),
+                  label: Text(
+                    '問小法助拆解',
+                    style: TextStyle(
+                      fontSize: 11.5.sp,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: CaseLibraryColors.primaryGreen,
+                    side: BorderSide(
+                      color:
+                          CaseLibraryColors.primaryGreen.withValues(alpha: 0.35),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 8.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 8.w),
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: onOpenJudgePractice,
+                  icon: CaseLibrarySvgIcon(
+                    CaseLibrarySvgIcons.scale,
+                    size: 14.sp,
+                    color: Colors.white,
+                  ),
+                  label: Text(
+                    '進模擬法庭判這題',
+                    style: TextStyle(
+                      fontSize: 11.5.sp,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: CaseLibraryColors.primaryGreen,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    padding: EdgeInsets.symmetric(vertical: 8.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DeliberationStepHeader extends StatelessWidget {
+  const _DeliberationStepHeader({
+    required this.stepNumber,
+    required this.title,
+    required this.subtitle,
+    required this.accentColor,
+  });
+
+  final String stepNumber;
+  final String title;
+  final String subtitle;
+  final Color accentColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+          decoration: BoxDecoration(
+            color: accentColor.withValues(alpha: 0.14),
+            borderRadius: BorderRadius.circular(6.r),
+          ),
+          child: Text(
+            stepNumber,
+            style: TextStyle(
+              fontSize: 10.sp,
+              fontWeight: FontWeight.w900,
+              color: accentColor,
+            ),
+          ),
+        ),
+        SizedBox(width: 8.w),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w900,
+            color: CaseLibraryColors.textPrimary,
+          ),
+        ),
+        SizedBox(width: 8.w),
+        Expanded(
+          child: Text(
+            subtitle,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 11.sp,
+              color: CaseLibraryColors.textSecondary,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _DeliberationStepCard extends StatelessWidget {
+  const _DeliberationStepCard({
+    required this.iconSvg,
+    required this.title,
+    required this.preview,
+    required this.isExplored,
+    required this.backgroundColor,
+    required this.accentColor,
+    required this.onTap,
+  });
+
+  final String iconSvg;
+  final String title;
+  final String preview;
+  final bool isExplored;
+  final Color backgroundColor;
+  final Color accentColor;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(14.r),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 11.h),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(14.r),
+          border: Border.all(
+            color: isExplored
+                ? accentColor.withValues(alpha: 0.45)
+                : accentColor.withValues(alpha: 0.18),
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 36.w,
+              height: 36.w,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.85),
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Center(
+                child: CaseLibrarySvgIcon(
+                  iconSvg,
+                  size: 18.sp,
+                  color: accentColor,
+                ),
+              ),
+            ),
+            SizedBox(width: 10.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 13.5.sp,
+                            fontWeight: FontWeight.w900,
+                            color: CaseLibraryColors.textPrimary,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 6.w),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.w,
+                          vertical: 2.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isExplored
+                              ? accentColor
+                              : Colors.white.withValues(alpha: 0.85),
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                        child: Text(
+                          isExplored ? '已探索 ✓' : '待探索',
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w800,
+                            color: isExplored ? Colors.white : accentColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    preview,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 11.5.sp,
+                      height: 1.4,
+                      color: CaseLibraryColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(width: 6.w),
+            CaseLibrarySvgIcon(
+              CaseLibrarySvgIcons.chevronRight,
+              size: 12.sp,
+              color: accentColor,
+            ),
+          ],
         ),
       ),
     );

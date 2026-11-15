@@ -104,7 +104,7 @@ void main() {
         ),
       );
 
-      expect(find.text('手繪親筆簽名板'), findsOneWidget);
+      expect(find.text('手繪親筆簽名欄'), findsOneWidget);
       expect(find.text('清除重簽'), findsOneWidget);
 
       await tester.tap(find.text('清除重簽'));

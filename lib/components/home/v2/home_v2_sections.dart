@@ -7,3 +7,6 @@ export 'home_v2_entry_cards.dart';
 export 'home_v2_newsletter_cards.dart';
 export 'home_v2_social_news_section.dart';
 export 'home_v2_topic_sections.dart';
+export 'home_v2_bento_cards.dart';
+export 'home_v2_dashboard_dock.dart';
+export 'home_v2_feed_stream.dart';

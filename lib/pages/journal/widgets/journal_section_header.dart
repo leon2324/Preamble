@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:preamble/pages/journal/widgets/journal_palette.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 
 class JournalSectionHeader extends StatelessWidget {
   const JournalSectionHeader({
@@ -9,16 +11,19 @@ class JournalSectionHeader extends StatelessWidget {
     required this.subtitle,
     required this.palette,
     this.actionLabel,
+    this.onActionTap,
   });
 
   final String title;
   final String subtitle;
   final JournalPalette palette;
   final String? actionLabel;
+  final VoidCallback? onActionTap;
 
   @override
   Widget build(BuildContext context) {
-    // 主頁所有區塊標題都走同一個元件，日後調字級或間距時只要改這裡。
+    final t = context.tokens;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -28,20 +33,19 @@ class JournalSectionHeader extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: TextStyle(
-                  fontSize: 18.5.sp,
-                  fontWeight: FontWeight.w900,
-                  color: palette.primaryText,
+                style: t.serifTitle(
+                  size: 18.sp,
+                  weight: FontWeight.w800,
+                  color: t.textPrimary,
                 ),
               ),
               SizedBox(height: 3.h),
               Text(
                 subtitle,
-                style: TextStyle(
-                  fontSize: 11.5.sp,
-                  height: 1.35,
-                  fontWeight: FontWeight.w600,
-                  color: palette.secondaryText,
+                style: t.sansBody(
+                  size: 12.sp,
+                  color: t.textSecondary,
+                  height: 1.4,
                 ),
               ),
             ],
@@ -49,26 +53,30 @@ class JournalSectionHeader extends StatelessWidget {
         ),
         if (actionLabel != null) ...[
           SizedBox(width: 12.w),
-          Padding(
-            padding: EdgeInsets.only(top: 3.h),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  actionLabel!,
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w700,
-                    color: palette.primaryText,
+          GestureDetector(
+            onTap: onActionTap,
+            behavior: HitTestBehavior.opaque,
+            child: Padding(
+              padding: EdgeInsets.only(top: 3.h),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    actionLabel!,
+                    style: t.sansBody(
+                      size: 12.sp,
+                      weight: FontWeight.w700,
+                      color: t.accentBrass,
+                    ),
                   ),
-                ),
-                SizedBox(width: 3.w),
-                Icon(
-                  Icons.chevron_right_rounded,
-                  size: 18.sp,
-                  color: palette.primaryText,
-                ),
-              ],
+                  SizedBox(width: 2.w),
+                  Icon(
+                    PhosphorIconsRegular.caretRight,
+                    size: 14.sp,
+                    color: t.accentBrass,
+                  ),
+                ],
+              ),
             ),
           ),
         ],

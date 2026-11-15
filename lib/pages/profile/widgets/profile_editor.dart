@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:preamble/app/app_state.dart';
-import 'package:preamble/theme/app_colors.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 
-/// 本元件為個人資料編輯底頁 (ProfileEditorSheet)。
-/// 使用 StatefulWidget 暫存使用者在介面上的臨時選擇（如新暱稱、新頭像 ID），
-/// 當使用者點擊「儲存」時，才一次性呼叫 `PreambleState.updateUserProfile` 進行狀態寫入與 SharedPreferences 持久化。
 class PresetAvatar {
   const PresetAvatar({
     required this.id,
@@ -23,39 +22,39 @@ class PresetAvatar {
 final List<PresetAvatar> presetAvatars = [
   const PresetAvatar(
     id: 'scale',
-    icon: Icons.scale_rounded,
-    color: Color(0xFF243B63),
-    backgroundColor: Color(0xFFEAF0F8),
+    icon: PhosphorIconsRegular.scales,
+    color: Color(0xFF18362C),
+    backgroundColor: Color(0xFFE5EFEA),
   ),
   const PresetAvatar(
     id: 'gavel',
-    icon: Icons.gavel_rounded,
-    color: Color(0xFFD6A85F),
-    backgroundColor: Color(0xFFFAF2E6),
+    icon: PhosphorIconsRegular.gavel,
+    color: Color(0xFFB5894A),
+    backgroundColor: Color(0xFFF7EFE1),
   ),
   const PresetAvatar(
     id: 'briefcase',
-    icon: Icons.business_center_rounded,
-    color: Color(0xFFC96B3B),
-    backgroundColor: Color(0xFFFBF0EA),
+    icon: PhosphorIconsRegular.briefcase,
+    color: Color(0xFF35546C),
+    backgroundColor: Color(0xFFE9EFF4),
   ),
   const PresetAvatar(
     id: 'book',
-    icon: Icons.menu_book_rounded,
-    color: Color(0xFF2E7D32),
-    backgroundColor: Color(0xFFE8F5E9),
+    icon: PhosphorIconsRegular.bookOpenText,
+    color: Color(0xFF235D46),
+    backgroundColor: Color(0xFFE4F1EB),
   ),
   const PresetAvatar(
     id: 'shield',
-    icon: Icons.shield_rounded,
-    color: Color(0xFF3F51B5),
-    backgroundColor: Color(0xFFE8EAF6),
+    icon: PhosphorIconsRegular.shieldCheck,
+    color: Color(0xFF7A5621),
+    backgroundColor: Color(0xFFF7EFE1),
   ),
   const PresetAvatar(
     id: 'person',
-    icon: Icons.person_rounded,
-    color: Color(0xFF009688),
-    backgroundColor: Color(0xFFE0F2F1),
+    icon: PhosphorIconsRegular.userCircle,
+    color: Color(0xFF142E25),
+    backgroundColor: Color(0xFFEBE6DC),
   ),
 ];
 
@@ -103,28 +102,24 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
     required String label,
     required IconData icon,
   }) {
+    final t = context.tokens;
     final isSelected = _selectedAiStyle == value;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          setState(() {
-            _selectedAiStyle = value;
-          });
+          HapticFeedback.selectionClick();
+          setState(() => _selectedAiStyle = value);
         },
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 4.w),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 160),
+          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 6.w),
           decoration: BoxDecoration(
-            color: isSelected
-                ? (isDark ? const Color(0xFF243B63) : const Color(0xFFEAF0F8))
-                : (isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2)),
-            borderRadius: BorderRadius.circular(12.r),
+            color: isSelected ? t.brandContainer : t.surfaceSubtle,
+            borderRadius: BorderRadius.circular(14.r),
             border: Border.all(
-              color: isSelected
-                  ? AppColors.accent
-                  : (isDark ? const Color(0xFF2B3441) : AppColors.border),
-              width: isSelected ? 1.5.w : 1.w,
+              color: isSelected ? t.brandPrimary : t.border,
+              width: isSelected ? 1.5 : 1.0,
             ),
           ),
           child: Column(
@@ -132,20 +127,16 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
             children: [
               Icon(
                 icon,
-                color: isSelected
-                    ? AppColors.accent
-                    : (isDark ? Colors.white70 : AppColors.textSecondary),
+                color: isSelected ? t.brandPrimary : t.textSecondary,
                 size: 20.sp,
               ),
               SizedBox(height: 6.h),
               Text(
                 label,
-                style: TextStyle(
-                  fontSize: 11.sp,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  color: isSelected
-                      ? AppColors.accent
-                      : (isDark ? Colors.white70 : AppColors.textPrimary),
+                style: t.sansBody(
+                  size: 11.5.sp,
+                  weight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                  color: isSelected ? t.brandOnContainer : t.textPrimary,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -158,274 +149,247 @@ class _ProfileEditorSheetState extends State<ProfileEditorSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final surfaceColor = isDark ? const Color(0xFF171C22) : Colors.white;
-    final borderStyle =
-        BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
-    final titleTextStyle = TextStyle(
-      fontSize: 16.sp,
-      fontWeight: FontWeight.w900,
-      color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
-    );
+    final t = context.tokens;
 
     return Container(
       decoration: BoxDecoration(
-        color: surfaceColor,
+        color: t.surfaceElevated,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+        border: Border.all(color: t.border),
       ),
       padding: EdgeInsets.fromLTRB(
-          20.w, 12.h, 20.w, MediaQuery.viewInsetsOf(context).bottom + 24.h),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // 頂部拖曳指示條 (Drag handle)
-            Align(
-              alignment: Alignment.center,
-              child: Container(
-                width: 40.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF2B3441) : AppColors.border,
-                  borderRadius: BorderRadius.circular(2.r),
+        20.w,
+        12.h,
+        20.w,
+        MediaQuery.viewInsetsOf(context).bottom + 24.h,
+      ),
+      child: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  width: 38.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: t.borderStrong,
+                    borderRadius: BorderRadius.circular(99.r),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 16.h),
-            Text('編輯個人檔案', style: titleTextStyle, textAlign: TextAlign.center),
-            SizedBox(height: 20.h),
+              SizedBox(height: 16.h),
+              Text(
+                '編輯個人檔案',
+                style: t.serifTitle(size: 17.sp),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 20.h),
 
-            // 暱稱輸入欄位 (Nickname field)
-            Text('我的暱稱',
-                style: TextStyle(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.bold,
-                    color: isDark
-                        ? const Color(0xFFA3ABB6)
-                        : AppColors.textSecondary)),
-            SizedBox(height: 6.h),
-            TextField(
-              controller: _nameController,
-              maxLength: 15,
-              decoration: InputDecoration(
-                counterText: '',
-                hintText: '請輸入暱稱',
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-                filled: true,
-                fillColor:
-                    isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                  borderSide: borderStyle,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide(color: AppColors.accent, width: 1.5),
+              Text(
+                '顯示暱稱',
+                style: t.sansBody(
+                  size: 12.sp,
+                  weight: FontWeight.w700,
+                  color: t.textSecondary,
                 ),
               ),
-              style: TextStyle(
-                  fontSize: 14.sp,
-                  color:
-                      isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary),
-            ),
-            SizedBox(height: 20.h),
+              SizedBox(height: 6.h),
+              TextField(
+                controller: _nameController,
+                maxLength: 15,
+                style: t.sansBody(size: 14.sp, color: t.textPrimary),
+                decoration: InputDecoration(
+                  counterText: '',
+                  hintText: '請輸入暱稱',
+                  hintStyle: t.sansBody(size: 13.sp, color: t.textMuted),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                  filled: true,
+                  fillColor: t.surfaceSubtle,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                    borderSide: BorderSide(color: t.border),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                    borderSide: BorderSide(color: t.brandPrimary, width: 1.5),
+                  ),
+                ),
+              ),
+              SizedBox(height: 18.h),
 
-            // 頭像選擇網格 (Avatar selection)
-            Text('選擇頭像圖示',
-                style: TextStyle(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.bold,
-                    color: isDark
-                        ? const Color(0xFFA3ABB6)
-                        : AppColors.textSecondary)),
-            SizedBox(height: 10.h),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 6,
-                crossAxisSpacing: 10.w,
-                mainAxisSpacing: 10.h,
+              Text(
+                '選擇頭像徽記',
+                style: t.sansBody(
+                  size: 12.sp,
+                  weight: FontWeight.w700,
+                  color: t.textSecondary,
+                ),
               ),
-              itemCount: presetAvatars.length,
-              itemBuilder: (context, index) {
-                final avatar = presetAvatars[index];
-                final isSelected = avatar.id == _selectedAvatarId;
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _selectedAvatarId = avatar.id;
-                    });
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: avatar.backgroundColor,
-                      shape: BoxShape.circle,
-                      border: isSelected
-                          ? Border.all(color: AppColors.accent, width: 3.w)
-                          : Border.all(color: Colors.transparent),
-                      boxShadow: isSelected
-                          ? [
-                              BoxShadow(
-                                  color:
-                                      AppColors.accent.withValues(alpha: 0.3),
-                                  blurRadius: 8,
-                                  spreadRadius: 1)
-                            ]
-                          : null,
-                    ),
-                    child: Center(
-                      child: Icon(
-                        avatar.icon,
-                        color: avatar.color,
-                        size: 20.sp,
+              SizedBox(height: 10.h),
+              Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                spacing: 10.w,
+                runSpacing: 10.h,
+                children: presetAvatars.map((avatar) {
+                  final isSelected = avatar.id == _selectedAvatarId;
+                  return GestureDetector(
+                    onTap: () {
+                      HapticFeedback.selectionClick();
+                      setState(() => _selectedAvatarId = avatar.id);
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 160),
+                      width: 46.w,
+                      height: 46.w,
+                      decoration: BoxDecoration(
+                        color: t.isDark
+                            ? avatar.color.withValues(alpha: 0.22)
+                            : avatar.backgroundColor,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isSelected ? t.accentBrass : t.border,
+                          width: isSelected ? 2.4 : 1.0,
+                        ),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          avatar.icon,
+                          color: t.isDark ? t.brandPrimary : avatar.color,
+                          size: 20.sp,
+                        ),
                       ),
                     ),
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: 18.h),
+
+              Text(
+                '讀者身分背景',
+                style: t.sansBody(
+                  size: 12.sp,
+                  weight: FontWeight.w700,
+                  color: t.textSecondary,
+                ),
+              ),
+              SizedBox(height: 6.h),
+              DropdownButtonFormField<String>(
+                initialValue: _selectedProfession,
+                dropdownColor: t.surfaceElevated,
+                decoration: InputDecoration(
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                  filled: true,
+                  fillColor: t.surfaceSubtle,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                    borderSide: BorderSide(color: t.border),
                   ),
-                );
-              },
-            ),
-            SizedBox(height: 20.h),
-
-            // 身分設定下拉選單
-            Text(
-              '專業身分',
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.bold,
-                color:
-                    isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary,
-              ),
-            ),
-            SizedBox(height: 6.h),
-            DropdownButtonFormField<String>(
-              initialValue: _selectedProfession,
-              dropdownColor: surfaceColor,
-              decoration: InputDecoration(
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-                filled: true,
-                fillColor:
-                    isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                  borderSide: borderStyle,
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                    borderSide: BorderSide(color: t.brandPrimary, width: 1.5),
+                  ),
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide(color: AppColors.accent, width: 1.5),
+                items: const [
+                  DropdownMenuItem(value: 'citizen', child: Text('一般民眾')),
+                  DropdownMenuItem(value: 'lawyer', child: Text('執業律師')),
+                  DropdownMenuItem(value: 'legal_staff', child: Text('法務人員')),
+                  DropdownMenuItem(value: 'law_student', child: Text('法學生')),
+                ],
+                style: t.sansBody(size: 14.sp, color: t.textPrimary),
+                onChanged: (val) {
+                  if (val != null) {
+                    setState(() => _selectedProfession = val);
+                  }
+                },
+              ),
+              SizedBox(height: 18.h),
+
+              Text(
+                '小法助問診語氣偏好',
+                style: t.sansBody(
+                  size: 12.sp,
+                  weight: FontWeight.w700,
+                  color: t.textSecondary,
                 ),
               ),
-              items: const [
-                DropdownMenuItem(value: 'citizen', child: Text('一般民眾')),
-                DropdownMenuItem(value: 'lawyer', child: Text('執業律師')),
-                DropdownMenuItem(value: 'legal_staff', child: Text('法務人員')),
-                DropdownMenuItem(value: 'law_student', child: Text('法學生')),
-              ],
-              style: TextStyle(
-                  fontSize: 14.sp,
-                  color:
-                      isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary),
-              onChanged: (val) {
-                if (val != null) {
-                  setState(() {
-                    _selectedProfession = val;
-                  });
-                }
-              },
-            ),
-            SizedBox(height: 20.h),
-
-            // AI 對答風格自訂卡片
-            Text(
-              '小法助對話風格',
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.bold,
-                color:
-                    isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary,
+              SizedBox(height: 8.h),
+              Row(
+                children: [
+                  _buildStyleCard(
+                    context,
+                    value: 'simple',
+                    label: '白話文釋法',
+                    icon: PhosphorIconsRegular.chatCircleText,
+                  ),
+                  SizedBox(width: 8.w),
+                  _buildStyleCard(
+                    context,
+                    value: 'pro_analysis',
+                    label: '實務爭點分析',
+                    icon: PhosphorIconsRegular.scales,
+                  ),
+                  SizedBox(width: 8.w),
+                  _buildStyleCard(
+                    context,
+                    value: 'strict_cite',
+                    label: '精準法條對照',
+                    icon: PhosphorIconsRegular.bookOpenText,
+                  ),
+                ],
               ),
-            ),
-            SizedBox(height: 8.h),
-            Row(
-              children: [
-                _buildStyleCard(
-                  context,
-                  value: 'simple',
-                  label: '白話文釋法',
-                  icon: Icons.chat_bubble_outline_rounded,
-                ),
-                SizedBox(width: 8.w),
-                _buildStyleCard(
-                  context,
-                  value: 'pro_analysis',
-                  label: '專業訴訟分析',
-                  icon: Icons.insights_rounded,
-                ),
-                SizedBox(width: 8.w),
-                _buildStyleCard(
-                  context,
-                  value: 'strict_cite',
-                  label: '精準法條對照',
-                  icon: Icons.menu_book_rounded,
-                ),
-              ],
-            ),
-            SizedBox(height: 24.h),
+              SizedBox(height: 24.h),
 
-            // 底部操作按鈕（取消與儲存） (Action buttons)
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: OutlinedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 12.h),
-                      side: borderStyle,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14.r)),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: OutlinedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                        side: BorderSide(color: t.borderStrong),
+                        foregroundColor: t.textSecondary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14.r),
+                        ),
+                      ),
+                      child: const Text('取消'),
                     ),
-                    child: Text('取消',
-                        style: TextStyle(
-                            fontSize: 14.sp,
-                            color: isDark
-                                ? const Color(0xFFA3ABB6)
-                                : AppColors.textSecondary)),
                   ),
-                ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: FilledButton(
-                    onPressed: () {
-                      final name = _nameController.text.trim();
-                      if (name.isNotEmpty) {
-                        widget.appState.updateUserProfile(
-                          displayName: name,
-                          avatarUrl: _selectedAvatarId,
-                          profession: _selectedProfession,
-                          aiStyle: _selectedAiStyle,
-                        );
-                        Navigator.pop(context);
-                      }
-                    },
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      padding: EdgeInsets.symmetric(vertical: 12.h),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14.r)),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: () {
+                        final name = _nameController.text.trim();
+                        if (name.isNotEmpty) {
+                          widget.appState.updateUserProfile(
+                            displayName: name,
+                            avatarUrl: _selectedAvatarId,
+                            profession: _selectedProfession,
+                            aiStyle: _selectedAiStyle,
+                          );
+                          Navigator.pop(context);
+                        }
+                      },
+                      style: FilledButton.styleFrom(
+                        backgroundColor: t.brandPrimaryStrong,
+                        foregroundColor: const Color(0xFFFAF8F4),
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14.r),
+                        ),
+                      ),
+                      child: const Text('儲存'),
                     ),
-                    child: Text('儲存',
-                        style: TextStyle(
-                            fontSize: 14.sp,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold)),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,15 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:preamble/components/home/v2/home_v2_palette.dart';
-import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:preamble/pages/learning/widgets/notebook_aesthetics.dart';
-import 'package:preamble/theme/app_colors.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 
 /// 學習頁共用 hero 圖片。
-///
-/// 這裡只處理圖片來源的顯示與 fallback，不保存頁面狀態；
-/// 讓 `KnowLawPage` 可以專注在資料與學習流程。
 Widget buildLearningHeroImage({
   required String? imageUrl,
   required String localAsset,
@@ -44,90 +40,63 @@ Widget buildLearningHeroImage({
 }
 
 /// 主修課卡片上方的膠囊標籤。
-///
-/// 這個 helper 只吃文字與深色模式，不依賴 `KnowLawPageState`，
-/// 適合先抽成共用純 UI。
 Widget buildLearningCourseBadge(String label, bool isDark) {
+  final tokens = isDark ? PreambleTokens.dark : PreambleTokens.light;
   return Container(
-    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+    padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 4.h),
     decoration: BoxDecoration(
-      color: isDark
-          ? const Color(0xFF10161D).withValues(alpha: 0.74)
-          : Colors.white.withValues(alpha: 0.74),
+      color: tokens.surface.withValues(alpha: 0.86),
       borderRadius: BorderRadius.circular(999.r),
-      border: Border.all(
-        color: isDark
-            ? const Color(0xFF2D3845)
-            : Colors.white.withValues(alpha: 0.72),
-      ),
+      border: Border.all(color: tokens.borderStrong),
     ),
     child: Text(
       label,
-      style: TextStyle(
-        fontSize: 10.sp,
-        fontWeight: FontWeight.w900,
-        color: isDark
-            ? Colors.white.withValues(alpha: 0.9)
-            : HomeV2Palette.trustGreen,
+      style: tokens.sansBody(
+        size: 11.sp,
+        weight: FontWeight.w700,
+        color: tokens.brandPrimary,
       ),
     ),
   );
 }
 
-/// 手繪風勾選列。
-///
-/// 生活工具箱的檢核清單只需要把目前值與 onChanged 傳進來；
-/// 勾選後要不要 `setState` 由呼叫端決定，這裡不碰父層狀態。
+/// 標準語意勾選列（修正原先誤用五角星充當勾選框之問題，改用 Phosphor 方框勾選圖示）。
 Widget buildLearningHanddrawnCheckbox({
   required String label,
   required bool value,
   required ValueChanged<bool?> onChanged,
   required bool isDark,
 }) {
+  final t = isDark ? PreambleTokens.dark : PreambleTokens.light;
   return InkWell(
     onTap: () => onChanged(!value),
+    borderRadius: BorderRadius.circular(8.r),
     child: Padding(
       padding: EdgeInsets.symmetric(vertical: 6.h),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 18.w,
-            height: 18.w,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: value
-                    ? HomeV2Palette.trustGreen
-                    : (isDark
-                        ? const Color(0xFF4C5B6B)
-                        : const Color(0xFFC4B89F)),
-                width: 1.6.w,
-              ),
-              color: value
-                  ? HomeV2Palette.trustGreen.withValues(alpha: 0.12)
-                  : Colors.transparent,
-            ),
-            child: Center(
-              child: value
-                  ? Icon(
-                      Icons.star,
-                      size: 10.sp,
-                      color: HomeV2Palette.trustGreen,
-                    )
-                  : null,
+          Padding(
+            padding: EdgeInsets.only(top: 1.5.h),
+            child: Icon(
+              value
+                  ? PhosphorIconsFill.checkSquare
+                  : PhosphorIconsRegular.square,
+              size: 18.sp,
+              color: value ? t.brandPrimary : t.textMuted,
             ),
           ),
           SizedBox(width: 9.w),
           Expanded(
             child: Text(
               label,
-              style: TextStyle(
-                fontSize: 12.sp,
+              style: t.sansBody(
+                size: 12.5.sp,
+                weight: value ? FontWeight.w500 : FontWeight.w600,
+                color: value ? t.textMuted : t.textPrimary,
+              ).copyWith(
                 decoration: value ? TextDecoration.lineThrough : null,
-                decorationColor: isDark ? Colors.grey : const Color(0xFFC4B89F),
-                decorationThickness: 1.6,
-                color: value ? AppColors.textMuted : AppColors.textPrimary,
-                fontWeight: value ? FontWeight.normal : FontWeight.w600,
+                decorationColor: t.textMuted,
               ),
             ),
           ),
@@ -137,48 +106,32 @@ Widget buildLearningHanddrawnCheckbox({
   );
 }
 
-/// 便利貼風文字輸入框。
-///
-/// controller 由父層持有，這個 helper 只負責欄位外觀，
-/// 因此不會改變工具箱表單的資料流。
+/// 靜奢微凹文字輸入框。
 Widget buildLearningPostItInput({
   required TextEditingController controller,
   required String hintText,
   required bool isDark,
   int maxLines = 1,
 }) {
-  final bgColor = isDark ? const Color(0xFF2E2719) : const Color(0xFFFFFAD6);
-  final borderCol = isDark ? const Color(0xFF7A6539) : const Color(0xFFEAD8A8);
+  final t = isDark ? PreambleTokens.dark : PreambleTokens.light;
   return Container(
     decoration: BoxDecoration(
-      color: bgColor,
-      borderRadius: BorderRadius.circular(8.r),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.05),
-          blurRadius: 4,
-          offset: const Offset(1, 2),
-        ),
-      ],
-      border: Border.all(color: borderCol, width: 1.w),
+      color: t.surfaceSubtle,
+      borderRadius: BorderRadius.circular(10.r),
+      border: Border.all(color: t.borderStrong),
     ),
-    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 2.h),
+    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
     child: TextField(
       controller: controller,
       maxLines: maxLines,
-      style: TextStyle(
-        fontSize: 12.5.sp,
-        fontWeight: FontWeight.bold,
-        color: isDark ? Colors.amber.shade100 : const Color(0xFF5D4817),
+      style: t.sansBody(
+        size: 13.sp,
+        weight: FontWeight.w600,
+        color: t.textPrimary,
       ),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: TextStyle(
-          fontSize: 12.sp,
-          color: isDark
-              ? Colors.amber.shade100.withValues(alpha: 0.4)
-              : const Color(0xFFC0AE83),
-        ),
+        hintStyle: t.sansBody(size: 12.sp, color: t.textMuted),
         border: InputBorder.none,
         isDense: true,
       ),
@@ -186,10 +139,7 @@ Widget buildLearningPostItInput({
   );
 }
 
-/// 筆記本橫線風輸入框。
-///
-/// 這個 helper 被多個生活法律工具共用，抽出後仍由父層傳入 controller；
-/// 所以格式、keyboardType 與輸入結果都保持原本行為。
+/// 典藏筆記底線風輸入框。
 Widget buildLearningNotebookInput({
   required TextEditingController controller,
   required String labelText,
@@ -197,8 +147,7 @@ Widget buildLearningNotebookInput({
   required bool isDark,
   TextInputType keyboardType = TextInputType.text,
 }) {
-  final lineCol = isDark ? const Color(0xFF2D3845) : const Color(0xFFE5CEB1);
-  final textCol = isDark ? Colors.blue.shade100 : const Color(0xFF374E6F);
+  final t = isDark ? PreambleTokens.dark : PreambleTokens.light;
   return Padding(
     padding: EdgeInsets.symmetric(vertical: 6.h),
     child: Column(
@@ -207,34 +156,31 @@ Widget buildLearningNotebookInput({
         if (labelText.isNotEmpty)
           Text(
             labelText,
-            style: TextStyle(
-              fontSize: 11.sp,
-              fontWeight: FontWeight.w900,
-              color: isDark ? Colors.grey : const Color(0xFF7A6B53),
+            style: t.sansBody(
+              size: 11.5.sp,
+              weight: FontWeight.w700,
+              color: t.textSecondary,
             ),
           ),
         Container(
           decoration: BoxDecoration(
-            border: Border(bottom: BorderSide(color: lineCol, width: 1.4.w)),
+            border: Border(bottom: BorderSide(color: t.borderStrong, width: 1)),
           ),
           padding: EdgeInsets.symmetric(vertical: 2.h),
           child: TextField(
             controller: controller,
             keyboardType: keyboardType,
-            style: TextStyle(
-              fontSize: 13.sp,
-              color: textCol,
-              fontWeight: FontWeight.bold,
+            style: t.sansBody(
+              size: 13.5.sp,
+              weight: FontWeight.w600,
+              color: t.textPrimary,
             ),
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: TextStyle(
-                fontSize: 11.5.sp,
-                color: isDark ? Colors.grey.shade600 : const Color(0xFFC1B8AA),
-              ),
+              hintStyle: t.sansBody(size: 12.sp, color: t.textMuted),
               border: InputBorder.none,
               isDense: true,
-              contentPadding: EdgeInsets.symmetric(vertical: 4.h),
+              contentPadding: EdgeInsets.symmetric(vertical: 6.h),
             ),
           ),
         ),
@@ -243,69 +189,56 @@ Widget buildLearningNotebookInput({
   );
 }
 
-/// 印章風主要按鈕。
-///
-/// 這裡只呈現按鈕外觀並觸發 callback；計算器與表單邏輯仍留在原本頁面。
+/// 印鑑風主要行動膠囊按鈕。
 Widget buildLearningSealButton({
   required String label,
   required VoidCallback onPressed,
   required Color color,
 }) {
-  return GestureDetector(
+  return InkWell(
     onTap: onPressed,
-    child: AnimatedContainer(
-      duration: const Duration(milliseconds: 100),
-      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
+    borderRadius: BorderRadius.circular(12.r),
+    child: Container(
+      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 9.h),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24.r),
-        border: Border.all(color: color, width: 2.2.w),
-        color: color.withValues(alpha: 0.08),
-        boxShadow: [
-          BoxShadow(
-            color: color.withValues(alpha: 0.15),
-            blurRadius: 4,
-            offset: const Offset(1, 2),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: color, width: 1.5),
+        color: color.withValues(alpha: 0.12),
       ),
       child: Text(
         label,
         style: TextStyle(
           fontSize: 12.5.sp,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w700,
           color: color,
-          letterSpacing: 1.5,
+          letterSpacing: 0.6,
         ),
       ),
     ),
   );
 }
 
-/// 紙膠帶風次要按鈕。
-///
-/// 保留原本輕量、扁平的紙膠帶樣式；呼叫端負責決定實際操作。
+/// 靜奢次要標籤按鈕（取代過往歪斜紙膠帶外觀）。
 Widget buildLearningWashiTapeButton({
   required String label,
   required VoidCallback onPressed,
   required Color color,
 }) {
-  return GestureDetector(
+  return InkWell(
     onTap: onPressed,
+    borderRadius: BorderRadius.circular(8.r),
     child: Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
+      padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 7.h),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.18),
-        borderRadius: BorderRadius.circular(2.r),
-        border: Border.all(
-          color: color.withValues(alpha: 0.35),
-          width: 1.w,
-        ),
+        color: color.withValues(alpha: 0.14),
+        borderRadius: BorderRadius.circular(8.r),
+        border: Border.all(color: color.withValues(alpha: 0.36)),
       ),
       child: Text(
         label,
         style: TextStyle(
-          fontSize: 11.sp,
-          fontWeight: FontWeight.w900,
+          fontSize: 11.5.sp,
+          fontWeight: FontWeight.w700,
           color: color,
         ),
       ),
@@ -313,10 +246,7 @@ Widget buildLearningWashiTapeButton({
   );
 }
 
-/// 摘錄顏色選擇圓點。
-///
-/// 色點只知道目前選到哪個名稱與點擊 callback，
-/// 不直接修改手帳筆記資料，方便未來複用到其他 highlight UI。
+/// 摘錄重點標記色彩選擇圓點。
 Widget buildLearningHighlightColorDot(
   String name,
   Color color,
@@ -335,27 +265,25 @@ Widget buildLearningHighlightColorDot(
         color: color,
         shape: BoxShape.circle,
         border: Border.all(
-          color: isSelected ? Colors.black : Colors.grey.shade400,
-          width: isSelected ? 2.w : 0.8.w,
+          color: isSelected ? const Color(0xFF18362C) : Colors.grey.shade400,
+          width: isSelected ? 2 : 1,
         ),
-        boxShadow: isSelected
-            ? [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.15),
-                  blurRadius: 3,
-                  offset: const Offset(0, 1.5),
-                )
-              ]
-            : null,
       ),
       child: isNone
           ? Center(
-              child:
-                  Icon(Icons.close, size: 14.sp, color: Colors.grey.shade700),
+              child: Icon(
+                PhosphorIconsRegular.x,
+                size: 13.sp,
+                color: Colors.grey.shade700,
+              ),
             )
           : (isSelected
               ? Center(
-                  child: Icon(Icons.check, size: 14.sp, color: Colors.black),
+                  child: Icon(
+                    PhosphorIconsBold.check,
+                    size: 13.sp,
+                    color: const Color(0xFF18362C),
+                  ),
                 )
               : null),
     ),
@@ -363,9 +291,6 @@ Widget buildLearningHighlightColorDot(
 }
 
 /// 每日專題非同步載入骨架屏。
-///
-/// 這個元件只做淡入淡出的 skeleton loading，不讀取任何頁面狀態；
-/// 因此從 `KnowLawPage` 抽出後不會影響資料載入流程。
 class LearningPulsingSkeleton extends StatefulWidget {
   const LearningPulsingSkeleton({
     super.key,
@@ -406,24 +331,22 @@ class _LearningPulsingSkeletonState extends State<LearningPulsingSkeleton>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final t = context.tokens;
     return FadeTransition(
       opacity: _animation,
       child: Container(
         width: widget.width,
         height: widget.height,
         decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF2C3540) : const Color(0xFFE5E9EC),
-          borderRadius: widget.borderRadius ?? BorderRadius.circular(8.r),
+          color: t.surfaceMuted,
+          borderRadius: widget.borderRadius ?? BorderRadius.circular(10.r),
         ),
       ),
     );
   }
 }
 
-/// 自訂專屬法學課堂入口卡。
-///
-/// 卡片本身只處理按壓縮放與畫面呈現；開啟 dialog 的流程仍由父層 callback 控制。
+/// 自訂專屬法學課堂入口卡（完整支援深色模式與古銅金點綴）。
 class LearningCustomClassroomCard extends StatefulWidget {
   const LearningCustomClassroomCard({
     super.key,
@@ -445,37 +368,37 @@ class _LearningCustomClassroomCardState
 
   @override
   Widget build(BuildContext context) {
-    final cardBg =
-        widget.isDark ? const Color(0xFF2E2D24) : const Color(0xFFFFFDE7);
-    final circleBg =
-        widget.isDark ? const Color(0xFF4A4930) : const Color(0xFFFFF59D);
-    final iconColor =
-        widget.isDark ? const Color(0xFFFFD54F) : const Color(0xFFF57F17);
+    final t = context.tokens;
 
     return GestureDetector(
-      onTapDown: (_) => setState(() => _scale = 0.97),
+      onTapDown: (_) => setState(() => _scale = 0.98),
       onTapUp: (_) => setState(() => _scale = 1.0),
       onTapCancel: () => setState(() => _scale = 1.0),
       onTap: widget.onTap,
       child: AnimatedScale(
         scale: _scale,
-        duration: const Duration(milliseconds: 100),
+        duration: const Duration(milliseconds: 120),
         child: NotebookCard(
-          backgroundColor: cardBg,
+          backgroundColor: t.surface,
+          hasBookmark: true,
+          bookmarkColor: t.accentBrass,
           child: Row(
             children: [
               Container(
-                width: 40.w,
-                height: 40.w,
+                width: 42.w,
+                height: 42.w,
                 decoration: BoxDecoration(
-                  color: circleBg,
-                  shape: BoxShape.circle,
+                  color: t.accentBrassContainer,
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(
+                    color: t.accentBrass.withValues(alpha: 0.42),
+                  ),
                 ),
                 child: Center(
-                  child: CaseLibrarySvgIcon(
-                    CaseLibrarySvgIcons.idea,
+                  child: Icon(
+                    PhosphorIconsRegular.sparkle,
                     size: 20.sp,
-                    color: iconColor,
+                    color: t.accentOnBrassContainer,
                   ),
                 ),
               ),
@@ -486,28 +409,21 @@ class _LearningCustomClassroomCardState
                   children: [
                     Text(
                       '訂製專屬法學課堂',
-                      style: TextStyle(
-                        fontSize: 14.5.sp,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.textPrimary,
-                      ),
+                      style: t.serifTitle(size: 15.sp),
                     ),
-                    SizedBox(height: 2.h),
+                    SizedBox(height: 3.h),
                     Text(
-                      '輸入您的生活狀況，AI 將量身打造 5 個學習單元與測驗！',
-                      style: TextStyle(
-                        fontSize: 10.5.sp,
-                        color: AppColors.textSecondary,
-                      ),
+                      '輸入您的生活爭議情境，量身編排 5 階段修煉節點與隨堂測驗',
+                      style: t.sansBody(size: 11.5.sp, color: t.textSecondary),
                     ),
                   ],
                 ),
               ),
               SizedBox(width: 8.w),
               Icon(
-                Icons.chevron_right,
-                size: 20.sp,
-                color: iconColor.withValues(alpha: 0.8),
+                PhosphorIconsRegular.caretRight,
+                size: 18.sp,
+                color: t.accentOnBrassContainer,
               ),
             ],
           ),
@@ -517,12 +433,12 @@ class _LearningCustomClassroomCardState
   }
 }
 
-/// 呼吸發光容器，用以加強重點入口視覺優先級。
+/// 呼吸微光容器。
 class BreathingGlowContainer extends StatefulWidget {
   const BreathingGlowContainer({
     super.key,
     required this.child,
-    this.glowColor = const Color(0xFF6B4B14),
+    this.glowColor = const Color(0xFFB5894A),
     this.duration = const Duration(milliseconds: 1800),
   });
 
@@ -544,7 +460,7 @@ class _BreathingGlowContainerState extends State<BreathingGlowContainer>
     super.initState();
     _controller = AnimationController(vsync: this, duration: widget.duration)
       ..repeat(reverse: true);
-    _animation = Tween<double>(begin: 1.5, end: 6.0).animate(
+    _animation = Tween<double>(begin: 1.5, end: 5.0).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
   }
@@ -566,9 +482,9 @@ class _BreathingGlowContainerState extends State<BreathingGlowContainer>
             boxShadow: [
               BoxShadow(
                 color: widget.glowColor
-                    .withValues(alpha: 0.15 * (_animation.value / 6.0)),
+                    .withValues(alpha: 0.14 * (_animation.value / 5.0)),
                 blurRadius: _animation.value * 2.w,
-                spreadRadius: _animation.value * 0.5.w,
+                spreadRadius: _animation.value * 0.4.w,
               ),
             ],
           ),
@@ -580,9 +496,9 @@ class _BreathingGlowContainerState extends State<BreathingGlowContainer>
   }
 }
 
-/// 呼吸發光小圓點，用於提醒或高亮入口。
+/// 呼吸微光小圓點。
 class BreathingDot extends StatefulWidget {
-  const BreathingDot({super.key, this.color = const Color(0xFF4E7D5B)});
+  const BreathingDot({super.key, this.color = const Color(0xFF235D46)});
   final Color color;
   @override
   State<BreathingDot> createState() => _BreathingDotState();
@@ -599,7 +515,7 @@ class _BreathingDotState extends State<BreathingDot>
     _controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1200))
       ..repeat(reverse: true);
-    _animation = Tween<double>(begin: 0.3, end: 1.0).animate(_controller);
+    _animation = Tween<double>(begin: 0.35, end: 1.0).animate(_controller);
   }
 
   @override
@@ -621,13 +537,6 @@ class _BreathingDotState extends State<BreathingDot>
             decoration: BoxDecoration(
               color: widget.color,
               shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: widget.color.withValues(alpha: 0.5),
-                  blurRadius: 4.w,
-                  spreadRadius: 1.w,
-                ),
-              ],
             ),
           ),
         );

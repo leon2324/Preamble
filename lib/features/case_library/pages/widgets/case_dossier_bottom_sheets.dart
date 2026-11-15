@@ -424,30 +424,116 @@ extension _CaseDossierBottomSheets on _CaseDossierDetailPageState {
     final appState = PreambleScope.of(context);
     final caseId = widget.book.id;
     final initialNote = appState.caseNoteDraft(caseId) ?? '';
-    final controller = TextEditingController(text: initialNote);
 
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              color: CaseLibraryColors.bgCream,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.15),
-                  blurRadius: 20,
-                  offset: const Offset(0, -5),
-                ),
-              ],
+      builder: (sheetContext) {
+        return _CaseStudyNoteSheet(
+          book: widget.book,
+          initialNote: initialNote,
+          onSaveDraft: (text) => appState.saveCaseNoteDraft(caseId, text),
+        );
+      },
+    );
+  }
+}
+
+class _CaseStudyNoteSheet extends StatefulWidget {
+  const _CaseStudyNoteSheet({
+    required this.book,
+    required this.initialNote,
+    required this.onSaveDraft,
+  });
+
+  final CaseBook book;
+  final String initialNote;
+  final ValueChanged<String> onSaveDraft;
+
+  @override
+  State<_CaseStudyNoteSheet> createState() => _CaseStudyNoteSheetState();
+}
+
+class _CaseStudyNoteSheetState extends State<_CaseStudyNoteSheet> {
+  late final TextEditingController _controller;
+  final FocusNode _focusNode = FocusNode();
+  Timer? _debounce;
+  String _selectedTag = '爭點筆記';
+  bool _hasUnsavedDraft = false;
+
+  static const _noteTags = ['爭點筆記', '法條重點', '實務疑問', '生活應用'];
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialNote);
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    widget.onSaveDraft(_controller.text);
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _onTextChanged(String text) {
+    if (!_hasUnsavedDraft) {
+      setState(() => _hasUnsavedDraft = true);
+    } else {
+      setState(() {});
+    }
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      widget.onSaveDraft(_controller.text);
+      if (mounted) {
+        setState(() => _hasUnsavedDraft = false);
+      }
+    });
+  }
+
+  void _insertTemplate(String snippet) {
+    HapticFeedback.selectionClick();
+    final current = _controller.text;
+    final prefix = current.trim().isEmpty ? '' : '\n';
+    final nextText = '$current$prefix$snippet';
+    _controller.value = TextEditingValue(
+      text: nextText,
+      selection: TextSelection.collapsed(offset: nextText.length),
+    );
+    _onTextChanged(nextText);
+    if (!_focusNode.hasFocus) {
+      _focusNode.requestFocus();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final caseTitle = widget.book.shortTitleZh.isNotEmpty
+        ? widget.book.shortTitleZh
+        : widget.book.titleZh;
+    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: bottomInset),
+      child: Container(
+        decoration: BoxDecoration(
+          color: CaseLibraryColors.bgCream,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(22.r)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.14),
+              blurRadius: 20,
+              offset: const Offset(0, -5),
             ),
-            padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 24.h),
+          ],
+        ),
+        child: SafeArea(
+          top: false,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.fromLTRB(20.w, 14.h, 20.w, 18.h),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -462,58 +548,169 @@ extension _CaseDossierBottomSheets on _CaseDossierDetailPageState {
                     ),
                   ),
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 14.h),
                 Row(
                   children: [
                     Expanded(
-                      child: Text(
-                        '案件學習筆記',
-                        style: TextStyle(
-                          fontFamily: 'Songti TC',
-                          fontFamilyFallback: const [
-                            'Songti SC',
-                            'STSong',
-                            'PingFang TC'
-                          ],
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.bold,
-                          color: CaseLibraryColors.primaryGreen,
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '案件學習筆記',
+                            style: TextStyle(
+                              fontFamily: 'Songti TC',
+                              fontFamilyFallback: const [
+                                'Songti SC',
+                                'STSong',
+                                'PingFang TC'
+                              ],
+                              fontSize: 17.sp,
+                              fontWeight: FontWeight.w700,
+                              color: CaseLibraryColors.primaryGreen,
+                            ),
+                          ),
+                          SizedBox(height: 2.h),
+                          Text(
+                            caseTitle,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              color: CaseLibraryColors.textSecondary,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Text(
-                      '已自動儲存',
-                      style: TextStyle(
-                        fontSize: 10.sp,
-                        color: CaseLibraryColors.textMuted,
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 4.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(999),
+                        border:
+                            Border.all(color: CaseLibraryColors.borderLight),
+                      ),
+                      child: Text(
+                        _hasUnsavedDraft
+                            ? '${_controller.text.length} 字 · 暫存中'
+                            : '${_controller.text.length} 字 · 已同步',
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w600,
+                          color: CaseLibraryColors.textSecondary,
+                        ),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 16.h),
-                Text(
-                  '記錄您對「${widget.book.shortTitleZh.isNotEmpty ? widget.book.shortTitleZh : widget.book.titleZh}」的思考、心得或待查爭點：',
-                  style: TextStyle(
-                    fontSize: 11.5.sp,
-                    color: CaseLibraryColors.textSecondary,
+                SizedBox(height: 12.h),
+
+                // 筆記標籤快選（點擊可直接帶入模板）
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: _noteTags.map((tag) {
+                      final isSelected = tag == _selectedTag;
+                      return Padding(
+                        padding: EdgeInsets.only(right: 6.w),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() => _selectedTag = tag);
+                            _insertTemplate('[$tag] ');
+                          },
+                          borderRadius: BorderRadius.circular(999),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10.w,
+                              vertical: 5.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? CaseLibraryColors.primaryGreen
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(999),
+                              border: Border.all(
+                                color: isSelected
+                                    ? CaseLibraryColors.primaryGreen
+                                    : CaseLibraryColors.borderLight,
+                              ),
+                            ),
+                            child: Text(
+                              '+ $tag',
+                              style: TextStyle(
+                                fontSize: 11.sp,
+                                fontWeight: FontWeight.w700,
+                                color: isSelected
+                                    ? Colors.white
+                                    : CaseLibraryColors.primaryGreen,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
                 ),
+
+                if (widget.book.legalIssues.isNotEmpty) ...[
+                  SizedBox(height: 8.h),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: widget.book.legalIssues.take(3).map((issue) {
+                        return Padding(
+                          padding: EdgeInsets.only(right: 6.w),
+                          child: InkWell(
+                            onTap: () =>
+                                _insertTemplate('【引用爭點】${issue.title}\n想法：'),
+                            borderRadius: BorderRadius.circular(8.r),
+                            child: Container(
+                              constraints: BoxConstraints(maxWidth: 210.w),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 9.w,
+                                vertical: 5.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFEEF4F1),
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
+                              child: Text(
+                                '引用：${issue.title}',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 10.5.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: CaseLibraryColors.primaryGreen,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
                 SizedBox(height: 12.h),
+
                 TextField(
-                  controller: controller,
-                  maxLines: 6,
-                  autofocus: true,
-                  onChanged: (text) {
-                    appState.saveCaseNoteDraft(caseId, text);
-                  },
+                  controller: _controller,
+                  focusNode: _focusNode,
+                  maxLines: 5,
+                  minLines: 4,
+                  onChanged: _onTextChanged,
                   style: TextStyle(
                     fontSize: 13.sp,
+                    height: 1.5,
                     color: CaseLibraryColors.textPrimary,
                   ),
                   decoration: InputDecoration(
-                    hintText: '在此輸入筆記...',
+                    hintText: '點上方標籤快速整理爭點，或寫下你對本案的思考...',
                     hintStyle: TextStyle(
-                      fontSize: 13.sp,
+                      fontSize: 12.5.sp,
                       color: CaseLibraryColors.textMuted,
                     ),
                     fillColor: Colors.white,
@@ -539,32 +736,46 @@ extension _CaseDossierBottomSheets on _CaseDossierDetailPageState {
                     ),
                   ),
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 14.h),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    if (_focusNode.hasFocus)
+                      TextButton(
+                        onPressed: () => _focusNode.unfocus(),
+                        child: Text(
+                          '收起鍵盤',
+                          style: TextStyle(
+                            fontSize: 12.5.sp,
+                            fontWeight: FontWeight.w600,
+                            color: CaseLibraryColors.textSecondary,
+                          ),
+                        ),
+                      ),
+                    const Spacer(),
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(),
                       child: Text(
                         '關閉',
                         style: TextStyle(
                           fontSize: 13.sp,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w700,
                           color: CaseLibraryColors.primaryGreen,
                         ),
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    SizedBox(width: 8.w),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: CaseLibraryColors.primaryGreen,
                         foregroundColor: Colors.white,
+                        elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.r),
                         ),
                       ),
                       onPressed: () {
-                        appState.saveCaseNoteDraft(caseId, controller.text);
+                        _debounce?.cancel();
+                        widget.onSaveDraft(_controller.text);
                         Navigator.of(context).pop();
                         CustomToast.show(context, '筆記儲存成功！');
                       },
@@ -572,7 +783,7 @@ extension _CaseDossierBottomSheets on _CaseDossierDetailPageState {
                         '儲存筆記',
                         style: TextStyle(
                           fontSize: 13.sp,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
@@ -581,8 +792,8 @@ extension _CaseDossierBottomSheets on _CaseDossierDetailPageState {
               ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

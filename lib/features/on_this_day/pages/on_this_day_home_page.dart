@@ -1,19 +1,21 @@
 import 'dart:math' as math;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:preamble/features/case_library/data/case_library_repository.dart';
+import 'package:preamble/features/case_library/models/case_library_models.dart';
+import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
 import 'package:preamble/features/on_this_day/data/on_this_day_mock_data.dart';
 import 'package:preamble/features/on_this_day/models/on_this_day_models.dart';
-import 'package:preamble/features/on_this_day/theme/on_this_day_theme.dart';
 import 'package:preamble/features/on_this_day/pages/on_this_day_date_discovery_page.dart';
-import 'package:preamble/features/on_this_day/pages/on_this_day_list_page.dart';
 import 'package:preamble/features/on_this_day/pages/on_this_day_detail_page.dart';
+import 'package:preamble/features/on_this_day/pages/on_this_day_list_page.dart';
 import 'package:preamble/features/on_this_day/widgets/on_this_day_calendar_sheet.dart';
 import 'package:preamble/features/on_this_day/widgets/on_this_day_postcard_elements.dart';
 import 'package:preamble/features/on_this_day/widgets/retro_date_dial_picker.dart';
-import 'package:preamble/features/case_library/data/case_library_repository.dart';
-import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
-import 'package:preamble/features/case_library/models/case_library_models.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 
 class OnThisDayHomePage extends StatefulWidget {
   const OnThisDayHomePage({super.key});
@@ -23,21 +25,24 @@ class OnThisDayHomePage extends StatefulWidget {
 }
 
 class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
-  late DateTime _selectedDate;
-  OnThisDayCase? _mainCase;
-  List<OnThisDayCase> _otherCases = [];
-  OnThisDayLegalQuote? _selectedQuote;
+  static const int _initialPage = 10000;
 
+  late final DateTime _today;
+  late final DateTime _anchorDate;
+  late DateTime _selectedDate;
   late PageController _pageController;
-  final DateTime _anchorDate = DateTime(2026, 4, 7);
-  final int _initialPage = 10000;
-  late int _currentPage;
+
+  OnThisDayCase? _exactMainCase;
+  OnThisDayCase? _nearestCase;
+  List<OnThisDayCase> _otherCases = const [];
 
   @override
   void initState() {
     super.initState();
-    _selectedDate = DateTime(2026, 4, 7);
-    _currentPage = _initialPage;
+    final now = DateTime.now();
+    _today = DateTime(now.year, now.month, now.day);
+    _anchorDate = _today;
+    _selectedDate = _today;
     _pageController = PageController(initialPage: _initialPage);
     _initRepository();
     _loadCasesForSelectedDate();
@@ -54,27 +59,51 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
     if (repo.cases.isEmpty) {
       await repo.initialize();
       if (mounted) {
-        setState(() {}); // refresh to check dossiers
+        setState(() {});
       }
     }
   }
 
+  bool _isSameMonthDay(DateTime a, DateTime b) =>
+      a.month == b.month && a.day == b.day;
+
   void _loadCasesForSelectedDate() {
     final dayCases =
         onThisDayCasesForDate(_selectedDate.month, _selectedDate.day);
+    final nearest =
+        onThisDayNearestCaseForDate(_selectedDate.month, _selectedDate.day);
     setState(() {
       if (dayCases.isNotEmpty) {
-        _mainCase = dayCases.first;
+        _exactMainCase = dayCases.first;
+        _nearestCase = dayCases.first;
         _otherCases = dayCases.skip(1).toList();
-        _selectedQuote = null;
       } else {
-        _mainCase = null;
-        _otherCases = [];
-        final index = (_selectedDate.month * 31 + _selectedDate.day) %
-            onThisDayLegalQuotes.length;
-        _selectedQuote = onThisDayLegalQuotes[index];
+        _exactMainCase = null;
+        _nearestCase = nearest;
+        _otherCases = const [];
       }
     });
+  }
+
+  void _jumpToDate(DateTime targetDate, {bool animate = false}) {
+    final normalized =
+        DateTime(_anchorDate.year, targetDate.month, targetDate.day);
+    final page = _initialPage + normalized.difference(_anchorDate).inDays;
+    setState(() {
+      _selectedDate = normalized;
+      _loadCasesForSelectedDate();
+    });
+    if (_pageController.hasClients) {
+      if (animate) {
+        _pageController.animateToPage(
+          page,
+          duration: const Duration(milliseconds: 450),
+          curve: Curves.easeOutCubic,
+        );
+      } else {
+        _pageController.jumpToPage(page);
+      }
+    }
   }
 
   void _timeTravel() {
@@ -88,51 +117,38 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
     if (casesToUse.isEmpty) return;
 
     final randomCase = casesToUse[random.nextInt(casesToUse.length)];
-    // [審查修復] 閏年安全檢查：若隨機選到 2/29 的案件，但 _anchorDate.year (2026)
-    // 不是閏年，Dart 的 DateTime(2026, 2, 29) 會自動滾入 3/1，導致載入錯誤日期。
-    // 修復方式：遇到 2/29 時改用最近的閏年 (2024) 建構日期。
-    // 教學重點：Dart DateTime 建構子不會拋出例外，而是「自動進位」，
-    // 這種靜默行為很容易造成邏輯錯誤，必須在建構前自行檢查。
-    final year = (randomCase.month == 2 && randomCase.day == 29)
-        ? 2024
-        : _anchorDate.year;
-    final targetDate =
-        DateTime(year, randomCase.month, randomCase.day);
-
-    setState(() {
-      _selectedDate = targetDate;
-      final page = _initialPage + targetDate.difference(_anchorDate).inDays;
-      _currentPage = page;
-      if (_pageController.hasClients) {
-        _pageController.animateToPage(
-          page,
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.easeInOutCubic,
-        );
-      }
-      _loadCasesForSelectedDate();
-    });
+    final isLeapYear = (_anchorDate.year % 4 == 0 &&
+            _anchorDate.year % 100 != 0) ||
+        (_anchorDate.year % 400 == 0);
+    final safeDay =
+        (randomCase.month == 2 && randomCase.day == 29 && !isLeapYear)
+            ? 28
+            : randomCase.day;
+    _jumpToDate(
+      DateTime(_anchorDate.year, randomCase.month, safeDay),
+      animate: true,
+    );
   }
 
   void _goToPreviousDay() {
     if (_pageController.hasClients) {
       _pageController.previousPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
+        duration: const Duration(milliseconds: 280),
+        curve: Curves.easeOutCubic,
       );
     }
   }
 
-  CaseBook? _findDossierSync(OnThisDayCase? mainCase) {
-    if (mainCase == null) return null;
+  CaseBook? _findDossierSync(OnThisDayCase? item) {
+    if (item == null) return null;
     final cases = CaseLibraryRepository.instance.cases;
     for (final book in cases) {
-      if (book.id == mainCase.id ||
-          book.titleZh.contains(mainCase.title) ||
-          mainCase.title.contains(book.titleZh) ||
+      if (book.id == item.id ||
+          book.titleZh.contains(item.title) ||
+          item.title.contains(book.titleZh) ||
           (book.shortTitleZh.isNotEmpty &&
-              (book.shortTitleZh.contains(mainCase.title) ||
-                  mainCase.title.contains(book.shortTitleZh)))) {
+              (book.shortTitleZh.contains(item.title) ||
+                  item.title.contains(book.shortTitleZh)))) {
         return book;
       }
     }
@@ -143,21 +159,10 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (BuildContext context) {
+      builder: (BuildContext sheetContext) {
         return RetroDateDialPicker(
           initialDate: _selectedDate,
-          onDateSelected: (newDate) {
-            setState(() {
-              _selectedDate = newDate;
-              final page =
-                  _initialPage + newDate.difference(_anchorDate).inDays;
-              _currentPage = page;
-              if (_pageController.hasClients) {
-                _pageController.jumpToPage(page);
-              }
-              _loadCasesForSelectedDate();
-            });
-          },
+          onDateSelected: (newDate) => _jumpToDate(newDate),
         );
       },
     );
@@ -165,51 +170,99 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
+    final displayCase = _exactMainCase ?? _nearestCase;
+
     return Scaffold(
-      backgroundColor: OnThisDayColors.paperBeige,
+      backgroundColor: t.canvas,
       appBar: AppBar(
-        backgroundColor: OnThisDayColors.paperBeige,
+        backgroundColor: t.canvas,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded,
-              color: OnThisDayColors.primaryGreen),
+          icon: Icon(
+            PhosphorIconsRegular.caretLeft,
+            color: t.textPrimary,
+            size: 20.sp,
+          ),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 14.w),
+            child: TextButton.icon(
+              onPressed: _timeTravel,
+              icon: Icon(
+                PhosphorIconsRegular.shuffle,
+                size: 15.sp,
+                color: t.accentBrass,
+              ),
+              label: Text(
+                '隨機漫遊',
+                style: t.sansBody(
+                  size: 12.sp,
+                  weight: FontWeight.w700,
+                  color: t.accentBrass,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 4.h),
+        padding: EdgeInsets.fromLTRB(18.w, 4.h, 18.w, 32.h),
         physics: const BouncingScrollPhysics(),
         children: [
-          // Postcard Header with Stamp & Postmarks
           Padding(
-            padding: EdgeInsets.only(bottom: 20.h),
+            padding: EdgeInsets.only(bottom: 18.h),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '那年今日',
-                      style: OnThisDayTextStyles.pageTitle(context)
-                          .copyWith(fontSize: 28.sp),
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      '法制史上的今天',
-                      style: TextStyle(
-                        fontFamily: 'Songti TC',
-                        fontFamilyFallback: const ['BiauKai', 'serif'],
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w900,
-                        color: OnThisDayColors.secondaryGreen,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 3.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: t.accentBrassContainer,
+                          borderRadius: BorderRadius.circular(6.r),
+                        ),
+                        child: Text(
+                          '今日座標 · ${_today.month}月${_today.day}日',
+                          style: t.tabularMetric(
+                            size: 10.5.sp,
+                            weight: FontWeight.w700,
+                            color: t.accentOnBrassContainer,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 8.h),
+                      Text(
+                        '歷史上的今日',
+                        style: t.serifTitle(
+                          size: 26.sp,
+                          weight: FontWeight.w800,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        '臺灣法制與人權里程碑日誌',
+                        style: t.sansBody(
+                          size: 12.5.sp,
+                          weight: FontWeight.w600,
+                          color: t.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(
-                  width: 130.w,
+                  width: 128.w,
                   height: 60.h,
                   child: Stack(
                     clipBehavior: Clip.none,
@@ -221,18 +274,16 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
                       ),
                       Positioned(
                         left: 0,
-                        top: 0,
+                        top: 2.h,
                         child: IgnorePointer(
                           child: CustomPaint(
-                            size: Size(100.w, 54.h),
+                            size: Size(96.w, 52.h),
                             painter: ProgrammaticPostmarkPainter(
-                              dateText: _mainCase != null
-                                  ? '${_mainCase!.year}.${_mainCase!.month.toString().padLeft(2, '0')}.${_mainCase!.day.toString().padLeft(2, '0')}'
+                              dateText: displayCase != null
+                                  ? displayCase.fullDateLabel
                                   : '${_selectedDate.year}.${_selectedDate.month.toString().padLeft(2, '0')}.${_selectedDate.day.toString().padLeft(2, '0')}',
-                              locationText: _mainCase != null
-                                  ? _mainCase!.location
-                                  : '歷史歲月',
-                              color: const Color(0xFF8C7B6B),
+                              locationText: displayCase?.location ?? '法治歲月',
+                              color: t.textMuted,
                             ),
                           ),
                         ),
@@ -243,53 +294,36 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
               ],
             ),
           ),
-          // 0. Positioning introduction card
-          _buildPositioningBanner(),
-          // 1. Premium Calendar & Featured Case Card
-          _buildFeaturedCaseCard(),
+          _buildPositioningBanner(t),
+          _buildFeaturedCasePager(t),
           SizedBox(height: 24.h),
-
-          // 2. "今天的歷史案件" Section
-          _buildTodayHistorySection(),
+          _buildExploreByDateSection(t),
           SizedBox(height: 24.h),
-
-          // 3. "依日期探索" Section
-          _buildExploreByDateSection(),
-          SizedBox(height: 32.h),
+          _buildCuratedHistorySection(t),
         ],
       ),
     );
   }
 
-  Widget _buildPositioningBanner() {
+  Widget _buildPositioningBanner(PreambleTokens t) {
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       padding: EdgeInsets.all(14.w),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFAF6EE),
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFFD6C0A0), width: 1.w),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x06000000),
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
+      decoration: t.subtleBoxDecoration(radius: 16.r),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.all(8.w),
-            decoration: const BoxDecoration(
-              color: Color(0xFFEAF5EF),
-              shape: BoxShape.circle,
+            width: 34.w,
+            height: 34.w,
+            decoration: BoxDecoration(
+              color: t.brandContainer,
+              borderRadius: BorderRadius.circular(10.r),
             ),
             child: Icon(
-              Icons.mark_as_unread_rounded,
-              color: OnThisDayColors.primaryGreen,
-              size: 20.sp,
+              PhosphorIconsRegular.compass,
+              color: t.brandOnContainer,
+              size: 18.sp,
             ),
           ),
           SizedBox(width: 12.w),
@@ -298,22 +332,20 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '探索法治足跡，拉近法律與生活的距離',
-                  style: TextStyle(
-                    color: OnThisDayColors.primaryGreen,
-                    fontSize: 12.5.sp,
-                    fontWeight: FontWeight.bold,
-                    height: 1.2,
+                  '探索法治足跡，拉近法律與現代生活的距離',
+                  style: t.sansTitle(
+                    size: 13.sp,
+                    weight: FontWeight.w700,
+                    color: t.textPrimary,
                   ),
                 ),
-                SizedBox(height: 5.h),
+                SizedBox(height: 4.h),
                 Text(
-                  '歷史是一面鏡子，每一樁法治里程碑都默默指引著現代人的生活。那年今日帶您開啟一封封歷史信札，從思辨中找尋現代法律生活的定位。',
-                  style: TextStyle(
-                    color: const Color(0xFF7E6E5A),
-                    fontSize: 10.5.sp,
-                    height: 1.45,
-                    fontWeight: FontWeight.w500,
+                  '每一樁憲政與司法轉折都塑造了今日的權利保障。滑動日曆翻閱當日或鄰近歷史事件，對照現代法理演進。',
+                  style: t.sansBody(
+                    size: 11.5.sp,
+                    color: t.textSecondary,
+                    height: 1.48,
                   ),
                 ),
               ],
@@ -324,10 +356,10 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
     );
   }
 
-  Widget _buildFeaturedCaseCard() {
+  Widget _buildFeaturedCasePager(PreambleTokens t) {
     final textScale = MediaQuery.textScalerOf(context).scale(1.0);
     final pageHeight =
-        (textScale > 1.6 ? 410 : (textScale > 1.25 ? 350 : 255)).h;
+        (textScale > 1.5 ? 430 : (textScale > 1.2 ? 375 : 315)).h;
 
     return SizedBox(
       height: pageHeight,
@@ -335,7 +367,6 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
         controller: _pageController,
         onPageChanged: (page) {
           setState(() {
-            _currentPage = page;
             _selectedDate =
                 _anchorDate.add(Duration(days: page - _initialPage));
             _loadCasesForSelectedDate();
@@ -344,106 +375,268 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
         itemBuilder: (context, index) {
           final date = _anchorDate.add(Duration(days: index - _initialPage));
           final dayCases = onThisDayCasesForDate(date.month, date.day);
-          final mainCase = dayCases.isNotEmpty ? dayCases.first : null;
+          final exactCase = dayCases.isNotEmpty ? dayCases.first : null;
+          final nearestCase =
+              exactCase ?? onThisDayNearestCaseForDate(date.month, date.day);
 
           return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4.w),
-            child: _buildFeaturedCaseCardForDate(date, mainCase),
+            padding: EdgeInsets.symmetric(horizontal: 2.w),
+            child: _buildFeaturedCaseCardForDate(
+              t,
+              date: date,
+              exactCase: exactCase,
+              nearestCase: nearestCase,
+            ),
           );
         },
       ),
     );
   }
 
-  Widget _buildFeaturedCaseCardForDate(DateTime date, OnThisDayCase? mainCase) {
-    final textScale = MediaQuery.textScalerOf(context).scale(1.0);
-    final useStackedLayout = textScale > 1.25;
-    final matchedBook = _findDossierSync(mainCase);
+  Widget _buildFeaturedCaseCardForDate(
+    PreambleTokens t, {
+    required DateTime date,
+    required OnThisDayCase? exactCase,
+    required OnThisDayCase? nearestCase,
+  }) {
+    final isToday = _isSameMonthDay(date, _today);
+    final isExact = exactCase != null;
+    final activeCase = exactCase ?? nearestCase;
+    final matchedBook = _findDossierSync(activeCase);
+    final quoteItem = onThisDayLegalQuotes[
+        (date.month * 31 + date.day) % onThisDayLegalQuotes.length];
 
-    final cardContent = useStackedLayout
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Column(
-                  children: [
-                    OnThisDayCalendarSheet(
-                      year: mainCase != null ? mainCase.year : date.year,
-                      monthDay: '${date.month} / ${date.day}',
-                      location: mainCase != null ? mainCase.location : '歷史歲月',
-                    ),
-                    SizedBox(height: 8.h),
-                    _buildPreviousDayButton(),
-                  ],
-                ),
-              ),
-              SizedBox(height: 16.h),
-              _buildFeaturedCardTextContent(date, mainCase, matchedBook),
-            ],
-          )
-        : Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Left Column: Vintage Calendar Card
-              Column(
-                children: [
-                  OnThisDayCalendarSheet(
-                    year: mainCase != null ? mainCase.year : date.year,
-                    monthDay: '${date.month} / ${date.day}',
-                    location: mainCase != null ? mainCase.location : '歷史歲月',
-                  ),
-                  SizedBox(height: 12.h),
-                  _buildPreviousDayButton(),
-                ],
-              ),
-              SizedBox(width: 16.w),
-              // Right Column: Summary text and button
-              Expanded(
-                child:
-                    _buildFeaturedCardTextContent(date, mainCase, matchedBook),
-              ),
-            ],
-          );
+    final String statusBadgeLabel;
+    if (isExact) {
+      statusBadgeLabel = isToday
+          ? '今日正日事件 · ${date.month}月${date.day}日'
+          : '當日歷史事件 · ${date.month}月${date.day}日';
+    } else if (activeCase != null) {
+      final sameMonth = activeCase.month == date.month;
+      final prefix = isToday
+          ? '今日 ${date.month}月${date.day}日'
+          : '所選 ${date.month}月${date.day}日';
+      final relation = sameMonth ? '本月鄰近記憶' : '近期鄰近記憶';
+      statusBadgeLabel =
+          '$prefix · $relation (${activeCase.month}/${activeCase.day})';
+    } else {
+      statusBadgeLabel = '${date.month}月${date.day}日';
+    }
 
     return Container(
       padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: OnThisDayColors.bgPaperLight,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: OnThisDayColors.borderLight, width: 1.2),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 16,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
+      decoration: t.cardDecoration(radius: 20.r),
       child: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            cardContent,
-            if (mainCase != null) ...[
+            Row(
+              children: [
+                Expanded(
+                  child: Wrap(
+                    spacing: 6.w,
+                    runSpacing: 4.h,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 9.w,
+                          vertical: 4.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isExact
+                              ? t.brandContainer
+                              : t.accentBrassContainer,
+                          borderRadius: BorderRadius.circular(999.r),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              isExact
+                                  ? PhosphorIconsRegular.calendarCheck
+                                  : PhosphorIconsRegular.clockCounterClockwise,
+                              size: 12.sp,
+                              color: isExact
+                                  ? t.brandOnContainer
+                                  : t.accentOnBrassContainer,
+                            ),
+                            SizedBox(width: 4.w),
+                            Flexible(
+                              child: Text(
+                                statusBadgeLabel,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: t.sansBody(
+                                  size: 10.5.sp,
+                                  weight: FontWeight.w700,
+                                  color: isExact
+                                      ? t.brandOnContainer
+                                      : t.accentOnBrassContainer,
+                                  height: 1.2,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 6.w),
+                _buildPreviousDayButton(t),
+              ],
+            ),
+            SizedBox(height: 14.h),
+            if (activeCase != null) ...[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  OnThisDayCalendarSheet(
+                    year: activeCase.year,
+                    monthDay: '${activeCase.month} / ${activeCase.day}',
+                    location: activeCase.location,
+                    width: 96,
+                    height: 114,
+                  ),
+                  SizedBox(width: 14.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 7.w,
+                                vertical: 2.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: t.surfaceSubtle,
+                                borderRadius: BorderRadius.circular(6.r),
+                                border: Border.all(color: t.border),
+                              ),
+                              child: Text(
+                                activeCase.category,
+                                style: t.sansBody(
+                                  size: 10.sp,
+                                  weight: FontWeight.w700,
+                                  color: t.textSecondary,
+                                  height: 1.2,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 6.h),
+                        Text(
+                          activeCase.title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: t.serifTitle(
+                            size: 17.5.sp,
+                            weight: FontWeight.w800,
+                            height: 1.28,
+                          ),
+                        ),
+                        SizedBox(height: 6.h),
+                        Text(
+                          activeCase.summary,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: t.sansBody(
+                            size: 12.sp,
+                            color: t.textSecondary,
+                            height: 1.48,
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        Wrap(
+                          spacing: 8.w,
+                          runSpacing: 6.h,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                if (matchedBook != null) {
+                                  Navigator.of(context).push(
+                                    CupertinoPageRoute<void>(
+                                      builder: (__) => CaseDossierDetailPage(
+                                        book: matchedBook,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  Navigator.of(context).push(
+                                    CupertinoPageRoute<void>(
+                                      builder: (__) => OnThisDayDetailPage(
+                                        caseId: activeCase.id,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 13.w,
+                                  vertical: 7.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: t.brandPrimaryStrong,
+                                  borderRadius: BorderRadius.circular(999.r),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      matchedBook != null
+                                          ? '調閱法治卷宗'
+                                          : '閱讀歷史卷宗',
+                                      style: t.sansBody(
+                                        size: 11.5.sp,
+                                        weight: FontWeight.w700,
+                                        color: const Color(0xFFFAF8F4),
+                                        height: 1.2,
+                                      ),
+                                    ),
+                                    SizedBox(width: 4.w),
+                                    Icon(
+                                      PhosphorIconsRegular.arrowRight,
+                                      size: 12.sp,
+                                      color: const Color(0xFFFAF8F4),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
               SizedBox(height: 12.h),
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 9.h),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFF9EE),
+                  color: t.surfaceSubtle,
                   borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(
-                      color: const Color(0xFFD5C3A3).withValues(alpha: 0.5)),
+                  border: Border(
+                    left: BorderSide(color: t.accentBrass, width: 3),
+                  ),
                 ),
                 child: Text(
-                  '「${mainCase.quote}」',
+                  isExact
+                      ? '「${activeCase.quote}」'
+                      : '當日思辨：「${quoteItem.quote}」—— ${quoteItem.author}',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 10.5.sp,
-                    fontWeight: FontWeight.w800,
-                    fontStyle: FontStyle.italic,
-                    color: const Color(0xFF6C5437),
+                  style: t.serifBody(
+                    size: 11.5.sp,
+                    color: t.textSecondary,
+                    height: 1.45,
                   ),
                 ),
               ),
@@ -454,28 +647,32 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
     );
   }
 
-  Widget _buildPreviousDayButton() {
+  Widget _buildPreviousDayButton(PreambleTokens t) {
     return GestureDetector(
       onTap: _goToPreviousDay,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+        padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 4.h),
         decoration: BoxDecoration(
-          color: OnThisDayColors.paperBeige.withValues(alpha: 0.25),
-          borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(color: OnThisDayColors.borderLight),
+          color: t.surfaceSubtle,
+          borderRadius: BorderRadius.circular(999.r),
+          border: Border.all(color: t.border),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.arrow_back_rounded,
-                size: 10.sp, color: OnThisDayColors.secondaryGreen),
-            SizedBox(width: 4.w),
+            Icon(
+              PhosphorIconsRegular.arrowLeft,
+              size: 11.sp,
+              color: t.textSecondary,
+            ),
+            SizedBox(width: 3.w),
             Text(
-              '倒回前一天',
-              style: TextStyle(
-                fontSize: 9.sp,
-                fontWeight: FontWeight.w800,
-                color: OnThisDayColors.secondaryGreen,
+              '前一日',
+              style: t.sansBody(
+                size: 10.sp,
+                weight: FontWeight.w700,
+                color: t.textSecondary,
+                height: 1.2,
               ),
             ),
           ],
@@ -484,185 +681,122 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
     );
   }
 
-  Widget _buildFeaturedCardTextContent(
-      DateTime date, OnThisDayCase? mainCase, CaseBook? matchedBook) {
-    final hasDossier = matchedBook != null;
-
-    if (mainCase != null) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            mainCase.title,
-            style: OnThisDayTextStyles.titleSerif(context).copyWith(
-              fontSize: 18.sp,
-              height: 1.2,
-            ),
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            mainCase.summary,
-            maxLines: 4,
-            overflow: TextOverflow.ellipsis,
-            style: OnThisDayTextStyles.body(context).copyWith(
-              fontSize: 11.5.sp,
-              height: 1.5,
-            ),
-          ),
-          SizedBox(height: 14.h),
-          GestureDetector(
-            onTap: () {
-              if (hasDossier) {
-                Navigator.of(context).push(
-                  CupertinoPageRoute<void>(
-                    builder: (__) => CaseDossierDetailPage(book: matchedBook),
-                  ),
-                );
-              } else {
-                Navigator.of(context).push(
-                  CupertinoPageRoute<void>(
-                    builder: (__) => OnThisDayDetailPage(caseId: mainCase.id),
-                  ),
-                );
-              }
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-              decoration: BoxDecoration(
-                color: OnThisDayColors.primaryGreen,
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    hasDossier ? '調閱法治卷宗' : '回到那一天',
-                    style: TextStyle(
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w900,
-                      color: OnThisDayColors.bgPaperLight,
-                    ),
-                  ),
-                  SizedBox(width: 4.w),
-                  Icon(
-                    Icons.arrow_forward_rounded,
-                    size: 11.sp,
-                    color: OnThisDayColors.bgPaperLight,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      );
-    } else {
-      // [審查修復] 原本這裡重複計算了 index 與 quoteItem，
-      // 但 _loadCasesForSelectedDate() 已經將結果存入 _selectedQuote。
-      // 直接使用 _selectedQuote 即可，避免兩處計算不一致的風險。
-      final quoteItem = _selectedQuote ?? onThisDayLegalQuotes[
-          (date.month * 31 + date.day) % onThisDayLegalQuotes.length];
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+  Widget _buildExploreByDateSection(PreambleTokens t) {
+    final isTodaySelected = _isSameMonthDay(_selectedDate, _today);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '依時間維度探索',
+          style: t.sansTitle(size: 15.sp, weight: FontWeight.w700),
+        ),
+        SizedBox(height: 10.h),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          child: Row(
             children: [
-              Icon(Icons.format_quote_rounded,
-                  color: OnThisDayColors.accentGold, size: 16.sp),
-              SizedBox(width: 4.w),
-              Text(
-                '思辨格言',
-                style: TextStyle(
-                  fontFamily: 'Songti TC',
-                  fontFamilyFallback: const ['BiauKai', 'serif'],
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w900,
-                  color: OnThisDayColors.secondaryGreen,
+              _buildExplorePill(
+                t,
+                '今天 (${_today.month}/${_today.day})',
+                isSelected: isTodaySelected,
+                onTap: () => _jumpToDate(_today, animate: true),
+              ),
+              SizedBox(width: 8.w),
+              _buildExplorePill(t, '本月記憶', onTap: () => _openDiscovery('本月')),
+              SizedBox(width: 8.w),
+              _buildExplorePill(t, '週年紀念', onTap: () => _openDiscovery('今年')),
+              SizedBox(width: 8.w),
+              _buildExplorePill(
+                t,
+                '重大憲政',
+                onTap: () => _openDiscovery('重大事件'),
+              ),
+              SizedBox(width: 8.w),
+              GestureDetector(
+                onTap: _showRetroDatePicker,
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 8.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: t.surface,
+                    borderRadius: BorderRadius.circular(999.r),
+                    border: Border.all(color: t.border),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        PhosphorIconsRegular.calendarBlank,
+                        size: 15.sp,
+                        color: t.brandPrimary,
+                      ),
+                      SizedBox(width: 5.w),
+                      Text(
+                        '指定日期',
+                        style: t.sansBody(
+                          size: 12.sp,
+                          weight: FontWeight.w700,
+                          color: t.textPrimary,
+                          height: 1.2,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 6.h),
-          Text(
-            '「${quoteItem.quote}」',
-            style: TextStyle(
-              fontFamily: 'Songti TC',
-              fontFamilyFallback: const ['BiauKai', 'serif'],
-              fontSize: 13.sp,
-              fontWeight: FontWeight.bold,
-              height: 1.4,
-              color: const Color(0xFF6C5437),
-            ),
-          ),
-          SizedBox(height: 4.h),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              '—— ${quoteItem.author}',
-              style: TextStyle(
-                fontSize: 10.sp,
-                fontWeight: FontWeight.w800,
-                color: OnThisDayColors.textSecondary,
-              ),
-            ),
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            '思辨問題：${quoteItem.reflectiveQuestion}',
-            style: TextStyle(
-              fontSize: 10.5.sp,
-              height: 1.4,
-              color: OnThisDayColors.textSecondary,
-            ),
-          ),
-          SizedBox(height: 12.h),
-          GestureDetector(
-            onTap: _timeTravel,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-              decoration: BoxDecoration(
-                color: OnThisDayColors.accentGold,
-                borderRadius: BorderRadius.circular(20.r),
-                boxShadow: [
-                  BoxShadow(
-                    color: OnThisDayColors.accentGold.withValues(alpha: 0.15),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '歷史時空漫遊 🃏',
-                    style: TextStyle(
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w900,
-                      color: OnThisDayColors.bgPaperLight,
-                    ),
-                  ),
-                  SizedBox(width: 4.w),
-                  Icon(
-                    Icons.casino_outlined,
-                    size: 11.sp,
-                    color: OnThisDayColors.bgPaperLight,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      );
-    }
+        ),
+      ],
+    );
   }
 
-  // Removed internal _buildCalendarSheet to use the shared OnThisDayCalendarSheet widget
+  Widget _buildExplorePill(
+    PreambleTokens t,
+    String label, {
+    bool isSelected = false,
+    VoidCallback? onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          color: isSelected ? t.brandPrimaryStrong : t.surface,
+          borderRadius: BorderRadius.circular(999.r),
+          border: Border.all(
+            color: isSelected ? t.brandPrimaryStrong : t.border,
+          ),
+        ),
+        child: Text(
+          label,
+          style: t.sansBody(
+            size: 12.sp,
+            weight: FontWeight.w700,
+            color: isSelected ? const Color(0xFFFAF8F4) : t.textSecondary,
+            height: 1.2,
+          ),
+        ),
+      ),
+    );
+  }
 
-  Widget _buildTodayHistorySection() {
-    // Other cases happening on this day
+  Widget _buildCuratedHistorySection(PreambleTokens t) {
+    final activeId = (_exactMainCase ?? _nearestCase)?.id;
+    final sameMonthCases = onThisDayCasesForMonth(_selectedDate.month)
+        .where((c) => c.id != activeId)
+        .toList();
     final listCases = _otherCases.isNotEmpty
         ? _otherCases
-        : onThisDayCases.where((c) => c.id != _mainCase?.id).take(3).toList();
+        : (sameMonthCases.isNotEmpty
+            ? sameMonthCases
+            : onThisDayCases
+                .where((c) => c.id != activeId)
+                .take(4)
+                .toList());
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -671,9 +805,10 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              '今天的歷史案件',
-              style: OnThisDayTextStyles.cardTitle(context)
-                  .copyWith(fontSize: 15.sp),
+              sameMonthCases.isNotEmpty
+                  ? '${_selectedDate.month} 月相關法治事件'
+                  : '經典法治歷史館藏',
+              style: t.sansTitle(size: 15.sp, weight: FontWeight.w700),
             ),
             GestureDetector(
               onTap: () {
@@ -687,14 +822,18 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
                 children: [
                   Text(
                     '查看全部',
-                    style: TextStyle(
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w800,
-                      color: OnThisDayColors.accentGold,
+                    style: t.sansBody(
+                      size: 12.sp,
+                      weight: FontWeight.w700,
+                      color: t.accentBrass,
                     ),
                   ),
-                  Icon(Icons.chevron_right_rounded,
-                      size: 14.sp, color: OnThisDayColors.accentGold),
+                  SizedBox(width: 2.w),
+                  Icon(
+                    PhosphorIconsRegular.caretRight,
+                    size: 14.sp,
+                    color: t.accentBrass,
+                  ),
                 ],
               ),
             ),
@@ -702,7 +841,7 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
         ),
         SizedBox(height: 12.h),
         SizedBox(
-          height: 90.h,
+          height: 112.h,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
@@ -719,35 +858,48 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
                   );
                 },
                 child: Container(
-                  width: 140.w,
-                  padding: EdgeInsets.all(12.w),
-                  decoration: BoxDecoration(
-                    color: OnThisDayColors.bgCream.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(color: OnThisDayColors.borderLight),
-                  ),
+                  width: 168.w,
+                  padding: EdgeInsets.all(13.w),
+                  decoration: t.cardDecoration(radius: 16.r, elevated: false),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        '${c.year}',
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          fontWeight: FontWeight.w900,
-                          color: OnThisDayColors.accentGold,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            '${c.year}.${c.month.toString().padLeft(2, '0')}.${c.day.toString().padLeft(2, '0')}',
+                            style: t.tabularMetric(
+                              size: 11.sp,
+                              weight: FontWeight.w700,
+                              color: t.accentBrass,
+                            ),
+                          ),
+                          SizedBox(width: 6.w),
+                          Expanded(
+                            child: Text(
+                              c.category,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.right,
+                              style: t.sansBody(
+                                size: 10.sp,
+                                weight: FontWeight.w600,
+                                color: t.textMuted,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 4.h),
+                      SizedBox(height: 6.h),
                       Expanded(
                         child: Text(
                           c.title,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w800,
-                            color: OnThisDayColors.primaryGreen,
+                          style: t.serifTitle(
+                            size: 13.5.sp,
+                            weight: FontWeight.w700,
+                            height: 1.3,
                           ),
                         ),
                       ),
@@ -759,89 +911,6 @@ class _OnThisDayHomePageState extends State<OnThisDayHomePage> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildExploreByDateSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '依日期探索',
-          style:
-              OnThisDayTextStyles.cardTitle(context).copyWith(fontSize: 15.sp),
-        ),
-        SizedBox(height: 12.h),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _buildExplorePill('今天',
-                isSelected: _selectedDate.month == 4 && _selectedDate.day == 7,
-                onTap: () {
-              setState(() {
-                _selectedDate = DateTime(2026, 4, 7);
-                final page =
-                    _initialPage + _selectedDate.difference(_anchorDate).inDays;
-                _currentPage = page;
-                if (_pageController.hasClients) {
-                  _pageController.jumpToPage(page);
-                }
-                _loadCasesForSelectedDate();
-              });
-            }),
-            _buildExplorePill('本月', onTap: () => _openDiscovery('本月')),
-            _buildExplorePill('今年', onTap: () => _openDiscovery('今年')),
-            _buildExplorePill('重大事件', onTap: () => _openDiscovery('重大事件')),
-            GestureDetector(
-              onTap: _showRetroDatePicker,
-              child: Container(
-                padding: EdgeInsets.all(8.w),
-                decoration: BoxDecoration(
-                  color: OnThisDayColors.bgPaperLight,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: OnThisDayColors.borderLight),
-                ),
-                child: Icon(
-                  Icons.calendar_today_rounded,
-                  size: 16.sp,
-                  color: OnThisDayColors.primaryGreen,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildExplorePill(String label,
-      {bool isSelected = false, VoidCallback? onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? OnThisDayColors.primaryGreen
-              : OnThisDayColors.bgPaperLight,
-          borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(
-            color: isSelected
-                ? OnThisDayColors.primaryGreen
-                : OnThisDayColors.borderLight,
-          ),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 11.5.sp,
-            fontWeight: FontWeight.w900,
-            color: isSelected
-                ? OnThisDayColors.bgPaperLight
-                : OnThisDayColors.textSecondary,
-          ),
-        ),
-      ),
     );
   }
 

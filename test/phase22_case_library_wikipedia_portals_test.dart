@@ -133,7 +133,7 @@ void main() {
 
       // Verify Featured Landmark Case Card
       expect(find.text('⭐ 焦點指標大案'), findsOneWidget);
-      expect(find.text('司法院釋字第 748 號解釋'), findsOneWidget);
+      expect(find.text('同性婚姻釋憲案（司法院釋字第 748 號）'), findsOneWidget);
       expect(find.text('研讀判決檔案詳情 ➔'), findsOneWidget);
 
       // Tap on specific sub-shelf: "人身自由與正當法律程序"

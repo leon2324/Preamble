@@ -17,6 +17,7 @@ class PreambleStoryActionBar extends StatelessWidget {
     required this.onFollow,
     required this.onSave,
     required this.onShare,
+    this.showSaveButton = true,
     this.backgroundColor = Colors.white,
     this.borderColor = const Color(0xFFEDE4D8),
     this.primaryColor = const Color(0xFF1B3F38),
@@ -29,6 +30,7 @@ class PreambleStoryActionBar extends StatelessWidget {
   final VoidCallback onFollow;
   final VoidCallback onSave;
   final VoidCallback onShare;
+  final bool showSaveButton;
   final Color backgroundColor;
   final Color borderColor;
   final Color primaryColor;
@@ -104,16 +106,17 @@ class PreambleStoryActionBar extends StatelessWidget {
               ),
             ),
           ),
-          _StoryActionButton(
-            icon: _StorySvgIcon(
-              isSaved ? _svgStarFilledIcon : _svgStarOutlineIcon,
+          if (showSaveButton)
+            _StoryActionButton(
+              icon: _StorySvgIcon(
+                isSaved ? _svgStarFilledIcon : _svgStarOutlineIcon,
+                color: primaryColor,
+                applyColor: !isSaved,
+              ),
+              label: '收藏',
               color: primaryColor,
-              applyColor: !isSaved,
+              onTap: onSave,
             ),
-            label: '收藏',
-            color: primaryColor,
-            onTap: onSave,
-          ),
           _StoryActionButton(
             icon: _StorySvgIcon(_svgShareIcon, color: primaryColor),
             label: '分享',

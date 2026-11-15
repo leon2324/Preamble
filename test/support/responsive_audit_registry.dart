@@ -39,8 +39,8 @@ final responsiveComponentEntries = <ResponsiveAuditEntry>[
     id: 'component.island_bottom_nav',
     label: 'IslandBottomNav',
     declaredStates: const ['normal', 'safe-area'],
-    primaryLabels: const ['首頁', '學習', '小法助', '紀事', '我的'],
-    tappablePrimaryLabels: const ['首頁', '學習', '小法助', '紀事', '我的'],
+    primaryLabels: const ['首頁', '學習', '問診', '紀事', '我的'],
+    tappablePrimaryLabels: const ['首頁', '學習', '問診', '紀事', '我的'],
     usesBoundedSettle: true,
     builder: () => Scaffold(
       body: Stack(
@@ -66,7 +66,7 @@ final responsiveComponentEntries = <ResponsiveAuditEntry>[
                     selectedIcon: Icons.menu_book_rounded,
                   ),
                   BottomNavItemData(
-                    label: '小法助',
+                    label: '問診',
                     icon: Icons.support_agent_outlined,
                     selectedIcon: Icons.support_agent_rounded,
                   ),
@@ -129,7 +129,7 @@ final responsiveScreenEntries = <ResponsiveAuditEntry>[
     id: 'screen.app_shell_home',
     label: '主導航首頁',
     declaredStates: const ['loading', 'normal'],
-    primaryLabels: const ['法律即時快問', '首頁', '學習', '小法助', '紀事', '我的'],
+    primaryLabels: const ['公文解讀', '首頁', '學習', '問診', '紀事', '我的'],
     ownsAppShell: true,
     builder: () => const MylawApp(),
   ),
@@ -137,7 +137,7 @@ final responsiveScreenEntries = <ResponsiveAuditEntry>[
     id: 'screen.home_page',
     label: '首頁內容',
     declaredStates: const ['loading', 'normal', 'longest-realistic-content'],
-    primaryLabels: const ['法律即時快問'],
+    primaryLabels: const ['公文解讀'],
     // 台灣繁體中文教學註解：首頁主內容是長頁面；primary label 初始不在
     // viewport 不代表不可達，稽核前應先使用既有 ensureVisible 流程捲動。
     requiresScroll: true,

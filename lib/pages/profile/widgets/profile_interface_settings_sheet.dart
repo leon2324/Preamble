@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:preamble/components/shared/custom_toast.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:preamble/app/app_state.dart';
-import 'package:preamble/theme/app_colors.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 
-// 介面自訂設定底頁，支援 iOS 風格橫向島嶼導覽列拖曳排序、非同步微幅晃動動效，
-// 以及導覽文字標籤開關與 Accent 主題色彩點選。
-
+/// 介面自訂設定底頁：
+/// - 即時預覽盒同步反映 `_tempAccentIndex`、`_tempShowLabels` 與 `_tempOrder`
+/// - 分頁名稱與 `main.dart` 完全對齊（Tab 3 為「問診」）
 class _JiggleWidget extends StatefulWidget {
-  const _JiggleWidget(
-      {required this.child, required this.index, this.enabled = true});
+  const _JiggleWidget({
+    required this.child,
+    required this.index,
+    this.enabled = true,
+  });
 
   final Widget child;
   final int index;
@@ -32,26 +37,14 @@ class _JiggleWidgetState extends State<_JiggleWidget>
       vsync: this,
       duration: const Duration(milliseconds: 140),
     );
-
-    // 微幅的弧度旋轉動效（約 -1.1度 到 1.1度）
-    _rotationAnim = Tween<double>(begin: -0.02, end: 0.02).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut,
-      ),
+    _rotationAnim = Tween<double>(begin: -0.018, end: 0.018).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
-
-    // 微幅的上下平移，加強懸浮晃動感
-    _translationAnim = Tween<double>(begin: -0.6, end: 0.6).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut,
-      ),
+    _translationAnim = Tween<double>(begin: -0.5, end: 0.5).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
 
     if (widget.enabled) {
-      // 使用項目 index 來決定相位偏移量，
-      // 如此能確保每個分頁的抖動起動點不同，呈現擬真且不呆板的 iOS 非同步抖動效果。
       _controller.value = (widget.index * 0.23) % 1.0;
       _controller.repeat(reverse: true);
     }
@@ -108,14 +101,26 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
   late bool _tempShowLabels;
   late int _tempAccentIndex;
 
-  // 簡短文字標籤，適用於島嶼空間
+  /// 與 `main.dart` `_originalNavItems` 100% 一致的五大核心分頁標籤
   static const Map<int, String> _tabLabelsShort = {
     0: '首頁',
     1: '學習',
-    2: '小法助',
+    2: '問診',
     3: '紀事',
     4: '我的',
   };
+
+  /// 與 `AppColors` 靜奢強調色選擇器 1:1 對齊的 4 組高質感色票
+  static const List<({Color color, String label})> _accentSwatches = [
+    (color: Color(0xFFB5894A), label: '典藏古銅金'),
+    (color: Color(0xFFA64B3B), label: '朱砂印記紅'),
+    (color: Color(0xFF35546C), label: '岩青律政藍'),
+    (color: Color(0xFF235D46), label: '蒼松墨玉綠'),
+  ];
+
+  Color get _previewAccent =>
+      _accentSwatches[_tempAccentIndex.clamp(0, _accentSwatches.length - 1)]
+          .color;
 
   @override
   void initState() {
@@ -125,61 +130,39 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
     _tempAccentIndex = widget.appState.accentColorIndex;
   }
 
-  Widget _buildTabIcon(int index) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    // 使用當前的 Accent 主題色，增加自訂時的色彩回饋感
-    final iconColor = AppColors.accent;
+  Widget _buildTabIcon(int index, {required bool isPreviewActive}) {
+    final t = context.tokens;
+    final IconData iconData = switch (index) {
+      0 => isPreviewActive ? PhosphorIconsFill.house : PhosphorIconsRegular.house,
+      1 => isPreviewActive
+          ? PhosphorIconsFill.graduationCap
+          : PhosphorIconsRegular.graduationCap,
+      2 => isPreviewActive
+          ? PhosphorIconsFill.scales
+          : PhosphorIconsRegular.scales,
+      3 => isPreviewActive ? PhosphorIconsFill.books : PhosphorIconsRegular.books,
+      _ => isPreviewActive
+          ? PhosphorIconsFill.userCircle
+          : PhosphorIconsRegular.userCircle,
+    };
 
-    if (index == 2) {
-      return Container(
-        width: 24.w,
-        height: 24.w,
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-        ),
-        child: ClipOval(
-          child: Image.asset(
-            'assets/images/assistant/law_assistant_home.png',
-            fit: BoxFit.cover,
-            alignment: Alignment.topCenter,
-          ),
-        ),
-      );
-    }
-
-    final IconData iconData;
-    switch (index) {
-      case 0:
-        iconData = Icons.home_rounded;
-        break;
-      case 1:
-        iconData = Icons.menu_book_rounded;
-        break;
-      case 3:
-        iconData = Icons.inventory_2_rounded;
-        break;
-      case 4:
-      default:
-        iconData = Icons.person_rounded;
-        break;
-    }
-
-    return Icon(iconData, color: iconColor, size: 24.sp);
+    return Icon(
+      iconData,
+      color: isPreviewActive ? _previewAccent : t.textSecondary,
+      size: 22.sp,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final surfaceColor = isDark ? const Color(0xFF171C22) : Colors.white;
-    final borderSide =
-        BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
-    final textMuted =
-        isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
+    final t = context.tokens;
+    final previewAccent = _previewAccent;
 
     return Container(
       decoration: BoxDecoration(
-        color: surfaceColor,
+        color: t.surfaceElevated,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+        border: Border.all(color: t.border),
       ),
       padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 24.h),
       child: SafeArea(
@@ -189,148 +172,184 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Align(
-                alignment: Alignment.center,
+              Center(
                 child: Container(
-                  width: 40.w,
+                  width: 38.w,
                   height: 4.h,
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF2B3441) : AppColors.border,
-                    borderRadius: BorderRadius.circular(2.r),
+                    color: t.borderStrong,
+                    borderRadius: BorderRadius.circular(99.r),
                   ),
                 ),
               ),
               SizedBox(height: 16.h),
               Text(
                 '自訂導覽與介面',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w900,
-                  color:
-                      isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
-                ),
+                style: t.serifTitle(size: 17.sp),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 20.h),
+              SizedBox(height: 18.h),
 
-              // 1. 拖曳排序
-              Text('自訂分頁順序（長按並左右拖曳進行排序）',
-                  style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.bold,
-                      color: textMuted)),
-              SizedBox(height: 12.h),
+              Text(
+                '即時導覽列預覽（長按圖示並左右拖曳可調整順序）',
+                style: t.sansBody(
+                  size: 12.sp,
+                  weight: FontWeight.w700,
+                  color: t.textSecondary,
+                ),
+              ),
+              SizedBox(height: 10.h),
 
-              // 水平「懸浮島嶼」拖曳排序列，高度固定為 84.h，大圓角與精緻陰影
-              Container(
-                height: 84.h,
-                padding: EdgeInsets.symmetric(horizontal: 12.w),
+              // 懸浮島嶼即時預覽盒：即時反映 _tempAccentIndex、_tempShowLabels 與 _tempOrder
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                height: _tempShowLabels ? 82.h : 66.h,
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
                 decoration: BoxDecoration(
-                  color: isDark
-                      ? const Color(0xFF1A2028)
-                      : const Color(0xFFF2F4F7),
-                  borderRadius: BorderRadius.circular(28.r),
+                  color: t.surface,
+                  borderRadius: BorderRadius.circular(26.r),
+                  border: Border.all(
+                    color: previewAccent.withValues(alpha: 0.45),
+                    width: 1.2,
+                  ),
                   boxShadow: [
                     BoxShadow(
-                      color:
-                          Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
-                      blurRadius: 10,
+                      color: t.shadowAmbient,
+                      blurRadius: 14,
                       offset: const Offset(0, 4),
                     ),
                   ],
                 ),
-                child: ReorderableListView(
-                  scrollDirection: Axis.horizontal,
-                  buildDefaultDragHandles: false, // 長按拖曳
-                  children: [
-                    for (int i = 0; i < _tempOrder.length; i++)
-                      ReorderableDelayedDragStartListener(
-                        index: i,
-                        key: ValueKey(_tempOrder[i]),
-                        child: _JiggleWidget(
-                          index: i,
-                          enabled: true,
-                          child: Container(
-                            width:
-                                (MediaQuery.sizeOf(context).width - 64.w) / 5.2,
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                _buildTabIcon(_tempOrder[i]),
-                                SizedBox(height: 5.h),
-                                Text(
-                                  _tabLabelsShort[_tempOrder[i]]!,
-                                  style: TextStyle(
-                                    fontSize: 10.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: isDark
-                                        ? const Color(0xFFF2F4F7)
-                                        : AppColors.textPrimary,
-                                  ),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final itemWidth = constraints.maxWidth / _tempOrder.length;
+                    return ReorderableListView(
+                      scrollDirection: Axis.horizontal,
+                      buildDefaultDragHandles: false,
+                      proxyDecorator: (child, _, __) => Material(
+                        color: Colors.transparent,
+                        child: child,
+                      ),
+                      children: [
+                        for (int i = 0; i < _tempOrder.length; i++)
+                          ReorderableDelayedDragStartListener(
+                            index: i,
+                            key: ValueKey(_tempOrder[i]),
+                            child: _JiggleWidget(
+                              index: i,
+                              enabled: true,
+                              child: SizedBox(
+                                width: itemWidth,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    AnimatedContainer(
+                                      duration:
+                                          const Duration(milliseconds: 180),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 10.w,
+                                        vertical: 4.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: i == 0
+                                            ? previewAccent.withValues(
+                                                alpha: 0.14,
+                                              )
+                                            : Colors.transparent,
+                                        borderRadius:
+                                            BorderRadius.circular(99.r),
+                                      ),
+                                      child: _buildTabIcon(
+                                        _tempOrder[i],
+                                        isPreviewActive: i == 0,
+                                      ),
+                                    ),
+                                    if (_tempShowLabels) ...[
+                                      SizedBox(height: 3.h),
+                                      Text(
+                                        _tabLabelsShort[_tempOrder[i]] ?? '',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: t.sansBody(
+                                          size: 10.5.sp,
+                                          weight: i == 0
+                                              ? FontWeight.w700
+                                              : FontWeight.w600,
+                                          color: i == 0
+                                              ? previewAccent
+                                              : t.textSecondary,
+                                        ),
+                                      ),
+                                    ],
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                  ],
-                  onReorder: (oldIndex, newIndex) {
-                    setState(() {
-                      if (oldIndex < newIndex) {
-                        newIndex -= 1;
-                      }
-                      final int item = _tempOrder.removeAt(oldIndex);
-                      _tempOrder.insert(newIndex, item);
-                    });
+                      ],
+                      onReorder: (oldIndex, newIndex) {
+                        HapticFeedback.selectionClick();
+                        setState(() {
+                          if (oldIndex < newIndex) {
+                            newIndex -= 1;
+                          }
+                          final item = _tempOrder.removeAt(oldIndex);
+                          _tempOrder.insert(newIndex, item);
+                        });
+                      },
+                    );
                   },
                 ),
               ),
-              SizedBox(height: 24.h),
+              SizedBox(height: 20.h),
 
-              // 2. 顯示文字標籤
+              // 顯示文字標籤切換
               Container(
-                decoration: BoxDecoration(
-                  color: isDark
-                      ? const Color(0xFF0F1216)
-                      : const Color(0xFFFAF7F2),
-                  borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(color: borderSide.color),
-                ),
-                child: SwitchListTile(
-                  title: const Text('顯示分頁文字標籤',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: const Text('關閉後將只顯示導覽圖示，高度更加緊湊'),
+                decoration: t.subtleBoxDecoration(radius: 14.r),
+                child: SwitchListTile.adaptive(
+                  title: Text(
+                    '顯示分頁文字標籤',
+                    style: t.sansTitle(size: 14.sp),
+                  ),
+                  subtitle: Text(
+                    '關閉後導覽列僅呈現極簡圖示，視覺更緊湊',
+                    style: t.sansBody(size: 11.5.sp, color: t.textSecondary),
+                  ),
                   value: _tempShowLabels,
-                  activeThumbColor: AppColors.accent,
+                  activeThumbColor: previewAccent,
                   onChanged: (val) {
-                    setState(() {
-                      _tempShowLabels = val;
-                    });
+                    HapticFeedback.selectionClick();
+                    setState(() => _tempShowLabels = val);
                   },
                 ),
               ),
-              SizedBox(height: 24.h),
+              SizedBox(height: 20.h),
 
-              // 3. 主題 Accent Color 點選
-              Text('App 品牌配色',
-                  style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.bold,
-                      color: textMuted)),
-              SizedBox(height: 12.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildColorCircle(0, const Color(0xFFD6A85F), '金沙黃'),
-                  _buildColorCircle(1, const Color(0xFFC62828), '酒櫻紅'),
-                  _buildColorCircle(2, const Color(0xFF1565C0), '律政藍'),
-                  _buildColorCircle(3, const Color(0xFF2E7D32), '法規綠'),
-                ],
+              // 靜奢點綴色票選擇
+              Text(
+                '靜奢重點色票（即時預覽）',
+                style: t.sansBody(
+                  size: 12.sp,
+                  weight: FontWeight.w700,
+                  color: t.textSecondary,
+                ),
               ),
-              SizedBox(height: 28.h),
+              SizedBox(height: 12.h),
+              Wrap(
+                alignment: WrapAlignment.spaceEvenly,
+                spacing: 12.w,
+                runSpacing: 12.h,
+                children: List.generate(_accentSwatches.length, (i) {
+                  return _buildColorSwatch(
+                    context,
+                    index: i,
+                    color: _accentSwatches[i].color,
+                    name: _accentSwatches[i].label,
+                  );
+                }),
+              ),
+              SizedBox(height: 26.h),
 
-              // 操作按鈕
               Row(
                 children: [
                   Expanded(
@@ -338,12 +357,13 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
                       onPressed: () => Navigator.pop(context),
                       style: OutlinedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 12.h),
-                        side: borderSide,
+                        side: BorderSide(color: t.borderStrong),
+                        foregroundColor: t.textSecondary,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14.r)),
+                          borderRadius: BorderRadius.circular(14.r),
+                        ),
                       ),
-                      child: Text('取消',
-                          style: TextStyle(fontSize: 14.sp, color: textMuted)),
+                      child: const Text('取消'),
                     ),
                   ),
                   SizedBox(width: 12.w),
@@ -356,19 +376,21 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
                           accentColorIndex: _tempAccentIndex,
                         );
                         Navigator.pop(context);
-                        CustomToast.show(context, '介面自訂偏好已儲存！');
+                        CustomToast.show(
+                          context,
+                          '介面導覽與配色偏好已儲存',
+                          icon: PhosphorIconsFill.checkCircle,
+                        );
                       },
                       style: FilledButton.styleFrom(
-                        backgroundColor: AppColors.primary,
+                        backgroundColor: t.brandPrimaryStrong,
+                        foregroundColor: const Color(0xFFFAF8F4),
                         padding: EdgeInsets.symmetric(vertical: 12.h),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14.r)),
+                          borderRadius: BorderRadius.circular(14.r),
+                        ),
                       ),
-                      child: Text('儲存變更',
-                          style: TextStyle(
-                              fontSize: 14.sp,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold)),
+                      child: const Text('儲存變更'),
                     ),
                   ),
                 ],
@@ -380,46 +402,57 @@ class _InterfaceSettingsSheetState extends State<InterfaceSettingsSheet> {
     );
   }
 
-  Widget _buildColorCircle(int index, Color color, String name) {
+  Widget _buildColorSwatch(
+    BuildContext context, {
+    required int index,
+    required Color color,
+    required String name,
+  }) {
+    final t = context.tokens;
     final isSelected = _tempAccentIndex == index;
+
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _tempAccentIndex = index;
-        });
+        HapticFeedback.selectionClick();
+        setState(() => _tempAccentIndex = index);
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: 36.w,
-            height: 36.w,
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            width: 38.w,
+            height: 38.w,
             decoration: BoxDecoration(
               color: color,
               shape: BoxShape.circle,
-              border: isSelected
-                  ? Border.all(color: Colors.white, width: 3.w)
-                  : Border.all(color: Colors.transparent),
+              border: Border.all(
+                color: isSelected ? t.textPrimary : Colors.transparent,
+                width: 2.2,
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: color.withValues(alpha: isSelected ? 0.5 : 0.2),
-                  blurRadius: isSelected ? 8 : 4,
-                  spreadRadius: isSelected ? 2 : 0,
+                  color: color.withValues(alpha: isSelected ? 0.42 : 0.16),
+                  blurRadius: isSelected ? 10 : 4,
                   offset: const Offset(0, 2),
                 ),
               ],
             ),
             child: isSelected
-                ? const Icon(Icons.check_rounded, color: Colors.white, size: 18)
+                ? Icon(
+                    PhosphorIconsBold.check,
+                    color: Colors.white,
+                    size: 16.sp,
+                  )
                 : null,
           ),
           SizedBox(height: 6.h),
           Text(
             name,
-            style: TextStyle(
-              fontSize: 11.sp,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              color: isSelected ? AppColors.accent : Colors.grey,
+            style: t.sansBody(
+              size: 11.sp,
+              weight: isSelected ? FontWeight.w700 : FontWeight.w500,
+              color: isSelected ? color : t.textSecondary,
             ),
           ),
         ],

@@ -88,64 +88,112 @@ class _CaseLegalVocabularyPageState extends State<CaseLegalVocabularyPage> {
     },
   ];
 
-  List<Map<String, dynamic>> _getDisplayVocabs() {
+  List<Map<String, dynamic>> _buildAllVocabsForScope() {
     final List<Map<String, dynamic>> list = [];
 
-    // 1. 如果有傳入當前案卷，且該案卷有爭點 (legalIssues)，動態轉換為詞卡
     if (widget.book != null) {
-      for (final issue in widget.book!.legalIssues) {
+      final book = widget.book!;
+      final baseCategory = book.category.contains('憲法')
+          ? '憲法'
+          : (book.category.contains('民事')
+              ? '民事'
+              : (book.category.contains('勞動') || book.category.contains('勞資')
+                  ? '勞動'
+                  : '刑法'));
+
+      // 1. 專屬本案：由本案「法律爭點」轉換之獨立詞卡
+      for (final issue in book.legalIssues) {
+        final cleanedTerm = issue.title
+            .replaceAll('本案中關於', '')
+            .replaceAll('的法律認定標準為何？', '')
+            .replaceAll('？', '')
+            .trim();
         list.add({
-          'term': issue.title
-              .replaceAll('本案中關於', '')
-              .replaceAll('的法律認定標準為何？', '')
-              .replaceAll('？', ''),
-          'category': widget.book!.category.contains('憲法')
-              ? '憲法'
-              : (widget.book!.category.contains('民事') ? '民事' : '刑法'),
+          'term': cleanedTerm.isEmpty ? issue.title : cleanedTerm,
+          'category': baseCategory,
           'icon': CaseLibrarySvgIcons.scale,
           'color': const Color(0xFF1B5E4F),
-          'plainExplanation': issue.plainExplanation,
-          'lifeExample': '本案爭點關聯：${issue.relationToCase}',
-          'caseId': widget.book!.id,
-          'caseName': widget.book!.titleZh,
+          'plainExplanation': issue.plainExplanation.isNotEmpty
+              ? issue.plainExplanation
+              : '本案核心法律爭點之一，攸關裁判認定標準。',
+          'lifeExample': issue.relationToCase.isNotEmpty
+              ? '本案實務脈絡：${issue.relationToCase}'
+              : '與「${book.shortTitleZh}」核心認定直接相關。',
+          'caseId': book.id,
+          'caseName': book.titleZh,
         });
       }
-    }
 
-    // 2. 加上預設的詞卡資料
-    list.addAll(_vocabData);
+      // 2. 專屬本案：由本案「關鍵法條」轉換之詞卡
+      for (final law in book.relatedLaws) {
+        final term = '${law.lawName} ${law.articleNumber}'.trim();
+        if (term.isEmpty) continue;
+        list.add({
+          'term': term,
+          'category': '法條',
+          'icon': CaseLibrarySvgIcons.bookOpen,
+          'color': const Color(0xFF4A7C8C),
+          'plainExplanation': law.plainSummary.isNotEmpty
+              ? law.plainSummary
+              : '本案裁判所引據之核心法律規範。',
+          'lifeExample': law.relationToCase.isNotEmpty
+              ? '本案實務關聯：${law.relationToCase}'
+              : '適用於「${book.shortTitleZh}」之審理認定。',
+          'caseId': book.id,
+          'caseName': book.titleZh,
+        });
+      }
 
-    // 3. 如果有傳入當前案卷，將與此案卷相關（caseId 一致）的詞卡排在最前面
-    if (widget.book != null) {
+      // 3. 僅補充確實屬於本案 caseId 的精選詞卡（不混入其他案件）
+      for (final item in _vocabData) {
+        if (item['caseId'] == book.id) {
+          list.add(item);
+        }
+      }
+
+      // 若該案尚無爭點與法條資料，依本案標籤建立基礎專屬詞卡
+      if (list.isEmpty) {
+        for (final tag in book.tags) {
+          list.add({
+            'term': tag,
+            'category': baseCategory,
+            'icon': CaseLibrarySvgIcons.sparkles,
+            'color': const Color(0xFFB08C4A),
+            'plainExplanation':
+                '「$tag」為本案（${book.shortTitleZh}）審理與公共討論中的關鍵法律概念。',
+            'lifeExample': book.memoryLine.isNotEmpty
+                ? book.memoryLine
+                : book.shortDescription,
+            'caseId': book.id,
+            'caseName': book.titleZh,
+          });
+        }
+      }
+
+      // 依 term 去重，維持完全屬於本案的獨立詞卡清單
       final seenTerms = <String>{};
       final uniqueList = <Map<String, dynamic>>[];
       for (final item in list) {
         final term = item['term'] as String;
-        if (!seenTerms.contains(term)) {
-          seenTerms.add(term);
+        if (seenTerms.add(term)) {
           uniqueList.add(item);
         }
       }
-
-      uniqueList.sort((a, b) {
-        final aMatch = a['caseId'] == widget.book!.id ? 1 : 0;
-        final bMatch = b['caseId'] == widget.book!.id ? 1 : 0;
-        if (aMatch != bMatch) {
-          return bMatch.compareTo(aMatch); // 優先顯示匹配本案的
-        }
-
-        final aCat = a['category'] as String;
-        final bCat = b['category'] as String;
-        final bookCat = widget.book!.category;
-        final aCatMatch = bookCat.contains(aCat) ? 1 : 0;
-        final bCatMatch = bookCat.contains(bCat) ? 1 : 0;
-        return bCatMatch.compareTo(aCatMatch); // 次優先顯示分類大類一致的
-      });
-      list.clear();
-      list.addAll(uniqueList);
+      list
+        ..clear()
+        ..addAll(uniqueList);
+    } else {
+      // 全域入口（未指定案件）才顯示通用法學詞卡庫
+      list.addAll(_vocabData);
     }
 
-    // 4. 進行搜尋與分類過濾
+    return list;
+  }
+
+  List<Map<String, dynamic>> _getDisplayVocabs() {
+    final list = _buildAllVocabsForScope();
+
+    // 進行搜尋與分類過濾
     return list.where((item) {
       final matchesSearch = _searchQuery.isEmpty ||
           (item['term'] as String)
@@ -164,10 +212,19 @@ class _CaseLegalVocabularyPageState extends State<CaseLegalVocabularyPage> {
 
   @override
   Widget build(BuildContext context) {
+    final scopedVocabs = _buildAllVocabsForScope();
     // 依關鍵字與分類進行動態過濾
     final filteredVocab = _getDisplayVocabs();
 
-    final categories = ['全部', '憲法', '程序', '刑法'];
+    final categories = <String>{'全部'};
+    for (final item in scopedVocabs) {
+      final rawCat = (item['category'] as String).split('/').first.trim();
+      if (rawCat.isNotEmpty) categories.add(rawCat);
+    }
+    final categoryList = categories.toList();
+    if (!categoryList.contains(_selectedCategory)) {
+      _selectedCategory = '全部';
+    }
 
     return Scaffold(
       backgroundColor: CaseLibraryColors.bgCream,
@@ -203,7 +260,7 @@ class _CaseLegalVocabularyPageState extends State<CaseLegalVocabularyPage> {
                           '法律詞卡',
                           style: LightTextStyles.pageTitle(context).copyWith(
                             fontSize: 17.sp,
-                            fontWeight: FontWeight.w900,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
@@ -254,9 +311,9 @@ class _CaseLegalVocabularyPageState extends State<CaseLegalVocabularyPage> {
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.symmetric(horizontal: 12.w),
-                itemCount: categories.length,
+                itemCount: categoryList.length,
                 itemBuilder: (context, idx) {
-                  final cat = categories[idx];
+                  final cat = categoryList[idx];
                   final isSelected = cat == _selectedCategory;
                   return Padding(
                     padding: EdgeInsets.symmetric(horizontal: 4.w),
@@ -428,25 +485,36 @@ class _VocabularyFlipCardState extends State<_VocabularyFlipCard>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  CaseLibrarySvgIcon(
-                    item['icon'] as String,
-                    size: 18,
-                    color: color,
-                  ),
-                  SizedBox(width: 8.w),
-                  Text(
-                    item['term'] as String,
-                    style: LightTextStyles.cardTitle(context).copyWith(
-                      fontSize: 14.5.sp,
-                      color: CaseLibraryColors.primaryGreen,
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 2.h),
+                      child: CaseLibrarySvgIcon(
+                        item['icon'] as String,
+                        size: 18,
+                        color: color,
+                      ),
                     ),
-                  ),
-                ],
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Text(
+                        item['term'] as String,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: LightTextStyles.cardTitle(context).copyWith(
+                          fontSize: 14.5.sp,
+                          color: CaseLibraryColors.primaryGreen,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
+              SizedBox(width: 8.w),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
                 decoration: BoxDecoration(

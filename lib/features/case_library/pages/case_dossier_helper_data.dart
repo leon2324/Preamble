@@ -6,154 +6,583 @@ part of 'case_dossier_detail_page.dart';
 
 extension _CaseDossierDetailPageStateMockData on _CaseDossierDetailPageState {
   List<_TrialStep> _getTrialSteps(String caseId) {
-    if (caseId == '318') {
-      return const [
-        _TrialStep(
-          stage: '第一審',
-          courtName: '臺灣臺北地方法院',
-          caseNumber: '104 年度矚訴字第 1 號刑事判決',
-          outcome: '黃國昌等 22 人判決無罪',
-          date: '2017/03/31',
-          holdingDetail:
-              '【判決主文與事實理由概要】\n被告黃國昌、林飛帆、陳為廷等被控煽惑他人犯罪、妨害公務、侮辱公署等罪嫌。\n\n【核心理由】\n法院認為，被告等抗議手段係針對立法院審查服貿協議之程序爭議進行表達，屬於憲法保障之言論自由與集會自由範圍。且立法院之程序瑕疵引發重大社會爭端，被告之抗爭行為符合「公民不服從」之構成要件，手段和平非暴力且具有公益目的，故宣告全體被告無罪。',
-        ),
-        _TrialStep(
-          stage: '第二審',
-          courtName: '臺灣高等法院',
-          caseNumber: '106 年度矚上訴字第 2 號刑事判決',
-          outcome: '檢察官上訴駁回，維持一審無罪判決',
-          date: '2018/03/13',
-          holdingDetail:
-              '【判決主文與事實理由概要】\n檢察官針對一審判決無罪之被告提起上訴。\n\n【核心理由】\n高院審理後指出，一審判決認事用法並無違誤。憲法保障集會自由之核心價值在於保障人民向政府表達不同意見之管道。本案雖有佔領議場之形式違法，但其抗爭手段與民主防禦本質相符，且未造成不可回復之重大損害，檢察官上訴無理由，駁回上訴。',
-        ),
-        _TrialStep(
-          stage: '第三審定讞',
-          courtName: '最高法院',
-          caseNumber: '107 年度台上字第 42 號刑事判決',
-          outcome: '上訴駁回，全案無罪確定',
-          date: '2018/03/22',
-          holdingDetail:
-              '【判決主文與事實理由概要】\n檢察官不服二審判決，向最高法院提起上訴。\n\n【核心理由】\n最高法院指出，刑事訴訟法關於上訴第三審有嚴格之法律限制。本案二審維持一審無罪判決，且檢察官上訴指摘事項並非違背法令之核心，不符合上訴第三審之法定要件，裁定駁回檢察官上訴，本案無罪判決定讞。',
-        ),
-      ];
+    switch (caseId) {
+      case '318':
+        return const [
+          _TrialStep(
+            stage: '第一審',
+            courtName: '臺灣臺北地方法院',
+            caseNumber: '104 年度矚訴字第 1 號刑事判決',
+            outcome: '黃國昌等 22 人判決無罪',
+            date: '2017/03/31',
+            holdingDetail:
+                '【判決主文與事實理由概要】\n被告黃國昌、林飛帆、陳為廷等被控煽惑他人犯罪、妨害公務、侮辱公署等罪嫌。\n\n【核心理由】\n法院認為，被告等抗議手段係針對立法院審查服貿協議之程序爭議進行表達，屬於憲法保障之言論自由與集會自由範圍。且立法院之程序瑕疵引發重大社會爭端，被告之抗爭行為符合「公民不服從」之構成要件，手段和平非暴力且具有公益目的，故宣告全體被告無罪。',
+          ),
+          _TrialStep(
+            stage: '第二審',
+            courtName: '臺灣高等法院',
+            caseNumber: '106 年度矚上訴字第 2 號刑事判決',
+            outcome: '檢察官上訴駁回，維持一審無罪判決',
+            date: '2018/03/13',
+            holdingDetail:
+                '【判決主文與事實理由概要】\n檢察官針對一審判決無罪之被告提起上訴。\n\n【核心理由】\n高院審理後指出，一審判決認事用法並無違誤。憲法保障集會自由之核心價值在於保障人民向政府表達不同意見之管道。本案雖有佔領議場之形式違法，但其抗爭手段與民主防禦本質相符，且未造成不可回復之重大損害，檢察官上訴無理由，駁回上訴。',
+          ),
+          _TrialStep(
+            stage: '第三審定讞',
+            courtName: '最高法院',
+            caseNumber: '107 年度台上字第 42 號刑事判決',
+            outcome: '上訴駁回，全案無罪確定',
+            date: '2018/03/22',
+            holdingDetail:
+                '【判決主文與事實理由概要】\n檢察官不服二審判決，向最高法院提起上訴。\n\n【核心理由】\n最高法院指出，刑事訴訟法關於上訴第三審有嚴格之法律限制。本案二審維持一審無罪判決，且檢察官上訴指摘事項並非違背法令之核心，不符合上訴第三審之法定要件，裁定駁回檢察官上訴，本案無罪判決定讞。',
+          ),
+        ];
+      case 'case-chang-will-1764':
+        return const [
+          _TrialStep(
+            stage: '第一審',
+            courtName: '臺灣臺北地方法院',
+            caseNumber: '107 年度重家繼訴字第 62 號民事判決',
+            outcome: '認定密封遺囑具備法定要件，遺囑有效',
+            date: '2020/03/16',
+            holdingDetail:
+                '【判決理由概要】\n北院經調查筆跡鑑定、公證人與見證人證詞及醫療紀錄後，認定張榮發立遺囑時具備完全遺囑能力，且親筆簽名並於公證人前密封陳述，符合民法第 1192 條要件，判決原告確認遺囑無效之訴駁回。',
+          ),
+          _TrialStep(
+            stage: '第二審',
+            courtName: '臺灣高等法院',
+            caseNumber: '109 年度重家上字第 43 號民事判決',
+            outcome: '維持密封遺囑有效認定，駁回上訴',
+            date: '2023/04/25',
+            holdingDetail:
+                '【判決理由概要】\n高院審查公證過程錄音與文書記載，認立遺囑人於公證人詢問時點頭並確認內容為自己遺囑，已足以表徵真意，不致僅因口語簡短而影響密封遺囑效力，仍須受民法特留分規定之檢驗。',
+          ),
+          _TrialStep(
+            stage: '第三審定讞',
+            courtName: '最高法院',
+            caseNumber: '113 年度台上字第 1764 號民事判決',
+            outcome: '上訴駁回，張榮發百億密封遺囑有效確定',
+            date: '2024/08/14',
+            holdingDetail:
+                '【終審核心見解】\n最高法院認二審採證認事並無違誤，遺囑要式規範旨在確保立遺囑人真意不受竄改，本案已經公證程序妥適確認真意，判決密封遺囑效力確定，後續遺產分配回歸特留分實質扣減計算。',
+          ),
+        ];
+      case 'case-delivery-labor-2152':
+        return const [
+          _TrialStep(
+            stage: '第一審',
+            courtName: '臺灣臺北地方法院',
+            caseNumber: '勞動訴訟一審判決',
+            outcome: '採信平台承攬契約抗辯，駁回僱傭關係確認',
+            date: '2022/05/18',
+            holdingDetail:
+                '【一審見解】\n一審認為外送員可自行決定上線時段並有拒單選項，未受固定打卡工時限制，形式上欠缺傳統工廠作業式之時間從屬性，判決外送員敗訴。',
+          ),
+          _TrialStep(
+            stage: '第二審',
+            courtName: '臺灣高等法院',
+            caseNumber: '勞動上訴二審判決',
+            outcome: '逆轉改判確認僱傭關係存在',
+            date: '2023/08/29',
+            holdingDetail:
+                '【二審逆轉理由】\n高院實質勘驗平台 APP 演算法派單機制、品牌保溫箱配戴義務、取單率考核與片面停權機制，認定外送員高度受制於演算法指揮監督與報酬架構，實質上具有人格、經濟與組織從屬性。',
+          ),
+          _TrialStep(
+            stage: '第三審發回',
+            courtName: '最高法院',
+            caseNumber: '113 年度台上字第 2152 號民事判決',
+            outcome: '肯定實質從屬性審查架構，部分發回更審',
+            date: '2024/07/18',
+            holdingDetail:
+                '【指標法理確立】\n最高法院明確宣示數位平台勞動契約認定不拘泥合約名稱，必須依現代演算法管理態樣實質檢驗從屬性強度；同時就平台片面終止契約事由細節發回高院再為調查審認。',
+          ),
+        ];
+      case 'case-tsmc-secret-1589':
+        return const [
+          _TrialStep(
+            stage: '聲請定暫時狀態處分',
+            courtName: '智慧財產及商業法院',
+            caseNumber: '營業秘密定暫時狀態處分裁定',
+            outcome: '准許禁止跳槽任職於競爭對手相關研發職位',
+            date: '2020/11/10',
+            holdingDetail:
+                '【核心裁量】\n法院考量半導體先進製程研發機密具備高度經濟價值與時效性，高階研發主管任職敵對競爭廠商難免存在洩密高度蓋然性，有必要即時保全避免無法彌補之損害。',
+          ),
+          _TrialStep(
+            stage: '終審抗告維持',
+            courtName: '最高法院',
+            caseNumber: '111 年度台抗字第 1589 號民事裁定',
+            outcome: '駁回抗告，確立「不可避免揭露原則」實務標準',
+            date: '2022/09/15',
+            holdingDetail:
+                '【終審確定見解】\n最高法院指出，縱使契約競業禁止期間屆滿，前雇主若能釋明原主管所掌握核心營業秘密在新職位有「不可避免揭露」之侵害風險，仍得依營業秘密法第 11 條請求預防性排除侵害。',
+          ),
+        ];
+      case 'case-support-exemption-1118':
+        return const [
+          _TrialStep(
+            stage: '家事一審裁定',
+            courtName: '臺灣地方法院家事法庭',
+            caseNumber: '家聲字第 1118 號扶養費裁定',
+            outcome: '調查自幼未盡扶養事實，裁定完全免除子女扶養義務',
+            date: '2022/04/12',
+            holdingDetail:
+                '【事實審查】\n家事法庭傳喚親屬證人並調閱學籍、健保及家庭生活給付紀錄，認定聲請人於子女成長期間長期無正當理由未分擔扶養費且未曾探視，屬情節重大。',
+          ),
+          _TrialStep(
+            stage: '抗告終審確定',
+            courtName: '最高法院（民事家事裁定）',
+            caseNumber: '民法第 1118 條之 1 確定裁定',
+            outcome: '維持完全免除扶養義務裁定確定',
+            date: '2023/02/20',
+            holdingDetail:
+                '【法理界線】\n法院指出親屬互負扶養義務亦須兼顧實質公平，對自幼棄養或施暴未盡義務之父母，強令子女負擔扶養費顯失公平，依民法第 1118 條之 1 第 2 項應予完全免除而非僅減輕。',
+          ),
+        ];
+      case 'case-029':
+        return const [
+          _TrialStep(
+            stage: '起訴與點交鑑定',
+            courtName: '地方法院民事簡易庭',
+            caseNumber: '112 年度租簡字第 29 號民事判決',
+            outcome: '命房東返還不當扣抵之租屋押金與利息',
+            date: '2023/07/14',
+            holdingDetail:
+                '【審理重點】\n法院審酌退租點交照片、入住契約書與折舊年限表，認定牆面輕微使用痕跡與設備自然老化屬民法第 432 條及住宅租賃定型化契約應記載事項所容許之正常使用消耗，房東不得任意自押金扣抵。',
+          ),
+        ];
+      case 'case-031':
+        return const [
+          _TrialStep(
+            stage: '勞動調解及一審裁判',
+            courtName: '臺灣臺北地方法院勞動法庭',
+            caseNumber: '112 年度勞訴字第 31 號民事判決',
+            outcome: '確認兩造間僱傭關係存在，雇主應補發期間薪資',
+            date: '2023/11/08',
+            holdingDetail:
+                '【解僱最後手段性審查】\n勞動法庭指出，雇主引用勞基法第 11 條第 4 款業務緊縮資遣員工時，須證明已無適當工作可供安置；本案雇主未提供轉職培訓或合理調任機會即逕行資遣，解僱不生效力。',
+          ),
+        ];
+      case '102':
+        return const [
+          _TrialStep(
+            stage: '行政處分與行政訴訟',
+            courtName: '臺北高等行政法院／社會秩序維護法裁罰案',
+            caseNumber: '司法院釋字第 689 號原因案件',
+            outcome: '新聞記者提起行政救濟敗訴後聲請大法官解釋',
+            date: '2010/06/24',
+            holdingDetail:
+                '【爭點發端】\n記者持續近距離跟拍當事人日常生活遭警政機關依社會秩序維護法第 89 條第 2 款裁罰，聲請人主張該條構成對新聞採訪自由與人身行動自由之事前限制。',
+          ),
+          _TrialStep(
+            stage: '憲法解釋公布',
+            courtName: '司法院大法官',
+            caseNumber: '司法院釋字第 689 號解釋',
+            outcome: '宣告系爭規定合憲，並劃定公共場域跟拍界線',
+            date: '2011/07/29',
+            holdingDetail:
+                '【憲法衡量基準】\n大法官指出個人即使身處公共場域，仍享有不被他人無正當理由持續注視、監看、跟蹤侵擾之「合理隱私期待」與資訊自主權；新聞採訪須涉及具一定公益性事務且手段合於比例時，始具正當理由免罰。',
+          ),
+        ];
     }
 
-    // Fallbacks for other cases to ensure UI completeness
     final officialNumber = book.basicInfo.caseNumber?.isNotEmpty == true
         ? book.basicInfo.caseNumber!
         : (book.displayCode.isNotEmpty
             ? book.displayCode
-            : '${book.year} 年度重大字號');
+            : '${book.year} 年度指標裁判');
+    final primaryCourt = book.basicInfo.courtLevel.contains('/')
+        ? book.basicInfo.courtLevel.split('/').last.trim()
+        : book.basicInfo.courtLevel;
+    final steps = <_TrialStep>[];
+
+    if (book.timeline.isNotEmpty) {
+      for (var i = 0; i < book.timeline.length; i++) {
+        final node = book.timeline[i];
+        final isLast = i == book.timeline.length - 1;
+        steps.add(
+          _TrialStep(
+            stage: isLast ? book.status : node.title,
+            courtName: isLast
+                ? (book.basicInfo.courtLevel.contains('/')
+                    ? book.basicInfo.courtLevel.split('/').first.trim()
+                    : primaryCourt)
+                : primaryCourt,
+            caseNumber: officialNumber,
+            outcome: isLast && book.judgmentResult.isNotEmpty
+                ? book.judgmentResult
+                : node.description,
+            date: node.dateLabel,
+            holdingDetail: isLast && book.courtReasoning.isNotEmpty
+                ? '【法院核心理由】\n${book.courtReasoning}\n\n【裁判結果】\n${book.judgmentResult}'
+                : '【程序脈絡】\n${node.description}\n\n【法律定性參考】\n${book.oneSentenceSummary}',
+          ),
+        );
+      }
+      return steps;
+    }
 
     return [
       _TrialStep(
-        stage: '審理程序',
-        courtName: book.basicInfo.courtLevel.contains('/')
-            ? book.basicInfo.courtLevel.split('/').last.trim()
-            : book.basicInfo.courtLevel,
+        stage: book.basicInfo.procedureStage.isNotEmpty
+            ? book.basicInfo.procedureStage
+            : '審理程序',
+        courtName: primaryCourt,
         caseNumber: officialNumber,
-        outcome: '裁判結果：${book.status}',
+        outcome: book.judgmentResult.isNotEmpty
+            ? book.judgmentResult
+            : '裁判狀態：${book.status}',
         date: book.basicInfo.judgmentDate?.isNotEmpty == true
             ? book.basicInfo.judgmentDate!
             : book.basicInfo.updatedAt,
         holdingDetail:
-            '【判決概要】\n本案為 ${book.category}，經司法機關依法審判，考量相關法條事證與社會大眾爭點後作成決議。\n\n【核心判決意旨】\n詳細判決內容請參考司法院裁判書公開查詢系統。本系統已收錄該案件之核心法律關係與爭點。',
+            '【爭點與裁判理由】\n${book.courtReasoning.isNotEmpty ? book.courtReasoning : book.shortDescription}\n\n【裁判結果】\n${book.judgmentResult}',
       ),
-      if (book.status == '判決確定' || book.status == '已結案' || book.status == '已公布')
-        _TrialStep(
-          stage: '確定終審',
-          courtName: book.basicInfo.courtLevel.contains('/')
-              ? book.basicInfo.courtLevel.split('/').first.trim()
-              : book.basicInfo.courtLevel,
-          caseNumber: officialNumber,
-          outcome: book.judgmentResult.isNotEmpty
-              ? book.judgmentResult
-              : '上訴駁回，維持原判決確定',
-          date: book.basicInfo.judgmentDate?.isNotEmpty == true
-              ? book.basicInfo.judgmentDate!
-              : book.basicInfo.updatedAt,
-          holdingDetail:
-              '【終審裁判概要】\n本案經合法審理終結，宣告裁判主文，全案確定。\n\n【判決效力】\n全案定讞，對當事人具有實質確定力。',
-        ),
     ];
   }
 
   List<_GlossaryItem> _getGlossaries(String caseId) {
-    if (caseId == '318') {
+    switch (caseId) {
+      case '318':
+        return const [
+          _GlossaryItem(
+            term: '公民不服從',
+            pinyin: 'Civil Disobedience',
+            definition:
+                '出於對公共利益或維護憲政秩序之公益動機，以公開、和平、非暴力且願承擔法律後果之最後手段，刻意違反特定法規的抗議行動。',
+            importance: '法院肯認公民不服從在符合嚴格要件時，可作為超法規阻卻違法事由。',
+          ),
+          _GlossaryItem(
+            term: '阻卻違法事由',
+            pinyin: 'Justification / Excuse',
+            definition:
+                '行為外觀雖該當刑罰構成要件，但基於正當防衛、緊急避難或超法規抗辯而不具實質違法性，進而不予論罪。',
+            importance: '本案衡量程序瑕疵與民主防禦目的後，採認阻卻違法而宣告無罪。',
+          ),
+          _GlossaryItem(
+            term: '比例原則',
+            pinyin: 'Principle of Proportionality',
+            definition:
+                '公權力限制人民自由須符合目的正當性、適當性、必要性（最小侵害）及衡量性四項憲法檢驗基準。',
+            importance: '用以檢視警方驅離手段與抗爭侵害程度間是否失衡。',
+          ),
+        ];
+      case 'case-chang-will-1764':
+        return const [
+          _GlossaryItem(
+            term: '密封遺囑法定要式',
+            pinyin: 'Sealed Will Formalities',
+            definition:
+                '依民法第 1192 條，立遺囑人須於遺囑上簽名密封，於公證人前指定二人以上見證人，並向公證人陳述其為自己之遺囑。',
+            importance: '本案爭議點在於點頭簡短示意是否符合「陳述」要件，最高法院採實質真意確認見解認定有效。',
+          ),
+          _GlossaryItem(
+            term: '特留分扣減權',
+            pinyin: 'Compulsory Portion Reduction',
+            definition:
+                '法律為保障法定繼承人最低限度繼承權益所設之強制比例，遺囑處分侵害特留分時，受侵害繼承人得行使扣減權取回不足部分。',
+            importance: '即便本案密封遺囑有效確定，其餘繼承人仍得就依法定應繼分計算之特留分比例請求分配。',
+          ),
+        ];
+      case 'case-delivery-labor-2152':
+        return const [
+          _GlossaryItem(
+            term: '實質從屬性三要件',
+            pinyin: 'Substantive Subordination',
+            definition:
+                '判斷是否屬勞基法勞工的核心標準，包含人格從屬性（受指揮監督懲戒）、經濟從屬性（非為自己營業勞動）及組織從屬性（納入企業生產體系）。',
+            importance: '最高法院 113 台上 2152 確立外送員關係審查不得拘泥書面契約「承攬」名稱，應實質檢驗演算法控制強度。',
+          ),
+          _GlossaryItem(
+            term: '假承攬真僱傭',
+            pinyin: 'Disguised Employment',
+            definition:
+                '雇主形式上與工作者簽訂承攬合約以規避勞健保、職災賠償與特休成本，但實務運作仍施以考績罰則與嚴密控管。',
+            importance: '促成平台勞動專法研擬與外送職災強制納保政策推進。',
+          ),
+        ];
+      case 'case-tsmc-secret-1589':
+        return const [
+          _GlossaryItem(
+            term: '營業秘密三要件',
+            pinyin: 'Trade Secret Criteria',
+            definition:
+                '依營業秘密法第 2 條，須同時具備「秘密性」（非一般涉及該類資訊之人所知）、「經濟性」（具實際或潛在經濟價值）及「合理保密措施」。',
+            importance: '企業請求法院禁止離職主管洩密或競業前，必須先行舉證已完成具體存取分級與保密管理。',
+          ),
+          _GlossaryItem(
+            term: '不可避免揭露原則',
+            pinyin: 'Inevitable Disclosure Doctrine',
+            definition:
+                '當離職員工新職務與原核心研發高度重疊，使原秘密資訊在執行新職務時在客觀上幾乎無可避免遭到運用或揭露的風險衡量基準。',
+            importance: '法院得據此在侵害實際發生前即核發定暫時狀態處分，防堵先進製程秘密外流。',
+          ),
+        ];
+      case 'case-support-exemption-1118':
+        return const [
+          _GlossaryItem(
+            term: '免除扶養義務（民法 §1118-1）',
+            pinyin: 'Exemption from Support Duty',
+            definition:
+                '受扶養權利者對負扶養義務者及其配偶或直系血親故意為虐待、重大侮辱，或無正當理由未盡扶養義務且情節重大時，法院得完全免除其扶養義務。',
+            importance: '打破傳統「父母再不肖仍須養」的機械法條解釋，避免家庭暴力或棄養受害子女承受二次經濟剝削。',
+          ),
+        ];
+      case 'case-029':
+        return const [
+          _GlossaryItem(
+            term: '自然折舊耗損',
+            pinyin: 'Normal Wear and Tear',
+            definition:
+                '承租人依約定方法及房屋性質正常使用租賃物所致的老化、褪色或輕微磨損，屬於房屋所有權人應自行吸收的持有成本。',
+            importance: '依民法第 432 條及租賃定型化契約規範，房東不得以自然折舊為由扣留押金。',
+          ),
+          _GlossaryItem(
+            term: '租賃押金返還期限',
+            pinyin: 'Security Deposit Return',
+            definition:
+                '租期屆滿且承租人交還房屋後，除抵充明確欠租或可歸責損壞修復費用外，出租人應立即無息返還剩餘押金。',
+            importance: '保障租屋族權益，提醒退租時務必錄影拍照並簽署點交清單存證。',
+          ),
+        ];
+      case 'case-045':
+        return const [
+          _GlossaryItem(
+            term: '著作權合理使用四基準',
+            pinyin: 'Fair Use Four Factors (§65)',
+            definition:
+                '依著作權法第 65 條第 2 項，判斷是否構成合理使用須權衡：利用目的及性質、著作性質、所利用質量比例、以及對著作潛在市場與現在價值之影響。',
+            importance: '未經授權整篇轉載或替換原創作者流量收益，極難通過「市場替代效果」檢驗，將構成重製與公開傳輸侵權。',
+          ),
+          _GlossaryItem(
+            term: '實質近似與接觸原則',
+            pinyin: 'Access and Substantial Similarity',
+            definition:
+                '認定抄襲與未經授權重製的兩大證明支柱：被告曾有機會接觸原告著作，且成品內容在表達層次呈現高度實質近似。',
+            importance: '構成數位論壇文章、AI 訓練生成比對等智財訴訟中最核心的舉證架構。',
+          ),
+        ];
+      case 'case-031':
+        return const [
+          _GlossaryItem(
+            term: '解僱最後手段性原則',
+            pinyin: 'Ultima Ratio in Dismissal',
+            definition:
+                '雇主欲終止勞動契約，必須先窮盡調職、降薪、教育訓練或安置替代工作等較輕微管理手段仍無效果，始得行使終止權。',
+            importance: '本案即因雇主未舉證「無適當工作可供安置」而被判解僱無效。',
+          ),
+        ];
+      case '102':
+        return const [
+          _GlossaryItem(
+            term: '公共場域合理隱私期待',
+            pinyin: 'Privacy in Public Spaces',
+            definition:
+                '大法官於釋字第 689 號肯認，個人即使處於開放街道，只要不具公開暴露意圖，仍享有免於被持續跟監、特寫窺探之行動與資訊自主權。',
+            importance: '為現代街拍創作、新聞跟拍與個人肖像權衝突訂下明確憲法衡量準繩。',
+          ),
+        ];
+    }
+
+    final dynamicItems = <_GlossaryItem>[];
+    for (final law in book.relatedLaws.take(2)) {
+      dynamicItems.add(
+        _GlossaryItem(
+          term: '${law.lawName} ${law.articleNumber}'.trim(),
+          pinyin: 'Statutory Provision',
+          definition: law.plainSummary.isNotEmpty
+              ? law.plainSummary
+              : '規範本案爭議所涉及之主要實體法或程序法依據。',
+          importance: law.relationToCase.isNotEmpty
+              ? law.relationToCase
+              : '法院審理本案「${book.shortTitleZh}」時的核心法條適用準據。',
+        ),
+      );
+    }
+    if (dynamicItems.length < 2) {
+      for (final issue in book.legalIssues.take(2 - dynamicItems.length)) {
+        dynamicItems.add(
+          _GlossaryItem(
+            term: issue.title,
+            pinyin: 'Core Legal Issue',
+            definition: issue.plainExplanation.isNotEmpty
+                ? issue.plainExplanation
+                : book.oneSentenceSummary,
+            importance: issue.relationToCase.isNotEmpty
+                ? issue.relationToCase
+                : '決定本案責任歸屬與最終判決走向的關鍵法律爭點。',
+          ),
+        );
+      }
+    }
+    if (dynamicItems.isNotEmpty) {
+      return dynamicItems;
+    }
+
+    final isCriminal =
+        book.category.contains('刑') || book.basicInfo.caseType.contains('刑');
+    if (isCriminal) {
       return const [
         _GlossaryItem(
-          term: '公民不服從',
-          pinyin: 'Civil Disobedience',
-          definition:
-              '出於對於公共利益或維護憲法體制之公益動機，以公開、和平、非暴力且願意承擔法律後果之最後手段，刻意違反特定法律之抗議行為。',
-          importance: '法院肯認「公民不服從」在符合特定構成要件時，可作為刑法超法規之阻卻違法事由。',
-        ),
-        _GlossaryItem(
-          term: '阻卻違法事由',
-          pinyin: 'Justification / Excuse',
-          definition:
-              '指行為形式上雖符合特定刑罰條文，但實質上不具社會侵害性，而具法律容許之正當理由（如正當防衛、緊急避難或超法規事由）而不予處罰。',
-          importance: '本案抗爭之核心動機具有高度公益性，且為防禦民主之最後手段，因而判決無罪。',
+          term: '無罪推定與嚴格證明法則',
+          pinyin: 'Presumption of Innocence',
+          definition: '未經審判證明有罪確定前推定被告無罪；犯罪事實應依經合法調查之證據認定，不得僅憑臆測入罪。',
+          importance: '刑事審判最核心之人權程序防線，舉證責任歸屬於檢察官。',
         ),
         _GlossaryItem(
           term: '比例原則',
           pinyin: 'Principle of Proportionality',
-          definition:
-              '國家行使權利限制人民自由時，手段必須符合適當性（有助於目的達成）、必要性（最小侵害）、以及衡量性（手段所造成損害不可大於追求之公益）。',
-          importance: '學運相關之驅離訴訟案中，常用以檢視執法機關施放警械或水砲之妥當性。',
+          definition: '刑罰與強制處分干預人民基本權利時，須兼顧目的正當性與最小侵害手段，罪責應與刑度相當。',
+          importance: '法院裁量強制處分與最終量刑時必經之憲法檢驗。',
         ),
       ];
     }
+
     return const [
       _GlossaryItem(
-        term: '無罪推定原則',
-        pinyin: 'Presumption of Innocence',
-        definition: '未經審判證明有罪確定前，推定被告為無罪。犯罪事實應依證據認定之，無證據不得認定犯罪事實。',
-        importance: '刑事司法制度最核心之人權保障準則，舉證責任落在檢察官身上。',
+        term: '私法自治與舉證責任分配',
+        pinyin: 'Burden of Proof in Civil Disputes',
+        definition: '當事人主張有利於己之權利或免責事實者，就該要件事實負有客觀舉證與提出對話契約證據之責任。',
+        importance: '民商事及家事糾紛勝敗的核心，事前保留書面契約與通訊存證至關重要。',
       ),
       _GlossaryItem(
-        term: '比例原則',
-        pinyin: 'Principle of Proportionality',
-        definition: '國家行使權利限制人民權益時，必須注意手段與目的之衡平，具備適當、必要、最小侵害之特性。',
-        importance: '我國司法違憲審查與裁判見解中最常引年的憲法核心防線。',
+        term: '正當法律程序與救濟權',
+        pinyin: 'Due Process of Law',
+        definition: '法院或行政機關作成影響人民權益之裁決前，應確保通知、陳述意見及實質審查程序完備。',
+        importance: '憲法保障人民訴訟權與程序正義的基礎準則。',
       ),
     ];
   }
 
   List<_LiteratureItem> _getLiteratures(String caseId) {
-    if (caseId == '318') {
-      return const [
-        _LiteratureItem(
-          title: '代議失靈與公民不服從之憲法防禦權爭議',
-          author: '張文貞教授',
-          journal: '《台灣法學雜誌》第 246 期 (2014)',
-          sourceType: '學術期刊',
-        ),
-        _LiteratureItem(
-          title: '集會自由之預防性限制與緊急即時強制：兼論釋字第 718 號之落實',
-          author: '葉俊榮教授',
-          journal: '《台大法學論叢》第 43 卷第 4 期 (2014)',
-          sourceType: '學術期刊',
-        ),
-        _LiteratureItem(
-          title: '街頭抗爭的法律邊界：從太陽花學運無罪判決看阻卻違法事由',
-          author: '法白編輯部',
-          journal: '《法律實務白話文評析專欄》 (2018)',
-          sourceType: '實務評析',
-        ),
-      ];
+    switch (caseId) {
+      case '318':
+        return const [
+          _LiteratureItem(
+            title: '代議失靈與公民不服從之憲法防禦權爭議',
+            author: '張文貞教授',
+            journal: '《台灣法學雜誌》第 246 期 (2014)',
+            sourceType: '學術期刊',
+          ),
+          _LiteratureItem(
+            title: '集會自由之預防性限制與緊急即時強制：兼論釋字第 718 號之落實',
+            author: '葉俊榮教授',
+            journal: '《台大法學論叢》第 43 卷第 4 期 (2014)',
+            sourceType: '學術期刊',
+          ),
+          _LiteratureItem(
+            title: '街頭抗爭的法律邊界：從太陽花學運無罪判決看阻卻違法事由',
+            author: '法白編輯部',
+            journal: '《法律實務白話文評析專欄》 (2018)',
+            sourceType: '實務評析',
+          ),
+        ];
+      case 'case-chang-will-1764':
+        return const [
+          _LiteratureItem(
+            title: '密封遺囑之方式嚴格性與真意探求：評最高法院 113 台上 1764 號判決',
+            author: '家事與繼承法研究組',
+            journal: '《月旦裁判時報》繼承法實務評析',
+            sourceType: '實務評析',
+          ),
+          _LiteratureItem(
+            title: '台灣家族企業傳承中特留分與遺囑效力之調和界線',
+            author: '民法繼承編學術專論',
+            journal: '《政大法學評論》家事法專號',
+            sourceType: '學術期刊',
+          ),
+        ];
+      case 'case-delivery-labor-2152':
+        return const [
+          _LiteratureItem(
+            title: '演算法控制下的從屬性重構：最高法院 113 台上 2152 外送員案評釋',
+            author: '勞動法學會評析',
+            journal: '《台灣勞工季刊》數位平台專刊 (2024)',
+            sourceType: '學術期刊',
+          ),
+          _LiteratureItem(
+            title: '從承攬到勞動契約：外送員職災與專法立法比較研究',
+            author: '零工經濟法制研究小組',
+            journal: '《勞動部法制研究報告》',
+            sourceType: '實務評析',
+          ),
+        ];
+      case 'case-tsmc-secret-1589':
+        return const [
+          _LiteratureItem(
+            title: '高科技人才流動、競業禁止與不可避免揭露原則之定暫時狀態處分基準',
+            author: '智慧財產法學研究會',
+            journal: '《智慧財產權月刊》營業秘密專題',
+            sourceType: '學術期刊',
+          ),
+          _LiteratureItem(
+            title: '營業秘密法第 11 條預防性侵害排除請求權實務要件',
+            author: '智財實務評析編輯室',
+            journal: '《全國律師》半導體智財法專欄',
+            sourceType: '實務評析',
+          ),
+        ];
+      case 'case-support-exemption-1118':
+        return const [
+          _LiteratureItem(
+            title: '民法第 1118 條之 1「情節重大」與完全免除扶養義務之實務類型化',
+            author: '家事調解與實務研究組',
+            journal: '《家事法學與實務研究》',
+            sourceType: '實務評析',
+          ),
+        ];
+      case 'case-029':
+        return const [
+          _LiteratureItem(
+            title: '住宅租賃自然折舊與押金返還扣抵爭議之實務舉證指南',
+            author: '不動產與消保法研究團隊',
+            journal: '《租賃住宅實務評析專欄》',
+            sourceType: '實務評析',
+          ),
+        ];
+      case 'case-031':
+        return const [
+          _LiteratureItem(
+            title: '勞基法第 11 條第 4 款業務緊縮解僱之安置義務與最後手段性審查',
+            author: '勞動法庭判決研究組',
+            journal: '《勞動爭議實務解析》',
+            sourceType: '實務評析',
+          ),
+        ];
+      case '102':
+        return const [
+          _LiteratureItem(
+            title: '公共場域中的隱私權限與新聞自由界線：評司法院釋字第 689 號解釋',
+            author: '憲法與資訊隱私法學組',
+            journal: '《台大法學論叢》人權專題',
+            sourceType: '學術期刊',
+          ),
+        ];
+      case 'case-045':
+        return const [
+          _LiteratureItem(
+            title: '數位轉載與生成式時代下的著作權法第 65 條合理使用衡量基準',
+            author: '智慧財產權實務研究組',
+            journal: '《智財法實務評析》',
+            sourceType: '實務評析',
+          ),
+        ];
     }
-    return const [
+
+    final primaryLaw = book.relatedLaws.isNotEmpty
+        ? '${book.relatedLaws.first.lawName}${book.relatedLaws.first.articleNumber}'
+        : book.category;
+    return [
       _LiteratureItem(
-        title: '重大刑案中精神鑑定與量刑因子之實務審查標準',
-        author: '法學研究中心',
-        journal: '《司法官月刊》第 620 期',
+        title: '「${book.shortTitleZh}」核心爭點與 $primaryLaw 實務適用評析',
+        author: '${book.category}實務研究小組',
+        journal: '《台灣裁判實務評析彙編》（${book.year}）',
         sourceType: '實務評析',
       ),
       _LiteratureItem(
-        title: '比例原則在限制身體自由與刑後強制治療案件之適用界線',
-        author: '憲法研究基金會',
-        journal: '《憲政時代》第 46 卷',
+        title: '${book.category}中之程序保障、舉證標準與社會影響研究',
+        author: '法學方法與制度研究中心',
+        journal: '《當代法學評析季刊》',
         sourceType: '學術期刊',
       ),
     ];
@@ -15182,27 +15611,51 @@ final Map<String, List<CaseImage>> _preloadedCaseImages = {
 };
 
 List<CaseImage> _getDefaultImagesForCase(CaseBook book) {
-  // 歷史大案 (Landmarks) 依然讀取預載入高解析度真實照片
+  // 1. 優先採用 CaseLibraryImageResolver：
+  //    真實指標案件 / 憲法判決一律優先顯示 HTTP 驗證通過之 Wikimedia Commons 實景歷史照片，
+  //    並自動過濾 tse*.mm.bing.net 等不安全低解析度縮圖。
+  final resolved = resolveCaseLibraryImages(book);
+  if (resolved.isNotEmpty &&
+      !resolved.first.url.startsWith(
+        'assets/images/case_library_v2/case_library_v2_case_book_cover.png',
+      )) {
+    return resolved;
+  }
+
+  // 2. 非 case- 案件檢查預載入圖庫，但嚴格排除失效舊圖與 Bing 搜尋縮圖
   if (!book.id.startsWith('case-')) {
-    final list = _preloadedCaseImages[book.id];
-    if (list != null && list.isNotEmpty) {
-      return list;
+    final preloaded = _preloadedCaseImages[book.id]
+        ?.where((img) {
+          final lower = img.url.toLowerCase();
+          return !lower.contains('bing.net') &&
+              !lower.contains('tse') &&
+              !lower.contains('judicial_yuan_republic_of_china.jpg') &&
+              !lower.contains('sunflower_movement_protests_inside') &&
+              !lower.contains('sunflower_movement_2014-03-24.jpg') &&
+              !lower.contains('citizen_1985_protest_against') &&
+              !lower.contains('citizen_1985_white_shirt') &&
+              !lower.contains('hualien_train_derailment_accident_scene') &&
+              !lower.contains('tra_dr2800_in_hualien.jpg');
+        })
+        .toList();
+    if (preloaded != null && preloaded.isNotEmpty) {
+      return preloaded;
     }
   }
 
-  // 普通民刑案件 (ID 以 case- 開頭)，一律採用高解析度 Unsplash 類別適配示意圖，不加載 Bing 縮圖
+  // 3. 一般生活匿名前置民刑糾紛 (ID 以 case- 開頭)，採用清楚標註之類別情境示意圖（非本案當事人真實照片）
   final category = book.category;
   if (category == '車禍賠償') {
     return const [
       CaseImage(
         url:
             'https://images.unsplash.com/photo-1506015391300-4802dc74de2e?auto=format&fit=crop&w=1200&q=80',
-        source: '情境示意圖：道路交通路口實景',
+        source: '情境示意圖（非本案真實照片）：道路交通路口實景',
       ),
       CaseImage(
         url:
             'https://images.unsplash.com/photo-1518987013-07002866e15d?auto=format&fit=crop&w=1200&q=80',
-        source: '情境示意圖：車禍採證測量與道路調查',
+        source: '情境示意圖（非本案真實照片）：車禍採證測量與道路調查',
       ),
     ];
   } else if (category == '租屋糾紛') {
@@ -15210,12 +15663,12 @@ List<CaseImage> _getDefaultImagesForCase(CaseBook book) {
       CaseImage(
         url:
             'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80',
-        source: '情境示意圖：租屋公寓簽約與交屋點交',
+        source: '情境示意圖（非本案真實照片）：租屋公寓簽約與交屋點交',
       ),
       CaseImage(
         url:
             'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80',
-        source: '情境示意圖：租賃房屋內裝與自然折舊屋況',
+        source: '情境示意圖（非本案真實照片）：租賃房屋內裝與自然折舊屋況',
       ),
     ];
   } else if (category == '不當解雇') {
@@ -15223,12 +15676,12 @@ List<CaseImage> _getDefaultImagesForCase(CaseBook book) {
       CaseImage(
         url:
             'https://images.unsplash.com/photo-1521791136368-1a9b7d902d71?auto=format&fit=crop&w=1200&q=80',
-        source: '情境示意圖：辦公室勞資雙方協議會談',
+        source: '情境示意圖（非本案真實照片）：辦公室勞資雙方協議會談',
       ),
       CaseImage(
         url:
             'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
-        source: '情境示意圖：職場工作崗位與勞動權益',
+        source: '情境示意圖（非本案真實照片）：職場工作崗位與勞動權益',
       ),
     ];
   } else if (category == '離婚親權') {
@@ -15236,12 +15689,12 @@ List<CaseImage> _getDefaultImagesForCase(CaseBook book) {
       CaseImage(
         url:
             'https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=1200&q=80',
-        source: '情境示意圖：家庭親權撫養與監護權協商',
+        source: '情境示意圖（非本案真實照片）：家庭親權撫養與監護權協商',
       ),
       CaseImage(
         url:
             'https://images.unsplash.com/photo-1479839672679-a46483c0e7c8?auto=format&fit=crop&w=1200&q=80',
-        source: '情境示意圖：家事法庭調解與溝通程序',
+        source: '情境示意圖（非本案真實照片）：家事法庭調解與溝通程序',
       ),
     ];
   } else if (category == '借款返還' || category == '給付價金') {
@@ -15249,12 +15702,25 @@ List<CaseImage> _getDefaultImagesForCase(CaseBook book) {
       CaseImage(
         url:
             'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=1200&q=80',
-        source: '情境示意圖：財務往來金流與轉帳明細證物',
+        source: '情境示意圖（非本案真實照片）：財務往來金流與轉帳明細證物',
       ),
       CaseImage(
         url:
             'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80',
-        source: '情境示意圖：商業契約簽署與借據證明文件',
+        source: '情境示意圖（非本案真實照片）：商業契約簽署與借據證明文件',
+      ),
+    ];
+  } else if (category == '智慧財產') {
+    return const [
+      CaseImage(
+        url:
+            'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80',
+        source: '情境示意圖（非本案真實照片）：數位原創文本與著作權授權契約研析',
+      ),
+      CaseImage(
+        url:
+            'https://images.unsplash.com/photo-1505664194779-8bebcb95df84?auto=format&fit=crop&w=1200&q=80',
+        source: '情境示意圖（非本案真實照片）：智慧財產裁判法典彙編',
       ),
     ];
   } else if (category == '竊盜' || category == '傷害') {
@@ -15262,12 +15728,12 @@ List<CaseImage> _getDefaultImagesForCase(CaseBook book) {
       CaseImage(
         url:
             'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1200&q=80',
-        source: '情境示意圖：法院司法天平與法庭審理',
+        source: '情境示意圖（非本案真實照片）：法院司法天平與法庭審理',
       ),
       CaseImage(
         url:
             'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80',
-        source: '情境示意圖：刑事起訴證據採集與事實判定',
+        source: '情境示意圖（非本案真實照片）：刑事證據調查與事實判定',
       ),
     ];
   }
@@ -15277,12 +15743,12 @@ List<CaseImage> _getDefaultImagesForCase(CaseBook book) {
     CaseImage(
       url:
           'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1200&q=80',
-      source: '情境示意圖：法院司法天平與審判法庭現場',
+      source: '情境示意圖（非本案真實照片）：司法天平與審判實務意象',
     ),
     CaseImage(
       url:
           'https://images.unsplash.com/photo-1505664194779-8bebcb95df84?auto=format&fit=crop&w=1200&q=80',
-      source: '情境示意圖：最高法院司法卷宗圖書館',
+      source: '情境示意圖（非本案真實照片）：法學圖書館與裁判卷宗典藏',
     ),
   ];
 }

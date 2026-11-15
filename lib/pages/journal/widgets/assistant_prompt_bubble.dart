@@ -1,14 +1,13 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:preamble/pages/journal/widgets/journal_palette.dart';
 import 'package:preamble/pages/learning/know_law_page.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 
-/// 智慧小法助時事提問氣泡元件。
-///
-/// 本元件展示在記事頁頂部，左側為小法助頭像，右側為對話氣泡，
-/// 氣泡內會定期輪播熱門時事與生活法律痛點提問。點擊後可將當前問題自動帶入
-/// 「小法助提問頁」 (LawAssistantChatPage) 進行深度整理。
+/// 智慧小法助時事提問導引列（統一採用 `PreambleTokens` 靜奢設計語彙）。
 class AssistantPromptBubble extends StatefulWidget {
   const AssistantPromptBubble({
     super.key,
@@ -39,7 +38,7 @@ class _AssistantPromptBubbleState extends State<AssistantPromptBubble> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 4), (_) {
       if (mounted) {
         setState(() {
           _currentIndex = (_currentIndex + 1) % _prompts.length;
@@ -56,22 +55,8 @@ class _AssistantPromptBubbleState extends State<AssistantPromptBubble> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final t = context.tokens;
     final currentPrompt = _prompts[_currentIndex];
-
-    // Morandi colors matching the journal page.
-    final bubbleBgColor = isDark
-        ? const Color(0xFF1E2822)
-        : const Color(0xFFF1F8F5); // Soft Morandi pastel green
-    final bubbleBorderColor = isDark
-        ? const Color(0xFF2C3E36)
-        : const Color(0xFFCFE4DC); // Subtle Morandi border
-    final textColor = isDark
-        ? const Color(0xFFA5D1C0)
-        : const Color(0xFF1B4D3E); // Elegant dark Morandi green
-    final badgeBgColor = isDark
-        ? const Color(0xFF283A32)
-        : const Color(0xFFDCEFE7);
 
     return Material(
       color: Colors.transparent,
@@ -79,134 +64,84 @@ class _AssistantPromptBubbleState extends State<AssistantPromptBubble> {
         borderRadius: BorderRadius.circular(16.r),
         onTap: () {
           Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => LawAssistantChatPage(initialPrompt: currentPrompt),
+            MaterialPageRoute<void>(
+              builder: (_) =>
+                  LawAssistantChatPage(initialPrompt: currentPrompt),
             ),
           );
         },
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 2.h),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+          decoration: t.cardDecoration(
+            radius: 16.r,
+            fill: t.surface,
+            elevated: false,
+          ),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Left: Mascot head icon with soft shadow
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.06),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
+              ClipOval(
+                child: Container(
+                  width: 38.w,
+                  height: 38.w,
+                  color: t.brandContainer,
+                  padding: EdgeInsets.all(2.w),
+                  child: Image.asset(
+                    'assets/images/assistant/law_assistant_home.png',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              SizedBox(width: 10.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          PhosphorIconsFill.sparkle,
+                          size: 11.sp,
+                          color: t.accentBrass,
+                        ),
+                        SizedBox(width: 4.w),
+                        Text(
+                          '小法助實務熱問',
+                          style: t.sansBody(
+                            size: 10.5.sp,
+                            weight: FontWeight.w700,
+                            color: t.accentBrass,
+                            height: 1.2,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 3.h),
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 280),
+                      child: Align(
+                        key: ValueKey<int>(_currentIndex),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          currentPrompt,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: t.sansTitle(
+                            size: 13.sp,
+                            weight: FontWeight.w700,
+                            color: t.textPrimary,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-                child: Image.asset(
-                  'assets/images/assistant/law_assistant_home.png',
-                  width: 44.w,
-                  height: 44.w,
-                  fit: BoxFit.contain,
-                ),
               ),
               SizedBox(width: 8.w),
-              // Right: Dialogue bubble with AI Badge
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 9.h),
-                  decoration: BoxDecoration(
-                    color: bubbleBgColor,
-                    border: Border.all(color: bubbleBorderColor, width: 1.2.w),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(4.r),
-                      topRight: Radius.circular(16.r),
-                      bottomLeft: Radius.circular(16.r),
-                      bottomRight: Radius.circular(16.r),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: isDark ? 0.12 : 0.03),
-                        blurRadius: 8,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Row(
-                        children: [
-                          Flexible(
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-                              decoration: BoxDecoration(
-                                color: badgeBgColor,
-                                borderRadius: BorderRadius.circular(6.r),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.auto_awesome,
-                                    size: 10.sp,
-                                    color: textColor,
-                                  ),
-                                  SizedBox(width: 3.w),
-                                  Flexible(
-                                    child: Text(
-                                      '小法助熱問問診',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 9.5.sp,
-                                        fontWeight: FontWeight.w800,
-                                        color: textColor,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-                          Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            size: 9.sp,
-                            color: textColor.withValues(alpha: 0.7),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 4.h),
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 300),
-                        transitionBuilder: (child, animation) {
-                          return FadeTransition(
-                            opacity: animation,
-                            child: SlideTransition(
-                              position: Tween<Offset>(
-                                begin: const Offset(0.0, 0.25),
-                                end: Offset.zero,
-                              ).animate(animation),
-                              child: child,
-                            ),
-                          );
-                        },
-                        child: Text(
-                          currentPrompt,
-                          key: ValueKey<int>(_currentIndex),
-                          style: TextStyle(
-                            fontSize: 12.5.sp,
-                            fontWeight: FontWeight.w800,
-                            color: textColor,
-                            height: 1.25,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              Icon(
+                PhosphorIconsRegular.arrowUpRight,
+                size: 16.sp,
+                color: t.textMuted,
               ),
             ],
           ),

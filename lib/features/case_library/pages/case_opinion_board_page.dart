@@ -16,6 +16,7 @@ class CaseOpinionBoardPage extends StatefulWidget {
 
 class _CaseOpinionBoardPageState extends State<CaseOpinionBoardPage> {
   final TextEditingController _opinionController = TextEditingController();
+  final FocusNode _opinionFocusNode = FocusNode();
   final List<Map<String, dynamic>> _opinions = [];
 
   @override
@@ -28,6 +29,7 @@ class _CaseOpinionBoardPageState extends State<CaseOpinionBoardPage> {
   @override
   void dispose() {
     _opinionController.dispose();
+    _opinionFocusNode.dispose();
     super.dispose();
   }
 
@@ -275,6 +277,7 @@ class _CaseOpinionBoardPageState extends State<CaseOpinionBoardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: CaseLibraryColors.bgCream,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: CaseLibraryColors.bgCream,
@@ -292,13 +295,15 @@ class _CaseOpinionBoardPageState extends State<CaseOpinionBoardPage> {
             fontFamily: 'Songti TC',
             fontFamilyFallback: const ['Songti SC', 'STSong', 'PingFang TC'],
             fontSize: 16.sp,
-            fontWeight: FontWeight.w800,
+            fontWeight: FontWeight.w600,
             color: CaseLibraryColors.primaryGreen,
           ),
         ),
         centerTitle: true,
       ),
-      body: SafeArea(
+      body: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => _opinionFocusNode.unfocus(),
         child: Column(
           children: [
             // 頂部導言
@@ -314,9 +319,10 @@ class _CaseOpinionBoardPageState extends State<CaseOpinionBoardPage> {
                 ),
               ),
             ),
-            // 便利貼牆面 (錯落排列的 ListView)
+            // 便利貼牆面 (隔離重繪避免鍵盤動畫卡頓)
             Expanded(
-              child: ListView.builder(
+              child: RepaintBoundary(
+                child: ListView.builder(
                 keyboardDismissBehavior:
                     ScrollViewKeyboardDismissBehavior.onDrag,
                 padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 16.h),
@@ -402,10 +408,11 @@ class _CaseOpinionBoardPageState extends State<CaseOpinionBoardPage> {
                   );
                 },
               ),
+              ),
             ),
             // 輸入區 (小法助溫和引導)
             Container(
-              padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 16.h),
+              padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 12.h),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -420,65 +427,68 @@ class _CaseOpinionBoardPageState extends State<CaseOpinionBoardPage> {
                   ),
                 ],
               ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _opinionController,
-                      onTapOutside: (event) {
-                        FocusManager.instance.primaryFocus?.unfocus();
-                      },
-                      style: TextStyle(fontSize: 12.5.sp),
-                      decoration: InputDecoration(
-                        hintText: '對本案說說你的理性與感性想法...',
-                        hintStyle: TextStyle(
-                          fontSize: 12.5.sp,
-                          color: CaseLibraryColors.textMuted,
-                        ),
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 14.w,
-                          vertical: 10.h,
-                        ),
-                        fillColor: const Color(0xFFFAF8F5),
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                          borderSide: BorderSide(
-                            color: CaseLibraryColors.borderLight,
+              child: SafeArea(
+                top: false,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _opinionController,
+                        focusNode: _opinionFocusNode,
+                        textInputAction: TextInputAction.send,
+                        onSubmitted: (_) => _submitRawOpinion(),
+                        style: TextStyle(fontSize: 12.5.sp),
+                        decoration: InputDecoration(
+                          hintText: '對本案說說你的理性與感性想法...',
+                          hintStyle: TextStyle(
+                            fontSize: 12.5.sp,
+                            color: CaseLibraryColors.textMuted,
                           ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                          borderSide: BorderSide(
-                            color: CaseLibraryColors.borderLight,
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 14.w,
+                            vertical: 10.h,
                           ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                          borderSide: BorderSide(
-                            color: CaseLibraryColors.primaryGreen,
+                          fillColor: const Color(0xFFFAF8F5),
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: const BorderSide(
+                              color: CaseLibraryColors.borderLight,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: const BorderSide(
+                              color: CaseLibraryColors.borderLight,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: const BorderSide(
+                              color: CaseLibraryColors.primaryGreen,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: 8.w),
-                  GestureDetector(
-                    onTap: _submitRawOpinion,
-                    child: Container(
-                      padding: EdgeInsets.all(10.w),
-                      decoration: BoxDecoration(
-                        color: CaseLibraryColors.primaryGreen,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.send_rounded,
-                        size: 16.sp,
-                        color: Colors.white,
+                    SizedBox(width: 8.w),
+                    GestureDetector(
+                      onTap: _submitRawOpinion,
+                      child: Container(
+                        padding: EdgeInsets.all(10.w),
+                        decoration: const BoxDecoration(
+                          color: CaseLibraryColors.primaryGreen,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.send_rounded,
+                          size: 16.sp,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:preamble/features/on_this_day/theme/on_this_day_theme.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 
 class RetroDateDialPicker extends StatefulWidget {
   const RetroDateDialPicker({
@@ -39,8 +39,12 @@ class _RetroDateDialPickerState extends State<RetroDateDialPicker> {
     super.dispose();
   }
 
+  bool _isLeapYear(int year) =>
+      (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+
   int _daysInMonth(int month) {
-    if (month == 2) return 28;
+    final year = DateTime.now().year;
+    if (month == 2) return _isLeapYear(year) ? 29 : 28;
     if (month == 4 || month == 6 || month == 9 || month == 11) return 30;
     return 31;
   }
@@ -51,19 +55,22 @@ class _RetroDateDialPickerState extends State<RetroDateDialPicker> {
       _selectedDay = maxDays;
       _dayController.jumpToItem(maxDays - 1);
     }
-    widget.onDateSelected(DateTime(2026, _selectedMonth, _selectedDay));
+    final year = DateTime.now().year;
+    widget.onDateSelected(DateTime(year, _selectedMonth, _selectedDay));
   }
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
+
     return Container(
       decoration: BoxDecoration(
-        color: OnThisDayColors.paperBeige,
+        color: t.surfaceElevated,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-        border: Border.all(color: OnThisDayColors.borderLight, width: 1.5),
+        border: Border.all(color: t.borderStrong, width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.15),
+            color: t.shadowAmbient,
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -75,73 +82,65 @@ class _RetroDateDialPickerState extends State<RetroDateDialPicker> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Title bar
+              Container(
+                width: 36.w,
+                height: 4.h,
+                margin: EdgeInsets.only(bottom: 14.h),
+                decoration: BoxDecoration(
+                  color: t.borderStrong,
+                  borderRadius: BorderRadius.circular(999.r),
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     '選擇法治記憶座標',
-                    style: TextStyle(
-                      fontFamily: 'Songti TC',
-                      fontFamilyFallback: const ['BiauKai', 'serif'],
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w900,
-                      color: OnThisDayColors.primaryGreen,
-                    ),
+                    style: t.serifTitle(size: 16.5.sp, weight: FontWeight.w700),
                   ),
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
                     child: Text(
                       '確認',
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w900,
-                        color: OnThisDayColors.accentGold,
+                      style: t.sansTitle(
+                        size: 14.sp,
+                        weight: FontWeight.w700,
+                        color: t.accentBrass,
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 20.h),
-
-              // Picker Wheels Container
+              SizedBox(height: 14.h),
               Container(
                 height: 180.h,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFFDF5),
-                  borderRadius: BorderRadius.circular(16.r),
-                  border: Border.all(
-                      color: const Color(0xFFD9BC84).withValues(alpha: 0.6)),
-                ),
+                decoration: t.subtleBoxDecoration(radius: 16.r),
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    // Selection Highlight Overlay
                     Positioned(
                       left: 10.w,
                       right: 10.w,
-                      height: 40.h,
+                      height: 42.h,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFFECE0).withValues(alpha: 0.3),
-                          border: const Border(
-                            top: BorderSide(
-                                color: OnThisDayColors.accentGold, width: 1.2),
-                            bottom: BorderSide(
-                                color: OnThisDayColors.accentGold, width: 1.2),
+                          color: t.accentBrassContainer.withValues(alpha: 0.55),
+                          borderRadius: BorderRadius.circular(10.r),
+                          border: Border.symmetric(
+                            horizontal: BorderSide(
+                              color: t.accentBrass.withValues(alpha: 0.65),
+                              width: 1,
+                            ),
                           ),
                         ),
                       ),
                     ),
-
-                    // Two Wheel Columns
                     Row(
                       children: [
-                        // Month Dial
                         Expanded(
                           child: ListWheelScrollView.useDelegate(
                             controller: _monthController,
-                            itemExtent: 40.h,
+                            itemExtent: 42.h,
                             perspective: 0.005,
                             diameterRatio: 1.5,
                             physics: const FixedExtentScrollPhysics(),
@@ -159,20 +158,14 @@ class _RetroDateDialPickerState extends State<RetroDateDialPicker> {
                                 return Center(
                                   child: Text(
                                     '$month 月',
-                                    style: TextStyle(
-                                      fontFamily: 'Songti TC',
-                                      fontFamilyFallback: const [
-                                        'BiauKai',
-                                        'serif'
-                                      ],
-                                      fontSize: 18.sp,
-                                      fontWeight: isSelected
-                                          ? FontWeight.w900
+                                    style: t.serifTitle(
+                                      size: 18.sp,
+                                      weight: isSelected
+                                          ? FontWeight.w800
                                           : FontWeight.w500,
                                       color: isSelected
-                                          ? OnThisDayColors.primaryGreen
-                                          : OnThisDayColors.textSecondary
-                                              .withValues(alpha: 0.6),
+                                          ? t.brandPrimary
+                                          : t.textMuted,
                                     ),
                                   ),
                                 );
@@ -180,19 +173,15 @@ class _RetroDateDialPickerState extends State<RetroDateDialPicker> {
                             ),
                           ),
                         ),
-
-                        // Divider column
                         Container(
-                          width: 1.w,
-                          height: 140.h,
-                          color: const Color(0xFFD9BC84).withValues(alpha: 0.4),
+                          width: 1,
+                          height: 132.h,
+                          color: t.border,
                         ),
-
-                        // Day Dial
                         Expanded(
                           child: ListWheelScrollView.useDelegate(
                             controller: _dayController,
-                            itemExtent: 40.h,
+                            itemExtent: 42.h,
                             perspective: 0.005,
                             diameterRatio: 1.5,
                             physics: const FixedExtentScrollPhysics(),
@@ -210,20 +199,14 @@ class _RetroDateDialPickerState extends State<RetroDateDialPicker> {
                                 return Center(
                                   child: Text(
                                     '$day 日',
-                                    style: TextStyle(
-                                      fontFamily: 'Songti TC',
-                                      fontFamilyFallback: const [
-                                        'BiauKai',
-                                        'serif'
-                                      ],
-                                      fontSize: 18.sp,
-                                      fontWeight: isSelected
-                                          ? FontWeight.w900
+                                    style: t.serifTitle(
+                                      size: 18.sp,
+                                      weight: isSelected
+                                          ? FontWeight.w800
                                           : FontWeight.w500,
                                       color: isSelected
-                                          ? OnThisDayColors.primaryGreen
-                                          : OnThisDayColors.textSecondary
-                                              .withValues(alpha: 0.6),
+                                          ? t.brandPrimary
+                                          : t.textMuted,
                                     ),
                                   ),
                                 );

@@ -1,27 +1,110 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:preamble/pages/journal/widgets/journal_palette.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 
+/// 紀事策展頁靜奢編輯刊頭 (Quiet Luxury Editorial Masthead)。
 class JournalPageHeader extends StatelessWidget {
-  const JournalPageHeader({super.key, required this.palette});
+  const JournalPageHeader({
+    super.key,
+    required this.palette,
+    this.isSearchOpen = false,
+    this.onToggleSearch,
+  });
 
   final JournalPalette palette;
-  static const _headerAspectRatio = 1983 / 793;
+  final bool isSearchOpen;
+  final VoidCallback? onToggleSearch;
 
   @override
   Widget build(BuildContext context) {
-    // 這版 header 完全只顯示使用者提供的圖片，不再疊任何文字或搜尋欄；
-    // 為了適應手機寬度，直接用圖片原始長寬比顯示，避免被固定高度裁切變形。
-    return AspectRatio(
-      aspectRatio: _headerAspectRatio,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(18.r),
-        child: Image.asset(
-          'assets/images/journal/journal_header.png',
-          fit: BoxFit.cover,
-          alignment: Alignment.center,
+    final t = context.tokens;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Flexible(
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: t.accentBrassContainer,
+                  borderRadius: BorderRadius.circular(99.r),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      PhosphorIconsRegular.bookOpenText,
+                      size: 13.sp,
+                      color: t.accentOnBrassContainer,
+                    ),
+                    SizedBox(width: 5.w),
+                    Flexible(
+                      child: Text(
+                        '生活故事與紀錄',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: t.sansTitle(
+                          size: 11.sp,
+                          color: t.accentOnBrassContainer,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(width: 8.w),
+            if (onToggleSearch != null)
+              GestureDetector(
+                onTap: onToggleSearch,
+                child: Container(
+                  width: 36.w,
+                  height: 36.w,
+                  decoration: BoxDecoration(
+                    color: isSearchOpen ? t.brandContainer : t.surface,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: t.shadowAmbient,
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    isSearchOpen
+                        ? PhosphorIconsRegular.x
+                        : PhosphorIconsRegular.magnifyingGlass,
+                    size: 17.sp,
+                    color: isSearchOpen ? t.brandPrimary : t.textSecondary,
+                  ),
+                ),
+              ),
+          ],
         ),
-      ),
+        SizedBox(height: 8.h),
+        Text(
+          '紀事與案件夾',
+          style: t.serifTitle(
+            size: 25.sp,
+            weight: FontWeight.w800,
+          ),
+        ),
+        SizedBox(height: 4.h),
+        Text(
+          '看看台灣發生過的真實案例故事，也能把自己的處理進度整理在這裡。',
+          style: t.sansBody(
+            size: 12.5.sp,
+            color: t.textSecondary,
+            height: 1.45,
+          ),
+        ),
+      ],
     );
   }
 }

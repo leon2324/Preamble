@@ -51,7 +51,7 @@ void main() {
     expect(find.byType(Image), findsOneWidget);
 
     // Verify default prompt text and badge
-    expect(find.text('小法助熱問問診'), findsOneWidget);
+    expect(find.text('小法助實務熱問'), findsOneWidget);
     expect(find.text('租約到期房東扣押金不退，如何用法律自保？'), findsOneWidget);
 
     // Tap on the bubble

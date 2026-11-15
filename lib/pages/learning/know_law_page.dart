@@ -16,7 +16,10 @@ import 'package:preamble/data/mock_data/learning/learning_mock_data.dart';
 import 'package:preamble/data/mock_data/learning/extended_stories_data.dart';
 import 'package:preamble/pages/learning/learning_mock_detail_page.dart';
 import 'package:preamble/pages/learning/statute_database_page.dart';
+import 'package:preamble/pages/tools/legal_toolkit_hub_page.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:preamble/theme/app_colors.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 
 // 導入遊戲化、手寫本美學與自訂 SVG 圖示
 import 'package:preamble/data/learning/learning_game_state.dart';
@@ -24,6 +27,7 @@ import 'package:preamble/pages/learning/widgets/notebook_aesthetics.dart';
 import 'package:preamble/pages/learning/widgets/learning_shared_widgets.dart';
 import 'package:preamble/pages/learning/widgets/learning_result_action_bar.dart';
 import 'package:preamble/pages/learning/widgets/achievement_room.dart';
+import 'package:preamble/pages/learning/widgets/learning_adventure_map.dart';
 import 'package:preamble/pages/learning/widgets/mock_court_challenge.dart';
 import 'package:preamble/pages/learning/widgets/legal_document_export_page.dart';
 import 'package:preamble/pages/learning/widgets/notebook_cover_editor_page.dart';
@@ -831,6 +835,7 @@ class KnowLawPageState extends State<KnowLawPage> {
 
   // 1) 頂部自訂 Header 列
   Widget _buildHeaderRow(bool isDark, LearningGameState gameState) {
+    final t = context.tokens;
     return Row(
       children: [
         Expanded(
@@ -839,21 +844,46 @@ class KnowLawPageState extends State<KnowLawPage> {
             children: [
               Text(
                 '學堂與工具箱',
-                style: TextStyle(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.textPrimary,
+                style: t.serifTitle(
+                  size: 24.sp,
+                  weight: FontWeight.w900,
+                  color: t.textPrimary,
                   height: 1.2,
                 ),
               ),
-              SizedBox(height: 2.h),
-              Text(
-                '手寫法律筆記本 • 用情境學常識',
-                style: TextStyle(
-                  fontSize: 11.sp,
-                  color: AppColors.textSecondary,
-                  fontWeight: FontWeight.bold,
-                ),
+              SizedBox(height: 4.h),
+              Wrap(
+                spacing: 8.w,
+                runSpacing: 4.h,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text(
+                    '手寫法律筆記本 • 用情境學常識',
+                    style: t.sansBody(
+                      size: 11.sp,
+                      color: t.textSecondary,
+                      weight: FontWeight.w700,
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 7.w,
+                      vertical: 2.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: t.accentBrassContainer,
+                      borderRadius: BorderRadius.circular(999.r),
+                    ),
+                    child: Text(
+                      'Lv.${gameState.level} · ${gameState.experience} XP · 連勝 ${gameState.studyStreak} 天',
+                      style: t.tabularMetric(
+                        size: 11.sp,
+                        weight: FontWeight.w800,
+                        color: t.accentBrass,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -1715,20 +1745,19 @@ class KnowLawPageState extends State<KnowLawPage> {
                   ),
                 ),
                 SizedBox(height: 12.h),
-                ...rentUnits.asMap().entries.map((entry) {
-                  final unit = entry.value;
-                  final isDone = gameState.completedSteps
-                      .contains("${_activeTopic}_${unit.stepLabel}");
-                  final isNext =
-                      unit.stepLabel == nextUnit.stepLabel && !isComplete;
-                  return _buildCoursePathStepRow(
-                    unit,
-                    isDone: isDone,
-                    isNext: isNext,
-                    isLast: entry.key == rentUnits.length - 1,
-                    isDark: isDark,
-                  );
-                }),
+                LearningAdventureMap(
+                  topicTitle: _activeTopic,
+                  units: rentUnits,
+                  completedSteps: gameState.completedSteps,
+                  onUnitTap: _openUnitStep,
+                  onBossChallengeTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (__) => const MockCourtChallengePage(),
+                      ),
+                    );
+                  },
+                ),
                 SizedBox(height: 10.h),
                 Container(
                   width: double.infinity,
@@ -1757,122 +1786,6 @@ class KnowLawPageState extends State<KnowLawPage> {
                   ),
                 ),
               ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCoursePathStepRow(
-    LearningTopicUnit unit, {
-    required bool isDone,
-    required bool isNext,
-    required bool isLast,
-    required bool isDark,
-  }) {
-    final activeColor = isDone
-        ? HomeV2Palette.trustGreen
-        : isNext
-            ? const Color(0xFFE8B95F)
-            : AppColors.textMuted;
-    final paperColor =
-        isDark ? const Color(0xFF1D252E) : const Color(0xFFFAF7F0);
-
-    return GestureDetector(
-      onTap: () => _openUnitStep(unit),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 26.w,
-            child: Column(
-              children: [
-                Container(
-                  width: 24.w,
-                  height: 24.w,
-                  decoration: BoxDecoration(
-                    color: activeColor.withValues(
-                        alpha: isDone || isNext ? 0.18 : 0.10),
-                    shape: BoxShape.circle,
-                    border: Border.all(color: activeColor, width: 1.4.w),
-                  ),
-                  child: Center(
-                    child: CaseLibrarySvgIcon(
-                      isDone
-                          ? CaseLibrarySvgIcons.star
-                          : CaseLibrarySvgIcons.timeline,
-                      size: 13.sp,
-                      color: activeColor,
-                    ),
-                  ),
-                ),
-                if (!isLast)
-                  Container(
-                    width: 1.2.w,
-                    height: 42.h,
-                    color: activeColor.withValues(alpha: 0.24),
-                  ),
-              ],
-            ),
-          ),
-          SizedBox(width: 9.w),
-          Expanded(
-            child: Container(
-              margin: EdgeInsets.only(bottom: isLast ? 0 : 8.h),
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 9.h),
-              decoration: BoxDecoration(
-                color: paperColor,
-                borderRadius: BorderRadius.circular(10.r),
-                border: Border.all(
-                  color: isNext
-                      ? const Color(0xFFE8B95F)
-                      : (isDark
-                          ? const Color(0xFF2D3845)
-                          : const Color(0xFFECE6DB)),
-                  width: isNext ? 1.4.w : 1.w,
-                ),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${unit.stepLabel}：${unit.title}',
-                          style: TextStyle(
-                            fontSize: 12.5.sp,
-                            fontWeight: FontWeight.w900,
-                            decoration:
-                                isDone ? TextDecoration.lineThrough : null,
-                            color: isDone
-                                ? AppColors.textMuted
-                                : AppColors.textPrimary,
-                          ),
-                        ),
-                        SizedBox(height: 3.h),
-                        Text(
-                          '${unit.goal} • ${unit.readTime}',
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 10.5.sp,
-                            height: 1.35,
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 8.w),
-                  CaseLibrarySvgIcon(
-                    CaseLibrarySvgIcons.chevronRight,
-                    size: 15.sp,
-                    color: activeColor,
-                  ),
-                ],
-              ),
             ),
           ),
         ],

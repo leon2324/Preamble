@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:preamble/features/on_this_day/theme/on_this_day_theme.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 
 class PostageStamp extends StatelessWidget {
   const PostageStamp({
     super.key,
-    this.width = 44,
-    this.height = 54,
+    this.width = 46,
+    this.height = 56,
   });
 
   final double width;
@@ -14,11 +15,13 @@ class PostageStamp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
+
     return CustomPaint(
       size: Size(width.w, height.h),
-      painter: const StampBorderPainter(
-        backgroundColor: Color(0xFFFFFDF5),
-        borderColor: Color(0xFFD9BC84),
+      painter: StampBorderPainter(
+        backgroundColor: t.surface,
+        borderColor: t.accentBrass.withValues(alpha: 0.65),
         borderWidth: 1.0,
         scallopRadius: 2.0,
         scallopSpacing: 6.0,
@@ -29,14 +32,12 @@ class PostageStamp extends StatelessWidget {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // Inner dashed border
             Padding(
               padding: const EdgeInsets.all(4.0),
               child: Container(
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: const Color(0xFFD9BC84).withValues(alpha: 0.4),
-                    style: BorderStyle.solid,
+                    color: t.accentBrass.withValues(alpha: 0.35),
                     width: 0.8,
                   ),
                 ),
@@ -46,27 +47,27 @@ class PostageStamp extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'POSTAGE',
-                  style: TextStyle(
-                    fontSize: 5.5.sp,
-                    fontWeight: FontWeight.w900,
-                    color: const Color(0xFF8C7B6B),
-                    letterSpacing: 0.5,
+                  'ARCHIVE',
+                  style: t.tabularMetric(
+                    size: 5.5.sp,
+                    weight: FontWeight.w700,
+                    color: t.textMuted,
                   ),
                 ),
                 SizedBox(height: 2.h),
                 Icon(
-                  Icons.balance_rounded,
+                  PhosphorIconsRegular.scales,
                   size: 16.sp,
-                  color: OnThisDayColors.primaryGreen,
+                  color: t.brandPrimary,
                 ),
                 SizedBox(height: 2.h),
                 Text(
-                  '法治歷史',
-                  style: TextStyle(
-                    fontSize: 5.5.sp,
-                    fontWeight: FontWeight.w900,
-                    color: const Color(0xFF8C7B6B),
+                  '法治記憶',
+                  style: t.sansBody(
+                    size: 5.8.sp,
+                    weight: FontWeight.w700,
+                    color: t.accentBrass,
+                    height: 1.1,
                   ),
                 ),
               ],
@@ -114,13 +115,12 @@ class StampBorderPainter extends CustomPainter {
     final path = Path();
     path.moveTo(0, 0);
 
-    // Top Edge
     final topW = size.width;
     int numX = (topW / spacing).floor();
     if (numX < 2) numX = 2;
-    double actualSpacingX = topW / numX;
+    final double actualSpacingX = topW / numX;
     for (int i = 0; i < numX; i++) {
-      double nextX = (i + 0.5) * actualSpacingX;
+      final double nextX = (i + 0.5) * actualSpacingX;
       path.lineTo(nextX - scallopRadius, 0);
       path.arcToPoint(
         Offset(nextX + scallopRadius, 0),
@@ -130,13 +130,12 @@ class StampBorderPainter extends CustomPainter {
     }
     path.lineTo(size.width, 0);
 
-    // Right Edge
     final rightH = size.height;
     int numY = (rightH / spacing).floor();
     if (numY < 2) numY = 2;
-    double actualSpacingY = rightH / numY;
+    final double actualSpacingY = rightH / numY;
     for (int i = 0; i < numY; i++) {
-      double nextY = (i + 0.5) * actualSpacingY;
+      final double nextY = (i + 0.5) * actualSpacingY;
       path.lineTo(size.width, nextY - scallopRadius);
       path.arcToPoint(
         Offset(size.width, nextY + scallopRadius),
@@ -146,9 +145,8 @@ class StampBorderPainter extends CustomPainter {
     }
     path.lineTo(size.width, size.height);
 
-    // Bottom Edge
     for (int i = numX - 1; i >= 0; i--) {
-      double nextX = (i + 0.5) * actualSpacingX;
+      final double nextX = (i + 0.5) * actualSpacingX;
       path.lineTo(nextX + scallopRadius, size.height);
       path.arcToPoint(
         Offset(nextX - scallopRadius, size.height),
@@ -158,9 +156,8 @@ class StampBorderPainter extends CustomPainter {
     }
     path.lineTo(0, size.height);
 
-    // Left Edge
     for (int i = numY - 1; i >= 0; i--) {
-      double nextY = (i + 0.5) * actualSpacingY;
+      final double nextY = (i + 0.5) * actualSpacingY;
       path.lineTo(0, nextY + scallopRadius);
       path.arcToPoint(
         Offset(0, nextY - scallopRadius),
@@ -197,9 +194,8 @@ class ProgrammaticPostmarkPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // 1. Draw wavy cancellation lines
     final paint = Paint()
-      ..color = color.withValues(alpha: 0.15)
+      ..color = color.withValues(alpha: 0.22)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
@@ -214,26 +210,22 @@ class ProgrammaticPostmarkPainter extends CustomPainter {
       canvas.drawPath(path, paint);
     }
 
-    // 2. Draw circular processing mark
     final center = Offset(size.width * 0.5, size.height * 0.5);
     final outerRadius = size.height * 0.45;
     final innerRadius = outerRadius - 3.0;
 
     final circlePaint = Paint()
-      ..color = color.withValues(alpha: 0.25)
+      ..color = color.withValues(alpha: 0.35)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
     canvas.drawCircle(center, outerRadius, circlePaint);
     canvas.drawCircle(center, innerRadius, circlePaint);
 
-    // 3. Draw top curved text: locationText
     final textStyle = TextStyle(
-      fontFamily: 'Songti TC',
-      fontFamilyFallback: const ['BiauKai', 'serif', 'sans-serif'],
       fontSize: 6.sp,
-      fontWeight: FontWeight.w900,
-      color: color.withValues(alpha: 0.4),
+      fontWeight: FontWeight.w800,
+      color: color.withValues(alpha: 0.55),
     );
 
     _drawTextOnArc(
@@ -241,27 +233,25 @@ class ProgrammaticPostmarkPainter extends CustomPainter {
       locationText,
       center,
       innerRadius - 3.0,
-      0.0, // centered at 0 (top in charAngle)
+      0.0,
       textStyle,
-      true, // isUpward
+      true,
     );
 
-    // 4. Draw bottom curved text: categoryText
     _drawTextOnArc(
       canvas,
       categoryText,
       center,
       innerRadius - 3.0,
-      3.14159, // centered at pi (bottom in charAngle)
+      3.14159,
       textStyle,
-      false, // isUpward
+      false,
     );
 
-    // 5. Draw center straight text: dateText
     final dateStyle = TextStyle(
       fontSize: 7.sp,
-      fontWeight: FontWeight.w900,
-      color: color.withValues(alpha: 0.45),
+      fontWeight: FontWeight.w800,
+      color: color.withValues(alpha: 0.65),
       letterSpacing: 0.3,
     );
     final datePainter = TextPainter(

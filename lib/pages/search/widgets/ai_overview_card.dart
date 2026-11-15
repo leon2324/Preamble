@@ -1,7 +1,8 @@
 part of '../global_search_page.dart';
 
-// AI 摘要卡只負責呈現已生成的摘要、引用來源與風格切換按鈕；
-// 真正的 AI 生成與狀態更新仍留在 GlobalSearchPage，避免 UI 拆分改到搜尋流程。
+// 靜奢律政 × 雙重編碼「AI 三段論法理總覽卡」：
+// 明確拆解「01 大前提法規範（宋體權威條文）➔ 02 小前提爭點涵攝（黑體檢核）➔ 03 結論與行動建議」，
+// 並整合法定時效警示、談判自保防禦金句與一鍵建立「自救記事」案卷。
 
 class _AssistantThinkingIndicator extends StatefulWidget {
   const _AssistantThinkingIndicator();
@@ -21,7 +22,7 @@ class _AssistantThinkingIndicatorState
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 900),
     )..repeat();
   }
 
@@ -33,23 +34,24 @@ class _AssistantThinkingIndicatorState
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(3, (index) {
         return AnimatedBuilder(
           animation: _controller,
           builder: (context, child) {
-            final delay = index * 0.2;
+            final delay = index * 0.22;
             final val = (_controller.value + delay) % 1.0;
-            final scale = 0.6 + 0.4 * (0.5 - (0.5 - val).abs());
+            final scale = 0.65 + 0.35 * (0.5 - (0.5 - val).abs()) * 2;
             return Transform.scale(
               scale: scale,
               child: Container(
-                width: 9.w,
-                height: 9.w,
-                margin: EdgeInsets.symmetric(horizontal: 3.w),
-                decoration: const BoxDecoration(
-                  color: _SearchColors.primary,
+                width: 7.r,
+                height: 7.r,
+                margin: EdgeInsets.symmetric(horizontal: 2.5.w),
+                decoration: BoxDecoration(
+                  color: t.brandPrimary,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -61,90 +63,11 @@ class _AssistantThinkingIndicatorState
   }
 }
 
-class TypewriterText extends StatefulWidget {
-  const TypewriterText({
-    super.key,
-    required this.text,
-    this.speed = const Duration(milliseconds: 15),
-  });
-
-  final String text;
-  final Duration speed;
-
-  @override
-  State<TypewriterText> createState() => _TypewriterTextState();
-}
-
-class _TypewriterTextState extends State<TypewriterText> {
-  String _displayedText = '';
-  int _currentIndex = 0;
-  bool _isTyping = false;
-
-  Timer? _typeTimer;
-
-  @override
-  void initState() {
-    super.initState();
-    _startTyping();
-  }
-
-  @override
-  void didUpdateWidget(TypewriterText oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.text != widget.text) {
-      _startTyping();
-    }
-  }
-
-  void _startTyping() {
-    _typeTimer?.cancel();
-    setState(() {
-      _displayedText = '';
-      _currentIndex = 0;
-      _isTyping = true;
-    });
-    _type();
-  }
-
-  void _type() {
-    if (!mounted || !_isTyping) return;
-    if (_currentIndex < widget.text.length) {
-      setState(() {
-        _currentIndex++;
-        _displayedText = widget.text.substring(0, _currentIndex);
-      });
-      _typeTimer = Timer(widget.speed, _type);
-    } else {
-      setState(() {
-        _isTyping = false;
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _isTyping = false;
-    _typeTimer?.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      _displayedText,
-      style: _SearchText.bodyStrong().copyWith(
-        height: 1.6,
-        color: _SearchColors.text,
-      ),
-    );
-  }
-}
-
 class _DottedLine extends StatelessWidget {
   const _DottedLine({
+    required this.color,
     this.height = 1,
-    this.color = Colors.black,
-    this.dashWidth = 3,
+    this.dashWidth = 4,
     this.dashSpace = 4,
   });
 
@@ -158,7 +81,9 @@ class _DottedLine extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final boxWidth = constraints.constrainWidth();
+        if (!boxWidth.isFinite || boxWidth <= 0) return const SizedBox.shrink();
         final dashCount = (boxWidth / (dashWidth + dashSpace)).floor();
+        if (dashCount <= 0) return const SizedBox.shrink();
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: List.generate(dashCount, (_) {
@@ -176,144 +101,109 @@ class _DottedLine extends StatelessWidget {
   }
 }
 
-class _BreathingMascot extends StatefulWidget {
-  const _BreathingMascot({
-    required this.imagePath,
-    required this.width,
-    required this.height,
-  });
-
-  final String imagePath;
-  final double width;
-  final double height;
-
-  @override
-  State<_BreathingMascot> createState() => _BreathingMascotState();
-}
-
-class _BreathingMascotState extends State<_BreathingMascot>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-  late final Animation<double> _scaleAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1200),
-    )..repeat(reverse: true);
-    _scaleAnimation = Tween<double>(begin: 0.95, end: 1.05).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ScaleTransition(
-      scale: _scaleAnimation,
-      child: Container(
-        width: widget.width,
-        height: widget.height,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(
-              color: _SearchColors.primary.withValues(alpha: 0.15),
-              width: 1.5.w),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 6,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: ClipOval(
-          child: Image.asset(
-            widget.imagePath,
-            fit: BoxFit.cover,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _AssistantReportHeader extends StatelessWidget {
   const _AssistantReportHeader({
     required this.docId,
     required this.isThinking,
+    required this.isNaturalQuestion,
   });
 
   final String docId;
   final bool isThinking;
+  final bool isNaturalQuestion;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 8.w,
+          runSpacing: 4.h,
           children: [
             Text(
               docId,
-              style: _SearchText.caption().copyWith(
-                fontWeight: FontWeight.bold,
-                letterSpacing: 0.8,
-                color: _SearchColors.mutedText.withValues(alpha: 0.7),
+              style: _SearchText.metric(
+                context,
+                size: 11.sp,
+                color: t.textMuted,
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+              decoration: BoxDecoration(
+                color: isNaturalQuestion
+                    ? t.accentBrassContainer
+                    : t.brandContainer,
+                borderRadius: BorderRadius.circular(6.r),
+              ),
+              child: Text(
+                isNaturalQuestion ? '情境問診三段論' : '法源結構快析',
+                style: _SearchText.captionStrong(context).copyWith(
+                  color: isNaturalQuestion
+                      ? t.accentOnBrassContainer
+                      : t.brandOnContainer,
+                  fontSize: 11.sp,
+                ),
               ),
             ),
           ],
         ),
-        SizedBox(height: 6.h),
+        SizedBox(height: 8.h),
         Row(
           children: [
             Container(
-              padding: EdgeInsets.all(6.w),
-              decoration: const BoxDecoration(
-                color: _SearchColors.primary,
-                shape: BoxShape.circle,
+              width: 30.r,
+              height: 30.r,
+              decoration: BoxDecoration(
+                color: t.brandPrimaryStrong,
+                borderRadius: BorderRadius.circular(8.r),
+                border: Border.all(
+                  color: t.accentBrass.withValues(alpha: 0.4),
+                ),
               ),
-              child: SvgPicture.asset(
-                'assets/images/search/search_clipboard.svg',
-                colorFilter:
-                    const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                width: 13.w,
-                height: 13.w,
-              ),
-            ),
-            SizedBox(width: 8.w),
-            Text(
-              '小法助法律研析報告',
-              style: _SearchText.section().copyWith(
-                color: _SearchColors.primary,
-                fontSize: 14.5.sp,
-                letterSpacing: 0.5,
+              child: Icon(
+                PhosphorIconsFill.scales,
+                color: t.accentBrass,
+                size: 16.sp,
               ),
             ),
-            const Spacer(),
+            SizedBox(width: 9.w),
+            Expanded(
+              child: Text(
+                'AI 三段論法理總覽',
+                style: _SearchText.serifSection(context),
+              ),
+            ),
             if (isThinking)
               const _AssistantThinkingIndicator()
             else
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: _SearchColors.primary.withValues(alpha: 0.1),
+                  color: t.semanticSuccessContainer,
                   borderRadius: BorderRadius.circular(6.r),
                 ),
-                child: Text(
-                  '已完成',
-                  style: _SearchText.caption().copyWith(
-                    color: _SearchColors.primary,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      PhosphorIconsFill.checkCircle,
+                      size: 12.sp,
+                      color: t.semanticSuccess,
+                    ),
+                    SizedBox(width: 4.w),
+                    Text(
+                      '已完成',
+                      style: _SearchText.captionStrong(context).copyWith(
+                        color: t.semanticSuccess,
+                        fontSize: 11.sp,
+                      ),
+                    ),
+                  ],
                 ),
               ),
           ],
@@ -328,12 +218,14 @@ class _AssistantOverviewCard extends StatelessWidget {
     required this.query,
     required this.summary,
     required this.isThinking,
+    required this.isNaturalQuestion,
     required this.tone,
     required this.length,
     required this.onToneChanged,
     required this.onLengthChanged,
     required this.onNotebookSave,
     required this.onContinueChat,
+    this.syllogismAnalysis,
     this.defenseInsight,
     this.onSaveToJournal,
   });
@@ -341,194 +233,191 @@ class _AssistantOverviewCard extends StatelessWidget {
   final String query;
   final String summary;
   final bool isThinking;
+  final bool isNaturalQuestion;
   final String tone;
   final String length;
   final ValueChanged<String> onToneChanged;
   final ValueChanged<String> onLengthChanged;
   final VoidCallback onNotebookSave;
   final VoidCallback onContinueChat;
+  final LegalSyllogismAnalysis? syllogismAnalysis;
   final LawAssistantDefenseInsight? defenseInsight;
   final VoidCallback? onSaveToJournal;
 
   @override
   Widget build(BuildContext context) {
-    final docId = 'DOC-2026-${(query.hashCode % 9000 + 1000).abs()}';
+    final t = context.tokens;
+    final docId = 'SYLLOGISM-${(query.hashCode % 9000 + 1000).abs()}';
+    final analysis = syllogismAnalysis ??
+        LegalSyllogismEngine.analyzeDispute(
+          rawDisputeFacts: query.trim().isEmpty ? '一般民事權益爭議' : query.trim(),
+        );
 
     return _ProtoCard(
-      background: _SearchColors.softMint,
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+      background: t.surface,
+      borderColor:
+          isNaturalQuestion ? t.accentBrass.withValues(alpha: 0.45) : t.borderStrong,
+      padding: EdgeInsets.all(16.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _AssistantReportHeader(docId: docId, isThinking: isThinking),
+          _AssistantReportHeader(
+            docId: docId,
+            isThinking: isThinking,
+            isNaturalQuestion: isNaturalQuestion,
+          ),
           SizedBox(height: 12.h),
           _DottedLine(
-            height: 1.5.h,
-            color: _SearchColors.border.withValues(alpha: 0.7),
-            dashWidth: 3.w,
-            dashSpace: 3.w,
+            height: 1,
+            color: t.borderStrong,
+            dashWidth: 4,
+            dashSpace: 4,
           ),
           SizedBox(height: 14.h),
           if (isThinking)
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 20.h),
-              alignment: Alignment.center,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _BreathingMascot(
-                    imagePath:
-                        'assets/images/assistant/law_assistant_empty.png',
-                    width: 70.w,
-                    height: 75.h,
-                  ),
-                  SizedBox(height: 12.h),
-                  const _AssistantThinkingIndicator(),
-                  SizedBox(height: 8.h),
-                  Text(
-                    '正在彙整法律重點與實務裁判...',
-                    style: _SearchText.caption().copyWith(
-                      color: _SearchColors.mutedText,
-                      fontWeight: FontWeight.bold,
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 18.h),
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const _AssistantThinkingIndicator(),
+                    SizedBox(height: 10.h),
+                    Text(
+                      '正在執行三段論法理涵攝與法源比對...',
+                      style: _SearchText.bodyStrong(context).copyWith(
+                        color: t.textSecondary,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             )
           else ...[
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _MascotFloatingWrapper(
-                  child: Container(
-                    width: 50.w,
-                    height: 50.w,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                          color: _SearchColors.primary.withValues(alpha: 0.15),
-                          width: 1.5.w),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.04),
-                          blurRadius: 6,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: ClipOval(
-                      child: Image.asset(
-                        'assets/images/assistant/law_assistant_home.png',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 8.w),
-                const Expanded(
-                  child: _AssistantSpeechBubble(
-                    text: '研析報告已產生！以下為您摘要相關要點：',
-                  ),
-                ),
-              ],
+            // 三段論雙重編碼結構（大前提法規範 ➔ 小前提爭點 ➔ 結論與行動建議）
+            _SyllogismStepsFlow(
+              analysis: analysis,
+              summary: summary,
             ),
-            SizedBox(height: 16.h),
-            TypewriterText(text: summary),
 
-            // 💡 小法助即時解方與維權防禦模組
+            // 小法助即時解方與自保防禦模組
             if (defenseInsight != null) ...[
               SizedBox(height: 14.h),
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.all(12.w),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(
-                    color: _SearchColors.primary.withValues(alpha: 0.25),
-                    width: 1.2.w,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: _SearchColors.primary.withValues(alpha: 0.04),
-                      blurRadius: 6,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+                padding: EdgeInsets.all(13.w),
+                decoration: t.subtleBoxDecoration(
+                  radius: 14.r,
+                  fill: t.surfaceSubtle,
+                  borderColor: t.borderStrong,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    Wrap(
+                      spacing: 8.w,
+                      runSpacing: 6.h,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 2.5.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 3.h,
+                          ),
                           decoration: BoxDecoration(
-                            color: _SearchColors.primary.withValues(alpha: 0.12),
+                            color: t.brandContainer,
                             borderRadius: BorderRadius.circular(6.r),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
-                                Icons.auto_awesome,
-                                size: 11.sp,
-                                color: _SearchColors.primary,
+                                PhosphorIconsFill.shieldCheck,
+                                size: 13.sp,
+                                color: t.brandOnContainer,
                               ),
                               SizedBox(width: 4.w),
                               Text(
                                 '小法助即時解方',
-                                style: TextStyle(
-                                  fontSize: 10.sp,
-                                  fontWeight: FontWeight.w800,
-                                  color: _SearchColors.primary,
+                                style:
+                                    _SearchText.captionStrong(context).copyWith(
+                                  color: t.brandOnContainer,
+                                  fontSize: 11.sp,
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        SizedBox(width: 8.w),
-                        Expanded(
-                          child: Text(
-                            defenseInsight!.disputeCategory,
-                            style: TextStyle(
-                              fontSize: 11.sp,
-                              fontWeight: FontWeight.bold,
-                              color: _SearchColors.text,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                        Text(
+                          defenseInsight!.disputeCategory,
+                          style: _SearchText.bodyStrong(context),
                         ),
                       ],
                     ),
                     if (defenseInsight!.statuteDeadline != null) ...[
-                      SizedBox(height: 8.h),
+                      SizedBox(height: 10.h),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 8.h,
+                        ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFFF7ED),
-                          borderRadius: BorderRadius.circular(6.r),
-                          border: Border.all(color: const Color(0xFFFDBA74)),
+                          color: t.semanticUrgentContainer,
+                          borderRadius: BorderRadius.circular(10.r),
+                          border: Border.all(
+                            color: t.semanticUrgent.withValues(alpha: 0.35),
+                          ),
                         ),
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(
-                              Icons.access_time_filled_rounded,
-                              size: 11.sp,
-                              color: const Color(0xFFC2410C),
+                            Padding(
+                              padding: EdgeInsets.only(top: 2.h),
+                              child: Icon(
+                                PhosphorIconsFill.clockCountdown,
+                                size: 15.sp,
+                                color: t.semanticUrgent,
+                              ),
                             ),
-                            SizedBox(width: 5.w),
+                            SizedBox(width: 8.w),
                             Expanded(
-                              child: Text(
-                                '時效提醒：${defenseInsight!.statuteDeadline!.title} (${defenseInsight!.statuteDeadline!.durationDays}天) | ${defenseInsight!.statuteDeadline!.legalBasis}',
-                                style: TextStyle(
-                                  fontSize: 10.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: const Color(0xFF9A3412),
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                              child: Wrap(
+                                spacing: 6.w,
+                                runSpacing: 2.h,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                children: [
+                                  Text(
+                                    '時效警示：${defenseInsight!.statuteDeadline!.title}',
+                                    style: _SearchText.captionStrong(context)
+                                        .copyWith(color: t.semanticUrgent),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 6.w,
+                                      vertical: 2.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: t.semanticUrgent
+                                          .withValues(alpha: 0.14),
+                                      borderRadius: BorderRadius.circular(5.r),
+                                    ),
+                                    child: Text(
+                                      '${defenseInsight!.statuteDeadline!.durationDays} 天',
+                                      style: _SearchText.metric(
+                                        context,
+                                        size: 11.sp,
+                                        color: t.semanticUrgent,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    '依據：${defenseInsight!.statuteDeadline!.legalBasis}',
+                                    style: _SearchText.caption(context)
+                                        .copyWith(color: t.textPrimary),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -536,15 +425,13 @@ class _AssistantOverviewCard extends StatelessWidget {
                       ),
                     ],
                     SizedBox(height: 10.h),
-                    // 談判交涉金句框
                     Container(
-                      padding: EdgeInsets.all(10.w),
+                      width: double.infinity,
+                      padding: EdgeInsets.all(11.w),
                       decoration: BoxDecoration(
-                        color: _SearchColors.softMint.withValues(alpha: 0.55),
-                        borderRadius: BorderRadius.circular(8.r),
-                        border: Border.all(
-                          color: _SearchColors.border.withValues(alpha: 0.6),
-                        ),
+                        color: t.surface,
+                        borderRadius: BorderRadius.circular(10.r),
+                        border: Border.all(color: t.border),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -552,45 +439,50 @@ class _AssistantOverviewCard extends StatelessWidget {
                           Row(
                             children: [
                               Icon(
-                                Icons.format_quote_rounded,
-                                size: 13.sp,
-                                color: _SearchColors.primary,
+                                PhosphorIconsFill.quotes,
+                                size: 14.sp,
+                                color: t.accentBrass,
                               ),
-                              SizedBox(width: 4.w),
-                              Text(
-                                '談判自保防禦金句',
-                                style: TextStyle(
-                                  fontSize: 10.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: _SearchColors.primary,
+                              SizedBox(width: 5.w),
+                              Expanded(
+                                child: Text(
+                                  '談判自保防禦金句',
+                                  style: _SearchText.captionStrong(context)
+                                      .copyWith(color: t.brandPrimary),
                                 ),
                               ),
-                              const Spacer(),
                               InkWell(
                                 onTap: () {
-                                  Clipboard.setData(ClipboardData(
-                                    text: defenseInsight!.tacticalGoldenPhrase,
-                                  ));
-                                  CustomToast.show(context, '已複製談判自保金句！');
+                                  Clipboard.setData(
+                                    ClipboardData(
+                                      text:
+                                          defenseInsight!.tacticalGoldenPhrase,
+                                    ),
+                                  );
+                                  CustomToast.show(context, '已複製談判自保防禦金句');
                                 },
-                                borderRadius: BorderRadius.circular(4.r),
+                                borderRadius: BorderRadius.circular(6.r),
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 6.w,
+                                    vertical: 3.h,
+                                  ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Icon(
-                                        Icons.copy_rounded,
-                                        size: 10.sp,
-                                        color: _SearchColors.primary,
+                                        PhosphorIconsRegular.copy,
+                                        size: 13.sp,
+                                        color: t.brandPrimary,
                                       ),
-                                      SizedBox(width: 2.w),
+                                      SizedBox(width: 4.w),
                                       Text(
                                         '複製',
-                                        style: TextStyle(
-                                          fontSize: 9.5.sp,
-                                          fontWeight: FontWeight.bold,
-                                          color: _SearchColors.primary,
+                                        style:
+                                            _SearchText.captionStrong(context)
+                                                .copyWith(
+                                          color: t.brandPrimary,
+                                          fontSize: 11.sp,
                                         ),
                                       ),
                                     ],
@@ -599,13 +491,12 @@ class _AssistantOverviewCard extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(height: 5.h),
+                          SizedBox(height: 6.h),
                           Text(
                             defenseInsight!.tacticalGoldenPhrase,
-                            style: TextStyle(
-                              fontSize: 11.sp,
-                              color: _SearchColors.text,
-                              height: 1.4,
+                            style: _SearchText.serifBody(context).copyWith(
+                              fontSize: 13.sp,
+                              height: 1.55,
                             ),
                           ),
                         ],
@@ -617,20 +508,31 @@ class _AssistantOverviewCard extends StatelessWidget {
                         width: double.infinity,
                         child: FilledButton.icon(
                           style: FilledButton.styleFrom(
-                            backgroundColor: _SearchColors.primary,
-                            foregroundColor: Colors.white,
+                            backgroundColor: t.brandPrimaryStrong,
+                            foregroundColor: const Color(0xFFFAF8F4),
+                            minimumSize: const Size(double.infinity, 42),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.r),
+                              borderRadius: BorderRadius.circular(10.r),
+                              side: BorderSide(
+                                color: t.accentBrass.withValues(alpha: 0.35),
+                              ),
                             ),
-                            padding: EdgeInsets.symmetric(vertical: 8.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12.w,
+                              vertical: 9.h,
+                            ),
                           ),
-                          icon: Icon(Icons.folder_special_rounded, size: 14.sp),
+                          icon: Icon(
+                            PhosphorIconsRegular.folderSimplePlus,
+                            size: 15.sp,
+                            color: t.accentBrass,
+                          ),
                           label: Text(
-                            '📁 建立「自救記事」進度追蹤',
+                            '建立「自救記事」進度追蹤',
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 11.5.sp,
-                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFFFAF8F4),
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                           onPressed: onSaveToJournal,
@@ -644,15 +546,16 @@ class _AssistantOverviewCard extends StatelessWidget {
 
             SizedBox(height: 14.h),
             _AssistantCitationsRow(query: query),
-            SizedBox(height: 16.h),
+            SizedBox(height: 14.h),
             Wrap(
               spacing: 6.w,
               runSpacing: 8.h,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                Text('回答風格：',
-                    style: _SearchText.caption()
-                        .copyWith(fontWeight: FontWeight.bold)),
+                Text(
+                  '語氣：',
+                  style: _SearchText.captionStrong(context),
+                ),
                 _StyleChip(
                   label: '白話',
                   selected: tone == '白話',
@@ -664,9 +567,10 @@ class _AssistantOverviewCard extends StatelessWidget {
                   onTap: () => onToneChanged('專業'),
                 ),
                 SizedBox(width: 6.w),
-                Text('大綱長度：',
-                    style: _SearchText.caption()
-                        .copyWith(fontWeight: FontWeight.bold)),
+                Text(
+                  '篇幅：',
+                  style: _SearchText.captionStrong(context),
+                ),
                 _StyleChip(
                   label: '精簡',
                   selected: length == '精簡',
@@ -679,56 +583,312 @@ class _AssistantOverviewCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 16.h),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: _SearchColors.primary,
-                      side: const BorderSide(color: _SearchColors.border),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.r)),
-                      padding: EdgeInsets.symmetric(vertical: 8.h),
+            SizedBox(height: 14.h),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final isCompact = constraints.maxWidth < 290;
+                final saveBtn = OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: t.brandPrimary,
+                    backgroundColor: t.surface,
+                    minimumSize: const Size(0, 42),
+                    side: BorderSide(color: t.borderStrong),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(11.r),
                     ),
-                    icon: SvgPicture.asset(
-                      'assets/images/journal/book_icon.svg',
-                      colorFilter: const ColorFilter.mode(
-                          _SearchColors.primary, BlendMode.srcIn),
-                      width: 14.w,
-                      height: 14.w,
-                    ),
-                    label: Text('📌 摘錄筆記', style: _SearchText.captionStrong()),
-                    onPressed: onNotebookSave,
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 9.h),
                   ),
-                ),
-                SizedBox(width: 8.w),
-                Expanded(
-                  child: FilledButton.icon(
-                    style: FilledButton.styleFrom(
-                      backgroundColor: _SearchColors.primary,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.r)),
-                      padding: EdgeInsets.symmetric(vertical: 8.h),
-                    ),
-                    icon: SvgPicture.asset(
-                      'assets/images/journal/scale_icon.svg',
-                      colorFilter:
-                          const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                      width: 14.w,
-                      height: 14.w,
-                    ),
-                    label: Text('💬 深入問診',
-                        style: _SearchText.captionStrong()
-                            .copyWith(color: Colors.white)),
-                    onPressed: onContinueChat,
+                  icon: Icon(
+                    PhosphorIconsRegular.bookmarkSimple,
+                    size: 15.sp,
+                    color: t.brandPrimary,
                   ),
-                ),
-              ],
+                  label: Text(
+                    '摘錄筆記',
+                    style: _SearchText.captionStrong(context).copyWith(
+                      color: t.brandPrimary,
+                      fontSize: 12.sp,
+                    ),
+                  ),
+                  onPressed: onNotebookSave,
+                );
+
+                final chatBtn = FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: t.brandPrimaryStrong,
+                    foregroundColor: const Color(0xFFFAF8F4),
+                    minimumSize: const Size(0, 42),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(11.r),
+                    ),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 9.h),
+                  ),
+                  icon: Icon(
+                    PhosphorIconsRegular.chatsCircle,
+                    size: 15.sp,
+                    color: t.accentBrass,
+                  ),
+                  label: Text(
+                    '深入問診',
+                    style: _SearchText.captionStrong(context).copyWith(
+                      color: const Color(0xFFFAF8F4),
+                      fontSize: 12.sp,
+                    ),
+                  ),
+                  onPressed: onContinueChat,
+                );
+
+                if (isCompact) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      saveBtn,
+                      SizedBox(height: 8.h),
+                      chatBtn,
+                    ],
+                  );
+                }
+                return Row(
+                  children: [
+                    Expanded(child: saveBtn),
+                    SizedBox(width: 8.w),
+                    Expanded(child: chatBtn),
+                  ],
+                );
+              },
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+class _SyllogismStepsFlow extends StatelessWidget {
+  const _SyllogismStepsFlow({
+    required this.analysis,
+    required this.summary,
+  });
+
+  final LegalSyllogismAnalysis analysis;
+  final String summary;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    final primaryStatute = analysis.majorPremiseStatutes.isNotEmpty
+        ? analysis.majorPremiseStatutes.first
+        : null;
+    final issues = analysis.identifiedIssues.take(2).toList(growable: false);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 01 大前提：法規範基礎（宋體權威條文）
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(12.w),
+          decoration: BoxDecoration(
+            color: t.surfaceSubtle,
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border(
+              left: BorderSide(color: t.brandPrimary, width: 3.w),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  _SyllogismStepBadge(number: '01', label: '大前提・法規範基礎'),
+                ],
+              ),
+              SizedBox(height: 7.h),
+              if (primaryStatute != null) ...[
+                Text(
+                  primaryStatute.fullCitation,
+                  style: _SearchText.serifTileTitle(context).copyWith(
+                    color: t.brandPrimary,
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  primaryStatute.officialText,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: _SearchText.serifBody(context).copyWith(
+                    fontSize: 13.sp,
+                    height: 1.58,
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  '白話要旨：${primaryStatute.plainSummary}',
+                  style: _SearchText.body(context),
+                ),
+              ] else
+                Text(
+                  '依現行民刑法與特別法相關權利保障規範進行涵攝。',
+                  style: _SearchText.serifBody(context),
+                ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 14.w),
+          child: Icon(
+            PhosphorIconsRegular.arrowDown,
+            size: 14.sp,
+            color: t.accentBrass,
+          ),
+        ),
+        // 02 小前提：爭點與構成要件檢核（黑體行動語氣）
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(12.w),
+          decoration: BoxDecoration(
+            color: t.surfaceSubtle,
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border(
+              left: BorderSide(color: t.accentBrass, width: 3.w),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Row(
+                children: [
+                  _SyllogismStepBadge(
+                    number: '02',
+                    label: '小前提・爭點與要件涵攝',
+                    isBrass: true,
+                  ),
+                ],
+              ),
+              SizedBox(height: 7.h),
+              if (issues.isNotEmpty)
+                for (final issue in issues)
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 4.h),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 3.h),
+                          child: Icon(
+                            PhosphorIconsFill.caretRight,
+                            size: 12.sp,
+                            color: t.accentBrass,
+                          ),
+                        ),
+                        SizedBox(width: 6.w),
+                        Expanded(
+                          child: Text(
+                            issue,
+                            style: _SearchText.bodyStrong(context),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+              else
+                Text(
+                  analysis.summaryOfFacts,
+                  style: _SearchText.bodyStrong(context),
+                ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 14.w),
+          child: Icon(
+            PhosphorIconsRegular.arrowDown,
+            size: 14.sp,
+            color: t.brandPrimary,
+          ),
+        ),
+        // 03 結論與行動建議
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(12.w),
+          decoration: BoxDecoration(
+            color: t.brandContainer.withValues(alpha: t.isDark ? 0.5 : 0.65),
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(
+              color: t.brandPrimary.withValues(alpha: 0.28),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Row(
+                children: [
+                  _SyllogismStepBadge(number: '03', label: '結論與行動建議'),
+                ],
+              ),
+              SizedBox(height: 7.h),
+              Text(
+                summary.trim().isNotEmpty ? summary : analysis.conclusionRemedy,
+                style: _SearchText.bodyStrong(context).copyWith(
+                  height: 1.58,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SyllogismStepBadge extends StatelessWidget {
+  const _SyllogismStepBadge({
+    required this.number,
+    required this.label,
+    this.isBrass = false,
+  });
+
+  final String number;
+  final String label;
+  final bool isBrass;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    final fg = isBrass ? t.accentOnBrassContainer : t.brandOnContainer;
+    final bg = isBrass ? t.accentBrassContainer : t.brandContainer;
+    return Flexible(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(6.r),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              number,
+              style: _SearchText.metric(
+                context,
+                size: 11.sp,
+                color: fg,
+              ),
+            ),
+            SizedBox(width: 5.w),
+            Flexible(
+              child: Text(
+                label,
+                style: _SearchText.captionStrong(context).copyWith(
+                  color: fg,
+                  fontSize: 11.sp,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -741,24 +901,51 @@ class _AssistantCitationsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 依據搜尋詞動態決定引用來源
+    final t = context.tokens;
     final List<Map<String, String>> citations = [];
-    final matchingStatutes = TaiwanStatuteCanon.findBestMatchingStatutes(query, limit: 2);
+    final matchingStatutes =
+        TaiwanStatuteCanon.findBestMatchingStatutes(query, limit: 2);
     for (int i = 0; i < matchingStatutes.length; i++) {
       final s = matchingStatutes[i];
-      final category = s.disputeCategories.isNotEmpty ? s.disputeCategories.first : '規範要旨';
+      final category = s.disputeCategories.isNotEmpty
+          ? s.disputeCategories.first
+          : '規範要旨';
       final title = '${s.fullCitation} ($category)';
       citations.add({'id': '[${i + 1}]', 'title': title, 'tag': '法規'});
     }
 
     final domain = TaiwanStatuteCanon.detectDisputeDomain(query);
     final officialSource = switch (domain) {
-      TaiwanDisputeDomain.rentalAndHousing => {'id': '[${citations.length + 1}]', 'title': '內政部地政司 租賃住宅專區', 'tag': '官方'},
-      TaiwanDisputeDomain.laborAndEmployment => {'id': '[${citations.length + 1}]', 'title': '勞動部 勞工權益保障指南', 'tag': '官方'},
-      TaiwanDisputeDomain.trafficAndTort => {'id': '[${citations.length + 1}]', 'title': '警政署 道路交通事故處理規範', 'tag': '官方'},
-      TaiwanDisputeDomain.consumerProtection => {'id': '[${citations.length + 1}]', 'title': '行政院消保處 消費申訴網', 'tag': '官方'},
-      TaiwanDisputeDomain.fraudAndCybercrime => {'id': '[${citations.length + 1}]', 'title': '警政署 165 全民防騙網', 'tag': '官方'},
-      _ => {'id': '[${citations.length + 1}]', 'title': '司法院法規檢索系統', 'tag': '官方'},
+      TaiwanDisputeDomain.rentalAndHousing => {
+          'id': '[${citations.length + 1}]',
+          'title': '內政部地政司 租賃住宅專區',
+          'tag': '官方',
+        },
+      TaiwanDisputeDomain.laborAndEmployment => {
+          'id': '[${citations.length + 1}]',
+          'title': '勞動部 勞工權益保障指南',
+          'tag': '官方',
+        },
+      TaiwanDisputeDomain.trafficAndTort => {
+          'id': '[${citations.length + 1}]',
+          'title': '警政署 道路交通事故處理規範',
+          'tag': '官方',
+        },
+      TaiwanDisputeDomain.consumerProtection => {
+          'id': '[${citations.length + 1}]',
+          'title': '行政院消保處 消費申訴網',
+          'tag': '官方',
+        },
+      TaiwanDisputeDomain.fraudAndCybercrime => {
+          'id': '[${citations.length + 1}]',
+          'title': '警政署 165 全民防騙網',
+          'tag': '官方',
+        },
+      _ => {
+          'id': '[${citations.length + 1}]',
+          'title': '司法院法規檢索系統',
+          'tag': '官方',
+        },
     };
     citations.add(officialSource);
 
@@ -767,19 +954,16 @@ class _AssistantCitationsRow extends StatelessWidget {
       children: [
         Row(
           children: [
-            SvgPicture.asset(
-              'assets/images/journal/book_icon.svg',
-              colorFilter: const ColorFilter.mode(
-                  _SearchColors.primary, BlendMode.srcIn),
-              width: 12.w,
-              height: 12.w,
+            Icon(
+              PhosphorIconsRegular.bookOpenText,
+              color: t.brandPrimary,
+              size: 14.sp,
             ),
-            SizedBox(width: 4.w),
+            SizedBox(width: 5.w),
             Text(
-              '參考資料引用來源',
-              style: _SearchText.captionStrong().copyWith(
-                color: _SearchColors.primary,
-                fontSize: 10.sp,
+              '參考法源引用索引',
+              style: _SearchText.captionStrong(context).copyWith(
+                color: t.brandPrimary,
               ),
             ),
           ],
@@ -790,40 +974,53 @@ class _AssistantCitationsRow extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           child: Row(
             children: citations.map((citation) {
-              return Container(
-                margin: EdgeInsets.only(right: 8.w),
-                child: ActionChip(
-                  avatar: Text(
-                    citation['id']!,
-                    style: TextStyle(
-                      color: _SearchColors.primary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 9.sp,
-                    ),
-                  ),
-                  label: Text(citation['title']!),
-                  onPressed: () {
-                    ScaffoldMessenger.of(context)
-                      ..hideCurrentSnackBar()
-                      ..showSnackBar(
-                        SnackBar(
-                          behavior: SnackBarBehavior.floating,
-                          content: Text(
-                              '已為您定位引用來源：${citation['title']} (${citation['tag']})'),
-                        ),
+              return Padding(
+                padding: EdgeInsets.only(right: 8.w),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      Clipboard.setData(
+                        ClipboardData(text: citation['title']!),
                       );
-                  },
-                  backgroundColor: Colors.white.withValues(alpha: 0.6),
-                  side: const BorderSide(color: _SearchColors.border),
-                  visualDensity:
-                      const VisualDensity(horizontal: -4, vertical: -4),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.r)),
-                  labelStyle: _SearchText.caption().copyWith(
-                    color: _SearchColors.text,
-                    fontSize: 9.5.sp,
+                      CustomToast.show(
+                        context,
+                        '已複製引用來源：${citation['title']}',
+                      );
+                    },
+                    borderRadius: BorderRadius.circular(8.r),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 9.w,
+                        vertical: 5.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: t.surfaceSubtle,
+                        borderRadius: BorderRadius.circular(8.r),
+                        border: Border.all(color: t.border),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            citation['id']!,
+                            style: _SearchText.metric(
+                              context,
+                              size: 11.sp,
+                              color: t.brandPrimary,
+                            ),
+                          ),
+                          SizedBox(width: 5.w),
+                          Text(
+                            citation['title']!,
+                            style: _SearchText.caption(context).copyWith(
+                              color: t.textPrimary,
+                              fontSize: 11.sp,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               );
@@ -848,21 +1045,27 @@ class _StyleChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-        decoration: BoxDecoration(
-          color: selected ? _SearchColors.primary : Colors.white,
-          border: Border.all(
-              color: selected ? _SearchColors.primary : _SearchColors.border),
-          borderRadius: BorderRadius.circular(20.r),
-        ),
-        child: Text(
-          label,
-          style: _SearchText.caption().copyWith(
-            color: selected ? Colors.white : _SearchColors.text,
-            fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+    final t = context.tokens;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(999.r),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 11.w, vertical: 5.h),
+          decoration: BoxDecoration(
+            color: selected ? t.brandPrimaryStrong : t.surface,
+            border: Border.all(
+              color: selected ? t.brandPrimaryStrong : t.border,
+            ),
+            borderRadius: BorderRadius.circular(999.r),
+          ),
+          child: Text(
+            label,
+            style: _SearchText.captionStrong(context).copyWith(
+              color: selected ? const Color(0xFFFAF8F4) : t.textSecondary,
+              fontSize: 11.5.sp,
+            ),
           ),
         ),
       ),

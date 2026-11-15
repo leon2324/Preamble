@@ -119,7 +119,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('執業律師精準轉介與交辦'), findsOneWidget);
-      expect(find.textContaining('本次交辦案件簡報'), findsOneWidget);
+      expect(find.textContaining('交辦案件簡報'), findsOneWidget);
       expect(find.text('線上視訊 30 分鐘'), findsOneWidget);
       expect(find.text('實體事務所面談'), findsOneWidget);
       expect(find.text('書狀代撰審閱'), findsOneWidget);

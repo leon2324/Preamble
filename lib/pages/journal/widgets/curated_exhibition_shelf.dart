@@ -1,16 +1,68 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:preamble/features/case_library/data/case_library_repository.dart';
+import 'package:preamble/features/case_library/models/case_library_models.dart';
+import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
 import 'package:preamble/pages/journal/data/journal_page_items.dart';
 import 'package:preamble/pages/journal/widgets/journal_palette.dart';
 import 'package:preamble/pages/journal/widgets/journal_section_header.dart';
-import 'package:preamble/features/case_library/data/case_library_repository.dart';
-import 'package:preamble/features/case_library/pages/case_dossier_detail_page.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 
-class CuratedExhibitionShelf extends StatelessWidget {
+/// 主題策展特展區（現代美術館數位策展卡，移除舊版擬物木架與首案寫死跳轉錯誤）。
+class CuratedExhibitionShelf extends StatefulWidget {
   const CuratedExhibitionShelf({super.key, required this.palette});
 
   final JournalPalette palette;
+
+  @override
+  State<CuratedExhibitionShelf> createState() => _CuratedExhibitionShelfState();
+}
+
+class _CuratedExhibitionShelfState extends State<CuratedExhibitionShelf> {
+  @override
+  void initState() {
+    super.initState();
+    _ensureRepoInitialized();
+  }
+
+  Future<void> _ensureRepoInitialized() async {
+    final repo = CaseLibraryRepository.instance;
+    if (repo.cases.isEmpty) {
+      await repo.initialize();
+      if (mounted) setState(() {});
+    }
+  }
+
+  Future<void> _openExhibitionCollectionSheet(
+    BuildContext context,
+    CuratedExhibition item,
+    int exhibitionIndex,
+  ) async {
+    final repo = CaseLibraryRepository.instance;
+    if (repo.cases.isEmpty) {
+      await repo.initialize();
+    }
+    if (!context.mounted) return;
+
+    final books = item.caseIds
+        .map(repo.getCaseById)
+        .toList(growable: false);
+
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (sheetContext) {
+        return _ExhibitionCollectionSheet(
+          exhibition: item,
+          exhibitionNumber: exhibitionIndex + 1,
+          books: books,
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,369 +70,409 @@ class CuratedExhibitionShelf extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         JournalSectionHeader(
-          title: '主題策展特展架',
-          subtitle: '精選法律歷史與社會重大議題的系列卷宗特展。',
-          palette: palette,
+          title: '主題策展特展',
+          subtitle: '依憲政議題串聯多份指標卷宗，點擊展開該特展完整收錄清單。',
+          palette: widget.palette,
         ),
-        SizedBox(height: 14.h),
-        Stack(
-          children: [
-            // Shelf Background board (behind/bottom)
-            Positioned(
-              left: 4.w,
-              right: 4.w,
-              bottom: 8.h,
-              child: Container(
-                height: 12.h,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [
-                      Color(0xFF8E6F54), // Morandi wood / Warm clay
-                      Color(0xFF6E4E42),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(4.r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
-                      offset: Offset(0, 3.h),
-                      blurRadius: 4,
-                    ),
-                  ],
+        SizedBox(height: 12.h),
+        SizedBox(
+          height: MediaQuery.textScalerOf(context).scale(212.h),
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            itemCount: curatedExhibitionItems.length,
+            separatorBuilder: (_, __) => SizedBox(width: 12.w),
+            itemBuilder: (context, index) {
+              final item = curatedExhibitionItems[index];
+              return _ExhibitionMuseumCard(
+                item: item,
+                exhibitionNumber: index + 1,
+                onTap: () => _openExhibitionCollectionSheet(
+                  context,
+                  item,
+                  index,
                 ),
-              ),
-            ),
-            // Scrollable exhibition cards list
-            Padding(
-              padding: EdgeInsets.only(bottom: 16.h),
-              child: SizedBox(
-                height: 195.h,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
-                  padding: EdgeInsets.symmetric(horizontal: 12.w),
-                  itemCount: curatedExhibitionItems.length,
-                  itemBuilder: (context, index) {
-                    final item = curatedExhibitionItems[index];
-                    return _ExhibitionFolderCard(item: item);
-                  },
-                ),
-              ),
-            ),
-          ],
+              );
+            },
+          ),
         ),
       ],
     );
   }
 }
 
-class _ExhibitionFolderCard extends StatelessWidget {
-  const _ExhibitionFolderCard({required this.item});
+class _ExhibitionMuseumCard extends StatelessWidget {
+  const _ExhibitionMuseumCard({
+    required this.item,
+    required this.exhibitionNumber,
+    required this.onTap,
+  });
 
   final CuratedExhibition item;
+  final int exhibitionNumber;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 175.w,
-      margin: EdgeInsets.symmetric(horizontal: 6.w),
+    final t = context.tokens;
+    final repo = CaseLibraryRepository.instance;
+    final previewTitles = item.caseIds.map((id) {
+      final book = repo.getCaseById(id);
+      return book.shortTitleZh.isNotEmpty ? book.shortTitleZh : book.titleZh;
+    }).toList(growable: false);
+
+    return SizedBox(
+      width: 248.w,
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {
-            if (item.caseIds.isEmpty) return;
-            final firstCaseId = item.caseIds.first;
-            final book =
-                CaseLibraryRepository.instance.getCaseById(firstCaseId);
-            Navigator.of(context).push(
-              CupertinoPageRoute<void>(
-                builder: (_) => CaseDossierDetailPage(
-                  book: book,
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(20.r),
+          child: Ink(
+            padding: EdgeInsets.all(15.w),
+            decoration: t.cardDecoration(radius: 20.r, elevated: false),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Flexible(
+                      child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 3.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: t.accentBrassContainer,
+                        borderRadius: BorderRadius.circular(6.r),
+                      ),
+                      child: Text(
+                        'EXHIBITION 0$exhibitionNumber',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: t.tabularMetric(
+                          size: 10.sp,
+                          weight: FontWeight.w700,
+                          color: t.accentOnBrassContainer,
+                        ),
+                      ),
+                    ),
+                    ),
+                    SizedBox(width: 6.w),
+                    Text(
+                      '收錄 ${item.caseIds.length} 案',
+                      style: t.tabularMetric(
+                        size: 11.sp,
+                        weight: FontWeight.w700,
+                        color: t.brandPrimary,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            );
-          },
-          borderRadius: BorderRadius.circular(16.r),
+                SizedBox(height: 10.h),
+                Text(
+                  item.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: t.serifTitle(
+                    size: 16.sp,
+                    weight: FontWeight.w800,
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  item.description,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: t.sansBody(
+                    size: 11.5.sp,
+                    color: t.textSecondary,
+                    height: 1.42,
+                  ),
+                ),
+                const Spacer(),
+                Wrap(
+                  spacing: 6.w,
+                  runSpacing: 4.h,
+                  children: previewTitles.take(2).map((label) {
+                    return Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 7.w,
+                        vertical: 2.5.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: t.surfaceSubtle,
+                        borderRadius: BorderRadius.circular(6.r),
+                        border: Border.all(color: t.border),
+                      ),
+                      child: Text(
+                        label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: t.sansBody(
+                          size: 10.sp,
+                          weight: FontWeight.w600,
+                          color: t.textSecondary,
+                          height: 1.2,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                SizedBox(height: 10.h),
+                Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                      '閱讀進度 ${item.readProgress}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: t.tabularMetric(
+                        size: 10.5.sp,
+                        weight: FontWeight.w600,
+                        color: t.textMuted,
+                      ),
+                    ),
+                    ),
+                    SizedBox(width: 6.w),
+                    Text(
+                      '展開策展目錄',
+                      style: t.sansBody(
+                        size: 11.5.sp,
+                        weight: FontWeight.w700,
+                        color: t.brandPrimary,
+                      ),
+                    ),
+                    SizedBox(width: 3.w),
+                    Icon(
+                      PhosphorIconsRegular.arrowRight,
+                      size: 13.sp,
+                      color: t.brandPrimary,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ExhibitionCollectionSheet extends StatelessWidget {
+  const _ExhibitionCollectionSheet({
+    required this.exhibition,
+    required this.exhibitionNumber,
+    required this.books,
+  });
+
+  final CuratedExhibition exhibition;
+  final int exhibitionNumber;
+  final List<CaseBook> books;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+
+    return FractionallySizedBox(
+      heightFactor: 0.78,
+      child: Container(
+        decoration: BoxDecoration(
+          color: t.surfaceElevated,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(26.r)),
+          border: Border.all(color: t.borderStrong, width: 1),
+        ),
+        child: SafeArea(
+          top: false,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Folder top tab
-              Container(
-                width: 65.w,
-                height: 16.h,
-                decoration: BoxDecoration(
-                  color: item.themeColor,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(8.r),
-                    topRight: Radius.circular(8.r),
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    'EXHIBITION',
-                    style: TextStyle(
-                      fontSize: 8.sp,
-                      color: Colors.white.withValues(alpha: 0.9),
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 0.8,
-                    ),
+              Center(
+                child: Container(
+                  width: 38.w,
+                  height: 4.h,
+                  margin: EdgeInsets.only(top: 12.h, bottom: 14.h),
+                  decoration: BoxDecoration(
+                    color: t.borderStrong,
+                    borderRadius: BorderRadius.circular(999.r),
                   ),
                 ),
               ),
-              // Folder main body
-              Expanded(
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: item.themeColor,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(16.r),
-                      bottomLeft: Radius.circular(16.r),
-                      bottomRight: Radius.circular(16.r),
-                      topLeft: Radius.circular(0),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 3.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: t.accentBrassContainer,
+                            borderRadius: BorderRadius.circular(6.r),
+                          ),
+                          child: Text(
+                            'CURATED EXHIBITION 0$exhibitionNumber · 共 ${books.length} 案',
+                            style: t.tabularMetric(
+                              size: 10.5.sp,
+                              weight: FontWeight.w700,
+                              color: t.accentOnBrassContainer,
+                            ),
+                          ),
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          icon: Icon(
+                            PhosphorIconsRegular.x,
+                            size: 18.sp,
+                            color: t.textSecondary,
+                          ),
+                        ),
+                      ],
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: item.themeColor.withValues(alpha: 0.25),
-                        offset: const Offset(0, 4),
-                        blurRadius: 8,
+                    Text(
+                      exhibition.title,
+                      style: t.serifTitle(
+                        size: 21.sp,
+                        weight: FontWeight.w800,
                       ),
-                    ],
-                  ),
-                  padding: EdgeInsets.all(12.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Progress tag
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 7.w, vertical: 3.h),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.16),
-                              borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    SizedBox(height: 6.h),
+                    Text(
+                      exhibition.description,
+                      style: t.sansBody(
+                        size: 12.5.sp,
+                        color: t.textSecondary,
+                        height: 1.48,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 14.h),
+              Divider(color: t.border, height: 1),
+              Expanded(
+                child: ListView.separated(
+                  padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 24.h),
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: books.length,
+                  separatorBuilder: (_, __) => SizedBox(height: 12.h),
+                  itemBuilder: (context, index) {
+                    final book = books[index];
+                    return Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(18.r),
+                        onTap: () {
+                          final navigator = Navigator.of(context);
+                          navigator.pop();
+                          navigator.push(
+                            CupertinoPageRoute<void>(
+                              builder: (_) => CaseDossierDetailPage(book: book),
                             ),
-                            child: Text(
-                              '已讀 ${item.readProgress}',
-                              style: TextStyle(
-                                fontSize: 9.sp,
-                                color: Colors.white.withValues(alpha: 0.95),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Icon(
-                            CupertinoIcons.folder_open,
-                            size: 13.sp,
-                            color: Colors.white.withValues(alpha: 0.7),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 8.h),
-                      // Exhibition Title
-                      Text(
-                        item.title,
-                        style: TextStyle(
-                          fontSize: 13.5.sp,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(height: 4.h),
-                      // Exhibition Description
-                      Text(
-                        item.description,
-                        style: TextStyle(
-                          fontSize: 10.sp,
-                          height: 1.35,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white.withValues(alpha: 0.75),
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const Spacer(),
-                      // Stacked Book Covers & Read Button
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 4.h),
-                            child: Row(
-                              children: [
-                                Text(
-                                  '進入特展',
-                                  style: TextStyle(
-                                    fontSize: 10.sp,
-                                    color: Colors.white.withValues(alpha: 0.9),
-                                    fontWeight: FontWeight.bold,
+                          );
+                        },
+                        child: Ink(
+                          padding: EdgeInsets.all(15.w),
+                          decoration:
+                              t.cardDecoration(radius: 18.r, elevated: false),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 32.w,
+                                height: 32.w,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: t.brandContainer,
+                                  borderRadius: BorderRadius.circular(10.r),
+                                ),
+                                child: Text(
+                                  '0${index + 1}',
+                                  style: t.tabularMetric(
+                                    size: 12.sp,
+                                    weight: FontWeight.w700,
+                                    color: t.brandOnContainer,
                                   ),
                                 ),
-                                SizedBox(width: 2.w),
-                                Icon(
-                                  CupertinoIcons.chevron_right_circle_fill,
-                                  size: 11.sp,
-                                  color: Colors.white.withValues(alpha: 0.9),
+                              ),
+                              SizedBox(width: 12.w),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Wrap(
+                                      spacing: 6.w,
+                                      runSpacing: 4.h,
+                                      children: [
+                                        Text(
+                                          '${book.year} · ${book.category}',
+                                          style: t.tabularMetric(
+                                            size: 11.sp,
+                                            weight: FontWeight.w700,
+                                            color: t.accentBrass,
+                                          ),
+                                        ),
+                                        if (book.displayCode.isNotEmpty)
+                                          Text(
+                                            '· ${book.displayCode}',
+                                            style: t.tabularMetric(
+                                              size: 11.sp,
+                                              weight: FontWeight.w600,
+                                              color: t.textMuted,
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 5.h),
+                                    Text(
+                                      book.titleZh,
+                                      style: t.serifTitle(
+                                        size: 15.5.sp,
+                                        weight: FontWeight.w800,
+                                      ),
+                                    ),
+                                    SizedBox(height: 5.h),
+                                    Text(
+                                      book.oneSentenceSummary.isNotEmpty
+                                          ? book.oneSentenceSummary
+                                          : book.shortDescription,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: t.sansBody(
+                                        size: 12.sp,
+                                        color: t.textSecondary,
+                                        height: 1.45,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                              SizedBox(width: 8.w),
+                              Padding(
+                                padding: EdgeInsets.only(top: 6.h),
+                                child: Icon(
+                                  PhosphorIconsRegular.caretRight,
+                                  size: 16.sp,
+                                  color: t.textMuted,
+                                ),
+                              ),
+                            ],
                           ),
-                          _BookStack(caseIds: item.caseIds),
-                        ],
+                        ),
                       ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _BookStack extends StatelessWidget {
-  const _BookStack({required this.caseIds});
-
-  final List<String> caseIds;
-
-  @override
-  Widget build(BuildContext context) {
-    final bookCount = caseIds.length;
-    if (bookCount == 0) return const SizedBox.shrink();
-
-    return SizedBox(
-      width: 65.w,
-      height: 46.h,
-      child: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.bottomRight,
-        children: [
-          if (bookCount > 2)
-            Positioned(
-              right: 24.w,
-              bottom: 3.h,
-              child: Transform.rotate(
-                angle: -0.15,
-                child: _MiniBook(
-                  bookId: caseIds[2],
-                  baseColor: Colors.white.withValues(alpha: 0.4),
-                ),
-              ),
-            ),
-          if (bookCount > 1)
-            Positioned(
-              right: 12.w,
-              bottom: 1.5.h,
-              child: Transform.rotate(
-                angle: -0.07,
-                child: _MiniBook(
-                  bookId: caseIds[1],
-                  baseColor: Colors.white.withValues(alpha: 0.7),
-                ),
-              ),
-            ),
-          Positioned(
-            right: 0,
-            bottom: 0,
-            child: Transform.rotate(
-              angle: 0.05,
-              child: _MiniBook(
-                bookId: caseIds[0],
-                baseColor: Colors.white,
-                isFront: true,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _MiniBook extends StatelessWidget {
-  const _MiniBook({
-    required this.bookId,
-    required this.baseColor,
-    this.isFront = false,
-  });
-
-  final String bookId;
-  final Color baseColor;
-  final bool isFront;
-
-  @override
-  Widget build(BuildContext context) {
-    String displayLabel = '';
-    final book = CaseLibraryRepository.instance.getCaseById(bookId);
-
-    if (book.displayCode.isNotEmpty) {
-      displayLabel =
-          book.displayCode.replaceAll('CL-', '').replaceAll('JY-', '');
-    } else if (book.shortTitleZh.isNotEmpty) {
-      displayLabel = book.shortTitleZh;
-    } else {
-      displayLabel = book.titleZh
-          .substring(0, book.titleZh.length > 3 ? 3 : book.titleZh.length);
-    }
-
-    return Container(
-      width: 28.w,
-      height: 40.h,
-      decoration: BoxDecoration(
-        color: baseColor,
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(3.r),
-          bottomRight: Radius.circular(3.r),
-          topLeft: Radius.circular(1.r),
-          bottomLeft: Radius.circular(1.r),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.12),
-            blurRadius: 2,
-            offset: const Offset(1, 1),
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          // Spine Line
-          Positioned(
-            left: 0,
-            top: 0,
-            bottom: 0,
-            width: 2.w,
-            child: Container(
-              color: Colors.black.withValues(alpha: 0.12),
-            ),
-          ),
-          // Title on the front cover
-          if (isFront && displayLabel.isNotEmpty)
-            Center(
-              child: Padding(
-                padding: EdgeInsets.only(left: 3.w, right: 1.w),
-                child: Text(
-                  displayLabel,
-                  style: TextStyle(
-                    fontSize: 7.sp,
-                    fontWeight: FontWeight.w900,
-                    color: const Color(0xFF2C3E3B),
-                    height: 1.1,
-                  ),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ),
-        ],
       ),
     );
   }

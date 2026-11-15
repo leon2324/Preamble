@@ -1,42 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:preamble/theme/app_colors.dart';
+import 'package:preamble/theme/app_fonts.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 
 /// Preamble 全域 Theme 建構器。
 ///
-/// Theme 的顏色、字體與 Material 基礎樣式集中在這裡；`main.dart` 只負責套用，
-/// 避免 App 殼層同時承擔主題細節與分頁狀態管理。
+/// 正式掛載 `AppFonts`（Inter + 思源黑體 TW + 思源宋體 TW）與 `PreambleTokens`
+/// Light / Dark 雙生語意設計系統。
 class AppTheme {
   const AppTheme._();
 
   static ThemeData light() {
+    const t = PreambleTokens.light;
+    final textTheme = AppFonts.applyDefaultFallbacks(
+      Typography.material2021().black,
+      bodyColor: t.textPrimary,
+      displayColor: t.textPrimary,
+    );
+
     return ThemeData(
       useMaterial3: true,
-      scaffoldBackgroundColor: AppColors.background,
+      brightness: Brightness.light,
+      fontFamily: AppFonts.defaultFamily,
+      fontFamilyFallback: AppFonts.defaultFallbacks,
+      scaffoldBackgroundColor: t.canvas,
+      extensions: const [PreambleTokens.light],
       colorScheme: ColorScheme.fromSeed(
-        seedColor: AppColors.primary,
-        primary: AppColors.primary,
-        surface: AppColors.background,
+        brightness: Brightness.light,
+        seedColor: t.brandPrimary,
+        primary: t.brandPrimary,
+        onPrimary: t.brandOnPrimary,
+        secondary: t.accentBrass,
+        surface: t.surface,
+        onSurface: t.textPrimary,
+        error: t.semanticUrgent,
       ),
-      textTheme: Typography.blackMountainView.apply(
-        bodyColor: AppColors.textPrimary,
-        displayColor: AppColors.textPrimary,
+      textTheme: textTheme,
+      dividerTheme: const DividerThemeData(
+        color: Color(0xFFE5DFD3),
+        thickness: 1,
+        space: 1,
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.background,
-        foregroundColor: AppColors.textPrimary,
+        backgroundColor: Color(0xFFF8F6F1),
+        foregroundColor: Color(0xFF151C19),
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: const Color(0xFF1E352F),
+        backgroundColor: t.brandPrimaryStrong,
         contentTextStyle: const TextStyle(
-          color: Color(0xFFFAF6F0),
+          fontFamily: AppFonts.defaultFamily,
+          fontFamilyFallback: AppFonts.defaultFallbacks,
+          color: Color(0xFFFAF8F4),
           fontSize: 13,
           fontWeight: FontWeight.w600,
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
-          side: const BorderSide(color: Color(0xFF32544A), width: 1),
+          side: BorderSide(color: t.accentBrass.withValues(alpha: 0.35), width: 1),
         ),
         elevation: 4,
       ),
@@ -44,45 +67,61 @@ class AppTheme {
   }
 
   static ThemeData dark() {
-    // 深色主題先處理全域背景、文字與 Material 元件基礎色；
-    // 部分既有首頁插畫卡片仍保留品牌色，避免一鍵深色後失去首頁識別。
-    const darkBackground = Color(0xFF0F1216);
-    const darkSurface = Color(0xFF171C22);
-    const darkText = Color(0xFFF2F4F7);
+    const t = PreambleTokens.dark;
+    final textTheme = AppFonts.applyDefaultFallbacks(
+      Typography.material2021().white,
+      bodyColor: t.textPrimary,
+      displayColor: t.textPrimary,
+    );
 
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: darkBackground,
+      fontFamily: AppFonts.defaultFamily,
+      fontFamilyFallback: AppFonts.defaultFallbacks,
+      scaffoldBackgroundColor: t.canvas,
+      extensions: const [PreambleTokens.dark],
       colorScheme: ColorScheme.fromSeed(
         brightness: Brightness.dark,
-        seedColor: const Color(0xFF9FB0C6),
-        primary: const Color(0xFF9FB0C6),
-        surface: darkSurface,
+        seedColor: t.brandPrimary,
+        primary: t.brandPrimary,
+        onPrimary: t.brandOnPrimary,
+        secondary: t.accentBrass,
+        surface: t.surface,
+        onSurface: t.textPrimary,
+        error: t.semanticUrgent,
       ),
-      textTheme: Typography.whiteMountainView.apply(
-        bodyColor: darkText,
-        displayColor: darkText,
+      textTheme: textTheme,
+      dividerTheme: const DividerThemeData(
+        color: Color(0xFF2A3732),
+        thickness: 1,
+        space: 1,
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: darkBackground,
-        foregroundColor: darkText,
+        backgroundColor: Color(0xFF0E1211),
+        foregroundColor: Color(0xFFF2F5F3),
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: const Color(0xFF1F242A),
+        backgroundColor: t.surfaceElevated,
         contentTextStyle: const TextStyle(
-          color: Color(0xFFE2E8F0),
+          fontFamily: AppFonts.defaultFamily,
+          fontFamilyFallback: AppFonts.defaultFallbacks,
+          color: Color(0xFFF2F5F3),
           fontSize: 13,
           fontWeight: FontWeight.w600,
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
-          side: const BorderSide(color: Color(0xFF333D4B), width: 1),
+          side: BorderSide(color: t.borderStrong, width: 1),
         ),
         elevation: 4,
       ),
     );
   }
+
+  /// 供舊有常數參考相容保留
+  static Color get primary => AppColors.primary;
 }

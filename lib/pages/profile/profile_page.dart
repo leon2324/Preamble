@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/app/build_info.dart';
-import 'package:preamble/theme/adaptive_layout.dart';
 import 'package:preamble/components/navigation/app_shell_content_insets.dart';
-import 'package:preamble/theme/app_colors.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:preamble/components/subscription/morandi_paywall_sheet.dart';
-import 'package:preamble/pages/profile/widgets/profile_widgets.dart';
-import 'package:preamble/pages/profile/widgets/profile_editor.dart';
 import 'package:preamble/pages/profile/apple_ecosystem_demo_page.dart';
+import 'package:preamble/pages/profile/widgets/profile_editor.dart';
+import 'package:preamble/pages/profile/widgets/profile_widgets.dart';
+import 'package:preamble/theme/adaptive_layout.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({
     super.key,
-    this.showBackButton = false,
+    this.showBackButton = true,
     this.buildInfoProvider = const PackageBuildInfoProvider(),
   });
 
-  /// 個人頁同時會出現在底部導覽列，也可能被首頁以新路由 push 開啟。
-  /// 不能直接用 Navigator.canPop() 判斷是否顯示返回鍵，否則從子功能返回底部 tab 後，
-  /// 根 Navigator 仍可能回報可 pop，造成母頁多出返回箭頭並把主畫面 pop 成黑屏。
+  /// 個人頁同時會出現在底部導覽列（傳入 `showBackButton: false`），
+  /// 也可能被首頁或其他入口以新路由 push 開啟（預設 `true`）。
   final bool showBackButton;
   final BuildInfoProvider buildInfoProvider;
 
@@ -58,363 +58,354 @@ class _ProfilePageState extends State<ProfilePage> {
     final appState = PreambleScope.of(context);
     final topPadding =
         context.hasLargeTopInset ? context.topSafeInset + 10.h : 22.h;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final backgroundColor =
-        isDark ? const Color(0xFF0F1216) : AppColors.background;
-    final cardColor = isDark ? const Color(0xFF171C22) : Colors.white;
-    final borderColor = isDark ? const Color(0xFF2B3441) : AppColors.border;
-    final textColor = isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary;
-    final textMutedColor =
-        isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
+    return AnimatedBuilder(
+      animation: Listenable.merge([appState, appState.subscriptionService]),
+      builder: (context, _) {
+        final t = context.tokens;
+        final metrics = ProfileSyncedMetrics.fromState(appState);
+        final isPro = appState.subscriptionService.isProOrHigher;
+        final expiryDateStr = appState.subscriptionService.status.expiryDate
+            ?.toString()
+            .split(' ')
+            .first;
 
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.fromLTRB(
-          16.w,
-          topPadding,
-          16.w,
-          context.pageContentBottomPadding +
-              32.h +
-              AppShellContentInsets.additionalBottomOf(context),
-        ),
-        children: [
-          if (widget.showBackButton)
-            _BackButton(onBack: () => Navigator.of(context).pop()),
-
-          // Header: 自訂個人頭像與狀態（大頭像居中排列，偏上方視覺）
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 24.h),
-            decoration: BoxDecoration(
-              color: cardColor,
-              borderRadius: BorderRadius.circular(24.r),
-              border: Border.all(color: borderColor),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x0A000000),
-                  blurRadius: 18,
-                  offset: Offset(0, 8),
-                )
-              ],
+        return Scaffold(
+          backgroundColor: t.canvas,
+          body: ListView(
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(
+              16.w,
+              topPadding,
+              16.w,
+              context.pageContentBottomPadding +
+                  32.h +
+                  AppShellContentInsets.additionalBottomOf(context),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // 居中大尺寸自訂頭像，點擊開啟編輯器
-                GestureDetector(
-                  onTap: () => _showProfileEditorSheet(context, appState),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      AvatarWidget(
-                        avatarUrl: appState.currentUser.avatarUrl,
-                        isSubscriber: appState.isSubscriber,
-                        isGuest: appState.isGuest,
-                        size: 88, // 放大頭像尺寸
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          padding: EdgeInsets.all(4.w),
-                          decoration: BoxDecoration(
-                            color: AppColors.primary,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: cardColor, width: 1.5.w),
-                          ),
-                          child: Icon(
-                            Icons.edit_rounded,
-                            color: Colors.white,
-                            size: 13.sp,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 14.h),
+            children: [
+              if (widget.showBackButton && Navigator.of(context).canPop())
+                _BackButton(onBack: () => Navigator.of(context).maybePop()),
 
-                // 居中使用者名稱
-                Text(
-                  appState.isGuest
-                      ? '訪客個人中心'
-                      : appState.currentUser.displayName,
-                  style: TextStyle(
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.w900,
-                    color: textColor,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 4.h),
-
-                // 信箱或提示字
-                Text(
-                  appState.isGuest ? '點擊頭像編輯資料' : appState.currentUser.email,
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: textMutedColor,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                if (!appState.isGuest) ...[
-                  SizedBox(height: 8.h),
-                  // 依據使用者的專業身分顯示金色/金屬感標籤 Badge
-                  _buildProfessionBadge(
-                      context, appState.currentUser.profession),
-                ],
-                SizedBox(height: 12.h),
-
-                // 方案與額度膠囊 Badge（可點擊直接開啟付費牆）
-                GestureDetector(
-                  onTap: () => MorandiPaywallSheet.show(context),
-                  child: Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
-                    decoration: BoxDecoration(
-                      color: appState.subscriptionService.isProOrHigher
-                          ? const Color(0xFFE5C07B).withValues(alpha: 0.15)
-                          : AppColors.primary.withValues(alpha: 0.06),
-                      borderRadius: BorderRadius.circular(100.r),
-                      border: Border.all(
-                        color: appState.subscriptionService.isProOrHigher
-                            ? const Color(0xFFE5C07B)
-                            : AppColors.primary.withValues(alpha: 0.15),
-                        width: 1.w,
-                      ),
-                    ),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
+              // 頂部會員名片與即時同步數據快覽橫條
+              Container(
+                padding: EdgeInsets.fromLTRB(18.w, 24.h, 18.w, 18.h),
+                decoration: t.cardDecoration(radius: 24.r),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () => _showProfileEditorSheet(context, appState),
+                      child: Stack(
+                        alignment: Alignment.center,
                         children: [
-                          Icon(
-                            appState.subscriptionService.isProOrHigher
-                                ? Icons.workspace_premium_rounded
-                                : Icons.bolt_rounded,
-                            size: 14.sp,
-                            color: appState.subscriptionService.isProOrHigher
-                                ? const Color(0xFFD4AF37)
-                                : AppColors.primary,
+                          AvatarWidget(
+                            avatarUrl: appState.currentUser.avatarUrl,
+                            isSubscriber: appState.isSubscriber || isPro,
+                            isGuest: appState.isGuest,
+                            size: 86,
                           ),
-                          SizedBox(width: 4.w),
-                          Text(
-                            appState.subscriptionService.isProOrHigher
-                                ? '${appState.subscriptionService.status.tierDisplayName} ｜ 無限次 AI'
-                                : '免費用戶 ｜ 今日 AI 額度：${appState.subscriptionService.remainingAiQuota}',
-                            style: TextStyle(
-                              fontSize: 11.sp,
-                              color: appState.subscriptionService.isProOrHigher
-                                  ? const Color(0xFFD4AF37)
-                                  : AppColors.primary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          if (!appState.subscriptionService.isProOrHigher) ...[
-                            SizedBox(width: 4.w),
-                            Text(
-                              '升級',
-                              style: TextStyle(
-                                fontSize: 10.sp,
-                                color: const Color(0xFF2C5E43),
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline,
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              padding: EdgeInsets.all(5.w),
+                              decoration: BoxDecoration(
+                                color: t.brandPrimaryStrong,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: t.surface,
+                                  width: 1.8.w,
+                                ),
+                              ),
+                              child: Icon(
+                                PhosphorIconsFill.pencilSimple,
+                                color: const Color(0xFFFAF8F4),
+                                size: 12.5.sp,
                               ),
                             ),
-                          ],
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          SizedBox(height: 14.h),
-
-          // Dashboard 卡片 Grid (對接統計數據)
-          _SectionTitle('我的資料'),
-          SizedBox(height: 10.h),
-          DashboardGrid(appState: appState),
-          SizedBox(height: 10.h),
-          // 新增學習歷程與等級橫幅，顯示讀者法律智識等級
-          LearningProgressBanner(appState: appState),
-
-          SizedBox(height: 20.h),
-
-          // 會員尊榮服務 (Grouped List Style)
-          GroupedSettingsList(
-            title: '會員尊榮權益',
-            tiles: [
-              SettingsTile(
-                icon: Icons.workspace_premium_rounded,
-                iconColor: const Color(0xFFD4AF37),
-                title: appState.subscriptionService.isProOrHigher
-                    ? '管理 PRO 會員訂閱'
-                    : '升級 PRO 專業版會員',
-                subtitle: appState.subscriptionService.isProOrHigher
-                    ? '有效期限至 ${appState.subscriptionService.status.expiryDate?.toString().split(' ').first ?? '自動續訂中'}'
-                    : '解鎖 100% 動態公文生成、去浮水印與無限 AI 問診',
-                trailing: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE5C07B),
-                    borderRadius: BorderRadius.circular(6.r),
-                  ),
-                  child: Text(
-                    appState.subscriptionService.isProOrHigher ? '已開通' : '立即解鎖',
-                    style: TextStyle(
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF1E2824),
+                    SizedBox(height: 14.h),
+                    Text(
+                      appState.isGuest
+                          ? '訪客個人中心'
+                          : appState.currentUser.displayName,
+                      style: t.serifTitle(size: 20.sp),
+                      textAlign: TextAlign.center,
                     ),
-                  ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      appState.isGuest
+                          ? '點擊頭像設定個人稱謂與身分偏好'
+                          : appState.currentUser.email,
+                      style: t.sansBody(
+                        size: 12.sp,
+                        color: t.textSecondary,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    if (!appState.isGuest) ...[
+                      SizedBox(height: 8.h),
+                      _buildProfessionBadge(
+                        context,
+                        appState.currentUser.profession,
+                      ),
+                    ],
+                    SizedBox(height: 12.h),
+
+                    // 方案與今日 AI 額度膠囊（點擊開啟訂閱方案底頁）
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () => MorandiPaywallSheet.show(context),
+                        borderRadius: BorderRadius.circular(99.r),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 14.w,
+                            vertical: 6.5.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isPro
+                                ? t.accentBrassContainer
+                                : t.brandContainer,
+                            borderRadius: BorderRadius.circular(99.r),
+                            border: Border.all(
+                              color: isPro
+                                  ? t.accentBrass.withValues(alpha: 0.65)
+                                  : t.brandPrimary.withValues(alpha: 0.25),
+                            ),
+                          ),
+                          child: Wrap(
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 5.w,
+                            runSpacing: 2.h,
+                            children: [
+                              Icon(
+                                isPro
+                                    ? PhosphorIconsFill.crown
+                                    : PhosphorIconsRegular.sparkle,
+                                size: 14.sp,
+                                color: isPro
+                                    ? t.accentBrass
+                                    : t.brandPrimary,
+                              ),
+                              Text(
+                                isPro
+                                    ? '${appState.subscriptionService.status.tierDisplayName} ｜ 無限次 AI'
+                                    : '免費用戶 ｜ 今日 AI 額度：${appState.subscriptionService.remainingAiQuota}',
+                                style: t.sansBody(
+                                  size: 11.5.sp,
+                                  weight: FontWeight.w700,
+                                  color: isPro
+                                      ? t.accentOnBrassContainer
+                                      : t.brandPrimary,
+                                ),
+                              ),
+                              if (!isPro)
+                                Text(
+                                  '升級',
+                                  style: t.sansBody(
+                                    size: 11.sp,
+                                    weight: FontWeight.w800,
+                                    color: t.accentOnBrassContainer,
+                                  ).copyWith(
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 16.h),
+
+                    // 100% 即時同步三欄統計橫條（收藏案卷・法規 / 追蹤動態 / 隨手筆記）
+                    ProfileQuickStatsStrip(metrics: metrics),
+                  ],
                 ),
+              ),
+
+              SizedBox(height: 14.h),
+
+              // 靜奢深松墨綠 × 古銅金 PRO 會員尊榮橫幅卡片
+              ProUpgradeBanner(
+                isPro: isPro,
+                expiryText: expiryDateStr != null
+                    ? '有效期限至 $expiryDateStr ｜ 享無限次 AI 問診與無浮水印匯出'
+                    : '自動續訂中 ｜ 享無限次 AI 問診、客製公文與無浮水印 PDF',
                 onTap: () => MorandiPaywallSheet.show(context),
               ),
-            ],
-          ),
 
-          SizedBox(height: 16.h),
+              SizedBox(height: 20.h),
 
-          // 設定與個人化 (Grouped List Style)
-          GroupedSettingsList(
-            title: '個人化與設定',
-            tiles: [
-              SettingsTile(
-                icon: Icons.apple_rounded,
-                iconColor: const Color(0xFF0F1216),
-                title: ' Apple 系統核心整合',
-                subtitle: 'Widgets, Siri 捷徑與 PencilKit 實體功能集',
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const AppleEcosystemDemoPage()),
-                ),
-              ),
-              SettingsTile(
-                icon: Icons.dark_mode_rounded,
-                iconColor: Colors.purple,
-                title: '深色模式',
-                subtitle: '夜間查資料或讀案例時降低亮度',
-                trailing: Switch.adaptive(
-                  value: appState.isDarkMode,
-                  onChanged: appState.setDarkMode,
-                  activeThumbColor: AppColors.accent,
-                ),
-              ),
-              SettingsTile(
-                icon: Icons.format_size_rounded,
-                iconColor: Colors.teal,
-                title: '閱讀字型大小',
-                subtitle: '調整 App 內文字的大小比例',
-                onTap: () => _showFontSizeDialog(context, appState),
-              ),
-              SettingsTile(
-                icon: Icons.notifications_active_rounded,
-                iconColor: Colors.orange,
-                title: '提醒偏好',
-                subtitle: '調整 App 內提醒摘要的呈現方式',
-                onTap: () => _showNotificationSettingsSheet(context, appState),
-              ),
-              SettingsTile(
-                icon: Icons.security_rounded,
-                iconColor: Colors.blueAccent,
-                title: '資料與隱私安全',
-                subtitle: '了解本機資料、帳號與敏感資訊限制',
-                onTap: () => _showAccountSecuritySheet(context),
-              ),
-              SettingsTile(
-                icon: Icons.dashboard_customize_rounded,
-                iconColor: Colors.blue,
-                title: '自訂導覽與介面',
-                subtitle: '調整底部導覽列順序、文字開關及主題配色',
-                onTap: () => _showInterfaceSettingsSheet(context, appState),
-              ),
-              SettingsTile(
-                icon: Icons.delete_sweep_rounded,
-                iconColor: Colors.redAccent,
-                title: '本機資料說明',
-                subtitle: '了解收藏、筆記與草稿的保存方式',
-                onTap: () => _showLocalStorageInfo(context),
-              ),
-            ],
-          ),
+              // 主要資料儀表板
+              const _SectionTitle('我的資料'),
+              SizedBox(height: 10.h),
+              DashboardGrid(appState: appState),
+              SizedBox(height: 10.h),
+              LearningProgressBanner(appState: appState),
 
-          SizedBox(height: 16.h),
+              SizedBox(height: 22.h),
 
-          // 關於與條款 (Grouped List Style)
-          GroupedSettingsList(
-            title: '支援與服務條款',
-            tiles: [
-              SettingsTile(
-                icon: Icons.feedback_rounded,
-                iconColor: Colors.blueAccent,
-                title: '問題回報與建議',
-                subtitle: '向團隊回饋系統程式錯誤或優化意見',
-                onTap: () => _showFeedbackSheet(context, appState),
+              // 個人化與設定（修復深色模式黑底黑圖示與本機資料說明誤用紅色刪除圖示問題）
+              GroupedSettingsList(
+                title: '個人化與設定',
+                tiles: [
+                  SettingsTile(
+                    icon: PhosphorIconsRegular.moonStars,
+                    iconColor: t.brandPrimary,
+                    iconBgColor: t.brandContainer,
+                    title: '深色模式',
+                    subtitle: '夜間查閱法規或閱讀案卷時切換靜奢深色介面',
+                    trailing: Switch.adaptive(
+                      value: appState.isDarkMode,
+                      onChanged: appState.setDarkMode,
+                      activeThumbColor: t.brandPrimary,
+                    ),
+                  ),
+                  SettingsTile(
+                    icon: PhosphorIconsRegular.textAa,
+                    iconColor: t.brandPrimary,
+                    iconBgColor: t.brandContainer,
+                    title: '閱讀字型大小',
+                    subtitle:
+                        '調整 App 內法條與內文字級比例（目前 ${(appState.fontSizeScale * 100).round()}%）',
+                    onTap: () => _showFontSizeDialog(context, appState),
+                  ),
+                  SettingsTile(
+                    icon: PhosphorIconsRegular.bellRinging,
+                    iconColor: t.accentOnBrassContainer,
+                    iconBgColor: t.accentBrassContainer,
+                    title: '提醒偏好',
+                    subtitle: '管理修法異動、追蹤案卷與系統提醒摘要',
+                    onTap: () =>
+                        _showNotificationSettingsSheet(context, appState),
+                  ),
+                  SettingsTile(
+                    icon: PhosphorIconsRegular.slidersHorizontal,
+                    iconColor: t.semanticInfo,
+                    iconBgColor: t.semanticInfoContainer,
+                    title: '自訂導覽與介面',
+                    subtitle: '調整底部導覽列順序、標籤開關與主題點綴色',
+                    onTap: () =>
+                        _showInterfaceSettingsSheet(context, appState),
+                  ),
+                  SettingsTile(
+                    icon: PhosphorIconsRegular.shieldCheck,
+                    iconColor: t.semanticSuccess,
+                    iconBgColor: t.semanticSuccessContainer,
+                    title: '資料與隱私安全',
+                    subtitle: '了解本機資料保護、帳號與敏感資訊規範',
+                    onTap: () => _showAccountSecurityInfo(context),
+                  ),
+                  SettingsTile(
+                    icon: PhosphorIconsRegular.hardDrive,
+                    iconColor: t.semanticInfo,
+                    iconBgColor: t.semanticInfoContainer,
+                    title: '本機資料說明',
+                    subtitle: '了解收藏、法務筆記與書狀草稿的儲存方式',
+                    onTap: () => _showLocalStorageInfo(context),
+                  ),
+                ],
               ),
-              SettingsTile(
-                icon: Icons.source_rounded,
-                iconColor: Colors.teal,
-                title: '資料來源說明',
-                subtitle: '查看案件、法規與學習內容的來源限制',
-                onTap: () => _showSourcesSheet(context),
-              ),
-              SettingsTile(
-                icon: Icons.privacy_tip_rounded,
-                iconColor: Colors.indigo,
-                title: '隱私權說明',
-                subtitle: '了解本機資料與外部連結使用限制',
-                onTap: () => _showPrivacySheet(context),
-              ),
-              SettingsTile(
-                icon: Icons.article_rounded,
-                iconColor: Colors.brown,
-                title: '使用條款摘要',
-                subtitle: '了解使用 緒言 Preamble 時的重要約定',
-                onTap: () => _showTermsSheet(context),
-              ),
-              SettingsTile(
-                icon: Icons.gavel_rounded,
-                iconColor: Colors.amber,
-                title: '法律免責聲明',
-                subtitle: '檢視產品之法律資訊與責任限制說明',
-                onTap: () => _showDisclaimerSheet(context),
-              ),
-              SettingsTile(
-                icon: Icons.info_outline_rounded,
-                iconColor: Colors.grey,
-                title: '版本資訊',
-                trailing: Flexible(
-                  fit: FlexFit.loose,
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      _buildInfo?.displayLabel ?? '版本資訊讀取中',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.right,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: textMutedColor,
-                        fontWeight: FontWeight.bold,
-                        height: 1.25,
+
+              SizedBox(height: 18.h),
+
+              // 支援、條款與系統整合（將 iOS 生態系展示移至此處作為次要實驗室入口）
+              GroupedSettingsList(
+                title: '支援與系統資訊',
+                tiles: [
+                  SettingsTile(
+                    icon: PhosphorIconsRegular.chatCenteredText,
+                    iconColor: t.brandPrimary,
+                    iconBgColor: t.brandContainer,
+                    title: '問題回報與建議',
+                    subtitle: '向團隊回報系統異常或提出體驗改善建議',
+                    onTap: () => _showFeedbackSheet(context, appState),
+                  ),
+                  SettingsTile(
+                    icon: PhosphorIconsRegular.books,
+                    iconColor: t.semanticInfo,
+                    iconBgColor: t.semanticInfoContainer,
+                    title: '資料來源說明',
+                    subtitle: '檢視公開裁判書、全國法規資料庫與更新範圍',
+                    onTap: () => _showSourcesSheet(context),
+                  ),
+                  SettingsTile(
+                    icon: PhosphorIconsRegular.lockKey,
+                    iconColor: t.semanticSuccess,
+                    iconBgColor: t.semanticSuccessContainer,
+                    title: '隱私權政策',
+                    subtitle: '詳閱本機優先儲存原則與個人資料保護政策',
+                    onTap: () => LegalTermsSheet.show(
+                      context,
+                      kind: LegalTermsKind.privacy,
+                    ),
+                  ),
+                  SettingsTile(
+                    icon: PhosphorIconsRegular.scroll,
+                    iconColor: t.accentOnBrassContainer,
+                    iconBgColor: t.accentBrassContainer,
+                    title: '服務條款 (EULA)',
+                    subtitle: '詳閱使用者授權合約、訂閱自動續訂與取消說明',
+                    onTap: () => LegalTermsSheet.show(
+                      context,
+                      kind: LegalTermsKind.eula,
+                    ),
+                  ),
+                  SettingsTile(
+                    icon: PhosphorIconsRegular.scales,
+                    iconColor: t.accentOnBrassContainer,
+                    iconBgColor: t.accentBrassContainer,
+                    title: '法律免責聲明',
+                    subtitle: '檢視 AI 非正式法律意見與責任限制說明',
+                    onTap: () => _showDisclaimerSheet(context),
+                  ),
+                  SettingsTile(
+                    icon: PhosphorIconsRegular.deviceMobile,
+                    iconColor: t.textSecondary,
+                    iconBgColor: t.surfaceSubtle,
+                    title: '系統整合與實驗室',
+                    subtitle: 'iOS 小工具與捷徑展示',
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const AppleEcosystemDemoPage(),
                       ),
                     ),
                   ),
-                ),
+                  SettingsTile(
+                    icon: PhosphorIconsRegular.info,
+                    iconColor: t.textSecondary,
+                    iconBgColor: t.surfaceSubtle,
+                    title: '版本資訊',
+                    trailing: Flexible(
+                      fit: FlexFit.loose,
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          _buildInfo?.displayLabel ?? '版本資訊讀取中',
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.right,
+                          style: t.tabularMetric(
+                            size: 12.sp,
+                            weight: FontWeight.w600,
+                            color: t.textSecondary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-
-          // Release 版個人頁不放任何身份切換、內部展示或未接訂閱的控制入口；
-          // 使用者可見區域只保留已可實際保存到本機狀態的設定與正式說明。
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -422,8 +413,9 @@ class _ProfilePageState extends State<ProfilePage> {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => ProfileEditorSheet(appState: appState),
+      builder: (_) => ProfileEditorSheet(appState: appState),
     );
   }
 
@@ -431,67 +423,102 @@ class _ProfilePageState extends State<ProfilePage> {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => FeedbackSheet(appState: appState),
+      builder: (_) => FeedbackSheet(appState: appState),
+    );
+  }
+
+  void _showNotificationSettingsSheet(
+    BuildContext context,
+    PreambleState appState,
+  ) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => NotificationSettingsSheet(appState: appState),
+    );
+  }
+
+  void _showInterfaceSettingsSheet(
+    BuildContext context,
+    PreambleState appState,
+  ) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => InterfaceSettingsSheet(appState: appState),
     );
   }
 
   void _showDisclaimerSheet(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
+      useSafeArea: true,
       backgroundColor: Colors.transparent,
-      builder: (context) {
-        final isDark = Theme.of(context).brightness == Brightness.dark;
+      builder: (sheetContext) {
+        final t = sheetContext.tokens;
         return Padding(
           padding: EdgeInsets.all(16.w),
           child: Container(
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF171C22) : Colors.white,
+              color: t.surfaceElevated,
               borderRadius: BorderRadius.circular(24.r),
-              border: Border.all(
-                  color: isDark ? const Color(0xFF2B3441) : AppColors.border),
+              border: Border.all(color: t.border),
             ),
             padding: EdgeInsets.all(20.w),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.gavel_rounded, color: AppColors.accent, size: 36.sp),
-                SizedBox(height: 12.h),
-                Text(
-                  '法律免責聲明',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w900,
-                    color: isDark
-                        ? const Color(0xFFF2F4F7)
-                        : AppColors.textPrimary,
-                  ),
-                ),
-                SizedBox(height: 12.h),
-                Text(
-                  '本 App 提供的案件整理、法律知識與 AI 輔助說明，僅供學習與資訊參考，不構成法律意見。如涉及實際個案，請諮詢合格律師或相關專業人士。',
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    height: 1.55,
-                    color: isDark
-                        ? const Color(0xFFCAD0D8)
-                        : AppColors.textSecondary,
-                  ),
-                ),
-                SizedBox(height: 20.h),
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r)),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(12.w),
+                    decoration: BoxDecoration(
+                      color: t.accentBrassContainer,
+                      shape: BoxShape.circle,
                     ),
-                    child: const Text('關閉'),
+                    child: Icon(
+                      PhosphorIconsRegular.scales,
+                      color: t.accentBrass,
+                      size: 28.sp,
+                    ),
                   ),
-                ),
-              ],
+                  SizedBox(height: 12.h),
+                  Text(
+                    '法律免責聲明',
+                    style: t.serifTitle(size: 17.sp),
+                  ),
+                  SizedBox(height: 10.h),
+                  Text(
+                    '《緒言 Preamble》提供之裁判案卷整理、法規白話解析、AI 輔助問診與書狀草稿生成功能，僅供法學學習與事前資訊參考，不構成正式法律意見或律師代理。如涉及實際個案權益，請務必諮詢合格執業律師或相關主管機關。',
+                    style: t.sansBody(
+                      size: 13.5.sp,
+                      height: 1.6,
+                      color: t.textSecondary,
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton(
+                      onPressed: () => Navigator.pop(sheetContext),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: t.brandPrimaryStrong,
+                        foregroundColor: const Color(0xFFFAF8F4),
+                        padding: EdgeInsets.symmetric(vertical: 12.5.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14.r),
+                        ),
+                      ),
+                      child: const Text('我已了解'),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -500,73 +527,81 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _showSourcesSheet(BuildContext context) {
-    _showPlainInfoDialog(
+    _showInfoDialog(
       context,
+      icon: PhosphorIconsRegular.books,
       title: '資料來源說明',
       message:
-          '法規內容以全國法規資料庫與公開資料為主要查核來源；案件、學習文章與生活法律內容包含 緒言 Preamble 內建整理資料。若畫面未標示即時更新，代表內容不保證為最新狀態。涉及實際權益時，請回到官方來源或諮詢合格律師確認。',
+          '法規內容以全國法規資料庫與政府公開資料為主要查核來源；裁判案卷、專題與生活避坑內容包含《緒言 Preamble》法學編輯團隊整理之結構化摘要。若涉及具體個案時效或最新修法施行日，請以全國法規資料庫與司法院最新公告文本為準。',
     );
   }
 
   void _showLocalStorageInfo(BuildContext context) {
-    _showPlainInfoDialog(
+    _showInfoDialog(
       context,
+      icon: PhosphorIconsRegular.hardDrive,
       title: '本機資料說明',
       message:
-          '你的收藏、追蹤、筆記、閱讀偏好與文件草稿會先保存在此裝置。更換裝置、移除 App 或清除系統資料前，請自行備份重要內容。緒言 Preamble 不會將本機筆記視為正式送件或法律通知。',
+          '您的案卷收藏、法規追蹤、法務筆記、閱讀字級偏好與文件草稿均優先保存在此裝置本機儲存空間。更換裝置、移除 App 或重置系統前，請自行匯出或備份重要草稿內容。本機筆記與草稿不會自動作為正式法律送件。',
     );
   }
 
-  void _showPrivacySheet(BuildContext context) {
-    _showPlainInfoDialog(
+  void _showAccountSecurityInfo(BuildContext context) {
+    _showInfoDialog(
       context,
-      title: '隱私權說明',
+      icon: PhosphorIconsRegular.shieldCheck,
+      title: '資料與隱私安全',
       message:
-          '緒言 Preamble 會在裝置上保存你主動建立的收藏、筆記、偏好設定與草稿，用於延續 App 內體驗。請避免輸入不必要的身分證字號、完整地址、金融資料或第三人敏感資訊。開啟外部官方網站或分享內容時，該服務會依其自身規範處理資料。',
+          '目前個人稱謂、收藏、筆記與介面偏好均採本機優先（Local-First）安全儲存。為保護當事人隱私，請避免在筆記或問診中輸入真實身分證字號、完整門牌地址、銀行帳號或第三人敏感個資。',
     );
   }
 
-  void _showTermsSheet(BuildContext context) {
-    _showPlainInfoDialog(
-      context,
-      title: '使用條款摘要',
-      message:
-          '緒言 Preamble 提供法律學習、案件理解與資料整理工具。你應自行判斷內容是否適合特定情境，並以官方資料與專業意見作為最終依據。不得將本 App 內容用於騷擾、詐欺、規避法律責任或其他不當目的。',
-    );
-  }
-
-  void _showPlainInfoDialog(
+  void _showInfoDialog(
     BuildContext context, {
+    required IconData icon,
     required String title,
     required String message,
   }) {
     showDialog<void>(
       context: context,
-      builder: (context) {
-        final isDark = Theme.of(context).brightness == Brightness.dark;
-        final surfaceColor = isDark ? const Color(0xFF171C22) : Colors.white;
-        final textStyle = TextStyle(
-          fontSize: 14.sp,
-          color: isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary,
-        );
-
+      builder: (dialogContext) {
+        final t = dialogContext.tokens;
         return AlertDialog(
-          backgroundColor: surfaceColor,
-          title: Text(
-            title,
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w900,
-              color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
+          backgroundColor: t.surfaceElevated,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.r),
+            side: BorderSide(color: t.border),
+          ),
+          title: Row(
+            children: [
+              Icon(icon, color: t.brandPrimary, size: 20.sp),
+              SizedBox(width: 8.w),
+              Expanded(
+                child: Text(
+                  title,
+                  style: t.serifTitle(size: 16.5.sp),
+                ),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Text(
+              message,
+              style: t.sansBody(
+                size: 13.5.sp,
+                color: t.textSecondary,
+                height: 1.6,
+              ),
             ),
           ),
-          content: Text(message, style: textStyle),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('知道了'),
+              onPressed: () => Navigator.pop(dialogContext),
+              style: TextButton.styleFrom(foregroundColor: t.brandPrimary),
+              child: Text(
+                '知道了',
+                style: t.sansTitle(size: 13.5.sp, color: t.brandPrimary),
+              ),
             ),
           ],
         );
@@ -574,55 +609,48 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  // 依據使用者的專業身分代碼，顯示對應風格的金色或金屬質感標籤。
   Widget _buildProfessionBadge(BuildContext context, String profession) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final t = context.tokens;
     String label = '一般民眾';
-    IconData icon = Icons.person_outline_rounded;
-    Color badgeColor = const Color(0xFFC96B3B);
-    Color badgeBg = const Color(0xFFFBF0EA);
+    IconData icon = PhosphorIconsRegular.user;
+    Color fgColor = t.brandPrimary;
+    Color bgColor = t.brandContainer;
 
     if (profession == 'lawyer') {
       label = '執業律師';
-      icon = Icons.gavel_rounded;
-      badgeColor = const Color(0xFFD6A85F);
-      badgeBg = isDark ? const Color(0xFF332715) : const Color(0xFFFAF2E6);
+      icon = PhosphorIconsRegular.scales;
+      fgColor = t.accentOnBrassContainer;
+      bgColor = t.accentBrassContainer;
     } else if (profession == 'legal_staff') {
       label = '法務人員';
-      icon = Icons.business_center_rounded;
-      badgeColor = const Color(0xFF3F51B5);
-      badgeBg = isDark ? const Color(0xFF1B2245) : const Color(0xFFE8EAF6);
+      icon = PhosphorIconsRegular.briefcase;
+      fgColor = t.semanticInfo;
+      bgColor = t.semanticInfoContainer;
     } else if (profession == 'law_student') {
       label = '法學生';
-      icon = Icons.school_rounded;
-      badgeColor = const Color(0xFF2E7D32);
-      badgeBg = isDark ? const Color(0xFF133215) : const Color(0xFFE8F5E9);
-    } else {
-      label = '一般民眾';
-      icon = Icons.person_rounded;
-      badgeColor = isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
-      badgeBg = isDark ? const Color(0xFF2B3441) : AppColors.chipSurface;
+      icon = PhosphorIconsRegular.graduationCap;
+      fgColor = t.semanticSuccess;
+      bgColor = t.semanticSuccessContainer;
     }
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 3.h),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 3.5.h),
       decoration: BoxDecoration(
-        color: badgeBg,
-        borderRadius: BorderRadius.circular(100.r),
-        border:
-            Border.all(color: badgeColor.withValues(alpha: 0.3), width: 1.w),
+        color: bgColor,
+        borderRadius: BorderRadius.circular(99.r),
+        border: Border.all(color: fgColor.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: badgeColor, size: 12.sp),
+          Icon(icon, color: fgColor, size: 12.5.sp),
           SizedBox(width: 4.w),
           Text(
             label,
-            style: TextStyle(
-              fontSize: 10.5.sp,
-              color: badgeColor,
-              fontWeight: FontWeight.bold,
+            style: t.sansBody(
+              size: 11.sp,
+              weight: FontWeight.w700,
+              color: fgColor,
             ),
           ),
         ],
@@ -630,38 +658,65 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  // 點擊彈出字型大小調整 Dialog，點選後會將更新值儲存至 SharedPreferences。
   void _showFontSizeDialog(BuildContext context, PreambleState appState) {
     showDialog<void>(
       context: context,
-      builder: (context) {
-        final isDark = Theme.of(context).brightness == Brightness.dark;
-        final surfaceColor = isDark ? const Color(0xFF171C22) : Colors.white;
+      builder: (dialogContext) {
+        final t = dialogContext.tokens;
         final currentScale = appState.fontSizeScale;
 
         return AlertDialog(
-          backgroundColor: surfaceColor,
-          title: const Text('閱讀字型大小',
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildFontSizeOption(context, appState,
-                  label: '小 (0.85)', scale: 0.85, current: currentScale),
-              _buildFontSizeOption(context, appState,
-                  label: '適中 (1.00)', scale: 1.0, current: currentScale),
-              _buildFontSizeOption(context, appState,
-                  label: '大 (1.15)', scale: 1.15, current: currentScale),
-              _buildFontSizeOption(context, appState,
-                  label: '特大 (1.30)', scale: 1.30, current: currentScale),
-            ],
+          backgroundColor: t.surfaceElevated,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.r),
+            side: BorderSide(color: t.border),
           ),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+          title: Text(
+            '閱讀字型大小',
+            style: t.serifTitle(size: 17.sp),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildFontSizeOption(
+                  dialogContext,
+                  appState,
+                  label: '精巧 (85%)',
+                  scale: 0.85,
+                  current: currentScale,
+                ),
+                _buildFontSizeOption(
+                  dialogContext,
+                  appState,
+                  label: '標準適中 (100%)',
+                  scale: 1.0,
+                  current: currentScale,
+                ),
+                _buildFontSizeOption(
+                  dialogContext,
+                  appState,
+                  label: '舒適大字 (115%)',
+                  scale: 1.15,
+                  current: currentScale,
+                ),
+                _buildFontSizeOption(
+                  dialogContext,
+                  appState,
+                  label: '特大清晰 (130%)',
+                  scale: 1.30,
+                  current: currentScale,
+                ),
+              ],
+            ),
+          ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('關閉'),
+              onPressed: () => Navigator.pop(dialogContext),
+              child: Text(
+                '關閉',
+                style: t.sansTitle(size: 13.5.sp, color: t.textSecondary),
+              ),
             ),
           ],
         );
@@ -670,56 +725,40 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildFontSizeOption(
-    BuildContext context,
+    BuildContext dialogContext,
     PreambleState appState, {
     required String label,
     required double scale,
     required double current,
   }) {
-    final isSelected = current == scale;
+    final t = dialogContext.tokens;
+    final isSelected = (current - scale).abs() < 0.01;
     return ListTile(
-      title: Text(label, style: TextStyle(fontSize: 14.sp * scale)),
+      contentPadding: EdgeInsets.symmetric(horizontal: 4.w),
+      title: Text(
+        label,
+        style: t.sansBody(
+          size: (13.5 * scale).sp,
+          weight: isSelected ? FontWeight.w700 : FontWeight.w500,
+          color: t.textPrimary,
+        ),
+      ),
       trailing: Icon(
-        isSelected ? Icons.check_circle_rounded : Icons.circle_outlined,
-        color: isSelected ? AppColors.accent : AppColors.textSecondary,
+        isSelected
+            ? PhosphorIconsFill.checkCircle
+            : PhosphorIconsRegular.circle,
+        color: isSelected ? t.brandPrimary : t.textMuted,
+        size: 20.sp,
       ),
       onTap: () {
         appState.updateSettings(fontSizeScale: scale);
-        Navigator.pop(context);
-        CustomToast.show(context, '閱讀字型大小已更新！');
+        Navigator.pop(dialogContext);
+        CustomToast.show(
+          context,
+          '閱讀字型大小已更新',
+          icon: PhosphorIconsRegular.checkCircle,
+        );
       },
-    );
-  }
-
-  // 開啟通知精細設定 Bottom Sheet。
-  void _showNotificationSettingsSheet(
-      BuildContext context, PreambleState appState) {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => NotificationSettingsSheet(appState: appState),
-    );
-  }
-
-  // Release 版尚未開放正式第三方登入，因此只呈現資料安全說明。
-  void _showAccountSecuritySheet(BuildContext context) {
-    _showPlainInfoDialog(
-      context,
-      title: '資料與隱私安全',
-      message:
-          '目前個人資料、收藏、筆記與偏好設定會保存在此裝置。正式帳號登入與第三方帳號連結完成安全驗證前，本頁不提供帳號綁定或密碼變更操作。請不要在 App 內保存不必要的敏感個資。',
-    );
-  }
-
-  // 開啟介面自訂偏好設定底頁。
-  void _showInterfaceSettingsSheet(
-      BuildContext context, PreambleState appState) {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => InterfaceSettingsSheet(appState: appState),
     );
   }
 }
@@ -731,14 +770,20 @@ class _BackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Align(
       alignment: Alignment.centerLeft,
-      child: IconButton(
-        onPressed: onBack,
-        icon: const Icon(Icons.arrow_back_ios_new_rounded),
-        color: Theme.of(context).brightness == Brightness.dark
-            ? const Color(0xFFF2F4F7)
-            : AppColors.textPrimary,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 6.h),
+        child: IconButton(
+          onPressed: onBack,
+          tooltip: '返回',
+          icon: Icon(
+            PhosphorIconsRegular.caretLeft,
+            color: t.textPrimary,
+            size: 22.sp,
+          ),
+        ),
       ),
     );
   }
@@ -750,14 +795,12 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: TextStyle(
-        fontSize: 16.sp,
-        fontWeight: FontWeight.w900,
-        color: Theme.of(context).brightness == Brightness.dark
-            ? const Color(0xFFF2F4F7)
-            : AppColors.textPrimary,
+    final t = context.tokens;
+    return Padding(
+      padding: EdgeInsets.only(left: 4.w),
+      child: Text(
+        title,
+        style: t.serifTitle(size: 16.5.sp),
       ),
     );
   }

@@ -1,58 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 
+/// 「那年今日 (OnThisDay)」色彩與排版語意層。
+///
+/// 已全面橋接至全域 `PreambleTokens` (`context.tokens`)，
+/// 同時支援宣紙白日間模式 (`#F8F6F1`) 與深曜石夜間模式 (`#0E1211`)。
 class OnThisDayColors {
-  static const Color primaryGreen = Color(0xFF123D36);
-  static const Color secondaryGreen = Color(0xFF2F5D50);
-  static const Color accentGold = Color(0xFFC8A46B);
-  static const Color bgCream = Color(0xFFF6FEF2);
-  static const Color paperBeige = Color(0xFFEBE1D3);
-  static const Color bgPaperLight = Color(0xFFFFFDF9);
+  static const Color primaryGreen = Color(0xFF18362C);
+  static const Color secondaryGreen = Color(0xFF235D46);
+  static const Color accentGold = Color(0xFFB5894A);
+  static const Color bgCream = Color(0xFFF1EDE4);
+  static const Color paperBeige = Color(0xFFF8F6F1);
+  static const Color bgPaperLight = Color(0xFFFFFFFF);
 
-  static const Color textPrimary = Color(0xFF3A3A3A);
-  static const Color textSecondary = Color(0xFF5F5548);
-  static const Color textMuted = Color(0xFF8C7B6B);
+  static const Color textPrimary = Color(0xFF151C19);
+  static const Color textSecondary = Color(0xFF55625C);
+  static const Color textMuted = Color(0xFF838F89);
 
-  static const Color borderLight = Color(0xFFE4CFA7);
+  static const Color borderLight = Color(0xFFE5DFD3);
 }
 
 class OnThisDayTextStyles {
   static TextStyle titleSerif(BuildContext context) {
-    return const TextStyle(
-      fontFamily: 'Songti TC',
-      fontFamilyFallback: ['Songti SC', 'STSong', 'BiauKai', 'serif'],
-      fontWeight: FontWeight.bold,
-      color: OnThisDayColors.primaryGreen,
+    final t = context.tokens;
+    return t.serifTitle(
+      weight: FontWeight.w700,
+      color: t.textPrimary,
     );
   }
 
   static TextStyle pageTitle(BuildContext context) {
-    return const TextStyle(
-      fontFamily: 'Songti TC',
-      fontFamilyFallback: ['Songti SC', 'BiauKai', 'serif'],
-      fontWeight: FontWeight.w900,
-      color: OnThisDayColors.primaryGreen,
+    final t = context.tokens;
+    return t.serifTitle(
+      weight: FontWeight.w800,
+      color: t.textPrimary,
     );
   }
 
   static TextStyle cardTitle(BuildContext context) {
-    return const TextStyle(
-      fontWeight: FontWeight.w900,
-      color: OnThisDayColors.primaryGreen,
+    final t = context.tokens;
+    return t.sansTitle(
+      weight: FontWeight.w700,
+      color: t.textPrimary,
     );
   }
 
   static TextStyle body(BuildContext context) {
-    return const TextStyle(
-      fontWeight: FontWeight.w600,
-      color: OnThisDayColors.textSecondary,
-      height: 1.55,
+    final t = context.tokens;
+    return t.sansBody(
+      weight: FontWeight.w500,
+      color: t.textSecondary,
+      height: 1.6,
     );
   }
 
   static TextStyle caption(BuildContext context) {
-    return const TextStyle(
-      fontWeight: FontWeight.w500,
-      color: OnThisDayColors.textMuted,
+    final t = context.tokens;
+    return t.sansBody(
+      weight: FontWeight.w500,
+      color: t.textMuted,
     );
   }
 }

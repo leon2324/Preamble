@@ -1623,10 +1623,34 @@ class RelatedCasesCarousel extends StatelessWidget {
     }
     if (title.contains('性騷') ||
         title.contains('騷擾') ||
-        title.contains('拉扯') ||
-        title.contains('毆打') ||
-        title.contains('傷害')) {
-      return allCases.where((c) => ['case-034'].contains(c.id)).toList();
+        title.contains('職場')) {
+      return allCases
+          .where((c) => ['case-031', 'case-delivery-labor-2152'].contains(c.id))
+          .toList();
+    }
+    if (title.contains('外送') ||
+        title.contains('承攬') ||
+        title.contains('僱傭') ||
+        title.contains('從屬性')) {
+      return allCases
+          .where((c) => ['case-delivery-labor-2152', 'case-031'].contains(c.id))
+          .toList();
+    }
+    if (title.contains('街拍') ||
+        title.contains('肖像') ||
+        title.contains('隱私') ||
+        title.contains('跟拍')) {
+      return allCases
+          .where((c) => ['102', 'case-adultery-791'].contains(c.id))
+          .toList();
+    }
+    if (title.contains('AI') ||
+        title.contains('著作權') ||
+        title.contains('合理使用') ||
+        title.contains('轉載')) {
+      return allCases
+          .where((c) => ['case-045', 'case-044', 'case-046'].contains(c.id))
+          .toList();
     }
     if (title.contains('租屋') ||
         title.contains('押金') ||
@@ -1647,9 +1671,27 @@ class RelatedCasesCarousel extends StatelessWidget {
       case 2:
         return allCases.where((c) => ['case-031'].contains(c.id)).toList();
       case 3:
-        return allCases.where((c) => ['case-034'].contains(c.id)).toList();
+        return allCases
+            .where(
+              (c) => ['case-031', 'case-delivery-labor-2152'].contains(c.id),
+            )
+            .toList();
       case 4:
         return allCases.where((c) => ['case-029'].contains(c.id)).toList();
+      case 5:
+        return allCases
+            .where(
+              (c) => ['case-delivery-labor-2152', 'case-031'].contains(c.id),
+            )
+            .toList();
+      case 6:
+        return allCases
+            .where((c) => ['102', 'case-adultery-791'].contains(c.id))
+            .toList();
+      case 7:
+        return allCases
+            .where((c) => ['case-045', 'case-044', 'case-046'].contains(c.id))
+            .toList();
       default:
         return allCases.take(3).toList();
     }

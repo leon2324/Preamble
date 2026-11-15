@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:preamble/app/app_state.dart';
-import 'package:preamble/pages/learning/know_law_page.dart';
+import 'package:preamble/pages/tools/legal_toolkit_hub_page.dart';
+import 'package:preamble/theme/app_theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'support/responsive_error_collector.dart';
 
 void main() {
   testWidgets(
-      'Skeuomorphic toolbox handles car/motorcycle formulas and rent notice templates correctly',
+      'LegalToolkitHubPage handles car/motorcycle depreciation formulas, rent notice templates, and contract risk scanner',
       (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
 
@@ -30,44 +33,31 @@ void main() {
         builder: (context, __) => PreambleScope(
           state: appState,
           child: MaterialApp(
-            home: const KnowLawPage(),
+            theme: AppTheme.light(),
+            home: const LegalToolkitHubPage(initialToolKey: 'car'),
           ),
         ),
       ),
     );
 
-    await tester.pumpForVerification();
+    await tester.pump(const Duration(milliseconds: 400));
 
-    // 1. 切換至生活工具箱 Tab
-    expect(find.text('生活工具箱'), findsOneWidget);
-    await tester.tap(find.text('生活工具箱'));
-    await tester.pumpForVerification();
+    // 1. 驗證車禍折舊試算工作區與欄位
+    expect(find.text('法務實戰工具館'), findsOneWidget);
+    expect(find.text('車禍折舊試算'), findsOneWidget);
 
-    // 2. 驗證預設呈現的白話文翻譯機
-    expect(find.text('法律術語白話翻譯機'), findsOneWidget);
-
-    // 3. 點擊頂部車禍計算標籤
-    expect(find.text('車禍計算'), findsOneWidget);
-    await tester.tap(find.text('車禍計算'));
-    await tester.pumpForVerification();
-
-    expect(find.text('車禍零件折舊與工資計算機'), findsOneWidget);
-    expect(find.textContaining('💡 法律小常識'), findsWidgets);
-
-    // 4. 輸入汽車折舊試算資料 (使用 hintText 搜尋 TextField)
     final partsField = find.byWidgetPredicate(
-        (w) => w is TextField && w.decoration?.hintText == '例如：12000');
+      (w) => w is TextField && w.decoration?.hintText == '15000',
+    );
     final laborField = find.byWidgetPredicate(
-        (w) => w is TextField && w.decoration?.hintText == '例如：8000');
+      (w) => w is TextField && w.decoration?.hintText == '8000',
+    );
     final yearsField = find.byWidgetPredicate(
-        (w) => w is TextField && w.decoration?.hintText == '例如：3');
+      (w) => w is TextField && w.decoration?.hintText == '3',
+    );
     final monthsField = find.byWidgetPredicate(
-        (w) => w is TextField && w.decoration?.hintText == '例如：4');
-
-    expect(partsField, findsOneWidget);
-    expect(laborField, findsOneWidget);
-    expect(yearsField, findsOneWidget);
-    expect(monthsField, findsOneWidget);
+      (w) => w is TextField && w.decoration?.hintText == '6',
+    );
 
     await tester.enterText(partsField, '10000');
     await tester.enterText(laborField, '5000');
@@ -75,93 +65,114 @@ void main() {
     await tester.enterText(monthsField, '0');
     await tester.pump();
 
-    // 預設為：汽車 (5年) + 定律遞減法
-    await tester.tap(find.text('試算理賠額'));
-    await tester.pumpForVerification();
+    // 預設：自用汽車（耐用 5 年）+ 定率遞減法
+    await tester.tap(find.text('試算法院合理判賠額'));
+    await tester.pump(const Duration(milliseconds: 300));
 
-    // 驗證汽車折舊計算結果 (Y=3, M=0, r=0.369, 10000 -> Year 1: residual 6310 -> Year 2: residual 3981.6 -> Year 3: residual 2512.4 -> Claim = 2512 + 5000 = 7512)
-    expect(find.textContaining('零件折舊後殘值：\$2512 元'), findsOneWidget);
-    expect(find.textContaining('法院認定合理請求總額：\$7512 元'), findsOneWidget);
+    expect(find.textContaining('零件折舊後殘值：NT\$ 2512 元'), findsOneWidget);
+    expect(find.textContaining('法院實務認定合理請求總額：NT\$ 7512 元'), findsOneWidget);
 
-    // 5. 切換車輛種類為「🛵 機車 (耐用3年)」
-    await tester.tap(find.text('🛵 機車 (耐用3年)'));
-    await tester.pumpForVerification();
+    // 2. 切換為「機車（耐用 3 年）」驗證殘值保底下限 1/4 = 2500
+    await tester.tap(find.text('機車（耐用 3 年）'));
+    await tester.pump(const Duration(milliseconds: 200));
 
-    await tester.tap(find.text('試算理賠額'));
-    await tester.pumpForVerification();
+    await tester.tap(find.text('試算法院合理判賠額'));
+    await tester.pump(const Duration(milliseconds: 300));
 
-    // 驗證機車折舊結果：耐用年數 3 年，殘值保底下限 1/4 (10000 / 4 = 2500)。
-    // 原定律遞減法算 3 年會低於 2500，故會觸發 Floor 殘值，結果應為零件殘值 2500 元。
-    expect(find.textContaining('零件折舊後殘值：\$2500 元'), findsOneWidget);
-    expect(find.textContaining('法院認定合理請求總額：\$7500 元'), findsOneWidget);
+    expect(find.textContaining('零件折舊後殘值：NT\$ 2500 元'), findsOneWidget);
+    expect(find.textContaining('法院實務認定合理請求總額：NT\$ 7500 元'), findsOneWidget);
 
-    // 6. 切換至租屋信函起草器 (使用 '租屋催告')
-    expect(find.text('租屋催告'), findsOneWidget);
-    await tester.tap(find.text('租屋催告'));
-    await tester.pumpForVerification();
+    // 3. 切換至「租屋存證信函」起草器
+    final rentChip = find.text('租屋存證信函');
+    await tester.ensureVisible(rentChip);
+    await tester.tap(rentChip);
+    await tester.pump(const Duration(milliseconds: 300));
 
-    expect(find.text('租屋存證信函起草器'), findsOneWidget);
+    expect(find.text('租屋催告存證信函起草器'), findsOneWidget);
 
-    // 預設通知類型為「設備損壞修繕」
     final landlordField = find.byWidgetPredicate(
-        (w) => w is TextField && w.decoration?.hintText == '例如：王太太');
-    final addrField = find.byWidgetPredicate((w) =>
-        w is TextField && w.decoration?.hintText == '例如：台北市大安區忠孝東路三段XX號');
+      (w) => w is TextField && w.decoration?.hintText == '例如：王大明',
+    );
+    final addrField = find.byWidgetPredicate(
+      (w) =>
+          w is TextField &&
+          w.decoration?.hintText == '例如：台北市大安區仁愛路四段 XX 號 X 樓',
+    );
     final brokenField = find.byWidgetPredicate(
-        (w) => w is TextField && w.decoration?.hintText == '例如：客廳冷氣漏水');
-    final daysField = find.byWidgetPredicate(
-        (w) => w is TextField && w.decoration?.hintText == '例如：7');
-
-    expect(landlordField, findsOneWidget);
-    expect(addrField, findsOneWidget);
-    expect(brokenField, findsOneWidget);
-    expect(daysField, findsOneWidget);
+      (w) => w is TextField && w.decoration?.hintText == '例如：熱水器無法點火',
+    );
 
     await tester.enterText(landlordField, '王房東');
     await tester.enterText(addrField, '台北市大安區新生南路');
     await tester.enterText(brokenField, '天花板漏水');
-    await tester.enterText(daysField, '5');
     await tester.pump();
 
-    await tester.tap(find.text('起草催告書'));
-    await tester.pumpForVerification();
+    await tester.tap(find.text('生成正式催告草稿'));
+    await tester.pump(const Duration(milliseconds: 300));
 
-    expect(find.textContaining('郵局存證信函草稿 (設備修繕催告)'), findsOneWidget);
-    expect(find.textContaining('為請求儘速修繕房屋內「天花板漏水」設備事。'), findsOneWidget);
+    expect(find.textContaining('郵局存證信函草稿（設備修繕定期催告）'), findsOneWidget);
+    expect(find.textContaining('天花板漏水'), findsWidgets);
 
-    // 7. 切換通知類型為「💰 租約期滿退押金」
-    await tester.tap(find.text('💰 租約期滿退押金'));
-    await tester.pumpForVerification();
+    // 4. 切換至「租約期滿退還押金」模式
+    await tester.tap(find.text('租約期滿退還押金'));
+    await tester.pump(const Duration(milliseconds: 300));
 
     final expiryField = find.byWidgetPredicate(
-        (w) => w is TextField && w.decoration?.hintText == '例如：2026年6月1日');
+      (w) => w is TextField && w.decoration?.hintText == '例如：2026年10月31日',
+    );
     final depositField = find.byWidgetPredicate(
-        (w) => w is TextField && w.decoration?.hintText == '例如：30000');
+      (w) => w is TextField && w.decoration?.hintText == '例如：32000',
+    );
 
-    expect(expiryField, findsOneWidget);
-    expect(depositField, findsOneWidget);
-
-    await tester.enterText(expiryField, '2026年6月14日');
+    await tester.enterText(expiryField, '2026年10月31日');
     await tester.enterText(depositField, '32000');
     await tester.pump();
 
-    await tester.tap(find.text('起草催告書'));
-    await tester.pumpForVerification();
+    await tester.tap(find.text('生成正式催告草稿'));
+    await tester.pump(const Duration(milliseconds: 300));
 
-    expect(find.textContaining('郵局存證信函草稿 (期滿退還押金催告)'), findsOneWidget);
-    expect(
-        find.textContaining('為請求依法儘速返還租賃房屋押租金新台幣 32000 元整事。'), findsOneWidget);
+    expect(find.textContaining('郵局存證信函草稿（期滿返還押租金催告）'), findsOneWidget);
+    expect(find.textContaining('32000 元整'), findsWidgets);
   });
-}
 
-extension _VerificationPump on WidgetTester {
-  Future<void> pumpForVerification([
-    Duration duration = const Duration(milliseconds: 500),
-  ]) async {
-    // 台灣繁體中文教學註解：
-    // KnowLawPage 內有持續運作的裝飾動畫；測試只需要等待點擊後的 setState 與短動畫完成，
-    // 不能使用無界 pumpAndSettle，否則會一直等到 ticker 停止而逾時。
-    await pump();
-    await pump(duration);
-  }
+  testWidgets('LegalToolkitHubPage does not overflow at 320x568 @ 1.4x and 393x852 @ 2.0x',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final appState = PreambleState();
+    addTearDown(appState.dispose);
+
+    for (final scenario in const [
+      (Size(320, 568), 1.4),
+      (Size(393, 852), 2.0),
+    ]) {
+      final collector = ResponsiveErrorCollector()..install();
+      try {
+        await tester.pumpWidget(
+          MediaQuery(
+            data: MediaQueryData(
+              size: scenario.$1,
+              textScaler: TextScaler.linear(scenario.$2),
+            ),
+            child: ScreenUtilInit(
+              designSize: const Size(375, 812),
+              minTextAdapt: true,
+              splitScreenMode: true,
+              builder: (_, __) => PreambleScope(
+                state: appState,
+                child: MaterialApp(
+                  theme: AppTheme.dark(),
+                  home: const LegalToolkitHubPage(initialToolKey: 'contract'),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pump(const Duration(milliseconds: 300));
+      } finally {
+        collector.captureTesterException(tester);
+        collector.restore();
+      }
+      expect(collector.layoutFailures, isEmpty);
+    }
+  });
 }

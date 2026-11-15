@@ -5657,6 +5657,159 @@ HomeDiscussionFeed get homeDiscussionFeed => const HomeDiscussionFeed(
           ),
           tags: ['#租屋糾紛', '#押金扣抵', '#民法租賃', '#大眾關注'],
         ),
+        HomeDiscussionTopic(
+          headline: '外送平台經濟與勞動法制攻防',
+          title: '外送員僱傭或承攬之爭',
+          heatScore: 86,
+          rank: 6,
+          dayChangePercent: 31,
+          weekRankDelta: 5,
+          overview:
+              '最高法院 113 年度台上字第 2152 號判決揭示應依人格、經濟與組織從屬性實質審查，不再單憑契約名稱認定「承攬」。數十萬外送員的勞保、職災保障與接單彈性權衡成為全台熱議焦點。',
+          heatLabel: '24小時熱度 86 (+31%)',
+          trendPoints: [
+            HomeDiscussionTrendPoint(dateLabel: '07/01', volumeLabel: '1.8k'),
+            HomeDiscussionTrendPoint(dateLabel: '07/04', volumeLabel: '3.2k'),
+            HomeDiscussionTrendPoint(
+              dateLabel: '07/08',
+              volumeLabel: '5.6k',
+              annotation: '最高法院揭示實質從屬性標準',
+            ),
+            HomeDiscussionTrendPoint(dateLabel: '07/12', volumeLabel: '6.4k'),
+            HomeDiscussionTrendPoint(dateLabel: '07/16', volumeLabel: '7.9k'),
+            HomeDiscussionTrendPoint(dateLabel: '今天', volumeLabel: '8.6k'),
+          ],
+          timelineEvents: [
+            HomeDiscussionTimelineEvent(
+              pointIndex: 1,
+              timeLabel: '二審改判',
+              description: '高等法院認定 APP 派單與停權懲戒具備高度指揮監督色彩',
+              impactLabel: '+1.4k',
+            ),
+            HomeDiscussionTimelineEvent(
+              pointIndex: 2,
+              timeLabel: '終審發回',
+              description: '最高法院確認實質從屬性審查架構，推動外送專法討論升溫',
+              impactLabel: '+2.4k',
+            ),
+          ],
+          poll: HomeDiscussionPoll(
+            prompt: '數位平台外送員應定性為僱傭關係，還是承攬合作？',
+            options: [
+              HomeDiscussionPollOption(label: '認定僱傭關係，納入勞基法與職災保障', votes: 1762),
+              HomeDiscussionPollOption(label: '維持承攬關係，保留自由接單工作彈性', votes: 1080),
+              HomeDiscussionPollOption(label: '推動外送專法，兼顧彈性與基礎社會保險', votes: 640),
+            ],
+          ),
+          latestComment: HomeDiscussionComment(
+            content: 'APP 取消率扣分和停權機制根本就是在變相管理，應該要有基本職災跟勞保！',
+            submittedAt: '2026.07.18 09:42',
+            userHandle: '@rider_taipei',
+          ),
+          tags: ['#外送員權益', '#實質從屬性', '#假承攬真僱傭', '#勞基法'],
+        ),
+        HomeDiscussionTopic(
+          headline: '公共空間攝影權與隱私邊界',
+          title: '街拍與肖像隱私界線',
+          heatScore: 74,
+          rank: 7,
+          dayChangePercent: 18,
+          weekRankDelta: 3,
+          overview:
+              '短影音與街拍創作者興起，未經同意拍攝路人特寫並上傳營利引發正反激辯。釋字第 689 號早已揭示即使在公共場域，個人仍享有合理隱私期待，街拍創作自由與人格權該如何劃線？',
+          heatLabel: '24小時熱度 74 (+18%)',
+          trendPoints: [
+            HomeDiscussionTrendPoint(dateLabel: '07/01', volumeLabel: '1.1k'),
+            HomeDiscussionTrendPoint(dateLabel: '07/05', volumeLabel: '2.0k'),
+            HomeDiscussionTrendPoint(
+              dateLabel: '07/09',
+              volumeLabel: '3.9k',
+              annotation: '街拍未馬賽克訴訟爭議曝光',
+            ),
+            HomeDiscussionTrendPoint(dateLabel: '07/13', volumeLabel: '4.5k'),
+            HomeDiscussionTrendPoint(dateLabel: '07/17', volumeLabel: '5.1k'),
+            HomeDiscussionTrendPoint(dateLabel: '今天', volumeLabel: '5.8k'),
+          ],
+          timelineEvents: [
+            HomeDiscussionTimelineEvent(
+              pointIndex: 2,
+              timeLabel: '社群炎上',
+              description: '未打碼街拍影片累積百萬點閱，當事人要求下架並提告求償',
+              impactLabel: '+1.9k',
+            ),
+            HomeDiscussionTimelineEvent(
+              pointIndex: 4,
+              timeLabel: '憲法檢視',
+              description: '法界引述釋字第 689 號重申公共場所之資訊自主與肖像權保障',
+              impactLabel: '+1.2k',
+            ),
+          ],
+          poll: HomeDiscussionPoll(
+            prompt: '街拍攝影師未經同意上傳路人正面特寫影片，是否應負民事侵權賠償？',
+            options: [
+              HomeDiscussionPollOption(label: '侵害肖像與隱私權，未獲同意應負損害賠償', votes: 1484),
+              HomeDiscussionPollOption(label: '公共場所原則容許攝影，未醜化或營利免責', votes: 469),
+              HomeDiscussionPollOption(label: '視是否具新聞公共利益及商業營利綜合判斷', votes: 390),
+            ],
+          ),
+          latestComment: HomeDiscussionComment(
+            content: '走在路上不想莫名其妙變成別人的流量密碼，肖像權跟隱私權不能只靠「公共場所」一句話帶過。',
+            submittedAt: '2026.07.18 10:15',
+            userHandle: '@privacy_civic',
+          ),
+          tags: ['#街拍爭議', '#肖像權', '#釋字689號', '#公共空間隱私'],
+        ),
+        HomeDiscussionTopic(
+          headline: '生成式 AI 與人類創作授權攻防',
+          title: '生成式 AI 著作權合理使用',
+          heatScore: 81,
+          rank: 8,
+          dayChangePercent: 27,
+          weekRankDelta: 4,
+          overview:
+              'AI 模型大量爬蟲擷取公開圖文與文章進行訓練，開發商主張屬於促進技術創新之「轉化性合理使用」，創作者社群則痛批替代原創市場並違反著作權法第 65 條衡量基準。',
+          heatLabel: '24小時熱度 81 (+27%)',
+          trendPoints: [
+            HomeDiscussionTrendPoint(dateLabel: '07/01', volumeLabel: '1.5k'),
+            HomeDiscussionTrendPoint(dateLabel: '07/05', volumeLabel: '2.7k'),
+            HomeDiscussionTrendPoint(
+              dateLabel: '07/10',
+              volumeLabel: '4.8k',
+              annotation: '創作者工會要求強制揭露訓練資料清單',
+            ),
+            HomeDiscussionTrendPoint(dateLabel: '07/14', volumeLabel: '5.9k'),
+            HomeDiscussionTrendPoint(dateLabel: '07/17', volumeLabel: '6.8k'),
+            HomeDiscussionTrendPoint(dateLabel: '今天', volumeLabel: '7.5k'),
+          ],
+          timelineEvents: [
+            HomeDiscussionTimelineEvent(
+              pointIndex: 2,
+              timeLabel: '聯合聲明',
+              description: '數位創作聯盟呼籲建立資料集授權付費與退出機制（Opt-out）',
+              impactLabel: '+2.1k',
+            ),
+            HomeDiscussionTimelineEvent(
+              pointIndex: 4,
+              timeLabel: '修法討論',
+              description: '智財主管機關召開公聽會研議著作權法第 65 條合理使用指引',
+              impactLabel: '+1.6k',
+            ),
+          ],
+          poll: HomeDiscussionPoll(
+            prompt: '生成式 AI 擷取公開圖文訓練模型，是否構成著作權合理使用？',
+            options: [
+              HomeDiscussionPollOption(label: '須經事前授權付費，未付費擷取侵害原創市場', votes: 1632),
+              HomeDiscussionPollOption(label: '屬轉化性合理使用，過度管制將阻礙模型發展', votes: 804),
+              HomeDiscussionPollOption(label: '區分非營利研究免責與商業模型強制分潤', votes: 512),
+            ],
+          ),
+          latestComment: HomeDiscussionComment(
+            content: '拿別人十年畫風餵 AI 再直接產圖搶生意，怎麼看都不符合合理使用第四款對潛在市場的影響！',
+            submittedAt: '2026.07.18 11:08',
+            userHandle: '@art_rights_tw',
+          ),
+          tags: ['#生成式AI', '#著作權法65條', '#合理使用', '#創作者授權'],
+        ),
       ],
     );
 

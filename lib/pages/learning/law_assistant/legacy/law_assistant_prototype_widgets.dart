@@ -110,7 +110,7 @@ class _AssistantHero extends StatelessWidget {
           fit: BoxFit.contain,
         ),
         SizedBox(height: 8.h),
-        Text('你好，我是小法助 👋', style: _AssistantText.section(context)),
+        Text('你好，我是小法助', style: _AssistantText.section(context)),
         SizedBox(height: 4.h),
         Text(
           '有法律問題？我來幫你整理！',

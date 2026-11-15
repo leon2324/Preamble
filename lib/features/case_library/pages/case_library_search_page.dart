@@ -159,19 +159,24 @@ class _CaseLibrarySearchPageState extends State<CaseLibrarySearchPage> {
               // 如此一來，即使左側返回按鈕佔據寬度，標題文字依然能以主體中心為準進行對齊，而不會偏心。
               // 必須讓 SizedBox 撐滿寬度，左側返回鍵才會定位到真正的 AppBar 左緣。
               Padding(
-                padding: EdgeInsets.fromLTRB(6.w, 12.h, 18.w, 8.h),
+                padding: EdgeInsets.fromLTRB(6.w, 4.h, 16.w, 4.h),
                 child: SizedBox(
                   width: double.infinity,
-                  height: 48.h,
+                  height: 38.h,
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
                       Positioned(
                         left: 0,
                         child: IconButton(
+                          padding: EdgeInsets.zero,
+                          constraints: BoxConstraints(
+                            minWidth: 36.w,
+                            minHeight: 36.w,
+                          ),
                           icon: CaseLibrarySvgIcon(
                             CaseLibrarySvgIcons.chevronLeft,
-                            size: 20.w,
+                            size: 19.w,
                             color: CaseLibraryColors.primaryGreen,
                           ),
                           onPressed: () => Navigator.of(context).pop(),
@@ -181,8 +186,9 @@ class _CaseLibrarySearchPageState extends State<CaseLibrarySearchPage> {
                         '搜尋司法案件',
                         style:
                             CaseLibraryTextStyles.pageTitle(context).copyWith(
-                          fontSize: 20.sp,
+                          fontSize: 17.sp,
                           fontWeight: FontWeight.w900,
+                          color: CaseLibraryColors.primaryGreen,
                         ),
                       ),
                     ],

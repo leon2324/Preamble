@@ -6,9 +6,13 @@ import 'package:preamble/components/home/home_content.dart';
 import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:preamble/components/shared/law_app_story_action_bar.dart';
 import 'package:preamble/components/shared/share_sheet.dart';
+import 'package:preamble/data/journal/user_case_journal_models.dart';
+import 'package:preamble/data/journal/user_case_journal_repository.dart';
+import 'package:preamble/data/legal_brain/taiwan_statute_canon.dart';
 import 'package:preamble/data/mock_data/home/home_mock_data.dart';
 import 'package:preamble/pages/home/subpages/home_subpage_primitives.dart';
 import 'package:preamble/pages/learning/know_law_page.dart';
+import 'package:preamble/pages/tools/legal_toolkit_hub_page.dart';
 import 'package:preamble/platform/native_share_bridge.dart';
 import 'package:preamble/theme/app_colors.dart';
 import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
@@ -334,6 +338,7 @@ class LifeLegalTipDetailPage extends StatefulWidget {
 
 class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
   late final ScrollController _scrollController;
+  final GlobalKey _discussionKey = GlobalKey();
   late final List<String> _steps;
   late List<bool> _stepsChecked;
   double _readingProgress = 0.0;
@@ -342,8 +347,13 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
   var _isFollowing = false;
   var _isBookmarked = false;
   var _isLiked = false;
+  var _addedToCaseJournal = false;
   var _shareCountDelta = 0;
   var _commentCountDelta = 0;
+
+  late final List<_LifeTipComment> _comments;
+  late final Map<String, int> _tagCounts;
+  final Set<String> _selectedTags = {};
 
   @override
   void initState() {
@@ -353,6 +363,8 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
 
     _steps = _buildActionSteps(widget.item);
     _stepsChecked = List.generate(_steps.length, (_) => false);
+    _comments = _seedCommentsForTip(widget.item);
+    _tagCounts = _seedTagCountsForTip(widget.item);
   }
 
   @override
@@ -442,21 +454,180 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
     _showShareCardDialog();
   }
 
-  void _showCommentsBottomSheet() {
+  void _showCommentsBottomSheet({
+    String? initialReplyToId,
+    bool autofocusInput = false,
+  }) {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
+      barrierColor: Colors.black.withValues(alpha: 0.55),
       isScrollControlled: true,
+      useSafeArea: true,
       builder: (context) {
         return _LifeTipCommentSheet(
           title: widget.item.title,
-          onCommentPosted: () {
-            setState(() {
-              _commentCountDelta += 1;
-            });
+          comments: _comments,
+          tagCounts: _tagCounts,
+          selectedTags: _selectedTags,
+          initialReplyToId: initialReplyToId,
+          autofocusInput: autofocusInput,
+          onToggleTag: _toggleTagResonance,
+          onToggleHelpful: _toggleCommentHelpful,
+          onCommentSubmitted: (text, tag, replyToId) {
+            if (replyToId != null) {
+              _addReply(replyToId, text);
+            } else {
+              _addComment(text, tag: tag);
+            }
           },
         );
       },
+    );
+  }
+
+  void _scrollToDiscussion() {
+    final targetCtx = _discussionKey.currentContext;
+    if (targetCtx != null) {
+      Scrollable.ensureVisible(
+        targetCtx,
+        duration: const Duration(milliseconds: 360),
+        curve: Curves.easeOutCubic,
+      );
+    } else {
+      _showCommentsBottomSheet();
+    }
+  }
+
+  void _toggleTagResonance(String tag) {
+    HapticFeedback.selectionClick();
+    setState(() {
+      if (_selectedTags.contains(tag)) {
+        _selectedTags.remove(tag);
+        _tagCounts[tag] = ((_tagCounts[tag] ?? 1) - 1).clamp(0, 9999);
+      } else {
+        _selectedTags.add(tag);
+        _tagCounts[tag] = (_tagCounts[tag] ?? 0) + 1;
+      }
+    });
+  }
+
+  void _toggleCommentHelpful(String commentId) {
+    HapticFeedback.lightImpact();
+    setState(() {
+      final idx = _comments.indexWhere((c) => c.id == commentId);
+      if (idx == -1) return;
+      final current = _comments[idx];
+      final nextHelpful = !current.isHelpfulByMe;
+      _comments[idx] = current.copyWith(
+        isHelpfulByMe: nextHelpful,
+        helpfulCount: current.helpfulCount + (nextHelpful ? 1 : -1),
+      );
+    });
+  }
+
+  void _addComment(String text, {String? tag}) {
+    setState(() {
+      _comments.insert(
+        0,
+        _LifeTipComment(
+          id: 'user-${DateTime.now().microsecondsSinceEpoch}',
+          author: '我',
+          roleBadge: '當事人分享',
+          avatarColor: ProtoColors.deepGreen,
+          timeLabel: '剛剛',
+          tag: tag,
+          content: text,
+          helpfulCount: 0,
+          isHelpfulByMe: false,
+          replies: const [],
+        ),
+      );
+      _commentCountDelta += 1;
+    });
+  }
+
+  void _addReply(String parentId, String text) {
+    setState(() {
+      final idx = _comments.indexWhere((c) => c.id == parentId);
+      if (idx == -1) return;
+      final parent = _comments[idx];
+      _comments[idx] = parent.copyWith(
+        replies: [
+          ...parent.replies,
+          _LifeTipReply(
+            author: '我',
+            roleBadge: '補充回覆',
+            timeLabel: '剛剛',
+            content: text,
+          ),
+        ],
+      );
+      _commentCountDelta += 1;
+    });
+  }
+
+  String _toolkitKeyForCategory(String category) {
+    return switch (category) {
+      '租屋' => '租屋催告',
+      '交通' => '車禍賠償',
+      '網購' || '網購消費' || '消費' => '契約審閱',
+      _ => '租屋催告',
+    };
+  }
+
+  Future<void> _addTipToCaseJournal() async {
+    if (_addedToCaseJournal) {
+      CustomToast.show(context, '本篇已帶入「紀事 > 個人自救案件夾」');
+      return;
+    }
+    HapticFeedback.mediumImpact();
+    final repo = UserCaseJournalRepository();
+    final domain = TaiwanStatuteCanon.detectDisputeDomain(
+      '${widget.item.category} ${widget.item.title} ${widget.item.summary}',
+    );
+    final evidences = List.generate(_steps.length, (i) {
+      return CaseJournalEvidenceItem(
+        title: _steps[i],
+        isCollected: _stepsChecked[i],
+      );
+    });
+    await repo.addEntry(
+      UserCaseJournalEntry(
+        id: 'tip-${DateTime.now().microsecondsSinceEpoch}',
+        title: widget.item.title,
+        domain: domain,
+        counterparty: '相對人（可於案件夾編輯）',
+        disputedAmount: '依個案損害與契約約定評估',
+        status: CaseJournalStatus.active,
+        statuteDeadlineTitle: '證據保全與權利主張期',
+        statuteDeadlineBasis: _lawHintForTip(widget.item),
+        statuteDeadlineDays: 180,
+        startDate: DateTime.now(),
+        tacticalGoldenPhrase: _issueHintForTip(widget.item),
+        initialFacts: widget.item.summary.isNotEmpty
+            ? widget.item.summary
+            : widget.item.tip,
+        evidences: evidences,
+        logs: [
+          CaseJournalLogEntry(
+            id: 'log-tip-import',
+            timestamp: DateTime.now(),
+            title: '從避坑指引帶入自保清單',
+            note: '已同步匯入 ${_steps.length} 項證據與自保步驟（已完成 ${_stepsChecked.where((e) => e).length} 項）。',
+            tag: '避坑匯入',
+          ),
+        ],
+      ),
+    );
+    if (!mounted) return;
+    setState(() {
+      _addedToCaseJournal = true;
+    });
+    CustomToast.show(
+      context,
+      '已帶入「紀事 > 個人自救案件夾」',
+      icon: Icons.folder_special_rounded,
     );
   }
 
@@ -770,6 +941,7 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
     return PreambleStoryActionBar(
       isFollowed: _isFollowing,
       isSaved: _isBookmarked,
+      showSaveButton: false,
       onAskAssistant: () {
         Navigator.of(context).push(
           MaterialPageRoute<void>(
@@ -876,6 +1048,10 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
 
           // 4. 相關法規 / 生活提醒
           _buildLawsSection(isDark, aes),
+          SizedBox(height: 20.h),
+
+          // 5. 過來人討論區（1+2 結合：內頁直觀討論串 + 85% 討論抽屜）
+          _buildDiscussionSection(isDark, aes),
         ],
       ),
     );
@@ -1067,19 +1243,15 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
                 onTap: _toggleLike,
               ),
               _LifeTipInteractionMetric(
-                svgPath: _svgShareNetwork,
-                color: const Color(0xFF8A7B5C),
-                label: _metricText(widget.item.shares, _shareCountDelta),
-                onTap: _shareFromInteraction,
-              ),
-              _LifeTipInteractionMetric(
                 svgPath: CaseLibrarySvgIcons.message,
                 color: const Color(0xFF426E9F),
                 label: _metricText(widget.item.comments, _commentCountDelta),
-                onTap: _showCommentsBottomSheet,
+                onTap: _scrollToDiscussion,
               ),
               _LifeTipInteractionMetric(
-                svgPath: CaseLibrarySvgIcons.bookmark,
+                svgPath: _isBookmarked
+                    ? CaseLibrarySvgIcons.bookmarkFilled
+                    : CaseLibrarySvgIcons.bookmark,
                 color:
                     _isBookmarked ? ProtoColors.deepGreen : AppColors.textMuted,
                 label: _isBookmarked ? '已儲存' : '儲存',
@@ -1363,11 +1535,398 @@ class _LifeLegalTipDetailPageState extends State<LifeLegalTipDetailPage> {
                   ),
                 );
               }),
+              SizedBox(height: 6.h),
+              Container(
+                padding: EdgeInsets.all(10.w),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? const Color(0xFF14181E)
+                      : Colors.white.withValues(alpha: 0.88),
+                  borderRadius: BorderRadius.circular(10.r),
+                  border: Border.all(
+                    color: isDark
+                        ? const Color(0xFF2D333F)
+                        : const Color(0xFFD2ECE0),
+                    width: 0.8.w,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '證據與自保準備進度',
+                          style: TextStyle(
+                            fontSize: 11.5.sp,
+                            fontWeight: FontWeight.w800,
+                            color: isDark
+                                ? const Color(0xFFCBD5E1)
+                                : ProtoColors.charcoal,
+                          ),
+                        ),
+                        Text(
+                          '已完成 $completedCount / ${_steps.length} 項',
+                          style: TextStyle(
+                            fontSize: 11.5.sp,
+                            fontWeight: FontWeight.w900,
+                            color: ProtoColors.deepGreen,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 6.h),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(999.r),
+                      child: LinearProgressIndicator(
+                        value: progress,
+                        minHeight: 6.h,
+                        backgroundColor: isDark
+                            ? const Color(0xFF242B35)
+                            : const Color(0xFFE2F1EA),
+                        valueColor: const AlwaysStoppedAnimation<Color>(
+                          ProtoColors.deepGreen,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: _addTipToCaseJournal,
+                            icon: Icon(
+                              _addedToCaseJournal
+                                  ? Icons.check_circle_rounded
+                                  : Icons.folder_copy_outlined,
+                              size: 15.sp,
+                            ),
+                            label: Text(
+                              _addedToCaseJournal ? '已帶入案件夾' : '帶入我的案件夾',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 11.5.sp,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: ProtoColors.deepGreen,
+                              side: BorderSide(
+                                color: ProtoColors.deepGreen
+                                    .withValues(alpha: 0.45),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 10.w,
+                                vertical: 9.h,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.r),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        Expanded(
+                          child: FilledButton.icon(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute<void>(
+                                  builder: (_) => LegalToolkitHubPage(
+                                    initialToolKey: _toolkitKeyForCategory(
+                                      widget.item.category,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            icon: Icon(
+                              Icons.edit_document,
+                              size: 15.sp,
+                            ),
+                            label: Text(
+                              '生成存證／催告',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 11.5.sp,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            style: FilledButton.styleFrom(
+                              backgroundColor: ProtoColors.deepGreen,
+                              foregroundColor: Colors.white,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 10.w,
+                                vertical: 9.h,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.r),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildDiscussionSection(bool isDark, CategoryAesthetics aes) {
+    final surface = isDark ? const Color(0xFF181C23) : Colors.white;
+    final border =
+        isDark ? const Color(0xFF2D333F) : const Color(0xFFE8DFD1);
+    final text = isDark ? Colors.white : ProtoColors.charcoal;
+    final muted = isDark ? const Color(0xFF94A3B8) : AppColors.textSecondary;
+
+    return Container(
+      key: _discussionKey,
+      padding: EdgeInsets.all(14.w),
+      decoration: BoxDecoration(
+        color: surface,
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(color: border, width: 0.8.w),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CaseLibrarySvgIcon(
+                CaseLibrarySvgIcons.message,
+                color: const Color(0xFF426E9F),
+                size: 18.sp,
+              ),
+              SizedBox(width: 8.w),
+              Expanded(
+                child: Text(
+                  '過來人討論區',
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w900,
+                    color: text,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () => _showCommentsBottomSheet(),
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: Text(
+                  '展開全部 (${_comments.length}) →',
+                  style: TextStyle(
+                    fontSize: 11.5.sp,
+                    fontWeight: FontWeight.w800,
+                    color: ProtoColors.deepGreen,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 4.h),
+          Text(
+            '遇到類似狀況？先點選共鳴標籤，或看看大家怎麼處理。',
+            style: TextStyle(
+              fontSize: 11.5.sp,
+              color: muted,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          Wrap(
+            spacing: 8.w,
+            runSpacing: 8.h,
+            children: _tagCounts.entries.map((entry) {
+              final isSelected = _selectedTags.contains(entry.key);
+              return GestureDetector(
+                onTap: () => _toggleTagResonance(entry.key),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 160),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? ProtoColors.deepGreen.withValues(alpha: 0.14)
+                        : (isDark
+                            ? const Color(0xFF1E2228)
+                            : const Color(0xFFFAF8F5)),
+                    borderRadius: BorderRadius.circular(999.r),
+                    border: Border.all(
+                      color: isSelected ? ProtoColors.deepGreen : border,
+                      width: 0.9.w,
+                    ),
+                  ),
+                  child: Text(
+                    '${entry.key} · ${entry.value}',
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w800,
+                      color: isSelected ? ProtoColors.deepGreen : text,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(growable: false),
+          ),
+          SizedBox(height: 14.h),
+          ..._comments.take(3).map(
+                (comment) => Padding(
+                  padding: EdgeInsets.only(bottom: 10.h),
+                  child: _LifeTipCommentCard(
+                    comment: comment,
+                    isDark: isDark,
+                    onToggleHelpful: () => _toggleCommentHelpful(comment.id),
+                    onReply: () => _showCommentsBottomSheet(
+                      initialReplyToId: comment.id,
+                      autofocusInput: true,
+                    ),
+                  ),
+                ),
+              ),
+          SizedBox(height: 4.h),
+          GestureDetector(
+            onTap: () => _showCommentsBottomSheet(autofocusInput: true),
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 11.h),
+              decoration: BoxDecoration(
+                color: isDark
+                    ? const Color(0xFF1E2228)
+                    : const Color(0xFFFAF8F5),
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(color: border, width: 0.8.w),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.edit_note_rounded,
+                    size: 18.sp,
+                    color: ProtoColors.deepGreen,
+                  ),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Text(
+                      '寫下你的避坑經驗、或問大家怎麼回對方...',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: muted,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                    decoration: BoxDecoration(
+                      color: ProtoColors.deepGreen,
+                      borderRadius: BorderRadius.circular(999.r),
+                    ),
+                    child: Text(
+                      '參與討論',
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static List<_LifeTipComment> _seedCommentsForTip(HomeNewsletterItem item) {
+    if (item.category.contains('租屋') || item.title.contains('房東')) {
+      return [
+        const _LifeTipComment(
+          id: 'seed-rent-1',
+          author: '林小安',
+          roleBadge: '租客經驗',
+          avatarColor: Color(0xFF426E9F),
+          timeLabel: '2 小時前',
+          tag: '我也遇過類似狀況',
+          content: '上次房東沒先講就帶人來，我當下直接開錄影並傳 LINE 確認「未經同意請勿進入」，後來對方就不敢再犯了。',
+          helpfulCount: 18,
+          isHelpfulByMe: false,
+          replies: [
+            _LifeTipReply(
+              author: 'Preamble 法務小助教',
+              roleBadge: '法務補充',
+              timeLabel: '1 小時前',
+              content: '做法很正確！記得把對話截圖備份，若仍有擅自進入情況，可依刑法第 306 條或民法主張終止租約與損害賠償。',
+            ),
+          ],
+        ),
+        const _LifeTipComment(
+          id: 'seed-rent-2',
+          author: '阿哲',
+          roleBadge: '過來人',
+          avatarColor: Color(0xFF8A7B5C),
+          timeLabel: '昨天',
+          tag: '求範本／怎麼回對方',
+          content: '合約快到期時真的很容易被突然要求帶看，建議直接在 LINE 先約定「須提前 24 小時確認時段且我在場」。',
+          helpfulCount: 9,
+          isHelpfulByMe: false,
+          replies: [],
+        ),
+      ];
+    }
+    return [
+      _LifeTipComment(
+        id: 'seed-gen-1',
+        author: '陳小宇',
+        roleBadge: '過來人',
+        avatarColor: const Color(0xFF426E9F),
+        timeLabel: '3 小時前',
+        tag: '我也遇過類似狀況',
+        content: '以前都覺得是小事沒留證據，看完這篇才發現「當下截圖 + 傳文字確認」真的能救命。',
+        helpfulCount: 12,
+        isHelpfulByMe: false,
+        replies: const [
+          _LifeTipReply(
+            author: 'Preamble 法務小助教',
+            roleBadge: '法務補充',
+            timeLabel: '2 小時前',
+            content: '沒錯，時間序完整的對話紀錄與現場照片，往往是後續調解或寫存證信函最有力的證據。',
+          ),
+        ],
+      ),
+      const _LifeTipComment(
+        id: 'seed-gen-2',
+        author: 'Mina',
+        roleBadge: '社群讀者',
+        avatarColor: Color(0xFF8A7B5C),
+        timeLabel: '昨天',
+        tag: '已拍照存證',
+        content: '已經把自保清單勾完並存進案件夾了，推實戰流程！',
+        helpfulCount: 7,
+        isHelpfulByMe: false,
+        replies: [],
+      ),
+    ];
+  }
+
+  static Map<String, int> _seedTagCountsForTip(HomeNewsletterItem item) {
+    return {
+      '我也遇過類似狀況': 24,
+      '求範本／怎麼回對方': 15,
+      '已拍照存證': 11,
+      '法條疑問': 6,
+    };
   }
 
   Widget _buildLawsSection(bool isDark, CategoryAesthetics aes) {
@@ -2155,14 +2714,356 @@ class _LifeTipInteractionMetric extends StatelessWidget {
   }
 }
 
+class _LifeTipReply {
+  const _LifeTipReply({
+    required this.author,
+    required this.roleBadge,
+    required this.timeLabel,
+    required this.content,
+  });
+
+  final String author;
+  final String roleBadge;
+  final String timeLabel;
+  final String content;
+}
+
+class _LifeTipComment {
+  const _LifeTipComment({
+    required this.id,
+    required this.author,
+    required this.roleBadge,
+    required this.avatarColor,
+    required this.timeLabel,
+    this.tag,
+    required this.content,
+    required this.helpfulCount,
+    required this.isHelpfulByMe,
+    required this.replies,
+  });
+
+  final String id;
+  final String author;
+  final String roleBadge;
+  final Color avatarColor;
+  final String timeLabel;
+  final String? tag;
+  final String content;
+  final int helpfulCount;
+  final bool isHelpfulByMe;
+  final List<_LifeTipReply> replies;
+
+  _LifeTipComment copyWith({
+    int? helpfulCount,
+    bool? isHelpfulByMe,
+    List<_LifeTipReply>? replies,
+  }) {
+    return _LifeTipComment(
+      id: id,
+      author: author,
+      roleBadge: roleBadge,
+      avatarColor: avatarColor,
+      timeLabel: timeLabel,
+      tag: tag,
+      content: content,
+      helpfulCount: helpfulCount ?? this.helpfulCount,
+      isHelpfulByMe: isHelpfulByMe ?? this.isHelpfulByMe,
+      replies: replies ?? this.replies,
+    );
+  }
+}
+
+class _LifeTipCommentCard extends StatelessWidget {
+  const _LifeTipCommentCard({
+    required this.comment,
+    required this.isDark,
+    required this.onToggleHelpful,
+    required this.onReply,
+  });
+
+  final _LifeTipComment comment;
+  final bool isDark;
+  final VoidCallback onToggleHelpful;
+  final VoidCallback onReply;
+
+  @override
+  Widget build(BuildContext context) {
+    final cardBg =
+        isDark ? const Color(0xFF1E2228) : const Color(0xFFFAF8F5);
+    final border =
+        isDark ? const Color(0xFF2D333F) : const Color(0xFFE8DFD1);
+    final text = isDark ? Colors.white : ProtoColors.charcoal;
+    final muted = isDark ? const Color(0xFF94A3B8) : AppColors.textSecondary;
+
+    return Container(
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: cardBg,
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: border, width: 0.8.w),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 13.r,
+                backgroundColor: comment.avatarColor,
+                child: Text(
+                  comment.author.isNotEmpty ? comment.author.substring(0, 1) : '讀',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+              SizedBox(width: 8.w),
+              Text(
+                comment.author,
+                style: TextStyle(
+                  color: text,
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              SizedBox(width: 6.w),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                decoration: BoxDecoration(
+                  color: comment.avatarColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(999.r),
+                ),
+                child: Text(
+                  comment.roleBadge,
+                  style: TextStyle(
+                    color: comment.avatarColor,
+                    fontSize: 9.5.sp,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              Text(
+                comment.timeLabel,
+                style: TextStyle(
+                  color: muted,
+                  fontSize: 10.5.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          if (comment.tag != null && comment.tag!.isNotEmpty) ...[
+            SizedBox(height: 6.h),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 2.h),
+              decoration: BoxDecoration(
+                color: ProtoColors.deepGreen.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(6.r),
+              ),
+              child: Text(
+                '# ${comment.tag}',
+                style: TextStyle(
+                  color: ProtoColors.deepGreen,
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+          ],
+          SizedBox(height: 7.h),
+          Text(
+            comment.content,
+            style: TextStyle(
+              color: text,
+              fontSize: 12.5.sp,
+              height: 1.48,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Row(
+            children: [
+              GestureDetector(
+                onTap: onToggleHelpful,
+                child: Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: comment.isHelpfulByMe
+                        ? ProtoColors.deepGreen.withValues(alpha: 0.14)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(999.r),
+                    border: Border.all(
+                      color: comment.isHelpfulByMe
+                          ? ProtoColors.deepGreen
+                          : border,
+                      width: 0.8.w,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        comment.isHelpfulByMe
+                            ? Icons.thumb_up_alt_rounded
+                            : Icons.thumb_up_off_alt_rounded,
+                        size: 13.sp,
+                        color: comment.isHelpfulByMe
+                            ? ProtoColors.deepGreen
+                            : muted,
+                      ),
+                      SizedBox(width: 4.w),
+                      Text(
+                        '有幫助 ${comment.helpfulCount}',
+                        style: TextStyle(
+                          fontSize: 10.5.sp,
+                          fontWeight: FontWeight.w800,
+                          color: comment.isHelpfulByMe
+                              ? ProtoColors.deepGreen
+                              : muted,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(width: 8.w),
+              GestureDetector(
+                onTap: onReply,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.reply_rounded,
+                        size: 14.sp,
+                        color: muted,
+                      ),
+                      SizedBox(width: 4.w),
+                      Text(
+                        comment.replies.isEmpty
+                            ? '回覆'
+                            : '回覆 (${comment.replies.length})',
+                        style: TextStyle(
+                          fontSize: 10.5.sp,
+                          fontWeight: FontWeight.w800,
+                          color: muted,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if (comment.replies.isNotEmpty) ...[
+            SizedBox(height: 8.h),
+            Container(
+              padding: EdgeInsets.only(left: 10.w),
+              decoration: BoxDecoration(
+                border: Border(
+                  left: BorderSide(
+                    color: ProtoColors.deepGreen.withValues(alpha: 0.35),
+                    width: 2.w,
+                  ),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: comment.replies.map((reply) {
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 6.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              reply.author,
+                              style: TextStyle(
+                                color: text,
+                                fontSize: 11.sp,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                            SizedBox(width: 6.w),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 5.w, vertical: 1.h),
+                              decoration: BoxDecoration(
+                                color: ProtoColors.deepGreen
+                                    .withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(999.r),
+                              ),
+                              child: Text(
+                                reply.roleBadge,
+                                style: TextStyle(
+                                  color: ProtoColors.deepGreen,
+                                  fontSize: 9.sp,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              reply.timeLabel,
+                              style: TextStyle(
+                                color: muted,
+                                fontSize: 10.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 3.h),
+                        Text(
+                          reply.content,
+                          style: TextStyle(
+                            color: text,
+                            fontSize: 11.5.sp,
+                            height: 1.45,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(growable: false),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
 class _LifeTipCommentSheet extends StatefulWidget {
   const _LifeTipCommentSheet({
     required this.title,
-    required this.onCommentPosted,
+    required this.comments,
+    required this.tagCounts,
+    required this.selectedTags,
+    required this.onToggleTag,
+    required this.onToggleHelpful,
+    required this.onCommentSubmitted,
+    this.initialReplyToId,
+    this.autofocusInput = false,
   });
 
   final String title;
-  final VoidCallback onCommentPosted;
+  final List<_LifeTipComment> comments;
+  final Map<String, int> tagCounts;
+  final Set<String> selectedTags;
+  final ValueChanged<String> onToggleTag;
+  final ValueChanged<String> onToggleHelpful;
+  final void Function(String text, String? tag, String? replyToId)
+      onCommentSubmitted;
+  final String? initialReplyToId;
+  final bool autofocusInput;
 
   @override
   State<_LifeTipCommentSheet> createState() => _LifeTipCommentSheetState();
@@ -2170,15 +3071,36 @@ class _LifeTipCommentSheet extends StatefulWidget {
 
 class _LifeTipCommentSheetState extends State<_LifeTipCommentSheet> {
   final _controller = TextEditingController();
-  final _comments = <String>[
-    '這篇很實用，原來只是日常小動作也要先留紀錄。',
-    '我會先收藏，退租或拍照前拿出來確認。',
-  ];
+  final _focusNode = FocusNode();
+  String? _replyingToId;
+  String? _composerTag;
+
+  @override
+  void initState() {
+    super.initState();
+    _replyingToId = widget.initialReplyToId;
+    if (widget.autofocusInput) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _focusNode.requestFocus();
+        }
+      });
+    }
+  }
 
   @override
   void dispose() {
     _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
+  }
+
+  _LifeTipComment? get _replyTarget {
+    if (_replyingToId == null) return null;
+    for (final c in widget.comments) {
+      if (c.id == _replyingToId) return c;
+    }
+    return null;
   }
 
   void _submit() {
@@ -2186,148 +3108,296 @@ class _LifeTipCommentSheetState extends State<_LifeTipCommentSheet> {
     if (text.isEmpty) return;
 
     HapticFeedback.mediumImpact();
+    final targetId = _replyingToId;
+    final tag = _composerTag;
+    widget.onCommentSubmitted(text, tag, targetId);
     setState(() {
-      _comments.insert(0, text);
       _controller.clear();
+      _replyingToId = null;
+      _composerTag = null;
     });
-    widget.onCommentPosted();
   }
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
+    final sheetHeight = MediaQuery.sizeOf(context).height * 0.85;
     final bg = isDark ? const Color(0xFF181C23) : Colors.white;
     final text = isDark ? Colors.white : ProtoColors.charcoal;
     final muted = isDark ? const Color(0xFF94A3B8) : AppColors.textSecondary;
+    final border =
+        isDark ? const Color(0xFF2D333F) : const Color(0xFFE8DFD1);
+    final replyTarget = _replyTarget;
 
-    return Padding(
-      padding: EdgeInsets.only(bottom: bottomInset),
-      child: Container(
-        padding: EdgeInsets.fromLTRB(18.w, 12.h, 18.w, 18.h),
-        decoration: BoxDecoration(
-          color: bg,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 42.w,
-                height: 4.h,
+    // 外層 Container 實作完整不透明底色與圓角裁切，
+    // 並把 bottomInset 放在「內層」AnimatedPadding，徹底消除鍵盤上方透明未填滿的破洞。
+    return Container(
+      height: sheetHeight,
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: AnimatedPadding(
+        duration: const Duration(milliseconds: 120),
+        curve: Curves.easeOut,
+        padding: EdgeInsets.only(bottom: bottomInset),
+        child: SafeArea(
+          top: false,
+          bottom: bottomInset == 0,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(18.w, 12.h, 18.w, 10.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Container(
+                        width: 42.w,
+                        height: 4.h,
+                        decoration: BoxDecoration(
+                          color: isDark
+                              ? const Color(0xFF2D333F)
+                              : const Color(0xFFE8DFD1),
+                          borderRadius: BorderRadius.circular(999.r),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 12.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '過來人討論區 (${widget.comments.length})',
+                                style: TextStyle(
+                                  color: text,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                              SizedBox(height: 2.h),
+                              Text(
+                                widget.title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: muted,
+                                  fontSize: 11.5.sp,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          icon: Icon(Icons.close_rounded, color: muted),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Divider(height: 1, color: border),
+              Expanded(
+                child: ListView.separated(
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
+                  padding: EdgeInsets.fromLTRB(18.w, 12.h, 18.w, 16.h),
+                  itemCount: widget.comments.length + 1,
+                  separatorBuilder: (_, __) => SizedBox(height: 10.h),
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return Wrap(
+                        spacing: 8.w,
+                        runSpacing: 8.h,
+                        children: widget.tagCounts.entries.map((entry) {
+                          final selected = _composerTag == entry.key ||
+                              widget.selectedTags.contains(entry.key);
+                          return GestureDetector(
+                            onTap: () {
+                              widget.onToggleTag(entry.key);
+                              setState(() {
+                                _composerTag =
+                                    _composerTag == entry.key ? null : entry.key;
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 10.w,
+                                vertical: 5.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: selected
+                                    ? ProtoColors.deepGreen
+                                        .withValues(alpha: 0.14)
+                                    : (isDark
+                                        ? const Color(0xFF1E2228)
+                                        : const Color(0xFFFAF8F5)),
+                                borderRadius: BorderRadius.circular(999.r),
+                                border: Border.all(
+                                  color:
+                                      selected ? ProtoColors.deepGreen : border,
+                                  width: 0.8.w,
+                                ),
+                              ),
+                              child: Text(
+                                '${entry.key} · ${entry.value}',
+                                style: TextStyle(
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.w800,
+                                  color: selected ? ProtoColors.deepGreen : text,
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(growable: false),
+                      );
+                    }
+                    final comment = widget.comments[index - 1];
+                    return _LifeTipCommentCard(
+                      comment: comment,
+                      isDark: isDark,
+                      onToggleHelpful: () {
+                        widget.onToggleHelpful(comment.id);
+                        setState(() {});
+                      },
+                      onReply: () {
+                        setState(() {
+                          _replyingToId = comment.id;
+                        });
+                        _focusNode.requestFocus();
+                      },
+                    );
+                  },
+                ),
+              ),
+              Container(
                 decoration: BoxDecoration(
-                  color: isDark
-                      ? const Color(0xFF2D333F)
-                      : const Color(0xFFE8DFD1),
-                  borderRadius: BorderRadius.circular(999.r),
+                  color: bg,
+                  border: Border(top: BorderSide(color: border)),
+                ),
+                padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 12.h),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (replyTarget != null) ...[
+                      Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.only(bottom: 8.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 6.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: ProtoColors.deepGreen.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '正在回覆 ${replyTarget.author}：${replyTarget.content}',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: ProtoColors.deepGreen,
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _replyingToId = null;
+                                });
+                              },
+                              child: Icon(
+                                Icons.close_rounded,
+                                size: 15.sp,
+                                color: ProtoColors.deepGreen,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _controller,
+                            focusNode: _focusNode,
+                            minLines: 1,
+                            maxLines: 3,
+                            textInputAction: TextInputAction.send,
+                            onSubmitted: (_) => _submit(),
+                            style: TextStyle(color: text, fontSize: 12.5.sp),
+                            decoration: InputDecoration(
+                              hintText: replyTarget != null
+                                  ? '回覆 ${replyTarget.author}...'
+                                  : '寫下你的避坑心得或發問...',
+                              hintStyle:
+                                  TextStyle(color: muted, fontSize: 12.5.sp),
+                              filled: true,
+                              fillColor: isDark
+                                  ? const Color(0xFF1E2228)
+                                  : const Color(0xFFFAF8F5),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14.r),
+                                borderSide: BorderSide(color: border, width: 0.8),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14.r),
+                                borderSide: BorderSide(color: border, width: 0.8),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14.r),
+                                borderSide: const BorderSide(
+                                  color: ProtoColors.deepGreen,
+                                  width: 1.2,
+                                ),
+                              ),
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: 12.w,
+                                vertical: 10.h,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10.w),
+                        GestureDetector(
+                          onTap: _submit,
+                          child: Container(
+                            width: 42.w,
+                            height: 42.w,
+                            decoration: const BoxDecoration(
+                              color: ProtoColors.deepGreen,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.arrow_upward_rounded,
+                              color: Colors.white,
+                              size: 20.sp,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-            ),
-            SizedBox(height: 14.h),
-            Text(
-              '避坑留言',
-              style: TextStyle(
-                color: text,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-            SizedBox(height: 4.h),
-            Text(
-              widget.title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: muted,
-                fontSize: 11.5.sp,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            SizedBox(height: 14.h),
-            ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: 190.h),
-              child: ListView.separated(
-                shrinkWrap: true,
-                itemCount: _comments.length,
-                separatorBuilder: (_, __) => SizedBox(height: 8.h),
-                itemBuilder: (context, index) {
-                  return Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-                    decoration: BoxDecoration(
-                      color: isDark
-                          ? const Color(0xFF1E2228)
-                          : const Color(0xFFFAF8F5),
-                      borderRadius: BorderRadius.circular(10.r),
-                      border: Border.all(
-                        color: isDark
-                            ? const Color(0xFF2D333F)
-                            : const Color(0xFFE8DFD1),
-                        width: 0.8.w,
-                      ),
-                    ),
-                    child: Text(
-                      _comments[index],
-                      style: TextStyle(
-                        color: text,
-                        fontSize: 12.5.sp,
-                        height: 1.45,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            SizedBox(height: 14.h),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    minLines: 1,
-                    maxLines: 3,
-                    style: TextStyle(color: text, fontSize: 12.5.sp),
-                    decoration: InputDecoration(
-                      hintText: '寫下你的避坑心得...',
-                      hintStyle: TextStyle(color: muted, fontSize: 12.5.sp),
-                      filled: true,
-                      fillColor: isDark
-                          ? const Color(0xFF1E2228)
-                          : const Color(0xFFFAF8F5),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                        borderSide: BorderSide.none,
-                      ),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 12.w,
-                        vertical: 10.h,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10.w),
-                GestureDetector(
-                  onTap: _submit,
-                  child: Container(
-                    width: 42.w,
-                    height: 42.w,
-                    decoration: const BoxDecoration(
-                      color: ProtoColors.deepGreen,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.arrow_upward_rounded,
-                      color: Colors.white,
-                      size: 20.sp,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

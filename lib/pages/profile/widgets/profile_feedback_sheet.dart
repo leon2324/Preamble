@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:preamble/app/app_state.dart';
-import 'package:preamble/theme/app_colors.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 
-/// 反饋/問題回報 Bottom Sheet。
 class FeedbackSheet extends StatefulWidget {
   const FeedbackSheet({super.key, required this.appState});
 
@@ -35,218 +35,189 @@ class _FeedbackSheetState extends State<FeedbackSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final surfaceColor = isDark ? const Color(0xFF171C22) : Colors.white;
-    final borderSide =
-        BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
+    final t = context.tokens;
 
     return Container(
       decoration: BoxDecoration(
-        color: surfaceColor,
+        color: t.surfaceElevated,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+        border: Border.all(color: t.border),
       ),
       padding: EdgeInsets.fromLTRB(
-          20.w, 12.h, 20.w, MediaQuery.viewInsetsOf(context).bottom + 24.h),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // 頂部拖曳指示條 (Drag handle)
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              width: 40.w,
-              height: 4.h,
-              decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF2B3441) : AppColors.border,
-                borderRadius: BorderRadius.circular(2.r),
+        20.w,
+        12.h,
+        20.w,
+        MediaQuery.viewInsetsOf(context).bottom + 24.h,
+      ),
+      child: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  width: 38.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: t.borderStrong,
+                    borderRadius: BorderRadius.circular(99.r),
+                  ),
+                ),
               ),
-            ),
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            '問題回報與意見反饋',
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w900,
-              color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 20.h),
+              SizedBox(height: 16.h),
+              Text(
+                '問題回報與意見反饋',
+                style: t.serifTitle(size: 17.sp),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 18.h),
 
-          // 反饋類型選擇按鈕組 (Category Selector)
-          Text('反饋類型',
-              style: TextStyle(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.bold,
-                  color: isDark
-                      ? const Color(0xFFA3ABB6)
-                      : AppColors.textSecondary)),
-          SizedBox(height: 6.h),
-          Row(
-            children: ['功能建議', '內容錯誤', '程式錯誤', '其他'].map((cat) {
-              final isSelected = _category == cat;
-              return Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 2.w),
-                  child: InkWell(
-                    onTap: () => setState(() => _category = cat),
-                    borderRadius: BorderRadius.circular(8.r),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 8.h),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? AppColors.primary
-                            : (isDark
-                                ? const Color(0xFF0F1216)
-                                : const Color(0xFFFAF7F2)),
-                        borderRadius: BorderRadius.circular(8.r),
-                        border: Border.all(
-                          color: isSelected
-                              ? AppColors.primary
-                              : (isDark
-                                  ? const Color(0xFF2B3441)
-                                  : AppColors.border),
+              Text(
+                '反饋類別',
+                style: t.sansBody(
+                  size: 12.sp,
+                  weight: FontWeight.w700,
+                  color: t.textSecondary,
+                ),
+              ),
+              SizedBox(height: 8.h),
+              Wrap(
+                spacing: 8.w,
+                runSpacing: 8.h,
+                children: ['功能建議', '內容勘誤', '程式異常', '其他'].map((cat) {
+                  final isSelected = _category == cat;
+                  return ChoiceChip(
+                    label: Text(cat),
+                    selected: isSelected,
+                    onSelected: (_) => setState(() => _category = cat),
+                    selectedColor: t.brandPrimaryStrong,
+                    backgroundColor: t.surfaceSubtle,
+                    showCheckmark: false,
+                    side: BorderSide(
+                      color: isSelected ? t.brandPrimaryStrong : t.border,
+                    ),
+                    labelStyle: t.sansBody(
+                      size: 12.sp,
+                      weight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                      color: isSelected
+                          ? const Color(0xFFFAF8F4)
+                          : t.textPrimary,
+                    ),
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: 16.h),
+
+              Text(
+                '聯絡信箱（選填）',
+                style: t.sansBody(
+                  size: 12.sp,
+                  weight: FontWeight.w700,
+                  color: t.textSecondary,
+                ),
+              ),
+              SizedBox(height: 6.h),
+              TextField(
+                controller: _emailController,
+                style: t.sansBody(size: 13.5.sp, color: t.textPrimary),
+                decoration: InputDecoration(
+                  hintText: '填寫信箱以便團隊回覆處理進度',
+                  hintStyle: t.sansBody(size: 13.sp, color: t.textMuted),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 14.w, vertical: 11.h),
+                  filled: true,
+                  fillColor: t.surfaceSubtle,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                    borderSide: BorderSide(color: t.border),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                    borderSide: BorderSide(color: t.brandPrimary, width: 1.5),
+                  ),
+                ),
+              ),
+              SizedBox(height: 16.h),
+
+              Text(
+                '詳細說明與建議',
+                style: t.sansBody(
+                  size: 12.sp,
+                  weight: FontWeight.w700,
+                  color: t.textSecondary,
+                ),
+              ),
+              SizedBox(height: 6.h),
+              TextField(
+                controller: _feedbackController,
+                maxLines: 4,
+                style: t.sansBody(size: 13.5.sp, color: t.textPrimary),
+                decoration: InputDecoration(
+                  hintText: '請描述您遇到的情境或法規內容建議...',
+                  hintStyle: t.sansBody(size: 13.sp, color: t.textMuted),
+                  contentPadding: EdgeInsets.all(14.w),
+                  filled: true,
+                  fillColor: t.surfaceSubtle,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                    borderSide: BorderSide(color: t.border),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                    borderSide: BorderSide(color: t.brandPrimary, width: 1.5),
+                  ),
+                ),
+              ),
+              SizedBox(height: 22.h),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed:
+                          _isSending ? null : () => Navigator.pop(context),
+                      style: OutlinedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                        side: BorderSide(color: t.borderStrong),
+                        foregroundColor: t.textSecondary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14.r),
                         ),
                       ),
-                      child: Text(
-                        cat,
-                        style: TextStyle(
-                          fontSize: 11.5.sp,
-                          fontWeight:
-                              isSelected ? FontWeight.bold : FontWeight.normal,
-                          color: isSelected
-                              ? Colors.white
-                              : (isDark
-                                  ? const Color(0xFFF2F4F7)
-                                  : AppColors.textPrimary),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
+                      child: const Text('取消'),
                     ),
                   ),
-                ),
-              );
-            }).toList(),
-          ),
-          SizedBox(height: 16.h),
-
-          // 聯絡信箱輸入欄位 (Email Field)
-          Text('您的聯絡信箱 (選填)',
-              style: TextStyle(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.bold,
-                  color: isDark
-                      ? const Color(0xFFA3ABB6)
-                      : AppColors.textSecondary)),
-          SizedBox(height: 6.h),
-          TextField(
-            controller: _emailController,
-            decoration: InputDecoration(
-              hintText: '請輸入信箱以利回覆',
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
-              filled: true,
-              fillColor:
-                  isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: borderSide,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: AppColors.accent, width: 1.5),
-              ),
-            ),
-            style: TextStyle(
-                fontSize: 13.5.sp,
-                color:
-                    isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary),
-          ),
-          SizedBox(height: 16.h),
-
-          // 反饋內容描述輸入欄位 (Content Field)
-          Text('描述與建議',
-              style: TextStyle(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.bold,
-                  color: isDark
-                      ? const Color(0xFFA3ABB6)
-                      : AppColors.textSecondary)),
-          SizedBox(height: 6.h),
-          TextField(
-            controller: _feedbackController,
-            maxLines: 4,
-            decoration: InputDecoration(
-              hintText: '請詳細描述您遇到的問題或給予的指教...',
-              contentPadding: EdgeInsets.all(14.w),
-              filled: true,
-              fillColor:
-                  isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: borderSide,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: AppColors.accent, width: 1.5),
-              ),
-            ),
-            style: TextStyle(
-                fontSize: 13.5.sp,
-                color:
-                    isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary),
-          ),
-          SizedBox(height: 20.h),
-
-          // 底部操作按鈕（取消與提交） (Actions)
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: _isSending ? null : () => Navigator.pop(context),
-                  style: OutlinedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
-                    side: borderSide,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14.r)),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: _isSending ? null : _submitFeedback,
+                      style: FilledButton.styleFrom(
+                        backgroundColor: t.brandPrimaryStrong,
+                        foregroundColor: const Color(0xFFFAF8F4),
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14.r),
+                        ),
+                      ),
+                      child: _isSending
+                          ? SizedBox(
+                              width: 18.w,
+                              height: 18.w,
+                              child: const CircularProgressIndicator(
+                                strokeWidth: 2.2,
+                                color: Color(0xFFFAF8F4),
+                              ),
+                            )
+                          : const Text('送出回饋'),
+                    ),
                   ),
-                  child: Text('取消',
-                      style: TextStyle(
-                          fontSize: 14.sp,
-                          color: isDark
-                              ? const Color(0xFFA3ABB6)
-                              : AppColors.textSecondary)),
-                ),
-              ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: FilledButton(
-                  onPressed: _isSending ? null : _submitFeedback,
-                  style: FilledButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14.r)),
-                  ),
-                  child: _isSending
-                      ? SizedBox(
-                          width: 18.w,
-                          height: 18.w,
-                          child: const CircularProgressIndicator(
-                              strokeWidth: 2.5, color: Colors.white),
-                        )
-                      : Text('提交',
-                          style: TextStyle(
-                              fontSize: 14.sp,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold)),
-                ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -254,19 +225,24 @@ class _FeedbackSheetState extends State<FeedbackSheet> {
   Future<void> _submitFeedback() async {
     final content = _feedbackController.text.trim();
     if (content.isEmpty) {
-      CustomToast.show(context, '請填寫回饋內容！');
-
+      CustomToast.show(
+        context,
+        '請填寫回饋內容後再送出',
+        icon: PhosphorIconsRegular.warningCircle,
+      );
       return;
     }
 
     setState(() => _isSending = true);
-
-    // 模擬網路傳輸延遲約 1 秒，提供真實載入感 (模擬網路延遲 1 秒)
-    await Future<void>.delayed(const Duration(milliseconds: 900));
+    await Future<void>.delayed(const Duration(milliseconds: 700));
 
     if (mounted) {
       Navigator.pop(context);
-      CustomToast.show(context, '感謝回報！我們會盡快處理「$_category」問題。');
+      CustomToast.show(
+        context,
+        '感謝您的「$_category」回饋，編輯團隊已收悉。',
+        icon: PhosphorIconsFill.checkCircle,
+      );
     }
   }
 }

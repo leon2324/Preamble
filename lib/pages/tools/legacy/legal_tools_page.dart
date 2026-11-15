@@ -354,9 +354,7 @@ class _LegalToolsPageState extends State<LegalToolsPage> {
     final title = titleController.text.trim();
     final note = noteController.text.trim();
     if (title.isEmpty) {
-      ScaffoldMessenger.of(sheetContext)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(const SnackBar(content: Text('請先輸入證據名稱。')));
+      CustomToast.show(sheetContext, '請先輸入證據名稱。');
       return;
     }
 

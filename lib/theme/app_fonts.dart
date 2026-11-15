@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 class AppFonts {
   AppFonts._();
 
+  static const nunito = 'Nunito';
+  static const openHuninn = 'OpenHuninn';
   static const inter = 'Inter';
   static const sansTW = 'SourceHanSansTW';
   static const sansCN = 'SourceHanSansCN';
@@ -17,28 +19,26 @@ class AppFonts {
   static const serifJP = 'SourceHanSerifJP';
   static const kai = 'Kai';
 
-  /// App 預設先用 Inter 呈現英文與數字，再依序 fallback 到繁中、日文、簡中。
-  /// Preamble 主要服務台灣使用者，所以繁中 TW 必須排在 JP/CN 前面，避免同字異形被日文字形搶走。
-  static const defaultFamily = inter;
+  /// 全站改採圓潤親切的「Nunito + 粉圓體 OpenHuninn」組合，
+  /// 讓英文、數字與繁體中文都呈現溫暖、無壓力的生活工具手感。
+  static const defaultFamily = nunito;
   static const defaultFallbacks = <String>[
+    openHuninn,
     sansTW,
-    sansJP,
-    sansCN,
-    kai,
     'PingFang TC',
     'Noto Sans TC',
+    sansJP,
+    sansCN,
     'sans-serif',
   ];
 
-  /// 明體 fallback 給法律條文、判決摘錄、歷史文本這類需要比較正式語氣的內容使用。
+  /// 條文原文框專用清晰黑體（保留微弱區隔但不使用生硬宋體）。
   static const serifFallbacks = <String>[
-    serifTW,
-    serifJP,
-    serifCN,
-    kai,
-    'Songti TC',
-    'STSong',
-    'serif',
+    sansTW,
+    openHuninn,
+    'PingFang TC',
+    'Noto Sans TC',
+    'sans-serif',
   ];
 
   /// Flutter 的 TextTheme 不會自動知道我們新增的字體；透過這個 helper 套用，

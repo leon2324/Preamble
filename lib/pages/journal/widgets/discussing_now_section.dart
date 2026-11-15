@@ -10,6 +10,7 @@ import 'package:preamble/pages/journal/data/journal_page_items.dart';
 import 'package:preamble/pages/journal/widgets/journal_palette.dart';
 import 'package:preamble/pages/journal/widgets/journal_section_header.dart';
 import 'package:preamble/pages/journal/widgets/discussion_detail_page.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 
 class DiscussingNowSection extends StatelessWidget {
   const DiscussingNowSection({super.key, required this.palette});
@@ -55,6 +56,7 @@ class _DiscussionTrendCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     // 不綁死安全高度，改用 minHeight 支援特大字體
     final minH = (50.h < 50 ? 50.0 : 50.h);
 
@@ -76,16 +78,16 @@ class _DiscussionTrendCard extends StatelessWidget {
         child: Ink(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
           decoration: BoxDecoration(
-            color: isPrimary ? const Color(0xFFEAF7F2) : palette.surface,
+            color: isPrimary ? t.brandContainer : t.surface,
             borderRadius: BorderRadius.circular(16.r),
             border: Border.all(
               color: isPrimary
-                  ? const Color(0xFFAACFC3)
-                  : palette.border.withValues(alpha: 0.75),
+                  ? t.brandPrimary.withValues(alpha: 0.45)
+                  : t.border,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: isPrimary ? 0.05 : 0.028),
+                color: t.shadowAmbient,
                 blurRadius: isPrimary ? 14 : 10,
                 offset: const Offset(0, 5),
               ),
@@ -110,10 +112,10 @@ class _DiscussionTrendCard extends StatelessWidget {
                         item.title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 13.8.sp,
-                          fontWeight: FontWeight.w900,
-                          color: palette.primaryText,
+                        style: t.serifTitle(
+                          size: 14.sp,
+                          weight: FontWeight.w800,
+                          color: isPrimary ? t.brandOnContainer : t.textPrimary,
                           height: 1.3,
                         ),
                       ),
@@ -121,7 +123,6 @@ class _DiscussionTrendCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 8.w),
-                // 熱度分數區場加 maxWidth 防特竿螢幕擠動到左邊
                 ConstrainedBox(
                   constraints: BoxConstraints(minWidth: 72.w, maxWidth: 100.w),
                   child: Column(
@@ -130,11 +131,10 @@ class _DiscussionTrendCard extends StatelessWidget {
                     children: [
                       Text(
                         item.score.toStringAsFixed(1),
-                        style: TextStyle(
-                          fontSize: 15.sp,
-                          height: 1,
-                          fontWeight: FontWeight.w900,
-                          color: const Color(0xFFFF7A1A),
+                        style: t.tabularMetric(
+                          size: 15.sp,
+                          weight: FontWeight.w700,
+                          color: t.accentBrass,
                         ),
                       ),
                       SizedBox(height: 2.h),
@@ -142,11 +142,10 @@ class _DiscussionTrendCard extends StatelessWidget {
                         item.delta,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 9.8.sp,
-                          height: 1,
-                          fontWeight: FontWeight.w800,
-                          color: const Color(0xFF146B50),
+                        style: t.tabularMetric(
+                          size: 10.sp,
+                          weight: FontWeight.w700,
+                          color: t.semanticSuccess,
                         ),
                       ),
                     ],
@@ -156,7 +155,7 @@ class _DiscussionTrendCard extends StatelessWidget {
                 Icon(
                   CupertinoIcons.chevron_right,
                   size: 15.sp,
-                  color: palette.primaryText.withValues(alpha: 0.62),
+                  color: t.textMuted,
                 ),
               ],
             ),
@@ -250,6 +249,7 @@ class _DiscussionPreviewSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return SafeArea(
       top: false,
       child: Align(
@@ -257,7 +257,7 @@ class _DiscussionPreviewSheet extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 8.h),
           child: Material(
-            color: Colors.white,
+            color: t.surfaceElevated,
             borderRadius: BorderRadius.circular(28.r),
             clipBehavior: Clip.antiAlias,
             child: ConstrainedBox(
@@ -272,7 +272,7 @@ class _DiscussionPreviewSheet extends StatelessWidget {
                         width: 42.w,
                         height: 5.h,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFD5DCD8),
+                          color: t.borderStrong,
                           borderRadius: BorderRadius.circular(999.r),
                         ),
                       ),
@@ -284,11 +284,11 @@ class _DiscussionPreviewSheet extends StatelessWidget {
                         Expanded(
                           child: Text(
                             item.title,
-                            style: TextStyle(
-                              fontSize: 20.sp,
-                              height: 1.18,
-                              fontWeight: FontWeight.w900,
-                              color: const Color(0xFF173C37),
+                            style: t.serifTitle(
+                              size: 20.sp,
+                              height: 1.24,
+                              weight: FontWeight.w800,
+                              color: t.textPrimary,
                             ),
                           ),
                         ),
@@ -299,25 +299,25 @@ class _DiscussionPreviewSheet extends StatelessWidget {
                             vertical: 8.h,
                           ),
                           decoration: BoxDecoration(
-                            color: item.tint.withValues(alpha: 0.1),
+                            color: t.accentBrassContainer,
                             borderRadius: BorderRadius.circular(14.r),
                           ),
                           child: Column(
                             children: [
                               Text(
                                 item.score.toStringAsFixed(1),
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w900,
-                                  color: const Color(0xFFFF7A1A),
+                                style: t.tabularMetric(
+                                  size: 16.sp,
+                                  weight: FontWeight.w700,
+                                  color: t.accentOnBrassContainer,
                                 ),
                               ),
                               Text(
                                 item.delta,
-                                style: TextStyle(
-                                  fontSize: 10.sp,
-                                  fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF146B50),
+                                style: t.tabularMetric(
+                                  size: 10.sp,
+                                  weight: FontWeight.w700,
+                                  color: t.semanticSuccess,
                                 ),
                               ),
                             ],
@@ -332,11 +332,10 @@ class _DiscussionPreviewSheet extends StatelessWidget {
                     SizedBox(height: 6.h),
                     Text(
                       item.whyHot,
-                      style: TextStyle(
-                        fontSize: 12.2.sp,
+                      style: t.sansBody(
+                        size: 12.5.sp,
                         height: 1.6,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF5E6663),
+                        color: t.textSecondary,
                       ),
                     ),
                     SizedBox(height: 16.h),
@@ -353,18 +352,16 @@ class _DiscussionPreviewSheet extends StatelessWidget {
                                 vertical: 7.h,
                               ),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFF4F7F5),
+                                color: t.surfaceSubtle,
                                 borderRadius: BorderRadius.circular(999.r),
-                                border: Border.all(
-                                  color: item.tint.withValues(alpha: 0.22),
-                                ),
+                                border: Border.all(color: t.border),
                               ),
                               child: Text(
                                 label,
-                                style: TextStyle(
-                                  fontSize: 10.8.sp,
-                                  fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF35514B),
+                                style: t.sansBody(
+                                  size: 11.sp,
+                                  weight: FontWeight.w700,
+                                  color: t.textPrimary,
                                 ),
                               ),
                             ),
@@ -375,16 +372,16 @@ class _DiscussionPreviewSheet extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: CupertinoButton(
-                        color: const Color(0xFF173C37),
+                        color: t.brandPrimaryStrong,
                         borderRadius: BorderRadius.circular(16.r),
                         padding: EdgeInsets.symmetric(vertical: 14.h),
                         onPressed: onShowFullDiscussion,
                         child: Text(
                           '看完整討論',
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.white,
+                          style: t.sansTitle(
+                            size: 14.sp,
+                            weight: FontWeight.w700,
+                            color: const Color(0xFFFAF8F4),
                           ),
                         ),
                       ),
@@ -407,12 +404,13 @@ class _SheetLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Text(
       title,
-      style: TextStyle(
-        fontSize: 13.sp,
-        fontWeight: FontWeight.w900,
-        color: const Color(0xFF173C37),
+      style: t.sansTitle(
+        size: 13.sp,
+        weight: FontWeight.w700,
+        color: t.textPrimary,
       ),
     );
   }
@@ -425,22 +423,19 @@ class _MiniHeatChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Container(
       padding: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 10.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF5FAF8),
-        borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: item.tint.withValues(alpha: 0.14)),
-      ),
+      decoration: t.subtleBoxDecoration(radius: 18.r),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             '簡短熱度圖',
-            style: TextStyle(
-              fontSize: 11.4.sp,
-              fontWeight: FontWeight.w800,
-              color: const Color(0xFF35514B),
+            style: t.sansBody(
+              size: 11.5.sp,
+              weight: FontWeight.w700,
+              color: t.textPrimary,
             ),
           ),
           SizedBox(height: 10.h),
@@ -449,7 +444,7 @@ class _MiniHeatChart extends StatelessWidget {
             child: CustomPaint(
               painter: _MiniHeatChartPainter(
                 values: item.heatCurve,
-                color: item.tint,
+                color: t.brandPrimary,
               ),
               child: const SizedBox.expand(),
             ),
@@ -465,10 +460,10 @@ class _MiniHeatChart extends StatelessWidget {
                       : index == 0
                           ? TextAlign.left
                           : TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 9.7.sp,
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xFF6E7874),
+                  style: t.sansBody(
+                    size: 10.sp,
+                    weight: FontWeight.w600,
+                    color: t.textMuted,
                   ),
                 ),
               );

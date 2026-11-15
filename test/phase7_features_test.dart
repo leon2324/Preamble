@@ -29,7 +29,9 @@ void main() {
 
   group('Phase 7 UI/UX Components Tests', () {
     test('PreambleTheme generates Light and Dark themes', () {
+      // ignore: deprecated_member_use_from_same_package
       final lightTheme = PreambleTheme.getLightTheme();
+      // ignore: deprecated_member_use_from_same_package
       final darkTheme = PreambleTheme.getDarkTheme();
 
       expect(lightTheme.brightness, Brightness.light);

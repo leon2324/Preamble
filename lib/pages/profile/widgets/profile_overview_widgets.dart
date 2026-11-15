@@ -1,15 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/pages/following/following_page.dart';
-import 'package:preamble/theme/app_colors.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 
 import 'profile_editor.dart';
 
-// 這個檔案集中收納個人頁上半部的展示型 widgets。
-// 會使用 AppState 讀取統計資料與保留既有 FollowingPage 導航，但不在此新增資料寫入流程。
+/// 計算與 `FollowingPage` 100% 一致的個人中心即時統計數據。
+class ProfileSyncedMetrics {
+  const ProfileSyncedMetrics({
+    required this.savedCount,
+    required this.followedCount,
+    required this.noteCount,
+    required this.draftCount,
+  });
 
-/// 專屬頭像組件，支援訪客、會員與 Pro 訂閱者特效。
+  factory ProfileSyncedMetrics.fromState(PreambleState appState) {
+    final following = appState.followingSummary;
+    final savedCaseTotal = <String>{
+      ...appState.savedCaseIds,
+      ...following.savedCaseIds,
+    }.length;
+    final savedTotal = savedCaseTotal +
+        following.savedStatuteIds.length +
+        following.savedArticleIds.length;
+    final followedTotal = following.followedCaseIds.length +
+        following.followedStatuteIds.length +
+        following.followedTopicIds.length;
+
+    return ProfileSyncedMetrics(
+      savedCount: savedTotal,
+      followedCount: followedTotal,
+      noteCount: appState.caseNoteDrafts.length,
+      draftCount: appState.documentRepository.drafts.length,
+    );
+  }
+
+  final int savedCount;
+  final int followedCount;
+  final int noteCount;
+  final int draftCount;
+}
+
+/// 專屬頭像組件，支援訪客、一般會員與 PRO 專業訂閱者典藏古銅金光環。
 class AvatarWidget extends StatelessWidget {
   const AvatarWidget({
     super.key,
@@ -26,29 +60,28 @@ class AvatarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final surfaceColor = isDark ? const Color(0xFF171C22) : Colors.white;
+    final t = context.tokens;
     final avatar = isGuest ? null : getAvatarById(avatarUrl);
 
-    Widget avatarCore = Container(
+    final avatarCore = Container(
       width: size.w,
       height: size.w,
       decoration: BoxDecoration(
         color: isGuest
-            ? (isDark ? const Color(0xFF2B3441) : AppColors.chipSurface)
-            : avatar!.backgroundColor,
+            ? t.surfaceSubtle
+            : (t.isDark
+                ? avatar!.color.withValues(alpha: 0.18)
+                : avatar!.backgroundColor),
         shape: BoxShape.circle,
-        border: Border.all(
-            color: isDark ? const Color(0xFF2B3441) : AppColors.border,
-            width: 1.w),
+        border: Border.all(color: t.border, width: 1.w),
       ),
       child: Center(
         child: Icon(
-          isGuest ? Icons.person_rounded : avatar!.icon,
+          isGuest ? PhosphorIconsRegular.user : avatar!.icon,
           color: isGuest
-              ? (isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary)
-              : avatar!.color,
-          size: (size * 0.52).sp,
+              ? t.textSecondary
+              : (t.isDark ? t.brandPrimary : avatar!.color),
+          size: (size * 0.48).sp,
         ),
       ),
     );
@@ -61,13 +94,13 @@ class AvatarWidget extends StatelessWidget {
             padding: EdgeInsets.all(3.w),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: AppColors.accent, width: 2.w),
+              border: Border.all(color: t.accentBrass, width: 2.w),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.accent.withValues(alpha: 0.3),
-                  blurRadius: 10,
-                  spreadRadius: 1.5,
-                )
+                  color: t.accentBrass.withValues(alpha: 0.26),
+                  blurRadius: 12,
+                  spreadRadius: 1,
+                ),
               ],
             ),
             child: avatarCore,
@@ -76,19 +109,17 @@ class AvatarWidget extends StatelessWidget {
             bottom: -2.h,
             right: -2.w,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+              padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
               decoration: BoxDecoration(
-                color: AppColors.accent,
+                color: t.brandPrimaryStrong,
                 borderRadius: BorderRadius.circular(6.r),
-                border: Border.all(color: surfaceColor, width: 1.5.w),
+                border: Border.all(color: t.accentBrass, width: 1.2.w),
               ),
               child: Text(
                 'PRO',
-                style: TextStyle(
-                  fontSize: 8.5.sp,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
-                  letterSpacing: 0.5,
+                style: t.tabularMetric(
+                  size: 8.5.sp,
+                  color: t.accentBrass,
                 ),
               ),
             ),
@@ -101,279 +132,291 @@ class AvatarWidget extends StatelessWidget {
   }
 }
 
-/// 儀表板 2x2 對稱卡片網格與下方 AI 提問紀錄 Banner。
+/// 個人名片內嵌之三欄即時數據快覽橫條（收藏案卷・法規 / 追蹤動態 / 隨手筆記），
+/// 點擊直接進入 `FollowingPage` 對應分頁。
+class ProfileQuickStatsStrip extends StatelessWidget {
+  const ProfileQuickStatsStrip({
+    super.key,
+    required this.metrics,
+  });
+
+  final ProfileSyncedMetrics metrics;
+
+  void _openTab(BuildContext context, String tab) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => FollowingPage(initialTab: tab),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 6.w),
+      decoration: t.subtleBoxDecoration(radius: 16.r),
+      child: IntrinsicHeight(
+        child: Row(
+          children: [
+            Expanded(
+              child: _QuickStatCell(
+                label: '收藏案卷・法規',
+                count: metrics.savedCount,
+                onTap: () => _openTab(context, 'collections'),
+              ),
+            ),
+            VerticalDivider(width: 1, thickness: 1, color: t.border),
+            Expanded(
+              child: _QuickStatCell(
+                label: '追蹤動態',
+                count: metrics.followedCount,
+                onTap: () => _openTab(context, 'updates'),
+              ),
+            ),
+            VerticalDivider(width: 1, thickness: 1, color: t.border),
+            Expanded(
+              child: _QuickStatCell(
+                label: '隨手筆記',
+                count: metrics.noteCount,
+                onTap: () => _openTab(context, 'notes'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _QuickStatCell extends StatelessWidget {
+  const _QuickStatCell({
+    required this.label,
+    required this.count,
+    required this.onTap,
+  });
+
+  final String label;
+  final int count;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12.r),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 4.w),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '$count',
+              style: t.tabularMetric(
+                size: 17.sp,
+                color: t.brandPrimary,
+              ),
+            ),
+            SizedBox(height: 3.h),
+            Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: t.sansBody(
+                size: 11.sp,
+                weight: FontWeight.w600,
+                color: t.textSecondary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 儀表板 2x2 對稱卡片網格與下方小法助提問紀錄橫幅。
 class DashboardGrid extends StatelessWidget {
   const DashboardGrid({super.key, required this.appState});
 
   final PreambleState appState;
 
+  void _openTab(BuildContext context, String tab) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => FollowingPage(initialTab: tab),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final cardColor = isDark ? const Color(0xFF171C22) : Colors.white;
-    final borderColor = isDark ? const Color(0xFF2B3441) : AppColors.border;
-    final textMuted =
-        isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
+    final t = context.tokens;
+    final metrics = ProfileSyncedMetrics.fromState(appState);
 
-    // 計算使用者追蹤的總項目數量（加總案件、法條與主題的追蹤數）
-    final following = appState.followingSummary;
-    final followedCount = following.followedCaseIds.length +
-        following.followedStatuteIds.length +
-        following.followedTopicIds.length;
-    final savedCaseCount = {
-      ...appState.savedCaseIds,
-      ...following.savedCaseIds,
-    }.length;
-    final savedCount = savedCaseCount +
-        following.savedStatuteIds.length +
-        following.savedArticleIds.length;
-
-    // 建立 4 個儀表板主要資料項目，分別對接 AppState 裡的真實筆數
     final items = [
       _DashboardItemData(
         title: '我的收藏',
-        value: '$savedCount 筆',
-        icon: Icons.bookmark_rounded,
-        color: AppColors.primary,
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (__) => const FollowingPage(initialTab: 'collections'),
-            ),
-          );
-        },
+        value: '${metrics.savedCount} 筆',
+        icon: PhosphorIconsRegular.bookmarks,
+        color: t.brandPrimary,
+        bgColor: t.brandContainer,
+        onTap: () => _openTab(context, 'collections'),
       ),
       _DashboardItemData(
-        title: '我的追蹤',
-        value: '$followedCount 筆',
-        icon: Icons.notifications_active_rounded,
-        color: const Color(0xFF3F51B5),
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (__) => const FollowingPage(initialTab: 'tabs'),
-            ),
-          );
-        },
+        title: '追蹤動態',
+        value: '${metrics.followedCount} 筆',
+        icon: PhosphorIconsRegular.bellRinging,
+        color: t.semanticInfo,
+        bgColor: t.semanticInfoContainer,
+        onTap: () => _openTab(context, 'updates'),
       ),
       _DashboardItemData(
         title: '我的筆記',
-        value: '${appState.caseNoteDrafts.length} 筆',
-        icon: Icons.note_alt_rounded,
-        color: const Color(0xFF2E7D32),
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (__) => const FollowingPage(initialTab: 'notes'),
-            ),
-          );
-        },
+        value: '${metrics.noteCount} 筆',
+        icon: PhosphorIconsRegular.notebook,
+        color: t.semanticSuccess,
+        bgColor: t.semanticSuccessContainer,
+        onTap: () => _openTab(context, 'notes'),
       ),
       _DashboardItemData(
         title: '文件草稿',
-        value: '${appState.documentRepository.drafts.length} 份',
-        icon: Icons.description_rounded,
-        color: const Color(0xFFC96B3B),
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (__) => const FollowingPage(initialTab: 'drafts'),
-            ),
-          );
-        },
+        value: '${metrics.draftCount} 份',
+        icon: PhosphorIconsRegular.fileText,
+        color: t.accentOnBrassContainer,
+        bgColor: t.accentBrassContainer,
+        onTap: () => _openTab(context, 'drafts'),
       ),
     ];
 
-    final cardWidth = (MediaQuery.sizeOf(context).width - 42.w) / 2;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final cardWidth = (constraints.maxWidth - 10.w) / 2;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // 2x2 雙欄卡片網格佈局 (2x2 Grid)
-        Wrap(
-          spacing: 10.w,
-          runSpacing: 10.h,
-          children: items.map((item) {
-            return SizedBox(
-              width: cardWidth,
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Wrap(
+              spacing: 10.w,
+              runSpacing: 10.h,
+              children: items.map((item) {
+                return SizedBox(
+                  width: cardWidth,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: item.onTap,
+                      borderRadius: BorderRadius.circular(20.r),
+                      child: Container(
+                        padding: EdgeInsets.all(15.w),
+                        decoration: t.cardDecoration(
+                          radius: 20.r,
+                          elevated: false,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(8.w),
+                                  decoration: BoxDecoration(
+                                    color: item.bgColor,
+                                    borderRadius: BorderRadius.circular(11.r),
+                                  ),
+                                  child: Icon(
+                                    item.icon,
+                                    color: item.color,
+                                    size: 19.sp,
+                                  ),
+                                ),
+                                Icon(
+                                  PhosphorIconsRegular.arrowUpRight,
+                                  size: 14.sp,
+                                  color: t.textMuted,
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 12.h),
+                            Text(
+                              item.title,
+                              style: t.sansTitle(size: 14.sp),
+                            ),
+                            SizedBox(height: 3.h),
+                            Text(
+                              item.value,
+                              style: t.tabularMetric(
+                                size: 12.5.sp,
+                                weight: FontWeight.w600,
+                                color: t.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+            SizedBox(height: 10.h),
+            Material(
+              color: Colors.transparent,
               child: InkWell(
-                onTap: item.onTap,
+                onTap: () => _openTab(context, 'questions'),
                 borderRadius: BorderRadius.circular(20.r),
                 child: Container(
-                  padding: EdgeInsets.all(14.w),
-                  decoration: BoxDecoration(
-                    color: cardColor,
-                    borderRadius: BorderRadius.circular(20.r),
-                    border: Border.all(color: borderColor),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  padding: EdgeInsets.all(15.w),
+                  decoration: t.cardDecoration(radius: 20.r, elevated: false),
+                  child: Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.all(6.w),
+                        padding: EdgeInsets.all(9.w),
                         decoration: BoxDecoration(
-                          color: item.color.withValues(alpha: 0.08),
-                          shape: BoxShape.circle,
+                          color: t.accentBrassContainer,
+                          borderRadius: BorderRadius.circular(12.r),
                         ),
-                        child: Icon(item.icon, color: item.color, size: 20.sp),
-                      ),
-                      SizedBox(height: 12.h),
-                      Text(
-                        item.title,
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w900,
-                          color: isDark
-                              ? const Color(0xFFF2F4F7)
-                              : AppColors.textPrimary,
+                        child: Icon(
+                          PhosphorIconsRegular.chatsCircle,
+                          color: t.accentBrass,
+                          size: 20.sp,
                         ),
                       ),
-                      SizedBox(height: 2.h),
-                      Text(
-                        item.value,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: textMuted,
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '小法助提問紀錄',
+                              style: t.sansTitle(size: 14.sp),
+                            ),
+                            SizedBox(height: 2.h),
+                            Text(
+                              '檢視常用問診題庫、法源索引與今日剩餘額度',
+                              style: t.sansBody(
+                                size: 11.5.sp,
+                                color: t.textSecondary,
+                              ),
+                            ),
+                          ],
                         ),
+                      ),
+                      Icon(
+                        PhosphorIconsRegular.caretRight,
+                        color: t.textMuted,
+                        size: 15.sp,
                       ),
                     ],
                   ),
                 ),
               ),
-            );
-          }).toList(),
-        ),
-        SizedBox(height: 10.h),
-        // 小法助提問紀錄橫幅，供使用者一鍵進入對答歷史 (AI Chat History Horizontal Banner)
-        InkWell(
-          onTap: () {
-            _showMockSheet(
-              context,
-              '小法助對答歷史',
-              appState.isGuest
-                  ? '訪客帳戶對話未同步。請登入以雲端保存對答紀錄。'
-                  : '目前本地模擬對話紀錄已存檔，實時後端雲端對話同步即將推出。',
-            );
-          },
-          borderRadius: BorderRadius.circular(20.r),
-          child: Container(
-            padding: EdgeInsets.all(14.w),
-            decoration: BoxDecoration(
-              color: cardColor,
-              borderRadius: BorderRadius.circular(20.r),
-              border: Border.all(color: borderColor),
             ),
-            child: Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(8.w),
-                  decoration: BoxDecoration(
-                    color: AppColors.accent.withValues(alpha: 0.08),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(Icons.smart_toy_rounded,
-                      color: AppColors.accent, size: 22.sp),
-                ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '小法助提問紀錄',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w900,
-                          color: isDark
-                              ? const Color(0xFFF2F4F7)
-                              : AppColors.textPrimary,
-                        ),
-                      ),
-                      SizedBox(height: 2.h),
-                      Text(
-                        appState.isGuest ? '訪客對答未同步' : '點擊檢視與 AI 助手的歷史諮詢',
-                        style: TextStyle(
-                          fontSize: 11.5.sp,
-                          color: textMuted,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  color:
-                      isDark ? const Color(0xFF556070) : AppColors.placeholder,
-                  size: 14.sp,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  void _showMockSheet(BuildContext context, String title, String message) {
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        final isDark = Theme.of(context).brightness == Brightness.dark;
-        return Padding(
-          padding: EdgeInsets.all(16.w),
-          child: Container(
-            decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF171C22) : Colors.white,
-              borderRadius: BorderRadius.circular(24.r),
-              border: Border.all(
-                  color: isDark ? const Color(0xFF2B3441) : AppColors.border),
-            ),
-            padding: EdgeInsets.all(20.w),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.folder_open_rounded,
-                    color: AppColors.accent, size: 40.sp),
-                SizedBox(height: 12.h),
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w900,
-                    color: isDark
-                        ? const Color(0xFFF2F4F7)
-                        : AppColors.textPrimary,
-                  ),
-                ),
-                SizedBox(height: 8.h),
-                Text(
-                  message,
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    color: isDark
-                        ? const Color(0xFFA3ABB6)
-                        : AppColors.textSecondary,
-                    height: 1.45,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 20.h),
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r)),
-                    ),
-                    child: const Text('我知道了'),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          ],
         );
       },
     );
@@ -381,11 +424,12 @@ class DashboardGrid extends StatelessWidget {
 }
 
 class _DashboardItemData {
-  _DashboardItemData({
+  const _DashboardItemData({
     required this.title,
     required this.value,
     required this.icon,
     required this.color,
+    required this.bgColor,
     required this.onTap,
   });
 
@@ -393,119 +437,124 @@ class _DashboardItemData {
   final String value;
   final IconData icon;
   final Color color;
+  final Color bgColor;
   final VoidCallback onTap;
 }
 
-/// 精美金屬漸層 Pro 升級 Banner。
+/// 靜奢深松墨綠 × 典藏古銅金 PRO 會員權益橫幅卡片。
 class ProUpgradeBanner extends StatelessWidget {
-  const ProUpgradeBanner({super.key, required this.onTap});
+  const ProUpgradeBanner({
+    super.key,
+    required this.isPro,
+    required this.expiryText,
+    required this.onTap,
+  });
 
+  final bool isPro;
+  final String? expiryText;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF1E2F50), Color(0xFF131D33)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+    final t = context.tokens;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(20.r),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x1A000000),
-            blurRadius: 12,
-            offset: Offset(0, 6),
-          )
-        ],
-      ),
-      child: Stack(
-        children: [
-          // 裝飾用背景圓形發光特效 (Background decorative glow)
-          Positioned(
-            right: -20.w,
-            top: -20.h,
-            child: Container(
-              width: 100.w,
-              height: 100.w,
-              decoration: BoxDecoration(
-                color: AppColors.accent.withValues(alpha: 0.12),
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.accent.withValues(alpha: 0.12),
-                    blurRadius: 40,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(18.w),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.workspace_premium_rounded,
-                              color: AppColors.accent, size: 20.sp),
-                          SizedBox(width: 6.w),
-                          Text(
-                            '解鎖 緒言 Preamble Pro',
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w900,
-                              color: const Color(0xFFFAF7F2),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 6.h),
-                      Text(
-                        '享案件卷宗、高級小法助額度、文件匯出與追蹤提醒。',
-                        style: TextStyle(
-                          fontSize: 11.5.sp,
-                          color: const Color(0xFFCED5E0),
-                          height: 1.4,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(width: 10.w),
-                ElevatedButton(
-                  onPressed: onTap,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.accent,
-                    foregroundColor: const Color(0xFF1E2F50),
-                    elevation: 0,
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r)),
-                  ),
-                  child: Text(
-                    '暸解更多',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                ),
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(18.w),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                t.brandPrimaryStrong,
+                const Color(0xFF122921),
               ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
+            borderRadius: BorderRadius.circular(20.r),
+            border: Border.all(
+              color: t.accentBrass.withValues(alpha: 0.45),
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: t.shadowAmbient,
+                blurRadius: 16,
+                offset: const Offset(0, 6),
+              ),
+            ],
           ),
-        ],
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(10.w),
+                decoration: BoxDecoration(
+                  color: t.accentBrass.withValues(alpha: 0.16),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: t.accentBrass.withValues(alpha: 0.55),
+                  ),
+                ),
+                child: Icon(
+                  PhosphorIconsFill.crown,
+                  color: t.accentBrass,
+                  size: 22.sp,
+                ),
+              ),
+              SizedBox(width: 14.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      isPro ? '緒言 PRO 專業會員已開通' : '升級 緒言 Preamble PRO',
+                      style: t.serifTitle(
+                        size: 16.sp,
+                        color: const Color(0xFFFAF8F4),
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      isPro
+                          ? (expiryText ?? '享無限次 AI 問診、客製公文生成與無浮水印 PDF')
+                          : '解鎖無限次 AI 問診、客製公文生成與無浮水印 PDF 匯出',
+                      style: t.sansBody(
+                        size: 11.5.sp,
+                        color: const Color(0xFFD6E2DC),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 10.w),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 11.w, vertical: 6.h),
+                decoration: BoxDecoration(
+                  color: t.accentBrass,
+                  borderRadius: BorderRadius.circular(99.r),
+                ),
+                child: Text(
+                  isPro ? '管理方案' : '立即解鎖',
+                  style: t.sansBody(
+                    size: 11.5.sp,
+                    weight: FontWeight.w700,
+                    color: const Color(0xFF151C19),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
 
+/// 讀者法學智識進修歷程橫幅（零 3D Emoji，統一使用 Phosphor 語意圖示）。
 class LearningProgressBanner extends StatelessWidget {
   const LearningProgressBanner({super.key, required this.appState});
 
@@ -513,82 +562,70 @@ class LearningProgressBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final cardColor = isDark ? const Color(0xFF171C22) : Colors.white;
-    final borderColor = isDark ? const Color(0xFF2B3441) : AppColors.border;
-    final textMuted =
-        isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
-
+    final t = context.tokens;
     final savedStatuteCount = appState.followingSummary.savedStatuteIds.length;
 
-    // 根據追蹤法條數計算等級
-    String levelName = '法學小白 🐣';
+    String levelName = '法學入門讀者';
     if (savedStatuteCount >= 1 && savedStatuteCount <= 2) {
-      levelName = '法學初學者 🔍';
+      levelName = '法規研習讀者';
     } else if (savedStatuteCount >= 3) {
-      levelName = '法學進修者 🏛️';
+      levelName = '律政進修學者';
     }
 
-    return InkWell(
-      onTap: () {
-        showModalBottomSheet<void>(
-          context: context,
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          builder: (context) => AchievementRoomSheet(appState: appState),
-        );
-      },
-      borderRadius: BorderRadius.circular(20.r),
-      child: Container(
-        padding: EdgeInsets.all(14.w),
-        decoration: BoxDecoration(
-          color: cardColor,
-          borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(color: borderColor),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: EdgeInsets.all(8.w),
-              decoration: BoxDecoration(
-                color: const Color(0xFFD6A85F).withValues(alpha: 0.08),
-                shape: BoxShape.circle,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          showModalBottomSheet<void>(
+            context: context,
+            isScrollControlled: true,
+            useSafeArea: true,
+            backgroundColor: Colors.transparent,
+            builder: (_) => AchievementRoomSheet(appState: appState),
+          );
+        },
+        borderRadius: BorderRadius.circular(20.r),
+        child: Container(
+          padding: EdgeInsets.all(15.w),
+          decoration: t.cardDecoration(radius: 20.r, elevated: false),
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(9.w),
+                decoration: BoxDecoration(
+                  color: t.brandContainer,
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Icon(
+                  PhosphorIconsRegular.medal,
+                  color: t.brandPrimary,
+                  size: 20.sp,
+                ),
               ),
-              child: Icon(Icons.workspace_premium_rounded,
-                  color: const Color(0xFFD6A85F), size: 22.sp),
-            ),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '我的學習歷程',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w900,
-                      color: isDark
-                          ? const Color(0xFFF2F4F7)
-                          : AppColors.textPrimary,
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '我的學習歷程',
+                      style: t.sansTitle(size: 14.sp),
                     ),
-                  ),
-                  SizedBox(height: 2.h),
-                  Text(
-                    '等級：$levelName (已收藏 $savedStatuteCount 條法規)',
-                    style: TextStyle(
-                      fontSize: 11.5.sp,
-                      color: textMuted,
+                    SizedBox(height: 2.h),
+                    Text(
+                      '目前頭銜：$levelName（已典藏 $savedStatuteCount 條法規）',
+                      style: t.sansBody(size: 11.5.sp, color: t.textSecondary),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios_rounded,
-              color: isDark ? const Color(0xFF556070) : AppColors.placeholder,
-              size: 14.sp,
-            ),
-          ],
+              Icon(
+                PhosphorIconsRegular.caretRight,
+                color: t.textMuted,
+                size: 15.sp,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -602,107 +639,96 @@ class AchievementRoomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final surfaceColor = isDark ? const Color(0xFF171C22) : Colors.white;
-    final textMuted =
-        isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
-
-    final savedStatuteCount = appState.followingSummary.savedStatuteIds.length;
-    final savedCaseCount = appState.savedCaseIds.length;
+    final t = context.tokens;
+    final following = appState.followingSummary;
+    final savedStatuteCount = following.savedStatuteIds.length;
+    final savedCaseCount = <String>{
+      ...appState.savedCaseIds,
+      ...following.savedCaseIds,
+    }.length;
     final noteCount = appState.caseNoteDrafts.length;
-
-    // 根據條件計算成就啟動狀態
-    final hasNovice = savedStatuteCount >= 1;
-    final hasScholar = savedStatuteCount >= 3;
-    final hasCaseMaster = savedCaseCount >= 1;
-    final hasNoteTaker = noteCount >= 1;
 
     return Container(
       decoration: BoxDecoration(
-        color: surfaceColor,
+        color: t.surfaceElevated,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+        border: Border.all(color: t.border),
       ),
       padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 24.h),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: Container(
-                width: 40.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF2B3441) : AppColors.border,
-                  borderRadius: BorderRadius.circular(2.r),
+      child: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  width: 38.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: t.borderStrong,
+                    borderRadius: BorderRadius.circular(99.r),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 16.h),
-            Text(
-              '法律成就陳列室',
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w900,
-                color: isDark ? const Color(0xFFF2F4F7) : AppColors.textPrimary,
+              SizedBox(height: 16.h),
+              Text(
+                '法律學習成就陳列室',
+                style: t.serifTitle(size: 17.sp),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20.h),
-
-            // 成就列表
-            _buildAchievementTile(
-              context,
-              title: '法學初學者',
-              description: '收藏至少 1 條法規 (已收藏 $savedStatuteCount 條)',
-              icon: Icons.search_rounded,
-              isUnlocked: hasNovice,
-              badgeColor: const Color(0xFF2E7D32),
-            ),
-            SizedBox(height: 10.h),
-            _buildAchievementTile(
-              context,
-              title: '法學進修者',
-              description: '收藏至少 3 條法規 (已收藏 $savedStatuteCount 條)',
-              icon: Icons.account_balance_rounded,
-              isUnlocked: hasScholar,
-              badgeColor: const Color(0xFFD6A85F),
-            ),
-            SizedBox(height: 10.h),
-            _buildAchievementTile(
-              context,
-              title: '修法達人',
-              description: '收藏至少 1 筆判決案件 (已收藏 $savedCaseCount 筆)',
-              icon: Icons.gavel_rounded,
-              isUnlocked: hasCaseMaster,
-              badgeColor: const Color(0xFFC96B3B),
-            ),
-            SizedBox(height: 10.h),
-            _buildAchievementTile(
-              context,
-              title: '卷宗推手',
-              description: '撰寫至少 1 筆案件筆記 (已撰寫 $noteCount 筆)',
-              icon: Icons.drive_file_rename_outline_rounded,
-              isUnlocked: hasNoteTaker,
-              badgeColor: const Color(0xFF3F51B5),
-            ),
-            SizedBox(height: 24.h),
-
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton(
+              SizedBox(height: 18.h),
+              _buildAchievementTile(
+                context,
+                title: '法規研習讀者',
+                description: '典藏至少 1 條常用法規（目前 $savedStatuteCount 條）',
+                icon: PhosphorIconsRegular.bookOpenText,
+                isUnlocked: savedStatuteCount >= 1,
+                badgeColor: t.semanticSuccess,
+              ),
+              SizedBox(height: 10.h),
+              _buildAchievementTile(
+                context,
+                title: '律政進修學者',
+                description: '典藏至少 3 條常用法規（目前 $savedStatuteCount 條）',
+                icon: PhosphorIconsRegular.graduationCap,
+                isUnlocked: savedStatuteCount >= 3,
+                badgeColor: t.accentBrass,
+              ),
+              SizedBox(height: 10.h),
+              _buildAchievementTile(
+                context,
+                title: '判例閱卷達人',
+                description: '典藏至少 1 筆判決案卷（目前 $savedCaseCount 筆）',
+                icon: PhosphorIconsRegular.scales,
+                isUnlocked: savedCaseCount >= 1,
+                badgeColor: t.brandPrimary,
+              ),
+              SizedBox(height: 10.h),
+              _buildAchievementTile(
+                context,
+                title: '爭點筆記推手',
+                description: '撰寫至少 1 則法務筆記（目前 $noteCount 則）',
+                icon: PhosphorIconsRegular.notebook,
+                isUnlocked: noteCount >= 1,
+                badgeColor: t.semanticInfo,
+              ),
+              SizedBox(height: 22.h),
+              FilledButton(
                 onPressed: () => Navigator.pop(context),
                 style: FilledButton.styleFrom(
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: t.brandPrimaryStrong,
+                  foregroundColor: const Color(0xFFFAF8F4),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.r)),
+                    borderRadius: BorderRadius.circular(14.r),
+                  ),
                   padding: EdgeInsets.symmetric(vertical: 12.h),
                 ),
                 child: const Text('關閉'),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -716,84 +742,77 @@ class AchievementRoomSheet extends StatelessWidget {
     required bool isUnlocked,
     required Color badgeColor,
   }) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textMuted =
-        isDark ? const Color(0xFFA3ABB6) : AppColors.textSecondary;
-    final cardColor =
-        isDark ? const Color(0xFF0F1216) : const Color(0xFFFAF7F2);
-    final borderSide =
-        BorderSide(color: isDark ? const Color(0xFF2B3441) : AppColors.border);
+    final t = context.tokens;
 
     return Container(
-      padding: EdgeInsets.all(12.w),
+      padding: EdgeInsets.all(13.w),
       decoration: BoxDecoration(
-        color: cardColor,
+        color: isUnlocked ? t.surface : t.surfaceSubtle,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color:
-              isUnlocked ? badgeColor.withValues(alpha: 0.4) : borderSide.color,
-          width: isUnlocked ? 1.5.w : 1.w,
+          color: isUnlocked ? badgeColor.withValues(alpha: 0.45) : t.border,
+          width: isUnlocked ? 1.4 : 1.0,
         ),
       ),
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(8.w),
+            padding: EdgeInsets.all(9.w),
             decoration: BoxDecoration(
               color: isUnlocked
-                  ? badgeColor.withValues(alpha: 0.12)
-                  : Colors.grey.withValues(alpha: 0.1),
+                  ? badgeColor.withValues(alpha: 0.14)
+                  : t.surfaceMuted,
               shape: BoxShape.circle,
             ),
             child: Icon(
               icon,
-              color: isUnlocked ? badgeColor : Colors.grey,
-              size: 24.sp,
+              color: isUnlocked ? badgeColor : t.textMuted,
+              size: 21.sp,
             ),
           ),
-          SizedBox(width: 14.w),
+          SizedBox(width: 12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold,
-                        color: isUnlocked
-                            ? (isDark
-                                ? const Color(0xFFF2F4F7)
-                                : AppColors.textPrimary)
-                            : Colors.grey,
+                    Flexible(
+                      child: Text(
+                        title,
+                        style: t.sansTitle(
+                          size: 14.sp,
+                          color: isUnlocked ? t.textPrimary : t.textMuted,
+                        ),
                       ),
                     ),
                     if (isUnlocked) ...[
                       SizedBox(width: 6.w),
-                      Icon(Icons.check_circle_rounded,
-                          color: badgeColor, size: 14.sp),
+                      Icon(
+                        PhosphorIconsFill.checkCircle,
+                        color: badgeColor,
+                        size: 14.sp,
+                      ),
                     ],
                   ],
                 ),
                 SizedBox(height: 2.h),
                 Text(
                   description,
-                  style: TextStyle(
-                    fontSize: 11.5.sp,
-                    color: isUnlocked ? textMuted : Colors.grey,
+                  style: t.sansBody(
+                    size: 11.5.sp,
+                    color: isUnlocked ? t.textSecondary : t.textMuted,
                   ),
                 ),
               ],
             ),
           ),
           Text(
-            isUnlocked ? '已解鎖' : '未解鎖',
-            style: TextStyle(
-              fontSize: 11.sp,
-              fontWeight: FontWeight.bold,
-              color: isUnlocked ? badgeColor : Colors.grey,
+            isUnlocked ? '已達成' : '未解鎖',
+            style: t.sansBody(
+              size: 11.sp,
+              weight: FontWeight.w700,
+              color: isUnlocked ? badgeColor : t.textMuted,
             ),
           ),
         ],

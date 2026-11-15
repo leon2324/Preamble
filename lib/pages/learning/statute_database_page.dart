@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:preamble/components/shared/custom_toast.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:preamble/app/app_state.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:preamble/components/shared/mvp_state_widgets.dart';
 import 'package:preamble/data/common/app_loading_quotes.dart';
 import 'package:preamble/data/statutes/statute_item.dart';
 import 'package:preamble/data/statutes/statute_repository.dart';
 import 'package:preamble/pages/learning/know_law_page.dart';
-import 'package:preamble/theme/app_colors.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class StatuteDatabasePage extends StatefulWidget {
@@ -35,33 +37,39 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
   static const List<_StatuteQueryEntry> _popularQueries = [
     _StatuteQueryEntry(
       title: '民法第 184 條',
-      subtitle: '侵權行為',
+      articleBadge: '第 184 條',
+      subtitle: '侵權行為損害賠償請求權基礎',
       query: '民法 184',
     ),
     _StatuteQueryEntry(
       title: '租賃契約相關法條',
-      subtitle: '租賃、押金、修繕',
+      articleBadge: '民法債編',
+      subtitle: '房屋修繕義務、押金抵扣與終止租約',
       query: '租賃',
     ),
     _StatuteQueryEntry(
       title: '勞動基準法第 24 條',
-      subtitle: '工資、工時、加班',
+      articleBadge: '第 24 條',
+      subtitle: '平日與休息日延長工時加班費加成標準',
       query: '勞動基準法 24',
     ),
   ];
   static const List<_StatuteQueryEntry> _defaultRecentEntries = [
     _StatuteQueryEntry(
       title: '民法第 184 條',
+      articleBadge: '第 184 條',
       subtitle: '最後瀏覽：2026/04/23',
       query: '民法 184',
     ),
     _StatuteQueryEntry(
       title: '消費者保護法第 7 條',
+      articleBadge: '第 7 條',
       subtitle: '最後瀏覽：2026/04/22',
       query: '消費者保護法 7',
     ),
     _StatuteQueryEntry(
       title: '道路交通管理處罰條例第 56 條',
+      articleBadge: '第 56 條',
       subtitle: '最後瀏覽：2026/04/22',
       query: '道路交通管理處罰條例 56',
     ),
@@ -154,6 +162,7 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
       0,
       _StatuteQueryEntry(
         title: query,
+        articleBadge: '檢索',
         subtitle: '剛剛瀏覽',
         query: query,
       ),
@@ -172,46 +181,63 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
   void _openFilterSheet() {
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: AppColors.background,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(26.r)),
-      ),
-      builder: (context) {
-        return SafeArea(
-          top: false,
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(18.w, 18.h, 18.w, 22.h),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '篩選資料類型',
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.textPrimary,
+      backgroundColor: Colors.transparent,
+      builder: (sheetCtx) {
+        final st = sheetCtx.tokens;
+        return Container(
+          decoration: BoxDecoration(
+            color: st.surfaceElevated,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+            border: Border(top: BorderSide(color: st.borderStrong)),
+          ),
+          child: SafeArea(
+            top: false,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 24.h),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 36.w,
+                      height: 4.h,
+                      decoration: BoxDecoration(
+                        color: st.borderStrong,
+                        borderRadius: BorderRadius.circular(99.r),
+                      ),
+                    ),
                   ),
-                ),
-                SizedBox(height: 12.h),
-                Wrap(
-                  spacing: 8.w,
-                  runSpacing: 8.h,
-                  children: _quickFilters.map((label) {
-                    return _FilterChipButton(
-                      label: label,
-                      isSelected: label == _selectedFilter,
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        setState(() {
-                          _selectedFilter = label;
-                          _searchFuture = _searchStatutes();
-                        });
-                      },
-                    );
-                  }).toList(growable: false),
-                ),
-              ],
+                  SizedBox(height: 16.h),
+                  Text(
+                    '篩選法規位階與資料類型',
+                    style: st.serifTitle(size: 17.sp),
+                  ),
+                  SizedBox(height: 6.h),
+                  Text(
+                    '可依中央法規標準法位階快速過濾條文與函釋',
+                    style: st.sansBody(size: 12.sp),
+                  ),
+                  SizedBox(height: 14.h),
+                  Wrap(
+                    spacing: 8.w,
+                    runSpacing: 8.h,
+                    children: _quickFilters.map((label) {
+                      return _FilterChipButton(
+                        label: label,
+                        isSelected: label == _selectedFilter,
+                        onTap: () {
+                          Navigator.of(sheetCtx).pop();
+                          setState(() {
+                            _selectedFilter = label;
+                            _searchFuture = _searchStatutes();
+                          });
+                        },
+                      );
+                    }).toList(growable: false),
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -221,120 +247,147 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
 
   @override
   Widget build(BuildContext context) {
-    final topPadding = MediaQuery.paddingOf(context).top;
-
+    final t = context.tokens;
+    final padding = MediaQuery.paddingOf(context);
     final hasActiveSearch = _query.trim().isNotEmpty || _selectedFilter != '全部';
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF7F7F0),
-      body: Padding(
-        padding: EdgeInsets.fromLTRB(16.w, topPadding + 14.h, 16.w, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _StatuteTopBar(
-              onBack: () => Navigator.of(context).pop(),
-            ),
-            SizedBox(height: 18.h),
-            Row(
-              children: [
-                Expanded(
-                  child: _StatuteSearchField(
-                    controller: _searchController,
-                    onChanged: (value) {
-                      setState(() {
-                        _query = value;
-                        _searchFuture =
-                            hasActiveSearch ? _searchStatutes() : _searchFuture;
-                      });
-                    },
-                    onClear: () {
-                      // 教學註解：清除按鈕要同時清 TextField 與本頁用來篩選資料的 `_query`，
-                      // 否則畫面看起來清空了，列表仍會被舊關鍵字過濾。
-                      setState(() {
-                        _searchController.clear();
-                        _query = '';
-                        _searchFuture = null;
-                      });
-                    },
-                    onSubmitted: _submitSearch,
-                  ),
+    final Widget resultsSection = hasActiveSearch
+        ? FutureBuilder<StatuteSearchResult>(
+            future: _ensureSearchFuture(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const _StatuteLoadingState();
+              }
+
+              if (snapshot.hasError) {
+                return _StatuteErrorState(
+                  message: snapshot.error.toString(),
+                  onRetry: _reload,
+                );
+              }
+
+              final result = snapshot.data ??
+                  const StatuteSearchResult(
+                    items: [],
+                    isMock: false,
+                  );
+              final items = result.items.take(50).toList();
+              if (items.isEmpty) {
+                return const _StatuteEmptyState();
+              }
+
+              return ListView.separated(
+                physics: const BouncingScrollPhysics(),
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                padding: EdgeInsets.only(
+                  bottom: padding.bottom + 28.h,
                 ),
-                SizedBox(width: 10.w),
-                _FilterSquareButton(onTap: _openFilterSheet),
-              ],
-            ),
-            SizedBox(height: 14.h),
-            _StatuteFilterRail(
-              filters: _quickFilters,
-              selectedFilter: _selectedFilter,
-              onFilterTap: (label) {
+                itemCount: items.length,
+                separatorBuilder: (_, __) => SizedBox(height: 12.h),
+                itemBuilder: (context, index) {
+                  final item = items[index];
+                  return _StatuteResultCard(
+                    item: item,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (__) => StatuteDetailPage(item: item),
+                        ),
+                      );
+                    },
+                  );
+                },
+              );
+            },
+          )
+        : _StatuteLandingBody(
+            popularQueries: _popularQueries,
+            recentEntries: _recentEntries,
+            bottomPadding: padding.bottom + 28.h,
+            onQueryTap: _applyGuideQuery,
+            onClearRecent: _clearRecentEntries,
+          );
+
+    final headerWidgets = <Widget>[
+      _StatuteTopBar(
+        onBack: () => Navigator.of(context).pop(),
+      ),
+      SizedBox(height: 14.h),
+      Row(
+        children: [
+          Expanded(
+            child: _StatuteSearchField(
+              controller: _searchController,
+              onChanged: (value) {
                 setState(() {
-                  _selectedFilter = label;
-                  _searchFuture = _searchStatutes();
+                  _query = value;
+                  _searchFuture =
+                      hasActiveSearch ? _searchStatutes() : _searchFuture;
                 });
               },
+              onClear: () {
+                // 教學註解：清除按鈕要同時清 TextField 與本頁用來篩選資料的 `_query`，
+                // 否則畫面看起來清空了，列表仍會被舊關鍵字過濾。
+                setState(() {
+                  _searchController.clear();
+                  _query = '';
+                  _searchFuture = null;
+                });
+              },
+              onSubmitted: _submitSearch,
             ),
-            SizedBox(height: 20.h),
-            Expanded(
-              child: hasActiveSearch
-                  ? FutureBuilder<StatuteSearchResult>(
-                      future: _ensureSearchFuture(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const _StatuteLoadingState();
-                        }
+          ),
+          SizedBox(width: 10.w),
+          _FilterSquareButton(
+            hasActiveFilter: _selectedFilter != '全部',
+            onTap: _openFilterSheet,
+          ),
+        ],
+      ),
+      SizedBox(height: 12.h),
+      _StatuteFilterRail(
+        filters: _quickFilters,
+        selectedFilter: _selectedFilter,
+        onFilterTap: (label) {
+          setState(() {
+            _selectedFilter = label;
+            _searchFuture = _searchStatutes();
+          });
+        },
+      ),
+      SizedBox(height: 16.h),
+    ];
 
-                        if (snapshot.hasError) {
-                          return _StatuteErrorState(
-                            message: snapshot.error.toString(),
-                            onRetry: _reload,
-                          );
-                        }
-
-                        final result = snapshot.data ??
-                            const StatuteSearchResult(
-                              items: [],
-                              isMock: false,
-                            );
-                        final items = result.items.take(50).toList();
-                        if (items.isEmpty) {
-                          return const _StatuteEmptyState();
-                        }
-
-                        return ListView.separated(
-                          physics: const BouncingScrollPhysics(),
-                          keyboardDismissBehavior:
-                              ScrollViewKeyboardDismissBehavior.onDrag,
-                          padding: EdgeInsets.only(bottom: 28.h),
-                          itemCount: items.length,
-                          separatorBuilder: (_, __) => SizedBox(height: 10.h),
-                          itemBuilder: (context, index) {
-                            final item = items[index];
-                            return _StatuteResultCard(
-                              item: item,
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (__) =>
-                                        StatuteDetailPage(item: item),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        );
-                      },
-                    )
-                  : _StatuteLandingBody(
-                      popularQueries: _popularQueries,
-                      recentEntries: _recentEntries,
-                      onQueryTap: _applyGuideQuery,
-                      onClearRecent: _clearRecentEntries,
+    return Scaffold(
+      backgroundColor: t.canvas,
+      body: Padding(
+        padding: EdgeInsets.fromLTRB(16.w, padding.top + 12.h, 16.w, 0),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxHeight < 480) {
+              return SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ...headerWidgets,
+                    SizedBox(
+                      height: 280,
+                      child: resultsSection,
                     ),
-            ),
-          ],
+                  ],
+                ),
+              );
+            }
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ...headerWidgets,
+                Expanded(child: resultsSection),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -344,11 +397,13 @@ class _StatuteDatabasePageState extends State<StatuteDatabasePage> {
 class _StatuteQueryEntry {
   const _StatuteQueryEntry({
     required this.title,
+    required this.articleBadge,
     required this.subtitle,
     required this.query,
   });
 
   final String title;
+  final String articleBadge;
   final String subtitle;
   final String query;
 }
@@ -391,7 +446,10 @@ class _StatuteDetailPageState extends State<StatuteDetailPage> {
 
   Future<void> _toggleFollow(bool isFollowed) async {
     final appState = PreambleScope.of(context);
-    await appState.setStatuteFollowed(_statuteInteractionId(item), !isFollowed);
+    await appState.setStatuteFollowed(
+      _statuteInteractionId(item),
+      !isFollowed,
+    );
     if (!mounted) return;
     CustomToast.show(context, isFollowed ? '已取消追蹤。' : '已加入追蹤法條。');
   }
@@ -405,25 +463,26 @@ class _StatuteDetailPageState extends State<StatuteDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final topPadding = MediaQuery.paddingOf(context).top;
+    final t = context.tokens;
+    final padding = MediaQuery.paddingOf(context);
     final appState = PreambleScope.of(context);
     final statuteId = _statuteInteractionId(item);
     final isFollowed = appState.isStatuteFollowed(statuteId);
     final isSaved = appState.isStatuteSaved(statuteId);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F7F0),
+      backgroundColor: t.canvas,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: _showTitle
-            ? const Color(0xFFF7F7F0).withValues(alpha: 0.96)
-            : Colors.transparent,
+        backgroundColor:
+            _showTitle ? t.canvas.withValues(alpha: 0.96) : Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         automaticallyImplyLeading: false,
         leading: Align(
           alignment: Alignment.center,
           child: _RoundToolButton(
-            icon: Icons.arrow_back_ios_new_rounded,
+            icon: PhosphorIconsRegular.caretLeft,
             onTap: () => Navigator.of(context).pop(),
           ),
         ),
@@ -432,11 +491,9 @@ class _StatuteDetailPageState extends State<StatuteDetailPage> {
           duration: const Duration(milliseconds: 200),
           child: Text(
             item.displayTitle,
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w900,
-              color: AppColors.textPrimary,
-            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: t.serifTitle(size: 16.sp),
           ),
         ),
         centerTitle: true,
@@ -445,93 +502,222 @@ class _StatuteDetailPageState extends State<StatuteDetailPage> {
         controller: _scrollController,
         physics: const BouncingScrollPhysics(),
         padding: EdgeInsets.fromLTRB(
-            16.w, topPadding + kToolbarHeight + 10.h, 16.w, 32.h),
+          16.w,
+          padding.top + kToolbarHeight + 8.h,
+          16.w,
+          padding.bottom + 36.h,
+        ),
         children: [
+          // 頂部法典位階與古銅金條號雙重編碼識別
+          Wrap(
+            spacing: 8.w,
+            runSpacing: 6.h,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: t.brandContainer,
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Text(
+                  item.category.isEmpty ? '中華民國法規' : item.category,
+                  style: t.sansBody(
+                    size: 11.5.sp,
+                    weight: FontWeight.w700,
+                    color: t.brandOnContainer,
+                  ),
+                ),
+              ),
+              if (item.articleNumber.isNotEmpty)
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 4.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: t.accentBrassContainer,
+                    borderRadius: BorderRadius.circular(8.r),
+                    border: Border.all(
+                      color: t.accentBrass.withValues(alpha: 0.45),
+                    ),
+                  ),
+                  child: Text(
+                    item.articleNumber,
+                    style: t.tabularMetric(
+                      size: 12.sp,
+                      color: t.accentOnBrassContainer,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          SizedBox(height: 10.h),
           Text(
             item.codeName,
-            style: TextStyle(
-              fontSize: 15.sp,
-              fontWeight: FontWeight.w800,
-              color: const Color(0xFF64715A),
-            ),
+            style: t.serifTitle(size: 22.sp, height: 1.28),
           ),
-          SizedBox(height: 8.h),
-          Text(
-            item.articleNumber.isEmpty ? '條文內容' : item.articleNumber,
-            style: TextStyle(
-              fontSize: 26.sp,
-              height: 1.15,
-              fontWeight: FontWeight.w900,
-              color: AppColors.textPrimary,
+          if (item.articleNumber.isNotEmpty) ...[
+            SizedBox(height: 4.h),
+            Text(
+              item.articleNumber,
+              style: t.tabularMetric(
+                size: 15.sp,
+                color: t.accentOnBrassContainer,
+              ),
             ),
-          ),
+          ],
           SizedBox(height: 16.h),
+
+          // 1. 權威宋體：條文原文
           _DetailSectionCard(
-            title: '條文原文',
-            child: SelectableText(
-              item.articleText,
-              style: TextStyle(
-                fontSize: 16.sp,
-                height: 1.65,
-                color: AppColors.textPrimary,
+            title: '法定條文原文',
+            subtitle: '權威宋體呈現 · 長按可自由選取或一鍵複製引證',
+            icon: PhosphorIconsRegular.scroll,
+            accentColor: t.accentBrass,
+            trailing: IconButton(
+              onPressed: () {
+                Clipboard.setData(
+                  ClipboardData(
+                    text: '${item.displayTitle}\n${item.articleText}',
+                  ),
+                );
+                HapticFeedback.lightImpact();
+                CustomToast.show(context, '已複製完整法條原文與條號');
+              },
+              tooltip: '複製條文',
+              icon: Icon(
+                PhosphorIconsRegular.copy,
+                size: 18.sp,
+                color: t.textSecondary,
+              ),
+            ),
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.fromLTRB(12.w, 10.h, 12.w, 10.h),
+              decoration: BoxDecoration(
+                color: t.surfaceSubtle,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border(
+                  left: BorderSide(color: t.accentBrass, width: 3.w),
+                ),
+              ),
+              child: SelectableText(
+                item.articleText,
+                style: t.serifBody(
+                  size: 15.sp,
+                  height: 1.75,
+                  color: t.textPrimary,
+                ),
               ),
             ),
           ),
           SizedBox(height: 12.h),
+
+          // 2. 現代黑體：白話文解析
           _DetailSectionCard(
-            title: '白話文解釋',
+            title: '白話構成要件解析',
+            subtitle: '現代黑體轉譯 · 一眼掌握法律效果',
+            icon: PhosphorIconsRegular.translate,
+            accentColor: t.brandPrimary,
             child: Text(
               item.plainSummary,
-              style: TextStyle(
-                fontSize: 14.sp,
-                height: 1.6,
-                color: AppColors.textPrimary,
+              style: t.sansBody(
+                size: 14.sp,
+                height: 1.62,
+                color: t.textPrimary,
               ),
             ),
           ),
           SizedBox(height: 12.h),
+
+          // 3. 生活實務舉隅
           _DetailSectionCard(
-            title: '生活例子',
+            title: '日常實務情境舉隅',
+            icon: PhosphorIconsRegular.lightbulb,
+            accentColor: t.semanticInfo,
             child: Text(
               _lifeExampleFor(item),
-              style: TextStyle(
-                fontSize: 14.sp,
+              style: t.sansBody(
+                size: 13.5.sp,
                 height: 1.6,
-                color: AppColors.textPrimary,
+                color: t.textPrimary,
               ),
             ),
           ),
           SizedBox(height: 12.h),
+
+          // 4. 可能相關情境標籤
           _DetailSectionCard(
-            title: '可能相關情境',
+            title: '常見關聯生活爭點',
+            icon: PhosphorIconsRegular.tag,
+            accentColor: t.brandPrimary,
             child: Wrap(
               spacing: 8.w,
               runSpacing: 8.h,
               children: _scenarioChipsFor(item)
-                  .map((label) => Chip(label: Text(label)))
+                  .map(
+                    (label) => Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 11.w,
+                        vertical: 5.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: t.surfaceSubtle,
+                        borderRadius: BorderRadius.circular(99.r),
+                        border: Border.all(color: t.border),
+                      ),
+                      child: Text(
+                        label,
+                        style: t.sansBody(
+                          size: 12.sp,
+                          weight: FontWeight.w600,
+                          color: t.textPrimary,
+                        ),
+                      ),
+                    ),
+                  )
                   .toList(growable: false),
             ),
           ),
-          SizedBox(height: 12.h),
-          Row(
-            children: [
-              Expanded(
-                child: FilledButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (__) => LawAssistantChatPage(
-                          initialPrompt:
-                              '我想了解「${item.displayTitle}」在生活案例中怎麼使用？',
-                        ),
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.smart_toy_outlined),
-                  label: const Text('用這條法規問小法助'),
+          SizedBox(height: 14.h),
+
+          // 互動按鈕組
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton.icon(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (__) => LawAssistantChatPage(
+                      initialPrompt:
+                          '我想了解「${item.displayTitle}」在生活案例中怎麼使用？',
+                    ),
+                  ),
+                );
+              },
+              icon: Icon(
+                PhosphorIconsRegular.chatTeardropDots,
+                size: 18.sp,
+                color: t.brandOnPrimary,
+              ),
+              label: Text(
+                '帶入這條法規向小法助諮詢個案',
+                style: t.sansBody(
+                  size: 13.sp,
+                  weight: FontWeight.w700,
+                  color: t.brandOnPrimary,
                 ),
               ),
-            ],
+              style: FilledButton.styleFrom(
+                backgroundColor: t.brandPrimary,
+                foregroundColor: t.brandOnPrimary,
+                padding: EdgeInsets.symmetric(vertical: 13.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+              ),
+            ),
           ),
           SizedBox(height: 10.h),
           Row(
@@ -539,36 +725,84 @@ class _StatuteDetailPageState extends State<StatuteDetailPage> {
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: () => _toggleFollow(isFollowed),
-                  icon: Icon(isFollowed
-                      ? Icons.notifications_active_rounded
-                      : Icons.notifications_none_rounded),
-                  label: Text(isFollowed ? '已追蹤' : '加入追蹤'),
+                  icon: Icon(
+                    isFollowed
+                        ? PhosphorIconsFill.bellRinging
+                        : PhosphorIconsRegular.bell,
+                    size: 16.sp,
+                    color: isFollowed ? t.brandPrimary : t.textPrimary,
+                  ),
+                  label: Text(
+                    isFollowed ? '已追蹤異動' : '追蹤異動',
+                    style: t.sansBody(
+                      size: 12.5.sp,
+                      weight: FontWeight.w700,
+                      color: isFollowed ? t.brandPrimary : t.textPrimary,
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: isFollowed ? t.brandContainer : t.surface,
+                    side: BorderSide(
+                      color: isFollowed ? t.brandPrimary : t.borderStrong,
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 11.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                  ),
                 ),
               ),
               SizedBox(width: 10.w),
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: () => _toggleSaved(isSaved),
-                  icon: Icon(isSaved
-                      ? Icons.bookmark_rounded
-                      : Icons.bookmark_border_rounded),
-                  label: Text(isSaved ? '已收藏' : '收藏法條'),
+                  icon: Icon(
+                    isSaved
+                        ? PhosphorIconsFill.bookmarkSimple
+                        : PhosphorIconsRegular.bookmarkSimple,
+                    size: 16.sp,
+                    color: isSaved ? t.accentOnBrassContainer : t.textPrimary,
+                  ),
+                  label: Text(
+                    isSaved ? '已典藏法條' : '典藏法條',
+                    style: t.sansBody(
+                      size: 12.5.sp,
+                      weight: FontWeight.w700,
+                      color: isSaved ? t.accentOnBrassContainer : t.textPrimary,
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor:
+                        isSaved ? t.accentBrassContainer : t.surface,
+                    side: BorderSide(
+                      color: isSaved ? t.accentBrass : t.borderStrong,
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 11.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: 14.h),
+
+          // 資料來源與版本資訊
           _DetailSectionCard(
-            title: '資料資訊',
+            title: '法源出處與修訂紀錄',
+            icon: PhosphorIconsRegular.bank,
+            accentColor: t.textSecondary,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _DetailMetaRow(label: '法規類別', value: item.category),
-                _DetailMetaRow(label: '最新異動', value: item.updatedDate),
+                _DetailMetaRow(label: '法規位階', value: item.category),
                 _DetailMetaRow(
-                  label: '資料來源',
-                  value: item.sourceName,
+                  label: '最新異動',
+                  value: item.updatedDate,
+                  useTabular: true,
                 ),
+                _DetailMetaRow(label: '權責來源', value: item.sourceName),
                 if (item.lawUrl.isNotEmpty) ...[
                   SizedBox(height: 10.h),
                   OutlinedButton.icon(
@@ -578,16 +812,32 @@ class _StatuteDetailPageState extends State<StatuteDetailPage> {
                         mode: LaunchMode.externalApplication,
                       );
                     },
-                    icon: Icon(Icons.open_in_new_rounded, size: 16.sp),
-                    label: const Text('前往全國法規資料庫'),
+                    icon: Icon(
+                      PhosphorIconsRegular.arrowSquareOut,
+                      size: 16.sp,
+                      color: t.brandPrimary,
+                    ),
+                    label: Text(
+                      '前往全國法規資料庫核對官版原文',
+                      style: t.sansBody(
+                        size: 12.sp,
+                        weight: FontWeight.w700,
+                        color: t.brandPrimary,
+                      ),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: t.borderStrong),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                    ),
                   ),
-                  SizedBox(height: 4.h),
+                  SizedBox(height: 6.h),
                   SelectableText(
                     item.lawUrl,
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      height: 1.45,
-                      color: AppColors.primary,
+                    style: t.sansBody(
+                      size: 11.5.sp,
+                      color: t.brandPrimary,
                     ),
                   ),
                 ],
@@ -628,12 +878,12 @@ String _lifeExampleFor(StatuteItem item) {
 List<String> _scenarioChipsFor(StatuteItem item) {
   final text = '${item.codeName} ${item.articleText} ${item.tags.join(' ')}';
   final chips = <String>{};
-  if (text.contains('租') || text.contains('押金')) chips.add('租屋');
-  if (text.contains('車') || text.contains('損害')) chips.add('車禍');
-  if (text.contains('消費') || text.contains('網購')) chips.add('消費');
-  if (text.contains('勞') || text.contains('工資')) chips.add('勞資');
-  if (text.contains('刑') || text.contains('詐')) chips.add('刑事');
-  chips.addAll(['生活證據', '調解前準備']);
+  if (text.contains('租') || text.contains('押金')) chips.add('租屋點交');
+  if (text.contains('車') || text.contains('損害')) chips.add('車禍求償');
+  if (text.contains('消費') || text.contains('網購')) chips.add('消費契約');
+  if (text.contains('勞') || text.contains('工資')) chips.add('勞資權益');
+  if (text.contains('刑') || text.contains('詐')) chips.add('刑事風險');
+  chips.addAll(['舉證準備', '調解前檢核']);
   return chips.take(6).toList(growable: false);
 }
 
@@ -648,19 +898,20 @@ class _RoundToolButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 返回鍵統一改成 iOS 簡潔箭頭，不再加底色圓框；
-    // 點擊範圍仍保留 42.w，避免視覺變輕後手指不好點。
+    final t = context.tokens;
+    // 返回鍵維持簡潔輕盈，同時保留 42.w 觸控熱區。
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
+        borderRadius: BorderRadius.circular(12.r),
         child: SizedBox(
           width: 42.w,
           height: 42.w,
           child: Icon(
             icon,
             size: 20.sp,
-            color: AppColors.textPrimary,
+            color: t.textPrimary,
           ),
         ),
       ),
@@ -675,29 +926,31 @@ class _StatuteTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 42.h,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: _RoundToolButton(
-              icon: Icons.arrow_back_ios_new_rounded,
-              onTap: onBack,
-            ),
+    final t = context.tokens;
+    return Row(
+      children: [
+        _RoundToolButton(
+          icon: PhosphorIconsRegular.caretLeft,
+          onTap: onBack,
+        ),
+        Expanded(
+          child: Column(
+            children: [
+              Text(
+                '六法法規資料庫',
+                textAlign: TextAlign.center,
+                style: t.serifTitle(size: 18.sp),
+              ),
+              Text(
+                '宋體原文引證 × 白話要件雙重編碼',
+                textAlign: TextAlign.center,
+                style: t.sansBody(size: 11.sp, color: t.textMuted),
+              ),
+            ],
           ),
-          Text(
-            '法規資料庫',
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w900,
-              color: AppColors.textPrimary,
-            ),
-          ),
-          SizedBox(width: 42.w),
-        ],
-      ),
+        ),
+        SizedBox(width: 42.w),
+      ],
     );
   }
 }
@@ -717,32 +970,29 @@ class _StatuteSearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Container(
-      height: 44.h,
+      constraints: BoxConstraints(minHeight: 46.h),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(13.r),
-        border: Border.all(color: const Color(0xFFE7E9DF)),
+        color: t.surface,
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(color: t.borderStrong),
       ),
       child: TextField(
         controller: controller,
-        onTapOutside: (event) {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
+        onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
         onChanged: onChanged,
         onSubmitted: (value) => onSubmitted(value.trim()),
         textInputAction: TextInputAction.search,
         textAlignVertical: TextAlignVertical.center,
+        style: t.sansBody(size: 13.5.sp, color: t.textPrimary),
         decoration: InputDecoration(
-          hintText: '搜尋法條、關鍵字或法規名稱',
-          hintStyle: TextStyle(
-            fontSize: 13.sp,
-            color: const Color(0xFF9AA19A),
-          ),
+          hintText: '搜尋法典名稱、條號（如：民法 184）或白話關鍵字',
+          hintStyle: t.sansBody(size: 12.5.sp, color: t.textMuted),
           prefixIcon: Icon(
-            Icons.search_rounded,
-            size: 21.sp,
-            color: const Color(0xFF7E877B),
+            PhosphorIconsRegular.magnifyingGlass,
+            size: 19.sp,
+            color: t.textSecondary,
           ),
           suffixIcon: controller.text.isEmpty
               ? null
@@ -750,14 +1000,14 @@ class _StatuteSearchField extends StatelessWidget {
                   onPressed: onClear,
                   tooltip: '清除搜尋關鍵字',
                   icon: Icon(
-                    Icons.close_rounded,
+                    PhosphorIconsRegular.xCircle,
                     size: 18.sp,
-                    color: const Color(0xFF4B5647),
+                    color: t.textSecondary,
                   ),
                 ),
           border: InputBorder.none,
           isCollapsed: true,
-          contentPadding: EdgeInsets.symmetric(vertical: 13.h),
+          contentPadding: EdgeInsets.symmetric(vertical: 12.h),
         ),
       ),
     );
@@ -765,29 +1015,36 @@ class _StatuteSearchField extends StatelessWidget {
 }
 
 class _FilterSquareButton extends StatelessWidget {
-  const _FilterSquareButton({required this.onTap});
+  const _FilterSquareButton({
+    required this.hasActiveFilter,
+    required this.onTap,
+  });
 
+  final bool hasActiveFilter;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(13.r),
+        borderRadius: BorderRadius.circular(14.r),
         child: Container(
-          width: 44.w,
-          height: 44.h,
+          width: 46.w,
+          height: 46.h,
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(13.r),
-            border: Border.all(color: const Color(0xFFE7E9DF)),
+            color: hasActiveFilter ? t.brandContainer : t.surface,
+            borderRadius: BorderRadius.circular(14.r),
+            border: Border.all(
+              color: hasActiveFilter ? t.brandPrimary : t.borderStrong,
+            ),
           ),
           child: Icon(
-            Icons.tune_rounded,
-            size: 20.sp,
-            color: AppColors.textPrimary,
+            PhosphorIconsRegular.slidersHorizontal,
+            size: 19.sp,
+            color: hasActiveFilter ? t.brandPrimary : t.textPrimary,
           ),
         ),
       ),
@@ -808,21 +1065,20 @@ class _StatuteFilterRail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 32.h,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        itemBuilder: (context, index) {
-          final label = filters[index];
-          return _FilterChipButton(
-            label: label,
-            isSelected: label == selectedFilter,
-            onTap: () => onFilterTap(label),
-          );
-        },
-        separatorBuilder: (_, __) => SizedBox(width: 8.w),
-        itemCount: filters.length,
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
+      child: Row(
+        children: [
+          for (var i = 0; i < filters.length; i++) ...[
+            if (i > 0) SizedBox(width: 8.w),
+            _FilterChipButton(
+              label: filters[i],
+              isSelected: filters[i] == selectedFilter,
+              onTap: () => onFilterTap(filters[i]),
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -841,6 +1097,7 @@ class _FilterChipButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -849,18 +1106,18 @@ class _FilterChipButton extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 7.h),
           decoration: BoxDecoration(
-            color:
-                isSelected ? const Color(0xFFE4F0E8) : const Color(0xFFF1F2EE),
+            color: isSelected ? t.brandPrimary : t.surface,
             borderRadius: BorderRadius.circular(999.r),
+            border: Border.all(
+              color: isSelected ? t.brandPrimary : t.border,
+            ),
           ),
           child: Text(
             label,
-            style: TextStyle(
-              fontSize: 11.sp,
-              fontWeight: FontWeight.w800,
-              color: isSelected
-                  ? const Color(0xFF386249)
-                  : const Color(0xFF6C746C),
+            style: t.sansBody(
+              size: 12.sp,
+              weight: FontWeight.w700,
+              color: isSelected ? t.brandOnPrimary : t.textSecondary,
             ),
           ),
         ),
@@ -873,22 +1130,28 @@ class _StatuteLandingBody extends StatelessWidget {
   const _StatuteLandingBody({
     required this.popularQueries,
     required this.recentEntries,
+    required this.bottomPadding,
     required this.onQueryTap,
     required this.onClearRecent,
   });
 
   final List<_StatuteQueryEntry> popularQueries;
   final List<_StatuteQueryEntry> recentEntries;
+  final double bottomPadding;
   final ValueChanged<String> onQueryTap;
   final VoidCallback onClearRecent;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return ListView(
       physics: const BouncingScrollPhysics(),
-      padding: EdgeInsets.only(bottom: 32.h),
+      padding: EdgeInsets.only(bottom: bottomPadding),
       children: [
-        _StatuteSectionTitle(title: '熱門查詢'),
+        const _StatuteSectionTitle(
+          title: '常備核心條文索引',
+          subtitle: '日常契約、侵權與勞動爭議最常援引之請求權基礎',
+        ),
         SizedBox(height: 10.h),
         _StatuteQueryPanel(
           entries: popularQueries,
@@ -896,27 +1159,42 @@ class _StatuteLandingBody extends StatelessWidget {
           onQueryTap: onQueryTap,
         ),
         SizedBox(height: 22.h),
-        _StatuteSectionTitle(title: '最近瀏覽'),
+        Row(
+          children: [
+            const Expanded(
+              child: _StatuteSectionTitle(
+                title: '最近檢索紀錄',
+                subtitle: '快速重返近期查閱過的法規與條號',
+              ),
+            ),
+            if (recentEntries.isNotEmpty)
+              TextButton.icon(
+                onPressed: onClearRecent,
+                icon: Icon(
+                  PhosphorIconsRegular.trash,
+                  size: 14.sp,
+                  color: t.textMuted,
+                ),
+                label: Text(
+                  '清除',
+                  style: t.sansBody(size: 11.5.sp, color: t.textMuted),
+                ),
+              ),
+          ],
+        ),
         SizedBox(height: 10.h),
         if (recentEntries.isEmpty)
-          const _StatuteQuietCard(message: '目前沒有瀏覽記錄。')
-        else ...[
+          const _StatuteQuietCard(message: '目前沒有最近檢索紀錄。')
+        else
           _StatuteQueryPanel(
             entries: recentEntries,
             numbered: false,
             onQueryTap: onQueryTap,
           ),
-          SizedBox(height: 12.h),
-          Center(
-            child: TextButton(
-              onPressed: onClearRecent,
-              child: const Text('清除瀏覽記錄'),
-            ),
-          ),
-        ],
-        SizedBox(height: 10.h),
+        SizedBox(height: 14.h),
         const _StatuteQuietCard(
-          message: '資料來源：全國法規資料庫法律與命令資料。本頁只呈現公開法規資料，不構成法律意見。',
+          message:
+              '資料來源：全國法規資料庫公開法律與命令資料。本頁採「宋體法定原文 × 黑體白話摘要」雙重編碼呈現，僅供法學檢索參考，不構成正式法律意見。',
         ),
       ],
     );
@@ -924,19 +1202,32 @@ class _StatuteLandingBody extends StatelessWidget {
 }
 
 class _StatuteSectionTitle extends StatelessWidget {
-  const _StatuteSectionTitle({required this.title});
+  const _StatuteSectionTitle({
+    required this.title,
+    this.subtitle,
+  });
 
   final String title;
+  final String? subtitle;
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: TextStyle(
-        fontSize: 15.sp,
-        fontWeight: FontWeight.w900,
-        color: AppColors.textPrimary,
-      ),
+    final t = context.tokens;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: t.serifTitle(size: 16.sp),
+        ),
+        if (subtitle != null) ...[
+          SizedBox(height: 2.h),
+          Text(
+            subtitle!,
+            style: t.sansBody(size: 11.5.sp, color: t.textMuted),
+          ),
+        ],
+      ],
     );
   }
 }
@@ -954,16 +1245,13 @@ class _StatuteQueryPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: const Color(0xFFE7E9DF)),
-      ),
+      decoration: t.cardDecoration(radius: 16.r),
       child: Column(
         children: [
           for (var index = 0; index < entries.length; index++) ...[
-            if (index > 0) Divider(height: 1.h, color: const Color(0xFFE9EBE3)),
+            if (index > 0) Divider(height: 1, color: t.border),
             _StatuteQueryRow(
               entry: entries[index],
               index: index,
@@ -992,72 +1280,88 @@ class _StatuteQueryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     final leading = numbered
         ? Container(
-            width: 18.w,
-            height: 18.w,
+            width: 24.w,
+            height: 24.w,
             alignment: Alignment.center,
-            decoration: const BoxDecoration(
-              color: Color(0xFF315D47),
-              shape: BoxShape.circle,
+            decoration: BoxDecoration(
+              color: t.brandContainer,
+              borderRadius: BorderRadius.circular(7.r),
             ),
             child: Text(
-              '${index + 1}',
-              style: TextStyle(
-                fontSize: 10.sp,
-                fontWeight: FontWeight.w900,
-                color: Colors.white,
+              '0${index + 1}',
+              style: t.tabularMetric(
+                size: 11.sp,
+                color: t.brandPrimary,
               ),
             ),
           )
         : Icon(
-            Icons.history_rounded,
+            PhosphorIconsRegular.clockCounterClockwise,
             size: 18.sp,
-            color: const Color(0xFF637063),
+            color: t.textMuted,
           );
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(14.r),
+        borderRadius: BorderRadius.circular(16.r),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 13.h),
           child: Row(
             children: [
               leading,
-              SizedBox(width: 10.w),
+              SizedBox(width: 12.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      entry.title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.textPrimary,
-                      ),
+                    Wrap(
+                      spacing: 8.w,
+                      runSpacing: 4.h,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        Text(
+                          entry.title,
+                          style: t.serifTitle(size: 14.5.sp),
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 7.w,
+                            vertical: 2.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: t.accentBrassContainer,
+                            borderRadius: BorderRadius.circular(6.r),
+                          ),
+                          child: Text(
+                            entry.articleBadge,
+                            style: t.tabularMetric(
+                              size: 11.sp,
+                              color: t.accentOnBrassContainer,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 3.h),
                     Text(
                       entry.subtitle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        color: AppColors.textSecondary,
-                      ),
+                      style: t.sansBody(size: 12.sp, color: t.textSecondary),
                     ),
                   ],
                 ),
               ),
+              SizedBox(width: 6.w),
               Icon(
-                Icons.chevron_right_rounded,
-                size: 20.sp,
-                color: const Color(0xFF5F665F),
+                PhosphorIconsRegular.caretRight,
+                size: 16.sp,
+                color: t.textMuted,
               ),
             ],
           ),
@@ -1074,21 +1378,34 @@ class _StatuteQuietCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(14.w),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFFCF5),
-        borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: const Color(0xFFE7E0D2)),
-      ),
-      child: Text(
-        message,
-        style: TextStyle(
-          fontSize: 11.5.sp,
-          height: 1.45,
-          color: AppColors.textSecondary,
-        ),
+      decoration: t.subtleBoxDecoration(radius: 14.r),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 2.h),
+            child: Icon(
+              PhosphorIconsRegular.info,
+              size: 16.sp,
+              color: t.textMuted,
+            ),
+          ),
+          SizedBox(width: 8.w),
+          Expanded(
+            child: Text(
+              message,
+              style: t.sansBody(
+                size: 11.5.sp,
+                height: 1.5,
+                color: t.textSecondary,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -1105,63 +1422,150 @@ class _StatuteResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
+    final badgeLabel =
+        item.articleNumber.isNotEmpty ? item.articleNumber : item.category;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(18.r),
         child: Container(
-          padding: EdgeInsets.all(15.w),
-          decoration: BoxDecoration(
-            color: const Color(0xFFFFFAEC),
-            borderRadius: BorderRadius.circular(18.r),
-            border: Border.all(color: const Color(0xFFE7DFC7)),
-          ),
+          padding: EdgeInsets.all(16.w),
+          decoration: t.cardDecoration(radius: 18.r),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // 頂部：法典名稱（宋體） + 古銅金等寬條號徽章（Tabular Metric）
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: Text(
-                      item.displayTitle,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.textPrimary,
-                      ),
+                    child: Wrap(
+                      spacing: 8.w,
+                      runSpacing: 6.h,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        if (badgeLabel.isNotEmpty)
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                              vertical: 3.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: t.accentBrassContainer,
+                              borderRadius: BorderRadius.circular(7.r),
+                              border: Border.all(
+                                color: t.accentBrass.withValues(alpha: 0.42),
+                              ),
+                            ),
+                            child: Text(
+                              badgeLabel,
+                              style: t.tabularMetric(
+                                size: 11.5.sp,
+                                color: t.accentOnBrassContainer,
+                              ),
+                            ),
+                          ),
+                        Text(
+                          item.codeName.isNotEmpty
+                              ? item.codeName
+                              : item.displayTitle,
+                          style: t.serifTitle(size: 15.5.sp),
+                        ),
+                      ],
                     ),
                   ),
+                  SizedBox(width: 8.w),
                   Icon(
-                    Icons.arrow_forward_rounded,
-                    size: 20.sp,
-                    color: const Color(0xFF4B5563),
+                    PhosphorIconsRegular.arrowUpRight,
+                    size: 18.sp,
+                    color: t.brandPrimary,
                   ),
                 ],
               ),
-              SizedBox(height: 8.h),
-              Text(
-                item.plainSummary,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  height: 1.45,
-                  color: AppColors.textSecondary,
-                ),
-              ),
-              if (item.updatedDate.isNotEmpty) ...[
-                SizedBox(height: 8.h),
-                Text(
-                  '最新異動：${item.updatedDate}',
-                  style: TextStyle(
-                    fontSize: 10.5.sp,
-                    color: const Color(0xFF8A8372),
+
+              // 中段：法條原文節錄（權威宋體 15.sp, 1.75 行高）
+              if (item.articleText.trim().isNotEmpty) ...[
+                SizedBox(height: 10.h),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 11.w,
+                    vertical: 8.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: t.surfaceSubtle,
+                    borderRadius: BorderRadius.circular(10.r),
+                    border: Border(
+                      left: BorderSide(color: t.accentBrass, width: 2.5.w),
+                    ),
+                  ),
+                  child: Text(
+                    item.articleText.trim(),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: t.serifBody(
+                      size: 15.sp,
+                      height: 1.75,
+                      color: t.textPrimary,
+                    ),
                   ),
                 ),
               ],
+
+              // 下段：白話摘要與標籤（現代黑體）
+              if (item.plainSummary.trim().isNotEmpty) ...[
+                SizedBox(height: 9.h),
+                Text(
+                  item.plainSummary,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: t.sansBody(
+                    size: 12.5.sp,
+                    height: 1.5,
+                    color: t.textSecondary,
+                  ),
+                ),
+              ],
+
+              SizedBox(height: 10.h),
+              Wrap(
+                spacing: 6.w,
+                runSpacing: 6.h,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  for (final tag in item.tags.take(3))
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 7.w,
+                        vertical: 2.5.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: t.brandContainer,
+                        borderRadius: BorderRadius.circular(6.r),
+                      ),
+                      child: Text(
+                        tag,
+                        style: t.sansBody(
+                          size: 11.sp,
+                          weight: FontWeight.w600,
+                          color: t.brandOnContainer,
+                        ),
+                      ),
+                    ),
+                  if (item.updatedDate.isNotEmpty)
+                    Text(
+                      '異動 ${item.updatedDate}',
+                      style: t.tabularMetric(
+                        size: 11.sp,
+                        weight: FontWeight.w600,
+                        color: t.textMuted,
+                      ),
+                    ),
+                ],
+              ),
             ],
           ),
         ),
@@ -1173,34 +1577,54 @@ class _StatuteResultCard extends StatelessWidget {
 class _DetailSectionCard extends StatelessWidget {
   const _DetailSectionCard({
     required this.title,
+    required this.icon,
+    required this.accentColor,
     required this.child,
+    this.subtitle,
+    this.trailing,
   });
 
   final String title;
+  final String? subtitle;
+  final IconData icon;
+  final Color accentColor;
+  final Widget? trailing;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFFAEC),
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: const Color(0xFFE7DFC7)),
-      ),
+      decoration: t.cardDecoration(radius: 18.r),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w900,
-              color: const Color(0xFF5D5A38),
-            ),
+          Row(
+            children: [
+              Icon(icon, size: 17.sp, color: accentColor),
+              SizedBox(width: 7.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: t.sansTitle(size: 14.sp),
+                    ),
+                    if (subtitle != null)
+                      Text(
+                        subtitle!,
+                        style: t.sansBody(size: 11.sp, color: t.textMuted),
+                      ),
+                  ],
+                ),
+              ),
+              if (trailing != null) trailing!,
+            ],
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: 12.h),
           child,
         ],
       ),
@@ -1212,14 +1636,17 @@ class _DetailMetaRow extends StatelessWidget {
   const _DetailMetaRow({
     required this.label,
     required this.value,
+    this.useTabular = false,
   });
 
   final String label;
   final String value;
+  final bool useTabular;
 
   @override
   Widget build(BuildContext context) {
     if (value.isEmpty) return const SizedBox.shrink();
+    final t = context.tokens;
 
     return Padding(
       padding: EdgeInsets.only(bottom: 8.h),
@@ -1227,24 +1654,26 @@ class _DetailMetaRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: 70.w,
+            width: 76.w,
             child: Text(
               label,
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w800,
-                color: AppColors.textSecondary,
+              style: t.sansBody(
+                size: 12.sp,
+                weight: FontWeight.w700,
+                color: t.textSecondary,
               ),
             ),
           ),
           Expanded(
             child: Text(
               value,
-              style: TextStyle(
-                fontSize: 12.sp,
-                height: 1.45,
-                color: AppColors.textPrimary,
-              ),
+              style: useTabular
+                  ? t.tabularMetric(size: 12.sp, color: t.textPrimary)
+                  : t.sansBody(
+                      size: 12.sp,
+                      height: 1.45,
+                      color: t.textPrimary,
+                    ),
             ),
           ),
         ],
@@ -1299,6 +1728,7 @@ class _StatuteLoadingStateState extends State<_StatuteLoadingState>
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Center(
       child: AnimatedBuilder(
         animation: _typewriterController,
@@ -1309,45 +1739,40 @@ class _StatuteLoadingStateState extends State<_StatuteLoadingState>
           final cursorIsVisible =
               (_typewriterController.value * 12).floor().isEven;
 
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.balance_rounded,
-                size: 42.sp,
-                color: AppColors.primary,
-              ),
-              SizedBox(height: 16.h),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(text: '「${_visibleQuote(quote, typingProgress)}'),
-                    TextSpan(
-                      text: cursorIsVisible ? '｜' : ' ',
-                      style: TextStyle(color: AppColors.accent),
-                    ),
-                    TextSpan(
-                      text: typingProgress >= 1 ? '」' : '',
-                    ),
-                  ],
+          return SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  PhosphorIconsRegular.scales,
+                  size: 40.sp,
+                  color: t.brandPrimary,
                 ),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 15.sp,
-                  height: 1.45,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.textPrimary,
+                SizedBox(height: 16.h),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(text: '「${_visibleQuote(quote, typingProgress)}'),
+                      TextSpan(
+                        text: cursorIsVisible ? '｜' : ' ',
+                        style: TextStyle(color: t.accentBrass),
+                      ),
+                      TextSpan(
+                        text: typingProgress >= 1 ? '」' : '',
+                      ),
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
+                  style: t.serifTitle(size: 15.sp, height: 1.5),
                 ),
-              ),
-              SizedBox(height: 8.h),
-              Text(
-                '正在整理全國法規資料...',
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: AppColors.textSecondary,
+                SizedBox(height: 8.h),
+                Text(
+                  '正在檢索並校對全國法規資料庫...',
+                  style: t.sansBody(size: 12.sp, color: t.textSecondary),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),
@@ -1366,51 +1791,55 @@ class _StatuteErrorState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Center(
-      child: Container(
-        padding: EdgeInsets.all(18.w),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFFFAEC),
-          borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(color: const Color(0xFFE7DFC7)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.cloud_off_rounded,
-              size: 32.sp,
-              color: const Color(0xFF8A6E2F),
-            ),
-            SizedBox(height: 10.h),
-            Text(
-              '暫時讀不到法規資料',
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w900,
-                color: AppColors.textPrimary,
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Container(
+          padding: EdgeInsets.all(20.w),
+          decoration: t.cardDecoration(radius: 20.r),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                PhosphorIconsRegular.cloudSlash,
+                size: 32.sp,
+                color: t.accentBrass,
               ),
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 12.sp,
-                height: 1.45,
-                color: AppColors.textSecondary,
+              SizedBox(height: 10.h),
+              Text(
+                '暫時無法讀取法規資料',
+                style: t.serifTitle(size: 16.sp),
               ),
-            ),
-            SizedBox(height: 14.h),
-            FilledButton(
-              onPressed: onRetry,
-              style: FilledButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
+              SizedBox(height: 8.h),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: t.sansBody(size: 12.sp, height: 1.45),
               ),
-              child: const Text('重新讀取'),
-            ),
-          ],
+              SizedBox(height: 14.h),
+              FilledButton.icon(
+                onPressed: onRetry,
+                icon: Icon(
+                  PhosphorIconsRegular.arrowClockwise,
+                  size: 16.sp,
+                  color: t.brandOnPrimary,
+                ),
+                style: FilledButton.styleFrom(
+                  backgroundColor: t.brandPrimary,
+                  foregroundColor: t.brandOnPrimary,
+                ),
+                label: Text(
+                  '重新讀取',
+                  style: t.sansBody(
+                    size: 12.5.sp,
+                    weight: FontWeight.w700,
+                    color: t.brandOnPrimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -1422,14 +1851,25 @@ class _StatuteEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Center(
-      child: Text(
-        '找不到符合條件的條文，試試換一個關鍵字。',
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 13.sp,
-          height: 1.45,
-          color: AppColors.textSecondary,
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              PhosphorIconsRegular.magnifyingGlass,
+              size: 32.sp,
+              color: t.textMuted,
+            ),
+            SizedBox(height: 10.h),
+            Text(
+              '找不到符合條件的條文，請試試更換法典名稱或白話關鍵字。',
+              textAlign: TextAlign.center,
+              style: t.sansBody(size: 13.sp, height: 1.5),
+            ),
+          ],
         ),
       ),
     );

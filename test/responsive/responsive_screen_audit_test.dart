@@ -105,8 +105,8 @@ void main() {
       testCase: testCase,
     );
 
-    expect(result.unreachablePrimaryLabels, isNot(contains('法律即時快問')));
-    for (final label in const ['首頁', '學習', '小法助', '紀事', '我的']) {
+    expect(result.unreachablePrimaryLabels, isNot(contains('公文解讀')));
+    for (final label in const ['首頁', '學習', '問診', '紀事', '我的']) {
       expect(find.text(label).hitTestable(), findsOneWidget);
     }
     expect(

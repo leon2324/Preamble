@@ -230,7 +230,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('⚖️ 司法院確定終局裁判'), findsOneWidget);
-      expect(find.text('最高法院 113 年度台上字第 2152 號民事判決'), findsNWidgets(2));
+      expect(find.text('外送平台外送員僱傭關係認定案'), findsOneWidget);
+      expect(find.text('最高法院 113 年度台上字第 2152 號民事判決'), findsOneWidget);
       expect(find.textContaining('富胖達股份有限公司'), findsOneWidget);
       expect(find.textContaining('周舒雁'), findsOneWidget);
     });

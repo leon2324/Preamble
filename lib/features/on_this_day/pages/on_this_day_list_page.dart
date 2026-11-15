@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
-import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:preamble/features/on_this_day/data/on_this_day_local_bookmarks.dart';
 import 'package:preamble/features/on_this_day/data/on_this_day_mock_data.dart';
 import 'package:preamble/features/on_this_day/models/on_this_day_models.dart';
-import 'package:preamble/features/on_this_day/theme/on_this_day_theme.dart';
 import 'package:preamble/features/on_this_day/pages/on_this_day_detail_page.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 
 class OnThisDayListPage extends StatefulWidget {
   const OnThisDayListPage({super.key});
@@ -54,27 +55,31 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
+
     return Scaffold(
-      backgroundColor: OnThisDayColors.paperBeige,
+      backgroundColor: t.canvas,
       appBar: AppBar(
-        backgroundColor: OnThisDayColors.paperBeige,
+        backgroundColor: t.canvas,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded,
-              color: OnThisDayColors.primaryGreen),
+          icon: Icon(
+            PhosphorIconsRegular.caretLeft,
+            color: t.textPrimary,
+            size: 20.sp,
+          ),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          '歷史案件',
-          style:
-              OnThisDayTextStyles.pageTitle(context).copyWith(fontSize: 20.sp),
+          '法治歷史事件總覽',
+          style: t.serifTitle(size: 19.sp, weight: FontWeight.w800),
         ),
       ),
       body: Column(
         children: [
-          // Horizontal Category Tabs
           SizedBox(
-            height: 44.h,
+            height: 40.h,
             child: ListView.separated(
               padding: EdgeInsets.symmetric(horizontal: 18.w),
               scrollDirection: Axis.horizontal,
@@ -92,28 +97,27 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
                     });
                   },
                   child: Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 15.w,
+                      vertical: 7.h,
+                    ),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: isSelected
-                          ? OnThisDayColors.primaryGreen
-                          : OnThisDayColors.bgCream.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(20.r),
+                      color: isSelected ? t.brandPrimaryStrong : t.surface,
+                      borderRadius: BorderRadius.circular(999.r),
                       border: Border.all(
-                        color: isSelected
-                            ? OnThisDayColors.primaryGreen
-                            : OnThisDayColors.borderLight,
+                        color: isSelected ? t.brandPrimaryStrong : t.border,
                       ),
                     ),
                     child: Text(
                       cat,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w900,
+                      style: t.sansBody(
+                        size: 12.sp,
+                        weight: FontWeight.w700,
                         color: isSelected
-                            ? OnThisDayColors.bgPaperLight
-                            : OnThisDayColors.textSecondary,
+                            ? const Color(0xFFFAF8F4)
+                            : t.textSecondary,
+                        height: 1.2,
                       ),
                     ),
                   ),
@@ -121,17 +125,14 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
               },
             ),
           ),
-          SizedBox(height: 16.h),
-
-          // Case List
+          SizedBox(height: 14.h),
           Expanded(
             child: ListView.separated(
-              padding: EdgeInsets.fromLTRB(18.w, 0, 18.w, 24.h),
+              padding: EdgeInsets.fromLTRB(18.w, 0, 18.w, 28.h),
               itemCount: _filteredCases.length,
               separatorBuilder: (_, __) => SizedBox(height: 12.h),
               itemBuilder: (context, index) {
-                final c = _filteredCases[index];
-                return _buildListRow(c);
+                return _buildListRow(t, _filteredCases[index]);
               },
             ),
           ),
@@ -140,7 +141,7 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
     );
   }
 
-  Widget _buildListRow(OnThisDayCase c) {
+  Widget _buildListRow(PreambleTokens t, OnThisDayCase c) {
     final isSaved = _savedCaseIds.contains(c.id);
     return GestureDetector(
       onTap: () {
@@ -151,85 +152,87 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
         );
       },
       child: Container(
-        padding: EdgeInsets.all(12.w),
-        decoration: BoxDecoration(
-          color: OnThisDayColors.bgPaperLight,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: OnThisDayColors.borderLight),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
+        padding: EdgeInsets.all(14.w),
+        decoration: t.cardDecoration(radius: 18.r, elevated: false),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Retro vintage photo thumbnail placeholder
             Container(
-              width: 72.w,
-              height: 72.w,
+              width: 68.w,
+              padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 6.w),
               decoration: BoxDecoration(
-                color: const Color(0xFFE5DCD0),
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(color: OnThisDayColors.borderLight),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12.r),
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Color(0xFF4A3E3D), Color(0xFF2C2424)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                      ),
-                    ),
-                    Center(
-                      child: Opacity(
-                        opacity: 0.15,
-                        child: Icon(Icons.history_edu_rounded,
-                            color: Colors.white, size: 28.sp),
-                      ),
-                    ),
-                  ],
+                color: t.surfaceSubtle,
+                borderRadius: BorderRadius.circular(14.r),
+                border: Border.all(
+                  color: t.accentBrass.withValues(alpha: 0.4),
                 ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '${c.year}',
+                    style: t.tabularMetric(
+                      size: 11.sp,
+                      weight: FontWeight.w700,
+                      color: t.accentBrass,
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      '${c.month}/${c.day}',
+                      style: t.serifTitle(
+                        size: 16.sp,
+                        weight: FontWeight.w800,
+                        color: t.brandPrimary,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             SizedBox(width: 14.w),
-
-            // Details Column
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '${c.year} · ${c.category}',
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          fontWeight: FontWeight.w900,
-                          color: OnThisDayColors.accentGold,
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.w,
+                          vertical: 2.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: t.brandContainer,
+                          borderRadius: BorderRadius.circular(6.r),
+                        ),
+                        child: Text(
+                          c.category,
+                          style: t.sansBody(
+                            size: 10.5.sp,
+                            weight: FontWeight.w700,
+                            color: t.brandOnContainer,
+                            height: 1.2,
+                          ),
                         ),
                       ),
-                      IconButton(
-                        icon: Icon(
-                          isSaved
-                              ? Icons.bookmark_rounded
-                              : Icons.bookmark_border_rounded,
-                          color: OnThisDayColors.accentGold,
+                      SizedBox(width: 6.w),
+                      Expanded(
+                        child: Text(
+                          c.location,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: t.sansBody(
+                            size: 11.sp,
+                            color: t.textMuted,
+                          ),
                         ),
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                        iconSize: 18.sp,
-                        onPressed: () async {
+                      ),
+                      GestureDetector(
+                        onTap: () async {
                           final next =
                               await OnThisDayLocalBookmarks.toggle(c.id);
                           if (!mounted) return;
@@ -239,25 +242,40 @@ class _OnThisDayListPageState extends State<OnThisDayListPage> {
                                 : _savedCaseIds.remove(c.id);
                           });
                           CustomToast.show(
-                              context, next ? '已加入本機收藏。' : '已從本機收藏移除。');
+                            context,
+                            next ? '已加入本機收藏。' : '已從本機收藏移除。',
+                          );
                         },
+                        child: Padding(
+                          padding: EdgeInsets.all(2.w),
+                          child: Icon(
+                            isSaved
+                                ? PhosphorIconsFill.bookmarkSimple
+                                : PhosphorIconsRegular.bookmarkSimple,
+                            color: isSaved ? t.accentBrass : t.textMuted,
+                            size: 18.sp,
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 2.h),
+                  SizedBox(height: 6.h),
                   Text(
                     c.title,
-                    style: OnThisDayTextStyles.cardTitle(context)
-                        .copyWith(fontSize: 14.sp),
+                    style: t.serifTitle(
+                      size: 15.5.sp,
+                      weight: FontWeight.w800,
+                    ),
                   ),
                   SizedBox(height: 4.h),
                   Text(
                     c.summary,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: OnThisDayTextStyles.body(context).copyWith(
-                      fontSize: 11.5.sp,
-                      height: 1.4,
+                    style: t.sansBody(
+                      size: 12.sp,
+                      color: t.textSecondary,
+                      height: 1.45,
                     ),
                   ),
                 ],

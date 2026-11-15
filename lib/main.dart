@@ -2,30 +2,29 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:preamble/app/app_state.dart';
 import 'package:preamble/app/native_startup_coordinator.dart';
-import 'package:preamble/components/navigation/island_bottom_nav.dart';
 import 'package:preamble/components/navigation/app_shell_content_insets.dart';
-import 'package:preamble/pages/profile/profile_page.dart';
+import 'package:preamble/components/navigation/island_bottom_nav.dart';
+import 'package:preamble/features/case_library/data/case_library_repository.dart';
+import 'package:preamble/features/case_library/pages/case_legal_vocabulary_page.dart';
+import 'package:preamble/features/case_library/pages/case_library_entry_page.dart';
 import 'package:preamble/pages/home/home_page.dart';
+import 'package:preamble/pages/home/subpages/home_life_legal_tips_page.dart';
+import 'package:preamble/pages/journal/journal_page.dart';
 import 'package:preamble/pages/learning/know_law_page.dart';
 import 'package:preamble/pages/learning/statute_database_page.dart';
+import 'package:preamble/pages/profile/apple_ecosystem_demo_page.dart';
+import 'package:preamble/pages/profile/profile_page.dart';
 import 'package:preamble/pages/search/global_search_page.dart';
-import 'package:preamble/pages/journal/journal_page.dart';
-import 'package:preamble/theme/adaptive_layout.dart';
-import 'package:preamble/theme/app_theme.dart';
-import 'package:preamble/features/case_library/data/case_library_repository.dart';
+import 'package:preamble/pages/tools/legal_toolkit_hub_page.dart';
+import 'package:preamble/platform/ios_deep_link_bridge.dart';
 import 'package:preamble/platform/ios_quick_ask_intent_bridge.dart';
 import 'package:preamble/platform/ios_statute_spotlight_bridge.dart';
 import 'package:preamble/platform/ios_today_case_widget_bridge.dart';
-import 'package:preamble/platform/ios_deep_link_bridge.dart';
-// [審查修復] IosIntentRouter 已移除引用 — 它與 NativeStartupCoordinator 存在競態條件，
-// 兩者會同時消費同一批 Platform Channel intent，導致其中一方讀到 null 或觸發矛盾導航。
-// 統一由 NativeStartupCoordinator 處理冷啟動 intent，避免重複消費。
-import 'package:preamble/pages/profile/apple_ecosystem_demo_page.dart';
-import 'package:preamble/features/case_library/pages/case_library_entry_page.dart';
-import 'package:preamble/pages/home/subpages/home_life_legal_tips_page.dart';
-import 'package:preamble/features/case_library/pages/case_legal_vocabulary_page.dart';
+import 'package:preamble/theme/adaptive_layout.dart';
+import 'package:preamble/theme/app_theme.dart';
 
 /// 應用程式進入點。
 ///
@@ -42,9 +41,9 @@ void main() async {
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
-      builder: (context, child) {
-        return const MylawApp();
-      },
+      rebuildFactor: RebuildFactors.orientation,
+      child: const MylawApp(),
+      builder: (context, child) => child ?? const MylawApp(),
     ),
   );
 }
@@ -65,35 +64,36 @@ class _MylawAppState extends State<MylawApp> {
   int selectedIndex = 0;
   int? _knowLawInitialTabIndex;
   String? _knowLawInitialToolTab;
+  int _journalInitialLensTab = 0;
+  int _journalLensSelectionVersion = 0;
 
-  // [審查修復] 原本這裡有一份 _navItems static const 清單，但 build() 中另建了
-  // originalNavItems 區域變數，導致 _navItems 成為死碼。現已合併為單一 static const，
-  // 減少記憶體重複配置，也避免日後修改時忘記同步兩份清單。
+  /// 全域 5 大核心分頁圖示：統一採用 Phosphor Regular / Fill 雙態向量家族，
+  /// 淘汰舊版圓形卡通插畫頭貼，建立沉穩專業的一線行動應用識別。
   static const List<BottomNavItemData> _originalNavItems = [
     BottomNavItemData(
       label: '首頁',
-      icon: Icons.home_outlined,
-      selectedIcon: Icons.home_rounded,
+      icon: PhosphorIconsRegular.house,
+      selectedIcon: PhosphorIconsFill.house,
     ),
     BottomNavItemData(
       label: '學習',
-      icon: Icons.menu_book_outlined,
-      selectedIcon: Icons.menu_book_rounded,
+      icon: PhosphorIconsRegular.graduationCap,
+      selectedIcon: PhosphorIconsFill.graduationCap,
     ),
     BottomNavItemData(
-      label: '小法助',
-      icon: Icons.support_agent_outlined,
-      selectedIcon: Icons.support_agent_rounded,
+      label: '問診',
+      icon: PhosphorIconsRegular.scales,
+      selectedIcon: PhosphorIconsFill.scales,
     ),
     BottomNavItemData(
       label: '紀事',
-      icon: Icons.inventory_2_outlined,
-      selectedIcon: Icons.inventory_2_rounded,
+      icon: PhosphorIconsRegular.books,
+      selectedIcon: PhosphorIconsFill.books,
     ),
     BottomNavItemData(
       label: '我的',
-      icon: Icons.person_outline_rounded,
-      selectedIcon: Icons.person_rounded,
+      icon: PhosphorIconsRegular.userCircle,
+      selectedIcon: PhosphorIconsFill.userCircle,
     ),
   ];
 
@@ -115,10 +115,7 @@ class _MylawAppState extends State<MylawApp> {
       unawaited(IosTodayCaseWidgetBridge.syncDefaultStory());
       unawaited(IosStatuteSpotlightBridge.syncDefaultIndex());
 
-      // [審查修復] 原本這裡還呼叫了 IosIntentRouter.register / checkInitialIntents，
-      // 但它與下方的 NativeStartupCoordinator 會同時對 Platform Channel 呼叫
-      // consumeInitialPrompt / consumeInitialQuery / consumeInitialLink，
-      // 產生「誰先讀到就消費掉」的競態條件。已統一由 NativeStartupCoordinator 負責。
+      // 統一由 NativeStartupCoordinator 處理冷啟動 intent，避免重複消費。
       await _nativeStartupCoordinator.consumeAndHandleInitialEvents(
         consumeQuickAskPrompt: IosQuickAskIntentBridge.consumeInitialPrompt,
         consumeStatuteQuery: IosStatuteSpotlightBridge.consumeInitialQuery,
@@ -235,26 +232,42 @@ class _MylawAppState extends State<MylawApp> {
           ),
         );
         break;
+      case 'tools':
+        navigator.push(
+          MaterialPageRoute<void>(
+            builder: (_) => const LegalToolkitHubPage(),
+          ),
+        );
+        break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final order = _appState.navbarOrder;
-
-    // [審查修復] 導覽項目已提升為 class-level static const _originalNavItems，
-    // 不再於每次 build() 重新配置，降低 GC 壓力。
     final originalNavItems = _originalNavItems;
 
     final originalPages = [
       HomePage(
         onNavigateToTab: (targetOriginalIndex, {subTabIndex, toolTab}) {
-          // 當首頁按鈕點選跳頁時，在自訂順序列表（navbarOrder）中尋找原本的目標頁排在第幾個，並更新 selectedIndex。
+          // 若舊呼叫端要求開啟特定法務工具，直接開啟獨立「法務實戰工具館」，不干擾學習分頁狀態。
+          if (toolTab != null) {
+            _navigatorKey.currentState?.push(
+              MaterialPageRoute<void>(
+                builder: (_) => LegalToolkitHubPage(initialToolKey: toolTab),
+              ),
+            );
+            return;
+          }
           final realIndex = order.indexOf(targetOriginalIndex);
           if (realIndex != -1) {
             setState(() {
               _knowLawInitialTabIndex = subTabIndex;
-              _knowLawInitialToolTab = toolTab;
+              _knowLawInitialToolTab = null;
+              if (targetOriginalIndex == 3 && subTabIndex != null) {
+                _journalInitialLensTab = subTabIndex;
+                _journalLensSelectionVersion++;
+              }
               selectedIndex = realIndex;
             });
           }
@@ -265,7 +278,10 @@ class _MylawAppState extends State<MylawApp> {
         initialToolTab: _knowLawInitialToolTab,
       ),
       GlobalSearchPage(quickAskPromptListenable: _quickAskPromptNotifier),
-      const JournalPage(),
+      JournalPage(
+        initialLensTab: _journalInitialLensTab,
+        lensSelectionVersion: _journalLensSelectionVersion,
+      ),
       const ProfilePage(showBackButton: false),
     ];
 

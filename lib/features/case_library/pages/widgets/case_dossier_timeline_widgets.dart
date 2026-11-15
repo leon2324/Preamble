@@ -5,36 +5,49 @@ part of '../case_dossier_detail_page.dart';
 
 extension _CaseDossierTimelineWidgets on _CaseDossierDetailPageState {
   Widget _buildCombinedTimelineTab(BuildContext context) {
-    // 1. Gather all timeline nodes and trial steps, deduplicate by date
-    final Map<String, _CombinedTimelineNode> mergedNodes = {};
+    // 1. Gather all timeline nodes and trial steps without overwriting same-date entries
+    final List<_CombinedTimelineNode> allNodes = [];
 
     for (final item in book.timeline) {
-      mergedNodes[item.dateLabel] = _CombinedTimelineNode(
-        date: item.dateLabel,
-        title: item.title,
-        description: item.description,
-        type: 'event',
+      allNodes.add(
+        _CombinedTimelineNode(
+          date: item.dateLabel,
+          title: item.title,
+          description: item.description,
+          type: 'event',
+        ),
       );
     }
 
     final trialSteps = _getTrialSteps(book.id);
     for (final step in trialSteps) {
-      mergedNodes[step.date] = _CombinedTimelineNode(
-        date: step.date,
-        title: '${step.stage} · ${step.courtName}',
-        description: step.outcome,
-        type: 'trial',
-        trialStep: step,
+      allNodes.add(
+        _CombinedTimelineNode(
+          date: step.date,
+          title: '${step.stage} · ${step.courtName}',
+          description: step.outcome,
+          type: 'trial',
+          trialStep: step,
+        ),
       );
     }
 
     // 2. Sort by date ascending
-    final sortedNodes = mergedNodes.values.toList()
-      ..sort((a, b) => a.date.compareTo(b.date));
+    allNodes.sort((a, b) => a.date.compareTo(b.date));
+
+    final eventCount = allNodes.where((n) => n.type == 'event').length;
+    final trialCount = allNodes.where((n) => n.type == 'trial').length;
+
+    final filteredNodes = allNodes.where((n) {
+      if (_timelineFilter == 'event') return n.type == 'event';
+      if (_timelineFilter == 'trial') return n.type == 'trial';
+      return true;
+    }).toList();
 
     // 3. Handle expand/collapse logic
-    final displayNodes =
-        _isTimelineExpanded ? sortedNodes : sortedNodes.take(3).toList();
+    final displayNodes = _isTimelineExpanded
+        ? filteredNodes
+        : filteredNodes.take(4).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,241 +98,167 @@ extension _CaseDossierTimelineWidgets on _CaseDossierDetailPageState {
               ],
             ),
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 22.h),
         ],
 
-        Text(
-          '完整事件與訴訟脈絡',
-          style: LightTextStyles.sectionTitle(context).copyWith(
-            fontSize: 15.sp,
-            fontWeight: FontWeight.w900,
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                '完整事件與訴訟脈絡',
+                style: LightTextStyles.sectionTitle(context).copyWith(
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
+            Text(
+              '共 ${filteredNodes.length} 筆',
+              style: TextStyle(
+                fontSize: 11.sp,
+                fontWeight: FontWeight.w700,
+                color: CaseLibraryColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 10.h),
+
+        // Segmented Track Filter Pills
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              _buildTimelineFilterChip(
+                label: '全部 (${allNodes.length})',
+                value: 'all',
+              ),
+              SizedBox(width: 8.w),
+              _buildTimelineFilterChip(
+                label: '社會事件 ($eventCount)',
+                value: 'event',
+                dotColor: CaseLibraryColors.primaryGreen,
+              ),
+              SizedBox(width: 8.w),
+              _buildTimelineFilterChip(
+                label: '司法審理 ($trialCount)',
+                value: 'trial',
+                dotColor: CaseLibraryColors.accentGold,
+              ),
+            ],
           ),
         ),
-        SizedBox(height: 12.h),
+        SizedBox(height: 14.h),
 
-        // Vertical Timeline list
-        Column(
-          children: List.generate(displayNodes.length, (index) {
-            final node = displayNodes[index];
-            final isLast = index == displayNodes.length - 1;
+        if (displayNodes.isEmpty)
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(16.w),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12.r),
+              border: Border.all(color: CaseLibraryColors.borderLight),
+            ),
+            child: Text(
+              '此分類目前尚無紀錄。',
+              style: LightTextStyles.bodySmall(context),
+            ),
+          )
+        else
+          // Dual-Track Vertical Timeline Cards
+          Column(
+            children: List.generate(displayNodes.length, (index) {
+              final node = displayNodes[index];
+              final isLast = index == displayNodes.length - 1;
+              final isTrial = node.type == 'trial';
+              final trackColor = isTrial
+                  ? CaseLibraryColors.accentGold
+                  : CaseLibraryColors.primaryGreen;
+              final stageLabel =
+                  isTrial ? node.trialStep!.stage : '案發經過';
 
-            if (node.type == 'event') {
               return IntrinsicHeight(
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Date label (left)
+                    // Left Vertical Rail + Track Dot
                     SizedBox(
-                      width: 76.w,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 2.h),
-                        child: Text(
-                          node.date,
-                          style: TextStyle(
-                            fontSize: 11.5.sp,
-                            fontWeight: FontWeight.w900,
-                            color: CaseLibraryColors.accentGold,
+                      width: 20.w,
+                      child: Column(
+                        children: [
+                          SizedBox(height: 14.h),
+                          Container(
+                            width: 11.w,
+                            height: 11.w,
+                            decoration: BoxDecoration(
+                              color: trackColor,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: CaseLibraryColors.bgCream,
+                                width: 2,
+                              ),
+                            ),
                           ),
-                        ),
+                          if (!isLast)
+                            Expanded(
+                              child: Container(
+                                width: 2.w,
+                                margin: EdgeInsets.symmetric(vertical: 4.h),
+                                color: trackColor.withValues(alpha: 0.25),
+                              ),
+                            ),
+                        ],
                       ),
                     ),
-                    // Middle Line & Dot
-                    Column(
-                      children: [
-                        Container(
-                          width: 10.w,
-                          height: 10.w,
-                          decoration: BoxDecoration(
-                            color: CaseLibraryColors.primaryGreen,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                color: CaseLibraryColors.bgCream, width: 2),
-                          ),
-                        ),
-                        if (!isLast)
-                          Expanded(
-                            child: Container(
-                              width: 1.5.w,
-                              color: CaseLibraryColors.primaryGreen
-                                  .withValues(alpha: 0.3),
-                            ),
-                          ),
-                      ],
-                    ),
-                    SizedBox(width: 14.w),
-                    // Content (right)
+                    SizedBox(width: 8.w),
+                    // Right Structured Card
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsets.only(bottom: 20.h),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              node.title,
-                              style: TextStyle(
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w900,
-                                color: CaseLibraryColors.primaryGreen,
-                              ),
+                        padding: EdgeInsets.only(bottom: 12.h),
+                        child: Container(
+                          padding: EdgeInsets.all(14.w),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(14.r),
+                            border: Border.all(
+                              color: isTrial
+                                  ? CaseLibraryColors.accentGold
+                                      .withValues(alpha: 0.35)
+                                  : CaseLibraryColors.borderLight,
                             ),
-                            SizedBox(height: 4.h),
-                            Text(
-                              node.description,
-                              style:
-                                  LightTextStyles.bodySmall(context).copyWith(
-                                fontSize: 11.5.sp,
-                                height: 1.45,
-                                color: CaseLibraryColors.textSecondary,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.025),
+                                blurRadius: 8,
+                                offset: const Offset(0, 3),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
+                          child: isTrial
+                              ? _buildTrialTimelineCardContent(
+                                  context,
+                                  node.date,
+                                  stageLabel,
+                                  node.trialStep!,
+                                )
+                              : _buildEventTimelineCardContent(
+                                  context,
+                                  node.date,
+                                  stageLabel,
+                                  node.title,
+                                  node.description,
+                                ),
                         ),
                       ),
                     ),
                   ],
                 ),
               );
-            } else {
-              // Trial node (no card box, rendered directly like event items)
-              final step = node.trialStep!;
-              return IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Date label (left)
-                    SizedBox(
-                      width: 76.w,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 2.h),
-                        child: Text(
-                          node.date,
-                          style: TextStyle(
-                            fontSize: 11.5.sp,
-                            fontWeight: FontWeight.w900,
-                            color: CaseLibraryColors.accentGold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Timeline line & dot
-                    Column(
-                      children: [
-                        Container(
-                          width: 10.w,
-                          height: 10.w,
-                          decoration: BoxDecoration(
-                            color: CaseLibraryColors.accentGold,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                color: CaseLibraryColors.bgCream, width: 2),
-                          ),
-                        ),
-                        if (!isLast)
-                          Expanded(
-                            child: Container(
-                              width: 1.5.w,
-                              color: CaseLibraryColors.primaryGreen
-                                  .withValues(alpha: 0.3),
-                            ),
-                          ),
-                      ],
-                    ),
-                    SizedBox(width: 14.w),
-                    // Trial Content (right)
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 20.h),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Stage Badge + Court Name
-                            Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 6.w, vertical: 2.h),
-                                  decoration: BoxDecoration(
-                                    color: CaseLibraryColors.accentGold
-                                        .withValues(alpha: 0.15),
-                                    borderRadius: BorderRadius.circular(4.r),
-                                  ),
-                                  child: Text(
-                                    step.stage,
-                                    style: TextStyle(
-                                      fontSize: 9.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: CaseLibraryColors.accentGold,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 8.w),
-                                Expanded(
-                                  child: Text(
-                                    step.courtName,
-                                    style: TextStyle(
-                                      fontSize: 13.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: CaseLibraryColors.primaryGreen,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 6.h),
-                            Text(
-                              step.caseNumber,
-                              style: TextStyle(
-                                fontSize: 10.5.sp,
-                                color: CaseLibraryColors.textSecondary,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 6.h),
-                            Text(
-                              step.outcome,
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                color: const Color(0xFF2E7D32),
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                            SizedBox(height: 8.h),
-                            GestureDetector(
-                              onTap: () =>
-                                  _showHoldingBottomSheet(context, step),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    '檢視裁判理由',
-                                    style: TextStyle(
-                                      fontSize: 11.sp,
-                                      color: CaseLibraryColors.accentGold,
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                                  ),
-                                  SizedBox(width: 4.w),
-                                  CaseLibrarySvgIcon(
-                                    CaseLibrarySvgIcons.article,
-                                    size: 13.sp,
-                                    color: CaseLibraryColors.accentGold,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }
-          }),
-        ),
+            }),
+          ),
 
         // Expand / Collapse Timeline button & Interactive Timeline Page Entry
-        if (sortedNodes.length > 3) ...[
+        if (filteredNodes.length > 4) ...[
           Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -392,6 +331,219 @@ extension _CaseDossierTimelineWidgets on _CaseDossierDetailPageState {
           ),
           SizedBox(height: 24.h),
         ],
+      ],
+    );
+  }
+
+  Widget _buildTimelineFilterChip({
+    required String label,
+    required String value,
+    Color? dotColor,
+  }) {
+    final isSelected = _timelineFilter == value;
+    return InkWell(
+      onTap: () => _setTimelineFilter(value),
+      borderRadius: BorderRadius.circular(999),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+        decoration: BoxDecoration(
+          color: isSelected ? CaseLibraryColors.primaryGreen : Colors.white,
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(
+            color: isSelected
+                ? CaseLibraryColors.primaryGreen
+                : CaseLibraryColors.borderLight,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (dotColor != null) ...[
+              Container(
+                width: 7.w,
+                height: 7.w,
+                decoration: BoxDecoration(
+                  color: isSelected ? Colors.white : dotColor,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              SizedBox(width: 6.w),
+            ],
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11.sp,
+                fontWeight: FontWeight.w700,
+                color: isSelected ? Colors.white : CaseLibraryColors.textPrimary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEventTimelineCardContent(
+    BuildContext context,
+    String date,
+    String stageLabel,
+    String title,
+    String description,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+              decoration: BoxDecoration(
+                color: CaseLibraryColors.primaryGreen.withValues(alpha: 0.10),
+                borderRadius: BorderRadius.circular(6.r),
+              ),
+              child: Text(
+                stageLabel,
+                style: TextStyle(
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w800,
+                  color: CaseLibraryColors.primaryGreen,
+                ),
+              ),
+            ),
+            SizedBox(width: 8.w),
+            Expanded(
+              child: Text(
+                date,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 11.5.sp,
+                  fontWeight: FontWeight.w800,
+                  color: CaseLibraryColors.textSecondary,
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 8.h),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 13.5.sp,
+            fontWeight: FontWeight.w800,
+            color: CaseLibraryColors.primaryGreen,
+            height: 1.35,
+          ),
+        ),
+        if (description.trim().isNotEmpty) ...[
+          SizedBox(height: 5.h),
+          Text(
+            description,
+            style: LightTextStyles.bodySmall(context).copyWith(
+              fontSize: 12.sp,
+              height: 1.5,
+              color: CaseLibraryColors.textSecondary,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildTrialTimelineCardContent(
+    BuildContext context,
+    String date,
+    String stageLabel,
+    _TrialStep step,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+              decoration: BoxDecoration(
+                color: CaseLibraryColors.accentGold.withValues(alpha: 0.16),
+                borderRadius: BorderRadius.circular(6.r),
+              ),
+              child: Text(
+                stageLabel,
+                style: TextStyle(
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w800,
+                  color: const Color(0xFF9E7B2D),
+                ),
+              ),
+            ),
+            SizedBox(width: 8.w),
+            Expanded(
+              child: Text(
+                date,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 11.5.sp,
+                  fontWeight: FontWeight.w800,
+                  color: CaseLibraryColors.textSecondary,
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 8.h),
+        Text(
+          step.courtName,
+          style: TextStyle(
+            fontSize: 13.5.sp,
+            fontWeight: FontWeight.w800,
+            color: CaseLibraryColors.primaryGreen,
+          ),
+        ),
+        if (step.caseNumber.trim().isNotEmpty) ...[
+          SizedBox(height: 3.h),
+          Text(
+            step.caseNumber,
+            style: TextStyle(
+              fontSize: 11.sp,
+              color: CaseLibraryColors.textSecondary,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+        SizedBox(height: 6.h),
+        Text(
+          step.outcome,
+          style: TextStyle(
+            fontSize: 12.sp,
+            color: const Color(0xFF2E7D32),
+            fontWeight: FontWeight.w800,
+            height: 1.45,
+          ),
+        ),
+        SizedBox(height: 8.h),
+        GestureDetector(
+          onTap: () => _showHoldingBottomSheet(context, step),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '檢視裁判理由',
+                style: TextStyle(
+                  fontSize: 11.sp,
+                  color: CaseLibraryColors.accentGold,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              SizedBox(width: 4.w),
+              CaseLibrarySvgIcon(
+                CaseLibrarySvgIcons.article,
+                size: 13.sp,
+                color: CaseLibraryColors.accentGold,
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

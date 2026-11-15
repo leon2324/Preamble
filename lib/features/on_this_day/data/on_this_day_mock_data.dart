@@ -48,20 +48,14 @@ const List<OnThisDayCase> onThisDayCases = [
     ],
     photos: [
       OnThisDayPhoto(
-        photoUrl: 'assets/images/on_this_day/nylon_speech.jpg',
-        caption: '鄭南榕於世新大學演講 (1988)',
+        photoUrl:
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/04.07_%E3%80%8C%E9%84%AD%E5%8D%97%E6%A6%9528%E9%80%B1%E5%B9%B4%E7%B4%80%E5%BF%B5%E8%BF%BD%E6%80%9D%E6%9C%83%E3%80%8D_%2833889642495%29.jpg/960px-04.07_%E3%80%8C%E9%84%AD%E5%8D%97%E6%A6%9528%E9%80%B1%E5%B9%B4%E7%B4%80%E5%BF%B5%E8%BF%BD%E6%80%9D%E6%9C%83%E3%80%8D_%2833889642495%29.jpg',
+        caption: '鄭南榕殉道紀念追思會現場攝影紀錄（Wikimedia Commons CC 授權）',
       ),
       OnThisDayPhoto(
-        photoUrl: 'assets/images/on_this_day/magazine_cover.jpg',
-        caption: '《自由時代》雜誌封面 (1988)',
-      ),
-      OnThisDayPhoto(
-        photoUrl: 'assets/images/on_this_day/clash_1989.jpg',
-        caption: '警民衝突與運動現場 (1989.04)',
-      ),
-      OnThisDayPhoto(
-        photoUrl: 'assets/images/on_this_day/funeral.jpg',
-        caption: '鄭南榕出殯與群眾哀悼 (1989.05)',
+        photoUrl:
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Ceci_n%E2%80%99est_pas_place_de_Nylon_%28%E5%8D%97%E6%A6%95%E5%BB%A3%E5%A0%B4%29.jpg/960px-Ceci_n%E2%80%99est_pas_place_de_Nylon_%28%E5%8D%97%E6%A6%95%E5%BB%A3%E5%A0%B4%29.jpg',
+        caption: '「南榕廣場」言論自由紀念地景攝影（Wikimedia Commons CC 授權）',
       ),
     ],
     relatedCaseTitles: ['美麗島事件', '雷震案', '野百合學運'],
@@ -134,12 +128,14 @@ const List<OnThisDayCase> onThisDayCases = [
     ],
     photos: [
       OnThisDayPhoto(
-        photoUrl: 'assets/images/on_this_day/228_protest.jpg',
-        caption: '台北長官公署前聚集之抗議市民',
+        photoUrl:
+            'https://upload.wikimedia.org/wikipedia/commons/9/9b/Kaohsiung_Senior_High_Students_in_the_228_incident.jpg',
+        caption: '二二八事件高雄中學學生自衛隊歷史照片（Wikimedia Commons 公有領域）',
       ),
       OnThisDayPhoto(
-        photoUrl: 'assets/images/on_this_day/228_monument.jpg',
-        caption: '台北二二八和平紀念碑',
+        photoUrl:
+            'https://upload.wikimedia.org/wikipedia/commons/7/7b/228_Memorial_Park_Taipei.jpg',
+        caption: '台北二二八和平紀念公園與紀念碑實景（Wikimedia Commons CC 授權）',
       ),
     ],
     relatedCaseTitles: ['林宅血案', '美麗島事件', '雷震案'],
@@ -203,12 +199,14 @@ const List<OnThisDayCase> onThisDayCases = [
     ],
     photos: [
       OnThisDayPhoto(
-        photoUrl: 'assets/images/on_this_day/formosa_trial.jpg',
-        caption: '美麗島軍法大審公開法庭實況',
+        photoUrl:
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/%E7%BE%8E%E9%BA%97%E5%B3%B6%E9%9B%9C%E8%AA%8C_Formosa_-_The_Magazine_of_TAIWAN%27s_Democratic_Movement.jpg/960px-%E7%BE%8E%E9%BA%97%E5%B3%B6%E9%9B%9C%E8%AA%8C_Formosa_-_The_Magazine_of_TAIWAN%27s_Democratic_Movement.jpg',
+        caption: '1979年《美麗島》雜誌歷史刊物實照（Wikimedia Commons CC 授權）',
       ),
       OnThisDayPhoto(
-        photoUrl: 'assets/images/on_this_day/formosa_protest.jpg',
-        caption: '世界人權日遊行宣傳橫幅',
+        photoUrl:
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/%E7%BE%8E%E9%BA%97%E5%B3%B6%E9%9B%9C%E8%AA%8C%E7%A4%BE%E9%AB%98%E9%9B%84%E6%9C%8D%E5%8B%99%E8%99%95%E5%8E%9F%E5%9D%80.JPG/960px-%E7%BE%8E%E9%BA%97%E5%B3%B6%E9%9B%9C%E8%AA%8C%E7%A4%BE%E9%AB%98%E9%9B%84%E6%9C%8D%E5%8B%99%E8%99%95%E5%8E%9F%E5%9D%80.JPG',
+        caption: '美麗島雜誌社高雄服務處歷史原址實景（Wikimedia Commons CC 授權）',
       ),
     ],
     relatedCaseTitles: ['林宅血案', '雷震案', '江南案'],
@@ -272,8 +270,9 @@ const List<OnThisDayCase> onThisDayCases = [
     ],
     photos: [
       OnThisDayPhoto(
-        photoUrl: 'assets/images/on_this_day/lei_chen.jpg',
-        caption: '雷震步入軍事法庭受審',
+        photoUrl:
+            'https://upload.wikimedia.org/wikipedia/commons/3/39/Lei_Chen_%281959%29.jpg',
+        caption: '《自由中國》創辦人雷震先生歷史肖像（1959年攝，Wikimedia Commons 公有領域）',
       ),
     ],
     relatedCaseTitles: ['美麗島事件', '鄭南榕事件'],
@@ -333,8 +332,9 @@ const List<OnThisDayCase> onThisDayCases = [
     ],
     photos: [
       OnThisDayPhoto(
-        photoUrl: 'assets/images/on_this_day/sunflower_ly.jpg',
-        caption: '學生於立法院議場頂樓高舉標語',
+        photoUrl:
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Sunflower_Movement_collage.jpg/960px-Sunflower_Movement_collage.jpg',
+        caption: '2014年太陽花學運佔領立法院與集會遊行實景紀錄（Wikimedia Commons CC 授權）',
       ),
     ],
     relatedCaseTitles: ['太陽花學運佔領行政院', '野百合學運'],
@@ -394,8 +394,9 @@ const List<OnThisDayCase> onThisDayCases = [
     ],
     photos: [
       OnThisDayPhoto(
-        photoUrl: 'assets/images/on_this_day/sunflower_ey.jpg',
-        caption: '行政院周邊警民對峙實況',
+        photoUrl:
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Taipei_Sunflower_Movement_Lonely_Morning_Sunflower_%2813662063795%29.jpg/960px-Taipei_Sunflower_Movement_Lonely_Morning_Sunflower_%2813662063795%29.jpg',
+        caption: '2014年3月太陽花學運抗爭現場實景攝影（Wikimedia Commons CC 授權）',
       ),
     ],
     relatedCaseTitles: ['太陽花學運佔領立法院', '美麗島事件'],
@@ -455,8 +456,9 @@ const List<OnThisDayCase> onThisDayCases = [
     ],
     photos: [
       OnThisDayPhoto(
-        photoUrl: 'assets/images/on_this_day/319_jeep.jpg',
-        caption: '正副總統遭槍擊時乘坐的紅色吉普車',
+        photoUrl:
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Judicial_Yuan_Building_20140307.jpg/960px-Judicial_Yuan_Building_20140307.jpg',
+        caption: '司法院大廈實景：大法官作成釋字第585號解釋審查真調會條例合憲性（Wikimedia Commons CC 授權）',
       ),
     ],
     relatedCaseTitles: ['江南案', '鄭南榕事件'],
@@ -511,8 +513,9 @@ const List<OnThisDayCase> onThisDayCases = [
     ],
     photos: [
       OnThisDayPhoto(
-        photoUrl: 'assets/images/on_this_day/tca_meeting.jpg',
-        caption: '臺灣文化協會創立大會合影',
+        photoUrl:
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Anthem_of_the_Taiwanese_Cultural_Association_20210313.jpg/960px-Anthem_of_the_Taiwanese_Cultural_Association_20210313.jpg',
+        caption: '臺灣文化協會《會歌》歷史文物展覽攝影（Wikimedia Commons CC 授權）',
       ),
     ],
     relatedCaseTitles: ['雷震案', '美麗島事件'],
@@ -567,8 +570,9 @@ const List<OnThisDayCase> onThisDayCases = [
     ],
     photos: [
       OnThisDayPhoto(
-        photoUrl: 'assets/images/on_this_day/lin_family.jpg',
-        caption: '林義雄與其家人合影紀錄',
+        photoUrl:
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/%E6%9E%97%E7%BE%A9%E9%9B%84%E5%AE%B6%E6%9B%B8.jpg/960px-%E6%9E%97%E7%BE%A9%E9%9B%84%E5%AE%B6%E6%9B%B8.jpg',
+        caption: '林義雄獄中家書歷史手稿紀錄照片（Wikimedia Commons CC 授權）',
       ),
     ],
     relatedCaseTitles: ['二二八事件', '美麗島事件', '江南案'],
@@ -623,8 +627,9 @@ const List<OnThisDayCase> onThisDayCases = [
     ],
     photos: [
       OnThisDayPhoto(
-        photoUrl: 'assets/images/on_this_day/chiang_nan.jpg',
-        caption: '作家劉宜良（筆名江南）生前照片',
+        photoUrl:
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Criminal_Division_Building%2C_Taiwan_High_Court_20221113.jpg/960px-Criminal_Division_Building%2C_Taiwan_High_Court_20221113.jpg',
+        caption: '臺灣高等法院刑事庭大廈實景：承審江南案相關司法審判程序（Wikimedia Commons CC 授權）',
       ),
     ],
     relatedCaseTitles: ['美麗島事件', '林宅血案', '319槍擊事件'],
@@ -654,6 +659,39 @@ OnThisDayCase? onThisDayCaseById(String id) {
 
 List<OnThisDayCase> onThisDayCasesForDate(int month, int day) {
   return onThisDayCases.where((c) => c.month == month && c.day == day).toList();
+}
+
+List<OnThisDayCase> onThisDayCasesForMonth(int month) {
+  final list = onThisDayCases.where((c) => c.month == month).toList()
+    ..sort((a, b) => a.day.compareTo(b.day));
+  return list;
+}
+
+/// 取得指定月／日最鄰近的歷史案件：
+/// 1. 若當日即有事件，回傳當日第一筆；
+/// 2. 否則優先在「當月」尋找即將到來或最近剛過的歷史日期；
+/// 3. 若當月無館藏，則依全年日序尋找最接近的下一筆歷史事件。
+OnThisDayCase? onThisDayNearestCaseForDate(int month, int day) {
+  if (onThisDayCases.isEmpty) return null;
+
+  final exact = onThisDayCasesForDate(month, day);
+  if (exact.isNotEmpty) return exact.first;
+
+  final sameMonth = onThisDayCasesForMonth(month);
+  if (sameMonth.isNotEmpty) {
+    final upcoming = sameMonth.where((c) => c.day > day).toList();
+    if (upcoming.isNotEmpty) return upcoming.first;
+    return sameMonth.last;
+  }
+
+  int dayIndex(int m, int d) => m * 32 + d;
+  final target = dayIndex(month, day);
+  final sorted = [...onThisDayCases]
+    ..sort((a, b) => dayIndex(a.month, a.day).compareTo(dayIndex(b.month, b.day)));
+  for (final c in sorted) {
+    if (dayIndex(c.month, c.day) >= target) return c;
+  }
+  return sorted.first;
 }
 
 const List<OnThisDayLegalQuote> onThisDayLegalQuotes = [

@@ -1,15 +1,17 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:preamble/components/shared/liquid_glass_widgets.dart';
 import 'package:preamble/platform/ios_today_case_widget_bridge.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 
-/// 台灣繁體中文教學註解：
-/// 這是 Apple 生態展示中心 (AppleEcosystemDemoPage)。
-/// 用於在 Maic 大賽中向評審演示 Live Activities, SwiftUI Widgets, PencilKit,
-/// Siri Shortcuts 等需要 Apple 付費證書才能在實機完整打包的 Apple 優勢特色，
-/// 同時在專案中建立最穩健的展示邏輯。
+/// 系統整合與實驗室（iOS 小工具、即時動態、Siri 捷徑與手寫辨識展示頁）。
+///
+/// 全面採用 `context.tokens` 靜奢設計系統與 `PhosphorIcons`，
+/// 支援淺深色雙模式、零 3D Emoji、零私用區 `U+F8FF` 字元。
 class AppleEcosystemDemoPage extends StatefulWidget {
   const AppleEcosystemDemoPage({super.key});
 
@@ -18,40 +20,34 @@ class AppleEcosystemDemoPage extends StatefulWidget {
 }
 
 class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
-  // 動態島狀態
   bool _isIslandExpanded = false;
-  final String _islandText = "1審宣判 倒數 3 天";
+  final String _islandText = '一審宣判 倒數 3 天';
 
-  // Widget 互動待辦
   final List<Map<String, dynamic>> _widgetTodos = [
-    {"title": "遞交訴訟委任狀", "checked": true},
-    {"title": "繳納第一審裁判費", "checked": false},
-    {"title": "聲請傳喚關鍵證人", "checked": false},
+    {'title': '遞交訴訟委任狀', 'checked': true},
+    {'title': '繳納第一審裁判費', 'checked': false},
+    {'title': '聲請傳喚關鍵證人', 'checked': false},
   ];
 
-  // Siri 語音動畫狀態
   bool _isSiriSpeaking = false;
-  String _siriResponse = "";
+  String _siriResponse = '';
   double _siriWaveHeight = 0.0;
   Timer? _siriTimer;
 
-  // PencilKit 畫板狀態
   final List<Offset?> _points = [];
   bool _isOcrConverted = false;
   final String _ocrText =
-      "起訴書\n原告：蒔光未來股份有限公司\n訴訟代理人：張三律師\n被告：被告股份有限公司\n為前開當事人間請求給付加班費事件，依法提起起訴。";
+      '起訴書\n原告：蒔光未來股份有限公司\n訴訟代理人：張三律師\n被告：相對人股份有限公司\n為前開當事人間請求給付加班費事件，依法提起起訴。';
 
-  // Live Text 相機狀態
   bool _isOcrScanning = false;
   bool _ocrScanDone = false;
 
   @override
   void initState() {
     super.initState();
-    // 初始化時同步一次待辦清單
     final activeTasks = _widgetTodos
-        .where((t) => t["checked"] == false)
-        .map((t) => t["title"] as String)
+        .where((t) => t['checked'] == false)
+        .map((t) => t['title'] as String)
         .toList();
     IosTodayCaseWidgetBridge.syncTodoList(activeTasks);
   }
@@ -62,25 +58,28 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
     super.dispose();
   }
 
-  // 模擬 Siri 觸發
   void _triggerSiri() {
     if (_isSiriSpeaking) return;
     HapticFeedback.heavyImpact();
     setState(() {
       _isSiriSpeaking = true;
-      _siriResponse = "正在傾聽...";
-      _siriWaveHeight = 30.0;
+      _siriResponse = '正在傾聽語音指令...';
+      _siriWaveHeight = 28.0;
     });
 
     int ticks = 0;
     _siriTimer = Timer.periodic(const Duration(milliseconds: 150), (timer) {
       ticks++;
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
       if (ticks == 10) {
         setState(() {
-          _siriResponse = "Siri：「您最近的開庭期日為 7 月 2 日 14:00，台北地院第 12 法庭。」";
-          _siriWaveHeight = 5.0;
-          HapticFeedback.mediumImpact();
+          _siriResponse = 'Siri：「您最近的開庭期日為 7 月 2 日 14:00，臺北地院第 12 法庭。」';
+          _siriWaveHeight = 6.0;
         });
+        HapticFeedback.mediumImpact();
       } else if (ticks == 30) {
         timer.cancel();
         setState(() {
@@ -88,17 +87,13 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
           _siriWaveHeight = 0.0;
         });
       } else {
-        // 隨機波形高度
-        if (mounted) {
-          setState(() {
-            _siriWaveHeight = 10.0 + (ticks % 3 == 0 ? 25.0 : 5.0);
-          });
-        }
+        setState(() {
+          _siriWaveHeight = 10.0 + (ticks % 3 == 0 ? 22.0 : 6.0);
+        });
       }
     });
   }
 
-  // 模擬相機 Live Text 掃描
   void _startCameraOcr() {
     HapticFeedback.selectionClick();
     setState(() {
@@ -110,108 +105,137 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
         setState(() {
           _isOcrScanning = false;
           _ocrScanDone = true;
-          HapticFeedback.vibrate();
         });
+        HapticFeedback.vibrate();
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
+
     return Scaffold(
-      body: LiquidGlassBackground(
-        child: SafeArea(
-          child: Stack(
-            children: [
-              // 主滾動區
-              Positioned.fill(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.fromLTRB(16.w, 64.h, 16.w, 40.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildHeader(),
-                      SizedBox(height: 16.h),
-                      _buildSectionTitle("📱 iOS 17 互動式桌面小工具 (Widgets)"),
-                      _buildWidgetDemo(),
-                      SizedBox(height: 24.h),
-                      _buildSectionTitle("✏️ PencilKit 批註手寫筆記 (Scribble)"),
-                      _buildPencilKitDemo(),
-                      SizedBox(height: 24.h),
-                      _buildSectionTitle(" Siri 捷徑語音與多彩流體波形"),
-                      _buildSiriDemo(),
-                      SizedBox(height: 24.h),
-                      _buildSectionTitle("📷 Live Text 活字相機（起訴書辨識）"),
-                      _buildCameraOcrDemo(),
-                      SizedBox(height: 24.h),
-                      _buildSectionTitle("⌚ Apple Watch & CarPlay 裝置整合"),
-                      _buildDeviceSimulators(),
-                      SizedBox(height: 40.h),
-                    ],
-                  ),
+      backgroundColor: t.canvas,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: EdgeInsets.fromLTRB(16.w, 62.h, 16.w, 40.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildHeader(t),
+                    SizedBox(height: 18.h),
+                    _buildSectionTitle(
+                      t,
+                      icon: PhosphorIconsRegular.squaresFour,
+                      title: 'iOS 互動式桌面小工具 (Widgets)',
+                    ),
+                    _buildWidgetDemo(t),
+                    SizedBox(height: 22.h),
+                    _buildSectionTitle(
+                      t,
+                      icon: PhosphorIconsRegular.pencilLine,
+                      title: 'PencilKit 批註與隨手寫筆記 (Scribble)',
+                    ),
+                    _buildPencilKitDemo(t),
+                    SizedBox(height: 22.h),
+                    _buildSectionTitle(
+                      t,
+                      icon: PhosphorIconsRegular.microphoneStage,
+                      title: 'Apple Siri 捷徑語音與快問整合',
+                    ),
+                    _buildSiriDemo(t),
+                    SizedBox(height: 22.h),
+                    _buildSectionTitle(
+                      t,
+                      icon: PhosphorIconsRegular.scan,
+                      title: 'Live Text 原況文字（起訴書光學辨識）',
+                    ),
+                    _buildCameraOcrDemo(t),
+                    SizedBox(height: 22.h),
+                    _buildSectionTitle(
+                      t,
+                      icon: PhosphorIconsRegular.watch,
+                      title: 'Apple Watch 與 CarPlay 跨裝置預覽',
+                    ),
+                    _buildDeviceSimulators(t),
+                  ],
                 ),
               ),
+            ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: EdgeInsets.only(top: 8.h),
+                child: _buildDynamicIsland(t),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-              // 螢幕最上方的「動態島 (Dynamic Island)」
-              Align(
-                alignment: Alignment.topCenter,
-                child: Padding(
-                  padding: EdgeInsets.only(top: 8.h),
-                  child: _buildDynamicIsland(),
-                ),
+  Widget _buildHeader(PreambleTokens t) {
+    return Row(
+      children: [
+        IconButton(
+          icon: Icon(
+            PhosphorIconsRegular.caretLeft,
+            color: t.textPrimary,
+            size: 22.sp,
+          ),
+          tooltip: '返回',
+          onPressed: () => Navigator.maybePop(context),
+        ),
+        SizedBox(width: 4.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '系統整合與實驗室',
+                style: t.serifTitle(size: 20.sp),
+              ),
+              SizedBox(height: 2.h),
+              Text(
+                'Apple iOS 與 iPadOS 小工具、捷徑及原況文字展示',
+                style: t.sansBody(size: 12.sp, color: t.textSecondary),
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Row(
-      children: [
-        IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Color(0xFF1B5E4F)),
-          onPressed: () => Navigator.pop(context),
-        ),
-        SizedBox(width: 8.w),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Apple 系統核心整合",
-              style: TextStyle(
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w900,
-                color: const Color(0xFF1B5E4F),
-              ),
-            ),
-            Text(
-              "iOS 與 iPadOS 原生底層與硬體整合",
-              style: TextStyle(fontSize: 11.sp, color: Colors.grey[600]),
-            ),
-          ],
-        )
       ],
     );
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(
+    PreambleTokens t, {
+    required IconData icon,
+    required String title,
+  }) {
     return Padding(
       padding: EdgeInsets.only(bottom: 10.h, left: 4.w),
-      child: Text(
-        title,
-        style: TextStyle(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.bold,
-          color: const Color(0xFF2E7D32),
-        ),
+      child: Row(
+        children: [
+          Icon(icon, size: 17.sp, color: t.brandPrimary),
+          SizedBox(width: 6.w),
+          Expanded(
+            child: Text(
+              title,
+              style: t.sansTitle(size: 14.sp, color: t.textPrimary),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  // 1. 動態島模擬
-  Widget _buildDynamicIsland() {
+  Widget _buildDynamicIsland(PreambleTokens t) {
     const liveActivityChannel = MethodChannel('preamble/live_activity');
     return GestureDetector(
       onTap: () async {
@@ -235,80 +259,104 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
         }
       },
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.elasticOut,
-        width: _isIslandExpanded ? 330.w : 110.w,
-        height: _isIslandExpanded ? 76.h : 28.h,
-        padding: EdgeInsets.symmetric(horizontal: 14.w),
+        duration: const Duration(milliseconds: 320),
+        curve: Curves.easeOutBack,
+        constraints: BoxConstraints(
+          maxWidth: _isIslandExpanded ? 328.w : 124.w,
+        ),
+        padding: EdgeInsets.symmetric(
+          horizontal: 14.w,
+          vertical: _isIslandExpanded ? 11.h : 6.h,
+        ),
         decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(_isIslandExpanded ? 24.r : 14.r),
+          color: const Color(0xFF101413),
+          borderRadius: BorderRadius.circular(_isIslandExpanded ? 24.r : 16.r),
+          border: Border.all(
+            color: t.accentBrass.withValues(alpha: 0.35),
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
-              blurRadius: 10,
+              color: t.shadowAmbient,
+              blurRadius: 12,
               offset: const Offset(0, 4),
-            )
+            ),
           ],
         ),
         child: _isIslandExpanded
             ? Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(6.w),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF2E7D32),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(Icons.scale,
-                            color: Colors.white, size: 16),
-                      ),
-                      SizedBox(width: 10.w),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "緒言 Preamble • 即時時程",
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 9.sp,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            _islandText,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ],
+                  Container(
+                    padding: EdgeInsets.all(7.w),
+                    decoration: BoxDecoration(
+                      color: t.brandPrimaryStrong,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      PhosphorIconsRegular.scales,
+                      color: t.accentBrass,
+                      size: 16.sp,
+                    ),
                   ),
-                  const Text(
-                    "3D 開庭中",
-                    style: TextStyle(
-                        color: Colors.orange,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold),
-                  )
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '緒言 Preamble • 即時動態',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: t.sansBody(
+                            size: 10.sp,
+                            weight: FontWeight.w600,
+                            color: const Color(0xFFA7B3AE),
+                          ),
+                        ),
+                        Text(
+                          _islandText,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: t.sansTitle(
+                            size: 13.sp,
+                            color: const Color(0xFFFAF8F4),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+                  Text(
+                    '期日提醒',
+                    style: t.sansBody(
+                      size: 10.5.sp,
+                      weight: FontWeight.w700,
+                      color: t.accentBrass,
+                    ),
+                  ),
                 ],
               )
             : Row(
+                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.scale, color: Color(0xFFFFB74D), size: 12),
-                  SizedBox(width: 4.w),
-                  Text(
-                    "Preamble",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.w900),
+                  Icon(
+                    PhosphorIconsRegular.scales,
+                    color: t.accentBrass,
+                    size: 13.sp,
+                  ),
+                  SizedBox(width: 5.w),
+                  Flexible(
+                    child: Text(
+                      'Preamble',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: t.sansBody(
+                        size: 10.5.sp,
+                        weight: FontWeight.w700,
+                        color: const Color(0xFFFAF8F4),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -316,324 +364,327 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
     );
   }
 
-  // 2. iOS 桌面小工具模擬
-  Widget _buildWidgetDemo() {
-    return LiquidGlassCard(
-      padding: EdgeInsets.all(14.w),
+  Widget _buildWidgetDemo(PreambleTokens t) {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: t.cardDecoration(radius: 20.r, elevated: false),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "直接在系統桌面新增小工具進行互動式勾選：",
-            style: TextStyle(fontSize: 10.5.sp, color: Colors.grey[700]),
+            '可於 iOS 桌面新增小工具並直接勾選訴訟待辦清單：',
+            style: t.sansBody(size: 12.sp, color: t.textSecondary),
           ),
           SizedBox(height: 12.h),
-          Center(
-            child: Container(
-              width: 310.w,
-              padding: EdgeInsets.all(14.w),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.r),
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFF1F8E9), Color(0xFFE8F5E9)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                border: Border.all(color: const Color(0xFFC8E6C9), width: 1.5),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  )
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(14.w),
+            decoration: BoxDecoration(
+              color: t.surfaceSubtle,
+              borderRadius: BorderRadius.circular(18.r),
+              border: Border.all(color: t.border),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.scale,
-                              color: Color(0xFF2E7D32), size: 14),
-                          SizedBox(width: 4.w),
-                          Text(
-                            "訴訟準備進度",
-                            style: TextStyle(
-                                fontSize: 10.sp,
-                                fontWeight: FontWeight.bold,
-                                color: const Color(0xFF1B5E4F)),
+                          Icon(
+                            PhosphorIconsRegular.scales,
+                            color: t.brandPrimary,
+                            size: 15.sp,
+                          ),
+                          SizedBox(width: 5.w),
+                          Flexible(
+                            child: Text(
+                              '訴訟準備進度',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: t.sansTitle(
+                                size: 12.sp,
+                                color: t.brandPrimary,
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                      Text("一審準備程序",
-                          style: TextStyle(fontSize: 8.sp, color: Colors.grey)),
-                    ],
-                  ),
-                  const Divider(color: Color(0xFFC8E6C9), height: 16),
-                  Column(
-                    children: List.generate(_widgetTodos.length, (idx) {
-                      final item = _widgetTodos[idx];
-                      return Padding(
-                        padding: EdgeInsets.symmetric(vertical: 4.h),
+                    ),
+                    Text(
+                      '一審準備程序',
+                      style: t.sansBody(size: 10.5.sp, color: t.textMuted),
+                    ),
+                  ],
+                ),
+                Divider(color: t.border, height: 18.h),
+                Column(
+                  children: List.generate(_widgetTodos.length, (idx) {
+                    final item = _widgetTodos[idx];
+                    final isChecked = item['checked'] as bool;
+                    return InkWell(
+                      onTap: () {
+                        HapticFeedback.mediumImpact();
+                        setState(() {
+                          _widgetTodos[idx]['checked'] = !isChecked;
+                        });
+                        final activeTasks = _widgetTodos
+                            .where((task) => task['checked'] == false)
+                            .map((task) => task['title'] as String)
+                            .toList();
+                        IosTodayCaseWidgetBridge.syncTodoList(activeTasks);
+                      },
+                      borderRadius: BorderRadius.circular(8.r),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 5.h),
                         child: Row(
                           children: [
-                            GestureDetector(
-                              onTap: () {
-                                HapticFeedback.mediumImpact();
-                                setState(() {
-                                  _widgetTodos[idx]["checked"] =
-                                      !_widgetTodos[idx]["checked"];
-                                });
-                                final activeTasks = _widgetTodos
-                                    .where((t) => t["checked"] == false)
-                                    .map((t) => t["title"] as String)
-                                    .toList();
-                                IosTodayCaseWidgetBridge.syncTodoList(
-                                    activeTasks);
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: item["checked"]
-                                      ? const Color(0xFF2E7D32)
-                                      : Colors.transparent,
-                                  border: Border.all(
-                                      color: const Color(0xFF2E7D32),
-                                      width: 1.5),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(2.0),
-                                  child: item["checked"]
-                                      ? const Icon(Icons.check,
-                                          size: 10, color: Colors.white)
-                                      : SizedBox(width: 10.w, height: 10.w),
-                                ),
-                              ),
+                            Icon(
+                              isChecked
+                                  ? PhosphorIconsFill.checkCircle
+                                  : PhosphorIconsRegular.circle,
+                              size: 18.sp,
+                              color: isChecked ? t.brandPrimary : t.textMuted,
                             ),
                             SizedBox(width: 10.w),
-                            Text(
-                              item["title"],
-                              style: TextStyle(
-                                fontSize: 11.sp,
-                                color: item["checked"]
-                                    ? Colors.grey
-                                    : const Color(0xFF0F1216),
-                                decoration: item["checked"]
-                                    ? TextDecoration.lineThrough
-                                    : null,
+                            Expanded(
+                              child: Text(
+                                item['title'] as String,
+                                style: t.sansBody(
+                                  size: 12.5.sp,
+                                  color: isChecked
+                                      ? t.textMuted
+                                      : t.textPrimary,
+                                ).copyWith(
+                                  decoration: isChecked
+                                      ? TextDecoration.lineThrough
+                                      : null,
+                                ),
                               ),
                             ),
                           ],
                         ),
-                      );
-                    }),
-                  ),
-                ],
-              ),
+                      ),
+                    );
+                  }),
+                ),
+              ],
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
-  // 3. PencilKit 批註畫板
-  Widget _buildPencilKitDemo() {
-    return LiquidGlassCard(
-      padding: EdgeInsets.all(14.w),
+  Widget _buildPencilKitDemo(PreambleTokens t) {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: t.cardDecoration(radius: 20.r, elevated: false),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "支援在 iPad 上的 Apple Pencil 手寫筆記與隨手寫：",
-            style: TextStyle(fontSize: 10.5.sp, color: Colors.grey[700]),
+            '支援 iPadOS 手寫批註與隨手寫（Scribble）文字轉換：',
+            style: t.sansBody(size: 12.sp, color: t.textSecondary),
           ),
           SizedBox(height: 10.h),
-          // 畫板區域
-          Container(
-            height: 120.h,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(color: Colors.grey[300]!),
-            ),
-            child: GestureDetector(
-              onPanUpdate: (details) {
-                final RenderBox renderBox =
-                    context.findRenderObject() as RenderBox;
-                final localPosition =
-                    renderBox.globalToLocal(details.globalPosition);
-                // 限制畫筆僅在畫布內
-                setState(() {
-                  _points.add(details.localPosition);
-                });
-              },
-              onPanEnd: (details) => _points.add(null),
-              child: CustomPaint(
-                painter: PencilKitPainter(points: _points),
-                size: Size.infinite,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(14.r),
+            child: Container(
+              height: 120.h,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: t.surfaceSubtle,
+                borderRadius: BorderRadius.circular(14.r),
+                border: Border.all(color: t.border),
+              ),
+              child: GestureDetector(
+                onPanUpdate: (details) {
+                  setState(() {
+                    _points.add(details.localPosition);
+                  });
+                },
+                onPanEnd: (_) => _points.add(null),
+                child: CustomPaint(
+                  painter: PencilKitPainter(
+                    points: _points,
+                    strokeColor: t.brandPrimary,
+                  ),
+                  size: Size.infinite,
+                ),
               ),
             ),
           ),
-          SizedBox(height: 10.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          SizedBox(height: 12.h),
+          Wrap(
+            spacing: 8.w,
+            runSpacing: 8.h,
+            alignment: WrapAlignment.spaceBetween,
             children: [
-              LiquidGlassButton(
-                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-                buttonColor: const Color(0xFFC62828).withValues(alpha: 0.1),
-                onTap: () {
+              OutlinedButton.icon(
+                onPressed: () {
                   setState(() {
                     _points.clear();
                     _isOcrConverted = false;
                   });
                 },
-                child: Text("清除畫布",
-                    style: TextStyle(
-                        color: const Color(0xFFC62828),
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.bold)),
+                icon: Icon(PhosphorIconsRegular.eraser, size: 15.sp),
+                label: const Text('清除畫布'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: t.semanticUrgent,
+                  side: BorderSide(
+                    color: t.semanticUrgent.withValues(alpha: 0.4),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                ),
               ),
-              LiquidGlassButton(
-                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-                buttonColor: const Color(0xFF1B5E4F).withValues(alpha: 0.1),
-                onTap: () {
+              FilledButton.tonalIcon(
+                onPressed: () {
                   HapticFeedback.mediumImpact();
                   setState(() {
                     _isOcrConverted = true;
                   });
                 },
-                child: Text("隨手寫 (Scribble) 辨識",
-                    style: TextStyle(
-                        color: const Color(0xFF1B5E4F),
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.bold)),
+                icon: Icon(PhosphorIconsRegular.textT, size: 15.sp),
+                label: const Text('隨手寫 (Scribble) 辨識'),
+                style: FilledButton.styleFrom(
+                  backgroundColor: t.brandContainer,
+                  foregroundColor: t.brandPrimary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                ),
               ),
             ],
           ),
           if (_isOcrConverted) ...[
             SizedBox(height: 12.h),
             Container(
-              padding: EdgeInsets.all(10.w),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF9F7F2),
-                borderRadius: BorderRadius.circular(8.r),
-                border: Border.all(color: const Color(0xFFE0DCCF)),
-              ),
+              width: double.infinity,
+              padding: EdgeInsets.all(12.w),
+              decoration: t.subtleBoxDecoration(radius: 14.r),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("✍️ Apple Scribble 轉文字成果：",
-                      style: TextStyle(
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFF1B5E4F))),
-                  SizedBox(height: 4.h),
-                  Text(_ocrText,
-                      style: TextStyle(
-                          fontSize: 10.sp,
-                          height: 1.4,
-                          color: Colors.grey[800])),
+                  Row(
+                    children: [
+                      Icon(
+                        PhosphorIconsRegular.pencilSimpleLine,
+                        size: 15.sp,
+                        color: t.brandPrimary,
+                      ),
+                      SizedBox(width: 6.w),
+                      Expanded(
+                        child: Text(
+                          'Apple Scribble 轉文字成果：',
+                          style: t.sansTitle(
+                            size: 12.sp,
+                            color: t.brandPrimary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 6.h),
+                  Text(
+                    _ocrText,
+                    style: t.sansBody(
+                      size: 12.sp,
+                      height: 1.5,
+                      color: t.textPrimary,
+                    ),
+                  ),
                 ],
               ),
-            )
-          ]
+            ),
+          ],
         ],
       ),
     );
   }
 
-  // 4. Siri 語音捷徑
-  Widget _buildSiriDemo() {
-    return LiquidGlassCard(
-      padding: EdgeInsets.all(14.w),
+  Widget _buildSiriDemo(PreambleTokens t) {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: t.cardDecoration(radius: 20.r, elevated: false),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "對接 Siri 捷徑語音指令：",
-            style: TextStyle(fontSize: 10.5.sp, color: Colors.grey[700]),
+            '對接 iOS 捷徑（Shortcuts）語音喚醒與快速問診指令：',
+            style: t.sansBody(size: 12.sp, color: t.textSecondary),
           ),
           SizedBox(height: 12.h),
           Center(
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Wrap(
+                  spacing: 10.w,
+                  runSpacing: 8.h,
+                  alignment: WrapAlignment.center,
                   children: [
-                    LiquidGlassButton(
-                      buttonColor: const Color(0xFF0F1216),
-                      onTap: _triggerSiri,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.mic, color: Colors.white, size: 16),
-                          SizedBox(width: 6.w),
-                          Text("喚醒 Siri",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11.sp,
-                                  fontWeight: FontWeight.bold)),
-                        ],
+                    FilledButton.icon(
+                      onPressed: _triggerSiri,
+                      icon: Icon(PhosphorIconsRegular.microphone, size: 16.sp),
+                      label: const Text('喚醒 Siri 查詢期日'),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: t.surfaceElevated,
+                        foregroundColor: t.textPrimary,
+                        side: BorderSide(color: t.borderStrong),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
                       ),
                     ),
-                    SizedBox(width: 8.w),
-                    LiquidGlassButton(
-                      buttonColor: const Color(0xFF1B5E4F),
-                      onTap: () {
+                    FilledButton.icon(
+                      onPressed: () {
                         HapticFeedback.mediumImpact();
-                        // 模擬原生 iOS Siri Intents / Shortcuts 喚醒並傳遞 prompt 參數
-                        ServicesBinding.instance.defaultBinaryMessenger
-                            .handlePlatformMessage(
+                        ServicesBinding.instance.channelBuffers.push(
                           'preamble/quick_ask_intent',
                           const StandardMethodCodec().encodeMethodCall(
                             const MethodCall(
-                                'openQuickAsk', {'prompt': '租屋押金被扣怎麼辦？'}),
+                              'openQuickAsk',
+                              {'prompt': '租屋押金被扣怎麼辦？'},
+                            ),
                           ),
                           (ByteData? data) {},
                         );
-                        // 關閉當前頁面返回主畫面，以便看見切換 Tab 與彈出小法助的動畫
-                        Navigator.of(context).pop();
+                        Navigator.of(context).maybePop();
                       },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.bolt, color: Colors.white, size: 16),
-                          SizedBox(width: 6.w),
-                          Text("快捷指令快問",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11.sp,
-                                  fontWeight: FontWeight.bold)),
-                        ],
+                      icon: Icon(PhosphorIconsRegular.lightning, size: 16.sp),
+                      label: const Text('捷徑指令快問'),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: t.brandPrimaryStrong,
+                        foregroundColor: const Color(0xFFFAF8F4),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
                       ),
                     ),
                   ],
                 ),
                 if (_isSiriSpeaking) ...[
                   SizedBox(height: 14.h),
-                  // Siri 波形動畫
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 150),
                     height: _siriWaveHeight.h,
                     width: 140.w,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: List.generate(7, (idx) {
+                      children: List.generate(7, (_) {
                         return Container(
                           width: 4.w,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(2.r),
-                            gradient: const LinearGradient(
+                            gradient: LinearGradient(
                               colors: [
-                                Colors.purple,
-                                Colors.blue,
-                                Colors.cyan,
-                                Colors.pink
+                                t.brandPrimary,
+                                t.accentBrass,
                               ],
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
@@ -647,281 +698,383 @@ class _AppleEcosystemDemoPageState extends State<AppleEcosystemDemoPage> {
                   Text(
                     _siriResponse,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1B5E4F)),
+                    style: t.sansTitle(size: 12.sp, color: t.brandPrimary),
                   ),
-                ]
+                ],
               ],
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
-  // 5. Live Text 相機整合
-  Widget _buildCameraOcrDemo() {
-    return LiquidGlassCard(
-      padding: EdgeInsets.all(14.w),
+  Widget _buildCameraOcrDemo(PreambleTokens t) {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: t.cardDecoration(radius: 20.r, elevated: false),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "整合 iOS Live Text (相機活字辨識)，對準紙本法規與判決書直接抓取文字：",
-            style: TextStyle(fontSize: 10.5.sp, color: Colors.grey[700]),
+            '整合原況文字（Live Text），對準紙本法規與裁判書擷取關鍵段落：',
+            style: t.sansBody(size: 12.sp, color: t.textSecondary),
           ),
           SizedBox(height: 12.h),
           Center(
             child: Column(
               children: [
-                LiquidGlassButton(
-                  buttonColor: const Color(0xFF1B5E4F),
-                  onTap: _startCameraOcr,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.camera_alt,
-                          color: Colors.white, size: 16),
-                      SizedBox(width: 6.w),
-                      Text("對準判決書掃描並提取文字",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 11.sp,
-                              fontWeight: FontWeight.bold)),
-                    ],
+                FilledButton.icon(
+                  onPressed: _startCameraOcr,
+                  icon: Icon(PhosphorIconsRegular.camera, size: 16.sp),
+                  label: const Text('模擬掃描裁判書並擷取文字'),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: t.brandPrimaryStrong,
+                    foregroundColor: const Color(0xFFFAF8F4),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
                   ),
                 ),
                 if (_isOcrScanning) ...[
                   SizedBox(height: 14.h),
                   LiquidGlassShimmer(
                     width: double.infinity,
-                    height: 50.h,
-                    radius: 10.r,
+                    height: 48.h,
+                    radius: 12.r,
                   ),
                   SizedBox(height: 8.h),
-                  Text("iOS Live Text 正在光學識別中...",
-                      style: TextStyle(fontSize: 10.sp, color: Colors.grey)),
+                  Text(
+                    '正在進行原況文字光學辨識...',
+                    style: t.sansBody(size: 11.5.sp, color: t.textMuted),
+                  ),
                 ],
                 if (_ocrScanDone) ...[
                   SizedBox(height: 14.h),
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(10.w),
+                    padding: EdgeInsets.all(12.w),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFE8F5E9),
-                      borderRadius: BorderRadius.circular(10.r),
-                      border: Border.all(color: const Color(0xFFC8E6C9)),
+                      color: t.semanticSuccessContainer,
+                      borderRadius: BorderRadius.circular(14.r),
+                      border: Border.all(
+                        color: t.semanticSuccess.withValues(alpha: 0.35),
+                      ),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
-                            const Icon(Icons.check_circle,
-                                color: Color(0xFF2E7D32), size: 14),
-                            SizedBox(width: 4.w),
-                            Text("辨識成功！文字已匯入手帳草稿",
-                                style: TextStyle(
-                                    fontSize: 10.5.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: const Color(0xFF1B5E4F))),
+                            Icon(
+                              PhosphorIconsFill.checkCircle,
+                              color: t.semanticSuccess,
+                              size: 16.sp,
+                            ),
+                            SizedBox(width: 6.w),
+                            Expanded(
+                              child: Text(
+                                '辨識完成，已擷取判決主文摘要',
+                                style: t.sansTitle(
+                                  size: 12.sp,
+                                  color: t.semanticSuccess,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                         SizedBox(height: 6.h),
                         Text(
-                          "「臺灣臺北地方法院民事判決 - 115年度勞訴字第99號... 請求給付加班費事件，判決主文：被告應給付原告新臺幣參拾萬零捌仟元。」",
-                          style: TextStyle(
-                              fontSize: 9.5.sp,
-                              color: Colors.grey[800],
-                              height: 1.4),
+                          '「臺灣臺北地方法院民事判決 — 115 年度勞訴字第 99 號請求給付加班費事件，主文：被告應給付原告新臺幣參拾萬零捌仟元。」',
+                          style: t.sansBody(
+                            size: 11.5.sp,
+                            color: t.textPrimary,
+                            height: 1.48,
+                          ),
                         ),
                       ],
                     ),
-                  )
-                ]
+                  ),
+                ],
               ],
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
-  // 6. 多端連動整合
-  Widget _buildDeviceSimulators() {
-    return LiquidGlassCard(
-      padding: EdgeInsets.all(14.w),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  Widget _buildDeviceSimulators(PreambleTokens t) {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: t.cardDecoration(radius: 20.r, elevated: false),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isNarrow = constraints.maxWidth < 290;
+          final watchCard = _buildWatchPreviewCard(t);
+          final carPlayCard = _buildCarPlayPreviewCard(t);
+
+          if (isNarrow) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                watchCard,
+                SizedBox(height: 12.h),
+                carPlayCard,
+              ],
+            );
+          }
+
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Watch 整合
-              Column(
+              Expanded(flex: 4, child: watchCard),
+              SizedBox(width: 10.w),
+              Expanded(flex: 6, child: carPlayCard),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildWatchPreviewCard(PreambleTokens t) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              PhosphorIconsRegular.watch,
+              size: 14.sp,
+              color: t.textSecondary,
+            ),
+            SizedBox(width: 4.w),
+            Flexible(
+              child: Text(
+                'Apple Watch',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: t.sansTitle(size: 11.5.sp, color: t.textSecondary),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 8.h),
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(10.w),
+          decoration: BoxDecoration(
+            color: const Color(0xFF101413),
+            borderRadius: BorderRadius.circular(20.r),
+            border: Border.all(color: const Color(0xFF2D3532), width: 3),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("⌚ Apple Watch",
-                      style: TextStyle(
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey[700])),
-                  SizedBox(height: 8.h),
-                  Container(
-                    width: 100.w,
-                    height: 120.h,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(24.r),
-                      border: Border.all(color: Colors.grey[800]!, width: 4),
+                  Icon(
+                    PhosphorIconsRegular.scales,
+                    color: t.accentBrass,
+                    size: 12.sp,
+                  ),
+                  Text(
+                    '10:09',
+                    style: t.tabularMetric(
+                      size: 9.5.sp,
+                      color: const Color(0xFFFAF8F4),
                     ),
-                    padding: EdgeInsets.all(8.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Icon(Icons.scale,
-                                color: Color(0xFFFFB74D), size: 10),
-                            Text("10:09",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 8.sp,
-                                    fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                        const Divider(color: Colors.grey, height: 8),
-                        Text("開庭警告",
-                            style: TextStyle(
-                                color: Colors.red,
-                                fontSize: 8.sp,
-                                fontWeight: FontWeight.bold)),
-                        Text("下週二 14:00",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 9.sp,
-                                fontWeight: FontWeight.bold)),
-                        Text("二審準備程序",
-                            style:
-                                TextStyle(color: Colors.grey, fontSize: 8.sp)),
-                        const Spacer(),
-                        Container(
-                          width: double.infinity,
-                          height: 16.h,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF2E7D32),
-                            borderRadius: BorderRadius.circular(4.r),
-                          ),
-                          child: Center(
-                            child: Text("確認收悉",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 7.sp,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                        )
-                      ],
-                    ),
-                  )
+                  ),
                 ],
               ),
-              // CarPlay 整合
-              Column(
-                children: [
-                  Text("🚗 Apple CarPlay",
-                      style: TextStyle(
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey[700])),
-                  SizedBox(height: 8.h),
-                  Container(
-                    width: 160.w,
-                    height: 120.h,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF0F1216),
-                      borderRadius: BorderRadius.circular(16.r),
-                      border: Border.all(color: Colors.grey[800]!, width: 3),
+              Divider(color: const Color(0xFF2D3532), height: 10.h),
+              Text(
+                '開庭期日提醒',
+                style: t.sansBody(
+                  size: 10.sp,
+                  weight: FontWeight.w700,
+                  color: t.accentBrass,
+                ),
+              ),
+              SizedBox(height: 2.h),
+              Text(
+                '下週二 14:00',
+                style: t.sansTitle(
+                  size: 11.sp,
+                  color: const Color(0xFFFAF8F4),
+                ),
+              ),
+              Text(
+                '二審準備程序',
+                style: t.sansBody(
+                  size: 9.5.sp,
+                  color: const Color(0xFFA7B3AE),
+                ),
+              ),
+              SizedBox(height: 8.h),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: t.brandPrimaryStrong,
+                  borderRadius: BorderRadius.circular(6.r),
+                ),
+                child: Center(
+                  child: Text(
+                    '確認收悉',
+                    style: t.sansBody(
+                      size: 9.5.sp,
+                      weight: FontWeight.w700,
+                      color: const Color(0xFFFAF8F4),
                     ),
-                    padding: EdgeInsets.all(8.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            const Icon(Icons.directions_car,
-                                color: Colors.blue, size: 10),
-                            SizedBox(width: 4.w),
-                            Text("CarPlay HUD",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 8.sp,
-                                    fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                        const Spacer(),
-                        Container(
-                          padding: EdgeInsets.all(6.w),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.5),
-                            borderRadius: BorderRadius.circular(6.r),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("🔊 正在播報避坑筆記：",
-                                  style: TextStyle(
-                                      color: Colors.green,
-                                      fontSize: 7.5.sp,
-                                      fontWeight: FontWeight.bold)),
-                              Text("「房屋租賃糾紛：承租人有買賣不破租賃之適用...」",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 7.sp),
-                                  maxLines: 2),
-                            ],
-                          ),
-                        ),
-                        const Spacer(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            const Icon(Icons.skip_previous,
-                                color: Colors.white, size: 12),
-                            Container(
-                              padding: EdgeInsets.all(4.w),
-                              decoration: const BoxDecoration(
-                                  color: Color(0xFF2E7D32),
-                                  shape: BoxShape.circle),
-                              child: const Icon(Icons.play_arrow,
-                                  color: Colors.white, size: 12),
-                            ),
-                            const Icon(Icons.skip_next,
-                                color: Colors.white, size: 12),
-                          ],
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              )
+                  ),
+                ),
+              ),
             ],
-          )
-        ],
-      ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCarPlayPreviewCard(PreambleTokens t) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              PhosphorIconsRegular.carProfile,
+              size: 14.sp,
+              color: t.textSecondary,
+            ),
+            SizedBox(width: 4.w),
+            Flexible(
+              child: Text(
+                'Apple CarPlay',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: t.sansTitle(size: 11.5.sp, color: t.textSecondary),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 8.h),
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(10.w),
+          decoration: BoxDecoration(
+            color: const Color(0xFF101413),
+            borderRadius: BorderRadius.circular(18.r),
+            border: Border.all(color: const Color(0xFF2D3532), width: 3),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    PhosphorIconsRegular.speakerHigh,
+                    color: t.accentBrass,
+                    size: 12.sp,
+                  ),
+                  SizedBox(width: 4.w),
+                  Expanded(
+                    child: Text(
+                      '語音導讀模式',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: t.sansBody(
+                        size: 10.sp,
+                        weight: FontWeight.w700,
+                        color: const Color(0xFFFAF8F4),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8.h),
+              Container(
+                padding: EdgeInsets.all(8.w),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF19211F),
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '正在播報避坑筆記：',
+                      style: t.sansBody(
+                        size: 9.5.sp,
+                        weight: FontWeight.w700,
+                        color: t.accentBrass,
+                      ),
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      '「房屋租賃糾紛：定期租約原則上適用買賣不破租賃保障...」',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: t.sansBody(
+                        size: 9.5.sp,
+                        color: const Color(0xFFD6E2DC),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 8.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Icon(
+                    PhosphorIconsFill.skipBack,
+                    color: const Color(0xFFFAF8F4),
+                    size: 13.sp,
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(5.w),
+                    decoration: BoxDecoration(
+                      color: t.brandPrimaryStrong,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      PhosphorIconsFill.play,
+                      color: const Color(0xFFFAF8F4),
+                      size: 12.sp,
+                    ),
+                  ),
+                  Icon(
+                    PhosphorIconsFill.skipForward,
+                    color: const Color(0xFFFAF8F4),
+                    size: 13.sp,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
 
-// PencilKit 自定義畫筆繪製
 class PencilKitPainter extends CustomPainter {
-  final List<Offset?> points;
+  PencilKitPainter({
+    required this.points,
+    required this.strokeColor,
+  });
 
-  PencilKitPainter({required this.points});
+  final List<Offset?> points;
+  final Color strokeColor;
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFF2E7D32)
+      ..color = strokeColor
       ..strokeCap = StrokeCap.round
       ..strokeWidth = 3.0;
 
@@ -933,5 +1086,5 @@ class PencilKitPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant PencilKitPainter oldDelegate) => true;
 }

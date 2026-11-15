@@ -85,7 +85,7 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(find.text('攻防洞察與舉證指引'), findsOneWidget);
+      expect(find.text('攻防洞察與雙重編碼指引'), findsOneWidget);
       expect(find.text(testInsight.disputeCategory), findsOneWidget);
 
       // Find and tap conversion button

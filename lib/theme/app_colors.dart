@@ -1,42 +1,44 @@
 import 'package:flutter/material.dart';
 
-/// 專案共用色票。
+/// 專案共用靜態色票（已全面收斂至「溫柔日系粉彩 × 親切工具風」母體色系）。
 ///
-/// 之後若要調整品牌色或增加深色模式，先從這個檔案收斂顏色會最省力。
+/// 提示：涉及深淺色動態切換的元件，請優先使用 `context.tokens` (`PreambleTokens`)，
+/// 以確保深色模式下文字與卡片永遠維持高對比度。
 class AppColors {
-  static const background = Color(0xFFFAF7F2);
-  static const surface = Color(0xFFFFFDFC);
-  static const shadow = Color(0x16000000);
-  static const border = Color(0xFFE5E7EB);
-  static const textPrimary = Color(0xFF101828);
-  static const textSecondary = Color(0xFF667085);
-  static const textMuted = Color(0xFF9A9A9A);
+  static const background = Color(0xFFFAF8F4);
+  static const surface = Color(0xFFFFFFFF);
+  static const shadow = Color(0x0D2C3531);
+  static const border = Color(0xFFECE8DF);
+  static const textPrimary = Color(0xFF2C3531);
+  static const textSecondary = Color(0xFF66726D);
+  static const textMuted = Color(0xFF949F9A);
 
-  static const searchSurface = Color(0xFFF1F0EE);
-  static const newsSurface = Color(0xFFDDE9E1);
-  static const newsletterSurface = Color(0xFFF3E6D6);
-  static const taskSurface = Color(0xFFDDD1F2);
-  static const discussionSurface = Color(0xFFDCE7F5);
-  static const chipSurface = Color(0xFFEAF0F8);
-  static const placeholder = Color(0xFFB7B7B7);
+  static const searchSurface = Color(0xFFF3F1EC);
+  static const newsSurface = Color(0xFFE6F2EC);
+  static const newsletterSurface = Color(0xFFFDF2E6);
+  static const taskSurface = Color(0xFFEDF3F8);
+  static const discussionSurface = Color(0xFFEAE6DD);
+  static const chipSurface = Color(0xFFE6F2EC);
+  static const placeholder = Color(0xFFA3AEA8);
 
-  static const primary = Color(0xFF243B63);
-  static const primarySoft = Color(0xFF31486F);
+  /// 品牌核心溫柔鼠尾草綠（親切、治癒、無距離感）
+  static const primary = Color(0xFF538A74);
+  static const primarySoft = Color(0xFF6FA38E);
 
-  // 動態 Accent 品牌色彩選擇器。
-  // 0: 金色 (預設), 1: 典雅酒紅, 2: 正義深藍, 3: 森林草綠。
+  /// 溫柔粉彩強調色選擇器
+  /// 0: 奶茶杏 (預設), 1: 珊瑚粉橘, 2: 柔霧天藍, 3: 鼠尾草綠
   static int accentColorIndex = 0;
 
   static const _accents = [
-    Color(0xFFD6A85F), // 金色
-    Color(0xFFC62828), // 典雅酒紅
-    Color(0xFF1565C0), // 正義深藍
-    Color(0xFF2E7D32), // 森林草綠
+    Color(0xFFDFA065), // 奶茶杏
+    Color(0xFFDF7366), // 珊瑚粉橘
+    Color(0xFF6E95B8), // 柔霧天藍
+    Color(0xFF538A74), // 鼠尾草綠
   ];
 
-  static Color get accent => _accents[accentColorIndex];
+  static Color get accent => _accents[accentColorIndex.clamp(0, _accents.length - 1)];
 
-  static const success = Color(0xFF8BF45F);
-  static const danger = Color(0xFFFF8D8D);
-  static const info = Color(0xFFC96B3B);
+  static const success = Color(0xFF4B9B7B);
+  static const danger = Color(0xFFDF7366);
+  static const info = Color(0xFF6E95B8);
 }

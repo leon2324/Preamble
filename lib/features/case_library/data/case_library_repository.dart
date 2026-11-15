@@ -25,10 +25,40 @@ class CaseLibraryRepository {
 
       // 載入所有真實快取案件到記憶體快取
       final all = await db.getAllCases();
-      _casesCache.clear();
-      _casesCache.addAll(all);
-      if (_casesCache.isEmpty) {
+      if (all.isEmpty) {
+        _casesCache.clear();
         _casesCache.addAll(caseLibraryCasesSeed);
+        for (final seedCase in caseLibraryCasesSeed) {
+          await db.insertCase(seedCase);
+        }
+      } else {
+        // 同步種子庫最新標題與資訊（保留使用者本機的收藏與追蹤標記）
+        final Map<String, CaseBook> localMap = {for (var c in all) c.id: c};
+        final List<CaseBook> merged = [];
+        for (final seedCase in caseLibraryCasesSeed) {
+          final local = localMap[seedCase.id];
+          if (local != null) {
+            final updated = seedCase.copyWith(
+              isFavorite: local.isFavorite,
+              isFollowing: local.isFollowing,
+            );
+            merged.add(updated);
+            if (local.titleZh != seedCase.titleZh ||
+                local.shortTitleZh != seedCase.shortTitleZh) {
+              await db.insertCase(updated);
+            }
+          } else {
+            merged.add(seedCase);
+            await db.insertCase(seedCase);
+          }
+        }
+        for (final local in all) {
+          if (!merged.any((c) => c.id == local.id)) {
+            merged.add(local);
+          }
+        }
+        _casesCache.clear();
+        _casesCache.addAll(merged);
       }
     } catch (e) {
       // 在單元測試或不支援 sqflite 的平台上，捕獲異常並降級使用記憶體 Mock Seed
@@ -259,12 +289,21 @@ class CaseLibraryRepository {
     }
 
     if (query != null && query.trim().isNotEmpty) {
-      final lowerQuery = query.toLowerCase();
+      final lowerQuery = query.trim().toLowerCase();
       filtered = filtered.where((c) =>
           c.titleZh.toLowerCase().contains(lowerQuery) ||
+          c.shortTitleZh.toLowerCase().contains(lowerQuery) ||
           c.category.toLowerCase().contains(lowerQuery) ||
+          c.memoryLine.toLowerCase().contains(lowerQuery) ||
           c.shortDescription.toLowerCase().contains(lowerQuery) ||
-          c.background.toLowerCase().contains(lowerQuery));
+          c.background.toLowerCase().contains(lowerQuery) ||
+          c.tags.any((t) => t.toLowerCase().contains(lowerQuery)) ||
+          c.legalIssues.any((i) =>
+              i.title.toLowerCase().contains(lowerQuery) ||
+              i.plainExplanation.toLowerCase().contains(lowerQuery)) ||
+          c.relatedLaws.any((l) =>
+              l.lawName.toLowerCase().contains(lowerQuery) ||
+              l.articleNumber.toLowerCase().contains(lowerQuery)));
     }
 
     final sorted = filtered.toList()

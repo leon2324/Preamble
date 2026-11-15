@@ -105,7 +105,7 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                           '觀點光譜',
                           style: LightTextStyles.pageTitle(context).copyWith(
                             fontSize: 17.sp,
-                            fontWeight: FontWeight.w900,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
@@ -122,23 +122,28 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
               padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
               decoration: BoxDecoration(
                 color: const Color(0xFFFAF7F0),
-                borderRadius: BorderRadius.circular(10.r),
+                borderRadius: BorderRadius.circular(12.r),
                 border: Border.all(color: CaseLibraryColors.borderLight),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '案名：${widget.book.shortTitleZh.isNotEmpty ? widget.book.shortTitleZh : widget.book.titleZh}',
+                    widget.book.shortTitleZh.isNotEmpty
+                        ? widget.book.shortTitleZh
+                        : widget.book.titleZh,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: LightTextStyles.cardTitle(context).copyWith(
-                      fontSize: 12.sp,
+                      fontSize: 13.sp,
+                      color: CaseLibraryColors.primaryGreen,
                     ),
                   ),
                   SizedBox(height: 3.h),
                   Text(
-                    '說明：滑動光譜線來探索不同的司法與社會觀點，點擊節點可快速跳轉。',
+                    '點擊下方立場圖卡或拖曳光譜游標，比較不同法理見解並投下你的立場。',
                     style: LightTextStyles.caption(context).copyWith(
-                      fontSize: 9.5.sp,
+                      fontSize: 10.5.sp,
                     ),
                   ),
                 ],
@@ -147,11 +152,11 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
 
             Expanded(
               child: ListView(
-                padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 32.h),
+                padding: EdgeInsets.fromLTRB(16.w, 14.h, 16.w, 32.h),
                 children: [
-                  // 1. 光譜本體卡片
+                  // 1. 光譜滑軌 + 立場節點膠囊列
                   Container(
-                    padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 20.h),
+                    padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 16.h),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16.r),
@@ -159,135 +164,79 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                       border: Border.all(color: CaseLibraryColors.borderLight),
                     ),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '⚖️ 拖曳金色滑鈕表達你的位置：',
-                          style: LightTextStyles.cardTitle(context).copyWith(
-                            fontSize: 13.sp,
-                          ),
-                        ),
-                        SizedBox(height: 12.h),
-
-                        // 光譜滑軌背景（帶有節點圖示與社群分佈曲線）
-                        Stack(
-                          clipBehavior: Clip.none,
+                        Row(
                           children: [
-                            // 社群投票分佈圖（Bezier 曲線） - 投票後漸顯
-                            if (_voted)
-                              AnimatedBuilder(
-                                animation: _fadeAnimation,
-                                builder: (context, child) {
-                                  return Opacity(
-                                    opacity: _fadeAnimation.value,
-                                    child: SizedBox(
-                                      height: 50.h,
-                                      width: double.infinity,
-                                      child: CustomPaint(
-                                        painter: _SpectrumDistributionPainter(
-                                          isSunflower: widget.book.id == '318',
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              )
-                            else
-                              SizedBox(height: 50.h),
-
-                            // 色彩漸層色帶
-                            Positioned(
-                              bottom: 12.h,
-                              left: 10.w,
-                              right: 10.w,
-                              child: Container(
-                                height: 8.h,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(99),
-                                  gradient: const LinearGradient(
-                                    colors: [
-                                      Color(0xFFC62828), // 紅
-                                      Color(0xFFEF6C00), // 橘
-                                      Color(0xFF8C9B3E), // 黃綠
-                                      Color(0xFF2E7D32), // 綠
-                                    ],
-                                  ),
+                            Expanded(
+                              child: Text(
+                                '你的光譜座標',
+                                style:
+                                    LightTextStyles.cardTitle(context).copyWith(
+                                  fontSize: 13.5.sp,
                                 ),
                               ),
                             ),
-
-                            // 標示出 nodes 位置的小白點與文字
-                            Positioned.fill(
-                              child: LayoutBuilder(
-                                builder: (context, constraints) {
-                                  final double trackWidth =
-                                      constraints.maxWidth - 20.w;
-                                  return Stack(
-                                    children: [
-                                      for (final node in nodes)
-                                        Positioned(
-                                          left: 10.w +
-                                              ((node['value'] as double) /
-                                                  100 *
-                                                  trackWidth) -
-                                              18.w,
-                                          bottom: 0,
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                _currentValue =
-                                                    node['value'] as double;
-                                              });
-                                            },
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Container(
-                                                  width: 10.w,
-                                                  height: 10.w,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    shape: BoxShape.circle,
-                                                    border: Border.all(
-                                                      color: node['color']
-                                                          as Color,
-                                                      width: 2.5,
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(height: 2.h),
-                                                Text(
-                                                  node['shortTitle'] as String,
-                                                  style: TextStyle(
-                                                    fontSize: 8.5.sp,
-                                                    fontWeight: FontWeight.bold,
-                                                    color:
-                                                        node['color'] as Color,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                    ],
-                                  );
-                                },
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10.w, vertical: 4.h),
+                              decoration: BoxDecoration(
+                                color: (closestNode['color'] as Color)
+                                    .withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(999),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    '${_currentValue.toInt()}%',
+                                    style: TextStyle(
+                                      fontSize: 11.sp,
+                                      fontWeight: FontWeight.w800,
+                                      color: closestNode['color'] as Color,
+                                    ),
+                                  ),
+                                  SizedBox(width: 6.w),
+                                  Text(
+                                    (closestNode['label'] as String?) ??
+                                        (closestNode['shortTitle'] as String),
+                                    style: TextStyle(
+                                      fontSize: 11.sp,
+                                      fontWeight: FontWeight.w800,
+                                      color: closestNode['color'] as Color,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 12.h),
-
-                        // Flutter Slider 原生金色滑鈕控制
+                        SizedBox(height: 14.h),
+                        Container(
+                          height: 10.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(99),
+                            gradient: const LinearGradient(
+                              colors: [
+                                Color(0xFFC62828),
+                                Color(0xFFEF6C00),
+                                Color(0xFF8C9B3E),
+                                Color(0xFF2E7D32),
+                              ],
+                            ),
+                          ),
+                        ),
                         SliderTheme(
                           data: SliderThemeData(
                             activeTrackColor: Colors.transparent,
                             inactiveTrackColor: Colors.transparent,
                             thumbColor: CaseLibraryColors.accentGold,
                             overlayColor: CaseLibraryColors.accentGold
-                                .withValues(alpha: 0.15),
+                                .withValues(alpha: 0.18),
                             trackHeight: 0,
                             thumbShape: const RoundSliderThumbShape(
-                                enabledThumbRadius: 10),
+                              enabledThumbRadius: 10,
+                            ),
                           ),
                           child: Slider(
                             value: _currentValue,
@@ -300,41 +249,82 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                             },
                           ),
                         ),
-
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('秩序與安定性',
-                                style: LightTextStyles.caption(context)
-                                    .copyWith(fontWeight: FontWeight.bold)),
-                            Text('您的選擇：${_currentValue.toInt()}%',
-                                style: TextStyle(
-                                    fontSize: 11.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: CaseLibraryColors.primaryGreen)),
-                            Text('權益與抵抗權',
-                                style: LightTextStyles.caption(context)
-                                    .copyWith(fontWeight: FontWeight.bold)),
+                            Text(
+                              '秩序與安定性',
+                              style: LightTextStyles.caption(context).copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            Text(
+                              '權益與抵抗權',
+                              style: LightTextStyles.caption(context).copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
                           ],
+                        ),
+                        SizedBox(height: 12.h),
+                        Wrap(
+                          spacing: 6.w,
+                          runSpacing: 6.h,
+                          children: nodes.map((node) {
+                            final isSelected = node == closestNode;
+                            final nodeColor = node['color'] as Color;
+                            return InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _currentValue = node['value'] as double;
+                                });
+                              },
+                              borderRadius: BorderRadius.circular(999),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10.w, vertical: 5.h),
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? nodeColor
+                                      : nodeColor.withValues(alpha: 0.08),
+                                  borderRadius: BorderRadius.circular(999),
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? nodeColor
+                                        : nodeColor.withValues(alpha: 0.25),
+                                  ),
+                                ),
+                                child: Text(
+                                  node['shortTitle'] as String,
+                                  style: TextStyle(
+                                    fontSize: 11.sp,
+                                    fontWeight: FontWeight.w700,
+                                    color:
+                                        isSelected ? Colors.white : nodeColor,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: 14.h),
+                  SizedBox(height: 16.h),
 
-                  // 2. 當前位置觀點卡
+                  // 2. 單一焦點立場詳解卡（投票後原地展開社群民意分佈，不重複列出）
                   AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 220),
                     padding: EdgeInsets.all(16.w),
                     decoration: BoxDecoration(
-                      color: (closestNode['color'] as Color)
-                          .withValues(alpha: 0.04),
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(16.r),
                       border: Border.all(
                         color: (closestNode['color'] as Color)
-                            .withValues(alpha: 0.28),
-                        width: 1.5,
+                            .withValues(alpha: 0.45),
+                        width: 1.4,
                       ),
+                      boxShadow: [CaseLibraryShadows.softShadow],
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -342,27 +332,22 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                         Row(
                           children: [
                             Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 8.w, vertical: 4.h),
+                              width: 10.w,
+                              height: 10.w,
                               decoration: BoxDecoration(
                                 color: closestNode['color'] as Color,
-                                borderRadius: BorderRadius.circular(6.r),
-                              ),
-                              child: Text(
-                                closestNode['label'] as String,
-                                style: TextStyle(
-                                  fontSize: 10.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
+                                shape: BoxShape.circle,
                               ),
                             ),
                             SizedBox(width: 8.w),
-                            Text(
-                              '偏向此區間的法理邏輯：',
-                              style: LightTextStyles.caption(context).copyWith(
-                                color: CaseLibraryColors.textPrimary,
-                                fontWeight: FontWeight.bold,
+                            Expanded(
+                              child: Text(
+                                '${closestNode['shortTitle']} · 法理核心論據',
+                                style: TextStyle(
+                                  fontSize: 13.5.sp,
+                                  fontWeight: FontWeight.w800,
+                                  color: CaseLibraryColors.textPrimary,
+                                ),
                               ),
                             ),
                           ],
@@ -371,17 +356,127 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                         Text(
                           closestNode['fullText'] as String,
                           style: LightTextStyles.body(context).copyWith(
-                            fontSize: 12.sp,
-                            color: CaseLibraryColors.textPrimary,
-                            height: 1.5,
+                            fontSize: 12.5.sp,
+                            color: CaseLibraryColors.textSecondary,
+                            height: 1.55,
                           ),
                         ),
+                        if (_voted) ...[
+                          SizedBox(height: 16.h),
+                          const Divider(height: 1),
+                          SizedBox(height: 14.h),
+                          FadeTransition(
+                            opacity: _fadeAnimation,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const CaseLibrarySvgIcon(
+                                      CaseLibrarySvgIcons.sparkles,
+                                      size: 16,
+                                      color: Color(0xFF2E7D32),
+                                    ),
+                                    SizedBox(width: 6.w),
+                                    Expanded(
+                                      child: Text(
+                                        '已記錄你的立場：${closestNode['shortTitle']}',
+                                        style: TextStyle(
+                                          fontSize: 12.5.sp,
+                                          fontWeight: FontWeight.w800,
+                                          color: const Color(0xFF1B5E20),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 10.h),
+                                SizedBox(
+                                  height: 44.h,
+                                  width: double.infinity,
+                                  child: CustomPaint(
+                                    painter: _SpectrumDistributionPainter(
+                                      isSunflower: widget.book.id == '318',
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 10.h),
+                                ...nodes.asMap().entries.map((entry) {
+                                  final idx = entry.key;
+                                  final node = entry.value;
+                                  final nodeColor = node['color'] as Color;
+                                  final pct = _computeNodeShare(
+                                      nodes, idx, node == closestNode);
+                                  return Padding(
+                                    padding: EdgeInsets.only(bottom: 8.h),
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          _currentValue =
+                                              node['value'] as double;
+                                        });
+                                      },
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  node['shortTitle'] as String,
+                                                  style: TextStyle(
+                                                    fontSize: 11.5.sp,
+                                                    fontWeight: node ==
+                                                            closestNode
+                                                        ? FontWeight.w800
+                                                        : FontWeight.w600,
+                                                    color: node == closestNode
+                                                        ? nodeColor
+                                                        : CaseLibraryColors
+                                                            .textSecondary,
+                                                  ),
+                                                ),
+                                              ),
+                                              Text(
+                                                '$pct%',
+                                                style: TextStyle(
+                                                  fontSize: 11.sp,
+                                                  fontWeight: FontWeight.w800,
+                                                  color: nodeColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 4.h),
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(999),
+                                            child: LinearProgressIndicator(
+                                              value: pct / 100.0,
+                                              minHeight: 6.h,
+                                              backgroundColor:
+                                                  CaseLibraryColors.borderLight,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      nodeColor),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }),
+                              ],
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
-                  SizedBox(height: 16.h),
+                  SizedBox(height: 14.h),
 
-                  // 3. 投下一票與展示大眾投票
                   if (!_voted)
                     SizedBox(
                       width: double.infinity,
@@ -395,52 +490,9 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
                         ),
                         onPressed: _onVote,
                         child: Text(
-                          '🗳️ 投下我的一票，查看社群觀點分佈',
+                          '確認我的立場並查看民意分佈',
                           style: LightTextStyles.buttonText(context),
                         ),
-                      ),
-                    )
-                  else
-                    Container(
-                      padding: EdgeInsets.all(14.w),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF0F5F2),
-                        borderRadius: BorderRadius.circular(12.r),
-                        border: Border.all(color: const Color(0xFFD0E0D6)),
-                      ),
-                      child: Row(
-                        children: [
-                          const CaseLibrarySvgIcon(
-                            CaseLibrarySvgIcons.sparkles,
-                            size: 18,
-                            color: Color(0xFF2E7D32),
-                          ),
-                          SizedBox(width: 8.w),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '投票已記錄！',
-                                  style: TextStyle(
-                                    fontSize: 12.5.sp,
-                                    fontWeight: FontWeight.w900,
-                                    color: const Color(0xFF1B5E20),
-                                  ),
-                                ),
-                                SizedBox(height: 2.h),
-                                Text(
-                                  '背景中已漸顯大眾投票的波峰分佈圖。此案件的討論中，社群呈現了兩極化分佈（在 15% 與 85% 有兩個高點），代表社會在此議題上具有顯著的法理張力與分歧。',
-                                  style: TextStyle(
-                                    fontSize: 10.5.sp,
-                                    color: const Color(0xFF2E7D32),
-                                    height: 1.4,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
                       ),
                     ),
                 ],
@@ -450,6 +502,22 @@ class _CaseOpinionSpectrumPageState extends State<CaseOpinionSpectrumPage>
         ),
       ),
     );
+  }
+
+  int _computeNodeShare(
+    List<Map<String, dynamic>> nodes,
+    int index,
+    bool isSelected,
+  ) {
+    if (nodes.isEmpty) return 0;
+    final seed = widget.book.id.hashCode.abs();
+    final weights = List<int>.generate(nodes.length, (i) {
+      final base = 18 + ((seed + i * 17) % 23);
+      return i == index && isSelected ? base + 8 : base;
+    });
+    final total = weights.fold<int>(0, (a, b) => a + b);
+    if (total == 0) return 0;
+    return ((weights[index] * 100) / total).round();
   }
 
   static const String _svgBackIcon = '''

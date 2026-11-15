@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:preamble/components/safety/negotiation_kit_card.dart';
+import 'package:preamble/components/safety/statute_countdown_badge.dart';
+import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:preamble/data/documents/document_models.dart';
 import 'package:preamble/data/law_assistant/law_assistant_models.dart';
-import 'package:preamble/components/safety/statute_countdown_badge.dart';
-import 'package:preamble/components/safety/negotiation_kit_card.dart';
+import 'package:preamble/theme/preamble_tokens.dart';
 
-/// 小法助對話底部的攻防洞察與書狀一鍵生成卡片。
+/// 小法助對話底部的「靜奢雙重編碼」攻防洞察與行動交付卡片。
 ///
-/// 採用莫蘭迪紙質感設計，將 AI 對話的抽象分析收斂為實體行動方案（交付物）。
+/// 以清晰的垂直雙層架構收斂為三大模組：
+/// 1. `爭點核心`（定心丸與對方常見抗辯）
+/// 2. `法條依據`（宋體法源引證與法定時效倒數）
+/// 3. `下一步行動`（現場應對金句、關鍵舉證清單與一鍵書狀／律師轉介）
 class LawAssistantInsightCard extends StatefulWidget {
   const LawAssistantInsightCard({
     super.key,
@@ -32,95 +38,113 @@ class LawAssistantInsightCard extends StatefulWidget {
 class _LawAssistantInsightCardState extends State<LawAssistantInsightCard> {
   bool _isExpanded = true;
 
+  static final RegExp _leadingEmojiRegex = RegExp(
+    r'^[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\s]+',
+    unicode: true,
+  );
+
+  String _cleanText(String raw) {
+    return raw.replaceFirst(_leadingEmojiRegex, '').trim();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final t = context.tokens;
     final insight = widget.insight;
 
-    final cardBg = isDark ? const Color(0xFF1E2824) : const Color(0xFFF3F7F5);
-    final borderColor =
-        isDark ? const Color(0xFF2C3E36) : const Color(0xFFDCE7E2);
-    final headerColor =
-        isDark ? const Color(0xFFE8F1EC) : const Color(0xFF17231F);
-    final accentGreen =
-        isDark ? const Color(0xFF68B28B) : const Color(0xFF2C5E43);
-    final lightAmber =
-        isDark ? const Color(0xFF33291A) : const Color(0xFFFDF7E7);
-    final amberBorder =
-        isDark ? const Color(0xFF5C4724) : const Color(0xFFF0DEB4);
-    final amberText =
-        isDark ? const Color(0xFFE5C07B) : const Color(0xFF9E6800);
-
     return Container(
-      margin: EdgeInsets.only(top: 10.h, bottom: 4.h),
-      decoration: BoxDecoration(
-        color: cardBg,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: borderColor, width: 1.w),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
+      margin: EdgeInsets.only(top: 12.h, bottom: 6.h),
+      decoration: t.cardDecoration(
+        radius: 18.r,
+        fill: t.surface,
+        borderColor: t.borderStrong,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // 頂部標題列
+          // 頂部標題列（可收合）
           InkWell(
             onTap: () {
               HapticFeedback.selectionClick();
               setState(() => _isExpanded = !_isExpanded);
             },
-            borderRadius: BorderRadius.vertical(top: Radius.circular(12.r)),
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(18.r),
+              bottom: _isExpanded ? Radius.zero : Radius.circular(18.r),
+            ),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
               child: Row(
                 children: [
                   Container(
-                    padding: EdgeInsets.all(5.w),
+                    width: 34.w,
+                    height: 34.w,
                     decoration: BoxDecoration(
-                      color: accentGreen.withValues(alpha: 0.15),
-                      shape: BoxShape.circle,
+                      color: t.brandContainer,
+                      borderRadius: BorderRadius.circular(10.r),
+                      border: Border.all(
+                        color: t.brandPrimary.withValues(alpha: 0.22),
+                      ),
                     ),
                     child: Icon(
-                      Icons.balance_rounded,
-                      size: 15.sp,
-                      color: accentGreen,
+                      PhosphorIconsRegular.scales,
+                      size: 18.sp,
+                      color: t.brandPrimary,
                     ),
                   ),
-                  SizedBox(width: 8.w),
+                  SizedBox(width: 10.w),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '攻防洞察與舉證指引',
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.bold,
-                            color: headerColor,
-                          ),
+                          '攻防洞察與雙重編碼指引',
+                          style: t.sansTitle(size: 13.5.sp),
                         ),
-                        Text(
-                          insight.disputeCategory,
-                          style: TextStyle(
-                            fontSize: 10.sp,
-                            color: accentGreen,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        SizedBox(height: 2.h),
+                        Wrap(
+                          spacing: 6.w,
+                          runSpacing: 4.h,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            Text(
+                              insight.disputeCategory,
+                              style: t.sansBody(
+                                size: 11.5.sp,
+                                weight: FontWeight.w600,
+                                color: t.brandPrimary,
+                              ),
+                            ),
+                            if (insight.detectedAmount.isNotEmpty)
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 6.w,
+                                  vertical: 1.5.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: t.accentBrassContainer,
+                                  borderRadius: BorderRadius.circular(6.r),
+                                ),
+                                child: Text(
+                                  '標的 ${insight.detectedAmount}',
+                                  style: t.tabularMetric(
+                                    size: 11.sp,
+                                    color: t.accentOnBrassContainer,
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
                       ],
                     ),
                   ),
+                  SizedBox(width: 6.w),
                   Icon(
                     _isExpanded
-                        ? Icons.keyboard_arrow_up_rounded
-                        : Icons.keyboard_arrow_down_rounded,
-                    size: 20.sp,
-                    color: isDark ? Colors.white60 : Colors.black45,
+                        ? PhosphorIconsRegular.caretUp
+                        : PhosphorIconsRegular.caretDown,
+                    size: 18.sp,
+                    color: t.textSecondary,
                   ),
                 ],
               ),
@@ -128,256 +152,547 @@ class _LawAssistantInsightCardState extends State<LawAssistantInsightCard> {
           ),
 
           if (_isExpanded) ...[
-            Divider(height: 1, color: borderColor),
+            Divider(height: 1, color: t.border),
             Padding(
-              padding: EdgeInsets.all(12.w),
+              padding: EdgeInsets.all(14.w),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // 頂層三維概覽標籤列（Wrap 自適應，320pt 與大字級絕不溢位）
+                  _buildDualCodingOverviewStrip(t, insight),
+                  SizedBox(height: 12.h),
+
+                  // 模組一：爭點核心
+                  _buildDisputeCoreSection(t, insight),
+                  SizedBox(height: 10.h),
+
+                  // 模組二：法條依據與時效生死線
+                  _buildLegalBasisSection(t, insight),
+                  SizedBox(height: 10.h),
+
+                  // 模組三：下一步行動（應對金句 + 舉證清單 + 轉書狀交付）
+                  _buildNextActionsSection(context, t, insight),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDualCodingOverviewStrip(
+    PreambleTokens t,
+    LawAssistantDefenseInsight insight,
+  ) {
+    final defenseCount = insight.defensePoints.length;
+    final deadlineLabel = insight.statuteDeadline != null
+        ? '${insight.statuteDeadline!.durationDays} 日時效'
+        : '一般法定時效';
+    final evidenceCount = insight.keyEvidences.length;
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+      decoration: t.subtleBoxDecoration(radius: 12.r),
+      child: Wrap(
+        spacing: 12.w,
+        runSpacing: 8.h,
+        alignment: WrapAlignment.spaceBetween,
+        children: [
+          _buildOverviewMetric(
+            t: t,
+            icon: PhosphorIconsRegular.crosshair,
+            accent: t.accentBrass,
+            label: '爭點核心',
+            value: '$defenseCount 項抗辯預判',
+          ),
+          _buildOverviewMetric(
+            t: t,
+            icon: PhosphorIconsRegular.bookBookmark,
+            accent: t.brandPrimary,
+            label: '法條依據',
+            value: deadlineLabel,
+          ),
+          _buildOverviewMetric(
+            t: t,
+            icon: PhosphorIconsRegular.footprints,
+            accent: t.semanticSuccess,
+            label: '下一步行動',
+            value: '$evidenceCount 項關鍵舉證',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOverviewMetric({
+    required PreambleTokens t,
+    required IconData icon,
+    required Color accent,
+    required String label,
+    required String value,
+  }) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 14.sp, color: accent),
+        SizedBox(width: 5.w),
+        Text(
+          '$label：',
+          style: t.sansBody(
+            size: 11.sp,
+            weight: FontWeight.w600,
+            color: t.textSecondary,
+          ),
+        ),
+        Flexible(
+          child: Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: t.tabularMetric(size: 11.5.sp, color: t.textPrimary),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSectionHeader({
+    required PreambleTokens t,
+    required String stepCode,
+    required String title,
+    required IconData icon,
+    required Color badgeBg,
+    required Color badgeFg,
+  }) {
+    return Row(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 3.h),
+          decoration: BoxDecoration(
+            color: badgeBg,
+            borderRadius: BorderRadius.circular(6.r),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 12.sp, color: badgeFg),
+              SizedBox(width: 4.w),
+              Text(
+                stepCode,
+                style: t.tabularMetric(size: 11.sp, color: badgeFg),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(width: 8.w),
+        Expanded(
+          child: Text(
+            title,
+            style: t.sansTitle(size: 13.sp),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDisputeCoreSection(
+    PreambleTokens t,
+    LawAssistantDefenseInsight insight,
+  ) {
+    final reassurance = _cleanText(insight.immediateReassurance);
+
+    return Container(
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: t.surfaceSubtle.withValues(alpha: t.isDark ? 0.65 : 0.75),
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(color: t.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionHeader(
+            t: t,
+            stepCode: '01',
+            title: '爭點核心 · 相對人常見抗辯預判',
+            icon: PhosphorIconsRegular.crosshair,
+            badgeBg: t.accentBrassContainer,
+            badgeFg: t.accentOnBrassContainer,
+          ),
+          if (reassurance.isNotEmpty) ...[
+            SizedBox(height: 8.h),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+              decoration: BoxDecoration(
+                color: t.brandContainer,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 0. 現場 / LINE 應對金句與即時定心丸 (Tactical Golden Phrase)
-                  if (insight.tacticalGoldenPhrase.isNotEmpty) ...[
-                    _buildTacticalGoldenPhraseBox(
-                      context: context,
-                      reassurance: insight.immediateReassurance,
-                      goldenPhrase: insight.tacticalGoldenPhrase,
-                      isDark: isDark,
-                      accentGreen: accentGreen,
-                      headerColor: headerColor,
+                  Padding(
+                    padding: EdgeInsets.only(top: 2.h),
+                    child: Icon(
+                      PhosphorIconsFill.shieldCheck,
+                      size: 15.sp,
+                      color: t.brandPrimary,
                     ),
-                    SizedBox(height: 10.h),
-                  ],
-
-                  // 0.2 法律時效生死線倒數膠囊 (Statute Countdown)
-                  if (insight.statuteDeadline != null)
-                    StatuteCountdownBadge(deadline: insight.statuteDeadline!),
-
-                  // 0.5 現場談判防坑三不原則錦囊 (Negotiation Defense Kit)
-                  if (insight.negotiationKit != null)
-                    NegotiationKitCard(
-                      threeNeverSign: insight.negotiationKit!.threeNeverSign,
-                      threeMustAsk: insight.negotiationKit!.threeMustAsk,
-                      recordingLegalityTip:
-                          insight.negotiationKit!.recordingLegalityTip,
-                    ),
-
-                  // 1. 對方可能主張
-                  if (insight.defensePoints.isNotEmpty) ...[
-                    Container(
-                      padding: EdgeInsets.all(10.w),
-                      decoration: BoxDecoration(
-                        color: lightAmber,
-                        borderRadius: BorderRadius.circular(8.r),
-                        border: Border.all(color: amberBorder, width: 0.8.w),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.lightbulb_outline_rounded,
-                                size: 14.sp,
-                                color: amberText,
-                              ),
-                              SizedBox(width: 5.w),
-                              Text(
-                                '對方常見抗辯與可能主張',
-                                style: TextStyle(
-                                  fontSize: 11.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: amberText,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 6.h),
-                          for (final point in insight.defensePoints)
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 4.h),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '• ',
-                                    style: TextStyle(
-                                      fontSize: 11.sp,
-                                      color: amberText,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      point,
-                                      style: TextStyle(
-                                        fontSize: 11.sp,
-                                        height: 1.35,
-                                        color: isDark
-                                            ? const Color(0xFFE2D6C0)
-                                            : const Color(0xFF523D1B),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 10.h),
-                  ],
-
-                  // 2. 關鍵舉證清單
-                  if (insight.keyEvidences.isNotEmpty) ...[
-                    Text(
-                      '📋 建議優先蒐集之舉證清單：',
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.bold,
-                        color: headerColor,
-                      ),
-                    ),
-                    SizedBox(height: 6.h),
-                    for (final evidence in insight.keyEvidences)
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 4.h),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Icon(
-                              Icons.check_circle_outline_rounded,
-                              size: 13.sp,
-                              color: accentGreen,
-                            ),
-                            SizedBox(width: 6.w),
-                            Expanded(
-                              child: Text(
-                                evidence,
-                                style: TextStyle(
-                                  fontSize: 11.sp,
-                                  height: 1.35,
-                                  color: isDark
-                                      ? Colors.white70
-                                      : const Color(0xFF4A5550),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    SizedBox(height: 10.h),
-                  ],
-
-                  // 3. 一鍵轉入實體書狀按鈕
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        HapticFeedback.mediumImpact();
-                        widget.onConvertToDocument(
-                          insight.suggestedTemplateType,
-                          insight.extractedFacts,
-                        );
-                      },
-                      icon: Icon(
-                        Icons.description_outlined,
-                        size: 15.sp,
-                        color: Colors.white,
-                      ),
-                      label: Text(
-                        insight.suggestedActionLabel,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          letterSpacing: 0.3,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: accentGreen,
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        padding: EdgeInsets.symmetric(vertical: 10.h),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.r),
-                        ),
+                  ),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Text(
+                      reassurance,
+                      style: t.sansBody(
+                        size: 12.sp,
+                        color: t.brandOnContainer,
+                        height: 1.45,
                       ),
                     ),
                   ),
-
-                  // 4. 存入自救記事按鈕
-                  if (widget.onSaveToJournal != null) ...[
-                    SizedBox(height: 6.h),
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton.icon(
-                        onPressed: () {
-                          HapticFeedback.lightImpact();
-                          widget.onSaveToJournal!();
-                        },
-                        icon: Icon(
-                          Icons.bookmark_add_outlined,
-                          size: 14.sp,
-                          color: accentGreen,
-                        ),
-                        label: Text(
-                          '📥 存入「紀事」自救進度追蹤',
-                          style: TextStyle(
-                            fontSize: 11.5.sp,
-                            fontWeight: FontWeight.bold,
-                            color: accentGreen,
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            color: accentGreen.withValues(alpha: 0.5),
-                            width: 1.w,
-                          ),
-                          padding: EdgeInsets.symmetric(vertical: 8.h),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-
-                  // 5. 尋求專長執業律師按鈕
-                  if (widget.onConsultLawyer != null) ...[
-                    SizedBox(height: 6.h),
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton.icon(
-                        onPressed: () {
-                          HapticFeedback.selectionClick();
-                          widget.onConsultLawyer!();
-                        },
-                        icon: Icon(
-                          Icons.gavel_rounded,
-                          size: 14.sp,
-                          color: accentGreen,
-                        ),
-                        label: Text(
-                          '一鍵打包案情簡報並預約認證律師',
-                          style: TextStyle(
-                            fontSize: 11.sp,
-                            fontWeight: FontWeight.bold,
-                            color: accentGreen,
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            color: accentGreen.withValues(alpha: 0.5),
-                            width: 1.w,
-                          ),
-                          padding: EdgeInsets.symmetric(vertical: 8.h),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
                 ],
+              ),
+            ),
+          ],
+          if (insight.defensePoints.isNotEmpty) ...[
+            SizedBox(height: 10.h),
+            for (final point in insight.defensePoints)
+              Padding(
+                padding: EdgeInsets.only(bottom: 6.h),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 3.h),
+                      child: Icon(
+                        PhosphorIconsRegular.warningCircle,
+                        size: 14.sp,
+                        color: t.accentBrass,
+                      ),
+                    ),
+                    SizedBox(width: 7.w),
+                    Expanded(
+                      child: Text(
+                        _cleanText(point),
+                        style: t.sansBody(
+                          size: 12.sp,
+                          color: t.textPrimary,
+                          height: 1.45,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLegalBasisSection(
+    PreambleTokens t,
+    LawAssistantDefenseInsight insight,
+  ) {
+    final deadline = insight.statuteDeadline;
+
+    return Container(
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: t.surface,
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(color: t.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionHeader(
+            t: t,
+            stepCode: '02',
+            title: '法條依據 · 請求權基礎與法定時效',
+            icon: PhosphorIconsRegular.bookBookmark,
+            badgeBg: t.brandContainer,
+            badgeFg: t.brandOnContainer,
+          ),
+          SizedBox(height: 8.h),
+          if (deadline != null) ...[
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(10.w),
+              decoration: BoxDecoration(
+                color: t.surfaceSubtle,
+                borderRadius: BorderRadius.circular(10.r),
+                border: Border(
+                  left: BorderSide(color: t.accentBrass, width: 3.w),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Wrap(
+                    spacing: 8.w,
+                    runSpacing: 4.h,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      Text(
+                        deadline.legalBasis,
+                        style: t.serifBody(
+                          size: 13.5.sp,
+                          weight: FontWeight.w700,
+                          color: t.textPrimary,
+                          height: 1.5,
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.w,
+                          vertical: 2.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: t.semanticUrgentContainer,
+                          borderRadius: BorderRadius.circular(6.r),
+                        ),
+                        child: Text(
+                          '黃金時效 ${deadline.durationDays} 日',
+                          style: t.tabularMetric(
+                            size: 11.sp,
+                            color: t.semanticUrgent,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    deadline.urgencyDescription,
+                    style: t.sansBody(
+                      size: 11.5.sp,
+                      color: t.textSecondary,
+                      height: 1.45,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 8.h),
+            StatuteCountdownBadge(deadline: deadline),
+          ] else
+            Text(
+              '請依雙方法律關係檢附契約與金流憑證，並留意民法一般請求權消滅時效與刑事告訴乃論 6 個月期間。',
+              style: t.serifBody(
+                size: 13.sp,
+                color: t.textPrimary,
+                height: 1.6,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNextActionsSection(
+    BuildContext context,
+    PreambleTokens t,
+    LawAssistantDefenseInsight insight,
+  ) {
+    return Container(
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: t.surface,
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(color: t.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionHeader(
+            t: t,
+            stepCode: '03',
+            title: '下一步行動 · 應對金句與舉證交付',
+            icon: PhosphorIconsRegular.footprints,
+            badgeBg: t.semanticSuccessContainer,
+            badgeFg: t.semanticSuccess,
+          ),
+          SizedBox(height: 10.h),
+
+          // 現場 / LINE 應對金句
+          if (insight.tacticalGoldenPhrase.isNotEmpty) ...[
+            _buildTacticalGoldenPhraseBox(
+              context: context,
+              t: t,
+              goldenPhrase: insight.tacticalGoldenPhrase,
+            ),
+            SizedBox(height: 10.h),
+          ],
+
+          // 現場談判防坑錦囊
+          if (insight.negotiationKit != null) ...[
+            NegotiationKitCard(
+              threeNeverSign: insight.negotiationKit!.threeNeverSign,
+              threeMustAsk: insight.negotiationKit!.threeMustAsk,
+              recordingLegalityTip:
+                  insight.negotiationKit!.recordingLegalityTip,
+            ),
+            SizedBox(height: 10.h),
+          ],
+
+          // 建議優先蒐集舉證清單
+          if (insight.keyEvidences.isNotEmpty) ...[
+            Row(
+              children: [
+                Icon(
+                  PhosphorIconsRegular.listChecks,
+                  size: 15.sp,
+                  color: t.brandPrimary,
+                ),
+                SizedBox(width: 6.w),
+                Expanded(
+                  child: Text(
+                    '建議優先保全之關鍵證據清單',
+                    style: t.sansBody(
+                      size: 12.sp,
+                      weight: FontWeight.w700,
+                      color: t.textPrimary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 6.h),
+            for (final evidence in insight.keyEvidences)
+              Padding(
+                padding: EdgeInsets.only(bottom: 5.h),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 2.h),
+                      child: Icon(
+                        PhosphorIconsRegular.checkCircle,
+                        size: 14.sp,
+                        color: t.semanticSuccess,
+                      ),
+                    ),
+                    SizedBox(width: 6.w),
+                    Expanded(
+                      child: Text(
+                        _cleanText(evidence),
+                        style: t.sansBody(
+                          size: 12.sp,
+                          color: t.textSecondary,
+                          height: 1.42,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            SizedBox(height: 12.h),
+          ],
+
+          // 主要交付行動：一鍵轉入實體書狀
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton.icon(
+              onPressed: () {
+                HapticFeedback.mediumImpact();
+                widget.onConvertToDocument(
+                  insight.suggestedTemplateType,
+                  insight.extractedFacts,
+                );
+              },
+              icon: Icon(
+                PhosphorIconsRegular.fileText,
+                size: 16.sp,
+                color: t.brandOnPrimary,
+              ),
+              label: Text(
+                _cleanText(insight.suggestedActionLabel),
+                style: t.sansBody(
+                  size: 12.5.sp,
+                  weight: FontWeight.w700,
+                  color: t.brandOnPrimary,
+                ),
+              ),
+              style: FilledButton.styleFrom(
+                backgroundColor: t.brandPrimary,
+                foregroundColor: t.brandOnPrimary,
+                elevation: 0,
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 11.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+              ),
+            ),
+          ),
+
+          // 次要交付行動：存入「紀事」追蹤
+          if (widget.onSaveToJournal != null) ...[
+            SizedBox(height: 8.h),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  widget.onSaveToJournal!();
+                },
+                icon: Icon(
+                  PhosphorIconsRegular.bookmarkSimple,
+                  size: 15.sp,
+                  color: t.brandPrimary,
+                ),
+                label: Text(
+                  '存入「紀事」自救進度追蹤',
+                  style: t.sansBody(
+                    size: 12.sp,
+                    weight: FontWeight.w700,
+                    color: t.brandPrimary,
+                  ),
+                ),
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: t.borderStrong),
+                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 9.h),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                ),
+              ),
+            ),
+          ],
+
+          // 次要交付行動：預約執業律師
+          if (widget.onConsultLawyer != null) ...[
+            SizedBox(height: 8.h),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () {
+                  HapticFeedback.selectionClick();
+                  widget.onConsultLawyer!();
+                },
+                icon: Icon(
+                  PhosphorIconsRegular.gavel,
+                  size: 15.sp,
+                  color: t.accentOnBrassContainer,
+                ),
+                label: Text(
+                  '一鍵打包案情簡報並預約認證律師',
+                  style: t.sansBody(
+                    size: 12.sp,
+                    weight: FontWeight.w700,
+                    color: t.accentOnBrassContainer,
+                  ),
+                ),
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: t.accentBrassContainer.withValues(alpha: 0.45),
+                  side: BorderSide(
+                    color: t.accentBrass.withValues(alpha: 0.45),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 9.h),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                ),
               ),
             ),
           ],
@@ -388,138 +703,100 @@ class _LawAssistantInsightCardState extends State<LawAssistantInsightCard> {
 
   Widget _buildTacticalGoldenPhraseBox({
     required BuildContext context,
-    required String reassurance,
+    required PreambleTokens t,
     required String goldenPhrase,
-    required bool isDark,
-    required Color accentGreen,
-    required Color headerColor,
   }) {
-    final boxBg = isDark ? const Color(0xFF1B2B23) : const Color(0xFFEBF5F0);
-    final boxBorder = isDark ? const Color(0xFF325443) : const Color(0xFFC3DEC8);
-
     return Container(
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
-        color: boxBg,
-        borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: boxBorder, width: 1.w),
-        boxShadow: [
-          BoxShadow(
-            color: accentGreen.withValues(alpha: 0.06),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: t.surfaceSubtle,
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: t.borderStrong),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          Wrap(
+            spacing: 8.w,
+            runSpacing: 6.h,
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              Container(
-                padding: EdgeInsets.all(4.w),
-                decoration: BoxDecoration(
-                  color: accentGreen.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(6.r),
-                ),
-                child: Icon(
-                  Icons.chat_bubble_outline_rounded,
-                  size: 14.sp,
-                  color: accentGreen,
-                ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    PhosphorIconsRegular.chatTeardropText,
+                    size: 15.sp,
+                    color: t.brandPrimary,
+                  ),
+                  SizedBox(width: 6.w),
+                  Flexible(
+                    child: Text(
+                      '現場 / LINE 應對金句（可直接複製發送）',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: t.sansBody(
+                        size: 11.5.sp,
+                        weight: FontWeight.w700,
+                        color: t.brandPrimary,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(width: 8.w),
-              Expanded(
-                child: Text(
-                  '現場 / LINE 應對金句（可直接複製發送）',
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.bold,
-                    color: accentGreen,
+              InkWell(
+                onTap: () {
+                  Clipboard.setData(ClipboardData(text: goldenPhrase));
+                  HapticFeedback.mediumImpact();
+                  CustomToast.show(context, '應對金句已複製到剪貼簿，可直接貼上發送');
+                },
+                borderRadius: BorderRadius.circular(8.r),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 5.h),
+                  decoration: BoxDecoration(
+                    color: t.brandPrimary,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        PhosphorIconsRegular.copy,
+                        size: 13.sp,
+                        color: t.brandOnPrimary,
+                      ),
+                      SizedBox(width: 4.w),
+                      Text(
+                        '一鍵複製',
+                        style: t.sansBody(
+                          size: 11.sp,
+                          weight: FontWeight.w700,
+                          color: t.brandOnPrimary,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ],
           ),
-          if (reassurance.isNotEmpty) ...[
-            SizedBox(height: 6.h),
-            Text(
-              reassurance,
-              style: TextStyle(
-                fontSize: 10.5.sp,
-                height: 1.4,
-                color: isDark ? const Color(0xFFD0E2D8) : const Color(0xFF2C4C3B),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
           SizedBox(height: 8.h),
           Container(
             width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 9.h),
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF14201A) : Colors.white,
-              borderRadius: BorderRadius.circular(6.r),
-              border: Border.all(
-                color: isDark ? const Color(0xFF2E483A) : const Color(0xFFD6E8DC),
-                width: 0.8.w,
-              ),
+              color: t.surface,
+              borderRadius: BorderRadius.circular(8.r),
+              border: Border.all(color: t.border),
             ),
             child: Text(
               goldenPhrase,
-              style: TextStyle(
-                fontSize: 11.5.sp,
-                height: 1.45,
-                color: headerColor,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          SizedBox(height: 8.h),
-          Align(
-            alignment: Alignment.centerRight,
-            child: InkWell(
-              onTap: () {
-                Clipboard.setData(ClipboardData(text: goldenPhrase));
-                HapticFeedback.mediumImpact();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      '📋 應對金句已複製到剪貼簿！可直接貼至 LINE 或在現場照著唸。',
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    backgroundColor: Color(0xFF2C5E43),
-                    duration: Duration(seconds: 2),
-                    behavior: SnackBarBehavior.floating,
-                  ),
-                );
-              },
-              borderRadius: BorderRadius.circular(6.r),
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-                decoration: BoxDecoration(
-                  color: accentGreen,
-                  borderRadius: BorderRadius.circular(6.r),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.copy_rounded,
-                      size: 12.sp,
-                      color: Colors.white,
-                    ),
-                    SizedBox(width: 4.w),
-                    Text(
-                      '一鍵複製金句',
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
+              style: t.serifBody(
+                size: 13.sp,
+                weight: FontWeight.w600,
+                color: t.textPrimary,
+                height: 1.6,
               ),
             ),
           ),

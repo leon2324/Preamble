@@ -1,7 +1,8 @@
 part of '../global_search_page.dart';
 
-// 搜尋結果卡片集中在此檔，維持 prototype 原本的顏色、間距與互動動畫；
-// 父層只傳入 _SearchResult 與 callback，因此不會影響搜尋資料來源或導頁判斷。
+// 雙重編碼檢索結果卡片（無 BackdropFilter GPU 疊加模糊，維持 120fps 順滑滾動）。
+// - 法規與裁判案卷：採用宋體（SourceHanSerifTW）呈現條文與判決原文權威語氣。
+// - 避坑實務與法務動態：採用黑體（Inter + SourceHanSansTW）呈現白話行動語氣。
 
 class _ResultSection extends StatelessWidget {
   const _ResultSection({
@@ -11,6 +12,7 @@ class _ResultSection extends StatelessWidget {
     required this.isSaved,
     required this.onSaved,
     this.isCarousel = false,
+    this.onMore,
   });
 
   final String title;
@@ -19,6 +21,7 @@ class _ResultSection extends StatelessWidget {
   final bool Function(_SearchResult item) isSaved;
   final ValueChanged<_SearchResult> onSaved;
   final bool isCarousel;
+  final VoidCallback? onMore;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +34,7 @@ class _ResultSection extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         clipBehavior: Clip.none,
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: items.map((item) {
             return _ResultTile(
               item: item,
@@ -67,7 +71,11 @@ class _ResultSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          _SectionHeader(title: title),
+          _SectionHeader(
+            title: title,
+            action: onMore != null ? '查看全部' : null,
+            onAction: onMore,
+          ),
           SizedBox(height: 8.h),
           itemsContent,
         ],
@@ -80,7 +88,7 @@ class _InteractiveCard extends StatefulWidget {
   const _InteractiveCard({
     required this.child,
     this.onTap,
-    this.background = Colors.white,
+    this.background,
     this.padding,
     this.borderColor,
     this.width = double.infinity,
@@ -88,7 +96,7 @@ class _InteractiveCard extends StatefulWidget {
 
   final Widget child;
   final VoidCallback? onTap;
-  final Color background;
+  final Color? background;
   final EdgeInsetsGeometry? padding;
   final Color? borderColor;
   final double? width;
@@ -100,7 +108,6 @@ class _InteractiveCard extends StatefulWidget {
 class _InteractiveCardState extends State<_InteractiveCard>
     with SingleTickerProviderStateMixin {
   late final AnimationController _scaleController;
-  late final Animation<double> _scaleAnimation;
 
   @override
   void initState() {
@@ -108,11 +115,10 @@ class _InteractiveCardState extends State<_InteractiveCard>
     _scaleController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 100),
-      lowerBound: 0.97,
+      lowerBound: 0.98,
       upperBound: 1.0,
       value: 1.0,
     );
-    _scaleAnimation = _scaleController;
   }
 
   @override
@@ -123,65 +129,46 @@ class _InteractiveCardState extends State<_InteractiveCard>
 
   void _handleTapDown(TapDownDetails details) {
     if (widget.onTap != null) {
-      _scaleController.animateTo(0.97, curve: Curves.easeInOut);
+      _scaleController.animateTo(0.98, curve: Curves.easeOut);
     }
   }
 
   void _handleTapUp(TapUpDetails details) {
     if (widget.onTap != null) {
-      _scaleController.animateTo(1.0, curve: Curves.easeInOut);
+      _scaleController.animateTo(1.0, curve: Curves.easeOut);
     }
   }
 
   void _handleTapCancel() {
     if (widget.onTap != null) {
-      _scaleController.animateTo(1.0, curve: Curves.easeInOut);
+      _scaleController.animateTo(1.0, curve: Curves.easeOut);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final borderCol =
-        (widget.borderColor ?? _SearchColors.border).withValues(alpha: 0.35);
-
+    final t = context.tokens;
     final card = Container(
       width: widget.width,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14.r),
-        boxShadow: [
-          BoxShadow(
-            color: _getAdaptiveShadowColor(widget.background),
-            blurRadius: 12.r,
-            offset: const Offset(0, 5),
-          )
-        ],
+      padding: widget.padding ?? EdgeInsets.all(14.w),
+      decoration: t.cardDecoration(
+        radius: 16.r,
+        fill: widget.background ?? t.surface,
+        borderColor: widget.borderColor ?? t.border,
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(14.r),
-        child: BackdropFilter(
-          filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            padding: widget.padding ?? EdgeInsets.all(13.w),
-            decoration: BoxDecoration(
-              color: widget.background.withValues(alpha: 0.88),
-              borderRadius: BorderRadius.circular(14.r),
-              border: Border.all(color: borderCol, width: 0.8.w),
-            ),
-            child: widget.child,
-          ),
-        ),
-      ),
+      child: widget.child,
     );
 
     if (widget.onTap == null) return card;
 
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTapDown: _handleTapDown,
       onTapUp: _handleTapUp,
       onTapCancel: _handleTapCancel,
       onTap: widget.onTap,
       child: ScaleTransition(
-        scale: _scaleAnimation,
+        scale: _scaleController,
         child: card,
       ),
     );
@@ -207,121 +194,137 @@ class _ResultTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 依據不同的結果類別設計高級莫蘭迪色系與視覺細節
-    Color cardBg;
-    Color borderCol;
-    Color iconColor;
-    String badgeText;
-    IconData typeIcon;
-    String? svgPath;
+    final t = context.tokens;
+    late final Color accentColor;
+    late final Color badgeBg;
+    late final Color badgeFg;
+    late final String badgeText;
+    late final IconData typeIcon;
+    late final bool useAuthoritativeSerif;
 
     switch (item.type) {
       case _ResultType.statute:
-        cardBg = const Color(0xFFEAF7F2); // 莫蘭迪薄荷綠
-        borderCol = const Color(0xFFD0E6DC);
-        iconColor = const Color(0xFF1E6D5A);
-        badgeText = item.title.contains('刑法') ? '⚖️ 刑事法規' : '⚖️ 民事法規';
-        typeIcon = Icons.menu_book_outlined;
-        svgPath = 'assets/images/journal/book_icon.svg';
-        break;
+        accentColor = t.brandPrimary;
+        badgeBg = t.brandContainer;
+        badgeFg = t.brandOnContainer;
+        badgeText = item.title.contains('刑法')
+            ? '刑事法規'
+            : (item.title.contains('勞') ? '勞動法規' : '現行法規');
+        typeIcon = PhosphorIconsRegular.bookBookmark;
+        useAuthoritativeSerif = true;
       case _ResultType.caseItem:
-        cardBg = const Color(0xFFEBF2F7); // 莫蘭迪灰藍
-        borderCol = const Color(0xFFD2DFE6);
-        iconColor = const Color(0xFF4A7C9D);
-        badgeText = '💼 實務裁判';
-        typeIcon = Icons.gavel_outlined;
-        svgPath = 'assets/images/journal/scale_icon.svg';
-        break;
+        accentColor = t.semanticInfo;
+        badgeBg = t.semanticInfoContainer;
+        badgeFg = t.semanticInfo;
+        badgeText = '裁判案卷';
+        typeIcon = PhosphorIconsRegular.gavel;
+        useAuthoritativeSerif = true;
       case _ResultType.lifeNote:
-        cardBg = const Color(0xFFFCF6EA); // 莫蘭迪柔沙暖黃
-        borderCol = const Color(0xFFEFE2CB);
-        iconColor = const Color(0xFFC69C55);
-        badgeText = '💡 避坑指南';
-        typeIcon = Icons.explore_outlined;
-        svgPath = 'assets/images/search/search_plant.svg';
-        break;
+        accentColor = t.accentBrass;
+        badgeBg = t.accentBrassContainer;
+        badgeFg = t.accentOnBrassContainer;
+        badgeText = '避坑實務';
+        typeIcon = PhosphorIconsRegular.lightbulbFilament;
+        useAuthoritativeSerif = false;
       case _ResultType.official:
-        cardBg = const Color(0xFFEFF3F1); // 莫蘭迪茶綠
-        borderCol = const Color(0xFFDCE4E1);
-        iconColor = const Color(0xFF6B8A7E);
-        badgeText = '🛡️ 官方認證';
-        typeIcon = Icons.verified_user_outlined;
-        svgPath = 'assets/images/search/search_clipboard.svg';
-        break;
+        accentColor = t.semanticSuccess;
+        badgeBg = t.semanticSuccessContainer;
+        badgeFg = t.semanticSuccess;
+        badgeText = '法務動態';
+        typeIcon = PhosphorIconsRegular.sealCheck;
+        useAuthoritativeSerif = false;
       case _ResultType.assistant:
-        cardBg = const Color(0xFFF9F6F0);
-        borderCol = const Color(0xFFEAE2D5);
-        iconColor = const Color(0xFFE7B76D);
-        badgeText = '🤖 AI 小法助';
-        typeIcon = Icons.support_agent_rounded;
-        svgPath = null;
-        break;
+        accentColor = t.brandPrimary;
+        badgeBg = t.brandContainer;
+        badgeFg = t.brandOnContainer;
+        badgeText = 'AI 問診';
+        typeIcon = PhosphorIconsRegular.chatsCircle;
+        useAuthoritativeSerif = false;
     }
 
     final cardContent = Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _IconBox(icon: typeIcon, color: iconColor, svgAsset: svgPath),
+        _IconBox(
+          icon: typeIcon,
+          color: accentColor,
+          backgroundColor: badgeBg,
+        ),
         SizedBox(width: 12.w),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Wrap(
+                spacing: 8.w,
+                runSpacing: 4.h,
+                crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Container(
                     padding:
                         EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                     decoration: BoxDecoration(
-                      color: iconColor.withValues(alpha: 0.12),
+                      color: badgeBg,
                       borderRadius: BorderRadius.circular(6.r),
                     ),
                     child: Text(
                       badgeText,
-                      style: _SearchText.captionStrong().copyWith(
-                        color: iconColor,
-                        fontSize: 9.5.sp,
+                      style: _SearchText.captionStrong(context).copyWith(
+                        color: badgeFg,
+                        fontSize: 11.sp,
                       ),
                     ),
                   ),
                   if (item.type == _ResultType.lifeNote)
-                    Text(
-                      '⏱️ 3分閱讀',
-                      style: _SearchText.caption().copyWith(fontSize: 9.sp),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          PhosphorIconsRegular.clock,
+                          size: 12.sp,
+                          color: t.textMuted,
+                        ),
+                        SizedBox(width: 3.w),
+                        Text(
+                          '3 分鐘實務',
+                          style: _SearchText.caption(context),
+                        ),
+                      ],
                     ),
                 ],
               ),
               SizedBox(height: 7.h),
               Text(
                 item.title,
-                maxLines: isCarouselCard ? 1 : 2,
+                maxLines: isCarouselCard ? 2 : 2,
                 overflow: TextOverflow.ellipsis,
-                style: _SearchText.tileTitle().copyWith(
-                  color: _SearchColors.text,
-                  fontSize: 13.5.sp,
-                ),
+                style: useAuthoritativeSerif
+                    ? _SearchText.serifTileTitle(context)
+                    : _SearchText.tileTitle(context),
               ),
               SizedBox(height: 5.h),
               Text(
                 item.summary,
                 maxLines: isCarouselCard ? 2 : 3,
                 overflow: TextOverflow.ellipsis,
-                style: _SearchText.body().copyWith(
-                  color: _SearchColors.mutedText,
-                  height: 1.45,
-                ),
+                style: useAuthoritativeSerif
+                    ? _SearchText.serifBody(context).copyWith(
+                        fontSize: 13.sp,
+                        color: t.textSecondary,
+                        height: 1.55,
+                      )
+                    : _SearchText.body(context),
               ),
               SizedBox(height: 8.h),
               Row(
                 children: [
                   Icon(
                     item.type == _ResultType.official
-                        ? Icons.verified_outlined
-                        : Icons.link_rounded,
-                    size: 11.sp,
-                    color: _SearchColors.mutedText.withValues(alpha: 0.7),
+                        ? PhosphorIconsRegular.arrowSquareOut
+                        : PhosphorIconsRegular.link,
+                    size: 12.sp,
+                    color: t.textMuted,
                   ),
                   SizedBox(width: 4.w),
                   Expanded(
@@ -329,10 +332,7 @@ class _ResultTile extends StatelessWidget {
                       item.source,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: _SearchText.caption().copyWith(
-                        color: _SearchColors.mutedText.withValues(alpha: 0.8),
-                        fontSize: 9.8.sp,
-                      ),
+                      style: _SearchText.caption(context),
                     ),
                   ),
                 ],
@@ -347,39 +347,48 @@ class _ResultTile extends StatelessWidget {
               onTap: onBookmark,
               borderRadius: BorderRadius.circular(999.r),
               child: Padding(
-                padding: EdgeInsets.all(4.w),
+                padding: EdgeInsets.all(5.r),
                 child: Icon(
                   isSaved
-                      ? Icons.bookmark_rounded
-                      : Icons.bookmark_border_rounded,
-                  color: _SearchColors.primary,
-                  size: 21.sp,
+                      ? PhosphorIconsFill.bookmarkSimple
+                      : PhosphorIconsRegular.bookmarkSimple,
+                  color: isSaved ? t.accentBrass : t.textMuted,
+                  size: 19.sp,
                 ),
               ),
             ),
           )
-        else if (item.type != _ResultType.official)
+        else if (item.type == _ResultType.official)
           Padding(
-            padding: EdgeInsets.only(top: 2.h),
+            padding: EdgeInsets.only(top: 2.h, left: 4.w),
             child: Icon(
-              Icons.chevron_right_rounded,
-              color: _SearchColors.mutedText,
-              size: 20.sp,
+              PhosphorIconsRegular.arrowUpRight,
+              color: t.textMuted,
+              size: 16.sp,
+            ),
+          )
+        else
+          Padding(
+            padding: EdgeInsets.only(top: 2.h, left: 4.w),
+            child: Icon(
+              PhosphorIconsRegular.caretRight,
+              color: t.textMuted,
+              size: 16.sp,
             ),
           ),
       ],
     );
 
     if (isCarouselCard) {
+      final screenWidth = MediaQuery.sizeOf(context).width;
+      final cardWidth = (screenWidth * 0.78).clamp(220.0, 290.0);
       return Container(
-        width: 250.w,
+        width: cardWidth,
         margin: EdgeInsets.only(right: 12.w),
         child: _InteractiveCard(
           onTap: onTap,
-          background: cardBg,
-          borderColor: borderCol,
-          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
           width: null,
+          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 13.h),
           child: cardContent,
         ),
       );
@@ -387,8 +396,6 @@ class _ResultTile extends StatelessWidget {
 
     return _InteractiveCard(
       onTap: onTap,
-      background: cardBg,
-      borderColor: borderCol,
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 13.h),
       child: cardContent,
     );
@@ -396,45 +403,50 @@ class _ResultTile extends StatelessWidget {
 }
 
 class _LifeCard extends StatelessWidget {
-  const _LifeCard({required this.item, required this.onTap});
+  const _LifeCard({
+    required this.item,
+    required this.onTap,
+  });
 
   final _SearchResult item;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return _ProtoCard(
       onTap: onTap,
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          _IconBox(
+            icon: PhosphorIconsRegular.lightbulbFilament,
+            color: t.accentOnBrassContainer,
+            backgroundColor: t.accentBrassContainer,
+          ),
+          SizedBox(width: 12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.title, style: _SearchText.tileTitle()),
+                Text(item.title, style: _SearchText.tileTitle(context)),
+                SizedBox(height: 5.h),
+                Text(item.summary, style: _SearchText.body(context)),
                 SizedBox(height: 6.h),
-                Text(item.summary, style: _SearchText.body()),
-                SizedBox(height: 6.h),
-                Text('小法助・3 分鐘閱讀', style: _SearchText.caption()),
+                Text(
+                  item.source.isNotEmpty ? item.source : '緒言避坑實務・3 分鐘閱讀',
+                  style: _SearchText.caption(context),
+                ),
               ],
             ),
           ),
-          SvgPicture.asset(_SearchAsset.clipboard, width: 74.w, height: 74.w),
+          Icon(
+            PhosphorIconsRegular.caretRight,
+            size: 16.sp,
+            color: t.textMuted,
+          ),
         ],
       ),
     );
   }
-}
-
-Color _getAdaptiveShadowColor(Color background) {
-  final val = background.toARGB32();
-  if (val == 0xFFEAF7F2) return const Color(0x081E6D5A);
-  if (val == 0xFFEBF2F7) return const Color(0x084A7C9D);
-  if (val == 0xFFFCF6EA) return const Color(0x08C69C55);
-  if (val == 0xFFEFF3F1) return const Color(0x086B8A7E);
-  if (val == 0xFFFAF7F2 || val == 0xFFF9F6F0) return const Color(0x081E6D5A);
-  if (val == 0xFFE8F1EC || val == 0xFFD6E6DE) return const Color(0x082E5E4E);
-  if (val == 0xFFF7EFE5 || val == 0xFFECDDC5) return const Color(0x087A583A);
-  if (val == 0xFFECF0F7 || val == 0xFFD3DFEF) return const Color(0x0838527A);
-  return const Color(0x0A2E3D34);
 }

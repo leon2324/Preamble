@@ -12,7 +12,7 @@ class SignaturePad extends StatefulWidget {
 }
 
 class _SignaturePadState extends State<SignaturePad> {
-  List<Offset?> _points = [];
+  final List<Offset?> _points = [];
 
   void _addPoint(DragUpdateDetails details) {
     setState(() {

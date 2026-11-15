@@ -48,102 +48,80 @@ class _LearningSearchTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 48.w,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: SizedBox(
-              width: 42.w,
-              height: 42.w,
-              child: InkWell(
-                onTap: onBack,
-                child: Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  size: 20.sp,
-                  color: const Color(0xFF2C5E43),
-                ),
-              ),
-            ),
-          ),
-          Text(
-            '問問小法助',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.normal,
-              color: const Color(0xFF2C5E43),
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  tooltip: '對造公文白話翻譯',
-                  icon: Icon(
-                    Icons.translate_rounded,
-                    size: 20.sp,
-                    color: const Color(0xFF2C5E43),
-                  ),
-                  onPressed: () => PlainDocumentTranslatorSheet.show(context),
-                ),
-                IconButton(
-                  tooltip: '諮詢歷史紀錄',
-                  icon: Icon(
-                    Icons.history,
-                    size: 22.sp,
-                    color: const Color(0xFF2C5E43),
-                  ),
-                  onPressed: onShowHistory,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LearningSearchSuggestion extends StatelessWidget {
-  const _LearningSearchSuggestion({
-    required this.label,
-    required this.onTap,
-  });
-
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final assistantPalette = _LawAssistantPalette.of(context);
-
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(999.r),
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 8.h),
-          decoration: BoxDecoration(
-            color: assistantPalette.chipSurface,
-            borderRadius: BorderRadius.circular(999.r),
-            border: Border.all(color: assistantPalette.border),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w700,
-              color: assistantPalette.secondary,
+    final t = context.tokens;
+    return Row(
+      children: [
+        SizedBox(
+          width: 40.w,
+          height: 40.w,
+          child: InkWell(
+            onTap: onBack,
+            borderRadius: BorderRadius.circular(12.r),
+            child: Icon(
+              PhosphorIconsRegular.caretLeft,
+              size: 20.sp,
+              color: t.textPrimary,
             ),
           ),
         ),
-      ),
+        SizedBox(width: 4.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '問問小法助',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: t.serifTitle(size: 17.5.sp),
+              ),
+              Text(
+                '攻防爭點梳理 × 法源雙重編碼',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: t.sansBody(size: 11.sp, color: t.textMuted),
+              ),
+            ],
+          ),
+        ),
+        IconButton(
+          visualDensity: VisualDensity.compact,
+          tooltip: '法務實戰工具',
+          icon: Icon(
+            PhosphorIconsRegular.toolbox,
+            size: 20.sp,
+            color: t.brandPrimary,
+          ),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const LegalToolkitHubPage(),
+              ),
+            );
+          },
+        ),
+        IconButton(
+          visualDensity: VisualDensity.compact,
+          tooltip: '對造公文白話翻譯',
+          icon: Icon(
+            PhosphorIconsRegular.translate,
+            size: 20.sp,
+            color: t.brandPrimary,
+          ),
+          onPressed: () => PlainDocumentTranslatorSheet.show(context),
+        ),
+        IconButton(
+          visualDensity: VisualDensity.compact,
+          tooltip: '諮詢歷史紀錄',
+          icon: Icon(
+            PhosphorIconsRegular.clockCounterClockwise,
+            size: 20.sp,
+            color: t.textPrimary,
+          ),
+          onPressed: onShowHistory,
+        ),
+      ],
     );
   }
 }
@@ -233,53 +211,46 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
     showDialog<void>(
       context: context,
       builder: (dialogContext) {
+        final dt = dialogContext.tokens;
         return Dialog(
           backgroundColor: Colors.transparent,
           insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 40.h),
           child: Container(
             constraints: BoxConstraints(maxHeight: 480.h),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20.r),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.15),
-                  blurRadius: 20,
-                  offset: const Offset(0, 8),
-                ),
-              ],
+            decoration: dt.cardDecoration(
+              radius: 20.r,
+              fill: dt.surfaceElevated,
+              borderColor: dt.borderStrong,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 // 標題列
                 Padding(
-                  padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 8.h),
+                  padding: EdgeInsets.fromLTRB(16.w, 16.h, 12.w, 10.h),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         '諮詢歷史紀錄',
-                        style: TextStyle(
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFF17231F),
-                        ),
+                        style: dt.serifTitle(size: 16.sp),
                       ),
                       IconButton(
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
-                        icon: Icon(Icons.close_rounded,
-                            size: 20.sp, color: Colors.grey),
+                        icon: Icon(
+                          PhosphorIconsRegular.x,
+                          size: 19.sp,
+                          color: dt.textSecondary,
+                        ),
                         onPressed: () => Navigator.of(dialogContext).pop(),
                       ),
                     ],
                   ),
                 ),
-                const Divider(color: Color(0xFFE9DFD2), height: 1),
+                Divider(color: dt.border, height: 1),
                 // 列表區 or 空狀態
                 if (history.isEmpty)
-                  // 空狀態
                   Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 24.w, vertical: 36.h),
@@ -287,28 +258,20 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          Icons.chat_bubble_outline_rounded,
-                          size: 40.sp,
-                          color: const Color(0xFFCDCDCD),
+                          PhosphorIconsRegular.chatTeardropDots,
+                          size: 38.sp,
+                          color: dt.textMuted,
                         ),
                         SizedBox(height: 14.h),
                         Text(
-                          '還沒有諮詢紀錄',
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFF5A615C),
-                          ),
+                          '尚無諮詢紀錄',
+                          style: dt.sansTitle(size: 14.sp),
                         ),
                         SizedBox(height: 6.h),
                         Text(
-                          '送出第一個問題後，\n這裡會自動保存最近的提問。',
+                          '送出第一個問題後，\n這裡會自動保存本次會話的提問脈絡。',
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 11.5.sp,
-                            height: 1.45,
-                            color: const Color(0xFF8B928D),
-                          ),
+                          style: dt.sansBody(size: 12.sp, height: 1.5),
                         ),
                       ],
                     ),
@@ -319,8 +282,8 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
                       shrinkWrap: true,
                       padding: EdgeInsets.symmetric(vertical: 8.h),
                       itemCount: history.length,
-                      separatorBuilder: (_, __) => const Divider(
-                        color: Color(0xFFF0EDE8),
+                      separatorBuilder: (_, __) => Divider(
+                        color: dt.border,
                         height: 1,
                         indent: 16,
                         endIndent: 16,
@@ -330,7 +293,6 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
                         return InkWell(
                           onTap: () {
                             // 點擊歷史紀錄，把問題文字帶回輸入框，讓使用者可再次編輯或送出。
-                            // 這是最安全的行為：不假裝重建完整對話，不呼叫後端。
                             Navigator.of(dialogContext).pop();
                             _replyController.text = record.prompt;
                             _replyController.selection =
@@ -352,10 +314,10 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
                                     Expanded(
                                       child: Text(
                                         record.preview,
-                                        style: TextStyle(
-                                          fontSize: 13.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: const Color(0xFF17231F),
+                                        style: dt.sansBody(
+                                          size: 13.sp,
+                                          weight: FontWeight.w600,
+                                          color: dt.textPrimary,
                                         ),
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
@@ -364,9 +326,10 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
                                     SizedBox(width: 8.w),
                                     Text(
                                       record.timeLabel,
-                                      style: TextStyle(
-                                        fontSize: 10.sp,
-                                        color: const Color(0xFF8B928D),
+                                      style: dt.tabularMetric(
+                                        size: 11.sp,
+                                        weight: FontWeight.w600,
+                                        color: dt.textMuted,
                                       ),
                                     ),
                                   ],
@@ -376,16 +339,16 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
                                   Row(
                                     children: [
                                       Icon(
-                                        Icons.attach_file_rounded,
-                                        size: 11.sp,
-                                        color: const Color(0xFF8B928D),
+                                        PhosphorIconsRegular.paperclip,
+                                        size: 12.sp,
+                                        color: dt.textMuted,
                                       ),
-                                      SizedBox(width: 3.w),
+                                      SizedBox(width: 4.w),
                                       Text(
                                         '含附件脈絡',
-                                        style: TextStyle(
-                                          fontSize: 10.sp,
-                                          color: const Color(0xFF8B928D),
+                                        style: dt.sansBody(
+                                          size: 11.sp,
+                                          color: dt.textMuted,
                                         ),
                                       ),
                                     ],
@@ -636,7 +599,7 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    final topPadding = MediaQuery.paddingOf(context).top;
+    final t = context.tokens;
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
     final conversation = _conversation;
     final messages = conversation?.messages ?? const <LawAssistantMessage>[];
@@ -644,7 +607,7 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
     return Scaffold(
       // 台灣繁體中文教學註解：本頁輸入框已用 viewInsets 手動避開鍵盤，這裡關閉 Scaffold 自動縮高，避免鍵盤高度被重複計算造成底部 overflow。
       resizeToAvoidBottomInset: false,
-      backgroundColor: const Color(0xFFFAF8F5), // 暖米色背景
+      backgroundColor: t.canvas,
       body: PrivacyShieldWrapper(
         child: GestureDetector(
           behavior: HitTestBehavior.translucent,
@@ -802,6 +765,7 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
   }
 
   Widget _buildSuggestionPills(List<LawAssistantMessage> messages) {
+    final t = context.tokens;
     // 優先使用最後一則 Assistant 訊息的智慧追問，若無則展示通用建議
     List<String> suggestions = const [
       '房東違約會怎麼算？',
@@ -835,32 +799,25 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
                 margin: EdgeInsets.only(right: 8.w),
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: t.surface,
                   borderRadius: BorderRadius.circular(100.r),
-                  border: Border.all(color: const Color(0xFFEDE4D8)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.02),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+                  border: Border.all(color: t.borderStrong),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.help_outline_rounded,
+                      PhosphorIconsRegular.sparkle,
                       size: 13.sp,
-                      color: const Color(0xFF2C5E43),
+                      color: t.brandPrimary,
                     ),
-                    SizedBox(width: 4.w),
+                    SizedBox(width: 5.w),
                     Text(
                       text,
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        color: const Color(0xFF2C5E43),
-                        fontWeight: FontWeight.bold,
+                      style: t.sansBody(
+                        size: 11.5.sp,
+                        weight: FontWeight.w700,
+                        color: t.brandPrimary,
                       ),
                     ),
                   ],
@@ -873,14 +830,6 @@ class _LawAssistantChatPageState extends State<LawAssistantChatPage> {
     );
   }
 }
-
-const String _svgSparkles = '''
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M9.9 4.2 8.7 7.1 5.8 8.3l2.9 1.2 1.2 2.9 1.2-2.9 2.9-1.2-2.9-1.2-1.2-2.9Z"></path>
-  <path d="M17.6 11.4 16.8 13l-1.6.8 1.6.8.8 1.6.8-1.6 1.6-.8-1.6-.8-.8-1.6Z"></path>
-  <path d="M6.5 15.5 5.8 17l-1.5.7 1.5.7.7 1.5.7-1.5 1.5-.7-1.5-.7-.7-1.5Z"></path>
-</svg>
-''';
 
 class _LawAssistantChatBubble extends StatelessWidget {
   const _LawAssistantChatBubble({
@@ -898,7 +847,7 @@ class _LawAssistantChatBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isUser = message.role == LawAssistantMessageRole.user;
-    final assistantPalette = _LawAssistantPalette.of(context);
+    final t = context.tokens;
 
     if (isUser) {
       return Padding(
@@ -909,32 +858,26 @@ class _LawAssistantChatBubble extends StatelessWidget {
           children: [
             Flexible(
               child: Container(
-                constraints: BoxConstraints(maxWidth: 270.w),
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                constraints: BoxConstraints(maxWidth: 276.w),
+                padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 12.h),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFFDF9), // 暖米白/白色
+                  color: t.brandContainer,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(16.r),
                     topRight: Radius.circular(16.r),
                     bottomLeft: Radius.circular(16.r),
-                    bottomRight: Radius.zero,
+                    bottomRight: Radius.circular(4.r),
                   ),
-                  border: Border.all(color: const Color(0xFFEDE4D8)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.03),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+                  border: Border.all(
+                    color: t.brandPrimary.withValues(alpha: 0.25),
+                  ),
                 ),
                 child: Text(
                   message.content,
-                  style: TextStyle(
-                    fontSize: 13.sp,
+                  style: t.sansBody(
+                    size: 13.5.sp,
                     height: 1.5,
-                    color: const Color(0xFF17231F), // 深色文字
-                    fontWeight: FontWeight.w500,
+                    color: t.brandOnContainer,
                   ),
                 ),
               ),
@@ -943,15 +886,18 @@ class _LawAssistantChatBubble extends StatelessWidget {
             Container(
               width: 32.w,
               height: 32.w,
-              decoration: const BoxDecoration(
-                color: Color(0xFFF2994A), // 橘色頭像
+              decoration: BoxDecoration(
+                color: t.accentBrassContainer,
                 shape: BoxShape.circle,
+                border: Border.all(
+                  color: t.accentBrass.withValues(alpha: 0.4),
+                ),
               ),
               child: Center(
                 child: Icon(
-                  Icons.person_rounded,
-                  color: Colors.white,
-                  size: 20.sp,
+                  PhosphorIconsFill.user,
+                  color: t.accentOnBrassContainer,
+                  size: 17.sp,
                 ),
               ),
             ),
@@ -966,19 +912,12 @@ class _LawAssistantChatBubble extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Mascot Avatar (吉祥物頭像)
           Container(
             width: 32.w,
             height: 32.w,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 8,
-                  offset: const Offset(0, 3),
-                ),
-              ],
+              border: Border.all(color: t.borderStrong),
             ),
             child: ClipOval(
               child: Image.asset(
@@ -992,31 +931,30 @@ class _LawAssistantChatBubble extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Small Sparkle tag name
-                Row(
+                Wrap(
+                  spacing: 6.w,
+                  runSpacing: 4.h,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Text(
                       '小法助',
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.bold,
-                        color: assistantPalette.accent,
-                      ),
+                      style: t.serifTitle(size: 13.sp, color: t.brandPrimary),
                     ),
-                    SizedBox(width: 4.w),
                     Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 6.w,
+                        vertical: 2.h,
+                      ),
                       decoration: BoxDecoration(
-                        color: assistantPalette.subtleSurface,
-                        borderRadius: BorderRadius.circular(4.r),
+                        color: t.accentBrassContainer,
+                        borderRadius: BorderRadius.circular(5.r),
                       ),
                       child: Text(
-                        'AI 助理',
-                        style: TextStyle(
-                          fontSize: 8.sp,
-                          fontWeight: FontWeight.bold,
-                          color: assistantPalette.secondary,
+                        'AI 法務助理',
+                        style: t.sansBody(
+                          size: 11.sp,
+                          weight: FontWeight.w700,
+                          color: t.accentOnBrassContainer,
                         ),
                       ),
                     ),
@@ -1024,24 +962,16 @@ class _LawAssistantChatBubble extends StatelessWidget {
                 ),
                 SizedBox(height: 6.h),
                 Container(
-                  constraints: BoxConstraints(maxWidth: 290.w),
                   padding: EdgeInsets.all(14.w),
                   decoration: BoxDecoration(
-                    color: assistantPalette.cardSurface,
+                    color: t.surface,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.zero,
+                      topLeft: Radius.circular(4.r),
                       topRight: Radius.circular(16.r),
                       bottomLeft: Radius.circular(16.r),
                       bottomRight: Radius.circular(16.r),
                     ),
-                    border: Border.all(color: assistantPalette.neutralBorder),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.02),
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
+                    border: Border.all(color: t.border),
                   ),
                   child: _AssistantAnswerContent(
                     message: message,
@@ -1144,15 +1074,15 @@ class _AssistantLegalDisclaimer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final assistantPalette = _LawAssistantPalette.of(context);
+    final t = context.tokens;
 
     // AI 回覆固定補上免責與求助提醒，避免使用者把初步整理誤認為律師正式意見。
     return Text(
       message,
-      style: TextStyle(
-        fontSize: 10.5.sp,
-        height: 1.45,
-        color: assistantPalette.mutedText,
+      style: t.sansBody(
+        size: 11.sp,
+        height: 1.48,
+        color: t.textMuted,
       ),
     );
   }
@@ -1542,14 +1472,16 @@ $safeContent
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (sheetContext) {
+        final st = sheetContext.tokens;
         return Padding(
           padding: EdgeInsets.only(
-            bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
+            bottom: MediaQuery.viewInsetsOf(sheetContext).bottom,
           ),
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+              color: st.surfaceElevated,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(22.r)),
+              border: Border(top: BorderSide(color: st.borderStrong)),
             ),
             padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 20.h),
             child: SafeArea(
@@ -1560,20 +1492,12 @@ $safeContent
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w900,
-                      color: const Color(0xFF17231F),
-                    ),
+                    style: st.serifTitle(size: 16.5.sp),
                   ),
                   SizedBox(height: 8.h),
                   Text(
                     description,
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      height: 1.45,
-                      color: const Color(0xFF5A615C),
-                    ),
+                    style: st.sansBody(size: 12.sp, height: 1.48),
                   ),
                   SizedBox(height: 14.h),
                   TextField(
@@ -1582,11 +1506,22 @@ $safeContent
                     minLines: 4,
                     maxLines: 8,
                     textInputAction: TextInputAction.newline,
+                    style: st.sansBody(size: 13.sp, color: st.textPrimary),
                     decoration: InputDecoration(
                       labelText: fieldLabel,
+                      labelStyle:
+                          st.sansBody(size: 12.sp, color: st.textSecondary),
                       alignLabelWithHint: true,
-                      border: OutlineInputBorder(
+                      filled: true,
+                      fillColor: st.surface,
+                      enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14.r),
+                        borderSide: BorderSide(color: st.borderStrong),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14.r),
+                        borderSide:
+                            BorderSide(color: st.brandPrimary, width: 1.5),
                       ),
                     ),
                   ),
@@ -1596,7 +1531,17 @@ $safeContent
                       Expanded(
                         child: OutlinedButton(
                           onPressed: () => Navigator.of(sheetContext).pop(),
-                          child: const Text('取消'),
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: st.borderStrong),
+                          ),
+                          child: Text(
+                            '取消',
+                            style: st.sansBody(
+                              size: 12.5.sp,
+                              weight: FontWeight.w600,
+                              color: st.textPrimary,
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(width: 10.w),
@@ -1611,7 +1556,18 @@ $safeContent
                             Navigator.of(sheetContext).pop();
                             _insertContextText(context, buildPrompt(value));
                           },
-                          child: const Text('加入脈絡'),
+                          style: FilledButton.styleFrom(
+                            backgroundColor: st.brandPrimary,
+                            foregroundColor: st.brandOnPrimary,
+                          ),
+                          child: Text(
+                            '加入脈絡',
+                            style: st.sansBody(
+                              size: 12.5.sp,
+                              weight: FontWeight.w700,
+                              color: st.brandOnPrimary,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -1636,15 +1592,25 @@ $safeContent
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (sheetContext) {
+        final st = sheetContext.tokens;
         Widget field(String label, TextEditingController controller,
             {int maxLines = 1}) {
           return TextField(
             controller: controller,
             maxLines: maxLines,
+            style: st.sansBody(size: 13.sp, color: st.textPrimary),
             decoration: InputDecoration(
               labelText: label,
-              border: OutlineInputBorder(
+              labelStyle: st.sansBody(size: 12.sp, color: st.textSecondary),
+              filled: true,
+              fillColor: st.surface,
+              enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14.r),
+                borderSide: BorderSide(color: st.borderStrong),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14.r),
+                borderSide: BorderSide(color: st.brandPrimary, width: 1.5),
               ),
             ),
           );
@@ -1652,12 +1618,13 @@ $safeContent
 
         return Padding(
           padding: EdgeInsets.only(
-            bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
+            bottom: MediaQuery.viewInsetsOf(sheetContext).bottom,
           ),
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+              color: st.surfaceElevated,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(22.r)),
+              border: Border(top: BorderSide(color: st.borderStrong)),
             ),
             padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 20.h),
             child: SafeArea(
@@ -1669,20 +1636,12 @@ $safeContent
                   children: [
                     Text(
                       '補充案件背景',
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w900,
-                        color: const Color(0xFF17231F),
-                      ),
+                      style: st.serifTitle(size: 16.5.sp),
                     ),
                     SizedBox(height: 8.h),
                     Text(
                       '把事件基本資料整理進輸入框，小法助會更容易先拆出爭點與需要補充的資料。',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        height: 1.45,
-                        color: const Color(0xFF5A615C),
-                      ),
+                      style: st.sansBody(size: 12.sp, height: 1.48),
                     ),
                     SizedBox(height: 14.h),
                     field('事件時間', timeController),
@@ -1698,7 +1657,17 @@ $safeContent
                         Expanded(
                           child: OutlinedButton(
                             onPressed: () => Navigator.of(sheetContext).pop(),
-                            child: const Text('取消'),
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: st.borderStrong),
+                            ),
+                            child: Text(
+                              '取消',
+                              style: st.sansBody(
+                                size: 12.5.sp,
+                                weight: FontWeight.w600,
+                                color: st.textPrimary,
+                              ),
+                            ),
                           ),
                         ),
                         SizedBox(width: 10.w),
@@ -1733,7 +1702,18 @@ $safeContent
 請先幫我整理這個問題的法律爭點。''',
                               );
                             },
-                            child: const Text('加入脈絡'),
+                            style: FilledButton.styleFrom(
+                              backgroundColor: st.brandPrimary,
+                              foregroundColor: st.brandOnPrimary,
+                            ),
+                            child: Text(
+                              '加入脈絡',
+                              style: st.sansBody(
+                                size: 12.5.sp,
+                                weight: FontWeight.w700,
+                                color: st.brandOnPrimary,
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -1777,22 +1757,34 @@ $safeContent
       context: context,
       backgroundColor: Colors.transparent,
       builder: (sheetContext) {
+        final st = sheetContext.tokens;
         return Container(
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+            color: st.surfaceElevated,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(22.r)),
+            border: Border(top: BorderSide(color: st.borderStrong)),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+          padding: EdgeInsets.fromLTRB(
+            20.w,
+            18.h,
+            20.w,
+            MediaQuery.viewPaddingOf(sheetContext).bottom + 20.h,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                '補充問題資料',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF17231F),
+              Container(
+                width: 36.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: st.borderStrong,
+                  borderRadius: BorderRadius.circular(99.r),
                 ),
+              ),
+              SizedBox(height: 14.h),
+              Text(
+                '補充案件資料與脈絡',
+                style: st.serifTitle(size: 15.5.sp),
               ),
               SizedBox(height: 16.h),
               Wrap(
@@ -1801,8 +1793,8 @@ $safeContent
                 alignment: WrapAlignment.center,
                 children: [
                   _buildPlusMenuItem(
-                    context,
-                    icon: Icons.photo_library_outlined,
+                    sheetContext,
+                    icon: PhosphorIconsRegular.image,
                     label: '加入照片',
                     onTap: () {
                       Navigator.of(sheetContext).pop();
@@ -1810,8 +1802,8 @@ $safeContent
                     },
                   ),
                   _buildPlusMenuItem(
-                    context,
-                    icon: Icons.attach_file_rounded,
+                    sheetContext,
+                    icon: PhosphorIconsRegular.paperclip,
                     label: '匯入文件',
                     onTap: () {
                       Navigator.of(sheetContext).pop();
@@ -1819,8 +1811,8 @@ $safeContent
                     },
                   ),
                   _buildPlusMenuItem(
-                    context,
-                    icon: Icons.event_note_outlined,
+                    sheetContext,
+                    icon: PhosphorIconsRegular.notebook,
                     label: '補充案件背景',
                     onTap: () {
                       Navigator.of(sheetContext).pop();
@@ -1829,7 +1821,7 @@ $safeContent
                   ),
                   _buildPlusMenuItem(
                     sheetContext,
-                    icon: Icons.article_outlined,
+                    icon: PhosphorIconsRegular.article,
                     label: '貼上參考資料',
                     onTap: () {
                       Navigator.of(sheetContext).pop();
@@ -1849,7 +1841,7 @@ $value
                   ),
                   _buildPlusMenuItem(
                     sheetContext,
-                    icon: Icons.bookmark_outline_rounded,
+                    icon: PhosphorIconsRegular.bookmarkSimple,
                     label: '貼上過去問題',
                     onTap: () {
                       Navigator.of(sheetContext).pop();
@@ -1869,8 +1861,8 @@ $value
                   ),
                   _buildPlusMenuItem(
                     sheetContext,
-                    icon: Icons.format_list_numbered_rounded,
-                    label: '整理提問',
+                    icon: PhosphorIconsRegular.listNumbers,
+                    label: '結構化提問',
                     onTap: () {
                       Navigator.of(sheetContext).pop();
                       _appendQuestionStructure(parentContext);
@@ -1878,7 +1870,6 @@ $value
                   ),
                 ],
               ),
-              SizedBox(height: 16.h),
             ],
           ),
         );
@@ -1892,23 +1883,34 @@ $value
     required String label,
     required VoidCallback onTap,
   }) {
+    final t = context.tokens;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12.r),
       child: SizedBox(
-        width: 80.w,
+        width: 84.w,
         child: Column(
           children: [
-            CircleAvatar(
-              radius: 24.r,
-              backgroundColor: const Color(0xFFF3FAF6),
-              child: Icon(icon, color: const Color(0xFF2EA26F), size: 22.sp),
+            Container(
+              width: 48.w,
+              height: 48.w,
+              decoration: BoxDecoration(
+                color: t.brandContainer,
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: t.brandPrimary.withValues(alpha: 0.22),
+                ),
+              ),
+              child: Icon(icon, color: t.brandPrimary, size: 21.sp),
             ),
             SizedBox(height: 8.h),
             Text(
               label,
-              style:
-                  TextStyle(fontSize: 10.5.sp, color: const Color(0xFF5A615C)),
+              style: t.sansBody(
+                size: 11.5.sp,
+                weight: FontWeight.w600,
+                color: t.textPrimary,
+              ),
               textAlign: TextAlign.center,
             ),
           ],
@@ -1919,6 +1921,12 @@ $value
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
+    final safeBottom = MediaQuery.viewPaddingOf(context).bottom;
+    final effectiveBottomPadding = widget.bottomInset > 0
+        ? widget.bottomInset + 10.h
+        : safeBottom + 12.h;
+
     final canSend = widget.controller.text.trim().isNotEmpty &&
         !widget.isSending &&
         (widget.isFirstMessage || !widget.isGuest);
@@ -1927,13 +1935,21 @@ $value
 
     return AnimatedPadding(
       duration: const Duration(milliseconds: 180),
-      padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, widget.bottomInset + 16.h),
+      curve: Curves.easeOutCubic,
+      padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, effectiveBottomPadding),
       child: Container(
-        padding: EdgeInsets.fromLTRB(14.w, 8.h, 12.w, 8.h),
+        padding: EdgeInsets.fromLTRB(12.w, 8.h, 10.w, 8.h),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: t.surface,
           borderRadius: BorderRadius.circular(24.r),
-          border: Border.all(color: const Color(0xFFEDE4D8)),
+          border: Border.all(color: t.borderStrong),
+          boxShadow: [
+            BoxShadow(
+              color: t.shadowAmbient,
+              blurRadius: 14,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -1950,51 +1966,61 @@ $value
               children: [
                 IconButton(
                   padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
+                  constraints: BoxConstraints(
+                    minWidth: 34.w,
+                    minHeight: 34.w,
+                  ),
+                  tooltip: '補充問題資料',
                   icon: Icon(
-                    Icons.add,
-                    size: 24.sp,
-                    color: const Color(0xFF5A615C),
+                    PhosphorIconsRegular.plusCircle,
+                    size: 23.sp,
+                    color: t.brandPrimary,
                   ),
                   onPressed: () => _showPlusMenu(context),
                 ),
-                SizedBox(width: 8.w),
+                SizedBox(width: 6.w),
                 Expanded(
                   child: TextField(
                     controller: widget.controller,
                     enabled: !showDisabled,
                     minLines: 1,
-                    maxLines: 3,
-                    style: TextStyle(
-                        fontSize: 13.sp, color: const Color(0xFF17231F)),
+                    maxLines: 4,
+                    style: t.sansBody(size: 13.5.sp, color: t.textPrimary),
                     decoration: InputDecoration(
                       hintText: widget.isFirstMessage
-                          ? '請輸入您的法律問題，例如：車禍和解...'
-                          : (widget.isGuest ? '登入後可以繼續追問' : '繼續追問...'),
+                          ? '請描述您的法律困擾，例如：退租被扣押金...'
+                          : (widget.isGuest ? '登入後可以繼續追問' : '繼續追問或補充細節...'),
+                      hintStyle: t.sansBody(size: 13.sp, color: t.textMuted),
                       border: InputBorder.none,
                       isCollapsed: true,
                     ),
                   ),
                 ),
+                SizedBox(width: 6.w),
                 GestureDetector(
                   onTap: canSend ? _handleSend : null,
                   child: Opacity(
-                    opacity: canSend ? 1.0 : 0.4,
-                    child: CircleAvatar(
-                      backgroundColor: const Color(0xFF2EA26F),
-                      radius: 16.r,
+                    opacity: canSend ? 1.0 : 0.38,
+                    child: Container(
+                      width: 34.w,
+                      height: 34.w,
+                      decoration: BoxDecoration(
+                        color: t.brandPrimary,
+                        shape: BoxShape.circle,
+                      ),
+                      alignment: Alignment.center,
                       child: widget.isSending
                           ? SizedBox(
-                              width: 14.w,
-                              height: 14.w,
-                              child: const CircularProgressIndicator(
+                              width: 15.w,
+                              height: 15.w,
+                              child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: Colors.white,
+                                color: t.brandOnPrimary,
                               ),
                             )
                           : Icon(
-                              Icons.arrow_upward_rounded,
-                              color: Colors.white,
+                              PhosphorIconsBold.arrowUp,
+                              color: t.brandOnPrimary,
                               size: 16.sp,
                             ),
                     ),
@@ -2046,6 +2072,7 @@ class _AssistantAttachmentTray extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -2068,12 +2095,8 @@ class _AssistantAttachmentTray extends StatelessWidget {
         ),
         SizedBox(height: 4.h),
         Text(
-          '附件只作為問題脈絡，圖片與 PDF/Word 內容仍需以文字補充說明。',
-          style: TextStyle(
-            fontSize: 10.sp,
-            height: 1.3,
-            color: const Color(0xFF7B817D),
-          ),
+          '附件僅作為問題脈絡索引，圖片與 PDF / Word 重點仍建議以文字補充。',
+          style: t.sansBody(size: 11.sp, color: t.textMuted),
         ),
       ],
     );
@@ -2093,14 +2116,15 @@ class _AssistantAttachmentChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     final isImage = attachment.kind == _AssistantAttachmentKind.image;
     return Container(
-      width: 178.w,
+      width: 184.w,
       padding: EdgeInsets.all(8.w),
       decoration: BoxDecoration(
-        color: const Color(0xFFF4FAF6),
+        color: t.surfaceSubtle,
         borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: const Color(0xFFD8EEE3)),
+        border: Border.all(color: t.border),
       ),
       child: Row(
         children: [
@@ -2109,7 +2133,7 @@ class _AssistantAttachmentChip extends StatelessWidget {
             height: 40.w,
             clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: t.surface,
               borderRadius: BorderRadius.circular(10.r),
             ),
             child: isImage && attachment.canShowPreview
@@ -2117,15 +2141,17 @@ class _AssistantAttachmentChip extends StatelessWidget {
                     attachment.previewBytes!,
                     fit: BoxFit.cover,
                     errorBuilder: (_, __, ___) => Icon(
-                      Icons.image_outlined,
+                      PhosphorIconsRegular.image,
                       size: 20.sp,
-                      color: const Color(0xFF2EA26F),
+                      color: t.brandPrimary,
                     ),
                   )
                 : Icon(
-                    isImage ? Icons.image_outlined : Icons.description_outlined,
+                    isImage
+                        ? PhosphorIconsRegular.image
+                        : PhosphorIconsRegular.fileText,
                     size: 20.sp,
-                    color: const Color(0xFF2EA26F),
+                    color: t.brandPrimary,
                   ),
           ),
           SizedBox(width: 8.w),
@@ -2138,10 +2164,10 @@ class _AssistantAttachmentChip extends StatelessWidget {
                   attachment.name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF17231F),
+                  style: t.sansBody(
+                    size: 11.5.sp,
+                    weight: FontWeight.w700,
+                    color: t.textPrimary,
                   ),
                 ),
                 SizedBox(height: 2.h),
@@ -2151,9 +2177,10 @@ class _AssistantAttachmentChip extends StatelessWidget {
                       : '${attachment.typeLabel} · $sizeLabel',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 9.5.sp,
-                    color: const Color(0xFF6B736E),
+                  style: t.tabularMetric(
+                    size: 11.sp,
+                    weight: FontWeight.w500,
+                    color: t.textMuted,
                   ),
                 ),
               ],
@@ -2166,9 +2193,9 @@ class _AssistantAttachmentChip extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.all(4.w),
               child: Icon(
-                Icons.close_rounded,
-                size: 16.sp,
-                color: const Color(0xFF5A615C),
+                PhosphorIconsRegular.x,
+                size: 15.sp,
+                color: t.textSecondary,
               ),
             ),
           ),
@@ -2185,140 +2212,145 @@ class _AssistantBentoIntro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final assistantPalette = _LawAssistantPalette.of(context);
+    final t = context.tokens;
     final appState = PreambleScope.of(context);
     final user = appState.currentUser;
     final nameText = user.isGuest ? '您好' : user.displayName;
 
-    final prompts = const [
+    const prompts = [
       _PromptItem(
         title: '車禍理賠',
         desc: '車禍受傷對方拖延不談和解，我該如何保障權益？',
-        icon: Icons.directions_car_outlined,
+        icon: PhosphorIconsRegular.carProfile,
       ),
       _PromptItem(
         title: '租屋糾紛',
         desc: '房東拒絕退還押金，還扣除清潔費，這合法嗎？',
-        icon: Icons.home_work_outlined,
+        icon: PhosphorIconsRegular.houseLine,
       ),
       _PromptItem(
         title: '職場權益',
         desc: '公司無預警裁員，我能爭取哪些非自願離職補償？',
-        icon: Icons.work_outline_rounded,
+        icon: PhosphorIconsRegular.briefcase,
       ),
       _PromptItem(
         title: '網購消保',
         desc: '網購商品收到後發現瑕疵，商家卻說特價品不退換？',
-        icon: Icons.shopping_bag_outlined,
+        icon: PhosphorIconsRegular.shoppingBagOpen,
       ),
     ];
-
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(height: 16.h),
-        // 1. AI 星星 Logo 區塊
+        SizedBox(height: 12.h),
         Container(
-          width: 56.w,
-          height: 56.w,
+          width: 54.w,
+          height: 54.w,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                assistantPalette.accent,
-                assistantPalette.secondary.withValues(alpha: 0.8),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+            color: t.brandPrimaryStrong,
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(
+              color: t.accentBrass.withValues(alpha: 0.55),
             ),
-            borderRadius: BorderRadius.circular(18.r),
             boxShadow: [
               BoxShadow(
-                color: assistantPalette.accent
-                    .withValues(alpha: isDark ? 0.3 : 0.15),
+                color: t.shadowAmbient,
                 blurRadius: 16,
-                offset: const Offset(0, 8),
+                offset: const Offset(0, 6),
               ),
             ],
           ),
           alignment: Alignment.center,
           child: Icon(
-            Icons.auto_awesome_rounded,
-            color: Colors.white,
-            size: 26.sp,
+            PhosphorIconsFill.scales,
+            color: t.accentBrass,
+            size: 25.sp,
           ),
         ),
-        SizedBox(height: 16.h),
-        // 2. 歡迎語與簡介
+        SizedBox(height: 14.h),
         Text(
-          '$nameText，今天想諮詢什麼法律問題？',
+          '$nameText，今天想釐清哪一項法律爭點？',
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 18.sp,
-            fontWeight: FontWeight.w900,
-            color: assistantPalette.primaryText,
-            height: 1.25,
-          ),
+          style: t.serifTitle(size: 18.sp, height: 1.32),
         ),
         SizedBox(height: 6.h),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Text(
-            '「小法助」將為您梳理問題方向、整理可能爭點與證據建議',
+            '小法助將以「爭點核心 × 法條依據 × 下一步行動」雙重編碼為您梳理脈絡',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 11.5.sp,
-              color: assistantPalette.mutedText,
-              height: 1.4,
-            ),
+            style: t.sansBody(size: 12.sp, height: 1.45),
           ),
         ),
-        SizedBox(height: 24.h),
-        // 3. 2x2 Bento 推薦 Prompt 卡片
-        Column(
-          children: [
-            Row(
+        SizedBox(height: 20.h),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final isCompact = constraints.maxWidth < 310 ||
+                MediaQuery.textScalerOf(context).scale(1.0) > 1.35;
+            if (isCompact) {
+              return Column(
+                children: [
+                  for (var i = 0; i < prompts.length; i++) ...[
+                    if (i > 0) SizedBox(height: 10.h),
+                    _PromptBentoCard(
+                      item: prompts[i],
+                      onTap: () => onPromptSelected(prompts[i].desc),
+                    ),
+                  ],
+                ],
+              );
+            }
+            return Column(
               children: [
-                Expanded(
-                  child: _PromptBentoCard(
-                    item: prompts[0],
-                    onTap: () => onPromptSelected(prompts[0].desc),
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        child: _PromptBentoCard(
+                          item: prompts[0],
+                          onTap: () => onPromptSelected(prompts[0].desc),
+                        ),
+                      ),
+                      SizedBox(width: 10.w),
+                      Expanded(
+                        child: _PromptBentoCard(
+                          item: prompts[1],
+                          onTap: () => onPromptSelected(prompts[1].desc),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(width: 10.w),
-                Expanded(
-                  child: _PromptBentoCard(
-                    item: prompts[1],
-                    onTap: () => onPromptSelected(prompts[1].desc),
+                SizedBox(height: 10.h),
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        child: _PromptBentoCard(
+                          item: prompts[2],
+                          onTap: () => onPromptSelected(prompts[2].desc),
+                        ),
+                      ),
+                      SizedBox(width: 10.w),
+                      Expanded(
+                        child: _PromptBentoCard(
+                          item: prompts[3],
+                          onTap: () => onPromptSelected(prompts[3].desc),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
-            ),
-            SizedBox(height: 10.h),
-            Row(
-              children: [
-                Expanded(
-                  child: _PromptBentoCard(
-                    item: prompts[2],
-                    onTap: () => onPromptSelected(prompts[2].desc),
-                  ),
-                ),
-                SizedBox(width: 10.w),
-                Expanded(
-                  child: _PromptBentoCard(
-                    item: prompts[3],
-                    onTap: () => onPromptSelected(prompts[3].desc),
-                  ),
-                ),
-              ],
-            ),
-          ],
+            );
+          },
         ),
-        SizedBox(height: 24.h),
-        // 4. 使用範圍與免責說明卡片
+        SizedBox(height: 20.h),
         const _AssistantBentoPlanCard(),
-        SizedBox(height: 24.h),
+        SizedBox(height: 20.h),
       ],
     );
   }
@@ -2347,8 +2379,7 @@ class _PromptBentoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final assistantPalette = _LawAssistantPalette.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final t = context.tokens;
 
     return Material(
       color: Colors.transparent,
@@ -2356,52 +2387,35 @@ class _PromptBentoCard extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(16.r),
         child: Ink(
-          padding: EdgeInsets.all(12.w),
-          height: 110.h,
-          decoration: BoxDecoration(
-            color: assistantPalette.cardSurface,
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(
-              color: assistantPalette.neutralBorder,
-              width: 1.2.w,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? 0.05 : 0.015),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
+          padding: EdgeInsets.all(13.w),
+          decoration: t.cardDecoration(radius: 16.r),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                item.icon,
-                color: assistantPalette.accent,
-                size: 18.sp,
+              Container(
+                padding: EdgeInsets.all(6.w),
+                decoration: BoxDecoration(
+                  color: t.brandContainer,
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Icon(
+                  item.icon,
+                  color: t.brandPrimary,
+                  size: 17.sp,
+                ),
               ),
-              SizedBox(height: 6.h),
+              SizedBox(height: 8.h),
               Text(
                 item.title,
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w900,
-                  color: assistantPalette.primaryText,
-                ),
+                style: t.sansTitle(size: 13.sp),
               ),
-              SizedBox(height: 3.h),
-              Expanded(
-                child: Text(
-                  item.desc,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 10.sp,
-                    height: 1.35,
-                    color: assistantPalette.mutedText,
-                  ),
-                ),
+              SizedBox(height: 4.h),
+              Text(
+                item.desc,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: t.sansBody(size: 11.5.sp, height: 1.4),
               ),
             ],
           ),
@@ -2417,13 +2431,14 @@ class _AssistantBentoPlanCard extends StatelessWidget {
   void _showUsageDialog(BuildContext context) {
     showDialog<void>(
       context: context,
-      builder: (context) {
-        final assistantPalette = _LawAssistantPalette.of(context);
+      builder: (dialogCtx) {
+        final dt = dialogCtx.tokens;
         return Dialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24.r),
+            borderRadius: BorderRadius.circular(22.r),
+            side: BorderSide(color: dt.borderStrong),
           ),
-          backgroundColor: assistantPalette.cardSurface,
+          backgroundColor: dt.surfaceElevated,
           child: Padding(
             padding: EdgeInsets.all(20.w),
             child: Column(
@@ -2431,12 +2446,8 @@ class _AssistantBentoPlanCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '小法助使用說明',
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w900,
-                    color: assistantPalette.primaryText,
-                  ),
+                  '小法助法源查核與使用說明',
+                  style: dt.serifTitle(size: 17.sp),
                 ),
                 SizedBox(height: 16.h),
                 const _PlanCompareTable(),
@@ -2444,11 +2455,19 @@ class _AssistantBentoPlanCard extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerRight,
                   child: FilledButton(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => Navigator.of(dialogCtx).pop(),
                     style: FilledButton.styleFrom(
-                      backgroundColor: assistantPalette.accent,
+                      backgroundColor: dt.brandPrimary,
+                      foregroundColor: dt.brandOnPrimary,
                     ),
-                    child: const Text('我知道了'),
+                    child: Text(
+                      '我知道了',
+                      style: dt.sansBody(
+                        size: 12.5.sp,
+                        weight: FontWeight.w700,
+                        color: dt.brandOnPrimary,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -2461,111 +2480,167 @@ class _AssistantBentoPlanCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final assistantPalette = _LawAssistantPalette.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final t = context.tokens;
 
     return Container(
+      width: double.infinity,
       padding: EdgeInsets.all(14.w),
-      decoration: BoxDecoration(
-        color: assistantPalette.introSurface,
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(
-          color: assistantPalette.border.withValues(alpha: isDark ? 0.3 : 0.5),
-          width: 1.2.w,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: assistantPalette.secondary
-                .withValues(alpha: isDark ? 0.05 : 0.02),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
+      decoration: t.subtleBoxDecoration(
+        radius: 18.r,
+        fill: t.surfaceSubtle,
+        borderColor: t.borderStrong,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          Wrap(
+            spacing: 8.w,
+            runSpacing: 6.h,
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: assistantPalette.accent.withValues(alpha: 0.15),
+                  color: t.brandContainer,
                   borderRadius: BorderRadius.circular(8.r),
                 ),
-                child: Text(
-                  '法律學習輔助',
-                  style: TextStyle(
-                    fontSize: 10.5.sp,
-                    fontWeight: FontWeight.bold,
-                    color: assistantPalette.secondary,
-                  ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      PhosphorIconsRegular.shieldCheck,
+                      size: 13.sp,
+                      color: t.brandPrimary,
+                    ),
+                    SizedBox(width: 4.w),
+                    Text(
+                      '雙重編碼法源查核機制',
+                      style: t.sansBody(
+                        size: 11.sp,
+                        weight: FontWeight.w700,
+                        color: t.brandOnContainer,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const Spacer(),
               Text(
-                '僅供學習參考',
-                style: TextStyle(
-                  fontSize: 10.5.sp,
-                  color: assistantPalette.mutedText,
-                  fontWeight: FontWeight.w600,
+                '僅供法學參考 · 非正式委任意見',
+                style: t.sansBody(
+                  size: 11.sp,
+                  weight: FontWeight.w600,
+                  color: t.textMuted,
                 ),
               ),
             ],
           ),
-          SizedBox(height: 12.h),
-          Row(
-            children: [
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(99.r),
-                  child: SizedBox(
-                    height: 6.h,
-                    child: LinearProgressIndicator(
-                      value: 1,
-                      color: assistantPalette.accent,
-                      backgroundColor: assistantPalette.cardSurface,
+          SizedBox(height: 10.h),
+          // 雙重編碼法源檢核狀態徽章（取代原先誤導性的 100% 滿格進度條）
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(10.w),
+            decoration: BoxDecoration(
+              color: t.surface,
+              borderRadius: BorderRadius.circular(12.r),
+              border: Border.all(color: t.border),
+            ),
+            child: Wrap(
+              spacing: 8.w,
+              runSpacing: 6.h,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                  decoration: BoxDecoration(
+                    color: t.accentBrassContainer,
+                    borderRadius: BorderRadius.circular(6.r),
+                    border: Border.all(
+                      color: t.accentBrass.withValues(alpha: 0.4),
                     ),
                   ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        PhosphorIconsRegular.sealWarning,
+                        size: 13.sp,
+                        color: t.accentOnBrassContainer,
+                      ),
+                      SizedBox(width: 4.w),
+                      Text(
+                        '待核對法源依據',
+                        style: t.sansBody(
+                          size: 11.sp,
+                          weight: FontWeight.w700,
+                          color: t.accentOnBrassContainer,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(width: 12.w),
-              Text(
-                '請查核官方來源',
-                style: TextStyle(
-                  fontSize: 11.sp,
-                  fontWeight: FontWeight.w700,
-                  color: assistantPalette.primaryText,
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                  decoration: BoxDecoration(
+                    color: t.semanticSuccessContainer,
+                    borderRadius: BorderRadius.circular(6.r),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        PhosphorIconsRegular.sealCheck,
+                        size: 13.sp,
+                        color: t.semanticSuccess,
+                      ),
+                      SizedBox(width: 4.w),
+                      Text(
+                        '已附法條引證',
+                        style: t.sansBody(
+                          size: 11.sp,
+                          weight: FontWeight.w700,
+                          color: t.semanticSuccess,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                Text(
+                  '引用條文請點擊引證編號或全國法規資料庫進行最終核對',
+                  style: t.sansBody(size: 11.5.sp, color: t.textSecondary),
+                ),
+              ],
+            ),
           ),
-          SizedBox(height: 12.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          SizedBox(height: 10.h),
+          Wrap(
+            spacing: 10.w,
+            runSpacing: 8.h,
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               Text(
-                '小法助會協助整理問題方向、證據與可能爭點。',
-                style: TextStyle(
-                  fontSize: 10.sp,
-                  color: assistantPalette.mutedText,
-                ),
+                '協助梳理案件爭點、舉證清單與應對話術。',
+                style: t.sansBody(size: 11.5.sp, color: t.textSecondary),
               ),
-              GestureDetector(
+              InkWell(
                 onTap: () => _showUsageDialog(context),
+                borderRadius: BorderRadius.circular(10.r),
                 child: Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 5.5.h,
+                  ),
                   decoration: BoxDecoration(
-                    color: assistantPalette.accent,
+                    color: t.brandPrimary,
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Text(
                     '使用說明',
-                    style: TextStyle(
-                      fontSize: 10.5.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                    style: t.sansBody(
+                      size: 11.sp,
+                      weight: FontWeight.w700,
+                      color: t.brandOnPrimary,
                     ),
                   ),
                 ),
@@ -2583,12 +2658,12 @@ class _PlanCompareTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final assistantPalette = _LawAssistantPalette.of(context);
-    final rows = const [
-      ['適用範圍', '法律學習、案件理解與資料整理'],
-      ['資料限制', '畫面未標示即時更新時，請以官方來源為準'],
-      ['實際個案', '請諮詢合格律師或相關專業人士'],
-      ['法律效果', '不構成法律意見或委任關係'],
+    final t = context.tokens;
+    const rows = [
+      ['適用範圍', '法律學習、案件爭點理解與舉證整理'],
+      ['法源查核', '已附法條引證處可點擊核對全國法規資料庫原文'],
+      ['實際個案', '涉及訴訟或重大權益請委任合格執業律師'],
+      ['法律效果', '系統整理結果不構成正式法律意見或委任關係'],
     ];
 
     return Table(
@@ -2598,8 +2673,8 @@ class _PlanCompareTable extends StatelessWidget {
       },
       border: TableBorder(
         horizontalInside: BorderSide(
-          color: assistantPalette.neutralBorder,
-          width: 0.8.w,
+          color: t.border,
+          width: 1,
         ),
       ),
       children: [
@@ -2607,14 +2682,14 @@ class _PlanCompareTable extends StatelessWidget {
           children: ['項目', '說明']
               .map(
                 (text) => Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.h),
+                  padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 4.w),
                   child: Text(
                     text,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w900,
-                      color: assistantPalette.primaryText,
+                    textAlign: TextAlign.left,
+                    style: t.sansBody(
+                      size: 11.5.sp,
+                      weight: FontWeight.w700,
+                      color: t.textPrimary,
                     ),
                   ),
                 ),
@@ -2626,13 +2701,14 @@ class _PlanCompareTable extends StatelessWidget {
             children: row
                 .map(
                   (text) => Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.h),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 8.h, horizontal: 4.w),
                     child: Text(
                       text,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 10.5.sp,
-                        color: assistantPalette.mutedText,
+                      textAlign: TextAlign.left,
+                      style: t.sansBody(
+                        size: 11.5.sp,
+                        color: t.textSecondary,
                       ),
                     ),
                   ),
