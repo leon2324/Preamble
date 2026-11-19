@@ -2,6 +2,15 @@
 
 此文件僅記錄 `lawapp`。每次接手先核對 Git 現況與最新驗收，不得把同層 `time_recorder` 的分支、測試、資料或部署狀態套用到此專案。
 
+## 目前快照（2026-11-19，案件庫正式快取）
+
+- 分支 `redesign/home-responsive-carousel`，開工基準 Commit `7cd6f58`。本批停止正式模式的內建案件種子初始化與舊 SQLite 正文優先讀取；正式詳情每次由雲端確認，只合併本機收藏／追蹤標記。
+- 正式清單建立推薦快照，成功空結果清除舊推薦；案件入口先讀正式清單再選 Hero。正式詳情失敗時沿用共用錯誤狀態，不顯示傳入頁面的舊案件內容；離線模式保留原展示流程。
+- 聚焦測試、已知 widget 測例失敗與靜態內容界線詳見[案件庫日期化驗收](CASE_LIBRARY_LIVE_CACHE_ACCEPTANCE_2026-11-19.md)。最新 Commit SHA 以 `git log -1` 查核；未 push、部署或驗收正式 Supabase。
+- 下一步應為靜態編輯內容與 generated `caseLibraryCases` 定義來源標示及正式模式契約；SQLite 若要移除舊種子列，須先規劃不刪收藏／追蹤標記的 migration。
+
+以下為上一批歷史快照，不代表目前案件詳情快取優先順序。
+
 ## 目前快照（2026-11-19，正式來源空結果）
 
 - 分支 `redesign/home-responsive-carousel`，開工基準 Commit `06e1ef6`。本批將案件、法規、官方消息與全站搜尋的預設改為 `DataFallbackPolicy.liveWhenConfigured`：正式來源成功空結果照實回空，失敗向上傳遞；未設定來源仍保留既有展示流程。`demo` 僅供明確選用。

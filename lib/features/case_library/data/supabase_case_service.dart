@@ -137,7 +137,9 @@ class SupabaseCaseService {
       }
       final found = caseLibraryCasesSeed.firstWhere(
         (c) => c.id == id,
-        orElse: () => caseLibraryCasesSeed.first,
+        // 台灣繁體中文教學註解：離線示範查無指定 ID 時應明確失敗，
+        // 不可悄悄回傳第一筆無關案件，否則詳情頁會顯示錯誤人物與判決。
+        orElse: () => throw StateError('Case not found in local data: $id'),
       );
       return found;
     }

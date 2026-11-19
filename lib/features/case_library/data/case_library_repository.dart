@@ -13,13 +13,23 @@ class CaseLibraryRepository {
       CaseLibraryRepository._privateConstructor();
 
   final SupabaseCaseService _supabaseService;
-  final List<CaseBook> _casesCache = List.from(caseLibraryCasesSeed);
+  // 台灣繁體中文教學註解：記憶體快取起始為空；離線模式才載入內建案例，
+  // 正式模式只能放入雲端成功回傳的案件，避免推薦與詳情混入示範資料。
+  final List<CaseBook> _casesCache = [];
   bool _initialized = false;
+  int _catalogRequestId = 0;
 
   List<CaseBook> get cases => _casesCache;
 
   Future<void> initialize() async {
     if (_initialized) return;
+    if (_supabaseService.isConfigured) {
+      // 台灣繁體中文教學註解：正式來源不執行舊版種子同步，也不把既有
+      // SQLite 列表讀成正式清單；SQLite 仍可保存收藏／追蹤標記。
+      _casesCache.clear();
+      _initialized = true;
+      return;
+    }
     try {
       // 確保 SQLite 初始化
       final db = CaseDossierSqliteDb.instance;
@@ -82,9 +92,11 @@ class CaseLibraryRepository {
     }
 
     // 當本機 SQLite 快取尚未載入時，從案件種子資料庫中檢索
-    final seedIndex = caseLibraryCasesSeed.indexWhere((c) => c.id == id);
-    if (seedIndex != -1) {
-      return caseLibraryCasesSeed[seedIndex];
+    if (!_supabaseService.isConfigured) {
+      final seedIndex = caseLibraryCasesSeed.indexWhere((c) => c.id == id);
+      if (seedIndex != -1) {
+        return caseLibraryCasesSeed[seedIndex];
+      }
     }
 
     // 找不到時，不應隨便回傳第一個 Legacy 元素。
@@ -130,7 +142,7 @@ class CaseLibraryRepository {
     String? topicTag,
     int limit = 6,
   }) {
-    if (_casesCache.isEmpty) {
+    if (_casesCache.isEmpty && !_supabaseService.isConfigured) {
       _casesCache.addAll(caseLibraryCasesSeed);
     }
 
@@ -221,6 +233,12 @@ class CaseLibraryRepository {
     }
     // 優先判定是否使用 Supabase 雲端資料庫
     if (_supabaseService.isConfigured) {
+      final updatesCatalog = offset == 0 &&
+          (category == null || category == '全部') &&
+          (query == null || query.trim().isEmpty);
+      // 台灣繁體中文教學註解：並發的正式清單請求只允許最後發起者更新推薦
+      // 快照，避免慢到的舊回應覆蓋較新的資料。
+      final requestId = updatesCatalog ? ++_catalogRequestId : null;
       try {
         final cloudCases = await _supabaseService.fetchCases(
           limit,
@@ -231,7 +249,12 @@ class CaseLibraryRepository {
 
         // 台灣繁體中文教學註解：雲端成功回傳空清單也是正式結果；不可再讀取
         // SQLite 的舊快取或內建種子案件，否則搜尋會出現不存在的資料。
-        if (cloudCases.isEmpty) return const [];
+        if (cloudCases.isEmpty) {
+          if (updatesCatalog && requestId == _catalogRequestId) {
+            _casesCache.clear();
+          }
+          return const [];
+        }
         final List<CaseBook> merged = [];
         for (final c in cloudCases) {
           try {
@@ -258,6 +281,19 @@ class CaseLibraryRepository {
             if (b.id.toLowerCase() == q && a.id.toLowerCase() != q) return 1;
             return 0;
           });
+        }
+        // 台灣繁體中文教學註解：推薦只使用正式來源的未篩選第一頁，
+        // 避免篩選或其他分頁回應混入編輯推薦快照。
+        if (updatesCatalog && requestId == _catalogRequestId) {
+          _casesCache.clear();
+          for (final item in merged) {
+            final index = _casesCache.indexWhere((c) => c.id == item.id);
+            if (index == -1) {
+              _casesCache.add(item);
+            } else {
+              _casesCache[index] = item;
+            }
+          }
         }
         return merged;
       } catch (e) {
@@ -333,55 +369,53 @@ class CaseLibraryRepository {
     if (!_initialized) {
       await initialize();
     }
-    // 1. 先從本地 SQLite 查詢是否有快取
-    try {
-      final local = await CaseDossierSqliteDb.instance.getCaseById(id);
-      // 必須確認該快取包含完整的詳情資料（如 background 或 fullStory 不為空），
-      // 否則可能只是列表查詢時存入的輕量中繼資料（metadata）。
-      if (local != null &&
-          local.fullStory.isNotEmpty &&
-          local.timeline.isNotEmpty) {
-        return local;
+    // 台灣繁體中文教學註解：正式來源的完整詳情必須先向雲端確認。
+    // 離線模式才把 SQLite 完整快取當作可直接使用的案件內容。
+    if (!_supabaseService.isConfigured) {
+      try {
+        final local = await CaseDossierSqliteDb.instance.getCaseById(id);
+        if (local != null &&
+            local.fullStory.isNotEmpty &&
+            local.timeline.isNotEmpty) {
+          return local;
+        }
+      } catch (e) {
+        print('Local cache read failed: $e');
       }
-    } catch (e) {
-      print('Local cache read failed: $e');
     }
 
     // 2. 本地無快取或資料不完整，從 Supabase（或本地模擬）載入完整詳情
     final fetched = await _supabaseService.fetchCaseDetail(id);
 
-    // 3. 異步寫入本地 SQLite 快取（快取同步）
+    // 3. 只從 SQLite 讀取使用者自己的收藏／追蹤標記；正文使用雲端版本。
+    var localFavorite = fetched.isFavorite;
+    var localFollowing = fetched.isFollowing;
     try {
-      // 合併本地收藏與追蹤狀態，確保寫入時狀態不被覆蓋
-      bool localFavorite = fetched.isFavorite;
-      bool localFollowing = fetched.isFollowing;
-      try {
-        final local = await CaseDossierSqliteDb.instance.getCaseById(id);
-        if (local != null) {
-          localFavorite = local.isFavorite;
-          localFollowing = local.isFollowing;
-        }
-      } catch (__) {}
-
-      final finalBook = fetched.copyWith(
-        isFavorite: localFavorite,
-        isFollowing: localFollowing,
-      );
-
-      await CaseDossierSqliteDb.instance.insertCase(finalBook);
-
-      // 同步更新記憶體 cache 陣列以確保同步 UI 同步
-      final cacheIndex = _casesCache.indexWhere((c) => c.id == id);
-      if (cacheIndex != -1) {
-        _casesCache[cacheIndex] = finalBook;
-      } else {
-        _casesCache.add(finalBook);
+      final local = await CaseDossierSqliteDb.instance.getCaseById(id);
+      if (local != null) {
+        localFavorite = local.isFavorite;
+        localFollowing = local.isFollowing;
       }
-      return finalBook;
+    } catch (__) {}
+    final finalBook = fetched.copyWith(
+      isFavorite: localFavorite,
+      isFollowing: localFollowing,
+    );
+
+    // 台灣繁體中文教學註解：SQLite 寫入失敗不能使已取得的正式詳情消失；
+    // 記憶體快取仍保存這次雲端驗證的內容，供同一工作階段使用。
+    try {
+      await CaseDossierSqliteDb.instance.insertCase(finalBook);
     } catch (e) {
       print('Failed to cache case detail: $e');
-      return fetched;
     }
+    final cacheIndex = _casesCache.indexWhere((c) => c.id == id);
+    if (cacheIndex != -1) {
+      _casesCache[cacheIndex] = finalBook;
+    } else {
+      _casesCache.add(finalBook);
+    }
+    return finalBook;
   }
 
   // [審查修復] toggleFavorite / toggleFollowing 原本手動逐一複製 CaseBook 的 30+ 個屬性，

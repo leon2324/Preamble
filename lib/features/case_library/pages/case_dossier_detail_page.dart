@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:preamble/components/shared/custom_toast.dart';
+import 'package:preamble/components/shared/mvp_state_widgets.dart';
 import 'package:preamble/components/shared/law_app_story_action_bar.dart';
 import 'package:preamble/components/shared/share_sheet.dart';
 import 'package:preamble/theme/app_fonts.dart';
@@ -14,6 +15,7 @@ import 'package:preamble/features/case_library/data/case_interactive_profiles.da
 import 'package:preamble/features/case_library/data/case_library_data.dart';
 import 'package:preamble/features/case_library/data/case_library_image_resolver.dart';
 import 'package:preamble/features/case_library/data/case_library_repository.dart';
+import 'package:preamble/features/case_library/data/supabase_case_service.dart';
 import 'package:preamble/features/case_library/models/case_library_models.dart';
 import 'package:preamble/features/case_library/theme/case_library_theme.dart';
 import 'package:preamble/components/shared/shimmer_skeleton.dart';
@@ -125,6 +127,7 @@ class CaseDossierDetailPage extends StatefulWidget {
 class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
   CaseBook? _detailedBook;
   bool _isLoading = true;
+  bool _loadFailed = false;
 
   late String _selectedTab;
   bool _isSaved = false;
@@ -320,6 +323,7 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
         setState(() {
           _detailedBook = detail;
           _isLoading = false;
+          _loadFailed = false;
           // 重新計算 Tab，防 Placeholder 空欄位導致 Tab 被隱藏
           final tabs = _availableTabs;
           if (tabs.contains(_selectedTab)) {
@@ -336,9 +340,18 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
       if (mounted) {
         setState(() {
           _isLoading = false;
+          _loadFailed = SupabaseCaseService.instance.isConfigured;
         });
       }
     }
+  }
+
+  void _retryLoadDetails() {
+    setState(() {
+      _isLoading = true;
+      _loadFailed = false;
+    });
+    _loadDetails();
   }
 
   Future<void> _refreshDossier() async {
@@ -564,6 +577,16 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return _buildLoadingState(context);
+    }
+
+    // 台灣繁體中文教學註解：正式詳情讀取失敗時不能改顯示傳入頁面的
+    // 舊快取或種子案件，沿用共用錯誤元件提供重試入口。
+    if (_loadFailed) {
+      return Scaffold(
+        body: SafeArea(
+          child: AppErrorState(message: '案件詳情暫時無法讀取。', onRetry: _retryLoadDetails),
+        ),
+      );
     }
 
     final book = _detailedBook ?? widget.book;

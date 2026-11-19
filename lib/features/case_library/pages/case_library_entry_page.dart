@@ -14,6 +14,7 @@ import 'package:preamble/features/case_library/pages/case_library_search_page.da
 import 'package:preamble/features/case_library/theme/case_library_theme.dart';
 import 'package:preamble/features/case_library/widgets/case_library_scaffold.dart';
 import 'package:preamble/features/case_library/data/case_library_repository.dart';
+import 'package:preamble/features/case_library/data/supabase_case_service.dart';
 import 'package:preamble/features/case_library/data/case_library_image_resolver.dart';
 import 'package:preamble/components/shared/shimmer_skeleton.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -86,6 +87,7 @@ class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
     '124': [88, 42],
   };
   final Map<String, List<Map<String, dynamic>>> _netizenComments = {};
+  int _heroRequestId = 0;
 
   @override
   void initState() {
@@ -94,33 +96,51 @@ class _CaseLibraryEntryPageState extends State<CaseLibraryEntryPage> {
   }
 
   Future<void> _loadHeroCases({String? tag}) async {
+    final requestId = ++_heroRequestId;
     try {
       final activeTag = tag ?? _selectedTopicTag;
-      final books = CaseLibraryRepository.instance.getRecommendedCases(
+      final repository = CaseLibraryRepository.instance;
+      if (SupabaseCaseService.instance.isConfigured) {
+        // 台灣繁體中文教學註解：正式模式先取得雲端清單，再從真實案件選 Hero；
+        // 同步推薦方法本身不應偷偷使用本機種子補足。
+        await repository.getCasesPaginated(60, 0);
+      }
+      final books = repository.getRecommendedCases(
         topicTag: activeTag,
         limit: 6,
       );
-      if (mounted) {
-        setState(() {
-          final initId = widget.initialCaseId;
-          if (initId != null) {
-            final existIdx = books.indexWhere((b) => b.id == initId);
-            if (existIdx != -1) {
-              final item = books.removeAt(existIdx);
-              books.insert(0, item);
-            } else {
-              final initBook =
-                  CaseLibraryRepository.instance.getCaseById(initId);
-              books.insert(0, initBook);
-            }
+      final initId = widget.initialCaseId;
+      if (initId != null) {
+        final existIdx = books.indexWhere((b) => b.id == initId);
+        if (existIdx != -1) {
+          final item = books.removeAt(existIdx);
+          books.insert(0, item);
+        } else if (SupabaseCaseService.instance.isConfigured) {
+          // 台灣繁體中文教學註解：指定案件不在推薦清單時，必須向正式來源
+          // 取得完整案件；不把「載入中」或種子案件當成真實 Hero。
+          try {
+            final book = await repository.getCaseDetail(initId);
+            books.insert(0, book);
+          } catch (e) {
+            // 台灣繁體中文教學註解：指定案件已移除時保留其他正式推薦，
+            // 不用示範案件補位。
+            print('Initial case unavailable: $e');
           }
+        } else {
+          books.insert(0, repository.getCaseById(initId));
+        }
+      }
+      // 台灣繁體中文教學註解：切換標籤時可能同時有多筆雲端請求；
+      // 只接受最後一次的結果，避免較慢的舊請求覆蓋新標籤。
+      if (mounted && requestId == _heroRequestId) {
+        setState(() {
           _heroBooks = books;
           _heroLoading = false;
         });
       }
     } catch (e) {
       print('Error loading hero cases: $e');
-      if (mounted) {
+      if (mounted && requestId == _heroRequestId) {
         setState(() {
           _heroLoading = false;
         });
