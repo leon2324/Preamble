@@ -1,83 +1,58 @@
 import 'package:preamble/data/cases/case_api_service.dart';
 import 'package:preamble/data/cases/case_models.dart';
+import 'package:preamble/data/common/data_fallback_policy.dart';
 
 class CaseRepository {
   CaseRepository({
     List<LawCase>? seedCases,
     CaseApiService? apiService,
+    this.fallbackPolicy = DataFallbackPolicy.demo,
   })  : _cases = seedCases ?? _mockCases,
         _apiService = apiService ?? CaseApiService(),
         _ownsApiService = apiService == null;
 
   final List<LawCase> _cases;
   final CaseApiService _apiService;
+  final DataFallbackPolicy fallbackPolicy;
   // 台灣繁體中文教學註解：注入的 API service 由呼叫端管理，repository 只釋放自建實例。
   final bool _ownsApiService;
   final Set<String> _followedCaseIds = <String>{};
 
   Future<List<LawCase>> fetchFeaturedCases() async {
-    if (_apiService.hasConfiguredBackend) {
-      try {
-        final remote = await _apiService.fetchFeaturedCases();
-        if (remote.isNotEmpty) return remote;
-      } catch (__) {
-        // 降級回本機 Mock
-      }
-    }
-    return _cases.take(3).toList(growable: false);
+    return _readList(
+      _apiService.fetchFeaturedCases,
+      () => _cases.take(3).toList(growable: false),
+    );
   }
 
   Future<List<LawCase>> fetchArchiveCases() async {
-    if (_apiService.hasConfiguredBackend) {
-      try {
-        final remote = await _apiService.fetchArchiveCases();
-        if (remote.isNotEmpty) return remote;
-      } catch (__) {
-        // 降級回本機 Mock
-      }
-    }
-    return _cases;
+    return _readList(_apiService.fetchArchiveCases, () => _cases);
   }
 
   Future<List<LawCase>> searchCases(String query) async {
     if (query.trim().isEmpty) return fetchArchiveCases();
-    if (_apiService.hasConfiguredBackend) {
-      try {
-        final remote = await _apiService.searchCases(query);
-        if (remote.isNotEmpty) return remote;
-      } catch (__) {
-        // 降級回本機 Mock
-      }
-    }
-    return _cases.where((item) => item.matches(query)).toList(growable: false);
+    return _readList(
+      () => _apiService.searchCases(query),
+      () => _cases.where((item) => item.matches(query)).toList(growable: false),
+    );
   }
 
   Future<List<LawCase>> filterByEra(String era) async {
     if (era.trim().isEmpty || era == '全部') return fetchArchiveCases();
-    if (_apiService.hasConfiguredBackend) {
-      try {
-        final remote = await _apiService.fetchArchiveCases(era: era);
-        if (remote.isNotEmpty) return remote;
-      } catch (__) {
-        // 降級回本機 Mock
-      }
-    }
-    return _cases.where((item) => item.era == era).toList(growable: false);
+    return _readList(
+      () => _apiService.fetchArchiveCases(era: era),
+      () => _cases.where((item) => item.era == era).toList(growable: false),
+    );
   }
 
   Future<List<LawCase>> filterByCategory(String category) async {
     if (category.trim().isEmpty || category == '全部') return fetchArchiveCases();
-    if (_apiService.hasConfiguredBackend) {
-      try {
-        final remote = await _apiService.fetchArchiveCases(category: category);
-        if (remote.isNotEmpty) return remote;
-      } catch (__) {
-        // 降級回本機 Mock
-      }
-    }
-    return _cases
-        .where((item) => item.category.contains(category))
-        .toList(growable: false);
+    return _readList(
+      () => _apiService.fetchArchiveCases(category: category),
+      () => _cases
+          .where((item) => item.category.contains(category))
+          .toList(growable: false),
+    );
   }
 
   Future<LawCase?> getCaseDetail(String id) async {
@@ -85,13 +60,34 @@ class CaseRepository {
       try {
         return await _apiService.getCaseDetail(id);
       } catch (__) {
-        // 降級回本機 Mock
+        if (!fallbackPolicy.onRemoteError) rethrow;
       }
+    } else if (!fallbackPolicy.onUnconfigured) {
+      throw const DataSourceUnavailableException('案件後端');
     }
     for (final item in _cases) {
       if (item.id == id) return item;
     }
     return null;
+  }
+
+  /// 台灣繁體中文教學註解：所有案件清單共用同一套三分支判斷；
+  /// 遠端成功但空清單不應與 HTTP 失敗混為一談，strict 模式會照實回空。
+  Future<List<LawCase>> _readList(
+    Future<List<LawCase>> Function() fetchRemote,
+    List<LawCase> Function() readLocal,
+  ) async {
+    if (_apiService.hasConfiguredBackend) {
+      try {
+        final remote = await fetchRemote();
+        if (remote.isNotEmpty || !fallbackPolicy.onRemoteEmpty) return remote;
+      } catch (__) {
+        if (!fallbackPolicy.onRemoteError) rethrow;
+      }
+    } else if (!fallbackPolicy.onUnconfigured) {
+      throw const DataSourceUnavailableException('案件後端');
+    }
+    return readLocal();
   }
 
   Future<void> followCase(String id) async {

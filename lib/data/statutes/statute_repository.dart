@@ -1,5 +1,6 @@
 import 'package:preamble/data/statutes/statute_api_service.dart';
 import 'package:preamble/data/statutes/statute_item.dart';
+import 'package:preamble/data/common/data_fallback_policy.dart';
 
 class StatuteSearchResult {
   const StatuteSearchResult({
@@ -18,11 +19,14 @@ class StatuteSearchResult {
 /// API service 只負責抓 MOJ 原始資料；搜尋、快取、mock fallback 放在 repository，
 /// 讓 UI 可以穩定處理 loading/error/empty，而不是每個頁面自己 try/catch。
 class StatuteRepository {
-  StatuteRepository({StatuteApiService? apiService})
-      : _apiService = apiService ?? StatuteApiService(),
+  StatuteRepository({
+    StatuteApiService? apiService,
+    this.fallbackPolicy = DataFallbackPolicy.demo,
+  })  : _apiService = apiService ?? StatuteApiService(),
         _ownsApiService = apiService == null;
 
   final StatuteApiService _apiService;
+  final DataFallbackPolicy fallbackPolicy;
   // 台灣繁體中文教學註解：外部注入的 service 可被其他 repository 共用，不由此處關閉。
   final bool _ownsApiService;
   List<StatuteItem>? _cache;
@@ -35,6 +39,9 @@ class StatuteRepository {
       _cache = await _apiService.fetchChineseLawItems();
       return _cache!;
     } catch (__) {
+      // 台灣繁體中文教學註解：法規 API 沒有「未設定後端」分支；成功的空清單
+      // 一律照實回傳。只有讀取錯誤且政策允許時才降級至內建法規。
+      if (!fallbackPolicy.onRemoteError) rethrow;
       _cache = _mockStatutes;
       return _cache!;
     }

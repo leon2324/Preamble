@@ -2,6 +2,15 @@
 
 此文件僅記錄 `lawapp`。每次接手先核對 Git 現況與最新驗收，不得把同層 `time_recorder` 的分支、測試、資料或部署狀態套用到此專案。
 
+## 目前快照（2026-11-19，資料來源回退契約）
+
+- 分支 `redesign/home-responsive-carousel`，基準 Commit `501fe97`。本批新增 `DataFallbackPolicy.demo`／`strict`，在案件、法規、官方消息及全站搜尋 repository 明確區分未設定、遠端成功空清單與遠端錯誤。
+- 預設 demo 維持既有展示；strict 僅在呼叫端明確注入時生效，本批沒有調整正式 App 入口或 UI。法規來源的成功空清單仍照實回空，官方消息預設保留 MOJ 回退。
+- 全專案 `dart analyze` 無問題，聚焦 Flutter 測試 30 項通過；涵蓋範圍及限制見[本批日期化驗收](DATA_SOURCE_FALLBACK_ACCEPTANCE_2026-11-19.md)。本批 Commit SHA 以 `git log -1` 查核；尚未 push、建立 PR、執行遠端 CI、部署或真機驗收。
+- 下一步應在正式後端與頁面 error／empty 契約確認後，再決定是否由 App 組裝層啟用 strict；大型靜態資料拆分仍需內容等價驗證。
+
+以下是上一批快照，不可替代目前驗證狀態。
+
 ## 目前快照（2026-11-19，後端 API 傳輸層重構）
 
 - 分支 `redesign/home-responsive-carousel`，基準 Commit `09ce31a`。本批將共用 Token 介面移至 `lib/data/common`，讓 `PreambleState` 直接依賴該介面，並讓七個領域服務共用 URI、headers 與錯誤訊息解析；保留原端點、模型、領域例外型別、mock 回退政策與前端展示。

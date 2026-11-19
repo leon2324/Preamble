@@ -1,5 +1,6 @@
 import 'package:preamble/data/cases/case_models.dart';
 import 'package:preamble/data/cases/case_repository.dart';
+import 'package:preamble/data/common/data_fallback_policy.dart';
 import 'package:preamble/data/journal/journal_repository.dart';
 import 'package:preamble/data/search/search_api_service.dart';
 import 'package:preamble/data/search/search_models.dart';
@@ -12,9 +13,12 @@ class SearchRepository {
     StatuteRepository? statuteRepository,
     SearchApiService? searchApiService,
     List<SearchResultItem>? seedResults,
-  })  : _caseRepository = caseRepository ?? CaseRepository(),
+    this.fallbackPolicy = DataFallbackPolicy.demo,
+  })  : _caseRepository =
+            caseRepository ?? CaseRepository(fallbackPolicy: fallbackPolicy),
         _journalRepository = journalRepository ?? const JournalRepository(),
-        _statuteRepository = statuteRepository ?? StatuteRepository(),
+        _statuteRepository = statuteRepository ??
+            StatuteRepository(fallbackPolicy: fallbackPolicy),
         _searchApiService = searchApiService ?? SearchApiService(),
         _ownsCaseRepository = caseRepository == null,
         _ownsStatuteRepository = statuteRepository == null,
@@ -25,6 +29,7 @@ class SearchRepository {
   final JournalRepository _journalRepository;
   final StatuteRepository _statuteRepository;
   final SearchApiService _searchApiService;
+  final DataFallbackPolicy fallbackPolicy;
   // 台灣繁體中文教學註解：搜尋會組合多個資料來源；只釋放自己建立的依賴，
   // 並記得釋放自建的案件 repository，避免其 HTTP client 長期佔用資源。
   final bool _ownsCaseRepository;
@@ -36,12 +41,18 @@ class SearchRepository {
     if (_searchApiService.hasConfiguredBackend) {
       try {
         final remoteResults = await _searchApiService.searchAll(query);
-        if (remoteResults.isNotEmpty) return remoteResults;
+        if (remoteResults.isNotEmpty || !fallbackPolicy.onRemoteEmpty) {
+          return remoteResults;
+        }
       } catch (__) {
-        // 降級回本機多庫聯合檢索
+        if (!fallbackPolicy.onRemoteError) rethrow;
       }
+    } else if (!fallbackPolicy.onUnconfigured) {
+      throw const DataSourceUnavailableException('全站搜尋後端');
     }
 
+    // 台灣繁體中文教學註解：本機聯合檢索是展示模式的回退來源；
+    // strict 模式遇到遠端空結果會在上方直接回空，失敗則保留原始錯誤。
     final mixed = <SearchResultItem>[
       ...await searchStatutes(query),
       ...await searchCases(query),
