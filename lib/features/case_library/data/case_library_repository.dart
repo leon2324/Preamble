@@ -4,10 +4,15 @@ import 'package:preamble/features/case_library/data/case_library_data.dart';
 import 'package:preamble/features/case_library/data/supabase_case_service.dart';
 
 class CaseLibraryRepository {
-  CaseLibraryRepository._privateConstructor();
+  CaseLibraryRepository._privateConstructor()
+      : _supabaseService = SupabaseCaseService.instance;
+  // 台灣繁體中文教學註解：注入假雲端並略過本機資料庫初始化，才能單獨驗證
+  // 「正式空結果不得讀取種子案件」的契約，不依賴實機 SQLite。
+  CaseLibraryRepository.forTesting(this._supabaseService) : _initialized = true;
   static final CaseLibraryRepository instance =
       CaseLibraryRepository._privateConstructor();
 
+  final SupabaseCaseService _supabaseService;
   final List<CaseBook> _casesCache = List.from(caseLibraryCasesSeed);
   bool _initialized = false;
 
@@ -215,47 +220,49 @@ class CaseLibraryRepository {
       await initialize();
     }
     // 優先判定是否使用 Supabase 雲端資料庫
-    if (SupabaseCaseService.instance.isConfigured) {
+    if (_supabaseService.isConfigured) {
       try {
-        final cloudCases = await SupabaseCaseService.instance.fetchCases(
+        final cloudCases = await _supabaseService.fetchCases(
           limit,
           offset,
           category: category,
           query: query,
         );
 
-        if (cloudCases.isNotEmpty) {
-          final List<CaseBook> merged = [];
-          for (final c in cloudCases) {
-            try {
-              final local = await CaseDossierSqliteDb.instance.getCaseById(c.id);
-              if (local != null) {
-                final mergedCase = c.copyWith(
-                  isFavorite: local.isFavorite,
-                  isFollowing: local.isFollowing,
-                );
-                merged.add(mergedCase);
-                await CaseDossierSqliteDb.instance.insertCase(mergedCase);
-              } else {
-                merged.add(c);
-                await CaseDossierSqliteDb.instance.insertCase(c);
-              }
-            } catch (__) {
+        // 台灣繁體中文教學註解：雲端成功回傳空清單也是正式結果；不可再讀取
+        // SQLite 的舊快取或內建種子案件，否則搜尋會出現不存在的資料。
+        if (cloudCases.isEmpty) return const [];
+        final List<CaseBook> merged = [];
+        for (final c in cloudCases) {
+          try {
+            final local = await CaseDossierSqliteDb.instance.getCaseById(c.id);
+            if (local != null) {
+              final mergedCase = c.copyWith(
+                isFavorite: local.isFavorite,
+                isFollowing: local.isFollowing,
+              );
+              merged.add(mergedCase);
+              await CaseDossierSqliteDb.instance.insertCase(mergedCase);
+            } else {
               merged.add(c);
+              await CaseDossierSqliteDb.instance.insertCase(c);
             }
+          } catch (__) {
+            merged.add(c);
           }
-          if (query != null && query.trim().isNotEmpty) {
-            final q = query.trim().toLowerCase();
-            merged.sort((a, b) {
-              if (a.id.toLowerCase() == q && b.id.toLowerCase() != q) return -1;
-              if (b.id.toLowerCase() == q && a.id.toLowerCase() != q) return 1;
-              return 0;
-            });
-          }
-          return merged;
         }
+        if (query != null && query.trim().isNotEmpty) {
+          final q = query.trim().toLowerCase();
+          merged.sort((a, b) {
+            if (a.id.toLowerCase() == q && b.id.toLowerCase() != q) return -1;
+            if (b.id.toLowerCase() == q && a.id.toLowerCase() != q) return 1;
+            return 0;
+          });
+        }
+        return merged;
       } catch (e) {
-        print('Supabase fetch query failed, fallback to local: $e');
+        print('Supabase fetch query failed: $e');
+        rethrow;
       }
     }
 
@@ -281,8 +288,10 @@ class CaseLibraryRepository {
       print('SQLite query failed, falling back to cache: $e');
     }
 
-    // 若本地 SQLite 為空或查詢失敗，使用記憶體內建種子庫進行過濾與分頁切片，保證永不回傳空白
-    Iterable<CaseBook> filtered = _casesCache.isNotEmpty ? _casesCache : caseLibraryCasesSeed;
+    // 台灣繁體中文教學註解：只有未設定雲端時，才用記憶體種子做離線查詢。
+    // 查詢無匹配項目時仍可合法回傳空清單。
+    Iterable<CaseBook> filtered =
+        _casesCache.isNotEmpty ? _casesCache : caseLibraryCasesSeed;
 
     if (category != null && category != '全部') {
       filtered = filtered.where((c) => c.category == category);
@@ -339,7 +348,7 @@ class CaseLibraryRepository {
     }
 
     // 2. 本地無快取或資料不完整，從 Supabase（或本地模擬）載入完整詳情
-    final fetched = await SupabaseCaseService.instance.fetchCaseDetail(id);
+    final fetched = await _supabaseService.fetchCaseDetail(id);
 
     // 3. 異步寫入本地 SQLite 快取（快取同步）
     try {
@@ -393,7 +402,8 @@ class CaseLibraryRepository {
     // 同步更新記憶體快取
     final index = _casesCache.indexWhere((c) => c.id == id);
     if (index != -1) {
-      _casesCache[index] = _casesCache[index].copyWith(isFollowing: isFollowing);
+      _casesCache[index] =
+          _casesCache[index].copyWith(isFollowing: isFollowing);
     }
   }
 }

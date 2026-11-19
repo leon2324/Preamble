@@ -8,9 +8,11 @@ import 'package:preamble/features/case_library/pages/case_library_search_page.da
 import 'package:preamble/features/case_library/theme/case_library_theme.dart';
 import 'package:preamble/features/case_library/widgets/case_library_scaffold.dart';
 import 'package:preamble/components/shared/shimmer_skeleton.dart';
+import 'package:preamble/components/shared/mvp_state_widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
 import 'package:preamble/features/case_library/data/case_library_repository.dart';
+import 'package:preamble/features/case_library/data/supabase_case_service.dart';
 
 class CaseLibraryHallPage extends StatefulWidget {
   const CaseLibraryHallPage({super.key, required this.hall});
@@ -55,10 +57,14 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
         for (final shelf in widget.hall.shelves) {
           shelfCaseIds.addAll(shelf.caseIds);
         }
-        for (final id in shelfCaseIds) {
-          final b = CaseLibraryRepository.instance.getCaseById(id);
-          if (b.titleZh != '案件載入中...' && !books.any((x) => x.id == b.id)) {
-            books.add(b);
+        // 台灣繁體中文教學註解：固定書架案件是離線展示資料；已設定雲端時，
+        // 成功空清單就不能再把固定案件加回查詢結果。
+        if (!SupabaseCaseService.instance.isConfigured) {
+          for (final id in shelfCaseIds) {
+            final b = CaseLibraryRepository.instance.getCaseById(id);
+            if (b.titleZh != '案件載入中...' && !books.any((x) => x.id == b.id)) {
+              books.add(b);
+            }
           }
         }
         if (mounted) {
@@ -472,6 +478,11 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
 
   // --- 3. SCREEN 5: CLASSIC VIEW (經典館) ---
   Widget _buildClassicView(BuildContext context) {
+    // 台灣繁體中文教學註解：正式案件清單為空時不放入固定代表案，
+    // 沿用共用空狀態，避免顯示與查詢不符的案件。
+    if (_allCases.isEmpty && SupabaseCaseService.instance.isConfigured) {
+      return const AppEmptyState(title: '目前沒有案件', message: '請稍後再查看。');
+    }
     // Featured Case dynamically selected
     final featuredBook = _allCases.isNotEmpty
         ? _allCases.first
@@ -480,7 +491,9 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
     // Representative list cases (others)
     final representativeCases = _allCases.length > 1
         ? _allCases.skip(1).toList()
-        : CaseLibraryRepository.instance.getRecommendedCases(limit: 6).skip(1).toList();
+        : SupabaseCaseService.instance.isConfigured
+            ? <CaseBook>[]
+            : CaseLibraryRepository.instance.getRecommendedCases(limit: 6).skip(1).toList();
 
     return ListView(
       padding: EdgeInsets.fromLTRB(18.w, 4.h, 18.w, 24.h),
@@ -589,9 +602,15 @@ class _CaseLibraryHallPageState extends State<CaseLibraryHallPage> {
         // 優先從該書架已註冊的真實案例提取，確保不空置
         final shelfCaseBooks = <CaseBook>[];
         for (final id in shelf.caseIds) {
-          final b = CaseLibraryRepository.instance.getCaseById(id);
-          if (b.titleZh != '案件載入中...' && !shelfCaseBooks.any((x) => x.id == b.id)) {
-            shelfCaseBooks.add(b);
+          // 台灣繁體中文教學註解：正式來源只從這次雲端結果挑選書架案件；
+          // 未設定來源才使用本機固定書架清單。
+          final candidates = SupabaseCaseService.instance.isConfigured
+              ? _allCases.where((c) => c.id == id)
+              : [CaseLibraryRepository.instance.getCaseById(id)];
+          for (final b in candidates) {
+            if (b.titleZh != '案件載入中...' && !shelfCaseBooks.any((x) => x.id == b.id)) {
+              shelfCaseBooks.add(b);
+            }
           }
         }
 

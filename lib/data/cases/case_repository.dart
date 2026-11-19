@@ -6,7 +6,7 @@ class CaseRepository {
   CaseRepository({
     List<LawCase>? seedCases,
     CaseApiService? apiService,
-    this.fallbackPolicy = DataFallbackPolicy.demo,
+    this.fallbackPolicy = DataFallbackPolicy.liveWhenConfigured,
   })  : _cases = seedCases ?? _mockCases,
         _apiService = apiService ?? CaseApiService(),
         _ownsApiService = apiService == null;
@@ -72,7 +72,7 @@ class CaseRepository {
   }
 
   /// 台灣繁體中文教學註解：所有案件清單共用同一套三分支判斷；
-  /// 遠端成功但空清單不應與 HTTP 失敗混為一談，strict 模式會照實回空。
+  /// 遠端成功但空清單不應與 HTTP 失敗混為一談；預設模式會照實回空。
   Future<List<LawCase>> _readList(
     Future<List<LawCase>> Function() fetchRemote,
     List<LawCase> Function() readLocal,

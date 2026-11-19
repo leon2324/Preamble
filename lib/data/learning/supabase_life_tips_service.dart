@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io' show Platform;
+import 'dart:io' show HttpException, Platform;
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:preamble/config/supabase_config.dart';
@@ -8,11 +8,23 @@ import 'package:preamble/data/mock_data/home/legacy/home_mock_data_legacy.dart';
 
 /// 負責對接 Supabase 雲端資料庫抓取「生活避坑筆記」的服務類別。
 class SupabaseLifeTipsService {
-  SupabaseLifeTipsService._privateConstructor();
-  static final SupabaseLifeTipsService instance =
-      SupabaseLifeTipsService._privateConstructor();
+  SupabaseLifeTipsService({http.Client? client, bool? configured})
+      : _client = client ?? http.Client(),
+        _ownsClient = client == null,
+        _configuredOverride = configured;
+  static final SupabaseLifeTipsService instance = SupabaseLifeTipsService();
+
+  final http.Client _client;
+  final bool _ownsClient;
+  final bool? _configuredOverride;
+
+  void dispose() {
+    if (_ownsClient) _client.close();
+  }
 
   bool get isConfigured {
+    // 台灣繁體中文教學註解：測試能注入 HTTP client 與來源設定，不需連正式資料庫。
+    if (_configuredOverride != null) return _configuredOverride;
     if (Platform.environment.containsKey('FLUTTER_TEST')) {
       return false;
     }
@@ -58,23 +70,19 @@ class SupabaseLifeTipsService {
 
       final url = Uri.parse(
           '$supabaseUrl/rest/v1/life_legal_tips?${queryParams.join('&')}');
-      final response = await http.get(url, headers: _headers);
+      final response = await _client.get(url, headers: _headers);
 
       if (response.statusCode == 200) {
         final List<dynamic> list = jsonDecode(response.body) as List<dynamic>;
         return list
             .map((item) => _mapJsonToTip(item as Map<String, dynamic>))
             .toList();
-      } else {
-        debugPrint(
-            'Supabase fetch life tips error: ${response.statusCode} ${response.body}');
-        return _getLocalFallbackTips(
-            category: category, query: query, limit: limit, offset: offset);
       }
+      // 台灣繁體中文教學註解：正式來源失敗不能顯示示範筆記，讓上層辨識錯誤。
+      throw HttpException('Supabase life tips: HTTP ${response.statusCode}');
     } catch (e) {
       debugPrint('Supabase fetch life tips failed: $e');
-      return _getLocalFallbackTips(
-          category: category, query: query, limit: limit, offset: offset);
+      rethrow;
     }
   }
 

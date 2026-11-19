@@ -23,6 +23,16 @@ extension LearningClassroomTabBuilder on KnowLawPageState {
   // 3) 法學課堂的列表項目
   // Mappings of recommendations: activeTopic -> [IllustrationTopic, DialogTopic]
   Widget buildLearningClassroomTab(bool isDark, LearningGameState gameState) {
+    // 台灣繁體中文教學註解：正式來源空結果或失敗時沿用共用狀態元件，
+    // 不把本機固定課程冒充今日雲端專題；自訂課程仍由使用者自行建立。
+    if (!_isLoadingTopics && SupabaseLearningService.instance.isConfigured &&
+        _dailyTopics.isEmpty && _customTopics.isEmpty) {
+      return LearningClassroomTab(children: [
+        _topicsLoadFailed
+            ? AppErrorState(message: '每日專題暫時無法讀取。', onRetry: _initDailyTopics)
+            : const AppEmptyState(title: '目前沒有每日專題', message: '請稍後再查看。'),
+      ]);
+    }
     if (_isLoadingTopics) {
       return LearningClassroomTab(children: [
         // 1. 公民法律小擂台入口 Banner

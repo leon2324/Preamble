@@ -83,6 +83,7 @@ class KnowLawPageState extends State<KnowLawPage> {
   List<LearningTopicData> _dailyTopics = [];
   final List<LearningTopicData> _customTopics = [];
   bool _isLoadingTopics = true;
+  bool _topicsLoadFailed = false;
   int? _selectedDailyAnswer;
 
   // 隨手記與法條標籤對照狀態
@@ -157,6 +158,7 @@ class KnowLawPageState extends State<KnowLawPage> {
         setState(() {
           _dailyTopics = topics;
           _isLoadingTopics = false;
+          _topicsLoadFailed = false;
           if (_dailyTopics.isNotEmpty) {
             _activeTopic = _dailyTopics.first.title;
           }
@@ -166,6 +168,7 @@ class KnowLawPageState extends State<KnowLawPage> {
       if (mounted) {
         setState(() {
           _isLoadingTopics = false;
+          _topicsLoadFailed = true;
         });
       }
     }
@@ -348,7 +351,7 @@ class KnowLawPageState extends State<KnowLawPage> {
           true,
         );
       }));
-    } else {
+    } else if (!SupabaseLearningService.instance.isConfigured) {
       options.addAll(_featuredTopics);
     }
     return options;

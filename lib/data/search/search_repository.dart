@@ -13,7 +13,7 @@ class SearchRepository {
     StatuteRepository? statuteRepository,
     SearchApiService? searchApiService,
     List<SearchResultItem>? seedResults,
-    this.fallbackPolicy = DataFallbackPolicy.demo,
+    this.fallbackPolicy = DataFallbackPolicy.liveWhenConfigured,
   })  : _caseRepository =
             caseRepository ?? CaseRepository(fallbackPolicy: fallbackPolicy),
         _journalRepository = journalRepository ?? const JournalRepository(),

@@ -9,7 +9,6 @@ import 'package:preamble/components/shared/share_sheet.dart';
 import 'package:preamble/data/journal/user_case_journal_models.dart';
 import 'package:preamble/data/journal/user_case_journal_repository.dart';
 import 'package:preamble/data/legal_brain/taiwan_statute_canon.dart';
-import 'package:preamble/data/mock_data/home/home_mock_data.dart';
 import 'package:preamble/pages/home/subpages/home_subpage_primitives.dart';
 import 'package:preamble/pages/learning/know_law_page.dart';
 import 'package:preamble/pages/tools/legal_toolkit_hub_page.dart';
@@ -17,7 +16,6 @@ import 'package:preamble/platform/native_share_bridge.dart';
 import 'package:preamble/theme/app_colors.dart';
 import 'package:preamble/features/case_library/widgets/case_library_svg_icon.dart';
 import 'package:preamble/data/learning/supabase_life_tips_service.dart';
-import 'package:preamble/data/mock_data/home/legacy/home_mock_data_legacy.dart';
 import 'package:preamble/components/shared/liquid_glass_widgets.dart';
 
 String _imageForCategory(String category) {
@@ -181,7 +179,9 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _allTips = homeNewsletterItems;
+          // 台灣繁體中文教學註解：正式來源失敗時保留空狀態，避免把示範筆記
+          // 誤當成雲端結果；不調整元件外觀。
+          _allTips = [];
           _isLoading = false;
         });
       }
@@ -267,16 +267,11 @@ class _LifeLegalTipsPageState extends State<LifeLegalTipsPage> {
             sliver: SliverList(
               delegate: SliverChildListDelegate(
                 [
-                  _LifeTipFeaturedCard(
-                    item: _allTips.isNotEmpty
-                        ? _allTips.first
-                        : homeNewsletterItems.first,
-                    onTap: () => _openTip(
-                        context,
-                        _allTips.isNotEmpty
-                            ? _allTips.first
-                            : homeNewsletterItems.first),
-                  ),
+                  if (_allTips.isNotEmpty)
+                    _LifeTipFeaturedCard(
+                      item: _allTips.first,
+                      onTap: () => _openTip(context, _allTips.first),
+                    ),
                   if (_selectedCategory == '租屋') ...[
                     SizedBox(height: 18.h),
                     const _RentTimelineGuideCard(),

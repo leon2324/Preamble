@@ -104,20 +104,27 @@ void main() {
       expect(DataFallbackPolicy.demo.allows(reason), isTrue);
       expect(DataFallbackPolicy.strict.allows(reason), isFalse);
     }
+    expect(DataFallbackPolicy.liveWhenConfigured.onUnconfigured, isTrue);
+    expect(DataFallbackPolicy.liveWhenConfigured.onRemoteEmpty, isFalse);
+    expect(DataFallbackPolicy.liveWhenConfigured.onRemoteError, isFalse);
   });
 
-  test('案件預設保留示範回退，strict 對空結果與錯誤照實處理', () async {
+  test('案件預設尊重正式空結果及錯誤；demo 明確允許回退', () async {
     final api = _CaseApi();
     addTearDown(api.dispose);
-    final demo = CaseRepository(apiService: api);
+    final demo = CaseRepository(
+        apiService: api, fallbackPolicy: DataFallbackPolicy.demo);
+    final live = CaseRepository(apiService: api);
     final strict = CaseRepository(
       apiService: api,
       fallbackPolicy: DataFallbackPolicy.strict,
     );
     expect(await demo.fetchFeaturedCases(), isNotEmpty);
+    expect(await live.fetchFeaturedCases(), isEmpty);
     expect(await strict.fetchFeaturedCases(), isEmpty);
     api.fail = true;
     expect(await demo.fetchFeaturedCases(), isNotEmpty);
+    await expectLater(live.fetchFeaturedCases(), throwsA(isA<StateError>()));
     await expectLater(strict.fetchFeaturedCases(), throwsA(isA<StateError>()));
     await expectLater(
         strict.getCaseDetail('missing'), throwsA(isA<StateError>()));
@@ -138,36 +145,47 @@ void main() {
   test('法規成功空清單不改用 mock；只有 demo 在錯誤時回退', () async {
     final api = _StatuteApi();
     addTearDown(api.dispose);
-    final demo = StatuteRepository(apiService: api);
+    final demo = StatuteRepository(
+        apiService: api, fallbackPolicy: DataFallbackPolicy.demo);
+    final live = StatuteRepository(apiService: api);
     final strict = StatuteRepository(
       apiService: api,
       fallbackPolicy: DataFallbackPolicy.strict,
     );
     expect(await demo.fetchAllStatutes(), isEmpty);
+    expect(await live.fetchAllStatutes(), isEmpty);
     expect(await strict.fetchAllStatutes(), isEmpty);
     api.fail = true;
     expect(await demo.fetchAllStatutes(forceRefresh: true), isNotEmpty);
+    await expectLater(
+        live.fetchAllStatutes(forceRefresh: true), throwsA(isA<StateError>()));
     await expectLater(
       strict.fetchAllStatutes(forceRefresh: true),
       throwsA(isA<StateError>()),
     );
   });
 
-  test('官方消息預設使用 MOJ 回退，strict 保留遠端空結果及錯誤', () async {
+  test('官方消息預設保留正式空結果；demo 明確允許 MOJ 回退', () async {
     final api = _OfficialApi();
     final moj = _MojFeed();
     addTearDown(api.dispose);
     addTearDown(moj.dispose);
-    final demo = OfficialFeedRepository(apiService: api, mojFeedService: moj);
+    final demo = OfficialFeedRepository(
+        apiService: api,
+        mojFeedService: moj,
+        fallbackPolicy: DataFallbackPolicy.demo);
+    final live = OfficialFeedRepository(apiService: api, mojFeedService: moj);
     final strict = OfficialFeedRepository(
       apiService: api,
       mojFeedService: moj,
       fallbackPolicy: DataFallbackPolicy.strict,
     );
     expect((await demo.fetchOfficialNews()).single.title, 'MOJ 正式來源');
+    expect(await live.fetchOfficialNews(), isEmpty);
     expect(await strict.fetchOfficialNews(), isEmpty);
     api.fail = true;
     expect((await demo.fetchOfficialNews()).single.title, 'MOJ 正式來源');
+    await expectLater(live.fetchOfficialNews(), throwsA(isA<StateError>()));
     await expectLater(strict.fetchOfficialNews(), throwsA(isA<StateError>()));
     expect(moj.calls, 2);
   });
@@ -203,19 +221,25 @@ void main() {
       caseRepository: caseRepository,
       statuteRepository: statuteRepository,
       seedResults: [_seedResult()],
+      fallbackPolicy: DataFallbackPolicy.demo,
     );
+    final live =
+        SearchRepository(searchApiService: api, seedResults: [_seedResult()]);
     final strict = SearchRepository(
       searchApiService: api,
       fallbackPolicy: DataFallbackPolicy.strict,
       seedResults: [_seedResult()],
     );
     addTearDown(demo.dispose);
+    addTearDown(live.dispose);
     addTearDown(strict.dispose);
     expect(
         (await demo.searchAll('押金')).any((item) => item.id == 'local-deposit'),
         isTrue);
+    expect(await live.searchAll('押金'), isEmpty);
     expect(await strict.searchAll('押金'), isEmpty);
     api.fail = true;
+    await expectLater(live.searchAll('押金'), throwsA(isA<StateError>()));
     await expectLater(strict.searchAll('押金'), throwsA(isA<StateError>()));
   });
 

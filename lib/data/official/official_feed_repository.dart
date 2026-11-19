@@ -7,7 +7,7 @@ class OfficialFeedRepository {
   OfficialFeedRepository({
     MojFeedService? mojFeedService,
     OfficialFeedApiService? apiService,
-    this.fallbackPolicy = DataFallbackPolicy.demo,
+    this.fallbackPolicy = DataFallbackPolicy.liveWhenConfigured,
   })  : _mojFeedService = mojFeedService ?? MojFeedService(),
         _apiService = apiService ?? OfficialFeedApiService(),
         _ownsMojFeedService = mojFeedService == null,
@@ -28,6 +28,7 @@ class OfficialFeedRepository {
     try {
       return await _mojFeedService.fetchItems(MojFeedCategory.news);
     } catch (__) {
+      if (!fallbackPolicy.onRemoteError) rethrow;
       return _mockOfficialItems;
     }
   }
@@ -44,12 +45,13 @@ class OfficialFeedRepository {
     try {
       return await _mojFeedService.fetchItems(MojFeedCategory.lawUpdates);
     } catch (__) {
+      if (!fallbackPolicy.onRemoteError) rethrow;
       return _mockOfficialItems;
     }
   }
 
   /// 台灣繁體中文教學註解：後端空清單、後端錯誤與未設定是不同原因；
-  /// 預設維持 MOJ／示範資料回退，strict 模式則照實回空或把錯誤傳上去。
+  /// 預設僅未設定後端時讀取 MOJ；正式後端空結果與錯誤照實傳遞。
   Future<List<MojFeedItem>> _readItems(
     Future<List<MojFeedItem>> Function() fetchRemote,
     Future<List<MojFeedItem>> Function() fetchFallback,

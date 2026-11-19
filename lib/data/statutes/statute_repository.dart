@@ -21,7 +21,7 @@ class StatuteSearchResult {
 class StatuteRepository {
   StatuteRepository({
     StatuteApiService? apiService,
-    this.fallbackPolicy = DataFallbackPolicy.demo,
+    this.fallbackPolicy = DataFallbackPolicy.liveWhenConfigured,
   })  : _apiService = apiService ?? StatuteApiService(),
         _ownsApiService = apiService == null;
 

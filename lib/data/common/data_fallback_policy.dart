@@ -9,11 +9,20 @@ class DataFallbackPolicy {
     required this.onRemoteError,
   });
 
-  /// 維持目前 App 展示行為；只有呼叫端明確改用 strict 才會改變資料來源。
+  /// 台灣繁體中文教學註解：僅供明確的展示或離線情境選用，允許以本機資料
+  /// 替代遠端空結果及錯誤；正式來源預設使用 liveWhenConfigured。
   static const demo = DataFallbackPolicy(
     onUnconfigured: true,
     onRemoteEmpty: true,
     onRemoteError: true,
+  );
+
+  /// 台灣繁體中文教學註解：正式來源一旦設定，成功空清單就是空結果，
+  /// 請求失敗也不能冒充本機資料；未設定來源時仍保留既有示範流程。
+  static const liveWhenConfigured = DataFallbackPolicy(
+    onUnconfigured: true,
+    onRemoteEmpty: false,
+    onRemoteError: false,
   );
 
   /// 正式來源模式：未設定時明確報錯；遠端空結果照實回空；錯誤往上傳。

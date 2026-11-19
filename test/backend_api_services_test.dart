@@ -7,6 +7,7 @@ import 'package:http/testing.dart';
 import 'package:preamble/data/auth/auth_service.dart';
 import 'package:preamble/data/cases/case_api_service.dart';
 import 'package:preamble/data/cases/case_repository.dart';
+import 'package:preamble/data/common/data_fallback_policy.dart';
 import 'package:preamble/data/official/official_feed_api_service.dart';
 import 'package:preamble/data/official/official_feed_repository.dart';
 import 'package:preamble/data/search/search_api_service.dart';
@@ -243,7 +244,11 @@ void main() {
         client: client,
         baseUrl: 'https://api.preamble.local',
       );
-      final repository = CaseRepository(apiService: apiService);
+      // 台灣繁體中文教學註解：這項測試刻意驗證展示模式的回退，正式預設不回退。
+      final repository = CaseRepository(
+        apiService: apiService,
+        fallbackPolicy: DataFallbackPolicy.demo,
+      );
 
       final cases = await repository.fetchFeaturedCases();
       expect(cases.isNotEmpty, true);
@@ -301,11 +306,14 @@ void main() {
       );
       final repository = SearchRepository(
         searchApiService: apiService,
+        fallbackPolicy: DataFallbackPolicy.demo,
         caseRepository: CaseRepository(
           apiService: CaseApiService(client: client),
+          fallbackPolicy: DataFallbackPolicy.demo,
         ),
         statuteRepository: StatuteRepository(
           apiService: StatuteApiService(client: client),
+          fallbackPolicy: DataFallbackPolicy.demo,
         ),
       );
 

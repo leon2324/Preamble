@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
-import 'dart:io' show Platform;
+import 'dart:io' show HttpException, Platform;
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:preamble/config/supabase_config.dart';
@@ -8,11 +8,23 @@ import 'package:preamble/data/mock_data/learning/learning_mock_data.dart';
 
 /// 負責對接 Supabase 雲端資料庫抓取精選與日常法律情境專題的服務類別
 class SupabaseLearningService {
-  SupabaseLearningService._privateConstructor();
-  static final SupabaseLearningService instance =
-      SupabaseLearningService._privateConstructor();
+  SupabaseLearningService({http.Client? client, bool? configured})
+      : _client = client ?? http.Client(),
+        _ownsClient = client == null,
+        _configuredOverride = configured;
+  static final SupabaseLearningService instance = SupabaseLearningService();
+
+  final http.Client _client;
+  final bool _ownsClient;
+  final bool? _configuredOverride;
+
+  void dispose() {
+    if (_ownsClient) _client.close();
+  }
 
   bool get isConfigured {
+    // 台灣繁體中文教學註解：測試可注入來源狀態與 HTTP client，正式單例仍依環境判斷。
+    if (_configuredOverride != null) return _configuredOverride;
     if (Platform.environment.containsKey('FLUTTER_TEST')) {
       return false;
     }
@@ -58,23 +70,21 @@ class SupabaseLearningService {
 
       final url = Uri.parse(
           '$supabaseUrl/rest/v1/learning_articles?${queryParams.join('&')}');
-      final response = await http.get(url, headers: _headers);
+      final response = await _client.get(url, headers: _headers);
 
       if (response.statusCode == 200) {
         final List<dynamic> list = jsonDecode(response.body) as List<dynamic>;
         return list
             .map((item) => _mapJsonToArticle(item as Map<String, dynamic>))
             .toList();
-      } else {
-        debugPrint(
-            'Supabase fetch learning error: ${response.statusCode} ${response.body}');
-        return _getLocalFallbackArticles(
-            category: category, query: query, limit: limit, offset: offset);
       }
+      // 台灣繁體中文教學註解：已設定正式來源時，HTTP 錯誤必須交給呼叫端處理，
+      // 不能以示範文章偽裝成雲端查詢結果。
+      throw HttpException(
+          'Supabase learning articles: HTTP ${response.statusCode}');
     } catch (e) {
       debugPrint('Supabase fetch learning failed: $e');
-      return _getLocalFallbackArticles(
-          category: category, query: query, limit: limit, offset: offset);
+      rethrow;
     }
   }
 
@@ -119,24 +129,23 @@ class SupabaseLearningService {
     }
 
     try {
+      // 台灣繁體中文教學註解：先列出雲端確實存在的專題 ID，再以日期當種子選取。
+      // 原本從 1–1000 猜 ID，資料稀疏時會把「有資料」誤判為「空結果」。
+      final availableTopicIds = await _fetchAvailableTopicIds();
+      if (availableTopicIds.isEmpty) return const [];
+
       // 1. 使用日期產生確定性的隨機種子
       final seed = date.year * 10000 + date.month * 100 + date.day;
       final rand = Random(seed);
-
-      final List<int> selectedTopicIds = [];
-      while (selectedTopicIds.length < 5) {
-        final id = rand.nextInt(1000) + 1;
-        if (!selectedTopicIds.contains(id)) {
-          selectedTopicIds.add(id);
-        }
-      }
+      final selectedTopicIds = availableTopicIds.toList()..shuffle(rand);
+      final featuredIds = selectedTopicIds.take(5).toList();
 
       // 2. 向 Supabase 查詢這 5 個專題的所有文章，依 topic_id 和 step_number 排序
-      final idParams = selectedTopicIds.map((id) => id.toString()).join(',');
+      final idParams = featuredIds.map((id) => id.toString()).join(',');
       final url = Uri.parse(
           '$supabaseUrl/rest/v1/learning_articles?topic_id=in.($idParams)&order=topic_id.asc,step_number.asc');
 
-      final response = await http.get(url, headers: _headers);
+      final response = await _client.get(url, headers: _headers);
       if (response.statusCode == 200) {
         final List<dynamic> list = jsonDecode(response.body) as List<dynamic>;
         final allArticles = list
@@ -154,7 +163,7 @@ class SupabaseLearningService {
 
         final List<LearningTopicData> topics = [];
         // 保留原有的 topic_id 順序，確保每次選出來的專題顯示順序一致
-        for (final topicId in selectedTopicIds) {
+        for (final topicId in featuredIds) {
           final articles = grouped[topicId] ?? [];
           if (articles.length == 5) {
             final category = articles.first.category ?? '法律情境';
@@ -212,17 +221,39 @@ class SupabaseLearningService {
           }
         }
 
-        if (topics.isNotEmpty) {
-          return topics;
-        }
+        // 台灣繁體中文教學註解：成功查詢卻沒有完整專題時，照實回傳空清單。
+        return topics;
       }
-      debugPrint(
-          'Supabase fetch daily topics error: ${response.statusCode} ${response.body}');
-      return _getLocalFallbackFeaturedTopics();
+      throw HttpException('Supabase daily topics: HTTP ${response.statusCode}');
     } catch (e) {
       debugPrint('Supabase fetch daily topics failed: $e');
-      return _getLocalFallbackFeaturedTopics();
+      rethrow;
     }
+  }
+
+  Future<List<int>> _fetchAvailableTopicIds() async {
+    final ids = <int>{};
+    const pageSize = 1000;
+    var offset = 0;
+    while (true) {
+      final url = Uri.parse(
+        '$supabaseUrl/rest/v1/learning_articles?select=topic_id&topic_id=not.is.null&order=topic_id.asc&limit=$pageSize&offset=$offset',
+      );
+      final response = await _client.get(url, headers: _headers);
+      if (response.statusCode != 200) {
+        throw HttpException('Supabase topic IDs: HTTP ${response.statusCode}');
+      }
+      final rows = jsonDecode(response.body) as List<dynamic>;
+      for (final row in rows) {
+        final id = (row as Map<String, dynamic>)['topic_id'];
+        if (id is int) ids.add(id);
+      }
+      // 台灣繁體中文教學註解：PostgREST 單次最多回傳一頁，滿頁就繼續查，
+      // 避免資料庫超過 1000 筆時漏掉後面的專題。
+      if (rows.length < pageSize) break;
+      offset += pageSize;
+    }
+    return ids.toList()..sort();
   }
 
   /// 本地降級備份：若沒有設定 Supabase，返回原有的 5 個本地寫死專題
@@ -253,7 +284,7 @@ class SupabaseLearningService {
     try {
       final url = Uri.parse(
           '$supabaseUrl/rest/v1/learning_articles?topic_id=eq.$topicId&order=step_number.asc');
-      final response = await http.get(url, headers: _headers);
+      final response = await _client.get(url, headers: _headers);
       if (response.statusCode == 200) {
         final List<dynamic> list = jsonDecode(response.body) as List<dynamic>;
         final articles = list
@@ -322,7 +353,7 @@ class SupabaseLearningService {
     try {
       final url = Uri.parse(
           '$supabaseUrl/rest/v1/learning_articles?title=eq.${Uri.encodeComponent(title)}&limit=1');
-      final response = await http.get(url, headers: _headers);
+      final response = await _client.get(url, headers: _headers);
       if (response.statusCode == 200) {
         final List<dynamic> list = jsonDecode(response.body) as List<dynamic>;
         if (list.isNotEmpty) {

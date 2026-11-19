@@ -6,11 +6,23 @@ import 'package:preamble/features/case_library/models/case_library_models.dart';
 import 'package:preamble/features/case_library/data/case_library_data.dart';
 
 class SupabaseCaseService {
-  SupabaseCaseService._privateConstructor();
-  static final SupabaseCaseService instance =
-      SupabaseCaseService._privateConstructor();
+  SupabaseCaseService({http.Client? client, bool? configured})
+      : _client = client ?? http.Client(),
+        _ownsClient = client == null,
+        _configuredOverride = configured;
+  static final SupabaseCaseService instance = SupabaseCaseService();
+
+  final http.Client _client;
+  final bool _ownsClient;
+  final bool? _configuredOverride;
+
+  void dispose() {
+    if (_ownsClient) _client.close();
+  }
 
   bool get isConfigured {
+    // 台灣繁體中文教學註解：測試可注入服務設定與 HTTP client，避免測試誤打正式資料庫。
+    if (_configuredOverride != null) return _configuredOverride;
     // 偵測是否在單元測試環境中，若是，則降級返回 false 避免發送真實網路請求
     if (Platform.environment.containsKey('FLUTTER_TEST')) {
       return false;
@@ -91,7 +103,7 @@ class SupabaseCaseService {
 
       final url =
           Uri.parse('$supabaseUrl/rest/v1/cases?${queryParams.join('&')}');
-      final response = await http.get(url, headers: _headers);
+      final response = await _client.get(url, headers: _headers);
 
       if (response.statusCode == 200) {
         final List<dynamic> list = jsonDecode(response.body) as List<dynamic>;
@@ -133,7 +145,7 @@ class SupabaseCaseService {
     try {
       final url = Uri.parse(
           '$supabaseUrl/rest/v1/cases?id=eq.${Uri.encodeComponent(id)}&select=*');
-      final response = await http.get(url, headers: _headers);
+      final response = await _client.get(url, headers: _headers);
 
       if (response.statusCode == 200) {
         final List<dynamic> list = jsonDecode(response.body) as List<dynamic>;
