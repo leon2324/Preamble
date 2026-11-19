@@ -2,6 +2,15 @@
 
 更新日期：2026-11-19。狀態只代表本機 `lawapp`，不代表遠端部署。
 
+## 本批：TestFlight Build 2 上傳成功＋討論詳情頁 AI 即時事件背景（基準 `a6e685b`）
+
+| 項目 | 狀態 | 依據／限制 |
+| --- | --- | --- |
+| TestFlight `1.1.0 (2)` 上傳 | 已完成 | `xcrun altool --upload-app` 成功（UUID `a7c790f6-0074-4739-add0-c3161fd7493d`），包含 App 內建瀏覽器、小法助 UI 減法與 Gemini Edge Function、Google News 即時熱度曲線。 |
+| 討論詳情頁 AI 即時事件背景 | 本機已改（未 commit） | `discussion_detail_page.dart` 補回「事件背景與近期脈絡」（Gemini 依即時新聞標題動態歸納）與「事件關鍵節點」。 |
+
+以下為上一批狀態（即時新聞每日熱度曲線與 TestFlight 打包）。
+
 ## 本批：即時新聞每日熱度曲線與 TestFlight 打包（基準 `35b004d`）
 
 | 項目 | 狀態 | 依據／限制 |

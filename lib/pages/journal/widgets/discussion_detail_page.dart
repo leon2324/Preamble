@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 import 'package:preamble/components/shared/custom_toast.dart';
+import 'package:preamble/config/supabase_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/components/home/home_content.dart';
@@ -35,6 +39,61 @@ class DiscussionDetailPage extends StatefulWidget {
 
 class _DiscussionDetailPageState extends State<DiscussionDetailPage> {
   bool _isFollowing = false;
+  String? _liveBackgroundSummary;
+  bool _isLoadingSummary = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLiveBackgroundSummary();
+  }
+
+  /// 台灣繁體中文教學註解：若帶入即時 Google News 報導，透過既有 Supabase Edge Function
+  /// 呼叫 Gemini 將新聞標題即時歸納為事件背景與社會法制爭點，避免靜態寫死文案。
+  Future<void> _loadLiveBackgroundSummary() async {
+    if (widget.liveArticles.isEmpty ||
+        supabaseUrl.trim().isEmpty ||
+        supabaseAnonKey.trim().isEmpty) {
+      return;
+    }
+    setState(() => _isLoadingSummary = true);
+    final client = http.Client();
+    try {
+      final headlines = widget.liveArticles
+          .take(5)
+          .map((a) => '• ${a.title}（${a.source}）')
+          .join('\n');
+      final uri = Uri.parse('$supabaseUrl/functions/v1/law-assistant');
+      final res = await client
+          .post(
+            uri,
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': supabaseAnonKey,
+              'Authorization': 'Bearer $supabaseAnonKey',
+            },
+            body: jsonEncode({
+              'prompt':
+                  '請用 100 至 130 字台灣繁體中文，根據以下「${widget.item.title}」最新台灣新聞標題，客觀整理目前的事件背景與核心法律／社會爭議（不要列點標題，也不要加免責聲明）：\n$headlines',
+            }),
+          )
+          .timeout(const Duration(seconds: 12));
+      if (res.statusCode >= 200 && res.statusCode < 300) {
+        final decoded = jsonDecode(utf8.decode(res.bodyBytes));
+        if (decoded is Map<String, dynamic>) {
+          final reply = (decoded['reply'] as String?)?.trim() ?? '';
+          if (mounted && reply.isNotEmpty) {
+            setState(() => _liveBackgroundSummary = reply);
+          }
+        }
+      }
+    } catch (_) {
+      // 失敗時靜默保留內建背景說明
+    } finally {
+      client.close();
+      if (mounted) setState(() => _isLoadingSummary = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -191,8 +250,61 @@ class _DiscussionDetailPageState extends State<DiscussionDetailPage> {
               ),
               SizedBox(height: 20.h),
 
+              // 事件背景與近期脈絡（有即時新聞時由 Gemini 依新聞標題動態整理，離線退回內建脈絡）
+              _buildSectionTitle(
+                _liveBackgroundSummary != null
+                    ? '事件背景與近期脈絡（AI 即時整理）'
+                    : '事件背景與脈絡',
+                Icons.info_outline_rounded,
+              ),
+              SizedBox(height: 8.h),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(14.w),
+                decoration: BoxDecoration(
+                  color: widget.palette.surface,
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(color: widget.palette.border),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _liveBackgroundSummary ?? topic.overview,
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        height: 1.55,
+                        color: widget.palette.primaryText,
+                      ),
+                    ),
+                    if (_isLoadingSummary) ...[
+                      SizedBox(height: 8.h),
+                      Text(
+                        '正在依最新新聞動態整理脈絡...',
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          color: widget.item.tint,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              SizedBox(height: 20.h),
+
               // 小法助 AI 法律焦點透視卡
               _buildAiLegalInsightCard(topic),
+              SizedBox(height: 20.h),
+
+              // 事件關鍵節點時間軸
+              _buildSectionTitle('事件關鍵節點', Icons.history_edu_rounded),
+              SizedBox(height: 12.h),
+              InteractiveTimelineSection(
+                events: topic.timelineEvents,
+                palette: widget.palette,
+                tint: widget.item.tint,
+              ),
               SizedBox(height: 20.h),
 
               // 社群意向與知識問答

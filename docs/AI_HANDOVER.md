@@ -2,6 +2,13 @@
 
 此文件僅記錄 `lawapp`。每次接手先核對 Git 現況與最新驗收，不得把同層 `time_recorder` 的分支、測試、資料或部署狀態套用到此專案。
 
+## 目前快照（2026-11-19，TestFlight Build 2 上傳成功＋討論詳情頁 AI 即時事件背景）
+
+- 分支 `redesign/home-responsive-carousel`，遠端已同步至 `a6e685b`，並已成功將 **`1.1.0 (2)`** 上傳至 TestFlight（Delivery UUID `a7c790f6-0074-4739-add0-c3161fd7493d`）。
+- 工作區另已於 `discussion_detail_page.dart` 補回「事件背景與近期脈絡（由 Gemini 依即時 Google News 標題動態歸納，離線保留內建脈絡）」及「事件關鍵節點」時間軸（尚未 commit／未進 Build 2）。
+
+以下為上一批歷史快照（即時新聞每日熱度曲線與 TestFlight 打包）。
+
 ## 目前快照（2026-11-19，即時新聞每日熱度曲線與 TestFlight 打包）
 
 - 分支 `redesign/home-responsive-carousel`，基準 Commit `35b004d`。已將 Supabase `trending-topics` Edge Function 升級至 v4，依每則新聞 `<pubDate>` 統計近 7 天每日報導量（`trendPoints`）。
