@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 import 'package:preamble/components/shared/custom_toast.dart';
+import 'package:preamble/config/supabase_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:preamble/components/home/home_content.dart';
@@ -12,32 +16,116 @@ import 'package:preamble/pages/journal/widgets/journal_section_header.dart';
 import 'package:preamble/pages/journal/widgets/discussion_detail_page.dart';
 import 'package:preamble/theme/preamble_tokens.dart';
 
-class DiscussingNowSection extends StatelessWidget {
+class _LiveTopicMetric {
+  const _LiveTopicMetric({
+    required this.title,
+    required this.articleCount,
+    required this.latestHeadline,
+  });
+
+  final String title;
+  final int articleCount;
+  final String latestHeadline;
+}
+
+class DiscussingNowSection extends StatefulWidget {
   const DiscussingNowSection({super.key, required this.palette});
 
   final JournalPalette palette;
 
   @override
+  State<DiscussingNowSection> createState() => _DiscussingNowSectionState();
+}
+
+class _DiscussingNowSectionState extends State<DiscussingNowSection> {
+  Map<String, _LiveTopicMetric> _liveMetricsByTitle = const {};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLiveTrending();
+  }
+
+  /// 台灣繁體中文教學註解：透過 Supabase Edge Function 取得 Google News 台灣公開新聞報導量；
+  /// 若離線或處於測試環境失敗，則維持誠實的「焦點策展」靜態展示，不影響頁面渲染。
+  Future<void> _loadLiveTrending() async {
+    if (supabaseUrl.trim().isEmpty || supabaseAnonKey.trim().isEmpty) return;
+    final client = http.Client();
+    try {
+      final uri = Uri.parse('$supabaseUrl/functions/v1/trending-topics');
+      final response = await client.get(
+        uri,
+        headers: {
+          'apikey': supabaseAnonKey,
+          'Authorization': 'Bearer $supabaseAnonKey',
+        },
+      ).timeout(const Duration(seconds: 6));
+
+      if (response.statusCode < 200 || response.statusCode >= 300) return;
+      final decoded = jsonDecode(utf8.decode(response.bodyBytes));
+      if (decoded is! Map<String, dynamic>) return;
+      final rawTopics = decoded['topics'];
+      if (rawTopics is! List) return;
+
+      final mapped = <String, _LiveTopicMetric>{};
+      for (final item in rawTopics.whereType<Map<String, dynamic>>()) {
+        final title = (item['title'] as String? ?? '').trim();
+        final count = (item['articleCount'] as num?)?.toInt() ?? 0;
+        final headline = (item['latestHeadline'] as String? ?? '').trim();
+        if (title.isNotEmpty && count > 0) {
+          mapped[title] = _LiveTopicMetric(
+            title: title,
+            articleCount: count,
+            latestHeadline: headline,
+          );
+        }
+      }
+      if (mounted && mapped.isNotEmpty) {
+        setState(() {
+          _liveMetricsByTitle = mapped;
+        });
+      }
+    } catch (_) {
+      // 離線或逾時靜默保留策展示範狀態
+    } finally {
+      client.close();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final hasLive = _liveMetricsByTitle.isNotEmpty;
+    final items = discussionTrendItems.take(5).toList();
+    if (hasLive) {
+      items.sort((a, b) {
+        final ca = _liveMetricsByTitle[a.title]?.articleCount ?? 0;
+        final cb = _liveMetricsByTitle[b.title]?.articleCount ?? 0;
+        return cb.compareTo(ca);
+      });
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         JournalSectionHeader(
           title: '大家都在討論',
-          subtitle: '先看排行榜，再從底部展開單一議題的熱度摘要。',
-          palette: palette,
+          subtitle: hasLive
+              ? '即時統計台灣近期公開新聞報導量（來源：Google News 台灣 RSS）。'
+              : '編輯精選台灣社會與法制焦點議題（示範策展，點選看完整脈絡）。',
+          palette: widget.palette,
         ),
         SizedBox(height: 10.h),
-        ...discussionTrendItems.take(5).map(
-              (item) => Padding(
-                padding: EdgeInsets.only(bottom: 8.h),
-                child: _DiscussionTrendCard(
-                  item: item,
-                  palette: palette,
-                  isPrimary: item.rank == 1,
-                ),
-              ),
+        for (var i = 0; i < items.length; i++)
+          Padding(
+            padding: EdgeInsets.only(bottom: 8.h),
+            child: _DiscussionTrendCard(
+              item: items[i],
+              displayRank: hasLive ? i + 1 : items[i].rank,
+              liveMetric: _liveMetricsByTitle[items[i].title],
+              palette: widget.palette,
+              isPrimary: hasLive ? i == 0 : items[i].rank == 1,
             ),
+          ),
       ],
     );
   }
@@ -46,11 +134,15 @@ class DiscussingNowSection extends StatelessWidget {
 class _DiscussionTrendCard extends StatelessWidget {
   const _DiscussionTrendCard({
     required this.item,
+    required this.displayRank,
+    this.liveMetric,
     required this.palette,
     required this.isPrimary,
   });
 
   final DiscussionTrendItem item;
+  final int displayRank;
+  final _LiveTopicMetric? liveMetric;
   final JournalPalette palette;
   final bool isPrimary;
 
@@ -100,7 +192,7 @@ class _DiscussionTrendCard extends StatelessWidget {
               children: [
                 Hero(
                   tag: 'discussion-rank-${item.rank}',
-                  child: _CompactRankBadge(rank: item.rank, tint: item.tint),
+                  child: _CompactRankBadge(rank: displayRank, tint: item.tint),
                 ),
                 SizedBox(width: 10.w),
                 Expanded(
@@ -123,31 +215,70 @@ class _DiscussionTrendCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 8.w),
+                // 台灣繁體中文維護註解：有即時新聞量時顯示真實篇數與來源；離線時維持誠實的策展標籤。
                 ConstrainedBox(
-                  constraints: BoxConstraints(minWidth: 72.w, maxWidth: 100.w),
+                  constraints: BoxConstraints(minWidth: 72.w, maxWidth: 112.w),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(
-                        item.score.toStringAsFixed(1),
-                        style: t.tabularMetric(
-                          size: 15.sp,
-                          weight: FontWeight.w700,
-                          color: t.accentBrass,
+                      if (liveMetric != null) ...[
+                        Text(
+                          '${liveMetric!.articleCount} 則新聞',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: t.tabularMetric(
+                            size: 13.sp,
+                            weight: FontWeight.w800,
+                            color: t.accentBrass,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 2.h),
-                      Text(
-                        item.delta,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: t.tabularMetric(
-                          size: 10.sp,
-                          weight: FontWeight.w700,
-                          color: t.semanticSuccess,
+                        SizedBox(height: 2.h),
+                        Text(
+                          'Google News',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: t.sansBody(
+                            size: 10.sp,
+                            weight: FontWeight.w600,
+                            color: t.semanticSuccess,
+                          ),
                         ),
-                      ),
+                      ] else ...[
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 7.w,
+                            vertical: 2.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: t.accentBrassContainer,
+                            borderRadius: BorderRadius.circular(6.r),
+                          ),
+                          child: Text(
+                            '焦點策展',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: t.sansBody(
+                              size: 10.sp,
+                              weight: FontWeight.w700,
+                              color: t.accentOnBrassContainer,
+                            ),
+                          ),
+                        ),
+                        if (item.relatedCases.isNotEmpty) ...[
+                          SizedBox(height: 3.h),
+                          Text(
+                            item.relatedCases.first,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: t.sansBody(
+                              size: 10.sp,
+                              weight: FontWeight.w600,
+                              color: t.textMuted,
+                            ),
+                          ),
+                        ],
+                      ],
                     ],
                   ),
                 ),
@@ -684,9 +815,9 @@ class _DiscussionDetailSheetState extends State<_DiscussionDetailSheet> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         _buildStatItem(
-                            '本週排名', '#${topic.rank}', Icons.assessment_rounded),
-                        _buildStatItem('熱度分數', '${topic.heatScore}',
-                            Icons.local_fire_department_rounded),
+                            '策展順位', '#${topic.rank}', Icons.assessment_rounded),
+                        _buildStatItem('資料性質', '示範策展',
+                            Icons.menu_book_rounded),
                         _buildStatItem('今日升幅', '+${topic.dayChangePercent}%',
                             Icons.trending_up_rounded),
                       ],

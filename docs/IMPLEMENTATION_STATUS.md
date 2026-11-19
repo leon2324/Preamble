@@ -2,6 +2,25 @@
 
 更新日期：2026-11-19。狀態只代表本機 `lawapp`，不代表遠端部署。
 
+## 本批：紀事頁即時新聞熱度榜串接（基準 `a9ce622`，本機未 commit）
+
+| 項目 | 狀態 | 依據／限制 |
+| --- | --- | --- |
+| `trending-topics` Edge Function | 已部署並實測 (`ACTIVE`) | Supabase Edge Function 即時彙整 Google News 台灣 RSS 報導篇數；`curl` 實測回傳 200（30–49 則不等）。 |
+| 紀事頁 `DiscussingNowSection` | 本機已改 | 優先顯示雲端即時新聞量與動態排序；離線或逾時自動維持誠實「焦點策展」標示。 |
+| 靜態分析與紀事測試 | 通過 | `dart analyze` 無問題；`test/phase20_journal_upgrades_test.dart` 4 項全數通過。 |
+
+以下為上一批狀態（紀事頁討論策展誠實標示）。
+
+## 本批：紀事頁討論策展誠實標示（基準 `a9ce622`，本機未 commit）
+
+| 項目 | 狀態 | 依據／限制 |
+| --- | --- | --- |
+| 紀事頁熱度榜改為策展標示 | 本機已改 | `discussing_now_section.dart` 與 `discussion_detail_page.dart` 移除靜態假分數／漲跌幅，改為「焦點策展」「示範策展」標示。 |
+| 靜態分析與紀事測試 | 驗證中／見輸出 | `dart analyze` 與 `test/phase20_journal_upgrades_test.dart`。 |
+
+以下為上一批狀態（Supabase 喚醒與小法助 Gemini Edge Function 串接）。
+
 ## 本批：Supabase 喚醒與小法助 Gemini Edge Function 串接（基準 `b1e030f`，本機未 commit）
 
 | 項目 | 狀態 | 依據／限制 |

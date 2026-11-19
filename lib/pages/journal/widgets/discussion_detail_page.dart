@@ -150,11 +150,11 @@ class _DiscussionDetailPageState extends State<DiscussionDetailPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildStatItem(
-                        '本週排名', '#${topic.rank}', Icons.assessment_rounded),
-                    _buildStatItem('熱度分數', '${topic.heatScore}',
-                        Icons.local_fire_department_rounded),
-                    _buildStatItem('今日升幅', '+${topic.dayChangePercent}%',
-                        Icons.trending_up_rounded),
+                        '策展順位', '#${topic.rank}', Icons.assessment_rounded),
+                    _buildStatItem('關聯案例', '${widget.item.relatedCases.length} 案',
+                        Icons.library_books_rounded),
+                    _buildStatItem(
+                        '資料性質', '示範策展', Icons.fact_check_outlined),
                   ],
                 ),
               ),
@@ -172,7 +172,7 @@ class _DiscussionDetailPageState extends State<DiscussionDetailPage> {
               SizedBox(height: 12.h),
 
               // Interactive trend line chart with touch-sensitive tooltips
-              _buildSectionTitle('社群聲量趨勢', Icons.analytics_outlined),
+              _buildSectionTitle('議題討論曲線（策展示意）', Icons.analytics_outlined),
               SizedBox(height: 8.h),
               InteractiveTrendChart(topic: topic, palette: widget.palette),
               SizedBox(height: 20.h),

@@ -2,6 +2,21 @@
 
 此文件僅記錄 `lawapp`。每次接手先核對 Git 現況與最新驗收，不得把同層 `time_recorder` 的分支、測試、資料或部署狀態套用到此專案。
 
+## 目前快照（2026-11-19，紀事頁即時新聞熱度榜串接）
+
+- 分支 `redesign/home-responsive-carousel`，基準 Commit `a9ce622`。已透過 Supabase MCP 部署 `trending-topics` Edge Function（`verify_jwt: false`），即時抓取 Google News 台灣公開 RSS 統計各法制／社會議題報導篇數並動態排序（實測回傳 30–49 則新聞不等）。
+- `DiscussingNowSection` 已改為 `StatefulWidget` 優先載入雲端即時新聞量與排序，離線或測試環境自動維持誠實的「焦點策展／示範策展」標示；`discussion_detail_page.dart` 同步去除假即時分數與漲跌幅。
+- 下一步待 `phase20_journal_upgrades_test.dart` 通過後，Commit、push GitHub、重包 Release IPA（`1.1.0+2`）並上傳 TestFlight。
+
+以下為上一批歷史快照（紀事頁討論策展誠實標示）。
+
+## 目前快照（2026-11-19，紀事頁討論策展誠實標示）
+
+- 分支 `redesign/home-responsive-carousel`，基準 Commit `a9ce622`（已 push 至 GitHub）。本批將紀事頁（`discussing_now_section.dart`、`discussion_detail_page.dart`）原本靜態的「熱度分數／24h 漲跌幅」改為誠實的「焦點策展／示範策展」標示，避免現場展示被誤認為即時爬蟲數據。
+- 待確認分析與測試通過後，即可重新建置 Release IPA 並以 `xcrun altool` 上傳 TestFlight。
+
+以下為上一批歷史快照（Supabase 喚醒與小法助 Gemini Edge Function 串接）。
+
 ## 目前快照（2026-11-19，Supabase 喚醒與小法助 Gemini Edge Function 串接）
 
 - 分支 `redesign/home-responsive-carousel`，最新 Commit `b1e030f`；工作區含小法助回覆 UI 減法與 `LawAssistantRepository` 串接 Supabase Edge Function（尚未 commit）。
