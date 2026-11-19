@@ -22,6 +22,7 @@ class LawAssistantInsightCard extends StatefulWidget {
     required this.onConvertToDocument,
     this.onConsultLawyer,
     this.onSaveToJournal,
+    this.initiallyExpanded = true,
   });
 
   final LawAssistantDefenseInsight insight;
@@ -29,6 +30,8 @@ class LawAssistantInsightCard extends StatefulWidget {
       onConvertToDocument;
   final VoidCallback? onConsultLawyer;
   final VoidCallback? onSaveToJournal;
+  // 台灣繁體中文教學註解：對話頁可預設收合洞察卡片，避免一次堆疊過多框線；獨立元件測試預設展開。
+  final bool initiallyExpanded;
 
   @override
   State<LawAssistantInsightCard> createState() =>
@@ -36,7 +39,13 @@ class LawAssistantInsightCard extends StatefulWidget {
 }
 
 class _LawAssistantInsightCardState extends State<LawAssistantInsightCard> {
-  bool _isExpanded = true;
+  late bool _isExpanded;
+
+  @override
+  void initState() {
+    super.initState();
+    _isExpanded = widget.initiallyExpanded;
+  }
 
   static final RegExp _leadingEmojiRegex = RegExp(
     r'^[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\s]+',

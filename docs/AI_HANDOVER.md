@@ -2,6 +2,23 @@
 
 此文件僅記錄 `lawapp`。每次接手先核對 Git 現況與最新驗收，不得把同層 `time_recorder` 的分支、測試、資料或部署狀態套用到此專案。
 
+## 目前快照（2026-11-19，Supabase 喚醒與小法助 Gemini Edge Function 串接）
+
+- 分支 `redesign/home-responsive-carousel`，最新 Commit `b1e030f`；工作區含小法助回覆 UI 減法與 `LawAssistantRepository` 串接 Supabase Edge Function（尚未 commit）。
+- **Supabase 狀態實測**：已透過 Supabase MCP 將 `LawApp`（`vtpdncwijhfjtegnnwkz`）由 `INACTIVE` 喚醒至 `ACTIVE_HEALTHY`，並查詢確認 `cases`（10,200 筆）、`life_legal_tips`（500 筆）、`learning_articles`（10,000 筆）皆有資料。
+- **小法助雲端串接**：已部署 `law-assistant` Edge Function（`verify_jwt: false`）呼叫 Gemini API；`LawAssistantRepository` 於未設定 `PREAMBLE_API_BASE_URL` 時優先呼叫該 Edge Function，失敗或逾時（15 秒）自動退回本機三段論引擎，不把 AI Key 放進 Flutter。仍須使用者於 Supabase Dashboard 設定 `GEMINI_API_KEY` Secret 並上機實測。
+
+以下為上一批歷史快照（小法助回覆 UI 減法與前夜優化）。
+
+## 目前快照（2026-11-19，小法助回覆 UI 減法與前夜優化）
+
+- 分支 `redesign/home-responsive-carousel`，最新 Commit `b1e030f`（含 App 內建瀏覽器、隱藏實驗室與語音按鈕、面試盤點紀錄）；工作區另有本批小法助回覆 UI 整理（尚未 commit）。
+- 小法助對話頁（`law_assistant_chat_page.dart`）移除 AI 氣泡外框與重複 `【...】：` 標籤，並讓 `LawAssistantInsightCard` 於對話中預設收合（獨立元件預設仍為展開），降低多層框線壓迫感。
+- 驗證：`dart analyze` 無問題（`No issues found!`）；`test/phase14_progressive_flow_test.dart` 與 `test/law_assistant_test.dart` 執行結果見 `IMPLEMENTATION_STATUS.md`。
+- 盤點與風險細節見[面試展示盤點與風險紀錄](INTERVIEW_DEMO_READINESS_AUDIT_2026-11-19.md)；尚未 push 或編譯至 iPhone 實機。
+
+以下為上一批歷史快照（面試展示盤點與前夜低風險優化）。
+
 ## 目前快照（2026-11-19，面試展示盤點與前夜低風險優化）
 
 - 分支 `redesign/home-responsive-carousel`，基準 Commit `b8dc013`（本機有未 commit 修改）。本輪完成三項低風險展示優化：全站網頁 `launchUrl` 改為 `LaunchMode.inAppBrowserView`、隱藏 `profile_page.dart` 的「系統整合與實驗室」入口、隱藏舊版小法助語音麥克風按鈕。

@@ -961,17 +961,17 @@ class _LawAssistantChatBubble extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 6.h),
+                // 台灣繁體中文教學註解：AI 回覆改以無框線、柔和底色的閱讀容器呈現，減少多層框線壓迫感。
                 Container(
-                  padding: EdgeInsets.all(14.w),
+                  padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
                   decoration: BoxDecoration(
-                    color: t.surface,
+                    color: t.surfaceSubtle.withValues(alpha: 0.72),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(4.r),
                       topRight: Radius.circular(16.r),
                       bottomLeft: Radius.circular(16.r),
                       bottomRight: Radius.circular(16.r),
                     ),
-                    border: Border.all(color: t.border),
                   ),
                   child: _AssistantAnswerContent(
                     message: message,
@@ -1023,6 +1023,7 @@ class _AssistantAnswerContent extends StatelessWidget {
           if (insight != null && onConvertToDocument != null) ...[
             LawAssistantInsightCard(
               insight: insight,
+              initiallyExpanded: false,
               onConvertToDocument: onConvertToDocument!,
               onConsultLawyer: onConsultLawyer,
               onSaveToJournal: onSaveToJournal,
@@ -1055,6 +1056,7 @@ class _AssistantAnswerContent extends StatelessWidget {
         if (insight != null && onConvertToDocument != null) ...[
           LawAssistantInsightCard(
             insight: insight,
+            initiallyExpanded: false,
             onConvertToDocument: onConvertToDocument!,
             onConsultLawyer: onConsultLawyer,
             onSaveToJournal: onSaveToJournal,
@@ -1094,33 +1096,37 @@ class _AssistantAnswerBlock extends StatelessWidget {
     required this.text,
   });
 
+  static final RegExp _leadingBracketLabelRegex = RegExp(r'^【[^】]+】[:：]?\s*');
+
   final String title;
   final String text;
 
   @override
   Widget build(BuildContext context) {
-    if (text.isEmpty) return const SizedBox.shrink();
+    final cleanedText =
+        text.trim().replaceFirst(_leadingBracketLabelRegex, '').trim();
+    if (cleanedText.isEmpty) return const SizedBox.shrink();
     final assistantPalette = _LawAssistantPalette.of(context);
 
     return Padding(
-      padding: EdgeInsets.only(bottom: 10.h),
+      padding: EdgeInsets.only(bottom: 12.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
             style: TextStyle(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w900,
+              fontSize: 12.5.sp,
+              fontWeight: FontWeight.w800,
               color: assistantPalette.primaryText,
             ),
           ),
           SizedBox(height: 4.h),
           InlineCitationText(
-            text: text,
+            text: cleanedText,
             style: TextStyle(
-              fontSize: 12.sp,
-              height: 1.45,
+              fontSize: 13.sp,
+              height: 1.5,
               color: assistantPalette.mutedText,
             ),
           ),

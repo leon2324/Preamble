@@ -2,6 +2,27 @@
 
 更新日期：2026-11-19。狀態只代表本機 `lawapp`，不代表遠端部署。
 
+## 本批：Supabase 喚醒與小法助 Gemini Edge Function 串接（基準 `b1e030f`，本機未 commit）
+
+| 項目 | 狀態 | 依據／限制 |
+| --- | --- | --- |
+| Supabase `LawApp` 專案 | 已喚醒 (`ACTIVE_HEALTHY`) | `restore_project` 成功；`execute_sql` 驗證 `cases` 10,200 筆、`life_legal_tips` 500 筆、`learning_articles` 10,000 筆。 |
+| `law-assistant` Edge Function | 已部署 (`ACTIVE`) | 透過 Supabase MCP 部署，呼叫 Gemini；須由使用者於 Supabase Dashboard 填入 `GEMINI_API_KEY` Secret。 |
+| Flutter 小法助串接 | 本機已改 | `LawAssistantRepository` 優先呼叫 Supabase Edge Function，失敗／離線自動退回 `LegalSyllogismEngine`；未將任何 Key 寫入程式碼。 |
+| 專案靜態分析與聚焦測試 | 通過 | `dart analyze` 無問題；`law_assistant_test.dart`、`phase14_progressive_flow_test.dart`、`backend_resource_ownership_test.dart` 通過（詳見輸出）。 |
+
+以下為上一批狀態（小法助回覆 UI 減法）。
+
+## 本批：小法助回覆 UI 減法整理（基準 `b1e030f`，本機未 commit）
+
+| 項目 | 狀態 | 依據／限制 |
+| --- | --- | --- |
+| 小法助回覆視覺減法 | 本機已改 | `law_assistant_chat_page.dart` 移除 AI 氣泡外框與重複 `【...】：` 前綴；`law_assistant_insight_card.dart` 支援 `initiallyExpanded`（對話頁傳入 `false` 預設收合）。 |
+| 專案靜態分析 | 通過 | `/Users/babychen/Documents/flutter/bin/cache/dart-sdk/bin/dart analyze`：`No issues found!`。 |
+| 小法助聚焦測試 | 9 項通過 | `test/phase14_progressive_flow_test.dart`、`test/law_assistant_test.dart` 全數通過。 |
+
+以下為上一批狀態（已於 `b1e030f` 提交）。
+
 ## 本批：面試展示盤點與前夜低風險優化（基準 `b8dc013`，本機未 commit）
 
 | 項目 | 狀態 | 依據／限制 |

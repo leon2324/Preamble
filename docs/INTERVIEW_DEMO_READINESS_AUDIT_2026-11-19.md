@@ -40,5 +40,15 @@
 3. **隱藏舊版語音輸入按鈕**：將 [law_assistant_prototype_widgets.dart](file:///Users/babychen/Dropbox/Baby%20Mac/python/lawapp/lib/pages/learning/law_assistant/legacy/law_assistant_prototype_widgets.dart) 的麥克風按鈕暫時註解隱藏，避免展示時觸發「語音輸入開發中」提示。
 4. **案件詳情頁 6 大思辨功能檢查**：確認 [case_dossier_detail_page.dart](file:///Users/babychen/Dropbox/Baby%20Mac/python/lawapp/lib/features/case_library/pages/case_dossier_detail_page.dart) 的 6 項思辨工具（法律詞卡、觀點光譜、如果你是法官、虛擬詰問室、社會效應圖譜、意見塗鴉牆）已有獨立案件 profile；執行 `test/phase24_case_library_independent_deliberation_test.dart` 14 項全數通過；`dart analyze` 為 `No issues found!`，搜尋／後端／Supabase 契約聚焦測試 22 項全數通過。
 
+（上述三項已於 Commit `b1e030f` 提交本機分支。）
+
+## 後續新增：小法助回覆 UI 減法與 Gemini Edge Function 串接
+
+1. **移除多餘外框與重複前綴**：於 [law_assistant_chat_page.dart](file:///Users/babychen/Dropbox/Baby%20Mac/python/lawapp/lib/pages/learning/law_assistant/law_assistant_chat_page.dart) 將 AI 回覆氣泡改為無框線柔和底色容器，並於 `_AssistantAnswerBlock` 去除重複的 `【...】：` 前綴與放大行距，提升閱讀感。
+2. **洞察卡片預設收合**：於 [law_assistant_insight_card.dart](file:///Users/babychen/Dropbox/Baby%20Mac/python/lawapp/lib/components/assistant/law_assistant_insight_card.dart) 新增 `initiallyExpanded` 參數（預設 `true` 保留既有元件測試契約），於對話頁傳入 `false` 預設收合「攻防洞察與雙重編碼指引」，避免多層框線同時堆疊，需要時再點開。
+3. **Supabase 專案喚醒與資料驗證**：透過 Supabase MCP 將 `LawApp`（`vtpdncwijhfjtegnnwkz`）由 `INACTIVE` 喚醒至 `ACTIVE_HEALTHY`，實測確認 `cases`（10,200 筆）、`life_legal_tips`（500 筆）與 `learning_articles`（10,000 筆）皆有資料。
+4. **部署 `law-assistant` Edge Function 與安全串接**：已部署 Supabase Edge Function `law-assistant`（`verify_jwt: false`）呼叫 Gemini API，並由使用者於 Supabase Dashboard 安全設定 `GEMINI_API_KEY` Secret（不寫入前端或 Git）。[law_assistant_repository.dart](file:///Users/babychen/Dropbox/Baby%20Mac/python/lawapp/lib/data/law_assistant/law_assistant_repository.dart) 優先呼叫此雲端介面，離線或逾時時自動退回本機三段論引擎。
+5. **驗證**：`dart analyze` 無問題；`test/law_assistant_test.dart`、`test/phase14_progressive_flow_test.dart`、`test/backend_resource_ownership_test.dart` 共 11 項全數通過；尚待實機編譯後做終端對終端連線實測。
+
 ## 建議後續追蹤
 - 面試前先於實機確認 Supabase 連線與資料表狀態；若需無網路環境的純離線展示保險，需另外明確決定是否切換為未設定來源／demo 模式（注意不得違反既有正式來源契約紀錄，應於驗證後清楚標註）。

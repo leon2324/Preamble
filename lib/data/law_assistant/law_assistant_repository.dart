@@ -1,4 +1,8 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 import 'package:preamble/components/shared/mvp_state_widgets.dart';
+import 'package:preamble/config/supabase_config.dart';
 import 'package:preamble/data/law_assistant/law_assistant_api_service.dart';
 import 'package:preamble/data/law_assistant/law_assistant_models.dart';
 import 'package:preamble/data/legal_brain/legal_syllogism_engine.dart';
@@ -9,18 +13,27 @@ import 'package:preamble/utils/typing_simulator.dart';
 /// 小法助資料存取層。
 ///
 /// UI 不直接判斷「要打後端還是 mock」，全部交給 repository；
-/// 這樣後端尚未設定時 App 仍可展示完整流程，而且不會把 AI provider key 放在 Flutter。
+/// 若未設定自建後端，優先透過 Supabase Edge Function 呼叫 Gemini（不把 key 放進 Flutter），
+/// 連線失敗或離線時則自動退回本機法學三段論引擎，確保展示流程不中斷。
 class LawAssistantRepository {
-  LawAssistantRepository({LawAssistantApiService? apiService})
-      : _apiService = apiService ?? LawAssistantApiService(),
-        _ownsApiService = apiService == null;
+  LawAssistantRepository({
+    LawAssistantApiService? apiService,
+    http.Client? edgeClient,
+  })  : _apiService = apiService ?? LawAssistantApiService(),
+        _ownsApiService = apiService == null,
+        _edgeClient = edgeClient ?? http.Client(),
+        _ownsEdgeClient = edgeClient == null;
 
   final LawAssistantApiService _apiService;
-  // 台灣繁體中文教學註解：只有本 repository 建立的 service 才在結束時釋放。
+  // 台灣繁體中文教學註解：只有本 repository 建立的 service／client 才在結束時釋放。
   final bool _ownsApiService;
+  final http.Client _edgeClient;
+  final bool _ownsEdgeClient;
   final Map<String, LawAssistantConversation> _mockConversations = {};
 
   bool get isBackendConfigured => _apiService.hasConfiguredBackend;
+  bool get _hasSupabaseEdgeFunction =>
+      supabaseUrl.trim().isNotEmpty && supabaseAnonKey.trim().isNotEmpty;
 
   Future<List<LawAssistantConversation>> fetchRecentConversations() async {
     if (isBackendConfigured) {
@@ -44,7 +57,12 @@ class LawAssistantRepository {
       return conversation.copyWith(isGuest: isGuestSession);
     }
 
-    final conversation = _mockConversation(maskedPrompt, isGuestSession);
+    final geminiReply = await _fetchGeminiEdgeReply(maskedPrompt);
+    final conversation = _mockConversation(
+      maskedPrompt,
+      isGuestSession,
+      customReply: geminiReply,
+    );
     _mockConversations[conversation.id] = conversation;
     return conversation;
   }
@@ -73,7 +91,21 @@ class LawAssistantRepository {
 
     final existing = _mockConversations[conversationId] ??
         _mockConversation(maskedPrompt, false);
+    final geminiReply = await _fetchGeminiEdgeReply(
+      maskedPrompt,
+      history: existing.messages,
+    );
     final now = DateTime.now();
+    final assistantMsg = geminiReply != null
+        ? _geminiAssistantMessage(
+            maskedPrompt,
+            geminiReply,
+            now.add(const Duration(milliseconds: 1)),
+          )
+        : _mockAssistantMessage(
+            maskedPrompt,
+            now.add(const Duration(milliseconds: 1)),
+          );
     final messages = [
       ...existing.messages,
       LawAssistantMessage(
@@ -82,8 +114,7 @@ class LawAssistantRepository {
         content: maskedPrompt,
         createdAt: now,
       ),
-      _mockAssistantMessage(
-          maskedPrompt, now.add(const Duration(milliseconds: 1))),
+      assistantMsg,
     ];
     final updated = existing.copyWith(
       preview: maskedPrompt,
@@ -110,10 +141,34 @@ class LawAssistantRepository {
       return;
     }
 
-    // 離線/Mock 打字機模擬：每 30ms 輸出 2~4 個中文字
+    // 優先嘗試 Supabase Edge Function（Gemini），失敗或離線時退回本機三段論引擎。
+    final existing = _mockConversations[conversationId];
+    final geminiReply = await _fetchGeminiEdgeReply(
+      maskedPrompt,
+      history: existing?.messages ?? const [],
+    );
     final now = DateTime.now();
-    final assistantMessage = _mockAssistantMessage(maskedPrompt, now);
+    final assistantMessage = geminiReply != null
+        ? _geminiAssistantMessage(maskedPrompt, geminiReply, now)
+        : _mockAssistantMessage(maskedPrompt, now);
     final answer = assistantMessage.answer;
+
+    if (existing != null && geminiReply != null) {
+      _mockConversations[conversationId] = existing.copyWith(
+        preview: maskedPrompt,
+        updatedAt: now,
+        messages: [
+          ...existing.messages,
+          LawAssistantMessage(
+            id: 'mock-user-${now.microsecondsSinceEpoch}',
+            role: LawAssistantMessageRole.user,
+            content: maskedPrompt,
+            createdAt: now,
+          ),
+          assistantMessage,
+        ],
+      );
+    }
 
     final fullTextParts = [
       if (answer != null) ...[
@@ -132,7 +187,7 @@ class LawAssistantRepository {
       yield LawAssistantStreamChunk(
         textChunk: char,
         isFinished: false,
-        citations: _mockCitations,
+        citations: assistantMessage.citations,
         fullAnswer: answer,
       );
     }
@@ -140,21 +195,97 @@ class LawAssistantRepository {
     yield LawAssistantStreamChunk(
       textChunk: '',
       isFinished: true,
-      citations: _mockCitations,
+      citations: assistantMessage.citations,
       fullAnswer: answer,
     );
   }
 
   void dispose() {
     if (_ownsApiService) _apiService.dispose();
+    if (_ownsEdgeClient) _edgeClient.close();
+  }
+
+  /// 台灣繁體中文教學註解：透過 Supabase Edge Function 安全呼叫 Gemini，
+  /// API Key 僅存於雲端 Secret；若未連網、逾時或雲端未設定，回傳 null 以退回本機引擎。
+  Future<String?> _fetchGeminiEdgeReply(
+    String prompt, {
+    List<LawAssistantMessage> history = const [],
+  }) async {
+    if (!_hasSupabaseEdgeFunction) return null;
+    try {
+      final uri = Uri.parse('$supabaseUrl/functions/v1/law-assistant');
+      final recentHistory = history
+          .take(6)
+          .map((m) => {
+                'role': m.role == LawAssistantMessageRole.assistant
+                    ? 'assistant'
+                    : 'user',
+                'content': m.content,
+              })
+          .toList(growable: false);
+
+      final response = await _edgeClient
+          .post(
+            uri,
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': supabaseAnonKey,
+              'Authorization': 'Bearer $supabaseAnonKey',
+            },
+            body: jsonEncode({
+              'prompt': prompt,
+              'history': recentHistory,
+            }),
+          )
+          .timeout(const Duration(seconds: 15));
+
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        return null;
+      }
+      final decoded = jsonDecode(utf8.decode(response.bodyBytes));
+      if (decoded is Map<String, dynamic>) {
+        final reply = (decoded['reply'] as String?)?.trim() ?? '';
+        if (reply.isNotEmpty) return reply;
+      }
+    } catch (_) {
+      return null;
+    }
+    return null;
+  }
+
+  LawAssistantMessage _geminiAssistantMessage(
+    String prompt,
+    String reply,
+    DateTime createdAt,
+  ) {
+    final insight = LawAssistantDefenseInsight.fromContext(text: prompt);
+    return LawAssistantMessage(
+      id: 'gemini-assistant-${createdAt.microsecondsSinceEpoch}',
+      role: LawAssistantMessageRole.assistant,
+      content: reply,
+      createdAt: createdAt,
+      citations: _mockCitations,
+      insight: insight,
+    );
   }
 
   LawAssistantConversation _mockConversation(
     String prompt,
-    bool isGuestSession,
-  ) {
+    bool isGuestSession, {
+    String? customReply,
+  }) {
     final now = DateTime.now();
     final id = 'mock-${now.microsecondsSinceEpoch}';
+    final assistantMsg = customReply != null
+        ? _geminiAssistantMessage(
+            prompt,
+            customReply,
+            now.add(const Duration(milliseconds: 1)),
+          )
+        : _mockAssistantMessage(
+            prompt,
+            now.add(const Duration(milliseconds: 1)),
+          );
     return LawAssistantConversation(
       id: id,
       title: prompt.length > 18 ? '${prompt.substring(0, 18)}...' : prompt,
@@ -162,7 +293,7 @@ class LawAssistantRepository {
       updatedAt: now,
       categoryLabel: _categoryForPrompt(prompt),
       isGuest: isGuestSession,
-      isMock: true,
+      isMock: customReply == null,
       sourceCitations: _mockCitations,
       messages: [
         LawAssistantMessage(
@@ -171,7 +302,7 @@ class LawAssistantRepository {
           content: prompt,
           createdAt: now,
         ),
-        _mockAssistantMessage(prompt, now.add(const Duration(milliseconds: 1))),
+        assistantMsg,
       ],
     );
   }
