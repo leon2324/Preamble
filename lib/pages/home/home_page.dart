@@ -276,16 +276,17 @@ class _HomePageState extends State<HomePage> {
       isScrollControlled: true,
       builder: (BuildContext sheetContext) {
         final t = sheetContext.tokens;
-        return SafeArea(
-          top: false,
-          child: Container(
-            decoration: BoxDecoration(
-              color: t.surfaceElevated,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-              border: Border.all(color: t.border),
-            ),
-            padding: EdgeInsets.fromLTRB(20.w, 14.h, 20.w, 24.h),
-            child: SingleChildScrollView(
+        return Container(
+          decoration: BoxDecoration(
+            color: t.surfaceElevated,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+            border: Border.all(color: t.border),
+          ),
+          child: SafeArea(
+            top: false,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(20.w, 14.h, 20.w, 20.h),
+              child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -391,6 +392,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
+            ),
             ),
           ),
         );

@@ -143,26 +143,17 @@ class _DiscussionDetailPageState extends State<DiscussionDetailPage> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Hero(
-                    tag: 'discussion-rank-${widget.item.rank}',
-                    child: _CompactRankBadge(
-                        rank: widget.item.rank, tint: widget.item.tint),
-                  ),
+                  _CompactRankBadge(
+                      rank: widget.item.rank, tint: widget.item.tint),
                   SizedBox(width: 12.w),
                   Expanded(
-                    child: Hero(
-                      tag: 'discussion-title-${widget.item.rank}',
-                      child: Material(
-                        color: Colors.transparent,
-                        child: Text(
-                          widget.item.title,
-                          style: TextStyle(
-                            fontSize: 20.sp,
-                            height: 1.25,
-                            fontWeight: FontWeight.w900,
-                            color: widget.palette.primaryText,
-                          ),
-                        ),
+                    child: Text(
+                      widget.item.title,
+                      style: TextStyle(
+                        fontSize: 20.sp,
+                        height: 1.25,
+                        fontWeight: FontWeight.w900,
+                        color: widget.palette.primaryText,
                       ),
                     ),
                   ),

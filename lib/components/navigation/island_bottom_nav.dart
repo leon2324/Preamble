@@ -61,9 +61,15 @@ class IslandBottomNav extends StatelessWidget {
                 borderRadius: BorderRadius.circular(34),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: t.isDark ? 0.44 : 0.09),
-                    blurRadius: 24,
-                    offset: const Offset(0, 10),
+                    color: Colors.black.withValues(alpha: t.isDark ? 0.44 : 0.13),
+                    blurRadius: 22,
+                    spreadRadius: 1,
+                    offset: const Offset(0, 8),
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: t.isDark ? 0.24 : 0.06),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
                   ),
                 ],
               ),

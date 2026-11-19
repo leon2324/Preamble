@@ -2,6 +2,19 @@
 
 更新日期：2026-11-19。狀態只代表本機 `lawapp`，不代表遠端部署。
 
+## 本批：TestFlight 實機回測全面修補（基準 `7596c66`）
+
+| 項目 | 狀態 | 依據／限制 |
+| --- | --- | --- |
+| 首頁 4 筆旗艦案件補齊 Supabase | 已寫入 | `execute_sql` 將 `case-delivery-labor-2152` 等 4 案寫入遠端 `public.cases`，首頁「今日生活話題／生活案例／大家怎麼看」可直接讀取。 |
+| 通知抽屜底部截斷／懸浮島陰影 | 本機已修 | `home_page.dart` 修正 `SafeArea` 包裹順序；`island_bottom_nav.dart` 加入雙層柔和陰影。 |
+| 紀事討論區過場與右側資訊 | 本機已修 | 移除 `Hero` 飛行動畫，顯示即時新聞標題副標與關聯案數。 |
+| 全國法規資料庫快取 | 本機已修 | `statute_repository.dart` 改用靜態 `_sharedCache` 與共用請求。 |
+| 委任律師 Mock 隱藏 | 本機已修 | `lawyer_referral_sheet.dart` 改為誠實尚未配對提示＋一鍵複製案件簡報。 |
+| 靜態分析與回歸測試 | 通過 | `dart analyze` 無問題；聚焦回歸測試 26 項通過（詳見輸出）。 |
+
+以下為上一批狀態（TestFlight Build 2 上傳成功＋討論詳情頁 AI 即時事件背景）。
+
 ## 本批：TestFlight Build 2 上傳成功＋討論詳情頁 AI 即時事件背景（基準 `a6e685b`）
 
 | 項目 | 狀態 | 依據／限制 |

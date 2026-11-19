@@ -263,13 +263,53 @@ class _LawyerReferralSheetState extends State<LawyerReferralSheet> {
                     ),
                     SizedBox(height: 18.h),
 
-                    // 推薦執業律師名冊
+                    // 台灣繁體中文維護註解：目前尚未串接真實執業律師媒合名單，暫時隱藏 Mock 律師清單，
+                    // 改為誠實的「尚未配對到律師」提示，保留未來正式媒合網絡的擴充入口。
                     Text(
-                      '選擇諮詢律師',
+                      '合作律師配對狀態',
                       style: t.sansTitle(size: 14.sp),
                     ),
                     SizedBox(height: 10.h),
-                    for (final lawyer in _lawyers) _buildLawyerCard(lawyer, t),
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(14.w),
+                      decoration: t.cardDecoration(
+                        radius: 14.r,
+                        fill: t.surfaceSubtle,
+                        borderColor: t.border,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            PhosphorIconsRegular.scales,
+                            size: 20.sp,
+                            color: t.accentBrass,
+                          ),
+                          SizedBox(width: 10.w),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '目前您身邊暫無配對成功的合作律師',
+                                  style: t.sansTitle(size: 13.5.sp),
+                                ),
+                                SizedBox(height: 4.h),
+                                Text(
+                                  '律師媒合網絡建置中，暫不顯示示範律師名單。您仍可先複製上方整理好的案件簡報，於前往法律扶助基金會或外部事務所諮詢時直接使用。',
+                                  style: t.sansBody(
+                                    size: 12.sp,
+                                    color: t.textSecondary,
+                                    height: 1.48,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
 
                     SizedBox(height: 14.h),
 
@@ -386,25 +426,25 @@ class _LawyerReferralSheetState extends State<LawyerReferralSheet> {
               child: SizedBox(
                 width: double.infinity,
                 child: FilledButton.icon(
-                  onPressed: _isSubmitting ? null : _handleSubmitBooking,
-                  icon: _isSubmitting
-                      ? SizedBox(
-                          width: 16.w,
-                          height: 16.w,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: t.brandOnPrimary,
-                          ),
-                        )
-                      : Icon(
-                          PhosphorIconsRegular.paperPlaneTilt,
-                          size: 17.sp,
-                          color: t.brandOnPrimary,
-                        ),
+                  onPressed: () async {
+                    final summary =
+                        '【${widget.caseBrief.disputeCategory}案件簡報】\n${widget.caseBrief.factSummary}';
+                    await Clipboard.setData(ClipboardData(text: summary));
+                    if (!context.mounted) return;
+                    CustomToast.show(
+                      context,
+                      '已複製案件簡報，可直接貼給律師或法扶人員參考',
+                      icon: Icons.copy_rounded,
+                    );
+                    Navigator.of(context).pop();
+                  },
+                  icon: Icon(
+                    PhosphorIconsRegular.copy,
+                    size: 17.sp,
+                    color: t.brandOnPrimary,
+                  ),
                   label: Text(
-                    _isSubmitting
-                        ? '正在加密傳送案件簡報...'
-                        : '打包交辦並預約 ${_selectedLawyer?.name ?? '律師'} 諮詢',
+                    '複製案件簡報（合作律師媒合建置中）',
                     style: t.sansBody(
                       size: 13.sp,
                       weight: FontWeight.w700,

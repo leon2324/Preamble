@@ -29,21 +29,43 @@ class StatuteRepository {
   final DataFallbackPolicy fallbackPolicy;
   // 台灣繁體中文教學註解：外部注入的 service 可被其他 repository 共用，不由此處關閉。
   final bool _ownsApiService;
-  List<StatuteItem>? _cache;
+  // 台灣繁體中文教學註解：全國法規資料庫壓縮檔體積較大，改以跨實例靜態記憶體快取與共用請求，
+  // 避免每次切換頁面都重新下載解析。
+  static List<StatuteItem>? _sharedCache;
+  static Future<List<StatuteItem>>? _sharedInFlight;
+  List<StatuteItem>? _instanceCache;
 
   Future<List<StatuteItem>> fetchAllStatutes(
       {bool forceRefresh = false}) async {
-    if (!forceRefresh && _cache != null) return _cache!;
+    if (!forceRefresh && _instanceCache != null) return _instanceCache!;
+    if (!forceRefresh && _ownsApiService && _sharedCache != null) {
+      return _sharedCache!;
+    }
 
     try {
-      _cache = await _apiService.fetchChineseLawItems();
-      return _cache!;
+      if (_ownsApiService) {
+        final future =
+            (!forceRefresh ? _sharedInFlight : null) ??
+                _apiService.fetchChineseLawItems();
+        _sharedInFlight = future;
+        final items = await future;
+        _sharedCache = items;
+        _instanceCache = items;
+        return items;
+      } else {
+        _instanceCache = await _apiService.fetchChineseLawItems();
+        return _instanceCache!;
+      }
     } catch (__) {
       // 台灣繁體中文教學註解：法規 API 沒有「未設定後端」分支；成功的空清單
       // 一律照實回傳。只有讀取錯誤且政策允許時才降級至內建法規。
       if (!fallbackPolicy.onRemoteError) rethrow;
-      _cache = _mockStatutes;
-      return _cache!;
+      _instanceCache = _mockStatutes;
+      return _instanceCache!;
+    } finally {
+      if (_ownsApiService) {
+        _sharedInFlight = null;
+      }
     }
   }
 

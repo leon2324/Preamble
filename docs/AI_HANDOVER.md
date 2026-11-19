@@ -2,6 +2,18 @@
 
 此文件僅記錄 `lawapp`。每次接手先核對 Git 現況與最新驗收，不得把同層 `time_recorder` 的分支、測試、資料或部署狀態套用到此專案。
 
+## 目前快照（2026-11-20，TestFlight 回測全面修補與 Build 4 準備）
+
+- 分支 `redesign/home-responsive-carousel`，基準 Commit `7596c66`。依據 TestFlight `1.1.0 (3)` 實機回測修正 6 項問題：
+  1. **首頁卡片讀取失敗根因修復**：發現 `home_v2_feed_stream.dart` 所引用之 `case-delivery-labor-2152`、`case-chang-will-1764`、`case-support-exemption-1118`、`case-tsmc-secret-1589` 未存在於遠端 Supabase `public.cases`，已透過 Supabase MCP `execute_sql` 補齊寫入（維持正式來源契約不變）。
+  2. **法務動態通知抽屜底部截斷修復**：`home_page.dart` 將 `SafeArea(top: false)` 移入底色 `Container` 內，消除底部透明缺口。
+  3. **懸浮島微陰影**：`island_bottom_nav.dart` 加入雙層柔和陰影。
+  4. **紀事頁「大家都在討論」過場與資訊優化**：移除 `discussing_now_section.dart` 與 `discussion_detail_page.dart` 的 `Hero` 飛行動畫改為標準推入；卡片顯示即時新聞標題副標與右側「關聯案數」。
+  5. **六法資料庫跨頁記憶體快取**：`statute_repository.dart` 新增跨實例靜態 `_sharedCache` 與 `_sharedInFlight`，避免每次開啟重抓 MOJ 壓縮檔。
+  6. **委任律師轉介誠實空狀態**：`lawyer_referral_sheet.dart` 隱藏 Mock 律師名單，改為「目前您身邊暫無配對成功的合作律師」＋複製案件簡報功能。
+
+以下為上一批歷史快照（TestFlight Build 2 上傳成功＋討論詳情頁 AI 即時事件背景）。
+
 ## 目前快照（2026-11-19，TestFlight Build 2 上傳成功＋討論詳情頁 AI 即時事件背景）
 
 - 分支 `redesign/home-responsive-carousel`，遠端已同步至 `a6e685b`，並已成功將 **`1.1.0 (2)`** 上傳至 TestFlight（Delivery UUID `a7c790f6-0074-4739-add0-c3161fd7493d`）。

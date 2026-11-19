@@ -230,17 +230,15 @@ class _DiscussionTrendCard extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Hero(
-                  tag: 'discussion-rank-${item.rank}',
-                  child: _CompactRankBadge(rank: displayRank, tint: item.tint),
-                ),
+                // 台灣繁體中文維護註解：移除 Hero 飛行動畫，讓點擊議題卡片採用標準 iOS 橫向推入過場。
+                _CompactRankBadge(rank: displayRank, tint: item.tint),
                 SizedBox(width: 10.w),
                 Expanded(
-                  child: Hero(
-                    tag: 'discussion-title-${item.rank}',
-                    child: Material(
-                      color: Colors.transparent,
-                      child: Text(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
                         item.title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -251,73 +249,62 @@ class _DiscussionTrendCard extends StatelessWidget {
                           height: 1.3,
                         ),
                       ),
-                    ),
+                      if (liveMetric != null &&
+                          liveMetric!.latestHeadline.isNotEmpty) ...[
+                        SizedBox(height: 3.h),
+                        Text(
+                          liveMetric!.latestHeadline,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: t.sansBody(
+                            size: 11.sp,
+                            color: t.textMuted,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
                 SizedBox(width: 8.w),
-                // 台灣繁體中文維護註解：有即時新聞量時顯示真實篇數與來源；離線時維持誠實的策展標籤。
+                // 台灣繁體中文維護註解：右側改為顯示實用的關聯案件數與焦點狀態，不再顯示無用的純新聞數字。
                 ConstrainedBox(
-                  constraints: BoxConstraints(minWidth: 72.w, maxWidth: 112.w),
+                  constraints: BoxConstraints(minWidth: 68.w, maxWidth: 108.w),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      if (liveMetric != null) ...[
-                        Text(
-                          '${liveMetric!.articleCount} 則新聞',
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.w,
+                          vertical: 2.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: t.accentBrassContainer,
+                          borderRadius: BorderRadius.circular(6.r),
+                        ),
+                        child: Text(
+                          '關聯 ${item.relatedCases.length} 案',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: t.tabularMetric(
-                            size: 13.sp,
-                            weight: FontWeight.w800,
-                            color: t.accentBrass,
+                          style: t.sansBody(
+                            size: 10.sp,
+                            weight: FontWeight.w700,
+                            color: t.accentOnBrassContainer,
                           ),
                         ),
-                        SizedBox(height: 2.h),
+                      ),
+                      if (item.relatedCases.isNotEmpty) ...[
+                        SizedBox(height: 3.h),
                         Text(
-                          'Google News',
+                          item.relatedCases.first,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: t.sansBody(
                             size: 10.sp,
                             weight: FontWeight.w600,
-                            color: t.semanticSuccess,
+                            color: t.textMuted,
                           ),
                         ),
-                      ] else ...[
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 7.w,
-                            vertical: 2.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: t.accentBrassContainer,
-                            borderRadius: BorderRadius.circular(6.r),
-                          ),
-                          child: Text(
-                            '焦點策展',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: t.sansBody(
-                              size: 10.sp,
-                              weight: FontWeight.w700,
-                              color: t.accentOnBrassContainer,
-                            ),
-                          ),
-                        ),
-                        if (item.relatedCases.isNotEmpty) ...[
-                          SizedBox(height: 3.h),
-                          Text(
-                            item.relatedCases.first,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: t.sansBody(
-                              size: 10.sp,
-                              weight: FontWeight.w600,
-                              color: t.textMuted,
-                            ),
-                          ),
-                        ],
                       ],
                     ],
                   ),
