@@ -2,6 +2,19 @@
 
 更新日期：2026-11-19。狀態只代表本機 `lawapp`，不代表遠端部署。
 
+## 本批：面試展示盤點與前夜低風險優化（基準 `b8dc013`，本機未 commit）
+
+| 項目 | 狀態 | 依據／限制 |
+| --- | --- | --- |
+| App 內建瀏覽器開啟 | 本機已改 | `statute_database_page.dart`、`share_sheet.dart`、`home_official_feed_pages.dart`、`global_search_page.dart` 改用 `LaunchMode.inAppBrowserView`。 |
+| 實驗室／語音按鈕隱藏 | 本機已改 | `profile_page.dart` 隱藏「系統整合與實驗室」入口；`law_assistant_prototype_widgets.dart` 隱藏語音按鈕，原檔與類別保留。 |
+| 案件詳情 6 大思辨功能 | 聚焦測試通過 | `test/phase24_case_library_independent_deliberation_test.dart` 14 項通過（涵蓋蘇建和案、RCA 案、湯英伸案、跨國同婚案、外役監案等獨立 profile）。 |
+| 專案靜態分析 | 通過 | `/Users/babychen/Documents/flutter/bin/cache/dart-sdk/bin/dart analyze`：`No issues found!`。 |
+| 聚焦回歸測試 | 22 項通過 | `phase21_global_search_upgrades_test.dart`、`backend_api_services_test.dart`、`supabase_source_contract_test.dart` 全數通過。 |
+| 全量測試／實機／Git | 未重跑／未編譯 | 修改前全量為 324 通過、8 失敗；本機尚未 commit、push 或編譯至 iPhone 實機驗收。 |
+
+以下為上一批歷史狀態；資料契約細節請見下方及各日期化驗收文件。
+
 ## 本批：案件庫正式內容與快取（基準 `7cd6f58`）
 
 | 項目 | 狀態 | 依據／限制 |

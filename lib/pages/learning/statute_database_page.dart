@@ -809,7 +809,8 @@ class _StatuteDetailPageState extends State<StatuteDetailPage> {
                     onPressed: () {
                       launchUrl(
                         Uri.parse(item.lawUrl),
-                        mode: LaunchMode.externalApplication,
+                        // 台灣繁體中文教學註解：改用 App 內建瀏覽器視圖（iOS SFSafariViewController），讓使用者留在 App 內瀏覽。
+                        mode: LaunchMode.inAppBrowserView,
                       );
                     },
                     icon: Icon(

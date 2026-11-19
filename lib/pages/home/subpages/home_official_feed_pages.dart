@@ -132,7 +132,8 @@ class OfficialFeedDetailPage extends StatelessWidget {
 
   Future<void> _openOfficialUrl() async {
     final uri = Uri.parse(item.url);
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
+    // 台灣繁體中文教學註解：使用 App 內建瀏覽器檢視官方來源頁面，避免直接跳離 App。
+    await launchUrl(uri, mode: LaunchMode.inAppBrowserView);
   }
 
   @override

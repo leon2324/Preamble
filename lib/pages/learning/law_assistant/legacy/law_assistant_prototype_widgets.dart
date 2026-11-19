@@ -145,8 +145,9 @@ class _AssistantInputLauncher extends StatelessWidget {
               ),
             ),
           ),
-          _AssistantRoundAction(icon: Icons.mic_none_rounded, onTap: onMic),
-          SizedBox(width: 6.w),
+          // 台灣繁體中文維護註解：語音輸入尚未接上原生辨識套件，暫時隱藏麥克風按鈕以免展示時觸發開發中提示。
+          // _AssistantRoundAction(icon: Icons.mic_none_rounded, onTap: onMic),
+          // SizedBox(width: 6.w),
           _AssistantRoundAction(
             icon: Icons.north_east_rounded,
             filled: true,

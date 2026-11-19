@@ -259,7 +259,8 @@ class ShareSheet {
   }) async {
     var launched = false;
     try {
-      launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      // 台灣繁體中文教學註解：網頁連結優先於 App 內建瀏覽器開啟，保留一鍵返回 App 的體驗。
+      launched = await launchUrl(uri, mode: LaunchMode.inAppBrowserView);
     } on Object {
       launched = false;
     }

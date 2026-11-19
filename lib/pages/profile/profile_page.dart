@@ -6,7 +6,8 @@ import 'package:preamble/app/build_info.dart';
 import 'package:preamble/components/navigation/app_shell_content_insets.dart';
 import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:preamble/components/subscription/morandi_paywall_sheet.dart';
-import 'package:preamble/pages/profile/apple_ecosystem_demo_page.dart';
+// 台灣繁體中文維護註解：MAIC 實驗室入口暫時隱藏，保留 import 註解供未來重新啟用。
+// import 'package:preamble/pages/profile/apple_ecosystem_demo_page.dart';
 import 'package:preamble/pages/profile/widgets/profile_editor.dart';
 import 'package:preamble/pages/profile/widgets/profile_widgets.dart';
 import 'package:preamble/theme/adaptive_layout.dart';
@@ -365,18 +366,19 @@ class _ProfilePageState extends State<ProfilePage> {
                     subtitle: '檢視 AI 非正式法律意見與責任限制說明',
                     onTap: () => _showDisclaimerSheet(context),
                   ),
-                  SettingsTile(
-                    icon: PhosphorIconsRegular.deviceMobile,
-                    iconColor: t.textSecondary,
-                    iconBgColor: t.surfaceSubtle,
-                    title: '系統整合與實驗室',
-                    subtitle: 'iOS 小工具與捷徑展示',
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (_) => const AppleEcosystemDemoPage(),
-                      ),
-                    ),
-                  ),
+                  // 台灣繁體中文維護註解：MAIC 實驗室入口暫時隱藏，保留 AppleEcosystemDemoPage 原檔待後續計畫重新啟用。
+                  // SettingsTile(
+                  //   icon: PhosphorIconsRegular.deviceMobile,
+                  //   iconColor: t.textSecondary,
+                  //   iconBgColor: t.surfaceSubtle,
+                  //   title: '系統整合與實驗室',
+                  //   subtitle: 'iOS 小工具與捷徑展示',
+                  //   onTap: () => Navigator.of(context).push(
+                  //     MaterialPageRoute<void>(
+                  //       builder: (_) => const AppleEcosystemDemoPage(),
+                  //     ),
+                  //   ),
+                  // ),
                   SettingsTile(
                     icon: PhosphorIconsRegular.info,
                     iconColor: t.textSecondary,

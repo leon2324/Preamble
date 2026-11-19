@@ -1374,7 +1374,8 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
   }
 
   Future<bool> _openExternalUri(Uri uri) {
-    return launchUrl(uri, mode: LaunchMode.externalApplication);
+    // 台灣繁體中文教學註解：搜尋頁外部來源改以 App 內建瀏覽器開啟，需要時可從右上／右下切換至外部 Safari。
+    return launchUrl(uri, mode: LaunchMode.inAppBrowserView);
   }
 
   Uri? _sourceUriFor(_SearchResult item) {

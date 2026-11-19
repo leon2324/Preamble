@@ -2,6 +2,14 @@
 
 此文件僅記錄 `lawapp`。每次接手先核對 Git 現況與最新驗收，不得把同層 `time_recorder` 的分支、測試、資料或部署狀態套用到此專案。
 
+## 目前快照（2026-11-19，面試展示盤點與前夜低風險優化）
+
+- 分支 `redesign/home-responsive-carousel`，基準 Commit `b8dc013`（本機有未 commit 修改）。本輪完成三項低風險展示優化：全站網頁 `launchUrl` 改為 `LaunchMode.inAppBrowserView`、隱藏 `profile_page.dart` 的「系統整合與實驗室」入口、隱藏舊版小法助語音麥克風按鈕。
+- 驗證：`dart analyze` 無問題（`No issues found!`）；`test/phase24_case_library_independent_deliberation_test.dart` 14 項通過；`phase21_global_search_upgrades_test.dart` + `backend_api_services_test.dart` + `supabase_source_contract_test.dart` 22 項通過。先前全量 `flutter test`（修改前）為 324 通過、8 失敗。
+- 盤點與風險細節見[面試展示盤點與風險紀錄](INTERVIEW_DEMO_READINESS_AUDIT_2026-11-19.md)；尚未重新 build 到實機或 commit。
+
+以下為上一批歷史快照（案件庫正式快取），仍為目前資料層契約基準。
+
 ## 目前快照（2026-11-19，案件庫正式快取）
 
 - 分支 `redesign/home-responsive-carousel`，開工基準 Commit `7cd6f58`。本批停止正式模式的內建案件種子初始化與舊 SQLite 正文優先讀取；正式詳情每次由雲端確認，只合併本機收藏／追蹤標記。
