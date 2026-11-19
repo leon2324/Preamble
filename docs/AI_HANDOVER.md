@@ -2,6 +2,14 @@
 
 此文件僅記錄 `lawapp`。每次接手先核對 Git 現況與最新驗收，不得把同層 `time_recorder` 的分支、測試、資料或部署狀態套用到此專案。
 
+## 目前快照（2026-11-19，即時新聞每日熱度曲線與 TestFlight 打包）
+
+- 分支 `redesign/home-responsive-carousel`，基準 Commit `35b004d`。已將 Supabase `trending-topics` Edge Function 升級至 v4，依每則新聞 `<pubDate>` 統計近 7 天每日報導量（`trendPoints`）。
+- `DiscussionDetailPage` 恢復 `InteractiveTrendChart` 與 `InteractivePollQuizCard`，並將即時 `liveTrendPoints` 優先灌入曲線圖（離線時退回內建曲線），同時保留小法助法律焦點透視、關聯歷史卷宗與下方 4 則可點開的相關新聞來源。
+- 驗證：`dart analyze` 無問題；`test/phase20_journal_upgrades_test.dart` 4 項通過。接著執行 Commit、push GitHub、重包 Release IPA（`1.1.0+2`）與 `xcrun altool` 上傳 TestFlight。
+
+以下為上一批歷史快照（紀事頁即時新聞熱度榜與內頁去 mock 化）。
+
 ## 目前快照（2026-11-19，紀事頁即時新聞熱度榜與內頁去 mock 化）
 
 - 分支 `redesign/home-responsive-carousel`，基準 Commit `a9b8bab`。已將 Supabase `trending-topics` Edge Function 升級至 v3（精準台灣在地關鍵字過濾並回傳前 6 則新聞標題、來源與連結）。

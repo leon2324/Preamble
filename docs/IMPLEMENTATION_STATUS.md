@@ -2,6 +2,16 @@
 
 更新日期：2026-11-19。狀態只代表本機 `lawapp`，不代表遠端部署。
 
+## 本批：即時新聞每日熱度曲線與 TestFlight 打包（基準 `35b004d`）
+
+| 項目 | 狀態 | 依據／限制 |
+| --- | --- | --- |
+| `trending-topics` v4 | 已部署 (`ACTIVE`) | 新增近 7 天每日報導量統計（`trendPoints`）供內頁趨勢圖繪製。 |
+| `InteractiveTrendChart` 即時曲線 | 本機已改 | `DiscussionDetailPage` 優先以即時每日報導量繪製互動折線圖，並保留社群意向問答、小法助透視、關聯卷宗與新聞來源。 |
+| 靜態分析與紀事測試 | 通過 | `dart analyze` 無問題；`test/phase20_journal_upgrades_test.dart` 4 項通過。 |
+
+以下為上一批狀態（紀事頁內頁即時新聞與去 mock 化）。
+
 ## 本批：紀事頁內頁即時新聞與去 mock 化（基準 `a9b8bab`）
 
 | 項目 | 狀態 | 依據／限制 |

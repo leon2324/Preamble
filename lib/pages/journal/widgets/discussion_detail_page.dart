@@ -20,12 +20,14 @@ class DiscussionDetailPage extends StatefulWidget {
     required this.palette,
     this.liveArticleCount,
     this.liveArticles = const [],
+    this.liveTrendPoints = const [],
   });
 
   final DiscussionTrendItem item;
   final JournalPalette palette;
   final int? liveArticleCount;
   final List<LiveNewsArticle> liveArticles;
+  final List<HomeDiscussionTrendPoint> liveTrendPoints;
 
   @override
   State<DiscussionDetailPage> createState() => _DiscussionDetailPageState();
@@ -174,12 +176,51 @@ class _DiscussionDetailPageState extends State<DiscussionDetailPage> {
               ),
               SizedBox(height: 20.h),
 
+              // 即時討論熱度趨勢圖（優先使用 Google News 每日報導量；離線時退回內建曲線）
+              _buildSectionTitle(
+                widget.liveTrendPoints.length >= 2
+                    ? '討論熱度趨勢（Google News 即時統計）'
+                    : '討論熱度趨勢',
+                Icons.analytics_outlined,
+              ),
+              SizedBox(height: 8.h),
+              InteractiveTrendChart(
+                topic: topic,
+                palette: widget.palette,
+                overridePoints: widget.liveTrendPoints,
+              ),
+              SizedBox(height: 20.h),
+
+              // 小法助 AI 法律焦點透視卡
+              _buildAiLegalInsightCard(topic),
+              SizedBox(height: 20.h),
+
+              // 社群意向與知識問答
+              _buildSectionTitle('社群意向與知識問答', Icons.how_to_vote_rounded),
+              SizedBox(height: 8.h),
+              InteractivePollQuizCard(
+                topic: topic,
+                palette: widget.palette,
+                tint: widget.item.tint,
+              ),
+              SizedBox(height: 20.h),
+
+              // Related Cases Horizontal Carousel
+              _buildSectionTitle(
+                  '關聯歷史卷宗 (進入案件圖書館)', Icons.library_books_outlined),
+              SizedBox(height: 10.h),
+              RelatedCasesCarousel(
+                topicIndex: widget.item.fullTopicIndex,
+                palette: widget.palette,
+              ),
+              SizedBox(height: 20.h),
+
               // 即時台灣公開新聞報導（App 內建瀏覽器開啟）
               if (widget.liveArticles.isNotEmpty) ...[
                 _buildSectionTitle(
-                    '近期公開新聞報導（Google News 台灣）', Icons.newspaper_rounded),
+                    '相關新聞來源（點擊於 App 內閱讀）', Icons.newspaper_rounded),
                 SizedBox(height: 10.h),
-                for (final article in widget.liveArticles)
+                for (final article in widget.liveArticles.take(4))
                   Padding(
                     padding: EdgeInsets.only(bottom: 8.h),
                     child: Material(
@@ -245,20 +286,6 @@ class _DiscussionDetailPageState extends State<DiscussionDetailPage> {
                   ),
                 SizedBox(height: 16.h),
               ],
-
-              // 小法助 AI 法律焦點透視卡
-              _buildAiLegalInsightCard(topic),
-              SizedBox(height: 20.h),
-
-              // Related Cases Horizontal Carousel
-              _buildSectionTitle(
-                  '關聯歷史卷宗 (進入案件圖書館)', Icons.library_books_outlined),
-              SizedBox(height: 10.h),
-              RelatedCasesCarousel(
-                topicIndex: widget.item.fullTopicIndex,
-                palette: widget.palette,
-              ),
-              SizedBox(height: 24.h),
             ],
           ),
         ),
@@ -673,10 +700,12 @@ class InteractiveTrendChart extends StatefulWidget {
     super.key,
     required this.topic,
     required this.palette,
+    this.overridePoints = const [],
   });
 
   final HomeDiscussionTopic topic;
   final JournalPalette palette;
+  final List<HomeDiscussionTrendPoint> overridePoints;
 
   @override
   State<InteractiveTrendChart> createState() => _InteractiveTrendChartState();
@@ -687,7 +716,9 @@ class _InteractiveTrendChartState extends State<InteractiveTrendChart> {
 
   @override
   Widget build(BuildContext context) {
-    final points = widget.topic.trendPoints;
+    final points = widget.overridePoints.length >= 2
+        ? widget.overridePoints
+        : widget.topic.trendPoints;
     final lineColor = const Color(0xFFFF7A1A);
 
     return Container(

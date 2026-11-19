@@ -22,12 +22,14 @@ class _LiveTopicMetric {
     required this.articleCount,
     required this.latestHeadline,
     required this.articles,
+    required this.trendPoints,
   });
 
   final String title;
   final int articleCount;
   final String latestHeadline;
   final List<LiveNewsArticle> articles;
+  final List<HomeDiscussionTrendPoint> trendPoints;
 }
 
 class DiscussingNowSection extends StatefulWidget {
@@ -90,12 +92,28 @@ class _DiscussingNowSectionState extends State<DiscussingNowSection> {
             }
           }
         }
+        final rawTrend = item['trendPoints'];
+        final trendPoints = <HomeDiscussionTrendPoint>[];
+        if (rawTrend is List) {
+          for (final tp in rawTrend.whereType<Map<String, dynamic>>()) {
+            final dateLabel = (tp['dateLabel'] as String? ?? '').trim();
+            final tpCount = (tp['count'] as num?)?.toInt() ?? 0;
+            if (dateLabel.isNotEmpty) {
+              trendPoints.add(HomeDiscussionTrendPoint(
+                dateLabel: dateLabel,
+                volumeLabel: '$tpCount 則報導',
+                annotation: 'Google News 台灣 RSS 即時統計',
+              ));
+            }
+          }
+        }
         if (title.isNotEmpty && count > 0) {
           mapped[title] = _LiveTopicMetric(
             title: title,
             articleCount: count,
             latestHeadline: headline,
             articles: articles,
+            trendPoints: trendPoints,
           );
         }
       }
@@ -183,6 +201,7 @@ class _DiscussionTrendCard extends StatelessWidget {
                 palette: palette,
                 liveArticleCount: liveMetric?.articleCount,
                 liveArticles: liveMetric?.articles ?? const [],
+                liveTrendPoints: liveMetric?.trendPoints ?? const [],
               ),
             ),
           );
