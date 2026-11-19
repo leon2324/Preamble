@@ -11,16 +11,21 @@ import 'package:preamble/pages/journal/data/journal_page_items.dart';
 import 'package:preamble/pages/journal/widgets/journal_palette.dart';
 import 'package:preamble/data/legal_brain/legal_syllogism_engine.dart';
 import 'package:preamble/pages/learning/know_law_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DiscussionDetailPage extends StatefulWidget {
   const DiscussionDetailPage({
     super.key,
     required this.item,
     required this.palette,
+    this.liveArticleCount,
+    this.liveArticles = const [],
   });
 
   final DiscussionTrendItem item;
   final JournalPalette palette;
+  final int? liveArticleCount;
+  final List<LiveNewsArticle> liveArticles;
 
   @override
   State<DiscussionDetailPage> createState() => _DiscussionDetailPageState();
@@ -149,109 +154,100 @@ class _DiscussionDetailPageState extends State<DiscussionDetailPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildStatItem(
-                        '策展順位', '#${topic.rank}', Icons.assessment_rounded),
+                    if (widget.liveArticleCount != null)
+                      _buildStatItem('近期報導量', '${widget.liveArticleCount} 則',
+                          Icons.newspaper_rounded)
+                    else
+                      _buildStatItem(
+                          '議題索引', '#${topic.rank}', Icons.assessment_rounded),
                     _buildStatItem('關聯案例', '${widget.item.relatedCases.length} 案',
                         Icons.library_books_rounded),
                     _buildStatItem(
-                        '資料性質', '示範策展', Icons.fact_check_outlined),
+                      '資料來源',
+                      widget.liveArticles.isNotEmpty
+                          ? 'Google News'
+                          : '案件圖書館',
+                      Icons.public_rounded,
+                    ),
                   ],
                 ),
               ),
               SizedBox(height: 20.h),
 
-              // Slogan
-              Text(
-                homeDiscussionFeed.collectionSlogan,
-                style: TextStyle(
-                  fontSize: 10.8.sp,
-                  color: widget.palette.secondaryText.withValues(alpha: 0.8),
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-              SizedBox(height: 12.h),
-
-              // Interactive trend line chart with touch-sensitive tooltips
-              _buildSectionTitle('議題討論曲線（策展示意）', Icons.analytics_outlined),
-              SizedBox(height: 8.h),
-              InteractiveTrendChart(topic: topic, palette: widget.palette),
-              SizedBox(height: 20.h),
-
-              // Overview
-              _buildSectionTitle('議題簡介與升溫原因', Icons.info_outline_rounded),
-              SizedBox(height: 8.h),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(14.w),
-                decoration: BoxDecoration(
-                  color: widget.palette.surface,
-                  borderRadius: BorderRadius.circular(16.r),
-                  border: Border.all(color: widget.palette.border),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      topic.overview,
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        height: 1.5,
-                        color: widget.palette.primaryText,
+              // 即時台灣公開新聞報導（App 內建瀏覽器開啟）
+              if (widget.liveArticles.isNotEmpty) ...[
+                _buildSectionTitle(
+                    '近期公開新聞報導（Google News 台灣）', Icons.newspaper_rounded),
+                SizedBox(height: 10.h),
+                for (final article in widget.liveArticles)
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 8.h),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(14.r),
+                        onTap: () {
+                          final uri = Uri.tryParse(article.url);
+                          if (uri != null) {
+                            launchUrl(uri, mode: LaunchMode.inAppBrowserView);
+                          }
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(12.w),
+                          decoration: BoxDecoration(
+                            color: widget.palette.surface,
+                            borderRadius: BorderRadius.circular(14.r),
+                            border: Border.all(color: widget.palette.border),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      article.title,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 13.sp,
+                                        fontWeight: FontWeight.w700,
+                                        height: 1.4,
+                                        color: widget.palette.primaryText,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4.h),
+                                    Text(
+                                      article.source,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 11.sp,
+                                        color: widget.item.tint,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 8.w),
+                              Icon(
+                                CupertinoIcons.arrow_up_right_square,
+                                size: 17.sp,
+                                color: widget.palette.secondaryText,
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                    SizedBox(height: 10.h),
-                    Divider(color: widget.palette.border),
-                    SizedBox(height: 8.h),
-                    Text(
-                      '今日討論點：',
-                      style: TextStyle(
-                        fontSize: 11.5.sp,
-                        fontWeight: FontWeight.bold,
-                        color: widget.item.tint,
-                      ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      widget.item.whyHot,
-                      style: TextStyle(
-                        fontSize: 12.5.sp,
-                        height: 1.5,
-                        color: widget.palette.secondaryText,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 18.h),
+                  ),
+                SizedBox(height: 16.h),
+              ],
 
               // 小法助 AI 法律焦點透視卡
               _buildAiLegalInsightCard(topic),
-              SizedBox(height: 20.h),
-
-              // Collapsible progressive timeline
-              _buildSectionTitle('事件關鍵節點', Icons.history_edu_rounded),
-              SizedBox(height: 12.h),
-              InteractiveTimelineSection(
-                events: topic.timelineEvents,
-                palette: widget.palette,
-                tint: widget.item.tint,
-              ),
-              SizedBox(height: 20.h),
-
-              // Poll / Quiz Section
-              _buildSectionTitle('社群意向與知識問答', Icons.how_to_vote_rounded),
-              SizedBox(height: 8.h),
-              InteractivePollQuizCard(
-                topic: topic,
-                palette: widget.palette,
-                tint: widget.item.tint,
-              ),
-              SizedBox(height: 20.h),
-
-              // Latest Comment
-              _buildSectionTitle('最新社群觀點', Icons.chat_bubble_outline_rounded),
-              SizedBox(height: 8.h),
-              _buildCommentCard(topic.latestComment, widget.palette),
               SizedBox(height: 20.h),
 
               // Related Cases Horizontal Carousel

@@ -21,11 +21,13 @@ class _LiveTopicMetric {
     required this.title,
     required this.articleCount,
     required this.latestHeadline,
+    required this.articles,
   });
 
   final String title;
   final int articleCount;
   final String latestHeadline;
+  final List<LiveNewsArticle> articles;
 }
 
 class DiscussingNowSection extends StatefulWidget {
@@ -72,11 +74,28 @@ class _DiscussingNowSectionState extends State<DiscussingNowSection> {
         final title = (item['title'] as String? ?? '').trim();
         final count = (item['articleCount'] as num?)?.toInt() ?? 0;
         final headline = (item['latestHeadline'] as String? ?? '').trim();
+        final rawArticles = item['articles'];
+        final articles = <LiveNewsArticle>[];
+        if (rawArticles is List) {
+          for (final a in rawArticles.whereType<Map<String, dynamic>>()) {
+            final aTitle = (a['title'] as String? ?? '').trim();
+            final aUrl = (a['url'] as String? ?? '').trim();
+            final aSource = (a['source'] as String? ?? 'Google News').trim();
+            if (aTitle.isNotEmpty && aUrl.isNotEmpty) {
+              articles.add(LiveNewsArticle(
+                title: aTitle,
+                url: aUrl,
+                source: aSource,
+              ));
+            }
+          }
+        }
         if (title.isNotEmpty && count > 0) {
           mapped[title] = _LiveTopicMetric(
             title: title,
             articleCount: count,
             latestHeadline: headline,
+            articles: articles,
           );
         }
       }
@@ -162,6 +181,8 @@ class _DiscussionTrendCard extends StatelessWidget {
               builder: (context) => DiscussionDetailPage(
                 item: item,
                 palette: palette,
+                liveArticleCount: liveMetric?.articleCount,
+                liveArticles: liveMetric?.articles ?? const [],
               ),
             ),
           );

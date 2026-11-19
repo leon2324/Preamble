@@ -1,5 +1,18 @@
 import 'package:flutter/material.dart';
 
+/// 即時公開新聞條目（來源：Google News 台灣 RSS via Supabase Edge Function）。
+class LiveNewsArticle {
+  const LiveNewsArticle({
+    required this.title,
+    required this.url,
+    required this.source,
+  });
+
+  final String title;
+  final String url;
+  final String source;
+}
+
 /// 社會討論趨勢資料。
 ///
 /// 記事頁這裡不是直接吃首頁完整討論模型，而是先整理成排行榜與摘要 Bottom Sheet
