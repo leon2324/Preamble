@@ -14,11 +14,14 @@ class SearchApiService {
     AuthTokenProvider authTokenProvider = const GuestAuthTokenProvider(),
     String? baseUrl,
   })  : _client = client ?? http.Client(),
+        _ownsClient = client == null,
         _authTokenProvider = authTokenProvider,
         _baseUrl = baseUrl ??
             const String.fromEnvironment('PREAMBLE_API_BASE_URL').trim();
 
   final http.Client _client;
+  // 台灣繁體中文教學註解：呼叫端注入的 client 由呼叫端管理，避免共用連線被提早關閉。
+  final bool _ownsClient;
   final AuthTokenProvider _authTokenProvider;
   final String _baseUrl;
 
@@ -48,7 +51,7 @@ class SearchApiService {
   }
 
   void dispose() {
-    _client.close();
+    if (_ownsClient) _client.close();
   }
 
   Uri _uri(String path, {Map<String, String>? queryParams}) {

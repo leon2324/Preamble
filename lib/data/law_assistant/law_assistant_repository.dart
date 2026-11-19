@@ -12,9 +12,12 @@ import 'package:preamble/utils/typing_simulator.dart';
 /// 這樣後端尚未設定時 App 仍可展示完整流程，而且不會把 AI provider key 放在 Flutter。
 class LawAssistantRepository {
   LawAssistantRepository({LawAssistantApiService? apiService})
-      : _apiService = apiService ?? LawAssistantApiService();
+      : _apiService = apiService ?? LawAssistantApiService(),
+        _ownsApiService = apiService == null;
 
   final LawAssistantApiService _apiService;
+  // 台灣繁體中文教學註解：只有本 repository 建立的 service 才在結束時釋放。
+  final bool _ownsApiService;
   final Map<String, LawAssistantConversation> _mockConversations = {};
 
   bool get isBackendConfigured => _apiService.hasConfiguredBackend;
@@ -36,7 +39,8 @@ class LawAssistantRepository {
     final maskedPrompt = PiiDataMasker.mask(prompt);
 
     if (isBackendConfigured) {
-      final conversation = await _apiService.createConversation(prompt: maskedPrompt);
+      final conversation =
+          await _apiService.createConversation(prompt: maskedPrompt);
       return conversation.copyWith(isGuest: isGuestSession);
     }
 
@@ -67,8 +71,8 @@ class LawAssistantRepository {
       );
     }
 
-    final existing =
-        _mockConversations[conversationId] ?? _mockConversation(maskedPrompt, false);
+    final existing = _mockConversations[conversationId] ??
+        _mockConversation(maskedPrompt, false);
     final now = DateTime.now();
     final messages = [
       ...existing.messages,
@@ -78,7 +82,8 @@ class LawAssistantRepository {
         content: maskedPrompt,
         createdAt: now,
       ),
-      _mockAssistantMessage(maskedPrompt, now.add(const Duration(milliseconds: 1))),
+      _mockAssistantMessage(
+          maskedPrompt, now.add(const Duration(milliseconds: 1))),
     ];
     final updated = existing.copyWith(
       preview: maskedPrompt,
@@ -141,7 +146,7 @@ class LawAssistantRepository {
   }
 
   void dispose() {
-    _apiService.dispose();
+    if (_ownsApiService) _apiService.dispose();
   }
 
   LawAssistantConversation _mockConversation(
@@ -201,7 +206,8 @@ class LawAssistantRepository {
     final goldenPhrasePrefix = insight.tacticalGoldenPhrase.isNotEmpty
         ? '【💬 現場 / LINE 應對金句（可直接複製發送或照著唸）】：\n${insight.tacticalGoldenPhrase}\n\n'
         : '';
-    final fullReport = '$reassurancePrefix$goldenPhrasePrefix${analysis.toDetailedReport()}';
+    final fullReport =
+        '$reassurancePrefix$goldenPhrasePrefix${analysis.toDetailedReport()}';
 
     return LawAssistantMessage(
       id: 'mock-assistant-${createdAt.microsecondsSinceEpoch}',
@@ -224,8 +230,6 @@ class LawAssistantRepository {
       insight: insight,
     );
   }
-
-
 
   String _categoryForPrompt(String prompt) {
     if (prompt.contains('租') || prompt.contains('押金')) return '租屋';

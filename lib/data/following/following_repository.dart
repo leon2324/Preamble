@@ -3,9 +3,12 @@ import 'package:preamble/data/following/following_models.dart';
 
 class FollowingRepository {
   FollowingRepository({FollowingApiService? apiService})
-      : _apiService = apiService ?? FollowingApiService();
+      : _apiService = apiService ?? FollowingApiService(),
+        _ownsApiService = apiService == null;
 
   final FollowingApiService _apiService;
+  // 台灣繁體中文教學註解：只釋放 repository 自建的 service，保留外部共用實例。
+  final bool _ownsApiService;
   FollowingSummary _summary = FollowingSummary.empty();
 
   bool get isBackendConfigured => _apiService.hasConfiguredBackend;
@@ -89,7 +92,7 @@ class FollowingRepository {
   }
 
   void dispose() {
-    _apiService.dispose();
+    if (_ownsApiService) _apiService.dispose();
   }
 
   Future<void> _setFollowed({

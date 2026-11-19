@@ -9,9 +9,13 @@ import 'package:preamble/data/moj/moj_feed_item.dart';
 /// 法務部有 RSS 說明頁，但實務上公開列表頁的資料更容易穩定取得標題與官方連結；
 /// 這裡只抓首頁可見的清單項目，裁判書與全文檢索仍應交給後端同步處理。
 class MojFeedService {
-  MojFeedService({http.Client? client}) : _client = client ?? http.Client();
+  MojFeedService({http.Client? client})
+      : _client = client ?? http.Client(),
+        _ownsClient = client == null;
 
   final http.Client _client;
+  // 台灣繁體中文教學註解：只有本服務自行建立的 HTTP client 才在 dispose 時關閉。
+  final bool _ownsClient;
 
   Future<List<MojFeedItem>> fetchItems(MojFeedCategory category) async {
     late final http.Response response;
@@ -39,7 +43,7 @@ class MojFeedService {
   }
 
   void dispose() {
-    _client.close();
+    if (_ownsClient) _client.close();
   }
 
   List<MojFeedItem> _parseListItems(String html, MojFeedCategory category) {

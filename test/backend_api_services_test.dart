@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -50,7 +51,9 @@ void main() {
       expect(service.token, 'jwt-member-123');
     });
 
-    test('AuthHttpClient 401 Interceptor automatically refreshes token and retries request', () async {
+    test(
+        'AuthHttpClient 401 Interceptor automatically refreshes token and retries request',
+        () async {
       var requestCount = 0;
       var refreshCalled = false;
 
@@ -100,6 +103,90 @@ void main() {
       expect(user?.displayName, '刷新後會員');
       expect(service.token, 'new-jwt-token-456');
     });
+
+    test('並發 401 共用一次刷新，且兩個請求都使用新 Token', () async {
+      var token = 'old-token';
+      var refreshCount = 0;
+      final refreshGate = Completer<void>();
+      final client = AuthHttpClient(
+        inner: MockClient((request) async {
+          if (request.headers['Authorization'] == 'Bearer old-token') {
+            return http.Response('', 401);
+          }
+          expect(request.headers['Authorization'], 'Bearer new-token');
+          return http.Response('ok', 200);
+        }),
+        tokenGetter: () => token,
+        onRefreshToken: () async {
+          refreshCount++;
+          await refreshGate.future;
+          token = 'new-token';
+          return token;
+        },
+      );
+
+      final first = client.get(Uri.parse('https://example.test/one'));
+      final second = client.get(Uri.parse('https://example.test/two'));
+      await Future<void>.delayed(Duration.zero);
+      expect(refreshCount, 1);
+      refreshGate.complete();
+      final responses = await Future.wait([first, second]);
+      expect(responses.map((response) => response.statusCode), [200, 200]);
+      expect(refreshCount, 1);
+      client.close();
+    });
+
+    test('不可重送的串流請求收到 401 時保留原回應', () async {
+      var refreshCount = 0;
+      var sendCount = 0;
+      final client = AuthHttpClient(
+        inner: MockClient((request) async {
+          sendCount++;
+          return http.Response('', 401);
+        }),
+        tokenGetter: () => 'old-token',
+        onRefreshToken: () async {
+          refreshCount++;
+          return 'new-token';
+        },
+      );
+      final request = http.StreamedRequest(
+        'POST',
+        Uri.parse('https://example.test/upload'),
+      );
+      request.sink.add(utf8.encode('payload'));
+      // 台灣繁體中文教學註解：先送出請求讓 MockClient 訂閱 stream；
+      // 若在 send 前等待 sink.close()，沒有讀取者時測試會永久等待。
+      unawaited(request.sink.close());
+
+      final response = await client.send(request);
+      expect(response.statusCode, 401);
+      expect(sendCount, 1);
+      expect(refreshCount, 0);
+      client.close();
+    });
+
+    test('外部指定的授權標頭不觸發受管理 Token 刷新', () async {
+      var refreshCount = 0;
+      final client = AuthHttpClient(
+        inner: MockClient((request) async {
+          expect(request.headers['Authorization'], 'Bearer external-token');
+          return http.Response('', 401);
+        }),
+        tokenGetter: () => 'managed-token',
+        onRefreshToken: () async {
+          refreshCount++;
+          return 'new-managed-token';
+        },
+      );
+      final response = await client.get(
+        Uri.parse('https://example.test/external'),
+        headers: {'Authorization': 'Bearer external-token'},
+      );
+      expect(response.statusCode, 401);
+      expect(refreshCount, 0);
+      client.close();
+    });
   });
 
   group('CaseApiService & CaseRepository Fallback Tests', () {
@@ -145,7 +232,9 @@ void main() {
       expect(cases.first.title, '遠端精選案件');
     });
 
-    test('CaseRepository seamlessly falls back to mock cases when backend fails', () async {
+    test(
+        'CaseRepository seamlessly falls back to mock cases when backend fails',
+        () async {
       final client = MockClient((request) async {
         return http.Response('Server Error', 500);
       });
@@ -199,7 +288,9 @@ void main() {
       expect(results.first.title, '租屋押金說明');
     });
 
-    test('SearchRepository falls back to multi-repository search when backend fails', () async {
+    test(
+        'SearchRepository falls back to multi-repository search when backend fails',
+        () async {
       final client = MockClient((request) async {
         return http.Response('Network Error', 503);
       });

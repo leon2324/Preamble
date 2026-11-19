@@ -9,7 +9,9 @@ import 'package:preamble/data/statutes/statute_item.dart';
 /// API 的欄位可能因版本或資料類型出現大小寫與命名差異，所以這裡用
 /// 多組候選 key 做寬鬆解析，讓 UI 不需要知道來源 JSON 的細節。
 class StatuteApiService {
-  StatuteApiService({http.Client? client}) : _client = client ?? http.Client();
+  StatuteApiService({http.Client? client})
+      : _client = client ?? http.Client(),
+        _ownsClient = client == null;
 
   static final Uri chineseLawUri = Uri.parse(
     'https://law.moj.gov.tw/api/ch/law/json',
@@ -19,6 +21,8 @@ class StatuteApiService {
   );
 
   final http.Client _client;
+  // 台灣繁體中文教學註解：外部注入的 client 可供其他法規服務共用，只有自建時才關閉。
+  final bool _ownsClient;
 
   Future<List<StatuteItem>> fetchChineseLawItems() async {
     // 使用者期待的是「台灣法規大全」，不只法律，也包含行政命令。
@@ -56,7 +60,7 @@ class StatuteApiService {
   }
 
   void dispose() {
-    _client.close();
+    if (_ownsClient) _client.close();
   }
 
   String _decodeBody(List<int> bytes) {

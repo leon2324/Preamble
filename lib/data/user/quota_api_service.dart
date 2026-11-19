@@ -37,11 +37,14 @@ class QuotaApiService {
     AuthTokenProvider authTokenProvider = const GuestAuthTokenProvider(),
     String? baseUrl,
   })  : _client = client ?? http.Client(),
+        _ownsClient = client == null,
         _authTokenProvider = authTokenProvider,
         _baseUrl = baseUrl ??
             const String.fromEnvironment('PREAMBLE_API_BASE_URL').trim();
 
   final http.Client _client;
+  // 台灣繁體中文教學註解：注入的 client 由上層管理；本服務只釋放自己建立的連線。
+  final bool _ownsClient;
   final AuthTokenProvider _authTokenProvider;
   final String _baseUrl;
 
@@ -79,7 +82,7 @@ class QuotaApiService {
   }
 
   void dispose() {
-    _client.close();
+    if (_ownsClient) _client.close();
   }
 
   Uri _uri(String path) {

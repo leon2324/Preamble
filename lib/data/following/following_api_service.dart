@@ -15,11 +15,14 @@ class FollowingApiService {
     AuthTokenProvider authTokenProvider = const GuestAuthTokenProvider(),
     String? baseUrl,
   })  : _client = client ?? http.Client(),
+        _ownsClient = client == null,
         _authTokenProvider = authTokenProvider,
         _baseUrl = baseUrl ??
             const String.fromEnvironment('PREAMBLE_API_BASE_URL').trim();
 
   final http.Client _client;
+  // 台灣繁體中文教學註解：只關閉本服務自行建立的 HTTP client，讓注入的共用 client 可繼續使用。
+  final bool _ownsClient;
   final AuthTokenProvider _authTokenProvider;
   final String _baseUrl;
 
@@ -96,7 +99,7 @@ class FollowingApiService {
   }
 
   void dispose() {
-    _client.close();
+    if (_ownsClient) _client.close();
   }
 
   FollowingSummary _summaryFromResponse(http.Response response) {

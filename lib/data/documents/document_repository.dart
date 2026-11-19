@@ -34,6 +34,7 @@ class DocumentRepository extends ChangeNotifier {
     SharedPreferences? prefs,
     this.isIncognito = false,
   })  : _client = client ?? http.Client(),
+        _ownsClient = client == null,
         _authTokenProvider = authTokenProvider,
         _baseUrl = baseUrl ??
             const String.fromEnvironment('PREAMBLE_API_BASE_URL').trim(),
@@ -47,6 +48,8 @@ class DocumentRepository extends ChangeNotifier {
 
   static const String _prefsKey = 'preamble_local_document_drafts_v1';
   final http.Client _client;
+  // 台灣繁體中文教學註解：文件 repository 可共用外部 client；只釋放自己建立的連線。
+  final bool _ownsClient;
   final AuthTokenProvider _authTokenProvider;
   final String _baseUrl;
   SharedPreferences? _prefs;
@@ -538,7 +541,7 @@ class DocumentRepository extends ChangeNotifier {
 
   @override
   void dispose() {
-    _client.close();
+    if (_ownsClient) _client.close();
     super.dispose();
   }
 

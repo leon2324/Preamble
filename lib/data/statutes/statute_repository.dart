@@ -19,9 +19,12 @@ class StatuteSearchResult {
 /// 讓 UI 可以穩定處理 loading/error/empty，而不是每個頁面自己 try/catch。
 class StatuteRepository {
   StatuteRepository({StatuteApiService? apiService})
-      : _apiService = apiService ?? StatuteApiService();
+      : _apiService = apiService ?? StatuteApiService(),
+        _ownsApiService = apiService == null;
 
   final StatuteApiService _apiService;
+  // 台灣繁體中文教學註解：外部注入的 service 可被其他 repository 共用，不由此處關閉。
+  final bool _ownsApiService;
   List<StatuteItem>? _cache;
 
   Future<List<StatuteItem>> fetchAllStatutes(
@@ -68,7 +71,7 @@ class StatuteRepository {
   }
 
   void dispose() {
-    _apiService.dispose();
+    if (_ownsApiService) _apiService.dispose();
   }
 
   int _score(StatuteItem item, String query) {

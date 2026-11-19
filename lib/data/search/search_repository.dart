@@ -16,12 +16,20 @@ class SearchRepository {
         _journalRepository = journalRepository ?? const JournalRepository(),
         _statuteRepository = statuteRepository ?? StatuteRepository(),
         _searchApiService = searchApiService ?? SearchApiService(),
+        _ownsCaseRepository = caseRepository == null,
+        _ownsStatuteRepository = statuteRepository == null,
+        _ownsSearchApiService = searchApiService == null,
         _seedResults = seedResults ?? _mockResults;
 
   final CaseRepository _caseRepository;
   final JournalRepository _journalRepository;
   final StatuteRepository _statuteRepository;
   final SearchApiService _searchApiService;
+  // 台灣繁體中文教學註解：搜尋會組合多個資料來源；只釋放自己建立的依賴，
+  // 並記得釋放自建的案件 repository，避免其 HTTP client 長期佔用資源。
+  final bool _ownsCaseRepository;
+  final bool _ownsStatuteRepository;
+  final bool _ownsSearchApiService;
   final List<SearchResultItem> _seedResults;
 
   Future<List<SearchResultItem>> searchAll(String query) async {
@@ -134,8 +142,9 @@ class SearchRepository {
   }
 
   void dispose() {
-    _statuteRepository.dispose();
-    _searchApiService.dispose();
+    if (_ownsCaseRepository) _caseRepository.dispose();
+    if (_ownsStatuteRepository) _statuteRepository.dispose();
+    if (_ownsSearchApiService) _searchApiService.dispose();
   }
 }
 

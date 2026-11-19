@@ -13,11 +13,14 @@ class OfficialFeedApiService {
     AuthTokenProvider authTokenProvider = const GuestAuthTokenProvider(),
     String? baseUrl,
   })  : _client = client ?? http.Client(),
+        _ownsClient = client == null,
         _authTokenProvider = authTokenProvider,
         _baseUrl = baseUrl ??
             const String.fromEnvironment('PREAMBLE_API_BASE_URL').trim();
 
   final http.Client _client;
+  // 台灣繁體中文教學註解：外部提供的 HTTP client 不屬於本服務，釋放時需保留給原持有者。
+  final bool _ownsClient;
   final AuthTokenProvider _authTokenProvider;
   final String _baseUrl;
 
@@ -32,7 +35,8 @@ class OfficialFeedApiService {
   }
 
   Future<List<MojFeedItem>> fetchAnnouncements() async {
-    return _fetchItems('/official-feeds/announcements', MojFeedCategory.lawUpdates);
+    return _fetchItems(
+        '/official-feeds/announcements', MojFeedCategory.lawUpdates);
   }
 
   Future<List<MojFeedItem>> _fetchItems(
@@ -61,7 +65,7 @@ class OfficialFeedApiService {
   }
 
   void dispose() {
-    _client.close();
+    if (_ownsClient) _client.close();
   }
 
   Uri _uri(String path) {

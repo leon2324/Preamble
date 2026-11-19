@@ -14,11 +14,14 @@ class CaseApiService {
     AuthTokenProvider authTokenProvider = const GuestAuthTokenProvider(),
     String? baseUrl,
   })  : _client = client ?? http.Client(),
+        _ownsClient = client == null,
         _authTokenProvider = authTokenProvider,
         _baseUrl = baseUrl ??
             const String.fromEnvironment('PREAMBLE_API_BASE_URL').trim();
 
   final http.Client _client;
+  // 台灣繁體中文教學註解：外部注入的 client 可能被多個服務共用，只有本服務建立的才由本服務關閉。
+  final bool _ownsClient;
   final AuthTokenProvider _authTokenProvider;
   final String _baseUrl;
 
@@ -45,7 +48,8 @@ class CaseApiService {
       if (category != null && category.isNotEmpty) 'category': category,
     };
     final response = await _client.get(
-      _uri('/cases/archive', queryParams: queryParams.isEmpty ? null : queryParams),
+      _uri('/cases/archive',
+          queryParams: queryParams.isEmpty ? null : queryParams),
       headers: await _headers(),
     );
     _ensureSuccess(response, '案件檔案讀取失敗');
@@ -91,7 +95,7 @@ class CaseApiService {
   }
 
   void dispose() {
-    _client.close();
+    if (_ownsClient) _client.close();
   }
 
   Uri _uri(String path, {Map<String, String>? queryParams}) {

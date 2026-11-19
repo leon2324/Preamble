@@ -6,10 +6,13 @@ class CaseRepository {
     List<LawCase>? seedCases,
     CaseApiService? apiService,
   })  : _cases = seedCases ?? _mockCases,
-        _apiService = apiService ?? CaseApiService();
+        _apiService = apiService ?? CaseApiService(),
+        _ownsApiService = apiService == null;
 
   final List<LawCase> _cases;
   final CaseApiService _apiService;
+  // 台灣繁體中文教學註解：注入的 API service 由呼叫端管理，repository 只釋放自建實例。
+  final bool _ownsApiService;
   final Set<String> _followedCaseIds = <String>{};
 
   Future<List<LawCase>> fetchFeaturedCases() async {
@@ -106,7 +109,7 @@ class CaseRepository {
   }
 
   void dispose() {
-    _apiService.dispose();
+    if (_ownsApiService) _apiService.dispose();
   }
 }
 

@@ -7,10 +7,15 @@ class OfficialFeedRepository {
     MojFeedService? mojFeedService,
     OfficialFeedApiService? apiService,
   })  : _mojFeedService = mojFeedService ?? MojFeedService(),
-        _apiService = apiService ?? OfficialFeedApiService();
+        _apiService = apiService ?? OfficialFeedApiService(),
+        _ownsMojFeedService = mojFeedService == null,
+        _ownsApiService = apiService == null;
 
   final MojFeedService _mojFeedService;
   final OfficialFeedApiService _apiService;
+  // 台灣繁體中文教學註解：兩個來源各自追蹤所有權，避免關閉外部注入的共用服務。
+  final bool _ownsMojFeedService;
+  final bool _ownsApiService;
 
   Future<List<MojFeedItem>> fetchOfficialNews() async {
     if (_apiService.hasConfiguredBackend) {
@@ -57,8 +62,8 @@ class OfficialFeedRepository {
   }
 
   void dispose() {
-    _mojFeedService.dispose();
-    _apiService.dispose();
+    if (_ownsMojFeedService) _mojFeedService.dispose();
+    if (_ownsApiService) _apiService.dispose();
   }
 }
 

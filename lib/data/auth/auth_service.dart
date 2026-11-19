@@ -112,9 +112,10 @@ class BackendAuthService implements AuthService {
       );
       if (response.statusCode >= 200 && response.statusCode < 300) {
         final decoded = jsonDecode(utf8.decode(response.bodyBytes));
-        final userJson = decoded is Map<String, dynamic> && decoded['user'] is Map
-            ? Map<String, dynamic>.from(decoded['user'] as Map)
-            : decoded as Map<String, dynamic>;
+        final userJson =
+            decoded is Map<String, dynamic> && decoded['user'] is Map
+                ? Map<String, dynamic>.from(decoded['user'] as Map)
+                : decoded as Map<String, dynamic>;
         _currentUser = PreambleUser.fromJson(userJson);
         return _currentUser;
       }
@@ -167,7 +168,8 @@ class BackendAuthService implements AuthService {
       throw AuthApiException('登入失敗：HTTP ${response.statusCode}');
     }
 
-    final decoded = jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+    final decoded =
+        jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
     _token = decoded['token']?.toString();
     final userJson = decoded['user'] as Map<String, dynamic>? ?? {};
     _currentUser = PreambleUser.fromJson(userJson);
@@ -184,7 +186,8 @@ class BackendAuthService implements AuthService {
   Map<String, String> _headers() {
     return {
       'Content-Type': 'application/json; charset=utf-8',
-      if (_token != null && _token!.isNotEmpty) 'Authorization': 'Bearer $_token',
+      if (_token != null && _token!.isNotEmpty)
+        'Authorization': 'Bearer $_token',
     };
   }
 }
@@ -202,23 +205,37 @@ class AuthHttpClient extends http.BaseClient {
   final http.Client _inner;
   final String? Function() _tokenGetter;
   final Future<String?> Function() _onRefreshToken;
+  Future<String?>? _refreshInFlight;
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
     final token = _tokenGetter();
-    if (token != null &&
-        token.isNotEmpty &&
-        !request.headers.containsKey('Authorization')) {
+    final authorization = request.headers['Authorization'];
+    // 台灣繁體中文教學註解：BackendAuthService 會先帶入目前 Token；此時仍由
+    // 攔截器管理刷新。只有與目前 Token 不同的外部授權才不可擅自替換。
+    final hasExternalAuthorization = authorization != null &&
+        (token == null || authorization != 'Bearer $token');
+    if (token != null && token.isNotEmpty && authorization == null) {
       request.headers['Authorization'] = 'Bearer $token';
     }
 
-    // 複製 Request 以備 401 重試
-    final requestCopy = _copyRequest(request);
+    // 台灣繁體中文教學註解：只有一般 Request 的 body 可安全複製。
+    // 串流或 multipart request 消耗後不能重播，遇到 401 應交由呼叫端處理。
+    final requestCopy = !hasExternalAuthorization && request is http.Request
+        ? _copyRequest(request)
+        : null;
 
     final response = await _inner.send(request);
-    if (response.statusCode == 401) {
-      final newToken = await _onRefreshToken();
+    if (response.statusCode == 401 && requestCopy != null && token != null) {
+      // 台灣繁體中文教學註解：別的請求可能已經刷新成功；先比較目前 Token，
+      // 仍是舊值才共用同一個刷新 Future，避免並發請求輪流覆寫新 Token。
+      final currentToken = _tokenGetter();
+      final newToken = currentToken != null && currentToken != token
+          ? currentToken
+          : await _refreshOnce();
       if (newToken != null && newToken.isNotEmpty) {
+        // 台灣繁體中文教學註解：丟棄舊 401 回應前先讀完 stream，釋放連線資源。
+        await response.stream.drain<void>();
         requestCopy.headers['Authorization'] = 'Bearer $newToken';
         return _inner.send(requestCopy);
       }
@@ -226,18 +243,24 @@ class AuthHttpClient extends http.BaseClient {
     return response;
   }
 
-  http.BaseRequest _copyRequest(http.BaseRequest request) {
-    if (request is http.Request) {
-      final copy = http.Request(request.method, request.url)
-        ..headers.addAll(request.headers)
-        ..bodyBytes = request.bodyBytes
-        ..encoding = request.encoding
-        ..followRedirects = request.followRedirects
-        ..maxRedirects = request.maxRedirects
-        ..persistentConnection = request.persistentConnection;
-      return copy;
-    }
-    return request;
+  Future<String?> _refreshOnce() {
+    final pending = _refreshInFlight;
+    if (pending != null) return pending;
+    final refresh = _onRefreshToken();
+    _refreshInFlight = refresh;
+    return refresh.whenComplete(() {
+      if (identical(_refreshInFlight, refresh)) _refreshInFlight = null;
+    });
+  }
+
+  http.Request _copyRequest(http.Request request) {
+    return http.Request(request.method, request.url)
+      ..headers.addAll(request.headers)
+      ..bodyBytes = request.bodyBytes
+      ..encoding = request.encoding
+      ..followRedirects = request.followRedirects
+      ..maxRedirects = request.maxRedirects
+      ..persistentConnection = request.persistentConnection;
   }
 
   @override
