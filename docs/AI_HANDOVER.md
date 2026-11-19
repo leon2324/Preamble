@@ -2,6 +2,15 @@
 
 此文件僅記錄 `lawapp`。每次接手先核對 Git 現況與最新驗收，不得把同層 `time_recorder` 的分支、測試、資料或部署狀態套用到此專案。
 
+## 目前快照（2026-11-19，後端 API 傳輸層重構）
+
+- 分支 `redesign/home-responsive-carousel`，基準 Commit `09ce31a`。本批將共用 Token 介面移至 `lib/data/common`，讓 `PreambleState` 直接依賴該介面，並讓七個領域服務共用 URI、headers 與錯誤訊息解析；保留原端點、模型、領域例外型別、mock 回退政策與前端展示。
+- 共用傳輸物件不擁有 HTTP client；上一批的 client 所有權規則繼續由服務負責。小法助原型別 import 路徑保留 re-export。
+- 全專案靜態分析無問題；聚焦測試與文件 repository 測試合計 33 項通過。完整結果與未測事項以[本批日期化驗收](BACKEND_API_TRANSPORT_ACCEPTANCE_2026-11-19.md)為準。本批 Commit SHA 以 `git log -1` 查核；尚未 push、建立 PR、執行遠端 CI、部署或真機驗收。
+- 下一步先查本批實際 Commit 與測試，再定義各 repository 的資料來源回退契約；大型靜態資料拆分仍須資料等價驗證。
+
+以下為上一批快照；測試與部署狀態不可代替本批驗證。
+
 ## 目前快照（2026-11-19，後端資源生命週期整理）
 
 - 工作分支：`redesign/home-responsive-carousel`；開工基準 HEAD：`0e76821`。本批原始工作區已有上一輪未提交的認證修補、回歸測試與後端盤點文件，這些變更一併納入本批 Commit。

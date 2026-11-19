@@ -5,7 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:preamble/data/auth/auth_service.dart';
 import 'package:preamble/data/documents/document_repository.dart';
 import 'package:preamble/data/following/following_models.dart';
-import 'package:preamble/data/law_assistant/law_assistant_api_service.dart';
+// 台灣繁體中文教學註解：App 狀態只實作共用 Token 介面，避免依賴小法助服務的內部檔案。
+import 'package:preamble/data/common/auth_token_provider.dart';
 import 'package:preamble/data/user/law_app_access_tier.dart';
 import 'package:preamble/data/user/law_app_user.dart';
 import 'package:preamble/platform/ios_today_case_widget_bridge.dart';

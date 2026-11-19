@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:preamble/data/law_assistant/law_assistant_api_service.dart';
+import 'package:preamble/data/common/auth_token_provider.dart';
+import 'package:preamble/data/common/preamble_api_transport.dart';
 import 'package:preamble/data/moj/moj_feed_item.dart';
 
 /// 官方訊息/新聞後端代理服務。
@@ -23,6 +24,11 @@ class OfficialFeedApiService {
   final bool _ownsClient;
   final AuthTokenProvider _authTokenProvider;
   final String _baseUrl;
+  // 台灣繁體中文教學註解：請求外殼集中管理，領域服務保留自己的端點與例外型別。
+  late final PreambleApiTransport _transport = PreambleApiTransport(
+    baseUrl: _baseUrl,
+    authTokenProvider: _authTokenProvider,
+  );
 
   bool get hasConfiguredBackend => _baseUrl.isNotEmpty;
 
@@ -68,20 +74,9 @@ class OfficialFeedApiService {
     if (_ownsClient) _client.close();
   }
 
-  Uri _uri(String path) {
-    final normalizedBaseUrl = _baseUrl.endsWith('/')
-        ? _baseUrl.substring(0, _baseUrl.length - 1)
-        : _baseUrl;
-    return Uri.parse('$normalizedBaseUrl$path');
-  }
+  Uri _uri(String path) => _transport.uri(path);
 
-  Future<Map<String, String>> _headers() async {
-    final token = await _authTokenProvider.getAuthToken();
-    return {
-      'Content-Type': 'application/json; charset=utf-8',
-      if (token != null && token.isNotEmpty) 'Authorization': 'Bearer $token',
-    };
-  }
+  Future<Map<String, String>> _headers() => _transport.headers();
 
   void _ensureConfigured() {
     if (!hasConfiguredBackend) {
@@ -93,18 +88,9 @@ class OfficialFeedApiService {
 
   void _ensureSuccess(http.Response response, String fallbackMessage) {
     if (response.statusCode >= 200 && response.statusCode < 300) return;
-
-    var message = fallbackMessage;
-    try {
-      final decoded = jsonDecode(utf8.decode(response.bodyBytes));
-      if (decoded is Map && decoded['message'] != null) {
-        message = decoded['message'].toString();
-      }
-    } catch (__) {
-      // 保持 fallback 訊息
-    }
-
-    throw OfficialFeedApiException('$message（HTTP ${response.statusCode}）');
+    throw OfficialFeedApiException(
+      _transport.errorMessage(response, fallbackMessage),
+    );
   }
 }
 

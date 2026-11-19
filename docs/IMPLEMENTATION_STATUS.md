@@ -2,6 +2,18 @@
 
 更新日期：2026-11-19。狀態只代表本機 `lawapp`，不代表遠端部署。
 
+## 本批：共用 API 傳輸層（基準 `09ce31a`）
+
+| 項目 | 狀態 | 依據／限制 |
+| --- | --- | --- |
+| Token 介面與七個 API 服務 | 本機已重構 | `AuthTokenProvider` 位於 `lib/data/common`；共用 URI、headers 與錯誤訊息解析；保留各服務的端點及例外型別。 |
+| UI 與前端展示 | 本批未修改 | 只改 `lib/data`、`lib/app/app_state.dart` 的 import、測試與文件。 |
+| 全專案靜態分析 | 通過 | `dart analyze`，`No issues found!`。 |
+| 聚焦 Flutter 測試 | 33 項通過 | API 契約、資源所有權、共用傳輸層、小法助、基礎流程與文件 repository；結果見 `docs/BACKEND_API_TRANSPORT_ACCEPTANCE_2026-11-19.md`。 |
+| Git／遠端／部署 | 本批已 Commit；遠端未執行 | 基準 `09ce31a`，最新 SHA 以 `git log -1` 查核；未 push、未建立 PR、未部署。 |
+
+以下為上一批狀態；本批測試請看上方及日期化驗收。
+
 | 項目 | 狀態 | 依據／限制 |
 | --- | --- | --- |
 | UI 與前端展示 | 本批未修改 | 修改限於 `lib/data`、後端測試與文件。 |

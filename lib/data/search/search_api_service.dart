@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:preamble/data/law_assistant/law_assistant_api_service.dart';
+import 'package:preamble/data/common/auth_token_provider.dart';
+import 'package:preamble/data/common/preamble_api_transport.dart';
 import 'package:preamble/data/search/search_models.dart';
 
 /// Preamble 全局搜尋 API 服務。
@@ -24,6 +25,11 @@ class SearchApiService {
   final bool _ownsClient;
   final AuthTokenProvider _authTokenProvider;
   final String _baseUrl;
+  // 台灣繁體中文教學註解：請求外殼集中管理，領域服務保留自己的端點與例外型別。
+  late final PreambleApiTransport _transport = PreambleApiTransport(
+    baseUrl: _baseUrl,
+    authTokenProvider: _authTokenProvider,
+  );
 
   bool get hasConfiguredBackend => _baseUrl.isNotEmpty;
 
@@ -54,24 +60,10 @@ class SearchApiService {
     if (_ownsClient) _client.close();
   }
 
-  Uri _uri(String path, {Map<String, String>? queryParams}) {
-    final normalizedBaseUrl = _baseUrl.endsWith('/')
-        ? _baseUrl.substring(0, _baseUrl.length - 1)
-        : _baseUrl;
-    final uri = Uri.parse('$normalizedBaseUrl$path');
-    if (queryParams != null && queryParams.isNotEmpty) {
-      return uri.replace(queryParameters: queryParams);
-    }
-    return uri;
-  }
+  Uri _uri(String path, {Map<String, String>? queryParams}) =>
+      _transport.uri(path, queryParams: queryParams);
 
-  Future<Map<String, String>> _headers() async {
-    final token = await _authTokenProvider.getAuthToken();
-    return {
-      'Content-Type': 'application/json; charset=utf-8',
-      if (token != null && token.isNotEmpty) 'Authorization': 'Bearer $token',
-    };
-  }
+  Future<Map<String, String>> _headers() => _transport.headers();
 
   void _ensureConfigured() {
     if (!hasConfiguredBackend) {
@@ -83,18 +75,9 @@ class SearchApiService {
 
   void _ensureSuccess(http.Response response, String fallbackMessage) {
     if (response.statusCode >= 200 && response.statusCode < 300) return;
-
-    var message = fallbackMessage;
-    try {
-      final decoded = jsonDecode(utf8.decode(response.bodyBytes));
-      if (decoded is Map && decoded['message'] != null) {
-        message = decoded['message'].toString();
-      }
-    } catch (__) {
-      // 保持 fallback 訊息
-    }
-
-    throw SearchApiException('$message（HTTP ${response.statusCode}）');
+    throw SearchApiException(
+      _transport.errorMessage(response, fallbackMessage),
+    );
   }
 }
 
