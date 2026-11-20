@@ -165,10 +165,10 @@ class SupabaseLearningService {
         // 保留原有的 topic_id 順序，確保每次選出來的專題顯示順序一致
         for (final topicId in featuredIds) {
           final articles = grouped[topicId] ?? [];
-          if (articles.length == 5) {
+          if (articles.isNotEmpty) {
             final category = articles.first.category ?? '法律情境';
 
-            // 建立 5 個單元
+            // 建立該專題的所有學習單元
             final List<LearningTopicUnit> units = [];
             for (final article in articles) {
               final stepNum = article.stepNumber ?? 1;
@@ -185,12 +185,13 @@ class SupabaseLearningService {
               title: '$category實務防身術第 $topicId 號',
               summary: '從具體生活案例出發，帶你釐清關於 $category 的 $topicId 號核心法律權益。',
               reasonToLearn: '涉及 $category 的糾紛在日常生活中相當常見，提前做足知識防身能省去大部分的訴訟成本。',
-              unitSummary: '5 個學習單元',
+              unitSummary: '${articles.length} 個學習單元',
               heroArticle: LearningMockArticle(
                 badge: '主專題',
                 title: '$category實務防身術第 $topicId 號：情境拆解與應對技巧',
-                summary: '本專案由 5 個單元組成，帶你循序漸進建立關於 $category 的精準判斷架構。',
-                readTime: '5 個學習單元',
+                summary:
+                    '本專案由 ${articles.length} 個單元組成，帶你循序漸進建立關於 $category 的精準判斷架構。',
+                readTime: '${articles.length} 個學習單元',
                 heroNote: '不要憑直覺解決爭議。先搞懂權利，再掌握證據，最後才談具體求償。',
                 keyPoints: [
                   '了解 $category 的法律請求權基礎與核心規範。',
@@ -290,7 +291,7 @@ class SupabaseLearningService {
         final articles = list
             .map((item) => _mapJsonToArticle(item as Map<String, dynamic>))
             .toList();
-        if (articles.length == 5) {
+        if (articles.isNotEmpty) {
           final List<LearningTopicUnit> units = [];
           for (final article in articles) {
             final stepNum = article.stepNumber ?? 1;
@@ -307,12 +308,13 @@ class SupabaseLearningService {
             title: title,
             summary: '從具體生活案例出發，帶你釐清關於 $category 的 $topicId 號核心法律權益。',
             reasonToLearn: '涉及 $category 的糾紛在日常生活中相當常見，提前做足知識防身能省去大部分的訴訟成本。',
-            unitSummary: '5 個學習單元',
+            unitSummary: '${articles.length} 個學習單元',
             heroArticle: LearningMockArticle(
               badge: '主專題',
               title: '$category實務防身術第 $topicId 號：情境拆解與應對技巧',
-              summary: '本專案由 5 個單元組成，帶你循序漸進建立關於 $category 的精準判斷架構。',
-              readTime: '5 個學習單元',
+              summary:
+                  '本專案由 ${articles.length} 個單元組成，帶你循序漸進建立關於 $category 的精準判斷架構。',
+              readTime: '${articles.length} 個學習單元',
               heroNote: '不要憑直覺解決爭議。先搞懂權利，再掌握證據，最後才談具體求償。',
               keyPoints: [
                 '了解 $category 的法律請求權基礎與核心規範。',

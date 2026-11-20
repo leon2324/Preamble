@@ -25,6 +25,8 @@ class DiscussionDetailPage extends StatefulWidget {
     this.liveArticleCount,
     this.liveArticles = const [],
     this.liveTrendPoints = const [],
+    this.liveSource,
+    this.livePublishedAgo,
   });
 
   final DiscussionTrendItem item;
@@ -32,6 +34,8 @@ class DiscussionDetailPage extends StatefulWidget {
   final int? liveArticleCount;
   final List<LiveNewsArticle> liveArticles;
   final List<HomeDiscussionTrendPoint> liveTrendPoints;
+  final String? liveSource;
+  final String? livePublishedAgo;
 
   @override
   State<DiscussionDetailPage> createState() => _DiscussionDetailPageState();
@@ -206,19 +210,21 @@ class _DiscussionDetailPageState extends State<DiscussionDetailPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    if (widget.liveArticleCount != null)
-                      _buildStatItem('近期報導量', '${widget.liveArticleCount} 則',
-                          Icons.newspaper_rounded)
+                    if (widget.livePublishedAgo != null)
+                      _buildStatItem('發布時間', widget.livePublishedAgo!,
+                          Icons.schedule_rounded)
                     else
                       _buildStatItem(
                           '議題索引', '#${topic.rank}', Icons.assessment_rounded),
-                    _buildStatItem('關聯案例', '${widget.item.relatedCases.length} 案',
-                        Icons.library_books_rounded),
+                    if (widget.liveArticleCount != null)
+                      _buildStatItem('相關報導', '${widget.liveArticleCount} 則',
+                          Icons.newspaper_rounded)
+                    else
+                      _buildStatItem('關聯案例', '${widget.item.relatedCases.length} 案',
+                          Icons.library_books_rounded),
                     _buildStatItem(
-                      '資料來源',
-                      widget.liveArticles.isNotEmpty
-                          ? 'Google News'
-                          : '案件圖書館',
+                      '新聞來源',
+                      widget.liveSource ?? '案件圖書館',
                       Icons.public_rounded,
                     ),
                   ],
@@ -288,11 +294,21 @@ class _DiscussionDetailPageState extends State<DiscussionDetailPage> {
               _buildAiLegalInsightCard(topic),
               SizedBox(height: 20.h),
 
-              // 事件關鍵節點時間軸
+              // 事件關鍵節點時間軸（有即時報導時改用新聞報導時間節點，避免靜態假漲幅）
               _buildSectionTitle('事件關鍵節點', Icons.history_edu_rounded),
               SizedBox(height: 12.h),
               InteractiveTimelineSection(
-                events: topic.timelineEvents,
+                events: widget.liveArticles.isNotEmpty
+                    ? List.generate(widget.liveArticles.length.clamp(0, 3), (i) {
+                        final a = widget.liveArticles[i];
+                        return HomeDiscussionTimelineEvent(
+                          pointIndex: i,
+                          timeLabel: a.source,
+                          description: a.title,
+                          impactLabel: '即時報導',
+                        );
+                      })
+                    : topic.timelineEvents,
                 palette: widget.palette,
                 tint: widget.item.tint,
               ),
@@ -305,6 +321,8 @@ class _DiscussionDetailPageState extends State<DiscussionDetailPage> {
                 topic: topic,
                 palette: widget.palette,
                 tint: widget.item.tint,
+                overrideTopicTitle:
+                    widget.liveSource != null ? widget.item.title : null,
               ),
               SizedBox(height: 20.h),
 
@@ -1371,11 +1389,13 @@ class InteractivePollQuizCard extends StatefulWidget {
     required this.topic,
     required this.palette,
     required this.tint,
+    this.overrideTopicTitle,
   });
 
   final HomeDiscussionTopic topic;
   final JournalPalette palette;
   final Color tint;
+  final String? overrideTopicTitle;
 
   @override
   State<InteractivePollQuizCard> createState() =>
@@ -1413,7 +1433,9 @@ class _InteractivePollQuizCardState extends State<InteractivePollQuizCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              poll.prompt,
+              widget.overrideTopicTitle != null
+                  ? '針對「${widget.overrideTopicTitle}」，你認為目前的法制防線是否足夠？'
+                  : poll.prompt,
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w900,

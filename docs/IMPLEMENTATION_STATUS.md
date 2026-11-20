@@ -2,6 +2,29 @@
 
 更新日期：2026-11-19。狀態只代表本機 `lawapp`，不代表遠端部署。
 
+## 本批：實機九張截圖問題全面修復（基準 `c60d599`，本機未 commit）
+
+| 項目 | 狀態 | 依據／限制 |
+| --- | --- | --- |
+| 每日專題 10 篇門檻修復 | 本機已修 | `supabase_learning_service.dart` 放寬為 `articles.isNotEmpty`（雲端每專題為 10 篇）。 |
+| 大家都在討論動態頭條 (`trending-topics` v5) | 已部署＋本機已改 | 動態抓取 Google News 台灣即時焦點標題、來源與時間，內頁曲線與時間節點同步改用真實報導資料。 |
+| 主題策展特展／詳情圖與載入文字 | 本機已修 | `curated_exhibition_shelf.dart` 預載真實案件；`case_dossier_detail_page.dart` 補上 `User-Agent` 標頭與置中「正在調閱卷宗...」。 |
+| 情境頁雲端化／AppBar／骨架波紋 | 已寫入＋本機已改 | Supabase 建立 `public.life_situation_guides`（4 領域）；`LifeSituationGuidePage`、`EditorialStoryPage`、`CaseDossierDetailPage` 改用骨架波紋載入。 |
+| 單一工具箱／專題報導頁 | 本機已修 | `learning_tools_tab.dart` 收斂至 `LegalToolkitHubPage`；新增 `editorial_story_page.dart`。 |
+| 靜態分析與回歸測試 | 通過 | `dart analyze` 無問題；`phase20_journal_upgrades_test.dart`、`learning_top_inset_test.dart`、`supabase_source_contract_test.dart` 共 16 項全數通過。 |
+
+以下為上一批狀態（首頁四大生活情境深度閱讀頁）。
+
+## 本批：首頁四大生活情境深度閱讀頁（基準 `c60d599`，本機未 commit）
+
+| 項目 | 狀態 | 依據／限制 |
+| --- | --- | --- |
+| `LifeSituationGuidePage`（4 領域 × 3 子情境） | 本機已建 | 含權利關係長文解析、社會學提醒、話術拆解、核心法條入口、關聯判例與右下角懸浮「情境工具」按鈕。 |
+| `HomeV2DashboardDock` 入口接線 | 本機已改 | 四張生活情境卡改為推入 `LifeSituationGuidePage`。 |
+| 靜態分析與首頁測試 | 通過 | `dart analyze` 無問題；`test/home_dashboard_feed_test.dart` 8 項全數通過。 |
+
+以下為上一批狀態（TestFlight 實機回測全面修補）。
+
 ## 本批：TestFlight 實機回測全面修補（基準 `7596c66`）
 
 | 項目 | 狀態 | 依據／限制 |

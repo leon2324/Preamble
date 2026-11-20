@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:preamble/app/app_state.dart';
+import 'package:preamble/pages/home/subpages/life_situation_guide_page.dart';
 import 'package:preamble/theme/preamble_tokens.dart';
 
 /// 《緒言 Preamble》溫柔日系粉彩 × 極簡任務導向首屏頂部中樞 (HomeDashboardDock)
@@ -755,6 +756,7 @@ class _HomeDashboardDockState extends State<HomeDashboardDock> {
   /// 3. 極簡任務導向核心：四大常見生活情境粉彩大按鈕（租屋／職場／網購／車禍）
   Widget _buildLifeSituationGrid(BuildContext context, PreambleTokens t) {
     final situations = <({
+      String domainId,
       String emoji,
       String title,
       String subtitle,
@@ -764,6 +766,7 @@ class _HomeDashboardDockState extends State<HomeDashboardDock> {
       Color accentColor,
     })>[
       (
+        domainId: 'rental',
         emoji: '🏠',
         title: '租屋大小事',
         subtitle: '押金不退・修繕・解約',
@@ -773,6 +776,7 @@ class _HomeDashboardDockState extends State<HomeDashboardDock> {
         accentColor: t.brandOnContainer,
       ),
       (
+        domainId: 'labor',
         emoji: '💼',
         title: '職場與薪資',
         subtitle: '加班費・資遣・離職',
@@ -782,6 +786,7 @@ class _HomeDashboardDockState extends State<HomeDashboardDock> {
         accentColor: t.accentOnBrassContainer,
       ),
       (
+        domainId: 'shopping',
         emoji: '🛍️',
         title: '網購與消費',
         subtitle: '七天退貨・瑕疵・詐騙',
@@ -791,6 +796,7 @@ class _HomeDashboardDockState extends State<HomeDashboardDock> {
         accentColor: t.semanticInfo,
       ),
       (
+        domainId: 'traffic',
         emoji: '🚗',
         title: '車禍與賠償',
         subtitle: '維修折舊・和解・求償',
@@ -881,6 +887,7 @@ class _HomeDashboardDockState extends State<HomeDashboardDock> {
   Widget _buildLifeSituationCard(
     PreambleTokens t,
     ({
+      String domainId,
       String emoji,
       String title,
       String subtitle,
@@ -894,7 +901,15 @@ class _HomeDashboardDockState extends State<HomeDashboardDock> {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () => _submitPrompt(item.prompt),
+        // 台灣繁體中文教學註解：點擊四大生活情境卡改為進入 85% 知識脈絡閱讀頁，
+        // 讓使用者先看懂權利關係，再透過右下角懸浮按鈕呼叫小法助或實戰工具。
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => LifeSituationGuidePage(domainId: item.domainId),
+            ),
+          );
+        },
         borderRadius: BorderRadius.circular(20.r),
         child: Ink(
           padding: EdgeInsets.all(14.w),

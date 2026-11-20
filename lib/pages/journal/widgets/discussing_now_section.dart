@@ -18,16 +18,20 @@ import 'package:preamble/theme/preamble_tokens.dart';
 
 class _LiveTopicMetric {
   const _LiveTopicMetric({
+    required this.rank,
     required this.title,
+    required this.source,
+    required this.publishedAgo,
     required this.articleCount,
-    required this.latestHeadline,
     required this.articles,
     required this.trendPoints,
   });
 
+  final int rank;
   final String title;
+  final String source;
+  final String publishedAgo;
   final int articleCount;
-  final String latestHeadline;
   final List<LiveNewsArticle> articles;
   final List<HomeDiscussionTrendPoint> trendPoints;
 }
@@ -42,7 +46,7 @@ class DiscussingNowSection extends StatefulWidget {
 }
 
 class _DiscussingNowSectionState extends State<DiscussingNowSection> {
-  Map<String, _LiveTopicMetric> _liveMetricsByTitle = const {};
+  List<_LiveTopicMetric> _liveTopics = const [];
 
   @override
   void initState() {
@@ -50,7 +54,7 @@ class _DiscussingNowSectionState extends State<DiscussingNowSection> {
     _loadLiveTrending();
   }
 
-  /// 台灣繁體中文教學註解：透過 Supabase Edge Function 取得 Google News 台灣公開新聞報導量；
+  /// 台灣繁體中文教學註解：透過 Supabase Edge Function 動態取得 Google News 台灣即時法制與社會焦點標題；
   /// 若離線或處於測試環境失敗，則維持誠實的「焦點策展」靜態展示，不影響頁面渲染。
   Future<void> _loadLiveTrending() async {
     if (supabaseUrl.trim().isEmpty || supabaseAnonKey.trim().isEmpty) return;
@@ -71,18 +75,21 @@ class _DiscussingNowSectionState extends State<DiscussingNowSection> {
       final rawTopics = decoded['topics'];
       if (rawTopics is! List) return;
 
-      final mapped = <String, _LiveTopicMetric>{};
-      for (final item in rawTopics.whereType<Map<String, dynamic>>()) {
+      final parsed = <_LiveTopicMetric>[];
+      for (var i = 0; i < rawTopics.length; i++) {
+        final item = rawTopics[i];
+        if (item is! Map<String, dynamic>) continue;
         final title = (item['title'] as String? ?? '').trim();
+        final source = (item['source'] as String? ?? '台灣新聞').trim();
+        final publishedAgo = (item['publishedAgo'] as String? ?? '近期').trim();
         final count = (item['articleCount'] as num?)?.toInt() ?? 0;
-        final headline = (item['latestHeadline'] as String? ?? '').trim();
         final rawArticles = item['articles'];
         final articles = <LiveNewsArticle>[];
         if (rawArticles is List) {
           for (final a in rawArticles.whereType<Map<String, dynamic>>()) {
             final aTitle = (a['title'] as String? ?? '').trim();
             final aUrl = (a['url'] as String? ?? '').trim();
-            final aSource = (a['source'] as String? ?? 'Google News').trim();
+            final aSource = (a['source'] as String? ?? source).trim();
             if (aTitle.isNotEmpty && aUrl.isNotEmpty) {
               articles.add(LiveNewsArticle(
                 title: aTitle,
@@ -107,19 +114,21 @@ class _DiscussingNowSectionState extends State<DiscussingNowSection> {
             }
           }
         }
-        if (title.isNotEmpty && count > 0) {
-          mapped[title] = _LiveTopicMetric(
+        if (title.isNotEmpty) {
+          parsed.add(_LiveTopicMetric(
+            rank: i + 1,
             title: title,
+            source: source,
+            publishedAgo: publishedAgo,
             articleCount: count,
-            latestHeadline: headline,
             articles: articles,
             trendPoints: trendPoints,
-          );
+          ));
         }
       }
-      if (mounted && mapped.isNotEmpty) {
+      if (mounted && parsed.isNotEmpty) {
         setState(() {
-          _liveMetricsByTitle = mapped;
+          _liveTopics = parsed;
         });
       }
     } catch (_) {
@@ -131,15 +140,38 @@ class _DiscussingNowSectionState extends State<DiscussingNowSection> {
 
   @override
   Widget build(BuildContext context) {
-    final hasLive = _liveMetricsByTitle.isNotEmpty;
-    final items = discussionTrendItems.take(5).toList();
-    if (hasLive) {
-      items.sort((a, b) {
-        final ca = _liveMetricsByTitle[a.title]?.articleCount ?? 0;
-        final cb = _liveMetricsByTitle[b.title]?.articleCount ?? 0;
-        return cb.compareTo(ca);
-      });
-    }
+    final hasLive = _liveTopics.isNotEmpty;
+    final paletteColors = const [
+      Color(0xFF1E7B66),
+      Color(0xFF2F6D99),
+      Color(0xFF9F6A26),
+      Color(0xFF7A5D9A),
+      Color(0xFF5D7A6E),
+    ];
+
+    final entries = hasLive
+        ? List.generate(_liveTopics.length.clamp(0, 5), (i) {
+            final live = _liveTopics[i];
+            final fallback = discussionTrendItems[
+                i % discussionTrendItems.length];
+            final dynamicItem = DiscussionTrendItem(
+              rank: i + 1,
+              title: live.title,
+              score: 0,
+              delta: live.publishedAgo,
+              whyHot: '${live.source}（${live.publishedAgo}）最新報導焦點',
+              relatedCases: fallback.relatedCases,
+              heatCurve: fallback.heatCurve,
+              heatLabels: fallback.heatLabels,
+              fullTopicIndex: i % homeDiscussionFeed.topics.length,
+              tint: paletteColors[i % paletteColors.length],
+            );
+            return (item: dynamicItem, live: live as _LiveTopicMetric?);
+          })
+        : discussionTrendItems
+            .take(5)
+            .map((item) => (item: item, live: null as _LiveTopicMetric?))
+            .toList(growable: false);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,20 +179,20 @@ class _DiscussingNowSectionState extends State<DiscussingNowSection> {
         JournalSectionHeader(
           title: '大家都在討論',
           subtitle: hasLive
-              ? '即時統計台灣近期公開新聞報導量（來源：Google News 台灣 RSS）。'
+              ? '即時抓取台灣近期法制與社會焦點新聞（來源：Google News 台灣 RSS）。'
               : '編輯精選台灣社會與法制焦點議題（示範策展，點選看完整脈絡）。',
           palette: widget.palette,
         ),
         SizedBox(height: 10.h),
-        for (var i = 0; i < items.length; i++)
+        for (var i = 0; i < entries.length; i++)
           Padding(
             padding: EdgeInsets.only(bottom: 8.h),
             child: _DiscussionTrendCard(
-              item: items[i],
-              displayRank: hasLive ? i + 1 : items[i].rank,
-              liveMetric: _liveMetricsByTitle[items[i].title],
+              item: entries[i].item,
+              displayRank: i + 1,
+              liveMetric: entries[i].live,
               palette: widget.palette,
-              isPrimary: hasLive ? i == 0 : items[i].rank == 1,
+              isPrimary: i == 0,
             ),
           ),
       ],
@@ -202,6 +234,8 @@ class _DiscussionTrendCard extends StatelessWidget {
                 liveArticleCount: liveMetric?.articleCount,
                 liveArticles: liveMetric?.articles ?? const [],
                 liveTrendPoints: liveMetric?.trendPoints ?? const [],
+                liveSource: liveMetric?.source,
+                livePublishedAgo: liveMetric?.publishedAgo,
               ),
             ),
           );
@@ -234,69 +268,50 @@ class _DiscussionTrendCard extends StatelessWidget {
                 _CompactRankBadge(rank: displayRank, tint: item.tint),
                 SizedBox(width: 10.w),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        item.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: t.serifTitle(
-                          size: 14.sp,
-                          weight: FontWeight.w800,
-                          color: isPrimary ? t.brandOnContainer : t.textPrimary,
-                          height: 1.3,
-                        ),
-                      ),
-                      if (liveMetric != null &&
-                          liveMetric!.latestHeadline.isNotEmpty) ...[
-                        SizedBox(height: 3.h),
-                        Text(
-                          liveMetric!.latestHeadline,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: t.sansBody(
-                            size: 11.sp,
-                            color: t.textMuted,
-                          ),
-                        ),
-                      ],
-                    ],
+                  child: Text(
+                    item.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: t.serifTitle(
+                      size: 14.sp,
+                      weight: FontWeight.w800,
+                      color: isPrimary ? t.brandOnContainer : t.textPrimary,
+                      height: 1.35,
+                    ),
                   ),
                 ),
                 SizedBox(width: 8.w),
-                // 台灣繁體中文維護註解：右側改為顯示實用的關聯案件數與焦點狀態，不再顯示無用的純新聞數字。
+                // 台灣繁體中文維護註解：右側顯示新聞來源與發布時間（如「中央社 · 2 小時前」），提供直覺可用的即時線索。
                 ConstrainedBox(
-                  constraints: BoxConstraints(minWidth: 68.w, maxWidth: 108.w),
+                  constraints: BoxConstraints(minWidth: 68.w, maxWidth: 112.w),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 7.w,
-                          vertical: 2.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: t.accentBrassContainer,
-                          borderRadius: BorderRadius.circular(6.r),
-                        ),
-                        child: Text(
-                          '關聯 ${item.relatedCases.length} 案',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: t.sansBody(
-                            size: 10.sp,
-                            weight: FontWeight.w700,
-                            color: t.accentOnBrassContainer,
+                      if (liveMetric != null) ...[
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 7.w,
+                            vertical: 2.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: t.accentBrassContainer,
+                            borderRadius: BorderRadius.circular(6.r),
+                          ),
+                          child: Text(
+                            liveMetric!.publishedAgo,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: t.sansBody(
+                              size: 10.sp,
+                              weight: FontWeight.w700,
+                              color: t.accentOnBrassContainer,
+                            ),
                           ),
                         ),
-                      ),
-                      if (item.relatedCases.isNotEmpty) ...[
                         SizedBox(height: 3.h),
                         Text(
-                          item.relatedCases.first,
+                          liveMetric!.source,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: t.sansBody(
@@ -305,6 +320,40 @@ class _DiscussionTrendCard extends StatelessWidget {
                             color: t.textMuted,
                           ),
                         ),
+                      ] else ...[
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 7.w,
+                            vertical: 2.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: t.accentBrassContainer,
+                            borderRadius: BorderRadius.circular(6.r),
+                          ),
+                          child: Text(
+                            '焦點策展',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: t.sansBody(
+                              size: 10.sp,
+                              weight: FontWeight.w700,
+                              color: t.accentOnBrassContainer,
+                            ),
+                          ),
+                        ),
+                        if (item.relatedCases.isNotEmpty) ...[
+                          SizedBox(height: 3.h),
+                          Text(
+                            item.relatedCases.first,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: t.sansBody(
+                              size: 10.sp,
+                              weight: FontWeight.w600,
+                              color: t.textMuted,
+                            ),
+                          ),
+                        ],
                       ],
                     ],
                   ),

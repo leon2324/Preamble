@@ -5,6 +5,7 @@ import 'package:preamble/app/app_state.dart';
 import 'package:preamble/components/home/home_content.dart';
 import 'package:preamble/components/shared/custom_toast.dart';
 import 'package:preamble/data/mock_data/home/home_mock_data.dart';
+import 'package:preamble/pages/home/subpages/editorial_story_page.dart';
 import 'package:preamble/theme/preamble_tokens.dart';
 
 /// 資訊流分類枚舉（親切白話分類）
@@ -374,10 +375,28 @@ class _HomeFeedStreamViewState extends State<HomeFeedStreamView> {
     final isSaved = appState.isCaseSaved(heroCaseId);
     final textScale = MediaQuery.textScalerOf(context).scale(1.0);
 
+    void openHeroEditorial() {
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => EditorialStoryPage(
+            categoryLabel: '今日生活話題 💡',
+            subtitleBadge: '外送與打工權益',
+            title: '跑外送算員工還是自己接案？法院這樣看平台跟外送員的關係',
+            leftLabel: '平台怎麼說',
+            leftSummary: '自由上下線、沒底薪，簽的是接案合約',
+            rightLabel: '法院怎麼看',
+            rightSummary: '派單與報酬都受演算法規定，其實就像員工一樣',
+            caseId: heroCaseId,
+            onOpenCaseDossier: widget.onNavigateToCase,
+          ),
+        ),
+      );
+    }
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () => widget.onNavigateToCase(heroCaseId),
+        onTap: openHeroEditorial,
         borderRadius: BorderRadius.circular(24.r),
         child: Ink(
           decoration: BoxDecoration(
@@ -800,6 +819,24 @@ class _HomeFeedStreamViewState extends State<HomeFeedStreamView> {
     final saved = appState.isCaseSaved(spec.caseId);
     final textScale = MediaQuery.textScalerOf(context).scale(1.0);
 
+    void openCaseStoryEditorial() {
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => EditorialStoryPage(
+            categoryLabel: '生活案例',
+            subtitleBadge: spec.courtBadge,
+            title: spec.title,
+            leftLabel: '發生什麼事',
+            leftSummary: spec.disputeContext,
+            rightLabel: '最後怎麼判',
+            rightSummary: spec.courtVerdict,
+            caseId: spec.caseId,
+            onOpenCaseDossier: widget.onNavigateToCase,
+          ),
+        ),
+      );
+    }
+
     return _buildCardShell(
       t: t,
       categoryIcon: PhosphorIconsRegular.scales,
@@ -809,12 +846,12 @@ class _HomeFeedStreamViewState extends State<HomeFeedStreamView> {
       metaBadge: spec.courtBadge,
       isBookmarked: saved,
       onBookmarkTap: () => _toggleCaseSaved(appState, spec.caseId),
-      onCardTap: () => widget.onNavigateToCase(spec.caseId),
+      onCardTap: openCaseStoryEditorial,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InkWell(
-            onTap: () => widget.onNavigateToCase(spec.caseId),
+            onTap: openCaseStoryEditorial,
             borderRadius: BorderRadius.circular(8.r),
             child: Text(
               spec.title,

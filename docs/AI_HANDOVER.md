@@ -2,6 +2,31 @@
 
 此文件僅記錄 `lawapp`。每次接手先核對 Git 現況與最新驗收，不得把同層 `time_recorder` 的分支、測試、資料或部署狀態套用到此專案。
 
+## 目前快照（2026-11-20，實機九張截圖問題全面修復）
+
+- 分支 `redesign/home-responsive-carousel`，基準 Commit `c60d599`。依使用者實機截圖與 `/grill-me` 確認之規格，完成以下 7 項修復：
+  1. **每日專題空白修復**：發現 `public.learning_articles` 每個 `topic_id` 實有 10 篇文章而非 5 篇，將 `supabase_learning_service.dart` 條件改為 `articles.isNotEmpty`，恢復 1,000 組雲端每日專題。
+  2. **大家都在討論完全動態化**：升級 `trending-topics` Edge Function v5 直接抓取 Google News 台灣最新法制／社會焦點頭條（不寫死標題），右側顯示「發布時間／新聞來源」，內頁動態繪製真實每日報導量曲線並替換假 `+28%` 時間節點。
+  3. **主題策展特展預先載入**：`curated_exhibition_shelf.dart` 預先與開啟抽屜時向雲端取得真實案件名稱與年份，消除「0 · 案件載入中...」。
+  4. **案件詳情圖片與載入文字**：`case_dossier_detail_page.dart` 改為置中顯示「正在調閱卷宗...」、為 `CachedNetworkImage` 加上 Wikimedia `User-Agent` 標頭，並以典藏視覺封面取代破圖圖示。
+  5. **生活情境閱讀頁雲端化與 AppBar**：於 Supabase 建立並寫入 `public.life_situation_guides`（含公開讀取 RLS 與 4 領域 × 3 子情境）；`life_situation_guide_page.dart` 改為優先從 Supabase 載入並補上標準置中標題 AppBar。
+  6. **全站載入改用骨架波紋（Shimmer）**：移除 `LifeSituationGuidePage`、`EditorialStoryPage` 與 `CaseDossierDetailPage` 的轉圈圈，統一改用 `ShimmerSkeleton` / `LiquidGlassShimmer` 骨架波紋。
+  7. **法務工具箱收斂**：`learning_tools_tab.dart` 收斂為導向單一 `LegalToolkitHubPage`（法務實戰工具館）。
+  8. **首頁生活話題／案例專題報導頁**：新增 `editorial_story_page.dart`，讓首頁卡片先進入雜誌式專題報導閱讀頁，最下方才提供「延伸閱讀：前往對應法院判決卷宗」入口。
+- 驗證：`dart analyze` 無問題；`phase20_journal_upgrades_test.dart`、`learning_top_inset_test.dart`、`supabase_source_contract_test.dart` 共 16 項全數通過。
+
+以下為上一批歷史快照（首頁四大生活情境深度閱讀頁升級）。
+
+## 目前快照（2026-11-20，首頁四大生活情境深度閱讀頁升級）
+
+- 分支 `redesign/home-responsive-carousel`，基準 Commit `c60d599`（已 push 至 GitHub）。
+- 新增 [life_situation_guide_page.dart](file:///Users/babychen/Dropbox/Baby%20Mac/python/lawapp/lib/pages/home/subpages/life_situation_guide_page.dart) 並將 `HomeV2DashboardDock` 四大生活情境卡（租屋大小事、職場與薪資、網購與消費、車禍與賠償）接入該獨立閱讀頁：
+  - 頂部 3 組子情境切換膠囊（共 12 個深度脈絡解析），以「處境與權利關係解析、法律社會學視角提醒、常見話術拆解、核心法條依據（可查全國法規）、關聯真實判例」為主體閱讀體驗。
+  - 右下角懸浮按鈕（`情境工具`）收斂展開「向 AI 小法助詢問此情境」與「開啟對應實戰工具」。
+- 尚未 commit 或上傳 TestFlight，待使用者於 iPhone 模擬器確認畫面與互動後再決定提交與打包。
+
+以下為上一批歷史快照（TestFlight 回測全面修補與 Build 4 準備）。
+
 ## 目前快照（2026-11-20，TestFlight 回測全面修補與 Build 4 準備）
 
 - 分支 `redesign/home-responsive-carousel`，基準 Commit `7596c66`。依據 TestFlight `1.1.0 (3)` 實機回測修正 6 項問題：

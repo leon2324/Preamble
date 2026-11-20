@@ -482,28 +482,16 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 14.w,
-                          height: 14.w,
-                          child: const CircularProgressIndicator(
-                            strokeWidth: 2.0,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              CaseLibraryColors.primaryGreen,
-                            ),
-                          ),
+                    Center(
+                      child: Text(
+                        '正在調閱卷宗...',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 13.5.sp,
+                          fontWeight: FontWeight.bold,
+                          color: CaseLibraryColors.primaryGreen,
                         ),
-                        SizedBox(width: 10.w),
-                        Text(
-                          '正在安全調閱雲端卷宗...',
-                          style: TextStyle(
-                            fontSize: 13.5.sp,
-                            fontWeight: FontWeight.bold,
-                            color: CaseLibraryColors.primaryGreen,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                     SizedBox(height: 20.h),
                     LiquidGlassShimmer(
@@ -541,12 +529,35 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
 
   Widget _buildCaseGalleryImage(String source) {
     final imageError = Container(
-      color: CaseLibraryColors.borderLight,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            CaseLibraryColors.primaryGreen.withValues(alpha: 0.14),
+            CaseLibraryColors.accentGold.withValues(alpha: 0.14),
+          ],
+        ),
+      ),
       child: Center(
-        child: CaseLibrarySvgIcon(
-          CaseLibrarySvgIcons.imageOff,
-          size: 40.w,
-          color: CaseLibraryColors.textMuted,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CaseLibrarySvgIcon(
+              CaseLibrarySvgIcons.scale,
+              size: 36.w,
+              color: CaseLibraryColors.primaryGreen,
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              '法制歷史典藏卷宗',
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w700,
+                color: CaseLibraryColors.primaryGreen,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -554,6 +565,10 @@ class _CaseDossierDetailPageState extends State<CaseDossierDetailPage> {
     if (source.startsWith('http')) {
       return CachedNetworkImage(
         imageUrl: source,
+        // 台灣繁體中文教學註解：Wikimedia 等公開圖庫會擋無 User-Agent 之請求，補上標準標識確保照片正常載入。
+        httpHeaders: const {
+          'User-Agent': 'PreambleApp/1.1 (https://preamble.tw)',
+        },
         fit: BoxFit.cover,
         width: double.infinity,
         errorWidget: (context, url, error) => imageError,

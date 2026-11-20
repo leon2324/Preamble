@@ -31,8 +31,18 @@ class _CuratedExhibitionShelfState extends State<CuratedExhibitionShelf> {
     final repo = CaseLibraryRepository.instance;
     if (repo.cases.isEmpty) {
       await repo.initialize();
-      if (mounted) setState(() {});
     }
+    // 台灣繁體中文教學註解：預先向雲端載入特展收錄的真實案件標題與年份，避免卡片與抽屜顯示「0 · 案件載入中...」。
+    final allIds = curatedExhibitionItems
+        .expand((item) => item.caseIds)
+        .toSet()
+        .toList(growable: false);
+    await Future.wait(allIds.map((id) async {
+      try {
+        await repo.getCaseDetail(id);
+      } catch (_) {}
+    }));
+    if (mounted) setState(() {});
   }
 
   Future<void> _openExhibitionCollectionSheet(
@@ -44,11 +54,14 @@ class _CuratedExhibitionShelfState extends State<CuratedExhibitionShelf> {
     if (repo.cases.isEmpty) {
       await repo.initialize();
     }
+    final books = await Future.wait(item.caseIds.map((id) async {
+      try {
+        return await repo.getCaseDetail(id);
+      } catch (_) {
+        return repo.getCaseById(id);
+      }
+    }));
     if (!context.mounted) return;
-
-    final books = item.caseIds
-        .map(repo.getCaseById)
-        .toList(growable: false);
 
     await showModalBottomSheet<void>(
       context: context,
