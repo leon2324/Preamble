@@ -2,6 +2,17 @@
 
 更新日期：2026-11-19。狀態只代表本機 `lawapp`，不代表遠端部署。
 
+## 本批：趨勢圖當日標題 Tooltip、全域字級與手動頁面適配（基準 `1dc160b`）
+
+| 項目 | 狀態 | 依據／限制 |
+| --- | --- | --- |
+| 趨勢圖當日代表性新聞 Tooltip | 已部署＋已改 | `trending-topics` v6 回傳每日 `topHeadline`；`discussing_now_section.dart` 與 `discussion_detail_page.dart` 顯示 2 行摘要。 |
+| 全域 App 內字級比例套用 | 本機已修 | `main.dart` `MaterialApp.builder` 乘入 `appState.fontSizeScale`，個人頁字級設定即時生效。 |
+| 手動頁面 140% 大字級測試 | 5 項通過 | `test/manual_pages_text_scale_test.dart` 覆蓋 `ProfilePage`、`LifeSituationGuidePage`、`EditorialStoryPage`、`LawAssistantChatPage`、`CaseDossierDetailPage`。 |
+| 全專案靜態分析 | 通過 | `dart analyze`：`No issues found!`。 |
+
+以下為上一批狀態（實機九張截圖問題全面修復）。
+
 ## 本批：實機九張截圖問題全面修復（基準 `c60d599`，本機未 commit）
 
 | 項目 | 狀態 | 依據／限制 |

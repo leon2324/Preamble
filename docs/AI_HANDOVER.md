@@ -2,6 +2,15 @@
 
 此文件僅記錄 `lawapp`。每次接手先核對 Git 現況與最新驗收，不得把同層 `time_recorder` 的分支、測試、資料或部署狀態套用到此專案。
 
+## 目前快照（2026-11-24，趨勢圖當日新聞標題 Tooltip 與全域字級／手動頁面大字級適配）
+
+- 分支 `redesign/home-responsive-carousel`，基準 Commit `1dc160b`（TestFlight `1.1.1 (1)` 已上傳）。
+- **趨勢圖 Tooltip 充實**：升級 `trending-topics` Edge Function（v6）為每個日期節點附上當日代表性新聞標題（`topHeadline`）；`discussing_now_section.dart` 寫入 `annotation`，`discussion_detail_page.dart` 加寬 Tooltip 至 `178.w` 並支援 2 行顯示。
+- **全域 App 內字級設定真正接通**：於 `main.dart` 的 `MaterialApp.builder` 將系統 `MediaQuery.textScaler` 與 `appState.fontSizeScale`（85%–130%）相乘套用至全站（上限夾於 `0.8–2.35`）。
+- **早期手動頁面大字級適配補齊測試**：新增 `test/manual_pages_text_scale_test.dart`，驗證 `ProfilePage`、`LifeSituationGuidePage`、`EditorialStoryPage`（320×568 @ 140%）與 `LawAssistantChatPage`、`CaseDossierDetailPage`（375×812 @ 140%）共 5 項全數無溢出通過；`dart analyze` 無問題。
+
+以下為上一批歷史快照（實機九張截圖問題全面修復）。
+
 ## 目前快照（2026-11-20，實機九張截圖問題全面修復）
 
 - 分支 `redesign/home-responsive-carousel`，基準 Commit `c60d599`。依使用者實機截圖與 `/grill-me` 確認之規格，完成以下 7 項修復：

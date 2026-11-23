@@ -947,15 +947,15 @@ class _InteractiveTrendChartState extends State<InteractiveTrendChart> {
                       final ptData = points[_hoveredIndex!];
 
                       final isLeft = selectedPt.dx < chartWidth / 2;
-                      final tooltipWidth = 120.w;
+                      final tooltipWidth = 178.w;
                       final tooltipX = isLeft
                           ? (selectedPt.dx + 10.w)
                               .clamp(0.0, chartWidth - tooltipWidth)
                           : (selectedPt.dx - tooltipWidth - 10.w)
-                              .clamp(0.0, chartWidth);
+                              .clamp(0.0, chartWidth - tooltipWidth);
 
                       final tooltipY =
-                          (selectedPt.dy - 50.h).clamp(0.0, chartHeight - 60.h);
+                          (selectedPt.dy - 68.h).clamp(0.0, chartHeight - 72.h);
 
                       return Positioned(
                         left: tooltipX,
@@ -997,12 +997,15 @@ class _InteractiveTrendChartState extends State<InteractiveTrendChart> {
                               ),
                               if (ptData.annotation != null &&
                                   ptData.annotation!.isNotEmpty) ...[
-                                SizedBox(height: 2.h),
+                                SizedBox(height: 3.h),
                                 Text(
                                   ptData.annotation!,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     color: lineColor,
-                                    fontSize: 8.sp,
+                                    fontSize: 9.sp,
+                                    height: 1.35,
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),

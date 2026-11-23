@@ -303,6 +303,20 @@ class _MylawAppState extends State<MylawApp> {
             theme: AppTheme.light(),
             darkTheme: AppTheme.dark(),
             themeMode: _appState.themeMode,
+            builder: (context, child) {
+              // 台灣繁體中文教學註解：將個人設定中的 App 內字級比例與系統 Dynamic Type 相乘，
+              // 讓「我的 → 閱讀字型大小」真正套用到全站文字。
+              final media = MediaQuery.of(context);
+              final combinedScale =
+                  (media.textScaler.scale(1.0) * _appState.fontSizeScale)
+                      .clamp(0.8, 2.35);
+              return MediaQuery(
+                data: media.copyWith(
+                  textScaler: TextScaler.linear(combinedScale),
+                ),
+                child: child ?? const SizedBox.shrink(),
+              );
+            },
             home: Scaffold(
               extendBody: true,
               resizeToAvoidBottomInset: false,

@@ -105,11 +105,14 @@ class _DiscussingNowSectionState extends State<DiscussingNowSection> {
           for (final tp in rawTrend.whereType<Map<String, dynamic>>()) {
             final dateLabel = (tp['dateLabel'] as String? ?? '').trim();
             final tpCount = (tp['count'] as num?)?.toInt() ?? 0;
+            final topHeadline = (tp['topHeadline'] as String? ?? '').trim();
             if (dateLabel.isNotEmpty) {
               trendPoints.add(HomeDiscussionTrendPoint(
                 dateLabel: dateLabel,
                 volumeLabel: '$tpCount 則報導',
-                annotation: 'Google News 台灣 RSS 即時統計',
+                annotation: topHeadline.isNotEmpty
+                    ? topHeadline
+                    : 'Google News 台灣 RSS 即時統計',
               ));
             }
           }
